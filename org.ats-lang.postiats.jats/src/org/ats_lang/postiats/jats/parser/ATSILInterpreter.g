@@ -27,20 +27,28 @@ tokens {
   import org.ats_lang.postiats.jats.*;
   
   import java.util.Map;
+  import java.util.HashMap;
   import java.util.ArrayList;
 }
 
 @members {
-  // public Map<String, Function> functions = null;
+    private static final IntType m_intType = new IntType();
+    
+    private Map<String, ATSType> m_types = new HashMap<String, ATSType>();
+    
+    private void defineType(String id, ATSType type) {
+        m_types.put(id, type);
+    }
 }
 
 // START:rules
 program returns [ATSNode node]
 @init {
+
   ProgramNode pn = new ProgramNode();
   node = pn;
 }
-    : ^(PROGRAM (gstat {pn.addStat($gstat.node);})*)
+    : ^(PROGRAM (gstat {pn.addStat($gstat.node);} | type_def)*)
     ;
 
 gstat returns [ATSNode node]
@@ -48,7 +56,6 @@ gstat returns [ATSNode node]
     | func_def {node = $func_def.node;}
     | var_def  {node = $var_def.node;}
     | var_assign {node = $var_assign.node;}
-    | type_def {node = $type_def.node;}
     ;
 
 
@@ -63,23 +70,34 @@ block returns [ATSNode node]
 bstat returns [ATSNode node]
     : var_def  {node = $var_def.node;}
     | assignment {node = $assignment.node;}
-    | ifstat  // todo
+    | ifstat {node = $ifstat.node;}
+    | returnstat {node = $returnstat.node;}
     ;
 
-ifstat
-    : ^(IF ifStat (elseIfStat)* (elseStat)?)
+returnstat returns [ATSNode node]
+    :  RETURN exp {node = new ReturnNode($exp.node);}
+    ;
+    
+ifstat returns [ATSNode node]
+@init {
+  IfNode ifnode = new IfNode();
+}
+@after {
+  node = ifnode;
+}
+    : ^(IF ifStat[ifnode] (elseIfStat[ifnode])* (elseStat[ifnode])?)
     ;
 
-ifStat
-    : ^(EXP exp block)
+ifStat [IfNode parent]
+    : ^(EXP exp block) {parent.addIf($exp.node, $block.node);}
     ;
       
-elseIfStat
-    :  ^(EXP exp block)
+elseIfStat [IfNode parent]
+    :  ^(EXP exp block) {parent.addIf($exp.node, $block.node);}
     ;
 
-elseStat
-    : ^(EXP block)
+elseStat [IfNode parent]
+    : ^(EXP block)  {parent.addElse($block.node);}
     ;
 
 assignment returns [ATSNode node]
@@ -114,12 +132,16 @@ var_def returns [ATSNode node]
 
 type returns [ATSType type]
     : prim_type {type = $prim_type.type;}
-    | compound_type
+    | name_type {type = $name_type.type;}
     ;
 
+name_type returns [ATSType type]
+    : ID {type = m_types.get($ID.text);}
+    ;
+    
 // todo
 prim_type returns [ATSType type]
-    : type_int {type = new IntType();}
+    : type_int {type = m_intType;}
     | type_char
     | type_ulint
     | type_bool
@@ -128,10 +150,6 @@ prim_type returns [ATSType type]
     | type_ptr
     | type_ref
     | type_arrptr
-    ;
-
-compound_type
-    : ^(STRUCT (type ID)+)
     ;
 
 func_decl returns [ATSNode node]
@@ -153,18 +171,20 @@ func_def returns [ATSNode node]
     : ^(FUNC_DEF ID arglst? block) {node = new FuncNode ($ID.text, $arglst.arglst, $block.node);}
     ;
 
-type_def returns [ATSNode node]
-    : struct_def {node = $struct_def.node;}
+type_def
+    : ^(TYPEDEF ID struct_def) {m_types.put($ID.text, $struct_def.type);}
     ;
 
-struct_def returns [ATSNode node]
+struct_def returns [StructType type]
 @init {
-  StructType st = new StructType();
+  StructType ty = new StructType();
+  type = ty;
 }
-@after {
-  node = new TypeNode(st);
-}
-    : ^(STRUCT (var_def {st.addMember((DefinitionNode)$var_def.node);})+)
+    : ^(STRUCT (var_def { DefinitionNode tynode = (DefinitionNode)$var_def.node;
+                          ty.addMember(tynode.getID(), tynode.getType());
+                         }
+                )+
+        )
     ;
 
 type_int  : 'int';
