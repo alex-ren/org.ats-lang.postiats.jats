@@ -6,19 +6,6 @@ options {
   ASTLabelType = CommonTree;
 }
 
-tokens {
-  VAR = 'var';
-  PROGRAM;
-  ASSIGNMENT;
-  EXP;
-  BLOCK;
-  ASSIGNMENT;
-  FUNC_CALL;
-  EXP_LIST;
-  ARG_LIST;
-  FUNC_DEF;
-}
-
 @header {
   package org.ats_lang.postiats.jats.parser;
   import org.ats_lang.postiats.jats.tree.*;
@@ -48,8 +35,18 @@ program returns [ATSNode node]
   ProgramNode pn = new ProgramNode();
   node = pn;
 }
-    : ^(PROGRAM (gstat {pn.addStat($gstat.node);} | type_def)*)
+    : ^(PROGRAM (p=program {pn.addProg($p.node);} 
+                 | type_def {}
+                 | minclude {}
+                 | gstat {pn.addStat($gstat.node);}
+                 )*
+        )
     ;
+
+
+ 
+// todo: Doesn't make sense that I cannot remove this rule.
+zz: ^(RR 'zz');
 
 gstat returns [ATSNode node]
     : func_decl  {node = $func_decl.node;}
@@ -58,6 +55,9 @@ gstat returns [ATSNode node]
     | var_assign {node = $var_assign.node;}
     ;
 
+minclude
+    : ^(MACRO_INCLUDE STRING)
+    ;
 
 block returns [ATSNode node]
 @init {
@@ -153,9 +153,14 @@ prim_type returns [ATSType type]
     ;
 
 func_decl returns [ATSNode node]
-    : ^(FUNC_DECL ID arglst?) {node = new FuncNode ($ID.text, $arglst.arglst, null);}
+    : ^(FUNC_DECL ID fun_decorator? type arglst?) {node = new FuncNode ($ID.text, $fun_decorator.dec, $type.type, $arglst.arglst, null);}
     ;
 
+fun_decorator returns [String dec]
+    : GLOBAL {dec = "global";}
+    | STATIC {dec = "static";}
+    ;
+    
 arglst returns [List<FuncPara> arglst]
 @init {
   arglst = new ArrayList<FuncPara>();
@@ -168,7 +173,7 @@ arg returns [FuncPara arg]
     ;
     
 func_def returns [ATSNode node]
-    : ^(FUNC_DEF ID arglst? block) {node = new FuncNode ($ID.text, $arglst.arglst, $block.node);}
+    : ^(FUNC_DEF ID fun_decorator? type arglst? block) {node = new FuncNode ($ID.text, $fun_decorator.dec, $type.type, $arglst.arglst, $block.node);}
     ;
 
 type_def

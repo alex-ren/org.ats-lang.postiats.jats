@@ -2,7 +2,27 @@ grammar ATSIL;
 
 options {
   language = Java;
- // output = AST;
+  output = AST;
+}
+
+
+tokens {
+  VAR = 'var';
+  PROGRAM;
+//  ASSIGNMENT;
+//  EXP;
+//  BLOCK;
+//  ASSIGNMENT;
+  FUNC_DECL;
+//  FUNC_CALL;
+//  EXP_LIST;
+//  ARG_LIST;
+  FUNC_DEF;
+  
+  GLOBAL;
+  STATIC;
+//  TYPEDEF;
+//  TYPEDEFb;
 }
 
 @header {
@@ -13,23 +33,31 @@ options {
   package org.ats_lang.postiats.jats.parser;
 }
 
+
 rule: program
     ;
     
 program
-    : (statement | macro_area)+
+    : stat_macro* -> ^(PROGRAM stat_macro*)
+    ;
+    
+stat_macro
+    : statement
+    | macro_area
     ;
     
 macro_area
-    : MACRO_IFNDEF ID program MACRO_ENDIF
-    | MACRO_INCLUDE STRING
+    : MACRO_IFNDEF! ID! program MACRO_ENDIF!
+    | MACRO_INCLUDE^ STRING
     ;
 
 statement
     : tmpdec Semicol
-    | fun_header Semicol
-    | fun_header LBrace block RBrace
-    | typedef
+    | fun_decorator? atstype ID LParen paralist? RParen
+        (Semicol -> ^(FUNC_DECL ID fun_decorator atstype paralist)
+        | LBrace block RBrace -> ^(FUNC_DEF ID fun_decorator atstype paralist block)
+        )
+    | typedef  // todo
     ;
 
 typedef
@@ -218,9 +246,9 @@ gototag
     ;
     
     
-fun_header
-    : fun_decorator? atstype ID LParen paralist? RParen
-    ;
+//fun_header
+//    : fun_decorator? atstype ID LParen paralist? RParen
+//    ;
 
 paralist
     : para (Comma para)*
@@ -239,16 +267,16 @@ argdecorator
     ;
 
 fun_decorator
-    : 'ATSstaticdec()'
-    | 'ATSglobaldec()'
+    : 'ATSstaticdec()' -> ^(GLOBAL)  // same effect as GLOBAL
+    | 'ATSglobaldec()' -> STATIC
     ;
     
 atstmpdec_void
-    : 'ATStmpdec_void' LParen ID Comma atstype RParen
+    : 'ATStmpdec_void' LParen ID Comma atstype RParen -> ^(VAR atstype ID)
     ;
     
 atstmpdec:
-    'ATStmpdec' LParen ID Comma atstype RParen
+    'ATStmpdec' LParen ID Comma atstype RParen -> ^(VAR atstype ID)
     ;
 
 atstype

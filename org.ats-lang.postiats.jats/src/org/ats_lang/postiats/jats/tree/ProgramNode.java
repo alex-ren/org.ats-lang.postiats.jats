@@ -18,6 +18,14 @@ public class ProgramNode implements ATSNode {
 	public void addStat(ATSNode stat) {
 		m_statements.add(stat);
 	}
+	
+    public void addProg(ATSNode stat) {
+        m_statements.addAll(((ProgramNode)stat).getStat());
+    }
+    
+    public List<ATSNode> getStat() {
+        return m_statements;
+    }
 
 	@Override
 	public ATSValue evaluate(ATSScope scope) {
