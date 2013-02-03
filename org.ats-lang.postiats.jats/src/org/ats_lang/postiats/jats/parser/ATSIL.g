@@ -9,20 +9,54 @@ options {
 tokens {
   VAR = 'var';
   PROGRAM;
-//  ASSIGNMENT;
-//  EXP;
-//  BLOCK;
-//  ASSIGNMENT;
+  BLOCK;
+  
   FUNC_DECL;
+  FUNC_DEF;
 //  FUNC_CALL;
 //  EXP_LIST;
-//  ARG_LIST;
-  FUNC_DEF;
-  
+  ARG_LIST;
+
   GLOBAL;
   STATIC;
-//  TYPEDEF;
-//  TYPEDEFb;
+  TYPEDEF;
+  STRUCT;
+
+  TYPE;
+  TYPE_INT;
+  TYPE_CHAR;
+  TYPE_ULINT;
+  TYPE_BOOL;
+  TYPE_STRING;
+  TYPE_FLOAT;
+  TYPE_PTR;
+  TYPE_REF;
+  TYPE_ARRPTR;
+  
+  TYPE_DEC_TYPE;
+  TYPE_DEC_T0YPE;
+  
+  ARGTYPE;
+  ARGTYPE_REF0;
+  ARGTYPE_REF1;
+  
+  IFSTAT;
+  IF;
+  ELSE;
+  WHILE;
+  DOWHILE;
+  GOTOTAG;
+  
+  ATSINS_LOAD;
+  ATSINS_STORE;
+  ATSINS_STORE_ARRPSZ_ASZ;
+  ATSINS_STORE_ARRPSZ_PTR;
+  ATSINS_STORE_FLTREC_OFS;
+  ATSINS_MOVE;
+  ATSINS_PMOVE;
+  ATSINS_MOVE_ARRPSZ_PTR;
+  ATSINS_UPDATE_PTRINC;
+  ATS_RETURN;
 }
 
 @header {
@@ -57,15 +91,15 @@ statement
         (Semicol -> ^(FUNC_DECL ID fun_decorator atstype paralist)
         | LBrace block RBrace -> ^(FUNC_DEF ID fun_decorator atstype paralist block)
         )
-    | typedef  // todo
+    | typedef
     ;
 
 typedef
-    : Typedef Struct LBrace struct_item_list? RBrace ID Semicol
+    : Typedef structure ID Semicol -> ^(TYPEDEF ID structure)
     ;
 
-struct_item_list
-    : atstype ID Semicol (atstype ID Semicol)*
+structure
+    : Struct LBrace (atstype ID Semicol)+ RBrace -> ^(STRUCT ^(VAR atstype ID)+)
     ;
     
 tmpdec
@@ -74,92 +108,98 @@ tmpdec
     ;
     
 block
-    : bstat*
+    : bstat* -> ^(BLOCK bstat*)
     ;
 
 bstat
     : tmpdec Semicol
+
+    | ifstat
+    | whilestat
+    | dowhilestat
+    | gototag
+    
     | atsins_load Semicol
     | atsins_store Semicol
     | atsins_store_arrpsz_asz Semicol
     | atsins_store_arrpsz_ptr Semicol
     | atsins_store_fltrec_ofs Semicol
-    | atsins_move_arrpsz_ptr Semicol
-    | atsins_update_ptrinc Semicol
     | atsins_move Semicol
+    | atsins_move_void Semicol       
     | atsins_pmove Semicol
-    | atsins_move_void Semicol
+    | atsins_move_arrpsz_ptr Semicol    
+    | atsins_update_ptrinc Semicol
     | ats_return Semicol
     | ats_return_void Semicol
-    | Return exp Semicol
-    | ifstat
-    | whilestat
-    | dowhilestat
-    | gototag
-    ;
-
-atsins_store
-    : 'ATSINSstore' LParen exp Comma exp RParen
-    ;
-
-
-
-atsins_store_fltrec_ofs
-    : 'ATSINSstore_fltrec_ofs' LParen ID Comma atstype Comma ID Comma exp RParen
-    ;
-    
-whilestat
-    : 'ATSwhile' LParen exp RParen LBrace block RBrace
-    ;
-    
-dowhilestat
-    : 'ATSdo' LParen RParen LBrace block RBrace 'ATSwhile' LParen exp RParen
-    ;
-
-ifstat
-    : ('ATSif' | 'ATSifnot') LParen exp RParen 'ATSthen' LParen RParen LBrace block RBrace ('ATSelse' LParen RParen LBrace block RBrace)?
-    ;
-    
-atsins_move_void:
-    'ATSINSmove_void' LParen ID Comma exp RParen
-    ;
-    
-atsins_update_ptrinc
-    : 'ATSINSupdate_ptrinc' LParen ID Comma atstype RParen
-    ;
-    
-atsins_move_arrpsz_ptr
-    : 'ATSINSmove_arrpsz_ptr' LParen ID Comma exp RParen
-    ;
-    
-atsins_store_arrpsz_ptr
-    : 'ATSINSstore_arrpsz_ptr' LParen ID Comma atstype Comma exp RParen
-    ;
-    
-atsins_store_arrpsz_asz
-    : 'ATSINSstore_arrpsz_asz' LParen ID Comma exp RParen
-    ;
-    
-ats_return
-    : 'ATSreturn' LParen exp RParen
-    ;
-
-ats_return_void
-    : 'ATSreturn_void' LParen exp RParen
+//    | Return exp Semicol
     ;
     
 atsins_load
-    : 'ATSINSload' LParen exp Comma exp RParen
+    : 'ATSINSload' LParen exp Comma exp RParen -> ^(ATSINS_LOAD exp exp)
+    ;
+
+atsins_store
+    : 'ATSINSstore' LParen exp Comma exp RParen -> ^(ATSINS_STORE exp exp)
+    ;
+    
+atsins_store_arrpsz_asz
+    : 'ATSINSstore_arrpsz_asz' LParen ID Comma exp RParen -> ^(ATSINS_STORE_ARRPSZ_ASZ ID exp)
+    ;
+    
+atsins_store_arrpsz_ptr
+    : 'ATSINSstore_arrpsz_ptr' LParen ID Comma atstype Comma exp RParen -> ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp)
+    ;
+
+atsins_store_fltrec_ofs
+    : 'ATSINSstore_fltrec_ofs' LParen ida=ID Comma atstype Comma idb=ID Comma exp RParen
+       -> ^(ATSINS_STORE_FLTREC_OFS $ida atstype $idb exp)
     ;
     
 atsins_move
-    : 'ATSINSmove' LParen ID Comma exp RParen
+    : 'ATSINSmove' LParen ID Comma exp RParen -> ^(ATSINS_MOVE ID exp)
     ;
 
-atsins_pmove
-    : 'ATSINSpmove' LParen ID Comma atstype Comma exp RParen
+atsins_move_void:
+    'ATSINSmove_void' LParen ID Comma exp RParen -> ^(ATSINS_MOVE ID exp)
     ;
     
+atsins_pmove
+    : 'ATSINSpmove' LParen ID Comma atstype Comma exp RParen -> ^(ATSINS_PMOVE ID atstype exp)
+    ;   
+     
+atsins_move_arrpsz_ptr
+    : 'ATSINSmove_arrpsz_ptr' LParen ID Comma exp RParen -> ^(ATSINS_MOVE_ARRPSZ_PTR ID exp)
+    ;
+    
+atsins_update_ptrinc
+    : 'ATSINSupdate_ptrinc' LParen ID Comma atstype RParen -> ^(ATSINS_UPDATE_PTRINC ID atstype)
+    ;
+    
+ats_return
+    : 'ATSreturn' LParen exp RParen -> ^(ATS_RETURN exp)
+    ;
+
+ats_return_void
+    : 'ATSreturn_void' LParen exp RParen -> ^(ATS_RETURN)
+    ;
+
+ifstat
+    : ('ATSif' /*| 'ATSifnot'*/) LParen exp RParen 'ATSthen' LParen RParen LBrace thenb=block RBrace ('ATSelse' LParen RParen LBrace elseb=block RBrace)?
+      -> ^(IFSTAT ^(IF exp $thenb) ^(ELSE $elseb))
+    ;
+    
+whilestat
+    : 'ATSwhile' LParen exp RParen LBrace block RBrace -> ^(WHILE exp block)
+    ;
+    
+dowhilestat
+    : 'ATSdo' LParen RParen LBrace block RBrace 'ATSwhile' LParen exp RParen -> ^(DOWHILE block exp)
+    ;
+    
+gototag
+    : ID Colon -> ^(GOTOTAG ID)
+    ;
+        
 exp : fun_call
     // ats spec
     | ats_cast
@@ -240,30 +280,26 @@ fun_call
 arglist
     : exp (Comma exp)*
     ;
-    
-gototag
-    : ID Colon
-    ;
-    
+
     
 //fun_header
 //    : fun_decorator? atstype ID LParen paralist? RParen
 //    ;
 
 paralist
-    : para (Comma para)*
+    : para (Comma para)* -> ^(ARG_LIST para+)
     ;
     
 para : argtype ID;
 
 argtype
-    : atstype
-    | argdecorator LParen atstype RParen
+    : atstype -> ^(ARGTYPE atstype)
+    | argdecorator LParen atstype RParen -> ^(ARGTYPE argdecorator atstype)
     ;
     
 argdecorator
-    : 'atsrefarg0_type'
-    | 'atsrefarg1_type'
+    : 'atsrefarg0_type' -> ARGTYPE_REF0
+    | 'atsrefarg1_type' -> ARGTYPE_REF1
     ;
 
 fun_decorator
@@ -280,13 +316,37 @@ atstmpdec:
     ;
 
 atstype
-    : ID
-    | kind_decorator LParen ID RParen  // todo
-    ; 
-    
+    : prim_type -> ^(TYPE prim_type)
+    | ID -> ^(TYPE ID)
+    | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
+    ;
+
+prim_type
+    : type_int -> TYPE_INT
+    | type_char -> TYPE_CHAR
+    | type_ulint -> TYPE_ULINT
+    | type_bool -> TYPE_BOOL
+    | type_string -> TYPE_STRING
+    | type_float -> TYPE_FLOAT
+    | type_ptr -> TYPE_PTR
+    | type_ref -> TYPE_REF
+    | type_arrptr -> TYPE_ARRPTR
+    ;
+
+type_int    : 'int';
+type_char   : 'char';
+type_ulint  : 'unsigned' 'long' 'int';
+type_bool   : 'bool';
+type_string : 'string';
+type_float  : 'float';
+type_ptr    : 'ptr';
+type_ref    : 'ref';
+type_arrptr : 'arrptr';
+
+
 kind_decorator
-    : 'atstkind_type'
-    | 'atstkind_t0ype'
+    : 'atstkind_type' -> TYPE_DEC_TYPE
+    | 'atstkind_t0ype' -> TYPE_DEC_T0YPE
     ;
 
 MACRO_ENDIF:  '#endif';

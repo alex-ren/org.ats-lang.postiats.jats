@@ -44,9 +44,7 @@ program returns [ATSNode node]
     ;
 
 
- 
-// todo: Doesn't make sense that I cannot remove this rule.
-zz: ^(RR 'zz');
+
 
 gstat returns [ATSNode node]
     : func_decl  {node = $func_decl.node;}
@@ -69,13 +67,63 @@ block returns [ATSNode node]
     
 bstat returns [ATSNode node]
     : var_def  {node = $var_def.node;}
-    | assignment {node = $assignment.node;}
     | ifstat {node = $ifstat.node;}
-    | returnstat {node = $returnstat.node;}
+    // todo while dowhile
+    | atsins {node = $atsins.node;}
     ;
 
-returnstat returns [ATSNode node]
-    :  RETURN exp {node = new ReturnNode($exp.node);}
+atsins returns [ATSNode node]
+    : atsins_load
+    | atsins_store
+    | atsins_store_arrpsz_asz
+    | atsins_store_arrpsz_ptr
+    | atsins_store_fltrec_ofs
+    | atsins_move   
+    | atsins_pmove
+    | atsins_move_arrpsz_ptr    
+    | atsins_update_ptrinc
+    | ats_return
+    ;
+
+atsins_load returns [ATSNode node]
+    : ^(ATSINS_LOAD dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
+    ;
+    
+atsins_store returns [ATSNode node]
+    : ^(ATSINS_STORE dest=exp cont=exp) {node = new AtsInsStore($dest.node, $cont.node);}
+    ;
+    
+atsins_store_arrpsz_asz returns [ATSNode node]
+    : ^(ATSINS_STORE_ARRPSZ_ASZ ID exp) {node = new AtsInsStoreArrpszAsz($ID.text, $exp.node);}
+    ;
+    
+atsins_store_arrpsz_ptr returns [ATSNode node]
+    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) {node = new AtsInsStoreArrpszPtr($ID.text, $atstype.type, $exp.node);}
+    ;
+    
+atsins_store_fltrec_ofs returns [ATSNode node]
+    : ^(ATSINS_STORE_FLTREC_OFS ida=ID atstype idb=ID exp)
+      {node = new AtsInsStoreFltrecOfs($ida.text, $atstype.type, $idb.text, $exp.node);}
+    ;
+    
+atsins_move returns [ATSNode node]
+    : ^(ATSINS_MOVE ID exp) {node = new AtsInsMove($ID.text, $exp.node);}
+    ;
+    
+atsins_pmove returns [ATSNode node]
+    : ^(ATSINS_PMOVE ID atstype exp) {node = new AtsInsPMove($ID.text, $atstype.type, $exp.node);}
+    ;
+    
+atsins_move_arrpsz_ptr returns [ATSNode node]
+    : ^(ATSINS_MOVE_ARRPSZ_PTR ID exp) {node = new AtsInsMoveArrpszPtr($ID.text, $exp.node);}
+    ;
+    
+atsins_update_ptrinc returns [ATSNode node]
+    : ^(ATSINS_UPDATE_PTRINC ID atstype) {node = new AtsInsUpdatePtrInc($ID.text, $atstype.type);} 
+    ;
+    
+ats_return returns [ATSNode node]
+    : ^(ATS_RETURN exp?) {node = new AtsReturnNode($exp.node);}
     ;
     
 ifstat returns [ATSNode node]
@@ -89,15 +137,15 @@ ifstat returns [ATSNode node]
     ;
 
 ifStat [IfNode parent]
-    : ^(EXP exp block) {parent.addIf($exp.node, $block.node);}
+    : ^(IF exp block) {parent.addIf($exp.node, $block.node);}
     ;
       
 elseIfStat [IfNode parent]
-    :  ^(EXP exp block) {parent.addIf($exp.node, $block.node);}
+    : ^(IF exp block) {parent.addIf($exp.node, $block.node);}
     ;
 
 elseStat [IfNode parent]
-    : ^(EXP block)  {parent.addElse($block.node);}
+    : ^(ELSE block)  {parent.addElse($block.node);}
     ;
 
 assignment returns [ATSNode node]
@@ -127,38 +175,54 @@ var_assign returns [ATSNode node]
     ;
     
 var_def returns [ATSNode node]
-    : ^(VAR type ID) {node = new DefinitionNode($type.type, $ID.text);}
+    : ^(VAR atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
     ;
 
-type returns [ATSType type]
-    : prim_type {type = $prim_type.type;}
-    | name_type {type = $name_type.type;}
+atstype returns [ATSType type]
+    : ^(TYPE prim_type) {type = $prim_type.type;}
+    | ^(TYPE name_type)  {type = $name_type.type;}
+    | ^(TYPE kind_decorator name_type) {type = new KindType($kind_decorator.kind, $name_type.type);}
     ;
 
 name_type returns [ATSType type]
     : ID {type = m_types.get($ID.text);}
     ;
     
+kind_decorator returns [ATSType.Decorator kind]
+    : TYPE_DEC_TYPE {kind = ATSType.Decorator.TYPE;}
+    | TYPE_DEC_T0YPE {kind = ATSType.Decorator.T0YPE;}
+    ;
+    
 // todo
 prim_type returns [ATSType type]
-    : type_int {type = m_intType;}
-    | type_char
-    | type_ulint
-    | type_bool
-    | type_string
-    | type_float
-    | type_ptr
-    | type_ref
-    | type_arrptr
+    : TYPE_INT {type = m_intType;}
+    | TYPE_CHAR
+    | TYPE_ULINT
+    | TYPE_BOOL
+    | TYPE_STRING
+    | TYPE_FLOAT
+    | TYPE_PTR
+    | TYPE_REF
+    | TYPE_ARRPTR
     ;
+
 
 func_decl returns [ATSNode node]
-    : ^(FUNC_DECL ID fun_decorator? type arglst?) {node = new FuncNode ($ID.text, $fun_decorator.dec, $type.type, $arglst.arglst, null);}
+    : ^(FUNC_DECL ID fun_decorator? argtype arglst?) {node = new FuncNode ($ID.text, $fun_decorator.dec, $argtype.type, $arglst.arglst, null);}
     ;
 
-fun_decorator returns [String dec]
-    : GLOBAL {dec = "global";}
-    | STATIC {dec = "static";}
+argtype returns [ATSType type]
+    : ^(ARGTYPE arg_decorator? atstype) {type = new ArgType($arg_decorator.dec, $atstype.type);}
+    ;
+
+arg_decorator returns [ATSType.ArgDecorator dec]
+    : ARGTYPE_REF0 {dec = ATSType.ArgDecorator.REF0;}
+    | ARGTYPE_REF1 {dec = ATSType.ArgDecorator.REF1;}
+    ;
+    
+fun_decorator returns [ATSNode.FunDecorator dec]
+    : GLOBAL {dec = ATSNode.FunDecorator.GLOBAL;}
+    | STATIC {dec = ATSNode.FunDecorator.STATIC;}
     ;
     
 arglst returns [List<FuncPara> arglst]
@@ -169,11 +233,11 @@ arglst returns [List<FuncPara> arglst]
     ;
 
 arg returns [FuncPara arg]
-    : type ID {arg = new FuncPara($type.type, $ID.text);}
+    : atstype ID {arg = new FuncPara($atstype.type, $ID.text);}
     ;
     
 func_def returns [ATSNode node]
-    : ^(FUNC_DEF ID fun_decorator? type arglst? block) {node = new FuncNode ($ID.text, $fun_decorator.dec, $type.type, $arglst.arglst, $block.node);}
+    : ^(FUNC_DEF ID fun_decorator? argtype arglst? block) {node = new FuncNode ($ID.text, $fun_decorator.dec, $argtype.type, $arglst.arglst, $block.node);}
     ;
 
 type_def
@@ -191,16 +255,6 @@ struct_def returns [StructType type]
                 )+
         )
     ;
-
-type_int  : 'int';
-type_char : 'char';
-type_ulint: 'unsigned long int';
-type_bool : 'bool';
-type_string:'string';
-type_float: 'float';
-type_ptr  : 'ptr';
-type_ref  : 'ref';
-type_arrptr: 'arrptr';
 
 ///* ******* ******* */
 //type_struct  // struct atstype_struct ; /* of indefinite size */
@@ -263,3 +317,7 @@ type_arrptr: 'arrptr';
 //atstkind_t0ype(atstype_int) atslab$0; 
 //atstkind_t0ype(atstype_int) atslab$1; 
 //} postiats_tyrec_0 ;
+
+
+ 
+// todo: Doesn't make sense that I cannot remove this rule.

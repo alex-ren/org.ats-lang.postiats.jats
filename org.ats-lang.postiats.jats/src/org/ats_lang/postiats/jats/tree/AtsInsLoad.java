@@ -3,14 +3,15 @@ package org.ats_lang.postiats.jats.tree;
 import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
-public class ReturnNode implements ATSNode {
-    private ATSNode m_exp;
+public class AtsInsLoad implements ATSNode {
+    private ATSNode m_dest;
+    private ATSNode m_cont;
     
-    public ReturnNode(ATSNode exp) {
-        m_exp = exp;
+    public AtsInsLoad(ATSNode dest, ATSNode cont) {
+        m_dest = dest;
+        m_cont = cont;
     }
     
-
     @Override
     public ATSValue evaluate(ATSScope scope) {
         // TODO Auto-generated method stub
