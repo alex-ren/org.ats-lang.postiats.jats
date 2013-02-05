@@ -16,11 +16,11 @@ options {
   import java.util.Map;
   import java.util.HashMap;
   import java.util.ArrayList;
+  
+  
 }
 
 @members {
-    private static final IntType m_intType = new IntType();
-    
     private Map<String, ATSType> m_types = new HashMap<String, ATSType>();
     
     private void defineType(String id, ATSType type) {
@@ -73,16 +73,16 @@ bstat returns [ATSNode node]
     ;
 
 atsins returns [ATSNode node]
-    : atsins_load
-    | atsins_store
-    | atsins_store_arrpsz_asz
-    | atsins_store_arrpsz_ptr
-    | atsins_store_fltrec_ofs
-    | atsins_move   
-    | atsins_pmove
-    | atsins_move_arrpsz_ptr    
-    | atsins_update_ptrinc
-    | ats_return
+    : atsins_load {node = $atsins_load.node;}
+    | atsins_store {node = $atsins_store.node;}
+    | atsins_store_arrpsz_asz {node = $atsins_store_arrpsz_asz.node;}
+    | atsins_store_arrpsz_ptr {node = $atsins_store_arrpsz_ptr.node;}
+    | atsins_store_fltrec_ofs {node = $atsins_store_fltrec_ofs.node;}
+    | atsins_move {node = $atsins_move.node;}
+    | atsins_pmove {node = $atsins_pmove.node;}
+    | atsins_move_arrpsz_ptr {node = $atsins_move_arrpsz_ptr.node;}
+    | atsins_update_ptrinc {node = $atsins_update_ptrinc.node;}
+    | ats_return {node = $ats_return.node;}
     ;
 
 atsins_load returns [ATSNode node]
@@ -133,7 +133,7 @@ ifstat returns [ATSNode node]
 @after {
   node = ifnode;
 }
-    : ^(IF ifStat[ifnode] (elseIfStat[ifnode])* (elseStat[ifnode])?)
+    : ^(IFSTAT ifStat[ifnode] (elseIfStat[ifnode])* (elseStat[ifnode])?)
     ;
 
 ifStat [IfNode parent]
@@ -154,8 +154,77 @@ assignment returns [ATSNode node]
     
 exp returns [ATSNode node]
     : func_call {node = $func_call.node;}
-    | ID  {node = new IdentifierNode($ID.text);}
-    | INT  {node = new ValueNode(new IntValue($INT.text));}
+    | ats_exp {node = $ats_exp.node;}
+    | atom_exp {node = $atom_exp.node;}
+    ;
+
+ats_exp returns [ATSNode node]
+    : ats_cast {node = $ats_cast.node;}
+    | ats_simple_cast {node = $ats_simple_cast.node;}
+    | ats_sizeof {node = $ats_sizeof.node;}
+    | ats_deref {node = $ats_deref.node;}
+    | ats_ref_arg {node = $ats_ref_arg.node;}
+    | ats_pmv_ptrof {node = $ats_pmv_ptrof.node;}
+    | ats_sel_recsin {node = $ats_sel_recsin.node;}
+    | ats_sel_flt_rec {node = $ats_sel_flt_rec.node;}
+    | ats_sel_arr_ind {node = $ats_sel_arr_ind.node;}
+    | ats_sel_box_rec {node = $ats_sel_box_rec.node;}
+    ;
+
+ats_cast returns [ATSNode node]
+    : ^(ATSPMV_CASTFN ID atstype exp) {node = new AtsPmvCastFn($ID.text, $atstype.type, $exp.node);}
+    ;
+
+ats_simple_cast returns [ATSNode node]
+    : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
+    | ATSPMV_TRUE {node = new ValueNode(BoolType.createTrue());}
+    | ATSPMV_FALSE {node = new ValueNode(BoolType.createFalse());}
+    | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
+    | ^(ATSPMV_STRING exp) {node = new AtsPmvSimpleCastNode(StringType.cType, $exp.node);}
+    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(I0ntType.cType, $exp.node);}
+    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(F0loatType.cType, $exp.node);}
+    ;
+
+ats_sizeof returns [ATSNode node]
+    : ^(ATSPMV_SIZEOF atstype) {node = new AtsPmvSizeofNode($atstype.type);}
+    ;
+    
+ats_deref returns [ATSNode node]
+    : ^(ATS_DEREF atstype exp) {node = new AtsDerefNode($atstype.type, $exp.node);}
+    ;
+
+ats_ref_arg returns [ATSNode node]
+    : ^(ATSPMV_REFARG0 exp) {node = new AtsPmvRefArg(ATSType.ParaDecorator.REF0, $exp.node);}
+    | ^(ATSPMV_REFARG1 exp) {node = new AtsPmvRefArg(ATSType.ParaDecorator.REF1, $exp.node);}
+    ;
+   
+ats_pmv_ptrof returns [ATSNode node]
+    : ^(ATSPMV_PTROF ID) {node = new AtsPmvPtrofNode($ID.text);}
+    ;
+    
+ats_sel_recsin returns [ATSNode node]
+      : ^(ATS_SEL_RECSIN pmv=ID atstype lab=ID) {node = new AtsSelRecsinNode($pmv.text, $atstype.type, $lab.text);}
+      ;
+   
+ats_sel_flt_rec returns [ATSNode node]
+    : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID) {node = new AtsSelFltRecNode($pmv.node, $atstype.type, $lab.text);}
+    ;
+
+ats_sel_arr_ind returns [ATSNode node]
+    : ^(ATS_SEL_ARR_IND exp atstype ID) {node = new AtsSelArrIndNode($exp.node, $atstype.type, $ID.text);}
+    ;
+
+ats_sel_box_rec returns [ATSNode node]
+    : ^(ATS_SEL_BOX_REC exp atstype ID) {node = new AtsSelBoxRecNode($exp.node, $atstype.type, $ID.text);}
+    ;
+
+atom_exp returns [ATSNode node]
+    : ID     {node = new IdentifierNode($ID.text);}
+    | INT    {node = new ValueNode(IntType.fromString($INT.text));}
+    | FLOAT  {node = new ValueNode(FloatType.fromString($FLOAT.text));}
+    | CHAR   {node = new ValueNode(CharType.fromString($CHAR.text));}
+    | STRING {node = new ValueNode(StringType.fromString($STRING.text));} 
+    | Bool   {node = new ValueNode(BoolType.fromString($Bool.text));}
     ;
 
 func_call returns [ATSNode node]
@@ -195,49 +264,49 @@ kind_decorator returns [ATSType.Decorator kind]
     
 // todo
 prim_type returns [ATSType type]
-    : TYPE_INT {type = m_intType;}
-    | TYPE_CHAR
-    | TYPE_ULINT
-    | TYPE_BOOL
-    | TYPE_STRING
-    | TYPE_FLOAT
-    | TYPE_PTR
-    | TYPE_REF
-    | TYPE_ARRPTR
+    : TYPE_INT    {type = IntType.cType;}
+    | TYPE_CHAR   {type = CharType.cType;}
+    | TYPE_ULINT  {type = ULIntType.cType;}
+    | TYPE_BOOL   {type = BoolType.cType;}
+    | TYPE_STRING {type = StringType.cType;}
+    | TYPE_FLOAT  {type = FloatType.cType;}
+    | TYPE_PTR  // todo
+    | TYPE_REF  // todo
+    | TYPE_ARRPTR  // todo
     ;
 
 
 func_decl returns [ATSNode node]
-    : ^(FUNC_DECL ID fun_decorator? argtype arglst?) {node = new FuncNode ($ID.text, $fun_decorator.dec, $argtype.type, $arglst.arglst, null);}
+    : ^(FUNC_DECL ID func_decorator? atstype paralst?) {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, null);}
     ;
 
-argtype returns [ATSType type]
-    : ^(ARGTYPE arg_decorator? atstype) {type = new ArgType($arg_decorator.dec, $atstype.type);}
-    ;
-
-arg_decorator returns [ATSType.ArgDecorator dec]
-    : ARGTYPE_REF0 {dec = ATSType.ArgDecorator.REF0;}
-    | ARGTYPE_REF1 {dec = ATSType.ArgDecorator.REF1;}
+para_decorator returns [ATSType.ParaDecorator dec]
+    : PARA_TYPE_REF0 {dec = ATSType.ParaDecorator.REF0;}
+    | PARA_TYPE_REF1 {dec = ATSType.ParaDecorator.REF1;}
     ;
     
-fun_decorator returns [ATSNode.FunDecorator dec]
+func_decorator returns [ATSNode.FunDecorator dec]
     : GLOBAL {dec = ATSNode.FunDecorator.GLOBAL;}
     | STATIC {dec = ATSNode.FunDecorator.STATIC;}
     ;
     
-arglst returns [List<FuncPara> arglst]
+paralst returns [List<FuncPara> paralst]
 @init {
-  arglst = new ArrayList<FuncPara>();
+  paralst = new ArrayList<FuncPara>();
 }
-    : ^(ARG_LIST (arg {arglst.add($arg.arg);})+)
+    : ^(PARA_LIST (para {paralst.add($para.para);})+)
     ;
 
-arg returns [FuncPara arg]
-    : atstype ID {arg = new FuncPara($atstype.type, $ID.text);}
+para returns [FuncPara para]
+    : paratype ID {para = new FuncPara($paratype.type, $ID.text);}
+    ;
+
+paratype returns [ATSType type]
+    : ^(PARA_TYPE para_decorator? atstype) {type = new ParaType($para_decorator.dec, $atstype.type);}
     ;
     
 func_def returns [ATSNode node]
-    : ^(FUNC_DEF ID fun_decorator? argtype arglst? block) {node = new FuncNode ($ID.text, $fun_decorator.dec, $argtype.type, $arglst.arglst, $block.node);}
+    : ^(FUNC_DEF ID func_decorator? atstype paralst? block) {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
 
 type_def
@@ -297,19 +366,6 @@ struct_def returns [StructType type]
 //
 //type_arrpsz
 
-//typedef
-//struct {
-//  atstype_arrptr ptr ; atstype_size size ;
-//} atstype_arrpsz ;
-
-
-// #define atstkind_type(tk) tk
-// #define atstkind_t0ype(tk) tk
-
-// #define atsrefarg0_type(hit) hit
-// #define atsrefarg1_type(hit) hit*
-
-
 // -- example for tuple
 // generate a struct for each tuple type
 //typedef
@@ -318,6 +374,3 @@ struct_def returns [StructType type]
 //atstkind_t0ype(atstype_int) atslab$1; 
 //} postiats_tyrec_0 ;
 
-
- 
-// todo: Doesn't make sense that I cannot remove this rule.

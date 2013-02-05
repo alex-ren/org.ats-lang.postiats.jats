@@ -13,9 +13,10 @@ tokens {
   
   FUNC_DECL;
   FUNC_DEF;
-//  FUNC_CALL;
-//  EXP_LIST;
-  ARG_LIST;
+  FUNC_CALL;
+  
+  EXP_LIST;
+  PARA_LIST;
 
   GLOBAL;
   STATIC;
@@ -36,9 +37,9 @@ tokens {
   TYPE_DEC_TYPE;
   TYPE_DEC_T0YPE;
   
-  ARGTYPE;
-  ARGTYPE_REF0;
-  ARGTYPE_REF1;
+  PARA_TYPE;
+  PARA_TYPE_REF0;
+  PARA_TYPE_REF1;
   
   IFSTAT;
   IF;
@@ -57,6 +58,24 @@ tokens {
   ATSINS_MOVE_ARRPSZ_PTR;
   ATSINS_UPDATE_PTRINC;
   ATS_RETURN;
+  
+  ATSPMV_CASTFN;
+	ATSPMV_INT;
+	ATSPMV_TRUE;
+	ATSPMV_FALSE;
+	ATSPMV_CHAR;
+	ATSPMV_STRING;
+	ATSPMV_I0NT;
+	ATSPMV_F0LOAT;
+	ATSPMV_SIZEOF;
+	ATS_DEREF;
+	ATSPMV_REFARG0;
+	ATSPMV_REFARG1;
+	ATSPMV_PTROF;
+	ATS_SEL_RECSIN;
+	ATS_SEL_FLT_REC;
+	ATS_SEL_ARR_IND;
+	ATS_SEL_BOX_REC;
 }
 
 @header {
@@ -76,7 +95,7 @@ program
     ;
     
 stat_macro
-    : statement
+    : gstat
     | macro_area
     ;
     
@@ -85,11 +104,11 @@ macro_area
     | MACRO_INCLUDE^ STRING
     ;
 
-statement
-    : tmpdec Semicol
-    | fun_decorator? atstype ID LParen paralist? RParen
-        (Semicol -> ^(FUNC_DECL ID fun_decorator atstype paralist)
-        | LBrace block RBrace -> ^(FUNC_DEF ID fun_decorator atstype paralist block)
+gstat
+    : tmpdec Semicol!
+    | func_decorator? rettype=atstype ID LParen paralst? RParen
+        (Semicol -> ^(FUNC_DECL ID func_decorator? $rettype paralst?)
+        | LBrace block RBrace -> ^(FUNC_DEF ID func_decorator? $rettype paralst? block)
         )
     | typedef
     ;
@@ -108,29 +127,30 @@ tmpdec
     ;
     
 block
-    : bstat* -> ^(BLOCK bstat*)
+    : (bstat)* -> ^(BLOCK bstat*)
     ;
 
 bstat
-    : tmpdec Semicol
+    : tmpdec Semicol!
 
     | ifstat
     | whilestat
     | dowhilestat
-    | gototag
     
-    | atsins_load Semicol
-    | atsins_store Semicol
-    | atsins_store_arrpsz_asz Semicol
-    | atsins_store_arrpsz_ptr Semicol
-    | atsins_store_fltrec_ofs Semicol
-    | atsins_move Semicol
-    | atsins_move_void Semicol       
-    | atsins_pmove Semicol
-    | atsins_move_arrpsz_ptr Semicol    
-    | atsins_update_ptrinc Semicol
-    | ats_return Semicol
-    | ats_return_void Semicol
+    | gototag!  // Don't handle goto now.
+    
+    | atsins_load Semicol!
+    | atsins_store Semicol!
+    | atsins_store_arrpsz_asz Semicol!
+    | atsins_store_arrpsz_ptr Semicol!
+    | atsins_store_fltrec_ofs Semicol!
+    | atsins_move Semicol!
+    | atsins_move_void Semicol!
+    | atsins_pmove Semicol!
+    | atsins_move_arrpsz_ptr Semicol!
+    | atsins_update_ptrinc Semicol!
+    | ats_return Semicol!
+    | ats_return_void Semicol!
 //    | Return exp Semicol
     ;
     
@@ -159,8 +179,8 @@ atsins_move
     : 'ATSINSmove' LParen ID Comma exp RParen -> ^(ATSINS_MOVE ID exp)
     ;
 
-atsins_move_void:
-    'ATSINSmove_void' LParen ID Comma exp RParen -> ^(ATSINS_MOVE ID exp)
+atsins_move_void
+    : 'ATSINSmove_void' LParen ID Comma exp RParen -> ^(ATSINS_MOVE ID exp)
     ;
     
 atsins_pmove
@@ -180,7 +200,7 @@ ats_return
     ;
 
 ats_return_void
-    : 'ATSreturn_void' LParen exp RParen -> ^(ATS_RETURN)
+    : 'ATSreturn_void' LParen exp RParen -> ^(ATS_RETURN exp)
     ;
 
 ifstat
@@ -200,8 +220,9 @@ gototag
     : ID Colon -> ^(GOTOTAG ID)
     ;
         
-exp : fun_call
-    // ats spec
+exp 
+    : func_call
+    
     | ats_cast
     | ats_simple_cast
     | ats_sizeof
@@ -212,97 +233,97 @@ exp : fun_call
     | ats_sel_flt_rec
     | ats_sel_arr_ind
     | ats_sel_box_rec
+    
     | atom_exp
     ;
-
-ats_sel_flt_rec
-    : 'ATSselfltrec' LParen exp Comma atstype Comma ID RParen
-    ;
-
-ats_sel_arr_ind
-    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen
-    ;
-
-ats_sel_box_rec
-    : 'ATSselboxrec' LParen exp Comma atstype Comma ID RParen
-    ;
     
-ats_sel_recsin
-      : 'ATSselrecsin' LParen ID Comma atstype Comma ID RParen
-      ;
-      
-ats_pmv_ptrof
-    : 'ATSPMVptrof' LParen ID RParen
+ats_cast
+    : 'ATSPMVcastfn' LParen ID Comma atstype Comma exp RParen -> ^(ATSPMV_CASTFN ID atstype exp)
     ;
 
 ats_simple_cast
-    : 'ATSPMVint' LParen exp RParen 
-    | 'ATSPMVbool_true' LParen RParen
-    | 'ATSPMVbool_false' LParen RParen
-    | 'ATSPMVchar' LParen exp RParen
-    | 'ATSPMVstring' LParen exp RParen
-    | 'ATSPMVi0nt' LParen exp RParen
-    | 'ATSPMVf0loat' LParen exp RParen
+    : 'ATSPMVint' LParen exp RParen -> ^(ATSPMV_INT exp)
+    | 'ATSPMVbool_true' LParen RParen -> ATSPMV_TRUE
+    | 'ATSPMVbool_false' LParen RParen -> ATSPMV_FALSE
+    | 'ATSPMVchar' LParen exp RParen -> ^(ATSPMV_CHAR exp)
+    | 'ATSPMVstring' LParen exp RParen -> ^(ATSPMV_STRING exp)
+    | 'ATSPMVi0nt' LParen exp RParen -> ^(ATSPMV_I0NT exp)
+    | 'ATSPMVf0loat' LParen exp RParen -> ^(ATSPMV_F0LOAT exp)
     ;    
+
+ats_sizeof
+    : 'ATSPMVsizeof' LParen atstype RParen -> ^(ATSPMV_SIZEOF atstype)
+    ;
+    
+ats_deref
+    : 'ATSderef2' LParen exp Comma atstype RParen -> ^(ATS_DEREF atstype exp)
+    ;
+
+ats_ref_arg
+    : 'ATSPMVrefarg0' LParen exp RParen -> ^(ATSPMV_REFARG0 exp)
+    | 'ATSPMVrefarg1' LParen exp RParen -> ^(ATSPMV_REFARG1 exp)
+    ;
+   
+ats_pmv_ptrof
+    : 'ATSPMVptrof' LParen ID RParen -> ^(ATSPMV_PTROF ID)
+    ;
+    
+ats_sel_recsin
+      : 'ATSselrecsin' LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATS_SEL_RECSIN $pmv atstype $lab)
+      ;
+   
+ats_sel_flt_rec
+    : 'ATSselfltrec' LParen pmv=exp Comma atstype Comma lab=ID RParen -> ^(ATS_SEL_FLT_REC $pmv atstype $lab)
+    ;
+
+ats_sel_arr_ind
+    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_ARR_IND exp atstype ID)
+    ;
+
+ats_sel_box_rec
+    : 'ATSselboxrec' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_BOX_REC exp atstype ID)
+    ;
 
 atom_exp
     : INT
     | FLOAT
     | CHAR
     | STRING
+    | Bool    
     | ID
-    | Bool
-    | LParen exp RParen
+    | LParen! exp RParen!
     ;
 
-ats_ref_arg
-    : 'ATSPMVrefarg0' LParen exp RParen
-    | 'ATSPMVrefarg1' LParen exp RParen
+func_call
+    : ID LParen explst? RParen -> ^(FUNC_CALL ID explst?)
     ;
     
-ats_deref
-    : 'ATSderef2' LParen exp Comma atstype RParen
-    ;
-    
-ats_sizeof
-    : 'ATSPMVsizeof' LParen atstype RParen
-    ;
-    
-ats_cast
-    : 'ATSPMVcastfn' LParen ID Comma atstype Comma exp RParen
-    ;
-    
-    
-fun_call
-    : ID LParen arglist? RParen
-    ;
-    
-arglist
-    : exp (Comma exp)*
+explst
+    : exp (Comma exp)* -> ^(EXP_LIST exp+)
     ;
 
     
-//fun_header
-//    : fun_decorator? atstype ID LParen paralist? RParen
+//func_header
+//    : func_decorator? atstype ID LParen paralst? RParen
 //    ;
 
-paralist
-    : para (Comma para)* -> ^(ARG_LIST para+)
+paralst
+    : para (Comma para)* -> ^(PARA_LIST para+)
     ;
     
-para : argtype ID;
+para : paratype ID;
 
-argtype
-    : atstype -> ^(ARGTYPE atstype)
-    | argdecorator LParen atstype RParen -> ^(ARGTYPE argdecorator atstype)
+paratype
+    : atstype -> ^(PARA_TYPE atstype)
+    | para_decorator LParen atstype RParen -> ^(PARA_TYPE para_decorator atstype)
     ;
     
-argdecorator
-    : 'atsrefarg0_type' -> ARGTYPE_REF0
-    | 'atsrefarg1_type' -> ARGTYPE_REF1
+para_decorator
+    : 'atsrefarg0_type' -> PARA_TYPE_REF0
+    | 'atsrefarg1_type' -> PARA_TYPE_REF1
     ;
 
-fun_decorator
+func_decorator
     : 'ATSstaticdec()' -> ^(GLOBAL)  // same effect as GLOBAL
     | 'ATSglobaldec()' -> STATIC
     ;
@@ -418,15 +439,20 @@ WS  : ( ' '
       ;
 
 STRING
+@init { final StringBuilder buf = new StringBuilder(); }
     // :  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
-    : '"' ('0'..'9' | 'a'..'z' | 'A'..'Z' |
-           '`' | '~' | '!' | '@' | '#' | '$' | '%' | '^' | '&' | '*' | '(' | ')' | '-' |
-            '_' | '=' | '+' | '[' | '{' | ']' | '}' | '|' | ';' | ':' | ',' | '<' | '.' |
-            '/' | '?' | ' ' | ESC_SEQ  
-           )+ '"' { System.out.println(getText()); }
+    : '"' ( i=('0'..'9' | 'a'..'z' | 'A'..'Z' |
+               '`' | '~' | '!' | '@' | '#' | '$' | '%' | '^' | '&' | '*' | '(' | ')' | '-' |
+               '_' | '=' | '+' | '[' | '{' | ']' | '}' | '|' | ';' | ':' | ',' | '<' | '.' |
+               '/' | '?' | ' '
+              ) { buf.appendCodePoint(i); }
+             | ESC_SEQ [buf]
+           )+ '"' { setText(buf.toString()); /*System.out.println(getText());*/ } 
     ;
 
-CHAR:  '\'' ( ESC_SEQ | ~('\''|'\\') ) '\''
+CHAR
+@init { final StringBuilder buf = new StringBuilder(); }
+    : '\'' ( ESC_SEQ[buf] | i=~('\''|'\\') { buf.appendCodePoint(i); } ) '\''  { setText(buf.toString()); }
     ;
 
 
@@ -437,10 +463,18 @@ fragment
 HEX_DIGIT : ('0'..'9'|'a'..'f'|'A'..'F') ;
 
 fragment
-ESC_SEQ
-    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
-    |   UNICODE_ESC
-    |   OCTAL_ESC
+ESC_SEQ [StringBuilder buf]
+    :   '\\' ('b' { buf.append('\b'); }
+             |'t' { buf.append('\t'); }
+             |'n' { buf.append('\n'); }
+             |'f' { buf.append('\f'); }
+             |'r' { buf.append('\r'); }
+             |'\"'{ buf.append('\\'); }
+             |'\''{ buf.append('\''); }
+             |'\\'{ buf.append('\\'); }
+             )
+    |   UNICODE_ESC  // todo
+    |   OCTAL_ESC  // todo
     ;
 
 fragment

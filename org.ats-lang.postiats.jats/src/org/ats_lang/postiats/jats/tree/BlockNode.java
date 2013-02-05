@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ats_lang.postiats.jats.ATSScope;
@@ -11,7 +12,10 @@ public class BlockNode implements ATSNode {
     public void addStat(ATSNode stat) {
         m_statements.add(stat);
     }
-
+    
+    public BlockNode() {
+        m_statements = new ArrayList();
+    }
     
     @Override
     public ATSValue evaluate(ATSScope scope) {

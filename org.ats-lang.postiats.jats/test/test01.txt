@@ -1,31 +1,8 @@
+atstkind_type(atstype_ptrk)
+xxx (atstkind_type(atstype_ptrk) arg0, atstkind_t0ype(atstype_int) arg1)
+{
 
-int main () {
-/*
-ATSINStmpdec(tmp0)) ;
-*/
-ATSINSstore_arrpsz_asz(tmp0, 3) ;
-ATSINSstore_arrpsz_ptr(tmp0, atstkind_t0ype(atstype_double), 3) ;
-ATSINSmove_arrpsz_ptr(tmp1, tmp0) ;
-ATSINSpmove(tmp1, atstkind_t0ype(atstype_double), ATSPMVf0loat(1.0)) ;
-ATSINSupdate_ptrinc(tmp1, atstkind_t0ype(atstype_double)) ;
-ATSINSpmove(tmp1, atstkind_t0ype(atstype_double), ATSPMVf0loat(2.0)) ;
-ATSINSupdate_ptrinc(tmp1, atstkind_t0ype(atstype_double)) ;
-ATSINSpmove(tmp1, atstkind_t0ype(atstype_double), ATSPMVf0loat(3.0)) ;
-/*
-ATSINStmpdec(tmp2)) ;
-*/
-ATSINSmove(tmp3, atspre_arrpsz_get_ptrsize(tmp0, ATSPMVrefarg1(ATSPMVptrof(tmp2)))) ;  // tmp3 holds the ptr to the array
-ATSINSmove_void(tmp4, atspre_print_string(ATSPMVstring("A[0] = "))) ;
-ATSINSmove(tmp6, _057$home_057$hwxi_057$research_057$Postiats_057$git_057$prelude_057$SATS_057$arrayptr_056$sats__arrayptr_get_at_gint$0$1(ATSPMVrefarg0(tmp3), ATSPMVi0nt(0))) ;
-ATSINSmove_void(tmp5, atspre_print_double(tmp6)) ;
-ATSINSmove_void(tmp25, atspre_print_newline()) ;
-ATSINSmove_void(tmp26, atspre_print_string(ATSPMVstring("A[1] = "))) ;
-ATSINSmove(tmp28, _057$home_057$hwxi_057$research_057$Postiats_057$git_057$prelude_057$SATS_057$arrayptr_056$sats__arrayptr_get_at_gint$0$2(ATSPMVrefarg0(tmp3), ATSPMVi0nt(1))) ;
-ATSINSmove_void(tmp27, atspre_print_double(tmp28)) ;
-ATSINSmove_void(tmp38, atspre_print_newline()) ;
-ATSINSmove_void(tmp39, atspre_print_string(ATSPMVstring("A[2] = "))) ;
-ATSINSmove(tmp41, _057$home_057$hwxi_057$research_057$Postiats_057$git_057$prelude_057$SATS_057$arrayptr_056$sats__arrayptr_get_at_gint$0$3(ATSPMVrefarg0(tmp3), ATSPMVi0nt(2))) ;
-ATSINSmove_void(tmp40, atspre_print_double(tmp41)) ;
-ATSINSmove_void(tmp51, atspre_print_newline()) ;
-return 0 ;
+ATSINSmove(tmp16$1, ATSPMVsizeof(atstkind_t0ype(atstype_double))) ;
+ATSINSmove(tmp15$1, atspre_ptr0_add_bytesize(arg0, tmp16$1)) ;
+
 }

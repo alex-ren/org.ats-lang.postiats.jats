@@ -3,13 +3,14 @@ package org.ats_lang.postiats.jats;
 import java.io.IOException;
 
 import org.antlr.runtime.ANTLRFileStream;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import org.ats_lang.postiats.jats.parser.*;
+import org.ats_lang.postiats.jats.tree.ATSNode;
 
 
 public class Test {
@@ -20,17 +21,27 @@ public class Test {
      * @throws IOException 
      */
     public static void main(String[] args) throws RecognitionException, IOException {
-        CharStream charStream = new ANTLRStringStream("\"ddd\" dd");
-        // CharStream charStream1 = new ANTLRFileStream("test.iats");
-        ATSILLexer lexer = new ATSILLexer(charStream );
+        String [] files = {"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c"};
         
-        TokenStream tokenStream = new CommonTokenStream(lexer);
-        ATSILParser parser = new ATSILParser(tokenStream );
-        
-        
-        parser.rule();
-        System.out.println("O.K.");
+        for (String file: files) {
+            ANTLRFileStream fileStream = new ANTLRFileStream(file);
+            ATSILLexer lexer = new ATSILLexer(fileStream);
+            TokenStream tokenStream = new CommonTokenStream(lexer);
+            ATSILParser parser = new ATSILParser(tokenStream);
+            ATSILParser.rule_return parser_ret = parser.rule();
+            
+            CommonTree tree = (CommonTree)parser_ret.getTree();
+            CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+            
+            ATSILInterpreter walker = new ATSILInterpreter(nodes);
+            
+            // get the returned node 
+            ATSNode returned = walker.program();
+            
+            System.out.println(file + " is O.K.");
+        }
     }
 
+    
 }
 
