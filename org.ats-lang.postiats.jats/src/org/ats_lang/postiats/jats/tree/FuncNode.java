@@ -24,6 +24,10 @@ public class FuncNode implements ATSNode {
         m_body = body;
     }
     
+    public String getName() {
+        return m_id;
+    }
+    
     public boolean isDecl() {
         if (null == m_body) {
             return true;

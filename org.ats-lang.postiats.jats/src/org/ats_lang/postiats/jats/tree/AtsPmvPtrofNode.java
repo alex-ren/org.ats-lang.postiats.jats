@@ -1,6 +1,9 @@
 package org.ats_lang.postiats.jats.tree;
 
+import java.util.Map;
+
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
 public class AtsPmvPtrofNode implements ATSNode {
@@ -11,7 +14,8 @@ public class AtsPmvPtrofNode implements ATSNode {
     }
 
     @Override
-    public ATSValue evaluate(ATSScope scope) {
+    // #define ATSPMVptrof(lval) (&(lval))
+    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncNode> funcs, ATSScope scope)x {
         // TODO Auto-generated method stub
         return null;
     }

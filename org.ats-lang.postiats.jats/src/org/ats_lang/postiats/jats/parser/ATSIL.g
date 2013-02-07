@@ -403,7 +403,7 @@ LBracket  : '[';
 RBracket  : ']';  
 LParen    : '(';  
 RParen    : ')';  
-Assign    : '=';  
+// Assign    : '=';  
 Comma     : ',';  
 QMark     : '?';  
   

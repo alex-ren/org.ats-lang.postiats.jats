@@ -22,9 +22,22 @@ options {
 
 @members {
     private Map<String, ATSType> m_types = new HashMap<String, ATSType>();
+    private Map<String, FuncNode> m_funcs = new HashMap<String, FuncNode>();
     
     private void defineType(String id, ATSType type) {
         m_types.put(id, type);
+    }
+    
+    private void defineFunc(FuncNode func) {
+        m_funcs.put(func.getName(), func);
+    }
+    
+    public Map<String, ATSType> getTypes() {
+        return m_types;
+    }
+    
+    public Map<String, FuncNode> getFuncs() {
+        return m_funcs;
     }
 }
 
@@ -35,9 +48,11 @@ program returns [ATSNode node]
   ProgramNode pn = new ProgramNode();
   node = pn;
 }
-    : ^(PROGRAM (p=program {pn.addProg($p.node);} 
-                 | type_def {}
-                 | minclude {}
+    : ^(PROGRAM (p=program {pn.addProg($p.node);}
+                 | type_def
+                 | func_decl  // omit declaration
+                 | func_def  {defineFunc($func_def.node);}
+                 | minclude
                  | gstat {pn.addStat($gstat.node);}
                  )*
         )
@@ -47,10 +62,7 @@ program returns [ATSNode node]
 
 
 gstat returns [ATSNode node]
-    : func_decl  {node = $func_decl.node;}
-    | func_def {node = $func_def.node;}
-    | var_def  {node = $var_def.node;}
-    | var_assign {node = $var_assign.node;}
+    : var_def  {node = $var_def.node;} //    | var_assign {node = $var_assign.node;} no assignment for global variable
     ;
 
 minclude
@@ -148,9 +160,9 @@ elseStat [IfNode parent]
     : ^(ELSE block)  {parent.addElse($block.node);}
     ;
 
-assignment returns [ATSNode node]
-    : ^(ASSIGNMENT ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
-    ;
+//assignment returns [ATSNode node]
+//    : ^(Assign ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
+//    ;
     
 exp returns [ATSNode node]
     : func_call {node = $func_call.node;}
@@ -239,9 +251,9 @@ explst returns [List<ATSNode> lst]
     : ^(EXP_LIST (exp {es.add($exp.node);})+)
     ;
     
-var_assign returns [ATSNode node]
-    : ^(ASSIGN ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
-    ;
+//var_assign returns [ATSNode node]
+//    : ^(ASSIGN ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
+//    ;
     
 var_def returns [ATSNode node]
     : ^(VAR atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
@@ -276,7 +288,7 @@ prim_type returns [ATSType type]
     ;
 
 
-func_decl returns [ATSNode node]
+func_decl returns [FuncNode node]
     : ^(FUNC_DECL ID func_decorator? atstype paralst?) {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, null);}
     ;
 
@@ -305,12 +317,13 @@ paratype returns [ATSType type]
     : ^(PARA_TYPE para_decorator? atstype) {type = new ParaType($para_decorator.dec, $atstype.type);}
     ;
     
-func_def returns [ATSNode node]
-    : ^(FUNC_DEF ID func_decorator? atstype paralst? block) {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
+func_def returns [FuncNode node]
+    : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
+      {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
 
 type_def
-    : ^(TYPEDEF ID struct_def) {m_types.put($ID.text, $struct_def.type);}
+    : ^(TYPEDEF ID struct_def) {defineType($ID.text, $struct_def.type);}
     ;
 
 struct_def returns [StructType type]
@@ -374,3 +387,5 @@ struct_def returns [StructType type]
 //atstkind_t0ype(atstype_int) atslab$1; 
 //} postiats_tyrec_0 ;
 
+// Why do I need this?
+dd: 'ddd';

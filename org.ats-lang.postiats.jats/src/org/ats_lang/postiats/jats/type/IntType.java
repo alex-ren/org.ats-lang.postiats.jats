@@ -6,15 +6,14 @@ public class IntType implements ATSType {
     
     public static final IntType cType = new IntType();
     
+    private IntType() {}
+    
     public static ATSValue fromString(String text) {
         return new ATSValue(IntType.cType, new Integer(text));
     }
     
-    public IntType() {}
-    
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
         return 4;
     }
 

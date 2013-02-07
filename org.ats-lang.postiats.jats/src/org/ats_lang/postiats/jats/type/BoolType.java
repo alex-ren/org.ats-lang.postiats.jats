@@ -13,11 +13,10 @@ public class BoolType implements ATSType {
         return new ATSValue(BoolType.cType, false);
     }
     
-    public BoolType() {}
+    private BoolType() {}
     
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
         return 1;
     }
 

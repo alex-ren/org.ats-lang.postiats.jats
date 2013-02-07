@@ -6,10 +6,11 @@ public class ULIntType implements ATSType {
 
     public static final ULIntType cType = new ULIntType();
     
+    private ULIntType() {}
+    
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 4;
     }
 
     public static ATSValue fromString(String text) {

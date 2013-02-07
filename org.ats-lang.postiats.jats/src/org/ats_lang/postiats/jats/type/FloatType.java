@@ -6,10 +6,11 @@ public class FloatType implements ATSType {
     
     public static final FloatType cType = new FloatType();
 
+    private FloatType () {}
+    
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 8;
     }
 
     public static ATSValue fromString(String text) {

@@ -6,9 +6,11 @@ public class F0loatType implements ATSType {
 
     public static final F0loatType cType = new F0loatType();
 
+    private F0loatType () {}
+    
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
+
         return 8;
     }
 

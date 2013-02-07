@@ -17,8 +17,11 @@ public class StructType implements ATSType {
 
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        int accu = 0;
+        for (Pair p: m_members) {
+            accu += p.m_ty.getSize();            
+        }
+        return accu;
     }
     
     private class Pair {

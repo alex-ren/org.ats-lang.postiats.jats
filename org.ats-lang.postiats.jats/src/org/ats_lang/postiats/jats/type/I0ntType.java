@@ -6,9 +6,10 @@ public class I0ntType implements ATSType {
     
     public static final I0ntType cType = new I0ntType();
 
+    private I0ntType () {}
+    
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
         return 4;
     }
 

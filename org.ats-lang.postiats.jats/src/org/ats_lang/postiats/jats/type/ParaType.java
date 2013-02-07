@@ -13,8 +13,7 @@ public class ParaType implements ATSType {
     
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return m_type.getSize();
     }
 
 }
