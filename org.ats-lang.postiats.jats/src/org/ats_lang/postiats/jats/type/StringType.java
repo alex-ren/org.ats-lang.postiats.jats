@@ -6,6 +6,8 @@ public class StringType implements ATSType {
 
     public static final StringType cType = new StringType();
     
+    private StringType() {}
+    
     @Override
     public int getSize() {
         return 4;
