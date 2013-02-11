@@ -17,4 +17,8 @@ public class StringType implements ATSType {
         return new ATSValue(StringType.cType, text);
     }
 
+	@Override
+	public void deepcopy(ATSValue dest, ATSValue src) {
+		dest.updateContent(src.getContent());		
+	}
 }

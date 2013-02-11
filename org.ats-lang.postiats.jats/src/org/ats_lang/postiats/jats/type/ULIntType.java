@@ -17,4 +17,8 @@ public class ULIntType implements ATSType {
         return new ATSValue(ULIntType.cType, new Integer(text));
     }
 
+	@Override
+	public void deepcopy(ATSValue dest, ATSValue src) {
+		dest.updateContent(src.getContent());		
+	}
 }

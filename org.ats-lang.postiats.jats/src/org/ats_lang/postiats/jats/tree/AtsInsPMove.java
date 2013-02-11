@@ -16,11 +16,20 @@ public class AtsInsPMove implements ATSNode {
         m_hit = hit;
         m_val = val;
     }
+    
     @Override
     // #define ATSINSpmove(tmp, hit, val) (*(hit*)tmp = val)
-    // public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncNode> funcs, ATSScope scope) {
-        // TODO Auto-generated method stub
-        return null;
+    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncNode> funcs, ATSScope scope) {
+        if (m_tmp instanceof IdentifierNode) {
+            ATSValue val_v = m_val.evaluate(types, funcs, scope);
+            ATSValue tmp_ptr = (ATSValue)scope.getValue(((IdentifierNode)m_tmp).getName());
+            ATSValue tmp_v = (ATSValue)tmp_ptr.getContent();
+            tmp_v.copyfrom(val_v);
+            
+            return ATSValue.VOID;
+        } else {
+            throw new Error("ATSINSpmove: only name is supported now");
+        }
     }
-
+    
 }

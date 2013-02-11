@@ -12,4 +12,8 @@ public class PtrType implements ATSType {
         return 4;
     }
 
+	@Override
+	public void deepcopy(ATSValue dest, ATSValue src) {
+		dest.updateContent(src.getContent());		
+	}
 }

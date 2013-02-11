@@ -1,4 +1,4 @@
-tree grammar ATSILInterpreter;
+tree grammar ATSILInterpreter; 
 
 options {
   language = Java;

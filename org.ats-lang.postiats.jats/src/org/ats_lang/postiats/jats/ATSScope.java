@@ -28,10 +28,12 @@ public class ATSScope {
     public void updateValue(String id, ATSValue v) {
         if (m_vars.containsKey(id)) {
             ATSValue lvalue = m_vars.get(id);
-            lvalue.update(v);
+            lvalue.copyfrom(v);
         }
         else if (m_parent != null) {
             m_parent.updateValue(id, v);
+        } else {
+        	throw new Error("Variable doesn't exist.");
         }
     }
     
@@ -74,7 +76,7 @@ public class ATSScope {
 //    }
 
     public ATSScope parent() {
-        return parent;
+        return m_parent;
     }
 
 //    private void reAssign(String identifier, TLValue value) {

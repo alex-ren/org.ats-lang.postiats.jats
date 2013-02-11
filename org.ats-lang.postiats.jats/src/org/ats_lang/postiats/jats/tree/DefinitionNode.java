@@ -21,6 +21,7 @@ public class DefinitionNode implements ATSNode {
         return m_id;
     }
     
+    // todo initialization is VIP.
     @Override
     public ATSValue evaluate(ATSScope scope) {
         // TODO Auto-generated method stub

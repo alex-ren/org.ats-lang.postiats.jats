@@ -17,4 +17,8 @@ public class FloatType implements ATSType {
         return new ATSValue(FloatType.cType, new Float(text));
     }
 
+	@Override
+	public void deepcopy(ATSValue dest, ATSValue src) {
+		dest.updateContent(src.getContent());		
+	}
 }
