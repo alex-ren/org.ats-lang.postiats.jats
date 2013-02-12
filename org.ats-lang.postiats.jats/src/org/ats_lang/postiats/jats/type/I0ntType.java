@@ -1,25 +1,26 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class I0ntType implements ATSType {
     
     public static final I0ntType cType = new I0ntType();
 
     private I0ntType () {}
+
+    public static PrimValue fromString(String text) {
+        return new PrimValue(new Integer(text));
+    }
     
     @Override
     public int getSize() {
         return 4;
     }
 
-    public static ATSValue fromString(String text) {
-        return new ATSValue(I0ntType.cType, new Integer(text));
+    @Override
+    public PrimValue createDefault() {
+        return new PrimValue(new Integer(0));
     }
 
-	@Override
-	public void deepcopy(ATSValue dest, ATSValue src) {
-		dest.updateContent(src.getContent());		
-	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsLoad implements ATSNode {
     private ATSNode m_tmp;
@@ -22,7 +23,7 @@ public class AtsInsLoad implements ATSNode {
         if (m_tmp instanceof IdentifierNode) {
             ATSValue v = m_pmv.evaluate(types, funcs, scope);
             scope.updateValue(((IdentifierNode)m_tmp).getName(), v);
-            return ATSValue.VOID;
+            return SingletonValue.VOID;
         } else {
             throw new Error("AtsInsLoad: only name is supported now");
         }

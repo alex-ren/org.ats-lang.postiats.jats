@@ -1,20 +1,19 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class BoolType implements ATSType {
     public static final BoolType cType = new BoolType();
     
-    public static ATSValue createTrue() {
+    public static PrimValue createTrue() {
         return new PrimValue(true);
     }
     
-    public static ATSValue createFalse() {
+    public static PrimValue createFalse() {
         return new PrimValue(false);
     }
 
-    public static ATSValue fromString(String text) {
+    public static PrimValue fromString(String text) {
         
         return new PrimValue(new Boolean(text));
     }

@@ -21,8 +21,8 @@ options {
 }
 
 @members {
-    private Map<String, ATSType> m_types = new HashMap<String, ATSType>();
-    private Map<String, FuncNode> m_funcs = new HashMap<String, FuncNode>();
+    private Map<String, ATSType> m_types;
+    private Map<String, FuncNode> m_funcs;
     
     private void defineType(String id, ATSType type) {
         m_types.put(id, type);
@@ -38,6 +38,14 @@ options {
     
     public Map<String, FuncNode> getFuncs() {
         return m_funcs;
+    }
+    
+    public void setTypes(Map<String, ATSType> types) {
+        m_types = types;
+    }
+    
+    public void setFuncs(Map<String, FuncNode> funcs) {
+        m_funcs = funcs;
     }
 }
 
@@ -114,8 +122,8 @@ atsins_store_arrpsz_ptr returns [ATSNode node]
     ;
     
 atsins_store_fltrec_ofs returns [ATSNode node]
-    : ^(ATSINS_STORE_FLTREC_OFS ida=ID atstype idb=ID exp)
-      {node = new AtsInsStoreFltrecOfs($ida.text, $atstype.type, $idb.text, $exp.node);}
+    : ^(ATSINS_STORE_FLTREC_OFS tmp=ID atstype lab=ID exp)
+      {node = new AtsInsStoreFltrecOfs($tmp.text, $atstype.type, $lab.text, $exp.node);}
     ;
     
 atsins_move returns [ATSNode node]
@@ -388,4 +396,4 @@ struct_def returns [StructType type]
 //} postiats_tyrec_0 ;
 
 // Why do I need this?
-dd: 'ddd';
+dd: 'ddd'; 

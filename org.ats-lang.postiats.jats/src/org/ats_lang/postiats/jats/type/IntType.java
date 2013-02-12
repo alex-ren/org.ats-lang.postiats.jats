@@ -1,6 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class IntType implements ATSType {
     
@@ -8,8 +8,8 @@ public class IntType implements ATSType {
     
     private IntType() {}
     
-    public static ATSValue fromString(String text) {
-        return new ATSValue(IntType.cType, new Integer(text));
+    public static PrimValue fromString(String text) {
+        return new PrimValue(new Integer(text));
     }
     
     @Override
@@ -17,8 +17,8 @@ public class IntType implements ATSType {
         return 4;
     }
 
-	@Override
-	public void deepcopy(ATSValue dest, ATSValue src) {
-		dest.updateContent(src.getContent());		
-	}
+    @Override
+    public PrimValue createDefault() {
+        return new PrimValue(new Integer(0));
+    }
 }

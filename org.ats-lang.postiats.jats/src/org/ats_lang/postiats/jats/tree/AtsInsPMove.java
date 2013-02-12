@@ -5,6 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsPMove implements ATSNode {
     private ATSNode m_tmp;
@@ -26,7 +27,7 @@ public class AtsInsPMove implements ATSNode {
             ATSValue tmp_v = (ATSValue)tmp_ptr.getContent();
             tmp_v.copyfrom(val_v);
             
-            return ATSValue.VOID;
+            return SingletonValue.VOID;
         } else {
             throw new Error("ATSINSpmove: only name is supported now");
         }

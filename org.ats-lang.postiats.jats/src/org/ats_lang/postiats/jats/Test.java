@@ -1,6 +1,8 @@
 package org.ats_lang.postiats.jats;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -11,6 +13,8 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import org.ats_lang.postiats.jats.parser.*;
 import org.ats_lang.postiats.jats.tree.ATSNode;
+import org.ats_lang.postiats.jats.tree.FuncNode;
+import org.ats_lang.postiats.jats.type.ATSType;
 
 
 public class Test {
@@ -35,7 +39,15 @@ public class Test {
             
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
             
-            // get the returned node 
+            // get the returned node
+            Map<String, ATSType> types = new HashMap<String, ATSType>();
+            Map<String, FuncNode> funcs = new HashMap<String, FuncNode>();
+            // todo
+            // add types and functions to walker
+            
+            walker.setTypes(types);
+            walker.setFuncs(funcs);
+            
             ATSNode returned = walker.program();
             
             System.out.println(file + " is O.K.");

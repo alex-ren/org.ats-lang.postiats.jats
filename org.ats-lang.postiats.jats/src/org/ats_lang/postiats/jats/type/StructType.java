@@ -1,9 +1,10 @@
 package org.ats_lang.postiats.jats.type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.StructValue;
 
 public class StructType implements ATSType {
     private List<Pair> m_members;
@@ -35,15 +36,12 @@ public class StructType implements ATSType {
         }
     }
 
-	@Override
-	public void deepcopy(ATSValue dest, ATSValue src) {
-		Map<String, ATSValue> src_map = (Map<String, ATSValue>)(src.getContent());
-		Map<String, ATSValue> dest_map = (Map<String, ATSValue>)(dest.getContent());
-		
-		for (Pair p : m_members)
-		{
-			dest_map.get(p.m_id).copyfrom(src_map.get(p.m_id));
-		}
-
-	}
+    @Override
+    public StructValue createDefault() {
+        HashMap<String, ATSValue> map = new HashMap<String, ATSValue>();
+        for (Pair p: m_members) {
+            map.put(p.m_id, p.m_ty.createDefault());
+        }
+        return new StructValue(this, map);
+    }
 }

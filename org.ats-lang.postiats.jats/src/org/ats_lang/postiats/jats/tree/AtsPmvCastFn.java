@@ -5,14 +5,20 @@ import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
 public class AtsPmvCastFn implements ATSNode {
-    protected String m_id;
-    protected ATSType m_type;
-    protected ATSNode m_node;
+    protected String m_d2c;
+    protected ATSType m_hit;
+    protected ATSNode m_arg;
     
-    public AtsPmvCastFn(String id, ATSType type, ATSNode node) {
-        m_id = id;
-        m_type = type;
-        m_node = node;
+    // #define ATSPMVcastfn(d2c, hit, arg) ((hit*)arg)
+    // example
+    // 
+//    typedef void *atstype_ptrk ;
+//    ATStmpdec(tmp12$2, atstkind_type(atstype_ptrk)) ;
+//    ATSPMVcastfn(cast, atstkind_type(atstype_ptrk), tmp12$2)
+    public AtsPmvCastFn(String d2c, ATSType hit, ATSNode arg) {
+        m_d2c = d2c;
+        m_hit = hit;
+        m_arg = arg;
     }
     
     @Override

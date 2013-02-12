@@ -1,19 +1,17 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.PtrValue;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class PtrType implements ATSType {
-    public static final PtrType cType = new PtrType();
-    
-    private PtrType() {}
-    
+
     @Override
     public int getSize() {
         return 4;
     }
 
-	@Override
-	public void deepcopy(ATSValue dest, ATSValue src) {
-		dest.updateContent(src.getContent());		
-	}
+    @Override
+    public PtrValue createDefault() {
+        return new PtrValue(SingletonValue.VOID);
+    }
 }
