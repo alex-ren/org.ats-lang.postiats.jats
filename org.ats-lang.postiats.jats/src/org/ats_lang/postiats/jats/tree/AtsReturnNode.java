@@ -1,7 +1,12 @@
 package org.ats_lang.postiats.jats.tree;
 
+import java.util.Map;
+
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.FuncDef;
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.ReturnValue;
 
 public class AtsReturnNode implements ATSNode {
     private ATSNode m_exp;
@@ -10,11 +15,14 @@ public class AtsReturnNode implements ATSNode {
         m_exp = exp;
     }
     
-
+    // #define ATSreturn(x) return (x)
+    // sample
+    // ATSreturn(tmp21$1) ;
     @Override
-    public ATSValue evaluate(ATSScope scope) {
-        // TODO Auto-generated method stub
-        return null;
+    public ATSValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope scope) {
+        ATSValue v = m_exp.evaluate(types, funcs, scope);
+        return new ReturnValue(v);
     }
 
 }

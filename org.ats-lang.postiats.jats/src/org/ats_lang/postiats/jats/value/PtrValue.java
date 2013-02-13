@@ -19,6 +19,12 @@ public class PtrValue implements ATSValue {
         m_arr = arr;
         m_ind = 0;      
     }
+    
+    private PtrValue(ATSValue mem, ArrayValue arr, int ind) {
+        m_mem = mem;
+        m_arr = arr;
+        m_ind = ind;
+    }
 
     // v is actually an element of arr
     public PtrValue(ArrayValue arr, int ind) {
@@ -51,5 +57,10 @@ public class PtrValue implements ATSValue {
 	public ATSValue getContent() {
 		return m_mem;
 	}
+
+    @Override
+    public ATSValue deepcopy() {
+        return new PtrValue(m_mem, m_arr, m_ind);
+    }
 
 }

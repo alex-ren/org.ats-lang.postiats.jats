@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.value;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.type.StructType;
@@ -15,6 +16,10 @@ public class StructValue implements ATSValue {
 	
 	public void updateItem(String id, ATSValue v) {
 	    m_mem.get(id).copyfrom(v);
+	}
+	
+	public ATSValue getItem(String id) {
+	    return m_mem.get(id);
 	}
 
 	@Override
@@ -35,5 +40,15 @@ public class StructValue implements ATSValue {
 	public Map<String, ATSValue> getContent() {
 		return m_mem;
 	}
+
+    @Override
+    public ATSValue deepcopy() {
+        Map<String, ATSValue> mem = new HashMap<String, ATSValue>();
+        for (Map.Entry<String, ATSValue> entry: m_mem.entrySet()) {
+            mem.put(entry.getKey(), entry.getValue().deepcopy());
+        }
+        
+        return new StructValue(m_type, mem);
+    }
 
 }

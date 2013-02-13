@@ -3,6 +3,7 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
@@ -18,7 +19,7 @@ public class AtsInsStore implements ATSNode {
     
     @Override
     // #define ATSINSstore(pmv1, pmv2) (pmv1 = pmv2)
-    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncNode> funcs, ATSScope scope) {
+    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope scope) {
         if (m_pmv1 instanceof IdentifierNode) {
             ATSValue v = m_pmv2.evaluate(types, funcs, scope);
             scope.updateValue(((IdentifierNode)m_pmv1).getName(), v);

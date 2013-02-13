@@ -18,8 +18,12 @@ public class SingletonValue implements ATSValue {
 
 	@Override
 	public Object getContent() {
-		// TODO Auto-generated method stub
 		throw new Error("Singleton Value.");
 	}
+
+    @Override
+    public ATSValue deepcopy() {
+        throw new Error("Singleton Value.");
+    }
 
 }

@@ -6,3 +6,6 @@ ATSINSmove(tmp16$1, ATSPMVsizeof(atstkind_t0ype(atstype_double))) ;
 ATSINSmove(tmp15$1, atspre_ptr0_add_bytesize(arg0, tmp16$1)) ;
 
 }
+
+int main() {
+}

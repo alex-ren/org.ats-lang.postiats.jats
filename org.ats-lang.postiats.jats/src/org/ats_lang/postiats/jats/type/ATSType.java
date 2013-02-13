@@ -7,8 +7,7 @@ import org.ats_lang.postiats.jats.value.ATSValue;
  */
 
 public interface ATSType {
-    public enum Decorator {TYPE, T0YPE};
-    public enum ParaDecorator {REF0, REF1};
+    static public enum Decorator {TYPE, T0YPE};
     
 	public int getSize();
 	

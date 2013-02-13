@@ -1,22 +1,26 @@
 package org.ats_lang.postiats.jats.tree;
 
+import java.util.Map;
+
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
 public class AtsPmvRefArg implements ATSNode {
-    
-    private ATSType.ParaDecorator m_dec;
     private ATSNode m_node;
 
-    public AtsPmvRefArg(ATSType.ParaDecorator dec, ATSNode node) {
-        m_dec = dec;
+    public AtsPmvRefArg(ATSNode node) {
         m_node = node;
     }
+    
     @Override
-    public ATSValue evaluate(ATSScope scope) {
-        // TODO Auto-generated method stub
-        return null;
+    // #define ATSPMVrefarg0(val) (val)
+    // #define ATSPMVrefarg1(ref) (ref)
+    // no-op
+    public ATSValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope scope) {
+        return m_node.evaluate(types, funcs, scope);
     }
 
 }

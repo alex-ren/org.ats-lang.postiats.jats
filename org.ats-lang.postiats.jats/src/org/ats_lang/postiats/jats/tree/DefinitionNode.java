@@ -1,8 +1,12 @@
 package org.ats_lang.postiats.jats.tree;
 
+import java.util.Map;
+
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class DefinitionNode implements ATSNode {
     private ATSType m_ty;
@@ -21,11 +25,11 @@ public class DefinitionNode implements ATSNode {
         return m_id;
     }
     
-    // todo initialization is VIP.
     @Override
-    public ATSValue evaluate(ATSScope scope) {
-        // TODO Auto-generated method stub
-        return null;
+    public ATSValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope scope) {
+        scope.addValue(m_id, m_ty.createDefault());
+        return SingletonValue.VOID;
     }
 
 }

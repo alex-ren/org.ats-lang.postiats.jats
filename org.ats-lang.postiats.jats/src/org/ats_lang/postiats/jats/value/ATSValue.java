@@ -19,6 +19,10 @@ public interface ATSValue {
     public void copyfrom(ATSValue v);
     
     public Object getContent();
+    
+    public ATSValue deepcopy();
+    
+
 }
 
 

@@ -22,13 +22,13 @@ options {
 
 @members {
     private Map<String, ATSType> m_types;
-    private Map<String, FuncNode> m_funcs;
+    private Map<String, FuncDef> m_funcs;
     
     private void defineType(String id, ATSType type) {
         m_types.put(id, type);
     }
     
-    private void defineFunc(FuncNode func) {
+    private void defineFunc(FuncDef func) {
         m_funcs.put(func.getName(), func);
     }
     
@@ -36,7 +36,7 @@ options {
         return m_types;
     }
     
-    public Map<String, FuncNode> getFuncs() {
+    public Map<String, FuncDef> getFuncs() {
         return m_funcs;
     }
     
@@ -44,13 +44,13 @@ options {
         m_types = types;
     }
     
-    public void setFuncs(Map<String, FuncNode> funcs) {
+    public void setFuncs(Map<String, FuncDef> funcs) {
         m_funcs = funcs;
     }
 }
 
 // START:rules
-program returns [ATSNode node]
+program returns [ProgramNode node]
 @init {
 
   ProgramNode pn = new ProgramNode();
@@ -59,7 +59,7 @@ program returns [ATSNode node]
     : ^(PROGRAM (p=program {pn.addProg($p.node);}
                  | type_def
                  | func_decl  // omit declaration
-                 | func_def  {defineFunc($func_def.node);}
+                 | func_def  {defineFunc($func_def.definition);}
                  | minclude
                  | gstat {pn.addStat($gstat.node);}
                  )*
@@ -69,7 +69,7 @@ program returns [ATSNode node]
 
 
 
-gstat returns [ATSNode node]
+gstat returns [DefinitionNode node]
     : var_def  {node = $var_def.node;} //    | var_assign {node = $var_assign.node;} no assignment for global variable
     ;
 
@@ -77,7 +77,7 @@ minclude
     : ^(MACRO_INCLUDE STRING)
     ;
 
-block returns [ATSNode node]
+block returns [BlockNode node]
 @init {
   BlockNode bn = new BlockNode();
   node = bn;
@@ -105,48 +105,48 @@ atsins returns [ATSNode node]
     | ats_return {node = $ats_return.node;}
     ;
 
-atsins_load returns [ATSNode node]
+atsins_load returns [AtsInsLoad node]
     : ^(ATSINS_LOAD dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
     ;
     
-atsins_store returns [ATSNode node]
+atsins_store returns [AtsInsStore node]
     : ^(ATSINS_STORE dest=exp cont=exp) {node = new AtsInsStore($dest.node, $cont.node);}
     ;
     
-atsins_store_arrpsz_asz returns [ATSNode node]
+atsins_store_arrpsz_asz returns [AtsInsStoreArrpszAsz node]
     : ^(ATSINS_STORE_ARRPSZ_ASZ ID exp) {node = new AtsInsStoreArrpszAsz($ID.text, $exp.node);}
     ;
     
-atsins_store_arrpsz_ptr returns [ATSNode node]
+atsins_store_arrpsz_ptr returns [AtsInsStoreArrpszPtr node]
     : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) {node = new AtsInsStoreArrpszPtr($ID.text, $atstype.type, $exp.node);}
     ;
     
-atsins_store_fltrec_ofs returns [ATSNode node]
+atsins_store_fltrec_ofs returns [AtsInsStoreFltrecOfs node]
     : ^(ATSINS_STORE_FLTREC_OFS tmp=ID atstype lab=ID exp)
       {node = new AtsInsStoreFltrecOfs($tmp.text, $atstype.type, $lab.text, $exp.node);}
     ;
     
-atsins_move returns [ATSNode node]
+atsins_move returns [AtsInsMove node]
     : ^(ATSINS_MOVE ID exp) {node = new AtsInsMove($ID.text, $exp.node);}
     ;
     
-atsins_pmove returns [ATSNode node]
-    : ^(ATSINS_PMOVE ID atstype exp) {node = new AtsInsPMove($ID.text, $atstype.type, $exp.node);}
+atsins_pmove returns [AtsInsPMove node]
+    : ^(ATSINS_PMOVE tmp=exp atstype val=exp) {node = new AtsInsPMove($tmp.node, $atstype.type, $val.node);}
     ;
     
-atsins_move_arrpsz_ptr returns [ATSNode node]
+atsins_move_arrpsz_ptr returns [AtsInsMoveArrpszPtr node]
     : ^(ATSINS_MOVE_ARRPSZ_PTR ID exp) {node = new AtsInsMoveArrpszPtr($ID.text, $exp.node);}
     ;
     
-atsins_update_ptrinc returns [ATSNode node]
+atsins_update_ptrinc returns [AtsInsUpdatePtrInc node]
     : ^(ATSINS_UPDATE_PTRINC ID atstype) {node = new AtsInsUpdatePtrInc($ID.text, $atstype.type);} 
     ;
-    
-ats_return returns [ATSNode node]
+
+ats_return returns [AtsReturnNode node]
     : ^(ATS_RETURN exp?) {node = new AtsReturnNode($exp.node);}
     ;
     
-ifstat returns [ATSNode node]
+ifstat returns [IfNode node]
 @init {
   IfNode ifnode = new IfNode();
 }
@@ -191,50 +191,51 @@ ats_exp returns [ATSNode node]
     | ats_sel_box_rec {node = $ats_sel_box_rec.node;}
     ;
 
-ats_cast returns [ATSNode node]
+ats_cast returns [AtsPmvCastFn node]
     : ^(ATSPMV_CASTFN ID atstype exp) {node = new AtsPmvCastFn($ID.text, $atstype.type, $exp.node);}
     ;
 
 ats_simple_cast returns [ATSNode node]
     : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
+    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(I0ntType.cType, $exp.node);}
+    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(F0loatType.cType, $exp.node);}    
     | ATSPMV_TRUE {node = new ValueNode(BoolType.createTrue());}
     | ATSPMV_FALSE {node = new ValueNode(BoolType.createFalse());}
     | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
     | ^(ATSPMV_STRING exp) {node = new AtsPmvSimpleCastNode(StringType.cType, $exp.node);}
-    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(I0ntType.cType, $exp.node);}
-    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(F0loatType.cType, $exp.node);}
+
     ;
 
-ats_sizeof returns [ATSNode node]
+ats_sizeof returns [AtsPmvSizeofNode node]
     : ^(ATSPMV_SIZEOF atstype) {node = new AtsPmvSizeofNode($atstype.type);}
     ;
     
-ats_deref returns [ATSNode node]
+ats_deref returns [AtsDerefNode node]
     : ^(ATS_DEREF atstype exp) {node = new AtsDerefNode($atstype.type, $exp.node);}
     ;
 
-ats_ref_arg returns [ATSNode node]
-    : ^(ATSPMV_REFARG0 exp) {node = new AtsPmvRefArg(ATSType.ParaDecorator.REF0, $exp.node);}
-    | ^(ATSPMV_REFARG1 exp) {node = new AtsPmvRefArg(ATSType.ParaDecorator.REF1, $exp.node);}
+ats_ref_arg returns [AtsPmvRefArg node]
+    : ^(ATSPMV_REFARG0 exp) {node = new AtsPmvRefArg($exp.node);}  // neglect refarg
+    | ^(ATSPMV_REFARG1 exp) {node = new AtsPmvRefArg($exp.node);}  // neglect refarg
     ;
    
-ats_pmv_ptrof returns [ATSNode node]
+ats_pmv_ptrof returns [AtsPmvPtrofNode node]
     : ^(ATSPMV_PTROF ID) {node = new AtsPmvPtrofNode($ID.text);}
     ;
     
-ats_sel_recsin returns [ATSNode node]
+ats_sel_recsin returns [AtsSelRecsinNode node]
       : ^(ATS_SEL_RECSIN pmv=ID atstype lab=ID) {node = new AtsSelRecsinNode($pmv.text, $atstype.type, $lab.text);}
       ;
    
-ats_sel_flt_rec returns [ATSNode node]
+ats_sel_flt_rec returns [AtsSelFltRecNode node]
     : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID) {node = new AtsSelFltRecNode($pmv.node, $atstype.type, $lab.text);}
     ;
 
-ats_sel_arr_ind returns [ATSNode node]
+ats_sel_arr_ind returns [AtsSelArrIndNode node]
     : ^(ATS_SEL_ARR_IND exp atstype ID) {node = new AtsSelArrIndNode($exp.node, $atstype.type, $ID.text);}
     ;
 
-ats_sel_box_rec returns [ATSNode node]
+ats_sel_box_rec returns [AtsSelBoxRecNode node]
     : ^(ATS_SEL_BOX_REC exp atstype ID) {node = new AtsSelBoxRecNode($exp.node, $atstype.type, $ID.text);}
     ;
 
@@ -247,7 +248,7 @@ atom_exp returns [ATSNode node]
     | Bool   {node = new ValueNode(BoolType.fromString($Bool.text));}
     ;
 
-func_call returns [ATSNode node]
+func_call returns [FuncCallNode node]
     : ^(FUNC_CALL ID explst?) {node = new FuncCallNode($ID.text, $explst.lst);}
     ;
 
@@ -263,7 +264,7 @@ explst returns [List<ATSNode> lst]
 //    : ^(ASSIGN ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
 //    ;
     
-var_def returns [ATSNode node]
+var_def returns [DefinitionNode node]
     : ^(VAR atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
     ;
 
@@ -296,13 +297,13 @@ prim_type returns [ATSType type]
     ;
 
 
-func_decl returns [FuncNode node]
-    : ^(FUNC_DECL ID func_decorator? atstype paralst?) {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, null);}
+func_decl
+    : ^(FUNC_DECL ID func_decorator? atstype paralst?)
     ;
 
-para_decorator returns [ATSType.ParaDecorator dec]
-    : PARA_TYPE_REF0 {dec = ATSType.ParaDecorator.REF0;}
-    | PARA_TYPE_REF1 {dec = ATSType.ParaDecorator.REF1;}
+para_decorator
+    : PARA_TYPE_REF0
+    | PARA_TYPE_REF1
     ;
     
 func_decorator returns [ATSNode.FunDecorator dec]
@@ -322,12 +323,12 @@ para returns [FuncPara para]
     ;
 
 paratype returns [ATSType type]
-    : ^(PARA_TYPE para_decorator? atstype) {type = new ParaType($para_decorator.dec, $atstype.type);}
+    : ^(PARA_TYPE para_decorator? atstype) {type = $atstype.type;}
     ;
     
-func_def returns [FuncNode node]
+func_def returns [FuncDef definition]
     : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
-      {node = new FuncNode ($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
+      {definition = new FuncDef($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
 
 type_def
@@ -345,55 +346,6 @@ struct_def returns [StructType type]
                 )+
         )
     ;
-
-///* ******* ******* */
-//type_struct  // struct atstype_struct ; /* of indefinite size */
-//
-//void_t0ype   // typedef void atsvoid_t0ype ;
-//
-//type_int     // typedef int atstype_int ;
-//type_uint    // typedef unsigned int atstype_uint ;
-//
-//type_lint    // typedef long int atstype_lint ;
-//type_ulint   // typedef unsigned long int atstype_ulint ;
-//
-//type_llint   // typedef long long int atstype_llint ;
-//type_ullint  // typedef unsigned long long int atstype_ullint ;
-//
-//type_sint    // typedef short int atstype_sint ;
-//type_usint   // typedef unsigned short int atstype_usint ;
-//
-//type_ssize   // typedef atstype_lint atstype_ssize ;
-//type_size    // typedef atstype_ulint atstype_size ;
-//
-//type_bool    // typedef int atstype_bool ; // true/false: 1/0
-//
-//type_char    // typedef char atstype_char ;
-//type_schar   // typedef signed char atstype_schar ;
-//type_uchar   // typedef unsigned char atstype_uchar ;
-//
-//type_string  // typedef char *atstype_string ;
-//
-//type_float   // typedef float atstype_float ;
-//type_double  // typedef double atstype_double ;
-//type_ldouble // typedef long double atstype_ldouble ;
-//
-//type_ptr     // typedef void *atstype_ptr ;
-//type_ptrk    // typedef void *atstype_ptrk ;
-//
-//type_ref     // typedef void *atstype_ref ;
-//
-//type_arrptr  // typedef void* atstype_arrptr ;
-//
-//type_arrpsz
-
-// -- example for tuple
-// generate a struct for each tuple type
-//typedef
-//struct {
-//atstkind_t0ype(atstype_int) atslab$0; 
-//atstkind_t0ype(atstype_int) atslab$1; 
-//} postiats_tyrec_0 ;
 
 // Why do I need this?
 dd: 'ddd'; 

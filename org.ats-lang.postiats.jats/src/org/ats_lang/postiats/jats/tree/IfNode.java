@@ -2,9 +2,14 @@ package org.ats_lang.postiats.jats.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.FuncDef;
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.PrimValue;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class IfNode implements ATSNode {
     private List<Choice> m_choices;
@@ -22,12 +27,6 @@ public class IfNode implements ATSNode {
         m_else = block;
     }
 
-    @Override
-    public ATSValue evaluate(ATSScope scope) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
     private class Choice {
 
         ATSNode m_exp;
@@ -38,4 +37,22 @@ public class IfNode implements ATSNode {
             m_block = block;
         }
     }
+
+    @Override
+    public ATSValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope scope) {
+        for (Choice ch: m_choices) {
+            ATSValue b = ch.m_exp.evaluate(types, funcs, scope);
+            if (PrimValue.isTrue(b)) {
+                ch.m_block.evaluate(types, funcs, scope);
+                return SingletonValue.VOID;
+            }
+        }
+        m_else.evaluate(types, funcs, scope);
+        return SingletonValue.VOID;
+    }
 }
+
+
+
+

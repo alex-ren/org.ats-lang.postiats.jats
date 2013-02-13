@@ -1,6 +1,9 @@
 package org.ats_lang.postiats.jats.tree;
 
+import java.util.Map;
+
 import org.ats_lang.postiats.jats.ATSScope;
+import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
@@ -14,10 +17,11 @@ public class AtsSelBoxRecNode implements ATSNode {
         m_type = type;
         m_lab = lab;
     }
+
     @Override
-    public ATSValue evaluate(ATSScope scope) {
-        // TODO Auto-generated method stub
-        return null;
+    public ATSValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope scope) {
+        throw new Error("AtsSelBoxRecNode is not supported.");
     }
 
 }
