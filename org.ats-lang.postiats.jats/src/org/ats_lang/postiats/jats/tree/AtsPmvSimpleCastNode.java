@@ -5,12 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.CharType;
-import org.ats_lang.postiats.jats.type.F0loatType;
-import org.ats_lang.postiats.jats.type.FloatType;
-import org.ats_lang.postiats.jats.type.I0ntType;
-import org.ats_lang.postiats.jats.type.IntType;
-import org.ats_lang.postiats.jats.type.StringType;
+import org.ats_lang.postiats.jats.type.PrimType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
@@ -28,17 +23,13 @@ public class AtsPmvSimpleCastNode implements ATSNode {
     public ATSValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope scope) {
         ATSValue v = m_node.evaluate(types, funcs, scope);
-        Object iv = v.getContent();
-        if (IntType.cType == m_type || I0ntType.cType == m_type) {
-            return new PrimValue((Integer)iv);
-        } else if (FloatType.cType == m_type || F0loatType.cType == m_type) {
-            return new PrimValue((Float)iv);
-        } else if (CharType.cType == m_type) {
-            return new PrimValue((Character)iv);
-        } else if (StringType.cType == m_type) {
-            return new PrimValue((String)iv);
-        } else {
-            throw new Error("unsupported type cast");
+        if (!(m_type instanceof PrimType)) {
+            throw new Error("AtsPmvSimpleCastNode::evaluate, cast to non-primitive type.");
+        } else if (!(v instanceof PrimValue)) {
+            throw new Error("AtsPmvSimpleCastNode::evaluate, cast from non-primitive type.");
+        }
+        else {
+            return ((PrimType) m_type).castFrom((PrimValue)v);
         }
     }
 

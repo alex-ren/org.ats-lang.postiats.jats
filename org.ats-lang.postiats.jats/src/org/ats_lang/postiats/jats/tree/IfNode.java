@@ -8,7 +8,7 @@ import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
+import org.ats_lang.postiats.jats.value.BoolValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class IfNode implements ATSNode {
@@ -43,7 +43,7 @@ public class IfNode implements ATSNode {
             Map<String, FuncDef> funcs, ATSScope scope) {
         for (Choice ch: m_choices) {
             ATSValue b = ch.m_exp.evaluate(types, funcs, scope);
-            if (PrimValue.isTrue(b)) {
+            if (BoolValue.isTrue(b)) {
                 ch.m_block.evaluate(types, funcs, scope);
                 return SingletonValue.VOID;
             }

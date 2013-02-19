@@ -7,7 +7,8 @@ options {
 
 
 tokens {
-  VAR = 'var';
+  VAR; //  = 'var';
+  VAR_VOID;
   PROGRAM;
   BLOCK;
   
@@ -54,6 +55,7 @@ tokens {
   ATSINS_STORE_ARRPSZ_PTR;
   ATSINS_STORE_FLTREC_OFS;
   ATSINS_MOVE;
+  ATSINS_MOVE_VOID;
   ATSINS_PMOVE;
   ATSINS_MOVE_ARRPSZ_PTR;
   ATSINS_UPDATE_PTRINC;
@@ -180,7 +182,7 @@ atsins_move
     ;
 
 atsins_move_void
-    : 'ATSINSmove_void' LParen ID Comma exp RParen -> ^(ATSINS_MOVE ID exp)
+    : 'ATSINSmove_void' LParen ID Comma exp RParen -> ^(ATSINS_MOVE_VOID exp)
     ;
     
 atsins_pmove
@@ -329,7 +331,7 @@ func_decorator
     ;
     
 atstmpdec_void
-    : 'ATStmpdec_void' LParen ID Comma atstype RParen -> ^(VAR atstype ID)
+    : 'ATStmpdec_void' LParen ID Comma atstype RParen -> ^(VAR_VOID atstype ID)
     ;
     
 atstmpdec:

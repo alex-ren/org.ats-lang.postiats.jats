@@ -11,6 +11,8 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
+import org.ats_lang.postiats.jats.ccomp.CCompFuncs;
+import org.ats_lang.postiats.jats.ccomp.CCompTypes;
 import org.ats_lang.postiats.jats.parser.*;
 import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.type.ATSType;
@@ -24,7 +26,7 @@ public class Test {
      * @throws IOException 
      */
     public static void main(String[] args) throws RecognitionException, IOException {
-        String [] files = {"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c"};
+        String [] files = {"test/test01.txt", "test/f91_dats.c"}; // , "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c"};
         
         for (String file: files) {
             System.out.println("Processing file " + file);
@@ -40,16 +42,17 @@ public class Test {
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
             
             // get the returned node
-            Map<String, ATSType> types = new HashMap<String, ATSType>();
-            Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
-            // todo
-            // add types and functions to walker
-            
+            Map<String, ATSType> types = CCompTypes.getLibTypes();
+            Map<String, FuncDef> funcs = CCompFuncs.getLibFuncs();
+
+            // add types and functions to walker           
             walker.setTypes(types);
             walker.setFuncs(funcs);
             
+            // collect the definition of all the functions
             ATSNode prog = walker.program();
             
+            // initialize all the global variables
             ATSScope globalScope = new ATSScope();
             prog.evaluate(types, funcs, globalScope);
             
@@ -64,7 +67,7 @@ public class Test {
             }
             
             ATSScope scope = new ATSScope(globalScope);
-            fun.evaluate(types, funcs, scope, null);
+            ((UserFunc)fun).evaluate(types, funcs, scope, null);
             
             
             System.out.println(file + " is O.K.");

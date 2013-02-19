@@ -1,34 +1,40 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.BoolValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class BoolType implements ATSType {
+public class BoolType implements PrimType {
     public static final BoolType cType = new BoolType();
-    
-    public static PrimValue createTrue() {
-        return new PrimValue(true);
-    }
-    
-    public static PrimValue createFalse() {
-        return new PrimValue(false);
+
+    public static BoolValue createTrue() {
+        return new BoolValue(true);
     }
 
-    public static PrimValue fromString(String text) {
-        
-        return new PrimValue(new Boolean(text));
+    public static BoolValue createFalse() {
+        return new BoolValue(false);
     }
 
-    private BoolType() {}
-    
+    public static BoolValue fromString(String text) {
+
+        return new BoolValue(new Boolean(text));
+    }
+
+    private BoolType() {
+    }
+
     @Override
     public int getSize() {
         return 1;
     }
 
-	@Override
-    public PrimValue createDefault() {
-	    return new PrimValue(false);
+    @Override
+    public BoolValue createDefault() {
+        return new BoolValue(false);
     }
 
+    @Override
+    public BoolValue castFrom(PrimValue pv) {
+        return BoolValue.castFrom(pv);
+    }
 
 }

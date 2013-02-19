@@ -28,7 +28,7 @@ options {
         m_types.put(id, type);
     }
     
-    private void defineFunc(FuncDef func) {
+    private void defineFunc(UserFunc func) {
         m_funcs.put(func.getName(), func);
     }
     
@@ -99,6 +99,7 @@ atsins returns [ATSNode node]
     | atsins_store_arrpsz_ptr {node = $atsins_store_arrpsz_ptr.node;}
     | atsins_store_fltrec_ofs {node = $atsins_store_fltrec_ofs.node;}
     | atsins_move {node = $atsins_move.node;}
+    | atsins_move_void {node = $atsins_move_void.node;}
     | atsins_pmove {node = $atsins_pmove.node;}
     | atsins_move_arrpsz_ptr {node = $atsins_move_arrpsz_ptr.node;}
     | atsins_update_ptrinc {node = $atsins_update_ptrinc.node;}
@@ -128,6 +129,10 @@ atsins_store_fltrec_ofs returns [AtsInsStoreFltrecOfs node]
     
 atsins_move returns [AtsInsMove node]
     : ^(ATSINS_MOVE ID exp) {node = new AtsInsMove($ID.text, $exp.node);}
+    ;
+    
+atsins_move_void returns [AtsInsMoveVoid node]
+    : ^(ATSINS_MOVE_VOID exp) {node = new AtsInsMoveVoid($exp.node);}
     ;
     
 atsins_pmove returns [AtsInsPMove node]
@@ -266,6 +271,7 @@ explst returns [List<ATSNode> lst]
     
 var_def returns [DefinitionNode node]
     : ^(VAR atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
+    | ^(VAR_VOID atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
     ;
 
 atstype returns [ATSType type]
@@ -275,7 +281,12 @@ atstype returns [ATSType type]
     ;
 
 name_type returns [ATSType type]
-    : ID {type = m_types.get($ID.text);}
+    : ID {type = m_types.get($ID.text); 
+          if (null == type) {
+              System.out.println("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
+              throw new Error("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
+          }
+         }
     ;
     
 kind_decorator returns [ATSType.Decorator kind]
@@ -326,9 +337,9 @@ paratype returns [ATSType type]
     : ^(PARA_TYPE para_decorator? atstype) {type = $atstype.type;}
     ;
     
-func_def returns [FuncDef definition]
+func_def returns [UserFunc definition]
     : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
-      {definition = new FuncDef($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
+      {definition = new UserFunc($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
 
 type_def

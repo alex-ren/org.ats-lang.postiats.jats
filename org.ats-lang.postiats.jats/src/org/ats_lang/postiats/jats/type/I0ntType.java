@@ -1,15 +1,17 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.FloatValue;
+import org.ats_lang.postiats.jats.value.IntValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class I0ntType implements ATSType {
+public class I0ntType implements PrimType {
     
     public static final I0ntType cType = new I0ntType();
 
     private I0ntType () {}
 
-    public static PrimValue fromString(String text) {
-        return new PrimValue(new Integer(text));
+    public static IntValue fromString(String text) {
+        return new IntValue(new Integer(text));
     }
     
     @Override
@@ -18,9 +20,13 @@ public class I0ntType implements ATSType {
     }
 
     @Override
-    public PrimValue createDefault() {
-        return new PrimValue(new Integer(0));
+    public IntValue createDefault() {
+        return new IntValue(new Integer(0));
     }
 
-	
+    @Override
+    public IntValue castFrom(PrimValue pv) {
+        return IntValue.castFrom(pv);
+    }
+
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.FuncDef;
+import org.ats_lang.postiats.jats.LibFunc;
+import org.ats_lang.postiats.jats.UserFunc;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
@@ -29,14 +31,19 @@ public class FuncCallNode implements ATSNode {
         
         FuncDef fun = funcs.get(m_id);
         if (null == fun) {
-            System.out.println("fun " + m_id + " is not found");
-            throw new Error("fun " + m_id + " is not found");
+            System.out.println("FuncCallNode::evaluate, fun " + m_id + " is not found");
+            throw new Error("FuncCallNode::evaluate, fun " + m_id + " is not found");
         }
 
         // Only global scope can be seen inside the function.
         ATSScope aScope = new ATSScope(scope.parent());
         
-        return fun.evaluate(types, funcs, aScope, m_args);
+        if (fun instanceof UserFunc) {
+            return ((UserFunc)fun).evaluate(types, funcs, aScope, m_args);
+        } else {
+            return ((LibFunc)fun).evaluate(m_args);
+        }
+    
     }
 
 }

@@ -1,15 +1,17 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.value.PrimValue;
+import org.ats_lang.postiats.jats.value.StringValue;
+import org.ats_lang.postiats.jats.value.ULIntValue;
 
-public class ULIntType implements ATSType {
+public class ULIntType implements PrimType {
 
     public static final ULIntType cType = new ULIntType();
     
     private ULIntType() {}
 	
-    public static PrimValue fromString(String text) {
-        return new PrimValue(ULIntType.cType, new Integer(text));
+    public static ULIntValue fromString(String text) {
+        return new ULIntValue(new Integer(text));
     }
     
     @Override
@@ -18,7 +20,12 @@ public class ULIntType implements ATSType {
     }
 
     @Override
-    public PrimValue createDefault() {
-        return new PrimValue(ULIntType.cType, new Integer(0));
+    public ULIntValue createDefault() {
+        return new ULIntValue(new Integer(0));
+    }
+
+    @Override
+    public ULIntValue castFrom(PrimValue pv) {
+        return ULIntValue.castFrom(pv);
     }
 }

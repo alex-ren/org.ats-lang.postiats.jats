@@ -1,8 +1,9 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.value.PrimValue;
+import org.ats_lang.postiats.jats.value.StringValue;
 
-public class StringType implements ATSType {
+public class StringType implements PrimType {
 
     public static final StringType cType = new StringType();
     
@@ -13,13 +14,18 @@ public class StringType implements ATSType {
         return 4;
     }
 
-    public static PrimValue fromString(String text) {
-        return new PrimValue(text);
+    public static StringValue fromString(String text) {
+        return new StringValue(text);
     }
 
     @Override
-    public PrimValue createDefault() {
-        return new PrimValue("");
+    public StringValue createDefault() {
+        return new StringValue("");
+    }
+
+    @Override
+    public StringValue castFrom(PrimValue pv) {
+        return StringValue.castFrom(pv);
     }
 
 }
