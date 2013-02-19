@@ -176,9 +176,9 @@ letpush(beg)
 */
 /* (*nothing*) */
 ATSINSmove_void(tmp11, atspre_print_string(ATSPMVstring("fact("))) ;
-ATSINSmove_void(tmp12, atspre_print_int(ATSPMVi0nt(12))) ;
+ATSINSmove_void(tmp12, atspre_print_int(ATSPMVi0nt(3))) ;
 ATSINSmove_void(tmp13, atspre_print_string(ATSPMVstring(") = "))) ;
-ATSINSmove(tmp16, fact_0(ATSPMVi0nt(12))) ;
+ATSINSmove(tmp16, fact_0(ATSPMVi0nt(3))) ;
 ATSINSmove(tmp15, ATSselrecsin(tmp16, atstkind_t0ype(atstype_int), atslab$1)) ; 
 ATSINSmove_void(tmp14, atspre_print_int(tmp15)) ;
 ATSINSmove_void(tmp17, atspre_print_newline()) ;

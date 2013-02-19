@@ -23,10 +23,14 @@ public class FuncCallNode implements ATSNode {
     @Override
     public ATSValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope scope) {
-        List<ATSValue> m_args = new ArrayList<ATSValue>();
-        for (ATSNode para: m_paras) {
-            // clone is important
-            m_args.add(para.evaluate(types, funcs, scope).deepcopy());
+        List<ATSValue> m_args = null;
+        
+        if (m_paras != null) {
+            m_args = new ArrayList<ATSValue>();
+            for (ATSNode para : m_paras) {
+                // clone is important
+                m_args.add(para.evaluate(types, funcs, scope).deepcopy());
+            }
         }
         
         FuncDef fun = funcs.get(m_id);

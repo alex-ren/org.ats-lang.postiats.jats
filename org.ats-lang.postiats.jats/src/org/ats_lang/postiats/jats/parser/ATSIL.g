@@ -71,6 +71,7 @@ tokens {
 	ATSPMV_F0LOAT;
 	ATSPMV_SIZEOF;
 	ATS_DEREF;
+	ATS_EMPTY;
 	ATSPMV_REFARG0;
 	ATSPMV_REFARG1;
 	ATSPMV_PTROF;
@@ -225,6 +226,7 @@ gototag
 exp 
     : func_call
     
+    | ats_empty
     | ats_cast
     | ats_simple_cast
     | ats_sizeof
@@ -237,6 +239,10 @@ exp
     | ats_sel_box_rec
     
     | atom_exp
+    ;
+    
+ats_empty
+    : 'ATSempty' LParen RParen -> ATS_EMPTY
     ;
     
 ats_cast
@@ -259,6 +265,7 @@ ats_sizeof
     
 ats_deref
     : 'ATSderef2' LParen exp Comma atstype RParen -> ^(ATS_DEREF atstype exp)
+    | 'ATSderef' LParen exp RParen -> ^(ATS_DEREF exp)
     ;
 
 ats_ref_arg

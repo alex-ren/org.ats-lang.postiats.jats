@@ -5,8 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.ATSScope;
 import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.IntValue;
+import org.ats_lang.postiats.jats.value.SizeValue;
 
 public class AtsPmvSizeofNode implements ATSNode {
     private ATSType m_hit;
@@ -17,8 +16,8 @@ public class AtsPmvSizeofNode implements ATSNode {
     
     @Override
     // #define ATSPMVsizeof(hit) (sizeof(hit))
-    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope scope) {
-        return new IntValue(m_hit.getSize());
+    public SizeValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope scope) {
+        return new SizeValue(m_hit.getSize());
     }
 
 }

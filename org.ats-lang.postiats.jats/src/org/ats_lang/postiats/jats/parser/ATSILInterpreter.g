@@ -185,6 +185,7 @@ exp returns [ATSNode node]
 
 ats_exp returns [ATSNode node]
     : ats_cast {node = $ats_cast.node;}
+    | ats_empty {node = $ats_empty.node;}
     | ats_simple_cast {node = $ats_simple_cast.node;}
     | ats_sizeof {node = $ats_sizeof.node;}
     | ats_deref {node = $ats_deref.node;}
@@ -198,6 +199,10 @@ ats_exp returns [ATSNode node]
 
 ats_cast returns [AtsPmvCastFn node]
     : ^(ATSPMV_CASTFN ID atstype exp) {node = new AtsPmvCastFn($ID.text, $atstype.type, $exp.node);}
+    ;
+    
+ats_empty returns [AtsEmpty node]
+    : ATS_EMPTY {node = new AtsEmpty();}
     ;
 
 ats_simple_cast returns [ATSNode node]
@@ -216,7 +221,10 @@ ats_sizeof returns [AtsPmvSizeofNode node]
     ;
     
 ats_deref returns [AtsDerefNode node]
-    : ^(ATS_DEREF atstype exp) {node = new AtsDerefNode($atstype.type, $exp.node);}
+@init {
+  ATSType ty = null;
+}
+    : ^(ATS_DEREF (atstype{ty = $atstype.type;})? exp) {node = new AtsDerefNode(ty, $exp.node);}
     ;
 
 ats_ref_arg returns [AtsPmvRefArg node]

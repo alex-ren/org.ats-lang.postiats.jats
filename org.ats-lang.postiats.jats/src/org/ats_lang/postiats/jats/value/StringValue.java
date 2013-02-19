@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.SizeType;
 import org.ats_lang.postiats.jats.type.StringType;
 
 public class StringValue extends PrimValue {
@@ -26,7 +27,7 @@ public class StringValue extends PrimValue {
     }
     
     @Override
-    public ATSValue deepcopy() {
+    public StringValue deepcopy() {
         return new StringValue((String)(this.getContent()));
     }
 
@@ -35,4 +36,10 @@ public class StringValue extends PrimValue {
         return (String)super.m_mem;
     }
 
+    @Override
+    public StringType getType() {
+        return m_type;
+    }
+    
+    
 }

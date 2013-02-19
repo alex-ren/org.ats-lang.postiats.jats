@@ -1,5 +1,8 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.IntType;
+import org.ats_lang.postiats.jats.type.PtrType;
+
 public class PtrValue implements ATSValue {
     
     private ATSValue m_mem;
@@ -42,6 +45,18 @@ public class PtrValue implements ATSValue {
 	    m_mem = m_arr.get(m_ind);
 	}
 	
+	public void addByteSize(int sz) {
+	    int len = m_mem.getType().getSize();
+	    if (sz % len != 0) {
+	        throw new Error("PtrValue::addByteSize, ptr boundry error");
+	    }
+	    
+	    m_ind += sz / len;
+	    m_mem = m_arr.get(m_ind);
+	    
+	    
+	}
+	
 	@Override
 	public void copyfrom(ATSValue v) {
 		if (v instanceof PtrValue) {
@@ -59,8 +74,13 @@ public class PtrValue implements ATSValue {
 	}
 
     @Override
-    public ATSValue deepcopy() {
+    public PtrValue deepcopy() {
         return new PtrValue(m_mem, m_arr, m_ind);
+    }
+    
+    @Override
+    public PtrType getType() {
+        return new PtrType();
     }
 
 }

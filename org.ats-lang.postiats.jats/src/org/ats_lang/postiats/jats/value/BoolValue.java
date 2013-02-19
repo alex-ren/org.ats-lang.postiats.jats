@@ -36,13 +36,18 @@ public class BoolValue extends PrimValue {
 
     
     @Override
-    public ATSValue deepcopy() {
+    public BoolValue deepcopy() {
         return new BoolValue((Boolean)(this.getContent()));
     }
     
     @Override
     public Boolean getContent() {
         return (Boolean)super.m_mem;
+    }
+
+    @Override
+    public BoolType getType() {
+        return m_type;
     }
     
 }

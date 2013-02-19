@@ -1,6 +1,5 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.BoolValue;
 import org.ats_lang.postiats.jats.value.CharValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 

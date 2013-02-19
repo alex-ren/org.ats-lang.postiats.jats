@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.ATSType;
+
 public class ReturnValue implements ATSValue {
     private ATSValue m_v;
     
@@ -19,6 +21,11 @@ public class ReturnValue implements ATSValue {
 
     @Override
     public ATSValue deepcopy() {
+        throw new Error("ReturnValue.");
+    }
+
+    @Override
+    public ATSType getType() {
         throw new Error("ReturnValue.");
     }
 

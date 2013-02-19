@@ -26,13 +26,22 @@ public class DoubleValue extends PrimValue {
     }
     
     @Override
-    public ATSValue deepcopy() {
-        return new DoubleValue((Double)(this.getContent()));
+    public DoubleValue deepcopy() {
+        return new DoubleValue(this.getContent());
     }
 
     @Override
     public Double getContent() {
-        return (Double)super.m_mem;
+        System.out.println("dddddddddddd");
+        Double k = new Double((Float)super.m_mem);
+        // return (Double)super.m_mem;
+        System.out.println("eeeeeeeeeee");
+        return k;
     }
 
+    @Override
+    public DoubleType getType() {
+        return m_type;
+    }
+    
 }

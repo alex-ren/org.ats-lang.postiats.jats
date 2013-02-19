@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.type.ULIntType;
 
 public class ULIntValue extends PrimValue {
@@ -26,7 +27,7 @@ public class ULIntValue extends PrimValue {
     }
     
     @Override
-    public ATSValue deepcopy() {
+    public ULIntValue deepcopy() {
         return new ULIntValue((Integer)(this.getContent()));
     }
 
@@ -34,4 +35,12 @@ public class ULIntValue extends PrimValue {
     public Integer getContent() {
         return (Integer)super.m_mem;
     }
+    
+    @Override
+    public ULIntType getType() {
+        return m_type;
+    }
+    
+    
+    
 }

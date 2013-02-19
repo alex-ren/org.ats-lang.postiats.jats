@@ -208,7 +208,7 @@ __patsflab_main_void:
 /*
 letpush(beg)
 */
-ATSINSmove(tmp14, fib_0(ATSPMVi0nt(10))) ;
+ATSINSmove(tmp14, fib_0(ATSPMVi0nt(5))) ;
 ATSINSmove_void(tmp15, atspre_print_string(ATSPMVstring("ans = "))) ;
 ATSINSmove_void(tmp16, atspre_print_int(tmp14)) ;
 ATSINSmove_void(tmp17, atspre_print_newline()) ;

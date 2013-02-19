@@ -29,18 +29,23 @@ public class ArrayValue implements ATSValue {
     }
 
     @Override
-    public Object getContent() {
+    public ATSValue [] getContent() {
         return m_arr;
     }
     
     @Override
-    public ATSValue deepcopy() {
+    public ArrayValue deepcopy() {
         ATSValue [] arr = new ATSValue[m_arr.length];
         for (int i = 0; i < m_arr.length; ++i) {
             arr[i] = m_arr[i].deepcopy();
         }
         
         return new ArrayValue(m_type, arr);
+    }
+
+    @Override
+    public ArrayType getType() {
+        return m_type;
     }
 
 }

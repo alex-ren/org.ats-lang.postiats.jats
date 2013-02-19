@@ -26,13 +26,18 @@ public class FloatValue extends PrimValue {
     }
     
     @Override
-    public ATSValue deepcopy() {
+    public FloatValue deepcopy() {
         return new FloatValue((Float)(this.getContent()));
     }
 
     @Override
     public Float getContent() {
         return (Float)super.m_mem;
+    }
+    
+    @Override
+    public FloatType getType() {
+        return m_type;
     }
 
 }

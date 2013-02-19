@@ -42,7 +42,7 @@ public class StructValue implements ATSValue {
 	}
 
     @Override
-    public ATSValue deepcopy() {
+    public StructValue deepcopy() {
         Map<String, ATSValue> mem = new HashMap<String, ATSValue>();
         for (Map.Entry<String, ATSValue> entry: m_mem.entrySet()) {
             mem.put(entry.getKey(), entry.getValue().deepcopy());
@@ -51,4 +51,9 @@ public class StructValue implements ATSValue {
         return new StructValue(m_type, mem);
     }
 
+    @Override
+    public StructType getType() {
+        return m_type;
+    }
+    
 }

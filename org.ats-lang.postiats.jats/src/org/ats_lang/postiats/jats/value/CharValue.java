@@ -26,7 +26,7 @@ public class CharValue extends PrimValue {
     }
     
     @Override
-    public ATSValue deepcopy() {
+    public CharValue deepcopy() {
         return new CharValue((Character)(this.getContent()));
     }
 
@@ -35,4 +35,9 @@ public class CharValue extends PrimValue {
         return (Character)super.m_mem;
     }
 
+    @Override
+    public CharType getType() {
+        return m_type;
+    }
+    
 }

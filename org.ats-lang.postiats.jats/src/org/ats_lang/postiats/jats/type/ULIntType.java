@@ -1,7 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.value.PrimValue;
-import org.ats_lang.postiats.jats.value.StringValue;
 import org.ats_lang.postiats.jats.value.ULIntValue;
 
 public class ULIntType implements PrimType {

@@ -1,13 +1,15 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.ATSType;
+
 public class SingletonValue implements ATSValue {
 	static {
 	    NULL = new SingletonValue();
 	    VOID = new SingletonValue();
 	}
 
-    public static final ATSValue NULL;
-    public static final ATSValue VOID;
+    public static final SingletonValue NULL;
+    public static final SingletonValue VOID;
     
 	private SingletonValue() {}
 	
@@ -23,6 +25,11 @@ public class SingletonValue implements ATSValue {
 
     @Override
     public ATSValue deepcopy() {
+        throw new Error("Singleton Value.");
+    }
+
+    @Override
+    public ATSType getType() {
         throw new Error("Singleton Value.");
     }
 

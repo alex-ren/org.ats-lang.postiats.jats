@@ -26,7 +26,7 @@ public class IntValue extends PrimValue {
     }
     
     @Override
-    public ATSValue deepcopy() {
+    public IntValue deepcopy() {
         return new IntValue((Integer)(this.getContent()));
     }
 
@@ -34,4 +34,13 @@ public class IntValue extends PrimValue {
     public Integer getContent() {
         return (Integer)super.m_mem;
     }
+    
+    
+    @Override
+    public IntType getType() {
+        return m_type;
+    }
+    
+    
+    
 }

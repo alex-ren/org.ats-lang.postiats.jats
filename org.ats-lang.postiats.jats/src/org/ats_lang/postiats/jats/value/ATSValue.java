@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.ATSType;
+
 
 /* iats type | Java Type
  * int 	  -> Integer
@@ -22,6 +24,7 @@ public interface ATSValue {
     
     public ATSValue deepcopy();
     
+    public ATSType getType();
 
 }
 

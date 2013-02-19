@@ -19,6 +19,9 @@ public abstract class PrimValue implements ATSValue {
 	@Override
 	public void copyfrom(ATSValue v) {
 		if (v instanceof PrimValue) {
+		    if (v.getType() != this.getType()) {
+		        throw new Error("PrimValue::copyfrom: copy from different type");
+		    }
 			m_mem = v.getContent();
 		} else {
     		throw new Error("PrimValue::copyfrom: copy from non-primitive value.");
