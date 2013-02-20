@@ -22,6 +22,16 @@ public class CCompInteger {
 
     }
     
+    public static IntValue atspre_g1int2int_int_int(ATSValue x) {
+        if (x instanceof PrimValue) {
+            return IntValue.castFromV((PrimValue)x);
+        } else {
+            throw new Error(
+                    "CCompInteger::atspre_g1int2int_int_int type conversion not supported.");
+        }
+
+    }
+    
     public static SizeValue atspre_g0int2uint_int_size(ATSValue x) {
         if (x instanceof PrimValue) {
             return SizeValue.castFromV((PrimValue)x);
@@ -87,8 +97,26 @@ public class CCompInteger {
         
     }
     
+    public static BoolValue atspre_g1int_gt_int(IntValue x1, IntValue x2) {
+        Integer i1 = x1.getContent();
+        Integer i2 = x2.getContent();
+        
+        return new BoolValue(i1 > i2);
+        
+    }
     
-    
-    
-    
+    public static IntValue atspre_g1int_sub_int(IntValue x1, IntValue x2) {
+        Integer i1 = x1.getContent();
+        Integer i2 = x2.getContent();
+        
+        return new IntValue(i1 - i2);
+        
+    }
+    public static IntValue atspre_g1int_mul_int(IntValue x1, IntValue x2) {
+        Integer i1 = x1.getContent();
+        Integer i2 = x2.getContent();
+        
+        return new IntValue(i1 * i2);
+        
+    }
 }

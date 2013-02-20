@@ -1,7 +1,7 @@
 package org.ats_lang.postiats.jats.ccomp;
 
-import org.ats_lang.postiats.jats.value.DoubleValue;
-import org.ats_lang.postiats.jats.value.SingletonValue;
+
+import org.ats_lang.postiats.jats.value.*;
 
 public class CCompFloat {
 
@@ -12,6 +12,9 @@ public class CCompFloat {
         return SingletonValue.VOID;
         
     }
+
+
     
+
     
 }

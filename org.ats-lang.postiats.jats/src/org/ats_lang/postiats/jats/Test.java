@@ -11,7 +11,7 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-import org.ats_lang.postiats.jats.ccomp.CCompFuncs;
+import org.ats_lang.postiats.jats.ccomp.CCompUtils;
 import org.ats_lang.postiats.jats.ccomp.CCompTypes;
 import org.ats_lang.postiats.jats.parser.*;
 import org.ats_lang.postiats.jats.tree.ATSNode;
@@ -28,6 +28,13 @@ public class Test {
     public static void main(String[] args) throws RecognitionException, IOException {
         String [] files = {"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c"};
         
+        // populate types and funcstions
+        Map<String, ATSType> types = CCompTypes.getLibTypes();
+        
+        Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
+        CCompUtils.populateAllFuncs(funcs);
+        
+        
         for (String file: files) {
             System.out.println("Processing file " + file);
             ANTLRFileStream fileStream = new ANTLRFileStream(file);
@@ -40,10 +47,6 @@ public class Test {
             CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
             
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
-            
-            // get the returned node
-            Map<String, ATSType> types = CCompTypes.getLibTypes();
-            Map<String, FuncDef> funcs = CCompFuncs.getLibFuncs();
 
             // add types and functions to walker           
             walker.setTypes(types);

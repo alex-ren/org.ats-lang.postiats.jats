@@ -1,6 +1,5 @@
 package org.ats_lang.postiats.jats.value;
 
-import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.type.ULIntType;
 
 public class ULIntValue extends PrimValue {

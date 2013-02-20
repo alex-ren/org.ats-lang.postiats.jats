@@ -1,6 +1,5 @@
 package org.ats_lang.postiats.jats.value;
 
-import org.ats_lang.postiats.jats.type.SizeType;
 import org.ats_lang.postiats.jats.type.StringType;
 
 public class StringValue extends PrimValue {
