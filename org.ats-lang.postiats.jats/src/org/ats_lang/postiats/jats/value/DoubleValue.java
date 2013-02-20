@@ -17,7 +17,12 @@ public class DoubleValue extends PrimValue {
         }
     }
     
-    public static DoubleValue castFrom(PrimValue pv) {
+    @Override
+    public DoubleValue castFrom(PrimValue pv) {
+        return DoubleValue.castFromV(pv);
+    }
+
+    public static DoubleValue castFromV(PrimValue pv) {
         if (pv instanceof DoubleValue) { 
             return new DoubleValue(((DoubleValue)pv).getContent());
         } else {
@@ -32,11 +37,7 @@ public class DoubleValue extends PrimValue {
 
     @Override
     public Double getContent() {
-        System.out.println("dddddddddddd");
-        Double k = new Double((Float)super.m_mem);
-        // return (Double)super.m_mem;
-        System.out.println("eeeeeeeeeee");
-        return k;
+        return (Double)super.m_mem;
     }
 
     @Override

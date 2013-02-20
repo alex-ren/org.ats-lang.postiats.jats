@@ -23,7 +23,7 @@ public class CharType implements PrimType {
 
     @Override
     public CharValue castFrom(PrimValue pv) {
-        return CharValue.castFrom(pv);
+        return CharValue.castFromV(pv);
     }
 
 }

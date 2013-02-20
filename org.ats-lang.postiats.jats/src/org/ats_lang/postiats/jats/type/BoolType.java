@@ -34,7 +34,7 @@ public class BoolType implements PrimType {
 
     @Override
     public BoolValue castFrom(PrimValue pv) {
-        return BoolValue.castFrom(pv);
+        return BoolValue.castFromV(pv);
     }
 
 }

@@ -207,8 +207,8 @@ ats_empty returns [AtsEmpty node]
 
 ats_simple_cast returns [ATSNode node]
     : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
-    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(I0ntType.cType, $exp.node);}
-    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(F0loatType.cType, $exp.node);}    
+    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
+    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}    
     | ATSPMV_TRUE {node = new ValueNode(BoolType.createTrue());}
     | ATSPMV_FALSE {node = new ValueNode(BoolType.createFalse());}
     | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
@@ -255,7 +255,7 @@ ats_sel_box_rec returns [AtsSelBoxRecNode node]
 atom_exp returns [ATSNode node]
     : ID     {node = new IdentifierNode($ID.text);}
     | INT    {node = new ValueNode(IntType.fromString($INT.text));}
-    | FLOAT  {node = new ValueNode(FloatType.fromString($FLOAT.text));}
+    | FLOAT  {node = new ValueNode(DoubleType.fromString($FLOAT.text));}
     | CHAR   {node = new ValueNode(CharType.fromString($CHAR.text));}
     | STRING {node = new ValueNode(StringType.fromString($STRING.text));} 
     | Bool   {node = new ValueNode(BoolType.fromString($Bool.text));}
@@ -309,7 +309,7 @@ prim_type returns [ATSType type]
     | TYPE_ULINT  {type = ULIntType.cType;}
     | TYPE_BOOL   {type = BoolType.cType;}
     | TYPE_STRING {type = StringType.cType;}
-    | TYPE_FLOAT  {type = FloatType.cType;}
+    | TYPE_FLOAT  {type = DoubleType.cType;}
     | TYPE_PTR  // todo
     | TYPE_REF  // todo
     | TYPE_ARRPTR  // todo

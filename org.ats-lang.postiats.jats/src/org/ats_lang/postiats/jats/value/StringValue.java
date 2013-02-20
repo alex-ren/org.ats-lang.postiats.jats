@@ -18,7 +18,12 @@ public class StringValue extends PrimValue {
         }
     }
     
-    public static StringValue castFrom(PrimValue pv) {
+    @Override
+    public StringValue castFrom(PrimValue pv) {
+        return StringValue.castFromV(pv);
+    }
+
+    public static StringValue castFromV(PrimValue pv) {
         if (pv instanceof StringValue) { 
             return new StringValue(((StringValue)pv).getContent());
         } else {

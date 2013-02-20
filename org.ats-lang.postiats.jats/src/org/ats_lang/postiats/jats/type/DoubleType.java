@@ -25,7 +25,7 @@ public class DoubleType implements PrimType {
 
     @Override
     public DoubleValue castFrom(PrimValue pv) {
-        return DoubleValue.castFrom(pv);
+        return DoubleValue.castFromV(pv);
     }
 
 }

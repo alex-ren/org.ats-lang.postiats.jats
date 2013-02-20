@@ -17,13 +17,20 @@ public class CharValue extends PrimValue {
         }
     }
     
-    public static CharValue castFrom(PrimValue pv) {
+    @Override
+    public CharValue castFrom(PrimValue pv) {
+        return CharValue.castFromV(pv);
+    }
+    
+    public static CharValue castFromV(PrimValue pv) {
         if (pv instanceof CharValue) { 
             return new CharValue(((CharValue)pv).getContent());
         } else {
             throw new Error("CharValue::castFrom");
         }
     }
+    
+    
     
     @Override
     public CharValue deepcopy() {

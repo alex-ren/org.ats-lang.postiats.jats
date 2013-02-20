@@ -17,7 +17,12 @@ public class SizeValue extends PrimValue {
         }
     }
     
-    public static SizeValue castFrom(PrimValue pv) {
+    @Override
+    public SizeValue castFrom(PrimValue pv) {
+        return SizeValue.castFromV(pv);
+    }
+    
+    public static SizeValue castFromV(PrimValue pv) {
         if (pv instanceof SizeValue) { 
             return new SizeValue(((SizeValue)pv).getContent());
         } else if (pv instanceof IntValue){

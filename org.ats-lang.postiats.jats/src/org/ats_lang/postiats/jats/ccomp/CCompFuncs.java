@@ -8,6 +8,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.FuncDef;
 import org.ats_lang.postiats.jats.LibFunc;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.DoubleValue;
 import org.ats_lang.postiats.jats.value.IntValue;
 import org.ats_lang.postiats.jats.value.PtrValue;
 import org.ats_lang.postiats.jats.value.SizeValue;
@@ -145,6 +146,15 @@ public class CCompFuncs {
         
         funcs.put("atspre_ptr0_add_bytesize", atspre_ptr0_add_bytesize);
         
+        
+        LibFunc atspre_print_double = new LibFunc() {
+            public ATSValue evaluate(List<ATSValue> args) {
+                Iterator<ATSValue> iter = args.iterator();
+                return CCompFloat.atspre_print_double((DoubleValue)iter.next());
+            }
+        };
+        
+        funcs.put("atspre_print_double", atspre_print_double);
         
         
         return funcs;

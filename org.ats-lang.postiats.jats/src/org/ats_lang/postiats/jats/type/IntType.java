@@ -25,7 +25,7 @@ public class IntType implements PrimType {
 
     @Override
     public IntValue castFrom(PrimValue pv) {
-        return IntValue.castFrom(pv);
+        return IntValue.castFromV(pv);
     }
 
 }

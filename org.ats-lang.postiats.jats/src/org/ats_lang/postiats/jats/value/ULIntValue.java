@@ -18,7 +18,12 @@ public class ULIntValue extends PrimValue {
         }
     }
     
-    public static ULIntValue castFrom(PrimValue pv) {
+    @Override
+    public ULIntValue castFrom(PrimValue pv) {
+        return ULIntValue.castFromV(pv);
+    }
+
+    public static ULIntValue castFromV(PrimValue pv) {
         if (pv instanceof ULIntValue) { 
             return new ULIntValue(((ULIntValue)pv).getContent());
         } else {

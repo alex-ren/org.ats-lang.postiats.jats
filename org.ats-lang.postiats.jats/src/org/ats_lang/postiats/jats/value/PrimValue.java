@@ -9,23 +9,29 @@ package org.ats_lang.postiats.jats.value;
  * string
  */
 public abstract class PrimValue implements ATSValue {
-    
+
     protected Object m_mem;
-   
+
     public PrimValue(Object mem) {
         m_mem = mem;
     }
-    
-	@Override
-	public void copyfrom(ATSValue v) {
-		if (v instanceof PrimValue) {
-		    if (v.getType() != this.getType()) {
-		        throw new Error("PrimValue::copyfrom: copy from different type");
-		    }
-			m_mem = v.getContent();
-		} else {
-    		throw new Error("PrimValue::copyfrom: copy from non-primitive value.");
-    	}
+
+    public abstract PrimValue castFrom(PrimValue pv);
+
+    @Override
+    public void copyfrom(ATSValue v) {
+        if (v instanceof PrimValue) {
+            PrimValue tmp = null;
+            if (v.getType() != this.getType()) {
+                tmp = this.castFrom((PrimValue) v);
+            } else {
+                tmp = (PrimValue) v;
+            }
+            m_mem = tmp.getContent();
+        } else {
+            throw new Error(
+                    "PrimValue::copyfrom: copy from non-primitive value.");
+        }
     }
 
 }

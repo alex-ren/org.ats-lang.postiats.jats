@@ -25,7 +25,7 @@ public class SizeType implements PrimType {
 
     @Override
     public SizeValue castFrom(PrimValue pv) {
-        return SizeValue.castFrom(pv);
+        return SizeValue.castFromV(pv);
     }
 
 }

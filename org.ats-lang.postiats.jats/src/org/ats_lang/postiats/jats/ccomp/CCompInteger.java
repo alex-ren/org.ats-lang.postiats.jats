@@ -14,7 +14,7 @@ public class CCompInteger {
 
     public static IntValue atspre_g0int2int_int_int(ATSValue x) {
         if (x instanceof PrimValue) {
-            return IntValue.castFrom((PrimValue)x);
+            return IntValue.castFromV((PrimValue)x);
         } else {
             throw new Error(
                     "CCompInteger::atspre_g0int2int_int_int type conversion not supported.");
@@ -24,7 +24,7 @@ public class CCompInteger {
     
     public static SizeValue atspre_g0int2uint_int_size(ATSValue x) {
         if (x instanceof PrimValue) {
-            return SizeValue.castFrom((PrimValue)x);
+            return SizeValue.castFromV((PrimValue)x);
         } else {
             throw new Error(
                     "CCompInteger::atspre_g0int2uint_int_size type conversion not supported.");

@@ -17,7 +17,12 @@ public class IntValue extends PrimValue {
         }
     }
     
-    public static IntValue castFrom(PrimValue pv) {
+    @Override
+    public IntValue castFrom(PrimValue pv) {
+        return IntValue.castFromV(pv);
+    }
+    
+    public static IntValue castFromV(PrimValue pv) {
         if (pv instanceof IntValue) { 
             return new IntValue(((IntValue)pv).getContent());
         } else {

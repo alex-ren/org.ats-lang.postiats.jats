@@ -26,7 +26,12 @@ public class BoolValue extends PrimValue {
         }
     }
     
-    public static BoolValue castFrom(PrimValue pv) {
+    @Override
+    public BoolValue castFrom(PrimValue pv) {
+        return BoolValue.castFromV(pv);
+    }
+    
+    public static BoolValue castFromV(PrimValue pv) {
         if (pv instanceof BoolValue) { 
             return new BoolValue(((BoolValue)pv).getContent());
         } else {

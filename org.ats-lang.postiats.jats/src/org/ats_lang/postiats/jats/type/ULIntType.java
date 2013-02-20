@@ -25,6 +25,6 @@ public class ULIntType implements PrimType {
 
     @Override
     public ULIntValue castFrom(PrimValue pv) {
-        return ULIntValue.castFrom(pv);
+        return ULIntValue.castFromV(pv);
     }
 }

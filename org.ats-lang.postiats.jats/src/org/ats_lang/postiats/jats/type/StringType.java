@@ -25,7 +25,7 @@ public class StringType implements PrimType {
 
     @Override
     public StringValue castFrom(PrimValue pv) {
-        return StringValue.castFrom(pv);
+        return StringValue.castFromV(pv);
     }
 
 }
