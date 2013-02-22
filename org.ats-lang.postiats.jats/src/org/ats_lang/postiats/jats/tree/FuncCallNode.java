@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.ATSScope;
-import org.ats_lang.postiats.jats.FuncDef;
-import org.ats_lang.postiats.jats.LibFunc;
-import org.ats_lang.postiats.jats.UserFunc;
+import org.ats_lang.postiats.jats.interpreter.ATSScope;
+import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.LibFunc;
+import org.ats_lang.postiats.jats.interpreter.UserFunc;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 

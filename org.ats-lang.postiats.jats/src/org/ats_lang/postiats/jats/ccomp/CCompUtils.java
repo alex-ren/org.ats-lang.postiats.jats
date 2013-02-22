@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.FuncDef;
-import org.ats_lang.postiats.jats.LibFunc;
+import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.LibFunc;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
 

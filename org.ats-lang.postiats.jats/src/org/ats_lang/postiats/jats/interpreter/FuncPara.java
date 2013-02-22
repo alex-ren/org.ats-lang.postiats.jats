@@ -1,4 +1,4 @@
-package org.ats_lang.postiats.jats;
+package org.ats_lang.postiats.jats.interpreter;
 
 import org.ats_lang.postiats.jats.type.ATSType;
 
