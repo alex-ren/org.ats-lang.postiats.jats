@@ -94,19 +94,9 @@ rule: program
     ;
     
 program
-    : stat_macro* -> ^(PROGRAM stat_macro*)
+    : gstat* -> ^(PROGRAM gstat*)
     ;
     
-stat_macro
-    : gstat
-    | macro_area
-    ;
-    
-macro_area
-    : MACRO_IFNDEF! ID! program MACRO_ENDIF!
-    | MACRO_INCLUDE^ STRING
-    ;
-
 gstat
     : tmpdec Semicol!
     | func_decorator? rettype=atstype ID LParen paralst? RParen

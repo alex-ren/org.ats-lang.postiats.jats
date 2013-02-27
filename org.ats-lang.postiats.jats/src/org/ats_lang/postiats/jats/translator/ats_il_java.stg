@@ -1,0 +1,68 @@
+group ats_il_java;
+
+decl(type, name, value) ::= "<type> <name><init(value)>;"
+init(v) ::= "\< <if(v)> = <v><endif>"
+
+// need map here
+
+
+program(classname, stats) ::= <<
+public class <classname> {
+    <stats; separator="\n">
+}
+>>
+
+var_def(desc, type, name, init) ::= <<
+// <desc>
+static private <type> <name> = ;
+
+
+>>
+
+classes_st(classes) ::= <<
+// The following inner classes are for structures
+<classes; separator="\n">
+// end of defining inner classes
+>>
+
+
+class_st(cls_name, cls_desc, body) ::= <<
+private static class <cls_name> {
+    // <cls_desc>
+    <body>
+}
+>>
+
+body_st(members, names) ::= <<
+// members
+<members; separator="\n">
+
+// constructor
+public <cls_name>() {
+    xxx
+}
+ 
+public int getSize() {
+    int ret = 0;
+    <names:{name|ret += <name>;}; separator="\n">
+}
+
+public createDefault() {
+
+}
+
+public <cls_name> deepCopy() {
+
+}
+
+public void copyFrom() {
+
+}
+
+}
+>>
+
+member_st(name) ::= <<
+int <name>;
+>>
+

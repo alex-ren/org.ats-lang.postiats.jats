@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.TokenRewriteStream;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
@@ -26,7 +28,7 @@ public class Test {
      * @throws IOException 
      */
     public static void main(String[] args) throws RecognitionException, IOException {
-        String [] files = {"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c"};
+        String [] files = {"test/test01.txt", "test/f91_dats.c" , "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c" };
         
         // populate types and funcstions
         Map<String, ATSType> types = CCompTypes.getLibTypes();
@@ -37,24 +39,40 @@ public class Test {
         
         for (String file: files) {
             System.out.println("Processing file " + file);
+            
             ANTLRFileStream fileStream = new ANTLRFileStream(file);
-            ATSILLexer lexer = new ATSILLexer(fileStream);
+            
+            // preprocessing
+            ATSILPrepocessorLexer lexer0 = new ATSILPrepocessorLexer(fileStream);
+            TokenStream tokens = new TokenRewriteStream(lexer0);
+            ATSILPrepocessorParser preparser = new ATSILPrepocessorParser(tokens);
+            preparser.rule();
+            
+            System.out.println("==preprocessing finished==========================");
+            
+            /* ******** ******** */
+            // lexing
+            ANTLRStringStream stream = new ANTLRStringStream(tokens.toString());
+            
+            ATSILLexer lexer = new ATSILLexer(stream);
             TokenStream tokenStream = new CommonTokenStream(lexer);
+            // System.out.println(tokenStream.toString());
+            
+            /* ******** ******** */
+            // parsing
             ATSILParser parser = new ATSILParser(tokenStream);
             ATSILParser.rule_return parser_ret = parser.rule();
-            
             CommonTree tree = (CommonTree)parser_ret.getTree();
             CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
             
+            /* ******** ******** */
+            // tree parsing
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
-
-            // add types and functions to walker           
-            walker.setTypes(types);
-            walker.setFuncs(funcs);
-            
+           
             // collect the definition of all the functions
-            ATSNode prog = walker.program();
+            ATSNode prog = walker.program(types, funcs);
             
+            /* ******** ******** */
             // initialize all the global variables
             ATSScope globalScope = new ATSScope();
             prog.evaluate(types, funcs, globalScope);

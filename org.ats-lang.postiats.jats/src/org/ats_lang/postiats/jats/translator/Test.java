@@ -1,16 +1,107 @@
-
 package org.ats_lang.postiats.jats.translator;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
+import org.ats_lang.postiats.jats.ccomp.CCompTypes;
+import org.ats_lang.postiats.jats.ccomp.CCompUtils;
+import org.ats_lang.postiats.jats.interpreter.ATSScope;
+import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.UserFunc;
+import org.ats_lang.postiats.jats.parser.ATSILInterpreter;
+import org.ats_lang.postiats.jats.parser.ATSILLexer;
+import org.ats_lang.postiats.jats.parser.ATSILParser;
+import org.ats_lang.postiats.jats.tree.ATSNode;
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.stringtemplate.v4.*;
 
 public class Test {
 
-    public static void main(String[] args) {
-        ST st = new ST("<items:{it|<it.id>: <it.lastName>, <it.firstName>\n}>");
-        st.addAggr("items.{ firstName ,lastName, id }", "Ter", "Parr", 99); // add() uses varargs
-        st.addAggr("items.{firstName, lastName ,id}", "Tom", "Burns", 34);
-        System.out.println(st.render());
+    /**
+     * @param args
+     * @throws RecognitionException
+     * @throws IOException
+     */
+    public static void main(String[] args) throws RecognitionException,
+            IOException {
+        
+        STGroup group = new STGroupFile("org/ats_lang/postiats/jats/translator/ats_il_java.stg");
+//        ST st = group.getInstanceOf("program");
+//        
+//        String [] arr = {"xjsiejfwef;", "feifjeijfw;"};
+//        st.add("classname", "Main");
+//        st.add("stats", arr);
+//        String result = st.render(); // yields "int x = 0;"
+//        System.out.println(result);
+        
+        ST st = group.getInstanceOf("classes_st");
+        
+        String [] arr = {"xjsiejfwef;", "feifjeijfw;"};
+        st.add("classes", arr);
+        String result = st.render(); // yields "int x = 0;"
+        System.out.println(result);
+        
+        // load the group file ByteCode.stg, put in templates var
+        FileReader groupFileR = new FileReader(
+                "src/org/ats_lang/postiats/jats/translator/ats_il_java.stg");
+        StringTemplateGroup templates = new StringTemplateGroup(groupFileR);
+        groupFileR.close();
+        System.out.println("================");
+
+        String[] files = { "test/test01.txt", "test/f91_dats.c",
+                                                 "test/fact_dats.c",
+                                                 "test/fib_dats.c",
+                                                 "test/test_dats.c"};
+
+        // populate types and funcstions
+        Map<String, ATSType> types = CCompTypes.getLibTypes();
+
+        Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
+        CCompUtils.populateAllFuncs(funcs);
+
+        for (String file : files) {
+            System.out.println("Processing file " + file);
+
+            ANTLRFileStream fileStream = new ANTLRFileStream(file);
+
+            /* ******** ******** */
+            // lexing
+            ATSILLexer lexer = new ATSILLexer(fileStream);
+            TokenStream tokenStream = new CommonTokenStream(lexer);
+
+            /* ******** ******** */
+            // parsing
+            ATSILParser parser = new ATSILParser(tokenStream);
+            ATSILParser.rule_return parser_ret = parser.rule();
+            CommonTree tree = (CommonTree) parser_ret.getTree();
+            CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+
+            /* ******** ******** */
+            // tree parsing
+            ATSIL2JavaPass1 walker = new ATSIL2JavaPass1(nodes);
+            walker.setTemplateLib(templates);
+            // collect the definition of all the functions
+            ATSIL2JavaPass1.program_return ret = walker.program();
+            // ATSNode prog = walker.program(types, funcs);
+
+            /* ******** ******** */
+            StringTemplate output = (StringTemplate) ret.getTemplate();
+
+            /* ******** ******** */
+            System.out.println(output.toString()); // render full template
+
+            System.out.println(file + " is O.K.");
+        }
     }
 
 }
-

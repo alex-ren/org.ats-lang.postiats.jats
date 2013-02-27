@@ -7,5 +7,14 @@ ATSINSmove(tmp15$1, atspre_ptr0_add_bytesize(arg0, tmp16$1)) ;
 
 }
 
+#include "dddd"
+
+ATStmpdec (dd, int);
+
+// ddd
+
+#ifndef sss
 int main() {
 }
+#endif
+

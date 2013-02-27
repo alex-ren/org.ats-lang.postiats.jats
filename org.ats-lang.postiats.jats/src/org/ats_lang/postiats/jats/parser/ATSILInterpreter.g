@@ -12,6 +12,7 @@ options {
   import org.ats_lang.postiats.jats.type.*;
   import org.ats_lang.postiats.jats.value.*;
   import org.ats_lang.postiats.jats.*;
+  import org.ats_lang.postiats.jats.interpreter.*;
   
   import java.util.Map;
   import java.util.HashMap;
@@ -40,27 +41,26 @@ options {
         return m_funcs;
     }
     
-    public void setTypes(Map<String, ATSType> types) {
-        m_types = types;
-    }
-    
-    public void setFuncs(Map<String, FuncDef> funcs) {
-        m_funcs = funcs;
-    }
+//    private void setTypes(Map<String, ATSType> types) {
+//        m_types = types;
+//    }
+//    
+//    private void setFuncs(Map<String, FuncDef> funcs) {
+//        m_funcs = funcs;
+//    }
 }
 
 // START:rules
-program returns [ProgramNode node]
+program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [ProgramNode node]
 @init {
-
+  m_types = types;
+  m_funcs = funcs;
   ProgramNode pn = new ProgramNode();
   node = pn;
 }
-    : ^(PROGRAM (p=program {pn.addProg($p.node);}
-                 | type_def
+    : ^(PROGRAM (  type_def
                  | func_decl  // omit declaration
                  | func_def  {defineFunc($func_def.definition);}
-                 | minclude
                  | gstat {pn.addStat($gstat.node);}
                  )*
         )
@@ -73,9 +73,6 @@ gstat returns [DefinitionNode node]
     : var_def  {node = $var_def.node;} //    | var_assign {node = $var_assign.node;} no assignment for global variable
     ;
 
-minclude
-    : ^(MACRO_INCLUDE STRING)
-    ;
 
 block returns [BlockNode node]
 @init {
@@ -366,5 +363,6 @@ struct_def returns [StructType type]
         )
     ;
 
-// Why do I need this?
-dd: 'ddd'; 
+
+
+

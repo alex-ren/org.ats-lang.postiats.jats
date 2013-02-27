@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="antlr-output"/>
 	<classpathentry excluding="org/ats_lang/postiats/jats/value/FloatValue.java|org/ats_lang/postiats/jats/type/F0loatType.java|org/ats_lang/postiats/jats/type/FloatType.java|org/ats_lang/postiats/jats/type/I0ntType.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="antlr-3.5-complete.jar" sourcepath="/home/grad2/aren/workspace/antlr/repository/antlr3/runtime/Java/src/main/java/"/>
+	<classpathentry kind="lib" path="antlr-3.5-complete.jar" sourcepath="/home/grad2/aren/workspace/antlr/repository/antlr3/runtime/Java/src/main/java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
