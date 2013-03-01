@@ -28,23 +28,24 @@ classes_st(classes) ::= <<
 
 class_st(cls_name, cls_desc, body) ::= <<
 private static class <cls_name> {
-    // <cls_desc>
+    // line <cls_desc>
     <body>
 }
 >>
 
-body_st(members, names) ::= <<
+body_st(name_type_map, size, f_crt_default) ::= <<
 // members
-<members; separator="\n">
+<name_type_map.keys:{k| <name_type_map.(k)> <k> = <name_type_map.(k)>.<f_crt_default>();}; separator="\n">
 
 // constructor
 public <cls_name>() {
     xxx
 }
- 
-public int getSize() {
-    int ret = 0;
-    <names:{name|ret += <name>;}; separator="\n">
+
+public static int m_size = <size>;
+
+public static int getSize() {
+    return <size>
 }
 
 public createDefault() {
@@ -62,7 +63,7 @@ public void copyFrom() {
 }
 >>
 
-member_st(name) ::= <<
-int <name>;
+member_st(type, name) ::= <<
+<type> <name>;
 >>
 

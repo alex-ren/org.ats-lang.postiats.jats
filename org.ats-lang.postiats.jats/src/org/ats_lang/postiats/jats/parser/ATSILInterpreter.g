@@ -307,9 +307,9 @@ prim_type returns [ATSType type]
     | TYPE_BOOL   {type = BoolType.cType;}
     | TYPE_STRING {type = StringType.cType;}
     | TYPE_FLOAT  {type = DoubleType.cType;}
-    | TYPE_PTR  // todo
-    | TYPE_REF  // todo
-    | TYPE_ARRPTR  // todo
+    | TYPE_PTR  {System.out.println("TYPE_PTR not supported");} // todo
+    | TYPE_REF  {System.out.println("TYPE_REF not supported");} // todo
+    | TYPE_ARRPTR  {System.out.println("TYPE_ARRPTR not supported");} // todo
     ;
 
 
@@ -348,12 +348,12 @@ func_def returns [UserFunc definition]
     ;
 
 type_def
-    : ^(TYPEDEF ID struct_def) {defineType($ID.text, $struct_def.type);}
+    : ^(TYPEDEF ID struct_def[$ID.text]) {defineType($ID.text, $struct_def.type);}   // todo move to struct_def
     ;
 
-struct_def returns [StructType type]
+struct_def [String name] returns [StructType type]
 @init {
-  StructType ty = new StructType();
+  StructType ty = new StructType(name);
   type = ty;
 }
     : ^(STRUCT (var_def { DefinitionNode tynode = (DefinitionNode)$var_def.node;

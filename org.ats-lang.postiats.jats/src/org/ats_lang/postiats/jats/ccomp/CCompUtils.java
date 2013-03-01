@@ -25,7 +25,7 @@ public class CCompUtils {
             String name = method.getName();
             
             if (name.startsWith(CCompUtils.prefix)) {
-                System.out.println(name);
+                // System.out.println(name);
                 Class<?> [] paraTypes = method.getParameterTypes();
                 final int argc = paraTypes.length;
                 LibFunc func = new LibFunc() {

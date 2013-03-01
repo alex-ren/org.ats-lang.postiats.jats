@@ -14,6 +14,11 @@ public class IntType implements PrimType {
     }
     
     @Override
+    public String toString() {
+        return "IntValue";
+    }
+    
+    @Override
     public int getSize() {
         return 4;
     }

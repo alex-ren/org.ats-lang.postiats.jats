@@ -19,7 +19,6 @@ program
                  | type_def
                  | func_decl  // omit declaration
                  | func_def
-                 | minclude
                  | gstat
                  )*
         )
@@ -30,10 +29,6 @@ program
 
 gstat
     : var_def //    | var_assign {node = $var_assign.node;} no assignment for global variable
-    ;
-
-minclude
-    : ^(MACRO_INCLUDE STRING)
     ;
 
 block

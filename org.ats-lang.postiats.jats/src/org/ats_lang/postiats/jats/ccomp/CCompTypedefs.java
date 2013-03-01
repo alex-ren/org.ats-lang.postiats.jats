@@ -42,7 +42,7 @@ public class CCompTypedefs {
         
         atstype_size = SizeType.cType;
         
-        atstype_arrpsz = new StructType();
+        atstype_arrpsz = new StructType("atstype_arrpsz");
         atstype_arrpsz.addMember("ptr", atstype_arrptr);
         atstype_arrpsz.addMember("size", atstype_size);
         

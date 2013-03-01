@@ -30,13 +30,7 @@ public class Test {
     public static void main(String[] args) throws RecognitionException, IOException {
         String [] files = {"test/test01.txt", "test/f91_dats.c" , "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c" };
         
-        // populate types and funcstions
-        Map<String, ATSType> types = CCompTypes.getLibTypes();
-        
-        Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
-        CCompUtils.populateAllFuncs(funcs);
-        
-        
+
         for (String file: files) {
             System.out.println("Processing file " + file);
             
@@ -68,7 +62,13 @@ public class Test {
             /* ******** ******** */
             // tree parsing
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
-           
+
+            // populate types and funcstions
+            Map<String, ATSType> types = CCompTypes.getLibTypes();
+            
+            Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
+            CCompUtils.populateAllFuncs(funcs);
+            
             // collect the definition of all the functions
             ATSNode prog = walker.program(types, funcs);
             
@@ -91,7 +91,7 @@ public class Test {
             ((UserFunc)fun).evaluate(types, funcs, scope, null);
             
             
-            System.out.println(file + " is O.K.");
+            System.out.println(file + " is O.K.\n");
         }
     }
 
