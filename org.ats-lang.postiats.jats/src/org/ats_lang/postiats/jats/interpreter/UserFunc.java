@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.tree.ATSNode;
-import org.ats_lang.postiats.jats.tree.ATSNode.FunDecorator;
 import org.ats_lang.postiats.jats.tree.BlockNode;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;

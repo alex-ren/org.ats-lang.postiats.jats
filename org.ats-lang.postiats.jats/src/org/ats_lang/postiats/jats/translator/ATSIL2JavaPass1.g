@@ -31,34 +31,34 @@ options {
 }
 
 // START:rules
-program [Map<String, ATSType> types]  // , Map<String, FuncDef> funcs]
+program [Map<String, ATSType> types, String filename]  // , Map<String, FuncDef> funcs]
 @init {
   m_types = types;
 }
-    : ^(PROGRAM (ts+=type_def
+    : ^(PROGRAM (stats+=type_def
                  | func_decl  // omit declaration
-                 | func_def
-                 | gstat
+                 | stats+=func_def
+                 | stats+=gstat
                  )*
-        ) -> classes_st(classes={$ts})
+        ) -> program_t(stats={$stats}, filename={filename})
     ;
 
 
 
 
 gstat
-    : var_def //    | var_assign {node = $var_assign.node;} no assignment for global variable
+    : var_def {retval.st = $var_def.st;}  //    | var_assign {node = $var_assign.node;} no assignment for global variable
     ;
 
 block
-    : ^(BLOCK bstat*)
+    : ^(BLOCK bstats+=bstat*) -> fun_body_st(bstats={$bstats})
     ;
     
 bstat
-    : var_def
-    | ifstat
+    : var_def -> template() "vardef"
+    | ifstat -> template() "ifstat"
     // todo while dowhile
-    | atsins
+    | atsins -> template() "atsins"
     ;
 
 atsins
@@ -235,8 +235,8 @@ explst
     
 var_def returns [String name, ATSType type]
     : ^(VAR atstype ID) {retval.name = $ID.text;
-                         retval.type = $atstype.type;}
-    | ^(VAR_VOID atstype ID)
+                         retval.type = $atstype.type;} -> var_def_st(type={retval.type}, name={retval.name})
+    | ^(VAR_VOID atstype ID)  // no output, means null
     ;
 
 atstype returns [ATSType type]
@@ -272,7 +272,7 @@ func_decl
     : ^(FUNC_DECL ID func_decorator? atstype paralst?)
     ;
 
-para_decorator
+para_decorator returns [FuncPara.ParaDecorator papa_type]
     : PARA_TYPE_REF0
     | PARA_TYPE_REF1
     ;
@@ -283,19 +283,26 @@ func_decorator
     ;
     
 paralst
-    : ^(PARA_LIST (para)+)
+    : ^(PARA_LIST (paras+=para)+) -> paras_st(paras={$paras})
     ;
 
 para
-    : paratype ID
+    : paratype ID -> para_st(type={$paratype.type}, name={$ID.text})
     ;
 
-paratype
-    : ^(PARA_TYPE para_decorator? atstype)
+paratype returns [ATSType type]
+    : ^(PARA_TYPE para_dec=para_decorator? atstype) 
+      {if ($para_dec.papa_type == FuncPara.ParaDecorator.REF1) {
+           retval.type = PtrType.cType;
+       } else {
+           retval.type = $atstype.type;
+       }
+      }
     ;
     
 func_def
-    : ^(FUNC_DEF ID func_decorator? atstype paralst? block)
+    : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
+      -> fun_def_st(type={$atstype.type}, name={$ID.text}, paras={$paralst.st}, body={$block.st})
     ;
 
 type_def
@@ -315,7 +322,7 @@ retval.type = ty;
                           } 
                         }
                 )+
-        ) -> body_st(name_type_map={structMap}, size={ATSTypeUtils.calcSize(structMap)}, f_crt_default={"createDefault"})
+        ) -> class_body_st(name_type_map={structMap}, size={ATSTypeUtils.calcSize(structMap)})
     ;
 
 

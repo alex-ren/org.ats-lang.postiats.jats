@@ -13,6 +13,11 @@ public class ArrayType implements ATSType {
     }
 
     @Override
+    public String toString() {
+        return ArrayValue.class.getSimpleName();
+    }
+    
+    @Override
     public int getSize() {
         return m_len * m_type.getSize();
     }

@@ -7,6 +7,8 @@ public class SizeType implements PrimType {
 
     public static final SizeType cType = new SizeType();
     
+    public static final int m_size = 4;
+    
     private SizeType() {}
     
     public static SizeValue fromString(String text) {
@@ -14,8 +16,13 @@ public class SizeType implements PrimType {
     }
     
     @Override
+    public String toString() {
+        return SizeValue.class.getSimpleName();
+    }
+    
+    @Override
     public int getSize() {
-        return 4;
+        return m_size;
     }
 
     @Override

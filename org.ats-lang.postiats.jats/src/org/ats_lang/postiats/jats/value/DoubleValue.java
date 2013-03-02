@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.DoubleType;
 
 public class DoubleValue extends PrimValue {
 
-    static final DoubleType m_type = DoubleType.cType;
+    public static final DoubleType m_type = DoubleType.cType;
 
     public DoubleValue(Double v) {
         super(v);

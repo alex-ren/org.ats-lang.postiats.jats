@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.BoolType;
 
 public class BoolValue extends PrimValue {
 
-    static final BoolType m_type = BoolType.cType;
+    public static final BoolType m_type = BoolType.cType;
 
     public BoolValue(Boolean v) {
         super(v);

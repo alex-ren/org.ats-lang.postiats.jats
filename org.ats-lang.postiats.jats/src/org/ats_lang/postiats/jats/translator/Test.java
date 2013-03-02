@@ -15,7 +15,6 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
-import org.ats_lang.postiats.jats.ccomp.CCompTypes;
 import org.ats_lang.postiats.jats.ccomp.CCompUtils;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.parser.ATSILLexer;
@@ -94,13 +93,13 @@ public class Test {
             walker.setTemplateLib(templates);
             
             // populate types and funcstions
-            Map<String, ATSType> types = CCompTypes.getLibTypes();
+            Map<String, ATSType> types = CCompUtils.getLibTypes();
             
 //            Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
 //            CCompUtils.populateAllFuncs(funcs);
             
             // collect the definition of all the structures
-            ATSIL2JavaPass1.program_return ret = walker.program(types);
+            ATSIL2JavaPass1.program_return ret = walker.program(types, file);
             // ATSNode prog = walker.program(types, funcs);
 
             /* ******** ******** */
@@ -109,7 +108,7 @@ public class Test {
             /* ******** ******** */
             System.out.println(output.toString()); // render full template
 
-            System.out.println(file + " is O.K.");
+            System.out.println(file + " is O.K.\n\n");
         }
     }
 

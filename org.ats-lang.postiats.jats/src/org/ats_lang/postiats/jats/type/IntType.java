@@ -7,6 +7,8 @@ public class IntType implements PrimType {
     
     public static final IntType cType = new IntType();
     
+    public static final int m_size = 4;
+    
     private IntType() {}
     
     public static IntValue fromString(String text) {
@@ -15,12 +17,12 @@ public class IntType implements PrimType {
     
     @Override
     public String toString() {
-        return "IntValue";
+        return IntValue.class.getSimpleName();
     }
     
     @Override
     public int getSize() {
-        return 4;
+        return m_size;
     }
 
     @Override

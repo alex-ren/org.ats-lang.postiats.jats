@@ -9,6 +9,11 @@ public class VoidType implements ATSType {
     private VoidType() {}
     
     @Override
+    public String toString() {
+        return "void";
+    }
+    
+    @Override
     public int getSize() {
         return 0;
     }

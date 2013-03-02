@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.IntType;
 
 public class IntValue extends PrimValue {
     
-    static final IntType m_type = IntType.cType;
+    public static final IntType m_type = IntType.cType;
 
     public IntValue(Integer v) {
         super(v);

@@ -5,6 +5,7 @@ import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class BoolType implements PrimType {
     public static final BoolType cType = new BoolType();
+    public static final int m_size = 1;
 
     public static BoolValue createTrue() {
         return new BoolValue(true);
@@ -21,10 +22,15 @@ public class BoolType implements PrimType {
 
     private BoolType() {
     }
+    
+    @Override
+    public String toString() {
+        return BoolValue.class.getSimpleName();
+    }
 
     @Override
     public int getSize() {
-        return 1;
+        return m_size;
     }
 
     @Override

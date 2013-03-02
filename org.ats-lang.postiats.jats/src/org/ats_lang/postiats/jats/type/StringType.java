@@ -7,11 +7,18 @@ public class StringType implements PrimType {
 
     public static final StringType cType = new StringType();
     
+    public static final int m_size = PtrType.m_size;
+    
     private StringType() {}
     
     @Override
+    public String toString() {
+        return StringValue.class.getSimpleName();
+    }
+    
+    @Override
     public int getSize() {
-        return 4;
+        return m_size;
     }
 
     public static StringValue fromString(String text) {

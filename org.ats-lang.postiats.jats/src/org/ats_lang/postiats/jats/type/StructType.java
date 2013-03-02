@@ -20,6 +20,11 @@ public class StructType implements ATSType {
     }
 
     @Override
+    public String toString() {
+        return m_name;
+    }
+    
+    @Override
     public int getSize() {
         int accu = 0;
         for (Pair p: m_members) {

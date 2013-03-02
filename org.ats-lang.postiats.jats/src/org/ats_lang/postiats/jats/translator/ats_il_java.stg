@@ -1,69 +1,117 @@
 group ats_il_java;
 
-decl(type, name, value) ::= "<type> <name><init(value)>;"
-init(v) ::= "\< <if(v)> = <v><endif>"
 
-// need map here
-
-
-program(classname, stats) ::= <<
-public class <classname> {
-    <stats; separator="\n">
+program_t(filename, stats) ::= <<
+public class <filename> {
+    <stats; separator="\n\n">
 }
->>
-
-var_def(desc, type, name, init) ::= <<
-// <desc>
-static private <type> <name> = ;
-
-
->>
-
-classes_st(classes) ::= <<
-// The following inner classes are for structures
-<classes; separator="\n">
-// end of defining inner classes
 >>
 
 
 class_st(cls_name, cls_desc, body) ::= <<
-private static class <cls_name> {
+private static class <cls_name> implements CCompCompositeValue {
     // line <cls_desc>
     <body>
 }
 >>
 
-body_st(name_type_map, size, f_crt_default) ::= <<
-// members
-<name_type_map.keys:{k| <name_type_map.(k)> <k> = <name_type_map.(k)>.<f_crt_default>();}; separator="\n">
+class_body_st(name_type_map, size) ::= <<
+
+// size info
+public static final int m_size = <size>;
+
+// type info
+public static class m_type {
+    public static int getSize() {
+        return m_size;
+    }
+
+    public static <cls_name> createDefault() {
+        <cls_name> obj = new <cls_name>();
+        <! obj.mem = IntValue.createDefault(); !>
+        <name_type_map.keys:{k| obj.<k> = <name_type_map.(k)>.m_type.createDefault();}; separator="\n">
+
+        return obj;
+    }
+}
+
+// member info
+<! IntValue mem; !>
+<name_type_map.keys:{k| <var_decl_st(type={<name_type_map.(k)>}, name={<k>})>}; separator="\n">
 
 // constructor
-public <cls_name>() {
-    xxx
+private <cls_name>() {
 }
 
-public static int m_size = <size>;
+@Override
+public void copyfrom(CCompCompositeValue v) {
+    if (v instanceof <cls_name>) {
+        <cls_name> from = (<cls_name>) v;
+        <! this.mem.copyfrom(from.mem); !>
+        <name_type_map.keys:{k| this.<k>.copyfrom(from.<k>);}; separator="\n">
 
-public static int getSize() {
-    return <size>
-}
-
-public createDefault() {
-
-}
-
-public <cls_name> deepCopy() {
-
-}
-
-public void copyFrom() {
+    } else {
+        throw new Error("Wrong type");
+    }
 
 }
 
+@Override
+public <cls_name> deepcopy() {
+    <cls_name> obj = new <cls_name>();
+    <! obj.mem = mem.deepcopy(); !>
+    <name_type_map.keys:{k| obj.<k> = <k>.deepcopy();}; separator="\n">
+
+    return obj;
 }
 >>
 
-member_st(type, name) ::= <<
-<type> <name>;
+var_def_st(type, name) ::= <<
+static public <type> <name> = <type>.m_type.createDefault();
 >>
+
+
+var_decl_st(type, name) ::= <<
+static public <type> <name>;
+>>
+
+fun_def_st(type, name, paras, body) ::= <<
+static public <type> <name>(<paras>) {
+    <body>
+}
+>>
+
+paras_st(paras) ::= <<
+<paras; separator=",">
+>>
+
+para_st(type, name) ::= <<
+<type> <name>
+>>
+
+fun_body_st(bstats) ::= <<
+<bstats; separator="\n">
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.SizeType;
 
 public class SizeValue extends PrimValue {
 
-    static final SizeType m_type = SizeType.cType;
+    public static final SizeType m_type = SizeType.cType;
 
     public SizeValue(Integer v) {
         super(v);

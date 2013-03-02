@@ -4,10 +4,20 @@ import org.ats_lang.postiats.jats.value.PtrValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class PtrType implements ATSType {
+    public static final int m_size = 4;
 
+    public static final PtrType cType = new PtrType();
+    
+    private PtrType() {}
+    
+    @Override
+    public String toString() {
+        return PtrValue.class.getSimpleName();
+    }
+    
     @Override
     public int getSize() {
-        return 4;
+        return m_size;
     }
 
     @Override

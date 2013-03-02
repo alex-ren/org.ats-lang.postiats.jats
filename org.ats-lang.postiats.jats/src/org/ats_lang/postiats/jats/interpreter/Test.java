@@ -14,7 +14,6 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import org.ats_lang.postiats.jats.ccomp.CCompUtils;
-import org.ats_lang.postiats.jats.ccomp.CCompTypes;
 import org.ats_lang.postiats.jats.parser.*;
 import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.type.ATSType;
@@ -64,7 +63,7 @@ public class Test {
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
 
             // populate types and funcstions
-            Map<String, ATSType> types = CCompTypes.getLibTypes();
+            Map<String, ATSType> types = CCompUtils.getLibTypes();
             
             Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
             CCompUtils.populateAllFuncs(funcs);

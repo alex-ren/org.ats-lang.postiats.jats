@@ -12,4 +12,6 @@ public interface ATSType {
 	public int getSize();
 	
 	public ATSValue createDefault();
+	
+    public String toString();
 }

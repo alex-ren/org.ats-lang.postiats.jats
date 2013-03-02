@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.StringType;
 
 public class StringValue extends PrimValue {
 
-    static final StringType m_type = StringType.cType;
+    public static final StringType m_type = StringType.cType;
 
     public StringValue(String v) {
         super(v);

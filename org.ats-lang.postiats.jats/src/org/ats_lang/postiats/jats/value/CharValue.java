@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.CharType;
 
 public class CharValue extends PrimValue {
 
-    static final CharType m_type = CharType.cType;
+    public static final CharType m_type = CharType.cType;
 
     public CharValue(Character v) {
         super(v);

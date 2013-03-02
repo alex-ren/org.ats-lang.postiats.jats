@@ -15,6 +15,11 @@ public class KindType implements ATSType {
     }
 
     @Override
+    public String toString() {
+        throw new Error("to be decided");
+    }
+    
+    @Override
     public int getSize() {
         // TODO Auto-generated method stub
         return m_type.getSize();

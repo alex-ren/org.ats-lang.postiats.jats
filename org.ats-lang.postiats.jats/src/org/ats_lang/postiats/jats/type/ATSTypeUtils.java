@@ -5,8 +5,12 @@ import java.util.Map;
 public class ATSTypeUtils {
     
     public static int calcSize(Map<?, ATSType> map) {
-        // todo
-        return 0;
+        int ret = 0;
+        for(ATSType ty: map.values()) {
+            ret += ty.getSize();
+        }
+        
+        return ret;
     }
 
 }

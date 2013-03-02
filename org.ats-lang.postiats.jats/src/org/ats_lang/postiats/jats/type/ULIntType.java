@@ -7,6 +7,8 @@ public class ULIntType implements PrimType {
 
     public static final ULIntType cType = new ULIntType();
     
+    public static final int m_size = 4;
+    
     private ULIntType() {}
 	
     public static ULIntValue fromString(String text) {
@@ -14,8 +16,13 @@ public class ULIntType implements PrimType {
     }
     
     @Override
+    public String toString() {
+        return ULIntValue.class.getSimpleName();
+    }
+    
+    @Override
     public int getSize() {
-        return 4;
+        return m_size;
     }
 
     @Override

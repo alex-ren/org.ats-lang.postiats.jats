@@ -5,6 +5,8 @@ import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class DoubleType implements PrimType {
     public static final DoubleType cType = new DoubleType();
+    
+    public static final int m_size = 8;
 
     private DoubleType () {}
 
@@ -13,8 +15,13 @@ public class DoubleType implements PrimType {
     }
 
     @Override
+    public String toString() {
+        return DoubleValue.class.getSimpleName();
+    }
+    
+    @Override
     public int getSize() {
-        return 8;
+        return m_size;
     }
 
     @Override

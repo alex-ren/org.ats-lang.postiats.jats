@@ -1,8 +1,11 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.PtrType;
 
 public class PtrValue implements ATSValue {
+    
+    public static final PtrType m_type = PtrType.cType;
     
     private ATSValue m_mem;
     // It's possible that the pointer points to an element in an array.
@@ -79,7 +82,7 @@ public class PtrValue implements ATSValue {
     
     @Override
     public PtrType getType() {
-        return new PtrType();
+        return m_type;
     }
 
 }

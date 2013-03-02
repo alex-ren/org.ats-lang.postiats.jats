@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.ULIntType;
 
 public class ULIntValue extends PrimValue {
     
-    static final ULIntType m_type = ULIntType.cType;
+    public static final ULIntType m_type = ULIntType.cType;
 
     public ULIntValue(Integer v) {
         super(v);
