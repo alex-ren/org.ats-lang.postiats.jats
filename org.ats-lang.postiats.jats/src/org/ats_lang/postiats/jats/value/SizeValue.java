@@ -17,6 +17,10 @@ public class SizeValue extends PrimValue {
         }
     }
     
+    static SizeValue create(int v) {
+        return new SizeValue(v);
+    }
+    
     @Override
     public SizeValue castFrom(PrimValue pv) {
         return SizeValue.castFromV(pv);

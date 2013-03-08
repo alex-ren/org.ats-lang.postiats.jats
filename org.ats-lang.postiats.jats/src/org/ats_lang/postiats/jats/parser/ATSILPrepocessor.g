@@ -153,16 +153,17 @@ exp
     : func_call
     
     | ats_empty
-    | ats_cast
+    | ats_pvm_castfn
     | ats_simple_cast
-    | ats_sizeof
+    | ats_pmv_sizeof
     | ats_deref
     | ats_ref_arg
     | ats_pmv_ptrof
     | ats_sel_recsin
     | ats_sel_flt_rec
-    | ats_sel_arr_ind
-    | ats_sel_box_rec
+    | ats_sel_box_rec    
+//    | ats_sel_arr_ind
+
     
     | atom_exp
     ;
@@ -171,7 +172,7 @@ ats_empty
     : 'ATSempty' LParen RParen
     ;
     
-ats_cast
+ats_pvm_castfn
     : 'ATSPMVcastfn' LParen ID Comma atstype Comma exp RParen
     ;
 
@@ -185,13 +186,12 @@ ats_simple_cast
     | 'ATSPMVf0loat' LParen exp RParen
     ;    
 
-ats_sizeof
+ats_pmv_sizeof
     : 'ATSPMVsizeof' LParen atstype RParen
     ;
     
 ats_deref
-    : 'ATSderef2' LParen exp Comma atstype RParen
-    | 'ATSderef' LParen exp RParen
+    : 'ATSderef' LParen exp Comma atstype RParen
     ;
 
 ats_ref_arg
@@ -211,13 +211,13 @@ ats_sel_flt_rec
     : 'ATSselfltrec' LParen pmv=exp Comma atstype Comma lab=ID RParen
     ;
 
-ats_sel_arr_ind
-    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen 
-    ;
-
 ats_sel_box_rec
     : 'ATSselboxrec' LParen exp Comma atstype Comma ID RParen
     ;
+
+//ats_sel_arr_ind
+//    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen 
+//    ;
 
 atom_exp
     : INT

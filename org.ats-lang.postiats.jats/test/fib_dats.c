@@ -129,11 +129,11 @@ ATSif(tmp2) ATSthen() {
 /*
 letpush(beg)
 */
-ATSINSload(tmp7, ATSselfltrec(ATSderef(arg0), postiats_tyrec_0, atslab$0)) ; 
-ATSINSload(tmp8, ATSselfltrec(ATSderef(arg0), postiats_tyrec_0, atslab$1)) ; 
-ATSINSstore(ATSselfltrec(ATSderef(arg0), postiats_tyrec_0, atslab$0), tmp8) ; 
+ATSINSload(tmp7, ATSselfltrec(ATSderef(arg0, atstype_int), postiats_tyrec_0, atslab$0)) ;
+ATSINSload(tmp8, ATSselfltrec(ATSderef(arg0, atstype_int), postiats_tyrec_0, atslab$1)) ;
+ATSINSstore(ATSselfltrec(ATSderef(arg0, atstype_int), postiats_tyrec_0, atslab$0), tmp8) ;
 ATSINSmove(tmp9, atspre_g0int_add_int(tmp7, tmp8)) ;
-ATSINSstore(ATSselfltrec(ATSderef(arg0), postiats_tyrec_0, atslab$1), tmp9) ; 
+ATSINSstore(ATSselfltrec(ATSderef(arg0, atstype_int), postiats_tyrec_0, atslab$1), tmp9) ;
 /*
 letpush(end)
 */

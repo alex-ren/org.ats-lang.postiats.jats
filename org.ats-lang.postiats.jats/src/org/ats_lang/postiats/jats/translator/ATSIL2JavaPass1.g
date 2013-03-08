@@ -47,7 +47,7 @@ program [Map<String, ATSType> types, String filename]  // , Map<String, FuncDef>
 
 
 gstat
-    : var_def {retval.st = $var_def.st;}  //    | var_assign {node = $var_assign.node;} no assignment for global variable
+    : var_def -> global_var_st(var={$var_def.st})  //    | var_assign {node = $var_assign.node;} no assignment for global variable
     ;
 
 block
@@ -55,85 +55,88 @@ block
     ;
     
 bstat
-    : var_def -> template() "vardef"
-    | ifstat -> template() "ifstat"
+    : var_def {retval.st = $var_def.st;}
+    | ifstat {retval.st = $ifstat.st;}
     // todo while dowhile
-    | atsins -> template() "atsins"
+    | atsins {retval.st = $atsins.st;}
     ;
 
 atsins
-    : atsins_load
-    | atsins_store
-    | atsins_store_arrpsz_asz
-    | atsins_store_arrpsz_ptr
-    | atsins_store_fltrec_ofs
-    | atsins_move
-    | atsins_move_void
-    | atsins_pmove
-    | atsins_move_arrpsz_ptr
-    | atsins_update_ptrinc
-    | ats_return
+    : atsins_load {retval.st = $atsins_load.st;}
+    | atsins_store {retval.st = $atsins_store.st;}
+    | atsins_store_arrpsz_asz {retval.st = $atsins_store_arrpsz_asz.st;}
+    | atsins_store_arrpsz_ptr {retval.st = $atsins_store_arrpsz_ptr.st;}
+    | atsins_store_fltrec_ofs {retval.st = $atsins_store_fltrec_ofs.st;}
+    | atsins_move {retval.st = $atsins_move.st;}
+    | atsins_move_void {retval.st = $atsins_move_void.st;}
+    | atsins_pmove {retval.st = $atsins_pmove.st;}
+    | atsins_move_arrpsz_ptr {retval.st = $atsins_move_arrpsz_ptr.st;}
+    | atsins_update_ptrinc {retval.st = $atsins_update_ptrinc.st;}
+    | ats_return {retval.st = $ats_return.st;}
     ;
 
 atsins_load
-    : ^(ATSINS_LOAD dest=exp cont=exp)
+    : ^(ATSINS_LOAD dest=exp cont=exp) -> atsins_load_st(dest={$dest.st}, cont={$cont.st})
     ;
     
 atsins_store
-    : ^(ATSINS_STORE dest=exp cont=exp)
+    : ^(ATSINS_STORE dest=exp cont=exp) -> atsins_store_st(dest={$dest.st}, cont={$cont.st})
     ;
     
 atsins_store_arrpsz_asz
-    : ^(ATSINS_STORE_ARRPSZ_ASZ ID exp)
+    : ^(ATSINS_STORE_ARRPSZ_ASZ ID exp) -> atsins_store_arrpsz_asz_st(tmp={$ID.text}, asz={$exp.st})
     ;
     
 atsins_store_arrpsz_ptr
-    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp)
+    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) -> atsins_store_arrpsz_ptr_st(tmp={$ID.text}, tyelt={$atstype.type}, tsz={$exp.st})
     ;
     
 atsins_store_fltrec_ofs
-    : ^(ATSINS_STORE_FLTREC_OFS tmp=ID atstype lab=ID exp)
+    : ^(ATSINS_STORE_FLTREC_OFS tmp=ID atstype lab=ID exp) -> atsins_store_fltrec_ofs_st(tmp={$tmp.text}, tyrec={""}, lab={$lab.text}, val={$exp.st})
     ;
     
 atsins_move
-    : ^(ATSINS_MOVE ID exp)
+    : ^(ATSINS_MOVE ID exp) -> atsins_move_st(tmp={$ID.text}, val={$exp.st})
     ;
     
 atsins_move_void
+@final {
+throw new Error("atsins_move_void");
+}
     : ^(ATSINS_MOVE_VOID exp)
     ;
     
 atsins_pmove
-    : ^(ATSINS_PMOVE tmp=exp atstype val=exp)
+    : ^(ATSINS_PMOVE tmp=exp atstype val=exp) -> atsins_pmove_st(tmp={$tmp.st}, hit={$atstype.type}, val={$val.st})
     ;
     
 atsins_move_arrpsz_ptr
-    : ^(ATSINS_MOVE_ARRPSZ_PTR ID exp)
+    : ^(ATSINS_MOVE_ARRPSZ_PTR ID exp) -> atsins_move_arrpsz_ptr_st(tmp={$ID.text}, psz={$exp.st})
     ;
     
 atsins_update_ptrinc
-    : ^(ATSINS_UPDATE_PTRINC ID atstype)
+    : ^(ATSINS_UPDATE_PTRINC ID atstype) -> atsins_update_ptrinc_st(tmp={$ID.text}, tyelt={$atstype.type})
     ;
 
 ats_return
-    : ^(ATS_RETURN exp?)
+    : ^(ATS_RETURN exp?) -> ats_return_st(exp={$exp.st})
     ;
     
 ifstat
 
-    : ^(IFSTAT ifStat (elseIfStat)* (elseStat)?)
+    : ^(IFSTAT ifStat (elifsts+=elseIfStat)* (elseStat)?) -> ifstatement_st(aifstat={$ifStat.st}, aelseifstats={$elifsts}, aelsestat={$elseStat.st})
     ;
 
 ifStat
-    : ^(IF exp block)
+    : ^(IF exp block) -> ifstat_st(exp={$exp.st}, block={$block.st})
     ;
       
 elseIfStat
-    : ^(IF exp block)
+    : ^(IF exp block) -> elseifstat_st(exp={$exp.st}, block={$block.st})
     ;
 
 elseStat
-    : ^(ELSE block)
+    : ^(ELSE block) -> elsestat_st(block={$block.st})
     ;
 
 //assignment returns [ATSNode node]
@@ -141,92 +144,96 @@ elseStat
 //    ;
     
 exp
-    : func_call
-    | ats_exp
-    | atom_exp
+    : func_call -> {retval.st=$func_call.st;}
+    | ats_exp -> {retval.st=$ats_exp.st;}
+    | atom_exp {retval.st=$atom_exp.st;}
     ;
 
 ats_exp
-    : ats_cast
-    | ats_empty
-    | ats_simple_cast
-    | ats_sizeof
-    | ats_deref
-    | ats_ref_arg
-    | ats_pmv_ptrof
-    | ats_sel_recsin
-    | ats_sel_flt_rec
-    | ats_sel_arr_ind
-    | ats_sel_box_rec
+    : ats_pvm_castfn -> {retval.st=$ats_pvm_castfn.st;}
+    | ats_empty -> {retval.st=$ats_empty.st;}
+    | ats_simple_cast -> {retval.st=$ats_simple_cast.st;}
+    | ats_pmv_sizeof -> {retval.st=$ats_pmv_sizeof.st;}
+    | ats_deref -> {retval.st=$ats_deref.st;}
+    | ats_ref_arg -> {retval.st=$ats_ref_arg.st;}
+    | ats_pmv_ptrof -> {retval.st=$ats_pmv_ptrof.st;}
+    | ats_sel_recsin -> {retval.st=$ats_sel_recsin.st;}
+    | ats_sel_flt_rec -> {retval.st=$ats_sel_flt_rec.st;}
+    | ats_sel_box_rec -> {retval.st=$ats_sel_box_rec.st;}
+//    | ats_sel_arr_ind -> {retval.st=$ats_sel_arr_ind.st;}
+
     ;
 
-ats_cast
-    : ^(ATSPMV_CASTFN ID atstype exp)
+ats_pvm_castfn
+    : ^(ATSPMV_CASTFN ID atstype exp) -> ats_pvm_castfn_st(hit={$atstype.type}, exp={$exp.st})
     ;
     
 ats_empty
-    : ATS_EMPTY
+    : ATS_EMPTY ->
     ;
 
 ats_simple_cast
-    : ^(ATSPMV_INT exp)
-    | ^(ATSPMV_I0NT exp)
-    | ^(ATSPMV_F0LOAT exp)
-    | ATSPMV_TRUE
-    | ATSPMV_FALSE
-    | ^(ATSPMV_CHAR exp)
-    | ^(ATSPMV_STRING exp)
+    : ^(ATSPMV_INT exp) {retval.st = $exp.st;}  // no op now
+    | ^(ATSPMV_I0NT exp) {retval.st = $exp.st;}  // no op now
+    | ^(ATSPMV_F0LOAT exp) {retval.st = $exp.st;}  // no op now
+    | ATSPMV_TRUE -> new_prim_st(valuetype={"BoolValue"}, content={"true"})
+    | ATSPMV_FALSE -> new_prim_st(valuetype={"BoolValue"}, content={"false"})
+    | ^(ATSPMV_CHAR exp) {retval.st = $exp.st;}  // no op now
+    | ^(ATSPMV_STRING exp) {retval.st = $exp.st;}  // no op now
 
     ;
 
-ats_sizeof
-    : ^(ATSPMV_SIZEOF atstype)
+ats_pmv_sizeof
+    : ^(ATSPMV_SIZEOF atstype) -> ats_pmv_sizeof_st(type={$atstype.type})
     ;
     
 ats_deref
-    : ^(ATS_DEREF (atstype)? exp)
+    : ^(ATS_DEREF atstype exp) -> ats_deref_st(pmv={$exp.st}, hit={$atstype.type})
     ;
 
 ats_ref_arg
-    : ^(ATSPMV_REFARG0 exp)  // neglect refarg
-    | ^(ATSPMV_REFARG1 exp)  // neglect refarg
+    : ^(ATSPMV_REFARG0 exp) {retval.st = $exp.st;} // neglect refarg
+    | ^(ATSPMV_REFARG1 exp) {retval.st = $exp.st;} // neglect refarg
     ;
    
 ats_pmv_ptrof
-    : ^(ATSPMV_PTROF ID)
+    : ^(ATSPMV_PTROF ID) -> ats_ptrof_st(lval={$ID.text})
     ;
     
-ats_sel_recsin
-      : ^(ATS_SEL_RECSIN pmv=ID atstype lab=ID)
+ats_sel_recsin  // no idea what this is
+      : ^(ATS_SEL_RECSIN pmv=ID atstype lab=ID) -> ats_sel_recsin_st(pmv={$pmv.text}, tyrec={$atstype.type}, lab={$lab.text})
       ;
    
 ats_sel_flt_rec
-    : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID)
-    ;
-
-ats_sel_arr_ind
-    : ^(ATS_SEL_ARR_IND exp atstype ID)
+    : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID) -> ats_sel_flt_rec_st(pmv={$exp.st}, tyrec={$atstype.type}, lab={$ID.text})
     ;
 
 ats_sel_box_rec
-    : ^(ATS_SEL_BOX_REC exp atstype ID)
+    : ^(ATS_SEL_BOX_REC exp atstype ID) -> ats_sel_box_rec_st(pmv={$exp.st}, tyrec={$atstype.type}, lab={$ID.text})
     ;
+//ats_sel_arr_ind
+//    : ^(ATS_SEL_ARR_IND exp atstype ID)
+//    ;
+
 
 atom_exp
-    : ID
-    | INT
-    | FLOAT
-    | CHAR
-    | STRING
-    | Bool
+    : ID -> template (id={$ID.text}) "<id>"
+    | INT -> new_prim_st(valuetype={"IntValue"}, content={$INT.text})
+    | FLOAT -> new_prim_st(valuetype={"DoubleValue"}, content={$FLOAT.text})
+    | CHAR -> new_prim_st(valuetype={"CharValue"}, content={$CHAR.text})
+    | STRING -> new_prim_st(valuetype={"StringValue"}, content={$STRING.text})
+    | Bool -> new_prim_st(valuetype={"BoolValue"}, content={$Bool.text})
     ;
 
 func_call
-    : ^(FUNC_CALL ID explst?)
+    : ^(FUNC_CALL ID explst?) -> fun_call_st(name={$ID.text}, explst={$explst.sts})
     ;
 
-explst 
-    : ^(EXP_LIST (exp)+)
+explst returns [List<StringTemplate> sts]
+@init {
+    retval.sts = new ArrayList<StringTemplate>();
+}
+    : ^(EXP_LIST (exp {retval.sts.add($exp.st);})+) 
     ;
     
 //var_assign returns [ATSNode node]

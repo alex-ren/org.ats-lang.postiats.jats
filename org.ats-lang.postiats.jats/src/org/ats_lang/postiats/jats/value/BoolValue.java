@@ -38,6 +38,10 @@ public class BoolValue extends PrimValue {
             throw new Error("BoolValue::castFrom");
         }
     }
+    
+    static BoolValue create(boolean v) {
+        return new BoolValue(v);
+    }
 
     
     @Override
@@ -54,5 +58,5 @@ public class BoolValue extends PrimValue {
     public BoolType getType() {
         return m_type;
     }
-    
+
 }

@@ -17,6 +17,10 @@ public class CharValue extends PrimValue {
         }
     }
     
+    static CharValue create(Character v) {
+        return new CharValue(v);
+    }
+    
     @Override
     public CharValue castFrom(PrimValue pv) {
         return CharValue.castFromV(pv);

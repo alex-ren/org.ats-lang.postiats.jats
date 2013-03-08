@@ -17,6 +17,10 @@ public class ULIntValue extends PrimValue {
         }
     }
     
+    static ULIntValue create(int v) {
+        return new ULIntValue(v);
+    }
+    
     @Override
     public ULIntValue castFrom(PrimValue pv) {
         return ULIntValue.castFromV(pv);

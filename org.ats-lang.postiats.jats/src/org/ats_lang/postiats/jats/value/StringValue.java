@@ -17,6 +17,10 @@ public class StringValue extends PrimValue {
         }
     }
     
+    static StringValue create(String v) {
+        return new StringValue(v);
+    }
+    
     @Override
     public StringValue castFrom(PrimValue pv) {
         return StringValue.castFromV(pv);

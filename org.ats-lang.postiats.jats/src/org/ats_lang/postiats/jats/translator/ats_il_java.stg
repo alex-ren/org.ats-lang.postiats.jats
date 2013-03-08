@@ -66,8 +66,12 @@ public <cls_name> deepcopy() {
 }
 >>
 
+global_var_st(var) ::= <<
+<if(var)>static public <var>;<endif>
+>>
+
 var_def_st(type, name) ::= <<
-static public <type> <name> = <type>.m_type.createDefault();
+<type> <name> = <type>.m_type.createDefault();
 >>
 
 
@@ -82,7 +86,7 @@ static public <type> <name>(<paras>) {
 >>
 
 paras_st(paras) ::= <<
-<paras; separator=",">
+<paras; separator=", ">
 >>
 
 para_st(type, name) ::= <<
@@ -93,19 +97,109 @@ fun_body_st(bstats) ::= <<
 <bstats; separator="\n">
 >>
 
+ifstatement_st (aifstat, aelseifstats, aelsestat) ::= <<
+<aifstat><aelseifstats; separator="s"><aelsestat>
+>>
 
+ifstat_st(exp, block) ::= <<
+if (true == <exp>) {
+    <block>
+}
+>>
 
+elseifstat_st(exp, block) ::= <<
+ else if (true == <exp>) {
+    <block>
+}
+>>
 
+elsestat_st(block) ::= <<
+ else {
+    <block>
+}
+>>
 
+new_prim_st(valuetype, content) ::= <<
+<valuetype>.create(<content>)
+>>
 
+fun_call_st (name, explst) ::= <<
+<name>(<explst:{e |<e>.deepcopy()}; separator=", ">)
+>>
 
+atsins_load_st(dest, cont) ::= <<
+<dest>.copyfrom(<cont>);
+>>
 
+atsins_store_st(dest, cont) ::= <<
+<dest>.copyfrom(<cont>);
+>>
 
+atsins_store_arrpsz_asz_st(tmp, asz) ::= <<
+<tmp>.size.copyfrom(<asz>);
+>>
 
+atsins_store_arrpsz_ptr_st(tmp, tyelt, tsz) ::= <<
+<tmp>.ptr.m_elesz = <tyelt>.m_type.getSize();
+<tmp>.ptr.m_arr = new <tyelt> [SizeValue.castFromV(<tsz>).getContent()];
+for (int i = 0; i \< <tmp>.ptr.m_arr.length; ++i) {
+    <tmp>.ptr.m_arr[i] = <tyelt>.m_type.createDefault();
+}
+<tmp>.ptr.m_ind = 0;
+<tmp>.ptr.m_mem = <tmp>.ptr.m_arr[0];
+>>
 
+atsins_store_fltrec_ofs_st(tmp, tyrec, lab, val) ::= <<
+<tmp>.<lab>.copyfrom(<val>);
+>>
 
+atsins_move_st(tmp, val) ::= <<
+<tmp>.copyfrom(<val>);
+>>
 
+atsins_pmove_st(tmp, hit, val) ::= <<
+((<hit>) <tmp>.m_mem).copyfrom(<val>);
+>>
 
+atsins_move_arrpsz_ptr_st(tmp, psz) ::= <<
+<tmp>.copyfrom(<psz>.ptr);
+>>
+
+atsins_update_ptrinc_st(tmp, tyelt) ::=<<
+<tmp>.incIndex();
+>>
+
+ats_return_st(exp) ::= <<
+return<if(exp)> <exp>.deepcopy();<else>;<endif>
+>>
+
+ats_pvm_castfn_st(hit, exp) ::= <<
+<!no op!>
+>>
+
+ats_pmv_sizeof_st(type) ::= <<
+SizeValue.create(<type>.m_type.getSize())
+>>
+
+ats_deref_st(pmv, hit) ::= <<
+((<hit>) <pmv>.deRef())
+>>
+
+ats_ptrof_st(lval) ::= <<
+CPtrValue.create(<lval>, <lval>.m_type.getSize())
+>>
+
+ats_sel_recsin_st(pmv, tyrec, lab) ::= <<
+<pmv>
+>>
+
+ats_sel_flt_rec_st(pmv, tyrec, lab) ::= <<
+(<pmv>).<lab>
+>>
+
+ats_sel_box_rec_st(pmv, tyrec, lab) ::= <<
+((<tyrec>) (<pmv>.deRef())).<lab>
+>>
 
 
 

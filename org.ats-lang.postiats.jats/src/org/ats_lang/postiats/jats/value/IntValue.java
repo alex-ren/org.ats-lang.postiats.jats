@@ -17,6 +17,10 @@ public class IntValue extends PrimValue {
         }
     }
     
+    static IntValue create(int v) {
+        return new IntValue(v);
+    }
+    
     @Override
     public IntValue castFrom(PrimValue pv) {
         return IntValue.castFromV(pv);

@@ -217,16 +217,17 @@ exp
     : func_call
     
     | ats_empty
-    | ats_cast
+    | ats_pvm_castfn
     | ats_simple_cast
-    | ats_sizeof
+    | ats_pmv_sizeof
     | ats_deref
     | ats_ref_arg
     | ats_pmv_ptrof
     | ats_sel_recsin
     | ats_sel_flt_rec
-    | ats_sel_arr_ind
     | ats_sel_box_rec
+//    | ats_sel_arr_ind
+
     
     | atom_exp
     ;
@@ -235,7 +236,7 @@ ats_empty
     : 'ATSempty' LParen RParen -> ATS_EMPTY
     ;
     
-ats_cast
+ats_pvm_castfn
     : 'ATSPMVcastfn' LParen ID Comma atstype Comma exp RParen -> ^(ATSPMV_CASTFN ID atstype exp)
     ;
 
@@ -249,13 +250,12 @@ ats_simple_cast
     | 'ATSPMVf0loat' LParen exp RParen -> ^(ATSPMV_F0LOAT exp)
     ;    
 
-ats_sizeof
+ats_pmv_sizeof
     : 'ATSPMVsizeof' LParen atstype RParen -> ^(ATSPMV_SIZEOF atstype)
     ;
     
 ats_deref
-    : 'ATSderef2' LParen exp Comma atstype RParen -> ^(ATS_DEREF atstype exp)
-    | 'ATSderef' LParen exp RParen -> ^(ATS_DEREF exp)
+    : 'ATSderef' LParen exp Comma atstype RParen -> ^(ATS_DEREF atstype exp)
     ;
 
 ats_ref_arg
@@ -275,13 +275,14 @@ ats_sel_flt_rec
     : 'ATSselfltrec' LParen pmv=exp Comma atstype Comma lab=ID RParen -> ^(ATS_SEL_FLT_REC $pmv atstype $lab)
     ;
 
-ats_sel_arr_ind
-    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_ARR_IND exp atstype ID)
-    ;
-
 ats_sel_box_rec
     : 'ATSselboxrec' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_BOX_REC exp atstype ID)
     ;
+    
+//ats_sel_arr_ind
+//    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_ARR_IND exp atstype ID)
+//    ;
+
 
 atom_exp
     : INT

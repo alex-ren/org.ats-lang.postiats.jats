@@ -15,7 +15,7 @@ public abstract class PrimValue implements ATSValue {
     public PrimValue(Object mem) {
         m_mem = mem;
     }
-
+    
     public abstract PrimValue castFrom(PrimValue pv);
 
     @Override

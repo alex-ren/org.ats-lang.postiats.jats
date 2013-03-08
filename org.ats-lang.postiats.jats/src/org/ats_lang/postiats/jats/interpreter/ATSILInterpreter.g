@@ -181,20 +181,21 @@ exp returns [ATSNode node]
     ;
 
 ats_exp returns [ATSNode node]
-    : ats_cast {node = $ats_cast.node;}
+    : ats_pvm_castfn {node = $ats_pvm_castfn.node;}
     | ats_empty {node = $ats_empty.node;}
     | ats_simple_cast {node = $ats_simple_cast.node;}
-    | ats_sizeof {node = $ats_sizeof.node;}
+    | ats_pmv_sizeof {node = $ats_pmv_sizeof.node;}
     | ats_deref {node = $ats_deref.node;}
     | ats_ref_arg {node = $ats_ref_arg.node;}
     | ats_pmv_ptrof {node = $ats_pmv_ptrof.node;}
     | ats_sel_recsin {node = $ats_sel_recsin.node;}
     | ats_sel_flt_rec {node = $ats_sel_flt_rec.node;}
-    | ats_sel_arr_ind {node = $ats_sel_arr_ind.node;}
-    | ats_sel_box_rec {node = $ats_sel_box_rec.node;}
+    | ats_sel_box_rec {node = $ats_sel_box_rec.node;}    
+//    | ats_sel_arr_ind {node = $ats_sel_arr_ind.node;}
+
     ;
 
-ats_cast returns [AtsPmvCastFn node]
+ats_pvm_castfn returns [AtsPmvCastFn node]
     : ^(ATSPMV_CASTFN ID atstype exp) {node = new AtsPmvCastFn($ID.text, $atstype.type, $exp.node);}
     ;
     
@@ -213,15 +214,12 @@ ats_simple_cast returns [ATSNode node]
 
     ;
 
-ats_sizeof returns [AtsPmvSizeofNode node]
+ats_pmv_sizeof returns [AtsPmvSizeofNode node]
     : ^(ATSPMV_SIZEOF atstype) {node = new AtsPmvSizeofNode($atstype.type);}
     ;
     
 ats_deref returns [AtsDerefNode node]
-@init {
-  ATSType ty = null;
-}
-    : ^(ATS_DEREF (atstype{ty = $atstype.type;})? exp) {node = new AtsDerefNode(ty, $exp.node);}
+    : ^(ATS_DEREF atstype exp) {node = new AtsDerefNode($atstype.type, $exp.node);}
     ;
 
 ats_ref_arg returns [AtsPmvRefArg node]
@@ -241,13 +239,14 @@ ats_sel_flt_rec returns [AtsSelFltRecNode node]
     : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID) {node = new AtsSelFltRecNode($pmv.node, $atstype.type, $lab.text);}
     ;
 
-ats_sel_arr_ind returns [AtsSelArrIndNode node]
-    : ^(ATS_SEL_ARR_IND exp atstype ID) {node = new AtsSelArrIndNode($exp.node, $atstype.type, $ID.text);}
-    ;
-
 ats_sel_box_rec returns [AtsSelBoxRecNode node]
     : ^(ATS_SEL_BOX_REC exp atstype ID) {node = new AtsSelBoxRecNode($exp.node, $atstype.type, $ID.text);}
     ;
+    
+//ats_sel_arr_ind returns [AtsSelArrIndNode node]
+//    : ^(ATS_SEL_ARR_IND exp atstype ID) {node = new AtsSelArrIndNode($exp.node, $atstype.type, $ID.text);}
+//    ;
+
 
 atom_exp returns [ATSNode node]
     : ID     {node = new IdentifierNode($ID.text);}

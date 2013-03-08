@@ -2,7 +2,6 @@ package org.ats_lang.postiats.jats.translator;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
@@ -16,13 +15,11 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.ats_lang.postiats.jats.ccomp.CCompUtils;
-import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.parser.ATSILLexer;
 import org.ats_lang.postiats.jats.parser.ATSILParser;
 import org.ats_lang.postiats.jats.parser.ATSILPrepocessorLexer;
 import org.ats_lang.postiats.jats.parser.ATSILPrepocessorParser;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.stringtemplate.v4.*;
 
 public class Test {
 
@@ -50,7 +47,7 @@ public class Test {
         groupFileR.close();
         System.out.println("==group template file loaded==============");
 
-        String[] files = { "test/test01.txt", "test/f91_dats.c",
+        String[] files = { "test/test01.txt" , "test/f91_dats.c",
                                                  "test/fact_dats.c",
                                                  "test/fib_dats.c",
                                                  "test/test_dats.c"};

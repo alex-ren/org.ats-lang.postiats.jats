@@ -332,7 +332,7 @@ letpush(beg)
 */
 /* (*nothing*) */
 /* (*nothing*) */
-ATSINSload(tmp22, ATSderef2(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), HITundef(HSEtyvar(a(2938))))) ; 
+ATSINSload(tmp22, ATSderef(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), HITundef(HSEtyvar(a(2938))))) ;
 /* (*nothing*) */
 /*
 letpush(end)
@@ -366,7 +366,7 @@ letpush(beg)
 */
 /* (*nothing*) */
 /* (*nothing*) */
-ATSINSload(tmp22$1, ATSderef2(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), atstkind_t0ype(atstype_double))) ; 
+ATSINSload(tmp22$1, ATSderef(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), atstkind_t0ype(atstype_double))) ;
 /* (*nothing*) */
 /*
 letpush(end)
@@ -472,7 +472,7 @@ letpush(beg)
 */
 /* (*nothing*) */
 /* (*nothing*) */
-ATSINSload(tmp22$2, ATSderef2(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), atstkind_t0ype(atstype_double))) ; 
+ATSINSload(tmp22$2, ATSderef(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), atstkind_t0ype(atstype_double))) ;
 /* (*nothing*) */
 /*
 letpush(end)
@@ -578,7 +578,7 @@ letpush(beg)
 */
 /* (*nothing*) */
 /* (*nothing*) */
-ATSINSload(tmp22$3, ATSderef2(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), atstkind_t0ype(atstype_double))) ; 
+ATSINSload(tmp22$3, ATSderef(ATSPMVcastfn(ptr1_of_ptr0, atstkind_type(atstype_ptrk), arg0), atstkind_t0ype(atstype_double))) ;
 /* (*nothing*) */
 /*
 letpush(end)

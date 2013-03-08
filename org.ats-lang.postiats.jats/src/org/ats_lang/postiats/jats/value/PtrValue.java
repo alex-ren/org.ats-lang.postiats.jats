@@ -1,6 +1,5 @@
 package org.ats_lang.postiats.jats.value;
 
-import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.PtrType;
 
 public class PtrValue implements ATSValue {

@@ -17,6 +17,10 @@ public class DoubleValue extends PrimValue {
         }
     }
     
+    static DoubleValue create(Double v) {
+        return new DoubleValue(v);
+    }
+    
     @Override
     public DoubleValue castFrom(PrimValue pv) {
         return DoubleValue.castFromV(pv);

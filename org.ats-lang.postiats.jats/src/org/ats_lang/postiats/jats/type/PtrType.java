@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;
 import org.ats_lang.postiats.jats.value.PtrValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
@@ -12,7 +13,7 @@ public class PtrType implements ATSType {
     
     @Override
     public String toString() {
-        return PtrValue.class.getSimpleName();
+        return CCompTypedefs.CPtrValue.class.getSimpleName();
     }
     
     @Override
