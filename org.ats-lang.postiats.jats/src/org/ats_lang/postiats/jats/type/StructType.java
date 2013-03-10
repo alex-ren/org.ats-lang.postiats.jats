@@ -8,7 +8,7 @@ import org.ats_lang.postiats.jats.value.StructValue;
 
 public class StructType implements ATSType {
     private List<Pair> m_members;
-    private String m_name;
+    private String m_name;  // This name is for generating code.
     
     public StructType(String name) {
         m_members = new ArrayList<Pair>();

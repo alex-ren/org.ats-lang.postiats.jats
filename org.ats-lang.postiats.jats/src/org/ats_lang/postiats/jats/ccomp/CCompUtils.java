@@ -19,6 +19,7 @@ public class CCompUtils {
     
     public static final String prefix = "atspre_";
     
+    // used by interpreter
     public static int populateFuncs(Map<String, FuncDef> funcs, Class<?> cls) {
         Method [] methods = cls.getDeclaredMethods();
         int nFuncs = 0;
@@ -65,6 +66,7 @@ public class CCompUtils {
         
     }
     
+    // used by interpreter
     public static void populateAllFuncs(Map<String, FuncDef> funcs) {
         populateFuncs(funcs, CCompBasics.class);
         populateFuncs(funcs, CCompInteger.class);
@@ -79,26 +81,30 @@ public class CCompUtils {
     public static Map<String, ATSType> getLibTypes() {
         Map<String, ATSType> types = new HashMap<String, ATSType>();
 
-        types.put("atstype_ptrk", CCompTypedefs.atstype_ptrk);
+        types.put("atstype_ptrk", CCompTypedefs.m_atstype_ptrk);
         
-        types.put("atsvoid_t0ype", CCompTypedefs.atsvoid_t0ype);
+        types.put("atsvoid_t0ype", CCompTypedefs.m_atsvoid_t0ype);
         
-        types.put("atstype_int", CCompTypedefs.atstype_int);
+        types.put("atstype_int", CCompTypedefs.m_atstype_int);
         
-        types.put("atstype_double", CCompTypedefs.atstype_double);
+        types.put("atstype_double", CCompTypedefs.m_atstype_double);
         
-        types.put("atstype_bool", CCompTypedefs.atstype_bool);
+        types.put("atstype_bool", CCompTypedefs.m_atstype_bool);
         
-        types.put("atstype_arrptr", CCompTypedefs.atstype_arrptr);
+        types.put("atstype_arrptr", CCompTypedefs.m_atstype_arrptr);
         
-        types.put("atstype_size", CCompTypedefs.atstype_size);
+        types.put("atstype_size", CCompTypedefs.m_atstype_size);
         
-        types.put("atstype_arrpsz", CCompTypedefs.atstype_arrpsz);
+        types.put("atstype_arrpsz", CCompTypedefs.m_atstype_arrpsz);
+        
+        types.put("demo", CCompTypedefs.m_demo);
         
         
         return types;
     }
     
+    // used by translator
+    // add class name to function name
     public static int populateFuncNames(Map<String, String> funcs, Class<?> cls) {
         Method [] methods = cls.getDeclaredMethods();
         String classname = cls.getSimpleName();
@@ -119,6 +125,7 @@ public class CCompUtils {
         
     }
     
+    // used by translator
     public static void populateAllFuncNames(Map<String, String> funcs) {
         populateFuncNames(funcs, CCompBasics.class);
         populateFuncNames(funcs, CCompInteger.class);

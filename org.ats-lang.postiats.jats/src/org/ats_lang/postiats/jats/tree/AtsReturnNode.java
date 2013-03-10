@@ -22,7 +22,7 @@ public class AtsReturnNode implements ATSNode {
     public ATSValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ValueScope scope) {
         ATSValue v = m_exp.evaluate(types, funcs, scope);
-        return new ReturnValue(v);
+        return new ReturnValue(v.deepcopy());
     }
 
 }

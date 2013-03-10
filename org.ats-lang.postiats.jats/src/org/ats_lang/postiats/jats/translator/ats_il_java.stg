@@ -1,7 +1,18 @@
 group ats_il_java;
 
+main_no_arg_st() ::= <<
+static public void main(String [] args) {
+    mainats();
+}
+>>
 
-program_t(filename, stats) ::= <<
+main_args_st() ::= <<
+static public void main(String [] args) {
+    mainats()s;
+}
+>>
+
+program_t(filename, stats, main) ::= <<
 package postiats;
 
 import org.ats_lang.postiats.jats.value.BoolValue;
@@ -11,19 +22,25 @@ import org.ats_lang.postiats.jats.value.ULIntValue;
 import org.ats_lang.postiats.jats.value.SizeValue;
 import org.ats_lang.postiats.jats.value.DoubleValue;
 import org.ats_lang.postiats.jats.value.StringValue;
-
 import org.ats_lang.postiats.jats.ccomp.CCompCompositeValue;
+
+import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;
+
 import org.ats_lang.postiats.jats.ccomp.CCompArrayPtr;
 import org.ats_lang.postiats.jats.ccomp.CCompBasics;
 import org.ats_lang.postiats.jats.ccomp.CCompFloat;
 import org.ats_lang.postiats.jats.ccomp.CCompInteger;
 import org.ats_lang.postiats.jats.ccomp.CCompString;
 
-import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;
 
 public class <filename> {
     <stats; separator="\n\n">
+    
+    <main>
+    
 }
+
+
 >>
 
 
@@ -41,12 +58,10 @@ public static final int m_size = <size>;
 
 // type info
 public static class m_type {
-    @SuppressWarnings("unused")
     public static int getSize() {
         return m_size;
     }
 
-    @SuppressWarnings("unused")
     public static <cls_name> createDefault() {
         <cls_name> obj = new <cls_name>();
         <! obj.mem = IntValue.createDefault(); !>
@@ -199,7 +214,7 @@ return<if(exp)> <exp>.deepcopy();<else>;<endif>
 >>
 
 ats_pvm_castfn_st(hit, exp) ::= <<
-<!no op!>
+<!no op!>/*castfn_currently_no_op*/<exp>
 >>
 
 ats_pmv_sizeof_st(type) ::= <<

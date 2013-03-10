@@ -1,11 +1,3 @@
-atstkind_type(atstype_ptrk)
-xxx (atstkind_type(atstype_ptrk) arg0, atstkind_t0ype(atstype_int) arg1)
-{
-
-ATSINSmove(tmp16$1, ATSPMVsizeof(atstkind_t0ype(atstype_double))) ;
-ATSINSmove(tmp15$1, atspre_ptr0_add_bytesize(arg0, tmp16$1)) ;
-
-}
 
 #include "dddd"
 
@@ -14,7 +6,10 @@ ATStmpdec (dd, int);
 // ddd
 
 #ifndef sss
-int main() {
+int mainats() {
+ATStmpdec_void(tmp15, atsvoid_t0ype) ;
+ATSINSmove_void(tmp15, atspre_print_string(ATSPMVstring("Hello World!"))) ;
+ATSreturn(3) ;
 }
 #endif
 

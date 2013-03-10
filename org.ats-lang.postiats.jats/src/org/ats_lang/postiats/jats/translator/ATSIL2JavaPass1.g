@@ -28,6 +28,10 @@ options {
     private void defineType(String id, ATSType type) {
         m_types.put(id, type);
     }
+    
+    static enum MainSpec {NOMAIN, MAIN, MAINARGS};
+    
+    MainSpec m_main = MainSpec.NOMAIN;
 }
 
 // START:rules
@@ -42,7 +46,9 @@ program [Map<String, ATSType> types, Map<String, String> libfuncs, String filena
                  | stats+=func_def
                  | stats+=gstat
                  )*
-        ) -> program_t(stats={$stats}, filename={filename})
+        ) -> {m_main == MainSpec.NOMAIN}? program_t(stats={$stats}, filename={filename})
+          -> {m_main == MainSpec.MAIN}?   program_t(stats={$stats}, filename={filename}, main={%main_no_arg_st()})
+          ->                              program_t(stats={$stats}, filename={filename}, main={%main_args_st()})
     ;
 
 
@@ -325,12 +331,13 @@ m_typescope = m_typescope.newScope();
 // remove the scope since we leave the function body
 m_typescope = m_typescope.getParent();
 }
-    : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
+    : ^(FUNC_DEF ID {if ($ID.text.equals("mainats")) {m_main = MainSpec.MAIN;}}
+                 func_decorator? atstype (paralst{m_main = MainSpec.MAINARGS;})? block) 
       -> fun_def_st(type={$atstype.type}, name={$ID.text}, paras={$paralst.st}, body={$block.st})
     ;
 
 type_def
-    : ^(TYPEDEF ID struct_def[$ID.text]) {defineType($ID.text, $struct_def.type);}  // todo move to struct_def
+    : ^(TYPEDEF ID struct_def[$ID.text]) {defineType($ID.text, $struct_def.type);}
        -> class_st(cls_name={$ID.text}, cls_desc={"line " + $ID.line}, body={$struct_def.st})
     ;
 

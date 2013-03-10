@@ -594,7 +594,9 @@ ATSreturn(tmp21$3) ;
 /*
 ** declaration initialization
 */
-int main () {
+ATSglobaldec()
+atstkind_t0ype(atstype_int)
+mainats () {
 /*
 ATSINStmpdec(tmp0)) ;
 */
