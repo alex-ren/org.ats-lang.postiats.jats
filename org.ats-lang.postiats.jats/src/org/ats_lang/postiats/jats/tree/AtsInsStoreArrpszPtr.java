@@ -2,8 +2,8 @@ package org.ats_lang.postiats.jats.tree;
 
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.interpreter.ATSScope;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.ArrayType;
 import org.ats_lang.postiats.jats.value.ATSValue;
@@ -41,7 +41,7 @@ public class AtsInsStoreArrpszPtr implements ATSNode {
 //    ATSINSstore_arrpsz_ptr(tmp0, atstkind_t0ype(atstype_double), 3) ;
 
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope scope) {
+            Map<String, FuncDef> funcs, ValueScope scope) {
         
         ATSValue asz = m_asz.evaluate(types, funcs, scope);
         int len = (Integer)asz.getContent();  // must be an integer

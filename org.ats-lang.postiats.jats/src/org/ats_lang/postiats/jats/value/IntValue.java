@@ -17,7 +17,7 @@ public class IntValue extends PrimValue {
         }
     }
     
-    static IntValue create(int v) {
+    public static IntValue create(int v) {
         return new IntValue(v);
     }
     

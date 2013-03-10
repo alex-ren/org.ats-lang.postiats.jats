@@ -10,11 +10,10 @@ options {
 @header {
   package org.ats_lang.postiats.jats.translator;
 
-  import org.ats_lang.postiats.jats.tree.*;
   import org.ats_lang.postiats.jats.type.*;
   import org.ats_lang.postiats.jats.value.*;
-  import org.ats_lang.postiats.jats.*;
-  import org.ats_lang.postiats.jats.interpreter.*;
+  import org.ats_lang.postiats.jats.interpreter.FuncPara;
+  import org.ats_lang.postiats.jats.utils.*;
   
   import java.util.Map;
   import java.util.HashMap;
@@ -23,7 +22,8 @@ options {
 
 @members {
     private Map<String, ATSType> m_types;
-//    private Map<String, FuncDef> m_funcs;
+    private Map<String, String> m_libfuncs;
+    private ATSScope<ATSType> m_typescope;
     
     private void defineType(String id, ATSType type) {
         m_types.put(id, type);
@@ -31,9 +31,11 @@ options {
 }
 
 // START:rules
-program [Map<String, ATSType> types, String filename]  // , Map<String, FuncDef> funcs]
+program [Map<String, ATSType> types, Map<String, String> libfuncs, String filename]  // , Map<String, FuncDef> funcs]
 @init {
   m_types = types;
+  m_libfuncs = libfuncs;
+  m_typescope = new MapScope<ATSType>();
 }
     : ^(PROGRAM (stats+=type_def
                  | func_decl  // omit declaration
@@ -100,10 +102,7 @@ atsins_move
     ;
     
 atsins_move_void
-@final {
-throw new Error("atsins_move_void");
-}
-    : ^(ATSINS_MOVE_VOID exp)
+    : ^(ATSINS_MOVE_VOID exp) -> atsins_move_void_st(val={$exp.st})
     ;
     
 atsins_pmove
@@ -119,7 +118,8 @@ atsins_update_ptrinc
     ;
 
 ats_return
-    : ^(ATS_RETURN exp?) -> ats_return_st(exp={$exp.st})
+    : ^(ATS_RETURN exp) -> ats_return_st(exp={$exp.st})
+    | ^(ATS_RETURN_VOID exp) -> ats_return_st()
     ;
     
 ifstat
@@ -197,7 +197,7 @@ ats_ref_arg
     ;
    
 ats_pmv_ptrof
-    : ^(ATSPMV_PTROF ID) -> ats_ptrof_st(lval={$ID.text})
+    : ^(ATSPMV_PTROF ID) -> ats_ptrof_st(lval={$ID.text}, type={m_typescope.getValue($ID.text)})
     ;
     
 ats_sel_recsin  // no idea what this is
@@ -226,7 +226,14 @@ atom_exp
     ;
 
 func_call
-    : ^(FUNC_CALL ID explst?) -> fun_call_st(name={$ID.text}, explst={$explst.sts})
+@init {
+String funcname = null;
+}
+    : ^(FUNC_CALL ID {funcname = m_libfuncs.get($ID.text); 
+                      if (funcname == null) {
+                          funcname = $ID.text;
+                      }
+                     } explst?) -> fun_call_st(name={funcname}, explst={$explst.sts})
     ;
 
 explst returns [List<StringTemplate> sts]
@@ -242,7 +249,9 @@ explst returns [List<StringTemplate> sts]
     
 var_def returns [String name, ATSType type]
     : ^(VAR atstype ID) {retval.name = $ID.text;
-                         retval.type = $atstype.type;} -> var_def_st(type={retval.type}, name={retval.name})
+                         retval.type = $atstype.type;
+                         m_typescope.addValue($ID.text, $atstype.type);
+                         } -> var_def_st(type={retval.type}, name={retval.name})
     | ^(VAR_VOID atstype ID)  // no output, means null
     ;
 
@@ -279,9 +288,9 @@ func_decl
     : ^(FUNC_DECL ID func_decorator? atstype paralst?)
     ;
 
-para_decorator returns [FuncPara.ParaDecorator papa_type]
-    : PARA_TYPE_REF0
-    | PARA_TYPE_REF1
+para_decorator returns [FuncPara.ParaDecorator para_type]
+    : PARA_TYPE_REF0 {retval.para_type = FuncPara.ParaDecorator.REF0;}
+    | PARA_TYPE_REF1 {retval.para_type = FuncPara.ParaDecorator.REF1;}
     ;
     
 func_decorator
@@ -299,7 +308,7 @@ para
 
 paratype returns [ATSType type]
     : ^(PARA_TYPE para_dec=para_decorator? atstype) 
-      {if ($para_dec.papa_type == FuncPara.ParaDecorator.REF1) {
+      {if ($para_dec.para_type == FuncPara.ParaDecorator.REF1) {
            retval.type = PtrType.cType;
        } else {
            retval.type = $atstype.type;
@@ -308,6 +317,14 @@ paratype returns [ATSType type]
     ;
     
 func_def
+@init {
+// add scope for the function body 
+m_typescope = m_typescope.newScope();
+}
+@final {
+// remove the scope since we leave the function body
+m_typescope = m_typescope.getParent();
+}
     : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
       -> fun_def_st(type={$atstype.type}, name={$ID.text}, paras={$paralst.st}, body={$block.st})
     ;
@@ -331,5 +348,4 @@ retval.type = ty;
                 )+
         ) -> class_body_st(name_type_map={structMap}, size={ATSTypeUtils.calcSize(structMap)})
     ;
-
 

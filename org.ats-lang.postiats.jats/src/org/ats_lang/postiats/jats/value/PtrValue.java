@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.PtrType;
 
 public class PtrValue implements ATSValue {
@@ -37,7 +38,11 @@ public class PtrValue implements ATSValue {
         m_mem = arr.get(ind);
     }
     
-	public ATSValue deRef() {
+	public ATSValue deRef(ATSType type) {
+	    if (type != m_mem.getType()) {
+	        System.out.println("need " + m_mem.getType() + ", we get " + type);
+	        throw new Error("deref on wrong type");
+	    }
 		return m_mem;
 	}
 

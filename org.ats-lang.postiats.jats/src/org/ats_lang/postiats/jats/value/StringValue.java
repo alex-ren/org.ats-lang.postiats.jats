@@ -17,7 +17,7 @@ public class StringValue extends PrimValue {
         }
     }
     
-    static StringValue create(String v) {
+    public static StringValue create(String v) {
         return new StringValue(v);
     }
     

@@ -2,6 +2,25 @@ group ats_il_java;
 
 
 program_t(filename, stats) ::= <<
+package postiats;
+
+import org.ats_lang.postiats.jats.value.BoolValue;
+import org.ats_lang.postiats.jats.value.CharValue;
+import org.ats_lang.postiats.jats.value.IntValue;
+import org.ats_lang.postiats.jats.value.ULIntValue;
+import org.ats_lang.postiats.jats.value.SizeValue;
+import org.ats_lang.postiats.jats.value.DoubleValue;
+import org.ats_lang.postiats.jats.value.StringValue;
+
+import org.ats_lang.postiats.jats.ccomp.CCompCompositeValue;
+import org.ats_lang.postiats.jats.ccomp.CCompArrayPtr;
+import org.ats_lang.postiats.jats.ccomp.CCompBasics;
+import org.ats_lang.postiats.jats.ccomp.CCompFloat;
+import org.ats_lang.postiats.jats.ccomp.CCompInteger;
+import org.ats_lang.postiats.jats.ccomp.CCompString;
+
+import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;
+
 public class <filename> {
     <stats; separator="\n\n">
 }
@@ -22,10 +41,12 @@ public static final int m_size = <size>;
 
 // type info
 public static class m_type {
+    @SuppressWarnings("unused")
     public static int getSize() {
         return m_size;
     }
 
+    @SuppressWarnings("unused")
     public static <cls_name> createDefault() {
         <cls_name> obj = new <cls_name>();
         <! obj.mem = IntValue.createDefault(); !>
@@ -76,7 +97,7 @@ var_def_st(type, name) ::= <<
 
 
 var_decl_st(type, name) ::= <<
-static public <type> <name>;
+public <type> <name>;
 >>
 
 fun_def_st(type, name, paras, body) ::= <<
@@ -102,13 +123,13 @@ ifstatement_st (aifstat, aelseifstats, aelsestat) ::= <<
 >>
 
 ifstat_st(exp, block) ::= <<
-if (true == <exp>) {
+if (<exp>.isTrue()) {
     <block>
 }
 >>
 
 elseifstat_st(exp, block) ::= <<
- else if (true == <exp>) {
+ else if (<exp>.isTrue) {
     <block>
 }
 >>
@@ -157,6 +178,10 @@ atsins_move_st(tmp, val) ::= <<
 <tmp>.copyfrom(<val>);
 >>
 
+atsins_move_void_st(val) ::= <<
+<if(val)><val>;<endif>
+>>
+
 atsins_pmove_st(tmp, hit, val) ::= <<
 ((<hit>) <tmp>.m_mem).copyfrom(<val>);
 >>
@@ -185,8 +210,8 @@ ats_deref_st(pmv, hit) ::= <<
 ((<hit>) <pmv>.deRef())
 >>
 
-ats_ptrof_st(lval) ::= <<
-CPtrValue.create(<lval>, <lval>.m_type.getSize())
+ats_ptrof_st(lval, type) ::= <<
+CCompTypedefs.CPtrValue.create(<lval>, <type>.m_type.getSize())
 >>
 
 ats_sel_recsin_st(pmv, tyrec, lab) ::= <<

@@ -17,7 +17,7 @@ public class CharValue extends PrimValue {
         }
     }
     
-    static CharValue create(Character v) {
+    public static CharValue create(Character v) {
         return new CharValue(v);
     }
     

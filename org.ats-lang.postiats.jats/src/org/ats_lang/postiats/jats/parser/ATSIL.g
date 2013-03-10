@@ -60,6 +60,7 @@ tokens {
   ATSINS_MOVE_ARRPSZ_PTR;
   ATSINS_UPDATE_PTRINC;
   ATS_RETURN;
+  ATS_RETURN_VOID;
   
   ATSPMV_CASTFN;
 	ATSPMV_INT;
@@ -89,6 +90,14 @@ tokens {
   package org.ats_lang.postiats.jats.parser;
 }
 
+
+@lexer::members {
+String m_str;
+
+public String getEscaped() {
+    return m_str;
+}
+}
 
 rule: program
     ;
@@ -193,7 +202,7 @@ ats_return
     ;
 
 ats_return_void
-    : 'ATSreturn_void' LParen exp RParen -> ^(ATS_RETURN exp)
+    : 'ATSreturn_void' LParen exp RParen -> ^(ATS_RETURN_VOID exp)
     ;
 
 ifstat
@@ -447,12 +456,12 @@ STRING
                '/' | '?' | ' '
               ) { buf.appendCodePoint(i); }
              | ESC_SEQ [buf]
-           )+ '"' { setText(buf.toString()); /*System.out.println(getText());*/ } 
+           )+ '"' {m_str = buf.toString();} // { setText(buf.toString()); /*System.out.println(getText());*/ } 
     ;
 
 CHAR
 @init { final StringBuilder buf = new StringBuilder(); }
-    : '\'' ( ESC_SEQ[buf] | i=~('\''|'\\') { buf.appendCodePoint(i); } ) '\''  { setText(buf.toString()); }
+    : '\'' ( ESC_SEQ[buf] | i=~('\''|'\\') { buf.appendCodePoint(i); } ) '\''  {m_str = buf.toString();}  // { setText(buf.toString()); }
     ;
 
 
@@ -488,3 +497,5 @@ fragment
 UNICODE_ESC
     :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
     ;
+
+    

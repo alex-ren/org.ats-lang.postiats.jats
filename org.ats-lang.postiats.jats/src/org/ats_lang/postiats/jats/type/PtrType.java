@@ -13,7 +13,7 @@ public class PtrType implements ATSType {
     
     @Override
     public String toString() {
-        return CCompTypedefs.CPtrValue.class.getSimpleName();
+        return CCompTypedefs.class.getSimpleName() + "." + CCompTypedefs.CPtrValue.class.getSimpleName();
     }
     
     @Override

@@ -17,7 +17,7 @@ public class SizeValue extends PrimValue {
         }
     }
     
-    static SizeValue create(int v) {
+    public static SizeValue create(int v) {
         return new SizeValue(v);
     }
     

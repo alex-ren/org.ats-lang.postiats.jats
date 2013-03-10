@@ -73,7 +73,7 @@ public class Test {
             
             /* ******** ******** */
             // initialize all the global variables
-            ATSScope globalScope = new ATSScope();
+            ValueScope globalScope = new ValueScope();
             prog.evaluate(types, funcs, globalScope);
             
             // "main" or "mainats"
@@ -86,7 +86,7 @@ public class Test {
                 }
             }
             
-            ATSScope scope = new ATSScope(globalScope);
+            ValueScope scope = globalScope.newScope();
             ((UserFunc)fun).evaluate(types, funcs, scope, null);
             
             

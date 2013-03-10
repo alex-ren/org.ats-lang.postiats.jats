@@ -1,7 +1,11 @@
 package org.ats_lang.postiats.jats.translator;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
@@ -20,6 +24,7 @@ import org.ats_lang.postiats.jats.parser.ATSILParser;
 import org.ats_lang.postiats.jats.parser.ATSILPrepocessorLexer;
 import org.ats_lang.postiats.jats.parser.ATSILPrepocessorParser;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.utils.FilenameUtils;
 
 public class Test {
 
@@ -58,11 +63,13 @@ public class Test {
 //        Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
 //        CCompUtils.populateAllFuncs(funcs);
 
-        for (String file : files) {
-            System.out.println("Processing file " + file);
+        for (String fileName : files) {
+            System.out.println("Processing file " + fileName);
 
-            ANTLRFileStream fileStream = new ANTLRFileStream(file);
+            ANTLRFileStream fileStream = new ANTLRFileStream(fileName);
             
+            File file = new File(fileName);
+            String classname = FilenameUtils.removeExtension(file.getName());
             // preprocessing
             ATSILPrepocessorLexer lexer0 = new ATSILPrepocessorLexer(fileStream);
             TokenStream tokens = new TokenRewriteStream(lexer0);
@@ -92,11 +99,11 @@ public class Test {
             // populate types and funcstions
             Map<String, ATSType> types = CCompUtils.getLibTypes();
             
-//            Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
-//            CCompUtils.populateAllFuncs(funcs);
+            Map<String, String> libfuncs = new HashMap<String, String>();
+            CCompUtils.populateAllFuncNames(libfuncs);
             
             // collect the definition of all the structures
-            ATSIL2JavaPass1.program_return ret = walker.program(types, file);
+            ATSIL2JavaPass1.program_return ret = walker.program(types, libfuncs, classname);
             // ATSNode prog = walker.program(types, funcs);
 
             /* ******** ******** */
@@ -104,6 +111,10 @@ public class Test {
 
             /* ******** ******** */
             System.out.println(output.toString()); // render full template
+            FileWriter fw = new FileWriter("test/postiats/" + classname + ".java");
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(output.toString());
+            bw.close();
 
             System.out.println(file + " is O.K.\n\n");
         }

@@ -17,7 +17,7 @@ public class DoubleValue extends PrimValue {
         }
     }
     
-    static DoubleValue create(Double v) {
+    public static DoubleValue create(Double v) {
         return new DoubleValue(v);
     }
     

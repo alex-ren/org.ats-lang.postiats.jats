@@ -2,8 +2,8 @@ package org.ats_lang.postiats.jats.tree;
 
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.interpreter.ATSScope;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
@@ -24,7 +24,7 @@ public class AtsSelRecsinNode implements ATSNode {
 //    ATStmpdec(tmp16, atstkind_t0ype(atstype_int)) ;
 //    ATSselrecsin(tmp16, atstkind_t0ype(atstype_int), atslab$1)
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope scope) {
+            Map<String, FuncDef> funcs, ValueScope scope) {
         // TODO Auto-generated method stub
         return scope.getValue(m_pmv);
     }

@@ -13,6 +13,7 @@ options {
   import org.ats_lang.postiats.jats.value.*;
   import org.ats_lang.postiats.jats.*;
   import org.ats_lang.postiats.jats.interpreter.*;
+  import org.ats_lang.postiats.jats.utils.*;
   
   import java.util.Map;
   import java.util.HashMap;
@@ -145,7 +146,8 @@ atsins_update_ptrinc returns [AtsInsUpdatePtrInc node]
     ;
 
 ats_return returns [AtsReturnNode node]
-    : ^(ATS_RETURN exp?) {node = new AtsReturnNode($exp.node);}
+    : ^(ATS_RETURN exp) {node = new AtsReturnNode($exp.node);}
+    | ^(ATS_RETURN_VOID exp) {node = new AtsReturnNode($exp.node);}
     ;
     
 ifstat returns [IfNode node]
@@ -252,8 +254,8 @@ atom_exp returns [ATSNode node]
     : ID     {node = new IdentifierNode($ID.text);}
     | INT    {node = new ValueNode(IntType.fromString($INT.text));}
     | FLOAT  {node = new ValueNode(DoubleType.fromString($FLOAT.text));}
-    | CHAR   {node = new ValueNode(CharType.fromString($CHAR.text));}
-    | STRING {node = new ValueNode(StringType.fromString($STRING.text));} 
+    | CHAR   {node = new ValueNode(CharType.fromString(LiteralUtils.getStringEcsaped($CHAR.text)));}
+    | STRING {node = new ValueNode(StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
     | Bool   {node = new ValueNode(BoolType.fromString($Bool.text));}
     ;
 
@@ -281,7 +283,7 @@ var_def returns [DefinitionNode node]
 atstype returns [ATSType type]
     : ^(TYPE prim_type) {type = $prim_type.type;}
     | ^(TYPE name_type)  {type = $name_type.type;}
-    | ^(TYPE kind_decorator name_type) {type = new KindType($kind_decorator.kind, $name_type.type);}
+    | ^(TYPE kind_decorator name_type) {type = $name_type.type;}  // We don't handle decorator now. {type = new KindType($kind_decorator.kind, $name_type.type);}
     ;
 
 name_type returns [ATSType type]

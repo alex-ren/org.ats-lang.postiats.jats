@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.interpreter.ATSScope;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LibFunc;
 import org.ats_lang.postiats.jats.interpreter.UserFunc;
+import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
@@ -22,7 +22,7 @@ public class FuncCallNode implements ATSNode {
     
     @Override
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope scope) {
+            Map<String, FuncDef> funcs, ValueScope scope) {
         List<ATSValue> m_args = null;
         
         if (m_paras != null) {
@@ -40,7 +40,7 @@ public class FuncCallNode implements ATSNode {
         }
 
         // Only global scope can be seen inside the function.
-        ATSScope aScope = new ATSScope(scope.parent());
+        ValueScope aScope = scope.getParent().newScope();
         
         if (fun instanceof UserFunc) {
             return ((UserFunc)fun).evaluate(types, funcs, aScope, m_args);

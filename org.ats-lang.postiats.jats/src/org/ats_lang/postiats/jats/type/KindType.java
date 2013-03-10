@@ -16,7 +16,7 @@ public class KindType implements ATSType {
 
     @Override
     public String toString() {
-        throw new Error("to be decided");
+        return m_type.toString();
     }
     
     @Override

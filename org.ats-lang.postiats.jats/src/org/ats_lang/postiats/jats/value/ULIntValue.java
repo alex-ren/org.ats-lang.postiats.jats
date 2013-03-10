@@ -17,7 +17,7 @@ public class ULIntValue extends PrimValue {
         }
     }
     
-    static ULIntValue create(int v) {
+    public static ULIntValue create(int v) {
         return new ULIntValue(v);
     }
     

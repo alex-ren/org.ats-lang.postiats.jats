@@ -42,7 +42,7 @@ public class UserFunc implements FuncDef{
      * scope: The scope, which is used as the current scope should be provided by the caller.
      */
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope scope, List<ATSValue> args) {
+            Map<String, FuncDef> funcs, ValueScope scope, List<ATSValue> args) {
         if (null != m_paras) {
             Iterator<FuncPara> iter_para = m_paras.iterator();
             Iterator<ATSValue> iter_val = args.iterator();

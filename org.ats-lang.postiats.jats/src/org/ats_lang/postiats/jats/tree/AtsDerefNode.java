@@ -2,8 +2,8 @@ package org.ats_lang.postiats.jats.tree;
 
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.interpreter.ATSScope;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.PtrValue;
@@ -19,9 +19,9 @@ public class AtsDerefNode implements ATSNode {
     
     @Override
     // #define ATSderef2(pmv, hit) (*(hit*)pmv)
-    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope scope) {
+    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
         PtrValue v = (PtrValue)m_node.evaluate(types, funcs, scope);
-        return v.deRef();
+        return v.deRef(m_type);
 
     }
 

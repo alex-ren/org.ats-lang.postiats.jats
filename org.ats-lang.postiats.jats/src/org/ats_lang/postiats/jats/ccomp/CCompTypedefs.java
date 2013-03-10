@@ -180,7 +180,7 @@ public class CCompTypedefs {
         
         public int m_elesz;
 
-        static CPtrValue create(Object v, int elesz) {
+        static public CPtrValue create(Object v, int elesz) {
             return new CPtrValue(v, elesz);
         }
         

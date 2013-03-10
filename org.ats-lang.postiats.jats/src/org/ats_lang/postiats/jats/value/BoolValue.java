@@ -26,6 +26,9 @@ public class BoolValue extends PrimValue {
         }
     }
     
+    public boolean isTrue() {
+        return (Boolean) m_mem;
+    }
     @Override
     public BoolValue castFrom(PrimValue pv) {
         return BoolValue.castFromV(pv);
@@ -39,7 +42,7 @@ public class BoolValue extends PrimValue {
         }
     }
     
-    static BoolValue create(boolean v) {
+    public static BoolValue create(boolean v) {
         return new BoolValue(v);
     }
 

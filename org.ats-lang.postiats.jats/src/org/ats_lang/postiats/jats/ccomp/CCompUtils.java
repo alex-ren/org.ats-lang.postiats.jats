@@ -98,5 +98,33 @@ public class CCompUtils {
         
         return types;
     }
+    
+    public static int populateFuncNames(Map<String, String> funcs, Class<?> cls) {
+        Method [] methods = cls.getDeclaredMethods();
+        String classname = cls.getSimpleName();
+        int nFuncs = 0;
+
+        for (final Method method: methods) {
+            String name = method.getName();
+            
+            if (name.startsWith(CCompUtils.prefix)) {
+                // System.out.println(name);
+
+                funcs.put(name, classname + "." + name);
+                nFuncs++;
+            }
+        }
         
+        return nFuncs;
+        
+    }
+    
+    public static void populateAllFuncNames(Map<String, String> funcs) {
+        populateFuncNames(funcs, CCompBasics.class);
+        populateFuncNames(funcs, CCompInteger.class);
+        populateFuncNames(funcs, CCompFloat.class);
+        populateFuncNames(funcs, CCompArrayPtr.class);
+        populateFuncNames(funcs, CCompString.class);
+        
+    }
 }
