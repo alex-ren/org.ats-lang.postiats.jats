@@ -42,6 +42,7 @@ public class FuncCallNode implements ATSNode {
         // Only global scope can be seen inside the function.
         ValueScope aScope = scope.getParent().newScope();
         
+        // System.out.println("name is " + m_id + " ================");
         if (fun instanceof UserFunc) {
             return ((UserFunc)fun).evaluate(types, funcs, aScope, m_args);
         } else {

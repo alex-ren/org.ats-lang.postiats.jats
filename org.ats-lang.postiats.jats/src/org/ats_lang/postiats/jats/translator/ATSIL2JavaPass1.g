@@ -41,21 +41,31 @@ program [Map<String, ATSType> types, Map<String, String> libfuncs, String filena
   m_libfuncs = libfuncs;
   m_typescope = new MapScope<ATSType>();
 }
-    : ^(PROGRAM (stats+=type_def
-                 | func_decl  // omit declaration
-                 | stats+=func_def
-                 | stats+=gstat
-                 )*
+    : ^(PROGRAM (stats+=gstat)*
         ) -> {m_main == MainSpec.NOMAIN}? program_t(stats={$stats}, filename={filename})
           -> {m_main == MainSpec.MAIN}?   program_t(stats={$stats}, filename={filename}, main={%main_no_arg_st()})
           ->                              program_t(stats={$stats}, filename={filename}, main={%main_args_st()})
     ;
 
-
-
-
 gstat
-    : var_def -> global_var_st(var={$var_def.st})  //    | var_assign {node = $var_assign.node;} no assignment for global variable
+    : type_def {retval.st = $type_def.st;}
+    | func_decl  // Simply ignore func_decl
+    | func_def {retval.st = $func_def.st;}
+    | var_def -> global_var_st(var={$var_def.st})
+    | ats_dyn_cst  // Simply ignore ats_dyn_cst
+    | ats_dyn_load1  // Simply ignore ats_dyn_load1
+    ;
+
+// Simply ignore ats_dyn_load1
+ats_dyn_load1
+    : ^(ATSdynload1 ID)
+    ;
+    
+// Simply ignore ats_dyn_cst
+ats_dyn_cst
+    : ^(ATS_DYN_CST_MAC ID)
+    | ^(ATS_DYN_CST_CASTFN ID)
+    | ^(ATS_DYN_CST_EXTFUN ID atstypelst atstype)
     ;
 
 block
@@ -64,6 +74,7 @@ block
     
 bstat
     : var_def {retval.st = $var_def.st;}
+    
     | ifstat {retval.st = $ifstat.st;}
     // todo while dowhile
     | atsins {retval.st = $atsins.st;}
@@ -81,10 +92,12 @@ atsins
     | atsins_move_arrpsz_ptr {retval.st = $atsins_move_arrpsz_ptr.st;}
     | atsins_update_ptrinc {retval.st = $atsins_update_ptrinc.st;}
     | ats_return {retval.st = $ats_return.st;}
+    | ats_return_void {retval.st = $ats_return_void.st;}
+    | ats_dyn_load0 {retval.st = $ats_dyn_load0.st;}
     ;
 
 atsins_load
-    : ^(ATSINS_LOAD dest=exp cont=exp) -> atsins_load_st(dest={$dest.st}, cont={$cont.st})
+    : ^(ATSINSload dest=exp cont=exp) -> atsins_load_st(dest={$dest.st}, cont={$cont.st})
     ;
     
 atsins_store
@@ -125,7 +138,14 @@ atsins_update_ptrinc
 
 ats_return
     : ^(ATS_RETURN exp) -> ats_return_st(exp={$exp.st})
-    | ^(ATS_RETURN_VOID exp) -> ats_return_st()
+    ;
+
+ats_return_void
+    : ^(ATS_RETURN_VOID exp?) -> ats_return_st()
+    ;
+
+ats_dyn_load0
+    : ^(ATSdynload0 ID) -> var_def_st(type={IntType.cType}, name={$ID.text})
     ;
     
 ifstat
@@ -261,6 +281,10 @@ var_def returns [String name, ATSType type]
     | ^(VAR_VOID atstype ID)  // no output, means null
     ;
 
+atstypelst
+    : ^(ATSTYPE_LIST atstype+)
+    ;
+    
 atstype returns [ATSType type]
     : ^(TYPE prim_type) {retval.type = $prim_type.type;}
     | ^(TYPE name_type) {retval.type = $name_type.type;}
@@ -289,7 +313,7 @@ prim_type returns [ATSType type]
     | TYPE_ARRPTR  {System.out.println("TYPE_ARRPTR not supported");} // todo
     ;
 
-
+// Simply ignore func_decl
 func_decl
     : ^(FUNC_DECL ID func_decorator? atstype paralst?)
     ;

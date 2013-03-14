@@ -25,7 +25,7 @@ public class SingletonValue implements ATSValue {
 
     @Override
     public ATSValue deepcopy() {
-        throw new Error("Singleton Value.");
+        return this;
     }
 
     @Override

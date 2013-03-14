@@ -18,6 +18,7 @@ tokens {
   
   EXP_LIST;
   PARA_LIST;
+  ATSTYPE_LIST;
 
   GLOBAL;
   STATIC;
@@ -34,6 +35,7 @@ tokens {
   TYPE_PTR;
   TYPE_REF;
   TYPE_ARRPTR;
+  TYPE_STRARR;
   
   TYPE_DEC_TYPE;
   TYPE_DEC_T0YPE;
@@ -49,7 +51,7 @@ tokens {
   DOWHILE;
   GOTOTAG;
   
-  ATSINS_LOAD;
+  ATSINSload;
   ATSINS_STORE;
   ATSINS_STORE_ARRPSZ_ASZ;
   ATSINS_STORE_ARRPSZ_PTR;
@@ -80,6 +82,16 @@ tokens {
 	ATS_SEL_FLT_REC;
 	ATS_SEL_ARR_IND;
 	ATS_SEL_BOX_REC;
+	
+	ATS_DYN_CST_MAC;
+	ATS_DYN_CST_CASTFN;
+	ATS_DYN_CST_EXTFUN;
+	
+	ATSdynload0;
+	ATSdynload1;
+	
+	ATSMAIN;
+
 }
 
 @header {
@@ -103,16 +115,44 @@ rule: program
     ;
     
 program
-    : gstat* -> ^(PROGRAM gstat*)
+    : (gstat | macro_commet)* -> ^(PROGRAM gstat*)  // omit the macro_commet
     ;
-    
+
+macro_commet
+    : '#if(0)' program MACRO_ENDIF  // to handle nested #if(0)
+    ;
+        
 gstat
-    : tmpdec Semicol!
+    : typedef
     | func_decorator? rettype=atstype ID LParen paralst? RParen
         (Semicol -> ^(FUNC_DECL ID func_decorator? $rettype paralst?)
         | LBrace block RBrace -> ^(FUNC_DEF ID func_decorator? $rettype paralst? block)
         )
-    | typedef
+    | tmpdec Semicol!
+    | ats_dyn_cst Semicol!
+    | ats_dyn_load1 Semicol!
+    | main_impl -> // ignore this node
+    ;
+
+main_impl
+    : atstype Main LParen paralst RParen LBrace
+    type_int ID Assign INT Semicol
+    func_call Semicol
+    atsmain LParen explst RParen Semicol
+    simple_return Semicol
+    RBrace
+    ;
+
+atsmain
+    : 'ATSmainats_void_0'
+    | 'ATSmainats_argc_argv_0'
+    | 'ATSmainats_argc_argv_envp_0'
+    ;
+    
+ats_dyn_cst
+    : 'ATSdyncst_mac' LParen ID RParen -> ^(ATS_DYN_CST_MAC ID)
+    | 'ATSdyncst_castfn' LParen ID RParen -> ^(ATS_DYN_CST_CASTFN ID)
+    | 'ATSdyncst_extfun' LParen ID Comma LParen atstypelst RParen Comma atstype RParen -> ^(ATS_DYN_CST_EXTFUN ID atstypelst atstype)
     ;
 
 typedef
@@ -153,11 +193,25 @@ bstat
     | atsins_update_ptrinc Semicol!
     | ats_return Semicol!
     | ats_return_void Semicol!
-//    | Return exp Semicol
+    | simple_return Semicol!
+    | ats_dyn_load0 Semicol!
+    ;
+    
+simple_return
+    : Return exp -> ^(ATS_RETURN exp)
+    | Return -> ^(ATS_RETURN_VOID)
+    ;
+    
+ats_dyn_load1
+    : ATSdynload1 LParen ID RParen -> ^(ATSdynload1 ID)
+    ;
+    
+ats_dyn_load0
+    : ATSdynload0 LParen ID RParen -> ^(ATSdynload0 ID)
     ;
     
 atsins_load
-    : 'ATSINSload' LParen exp Comma exp RParen -> ^(ATSINS_LOAD exp exp)
+    : 'ATSINSload' LParen exp Comma exp RParen -> ^(ATSINSload exp exp)
     ;
 
 atsins_store
@@ -236,9 +290,15 @@ exp
     | ats_sel_flt_rec
     | ats_sel_box_rec
 //    | ats_sel_arr_ind
-
+    | ats_ck_iseqz
     
     | atom_exp
+    
+
+    ;
+
+ats_ck_iseqz
+    : ATSCKiseqz LParen exp RParen -> ^(ATSCKiseqz exp)
     ;
     
 ats_empty
@@ -320,7 +380,7 @@ paralst
     : para (Comma para)* -> ^(PARA_LIST para+)
     ;
     
-para : paratype ID;
+para : paratype ID?;
 
 paratype
     : atstype -> ^(PARA_TYPE atstype)
@@ -345,10 +405,15 @@ atstmpdec:
     'ATStmpdec' LParen ID Comma atstype RParen -> ^(VAR atstype ID)
     ;
 
+atstypelst
+    : atstype (Comma atstype)*  -> ^(ATSTYPE_LIST atstype+)
+    ;
+    
 atstype
     : prim_type -> ^(TYPE prim_type)
     | ID -> ^(TYPE ID)
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
+    | 'atstyvar_type' LParen ID RParen -> // only appear in comment #if(0)
     ;
 
 prim_type
@@ -361,6 +426,7 @@ prim_type
     | type_ptr -> TYPE_PTR
     | type_ref -> TYPE_REF
     | type_arrptr -> TYPE_ARRPTR
+//    | type_str_arr -> TYPE_STRARR
     ;
 
 type_int    : 'int';
@@ -372,12 +438,19 @@ type_float  : 'float';
 type_ptr    : 'ptr';
 type_ref    : 'ref';
 type_arrptr : 'arrptr';
+type_str_arr: 'char **';
 
+Main: 'main';
 
 kind_decorator
     : 'atstkind_type' -> TYPE_DEC_TYPE
     | 'atstkind_t0ype' -> TYPE_DEC_T0YPE
     ;
+
+ATSCKiseqz: 'ATSCKiseqz';
+
+ATSdynload0: 'ATSdynload0';
+ATSdynload1: 'ATSdynload1';
 
 MACRO_ENDIF:  '#endif';
 MACRO_IFNDEF: '#ifndef';
@@ -412,7 +485,7 @@ LBracket  : '[';
 RBracket  : ']';  
 LParen    : '(';  
 RParen    : ')';  
-// Assign    : '=';  
+Assign    : '=';  
 Comma     : ',';  
 QMark     : '?';  
   

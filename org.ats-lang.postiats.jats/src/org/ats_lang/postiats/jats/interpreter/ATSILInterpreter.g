@@ -59,21 +59,29 @@ program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [Program
   ProgramNode pn = new ProgramNode();
   node = pn;
 }
-    : ^(PROGRAM (  type_def
-                 | func_decl  // omit declaration
-                 | func_def  {defineFunc($func_def.definition);}
-                 | gstat {pn.addStat($gstat.node);}
-                 )*
-        )
+    : ^(PROGRAM gstat[pn]*)
     ;
 
-
-
-
-gstat returns [DefinitionNode node]
-    : var_def  {node = $var_def.node;} //    | var_assign {node = $var_assign.node;} no assignment for global variable
+gstat [ProgramNode pn]
+    : type_def
+    | func_decl
+    | func_def  {defineFunc($func_def.definition);}
+    | var_def {pn.addStat($var_def.node);}
+    | ats_dyn_cst
+    | ats_dyn_load1
     ;
 
+// Simply ignore ats_dyn_load1   
+ats_dyn_load1
+    : ^(ATSdynload1 ID)
+    ;
+    
+// Simply ignore ats_dyn_cst         
+ats_dyn_cst
+    : ^(ATS_DYN_CST_MAC ID)
+    | ^(ATS_DYN_CST_CASTFN ID)
+    | ^(ATS_DYN_CST_EXTFUN ID atstypelst atstype)
+    ;
 
 block returns [BlockNode node]
 @init {
@@ -85,8 +93,10 @@ block returns [BlockNode node]
     
 bstat returns [ATSNode node]
     : var_def  {node = $var_def.node;}
+    
     | ifstat {node = $ifstat.node;}
     // todo while dowhile
+    
     | atsins {node = $atsins.node;}
     ;
 
@@ -102,10 +112,12 @@ atsins returns [ATSNode node]
     | atsins_move_arrpsz_ptr {node = $atsins_move_arrpsz_ptr.node;}
     | atsins_update_ptrinc {node = $atsins_update_ptrinc.node;}
     | ats_return {node = $ats_return.node;}
+    | ats_return_void {node = $ats_return_void.node;}
+    | ats_dyn_load0 {node = $ats_dyn_load0.node;} 
     ;
 
 atsins_load returns [AtsInsLoad node]
-    : ^(ATSINS_LOAD dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
+    : ^(ATSINSload dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
     ;
     
 atsins_store returns [AtsInsStore node]
@@ -147,7 +159,14 @@ atsins_update_ptrinc returns [AtsInsUpdatePtrInc node]
 
 ats_return returns [AtsReturnNode node]
     : ^(ATS_RETURN exp) {node = new AtsReturnNode($exp.node);}
-    | ^(ATS_RETURN_VOID exp) {node = new AtsReturnNode($exp.node);}
+    ;
+    
+ats_return_void returns [AtsReturnNode node]
+    : ^(ATS_RETURN_VOID exp?) {node = new AtsReturnNode($exp.node);}
+    ;
+
+ats_dyn_load0 returns [ATSNode node]
+    : ^(ATSdynload0 ID)  {node = new DefinitionNode(IntType.cType, $ID.text);}
     ;
     
 ifstat returns [IfNode node]
@@ -178,12 +197,8 @@ elseStat [IfNode parent]
     
 exp returns [ATSNode node]
     : func_call {node = $func_call.node;}
-    | ats_exp {node = $ats_exp.node;}
-    | atom_exp {node = $atom_exp.node;}
-    ;
 
-ats_exp returns [ATSNode node]
-    : ats_pvm_castfn {node = $ats_pvm_castfn.node;}
+    | ats_pvm_castfn {node = $ats_pvm_castfn.node;}
     | ats_empty {node = $ats_empty.node;}
     | ats_simple_cast {node = $ats_simple_cast.node;}
     | ats_pmv_sizeof {node = $ats_pmv_sizeof.node;}
@@ -194,7 +209,13 @@ ats_exp returns [ATSNode node]
     | ats_sel_flt_rec {node = $ats_sel_flt_rec.node;}
     | ats_sel_box_rec {node = $ats_sel_box_rec.node;}    
 //    | ats_sel_arr_ind {node = $ats_sel_arr_ind.node;}
+    | ats_ck_iseqz {node = $ats_ck_iseqz.node;}   
+    
+    | atom_exp {node = $atom_exp.node;}
+    ;
 
+ats_ck_iseqz returns [AtsCkIseqz node]
+    : ^(ATSCKiseqz exp) {node = new AtsCkIseqz($exp.node);}
     ;
 
 ats_pvm_castfn returns [AtsPmvCastFn node]
@@ -280,6 +301,10 @@ var_def returns [DefinitionNode node]
     | ^(VAR_VOID atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
     ;
 
+atstypelst
+    : ^(ATSTYPE_LIST atstype+)
+    ;
+    
 atstype returns [ATSType type]
     : ^(TYPE prim_type) {type = $prim_type.type;}
     | ^(TYPE name_type)  {type = $name_type.type;}
@@ -314,6 +339,7 @@ prim_type returns [ATSType type]
     ;
 
 
+// Simply ignore func_decl
 func_decl
     : ^(FUNC_DECL ID func_decorator? atstype paralst?)
     ;

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +57,8 @@ public class Test {
         String[] files = { "test/test01.txt" , "test/f91_dats.c",
                                                  "test/fact_dats.c",
                                                  "test/fib_dats.c",
-                                                 "test/test_dats.c"};
+                                                 "test/test_dats.c"};  // ,
+                                             //    "test/atof_dats.c"};
 
 //        // populate types and funcstions
 //        Map<String, ATSType> types = CCompTypes.getLibTypes();
@@ -110,13 +113,45 @@ public class Test {
             StringTemplate output = ret.st;
 
             /* ******** ******** */
-            System.out.println(output.toString()); // render full template
+            // System.out.println(output.toString()); // render full template
             FileWriter fw = new FileWriter("test/postiats/" + classname + ".java");
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(output.toString());
             bw.close();
 
             System.out.println(file + " is O.K.\n\n");
+            
+            try {
+                Class<?> c = Class.forName("postiats." + classname);
+                try {
+                    Method meth = c.getMethod("main", String[].class);
+                    String[] params = null; // init params accordingly
+                    try {
+                        meth.invoke(null, (Object) params);
+                    } catch (IllegalArgumentException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } // static method doesn't have an instance
+                } catch (SecurityException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+            } catch (ClassNotFoundException e) {
+                System.out.println("Generating " + classname + " failed.");
+                e.printStackTrace();
+            }
+            
+            System.out.println("\n======================" + file + " execution is O.K.\n\n");
         }
     }
 

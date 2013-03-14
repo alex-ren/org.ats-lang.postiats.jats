@@ -8,6 +8,7 @@ import org.ats_lang.postiats.jats.type.DoubleType;
 import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.PtrType;
 import org.ats_lang.postiats.jats.type.SizeType;
+import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.type.ULIntType;
 import org.ats_lang.postiats.jats.type.VoidType;
@@ -33,6 +34,8 @@ public class CCompTypedefs {
     public static PtrType m_atstype_arrptr = PtrType.cType;
 
     public static SizeType m_atstype_size = SizeType.cType;
+    
+    public static StringType m_atstype_string = StringType.cType;
     
     public static StructType m_atstype_arrpsz;
     

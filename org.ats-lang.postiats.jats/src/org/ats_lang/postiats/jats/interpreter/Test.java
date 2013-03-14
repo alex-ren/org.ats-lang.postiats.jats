@@ -27,7 +27,7 @@ public class Test {
      * @throws IOException 
      */
     public static void main(String[] args) throws RecognitionException, IOException {
-        String [] files = {"test/test01.txt", "test/f91_dats.c" , "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c" };
+        String [] files = {"test/test01.txt", "test/f91_dats.c" , "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c", "test/atof_dats.c" };
         
 
         for (String file: files) {
@@ -41,6 +41,8 @@ public class Test {
             ATSILPrepocessorParser preparser = new ATSILPrepocessorParser(tokens);
             preparser.rule();
             
+            // System.out.println("==print out processed==========================");
+            // System.out.println(tokens.toString());
             System.out.println("==preprocessing finished==========================");
             
             /* ******** ******** */

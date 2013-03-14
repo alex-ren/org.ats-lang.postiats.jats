@@ -29,6 +29,7 @@ stat_macro
 
 macro_area
     : macro_ifndef_id program macro_endif
+    | '#if(0)' program MACRO_ENDIF  // to handle nested #if(0)
     | MACRO_INCLUDE STRING -> template(macro_inc={$MACRO_INCLUDE.text}, name={$STRING.text}) "// <macro_inc> <name>"
     ;
 
@@ -42,6 +43,30 @@ gstat
         | LBrace block RBrace
         )
     | typedef
+    | ats_dyn_cst 
+    | ats_dyn_load1 Semicol
+    | main_impl
+    ;
+    
+main_impl
+    : atstype Main LParen paralst RParen LBrace
+    type_int ID Assign INT Semicol
+    func_call Semicol
+    atsmain LParen explst RParen Semicol
+    simple_return Semicol
+    RBrace
+    ;
+    
+atsmain
+    : 'ATSmainats_void_0'
+    | 'ATSmainats_argc_argv_0'
+    | 'ATSmainats_argc_argv_envp_0'
+    ;
+    
+ats_dyn_cst
+    : 'ATSdyncst_mac' LParen ID RParen
+    | 'ATSdyncst_castfn' LParen ID RParen
+    | 'ATSdyncst_extfun' LParen ID Comma LParen atstypelst RParen Comma atstype RParen
     ;
 
 typedef
@@ -82,9 +107,23 @@ bstat
     | atsins_update_ptrinc Semicol
     | ats_return Semicol
     | ats_return_void Semicol
+    | simple_return Semicol
+    | ats_dyn_load0 Semicol
 //    | Return exp Semicol
     ;
+
+simple_return
+    : Return exp?
+    ; 
+
+ats_dyn_load0
+    : ATSdynload0 LParen ID RParen
+    ;    
     
+ats_dyn_load1
+    : ATSdynload1 LParen ID RParen
+    ;    
+     
 atsins_load
     : 'ATSINSload' LParen exp Comma exp RParen
     ;
@@ -163,9 +202,15 @@ exp
     | ats_sel_flt_rec
     | ats_sel_box_rec    
 //    | ats_sel_arr_ind
-
+    | ats_ck_iseqz
     
     | atom_exp
+    
+
+    ;
+
+ats_ck_iseqz
+    : ATSCKiseqz LParen exp RParen
     ;
     
 ats_empty
@@ -246,7 +291,7 @@ paralst
     : para (Comma para)*
     ;
     
-para : paratype ID;
+para : paratype ID?;
 
 paratype
     : atstype
@@ -269,12 +314,18 @@ atstmpdec_void
     
 atstmpdec:
     'ATStmpdec' LParen ID Comma atstype RParen 
+    | atstype ID Assign exp
     ;
 
+atstypelst
+    : atstype (Comma atstype)*
+    ;
+    
 atstype
     : prim_type
     | ID
     | kind_decorator LParen ID RParen
+    | 'atstyvar_type' LParen ID RParen  // only appear in comment #if(0)
     ;
 
 prim_type
@@ -287,6 +338,7 @@ prim_type
     | type_ptr 
     | type_ref
     | type_arrptr 
+    | type_str_arr
     ;
 
 type_int    : 'int';
@@ -298,12 +350,19 @@ type_float  : 'float';
 type_ptr    : 'ptr';
 type_ref    : 'ref';
 type_arrptr : 'arrptr';
+type_str_arr: 'char **';
 
+Main: 'main';
 
 kind_decorator
     : 'atstkind_type' 
     | 'atstkind_t0ype' 
     ;
+
+ATSCKiseqz: 'ATSCKiseqz';
+
+ATSdynload0: 'ATSdynload0';
+ATSdynload1: 'ATSdynload1';
 
 MACRO_ENDIF:  '#endif';
 MACRO_IFNDEF: '#ifndef';
@@ -338,7 +397,7 @@ LBracket  : '[';
 RBracket  : ']';  
 LParen    : '(';  
 RParen    : ')';  
-// Assign    : '=';  
+Assign    : '=';  
 Comma     : ',';  
 QMark     : '?';  
   
@@ -362,7 +421,7 @@ FLOAT
 COMMENT
     :   '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
-    |   '#if(0)' ( options {greedy=false;} : . )* '#endif' {$channel=HIDDEN;}  // todo
+//    |   '#if(0)' ( options {greedy=true;} : . )* '#endif' {$channel=HIDDEN;}  // todo
     |   '#define' ( options {greedy=false;} : . )* ('\n') {$channel=HIDDEN;}  // todo
     ;
 
