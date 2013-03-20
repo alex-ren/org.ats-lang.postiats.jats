@@ -29,12 +29,135 @@ stat_macro
 
 macro_area
     : macro_ifndef_id program macro_endif
-    | '#if(0)' program MACRO_ENDIF  // to handle nested #if(0)
+    | MACRO_IF0 program_sp MACRO_ENDIF  // to handle nested #if(0)
     | MACRO_INCLUDE STRING -> template(macro_inc={$MACRO_INCLUDE.text}, name={$STRING.text}) "// <macro_inc> <name>"
     ;
 
-macro_ifndef_id: MACRO_IFNDEF ID -> template (macro_ifndef={$MACRO_IFNDEF.text}, id={$ID.text}) "// <macro_ifndef> <id>";
-macro_endif: MACRO_ENDIF -> template (macro_endif={$MACRO_ENDIF.text}) "// <macro_endif>";
+// =======================================================    
+program_sp  // appear only in macro_commet
+    : func_decorator? atstype_sp ID LParen paralst_sp? RParen
+        (Semicol
+        | LBrace block_sp RBrace
+        )
+    | MACRO_IF0 program_sp MACRO_ENDIF
+    ;
+
+    
+paralst_sp
+    : para_sp (Comma para_sp)*
+    ;
+    
+para_sp : paratype_sp ID?;
+
+paratype_sp
+    : atstype_sp
+    | para_decorator LParen atstype_sp RParen 
+    ;
+
+block_sp
+    : (bstat_sp)*
+    ;
+
+bstat_sp
+    : tmpdec_sp Semicol
+    
+    | gototag  // Don't handle goto now.
+    
+    | atsins_move_sp Semicol
+    | atsins_load_sp Semicol    
+    | ats_return Semicol
+    | ats_return_void Semicol
+    | simple_return Semicol
+
+    ;
+
+atsins_load_sp
+    : 'ATSINSload' LParen exp_sp Comma exp_sp RParen
+    ;
+
+
+atsins_move_sp
+    : 'ATSINSmove' LParen ID Comma exp_sp RParen
+    ;
+
+exp_sp
+    : exp_sp1 ('->' exp_sp1)*
+    ;
+
+exp_sp1
+    : func_call_sp
+    | atom_exp_sp
+    | ID (LT explst_sp GT)+
+    | 'PMVtmpltcst' LParen explst_sp RParen LParen explst_sp RParen
+    
+    // copy from exp
+    | ats_empty
+    | ats_pvm_castfn
+    | ats_simple_cast
+    | ats_pmv_sizeof_sp
+    | ats_deref_sp
+    | ats_ref_arg
+    | ats_pmv_ptrof
+    | ats_sel_recsin
+    | ats_sel_flt_rec
+    | ats_sel_box_rec    
+    | ats_ck_iseqz    
+    ;
+    
+ats_deref_sp
+    : 'ATSderef' LParen exp_sp Comma atstype_sp RParen
+    ;
+    
+ats_pmv_sizeof_sp
+    : 'ATSPMVsizeof' LParen atstype_sp RParen
+    ;
+        
+atom_exp_sp
+    : INT
+    | FLOAT
+    | CHAR
+    | STRING
+    | Bool    
+    | ID
+    | LParen exp_sp RParen
+    ;
+    
+func_call_sp
+    : ID LParen explst_sp? RParen
+    ;
+     
+explst_sp
+    : exp_sp (Comma exp_sp)*
+    ;
+    
+tmpdec_sp
+    : atstmpdec_sp
+    | atstmpdec_void_sp
+    ;
+
+atstmpdec_void_sp
+    : 'ATStmpdec_void' LParen ID Comma atstype_sp RParen 
+    ;
+    
+atstmpdec_sp:
+    'ATStmpdec' LParen ID Comma atstype_sp RParen 
+    ;
+
+atstype_sp  // only appear in comment #if(0)
+    : atstype
+    | 'atstyvar_type' LParen ID RParen  
+    | kind_decorator LParen 'postiats_undef' LParen exp RParen RParen
+    | 'HITundef' LParen exp_sp RParen
+    ;  
+   
+       
+// =======================================================
+    
+macro_ifndef_id: MACRO_IFNDEF ID -> template (macro_ifndef={$MACRO_IFNDEF.text}, id={$ID.text}) "// <macro_ifndef> <id>"
+    ;
+    
+macro_endif: MACRO_ENDIF -> template (macro_endif={$MACRO_ENDIF.text}) "// <macro_endif>"
+    ;
 
 gstat
     : tmpdec Semicol
@@ -49,7 +172,7 @@ gstat
     ;
     
 main_impl
-    : atstype Main LParen paralst RParen LBrace
+    : type_int Main LParen paralst RParen LBrace
     type_int ID Assign INT Semicol
     func_call Semicol
     atsmain LParen explst RParen Semicol
@@ -314,7 +437,6 @@ atstmpdec_void
     
 atstmpdec:
     'ATStmpdec' LParen ID Comma atstype RParen 
-    | atstype ID Assign exp
     ;
 
 atstypelst
@@ -325,7 +447,6 @@ atstype
     : prim_type
     | ID
     | kind_decorator LParen ID RParen
-    | 'atstyvar_type' LParen ID RParen  // only appear in comment #if(0)
     ;
 
 prim_type
@@ -364,6 +485,7 @@ ATSCKiseqz: 'ATSCKiseqz';
 ATSdynload0: 'ATSdynload0';
 ATSdynload1: 'ATSdynload1';
 
+MACRO_IF0:    '#if(0)';
 MACRO_ENDIF:  '#endif';
 MACRO_IFNDEF: '#ifndef';
 MACRO_IF:     '#if';

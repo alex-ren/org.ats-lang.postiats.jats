@@ -41,8 +41,8 @@ public class Test {
             ATSILPrepocessorParser preparser = new ATSILPrepocessorParser(tokens);
             preparser.rule();
             
-            // System.out.println("==print out processed==========================");
-            // System.out.println(tokens.toString());
+//            System.out.println("==print out processed==========================");
+//            System.out.println(tokens.toString());
             System.out.println("==preprocessing finished==========================");
             
             /* ******** ******** */
@@ -92,7 +92,7 @@ public class Test {
             ((UserFunc)fun).evaluate(types, funcs, scope, null);
             
             
-            System.out.println(file + " is O.K.\n");
+            System.out.println("\n" + file + " is O.K.\n");
         }
     }
 
