@@ -23,13 +23,7 @@ public class CCompInteger {
     }
     
     public static IntValue atspre_g1int2int_int_int(ATSValue x) {
-        if (x instanceof PrimValue) {
-            return IntValue.castFromV((PrimValue)x);
-        } else {
-            throw new Error(
-                    "CCompInteger::atspre_g1int2int_int_int type conversion not supported.");
-        }
-
+        return atspre_g0int2int_int_int(x);
     }
     
     public static SizeValue atspre_g0int2uint_int_size(ATSValue x) {
@@ -42,6 +36,8 @@ public class CCompInteger {
 
     }
     
+ // ===================================================
+    
     public static BoolValue atspre_g0int_gt_int(IntValue x1, IntValue x2) {
         Integer i1 = x1.getContent();
         Integer i2 = x2.getContent();
@@ -49,6 +45,32 @@ public class CCompInteger {
         return new BoolValue(i1 > i2);
         
     }
+    
+    public static BoolValue atspre_g0int_gte_int(IntValue x1, IntValue x2) {
+        Integer i1 = x1.getContent();
+        Integer i2 = x2.getContent();
+        
+        return new BoolValue(i1 >= i2);
+        
+    }
+    
+    public static BoolValue atspre_g0int_lt_int(IntValue x1, IntValue x2) {
+        Integer i1 = x1.getContent();
+        Integer i2 = x2.getContent();
+        
+        return new BoolValue(i1 < i2);
+        
+    }
+    
+    public static BoolValue atspre_g0int_lte_int(IntValue x1, IntValue x2) {
+        Integer i1 = x1.getContent();
+        Integer i2 = x2.getContent();
+        
+        return new BoolValue(i1 <= i2);
+        
+    }
+    
+ // ===================================================
     
     public static IntValue atspre_g0int_add_int(IntValue x1, IntValue x2) {
         Integer i1 = x1.getContent();
@@ -81,6 +103,8 @@ public class CCompInteger {
         
     }
     
+    // ===================================================
+    
     public static SingletonValue atspre_print_int(IntValue x) {
         Integer i = x.getContent();
         System.out.print(i);
@@ -97,26 +121,43 @@ public class CCompInteger {
         
     }
     
+    // ===================================================
+    
     public static BoolValue atspre_g1int_gt_int(IntValue x1, IntValue x2) {
-        Integer i1 = x1.getContent();
-        Integer i2 = x2.getContent();
-        
-        return new BoolValue(i1 > i2);
-        
+        return atspre_g0int_gt_int(x1, x2);
     }
     
+    public static BoolValue atspre_g1int_gte_int(IntValue x1, IntValue x2) {
+        return atspre_g0int_gte_int(x1, x2);
+    }
+    
+    public static BoolValue atspre_g1int_lt_int(IntValue x1, IntValue x2) {
+        return atspre_g0int_lt_int(x1, x2);
+    }
+    
+    public static BoolValue atspre_g1int_lte_int(IntValue x1, IntValue x2) {
+        return atspre_g0int_lte_int(x1, x2);
+    }
+    
+    // ===================================================
+    
+    public static IntValue atspre_g1int_add_int(IntValue x1, IntValue x2) {
+        return atspre_g0int_add_int(x1, x2);
+    }
     public static IntValue atspre_g1int_sub_int(IntValue x1, IntValue x2) {
-        Integer i1 = x1.getContent();
-        Integer i2 = x2.getContent();
-        
-        return new IntValue(i1 - i2);
-        
+        return atspre_g0int_sub_int(x1, x2);
     }
     public static IntValue atspre_g1int_mul_int(IntValue x1, IntValue x2) {
-        Integer i1 = x1.getContent();
-        Integer i2 = x2.getContent();
-        
-        return new IntValue(i1 * i2);
-        
+        return atspre_g0int_mul_int(x1, x2);
     }
+    public static IntValue atspre_g1int_div_int(IntValue x1, IntValue x2) {
+        return atspre_g0int_div_int(x1, x2);
+    }
+    
+ // ===================================================
+    public static SizeValue atspre_g0uint2uint_size_size(SizeValue x) {
+        return x;
+    }
+    
+    
 }

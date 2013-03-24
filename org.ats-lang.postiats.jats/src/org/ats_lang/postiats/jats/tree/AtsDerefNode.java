@@ -18,7 +18,7 @@ public class AtsDerefNode implements ATSNode {
     }
     
     @Override
-    // #define ATSderef2(pmv, hit) (*(hit*)pmv)
+    // #define ATSderef(pmv, hit) (*(hit*)pmv)
     public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
         PtrValue v = (PtrValue)m_node.evaluate(types, funcs, scope);
         return v.deRef(m_type);

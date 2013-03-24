@@ -15,8 +15,8 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import org.ats_lang.postiats.jats.ccomp.CCompUtils;
 import org.ats_lang.postiats.jats.parser.*;
-import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.type.ATSType;
+
 
 
 public class Test {
@@ -27,13 +27,13 @@ public class Test {
      * @throws IOException 
      */
     public static void main(String[] args) throws RecognitionException, IOException {
-        String [] files = {"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c", "test/atof_dats.c" };
-        
+        String [] filenames = {"test/f91_dats.c", "test/atof_dats.c"};  // /*"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c", */"test/atof_dats.c" };
+        // ATStmpdec_void(tmp92, atsvoid_t0ype) ;ATSINSmove_void(tmp92, atspre_print_string(ATSPMVstring("atof(\""))) ;
 
-        for (String file: files) {
-            System.out.println("Processing file " + file);
+        for (String filename: filenames) {
+            System.out.println("==Processing file " + filename + "==========");
             
-            ANTLRFileStream fileStream = new ANTLRFileStream(file);
+            ANTLRFileStream fileStream = new ANTLRFileStream(filename);
             
             // preprocessing
             ATSILPrepocessorLexer lexer0 = new ATSILPrepocessorLexer(fileStream);
@@ -71,28 +71,15 @@ public class Test {
             CCompUtils.populateAllFuncs(funcs);
             
             // collect the definition of all the functions
-            ATSNode prog = walker.program(types, funcs);
+            Program prog = walker.program(types, funcs);
+            
+            System.out.println("==fun the program==========================");
+            prog.run(new String[] {filename, "3"});
             
             /* ******** ******** */
-            // initialize all the global variables
-            ValueScope globalScope = new ValueScope();
-            prog.evaluate(types, funcs, globalScope);
+
             
-            // "main" or "mainats"
-            FuncDef fun = funcs.get("mainats");
-            if (null == fun) {
-                fun = funcs.get("main");
-                if (null == fun) {
-                    System.out.println("No main function is provided.");
-                    return;
-                }
-            }
-            
-            ValueScope scope = globalScope.newScope();
-            ((UserFunc)fun).evaluate(types, funcs, scope, null);
-            
-            
-            System.out.println("\n" + file + " is O.K.\n");
+            System.out.println("\n" + "==" + filename + " is O.K. " + "==========");
         }
     }
 

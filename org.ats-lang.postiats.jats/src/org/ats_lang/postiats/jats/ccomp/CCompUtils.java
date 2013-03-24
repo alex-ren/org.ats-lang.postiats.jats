@@ -89,9 +89,11 @@ public class CCompUtils {
     public static void populateAllFuncs(Map<String, FuncDef> funcs) {
         populateFuncs(funcs, CCompBasics.class);
         populateFuncs(funcs, CCompInteger.class);
+        populateFuncs(funcs, CCompChar.class);
         populateFuncs(funcs, CCompFloat.class);
         populateFuncs(funcs, CCompArrayPtr.class);
         populateFuncs(funcs, CCompString.class);
+        populateFuncs(funcs, CCompPointer.class);
 
     }
 
@@ -100,21 +102,38 @@ public class CCompUtils {
     public static Map<String, ATSType> getLibTypes() {
         Map<String, ATSType> types = new HashMap<String, ATSType>();
 
-        types.put("atstype_ptrk", CCompTypedefs.m_atstype_ptrk);
-
+        types.put("atstype_void", CCompTypedefs.m_atstype_void);
         types.put("atsvoid_t0ype", CCompTypedefs.m_atsvoid_t0ype);
 
         types.put("atstype_int", CCompTypedefs.m_atstype_int);
+        types.put("atstype_uint", CCompTypedefs.m_atstype_uint);
+        types.put("atstype_lint", CCompTypedefs.m_atstype_lint);
+        types.put("atstype_ulint", CCompTypedefs.m_atstype_ulint);
+        types.put("atstype_llint", CCompTypedefs.m_atstype_llint);
+        types.put("atstype_ullint", CCompTypedefs.m_atstype_ullint);
+        types.put("atstype_sint", CCompTypedefs.m_atstype_sint);
+        types.put("atstype_usint", CCompTypedefs.m_atstype_usint);
 
-        types.put("atstype_double", CCompTypedefs.m_atstype_double);
+        types.put("atstype_size", CCompTypedefs.m_atstype_size);
+        types.put("atstype_ssize", CCompTypedefs.m_atstype_ssize);
 
         types.put("atstype_bool", CCompTypedefs.m_atstype_bool);
 
-        types.put("atstype_arrptr", CCompTypedefs.m_atstype_arrptr);
+        types.put("atstype_char", CCompTypedefs.m_atstype_char);
+        types.put("atstype_schar", CCompTypedefs.m_atstype_schar);
+        types.put("atstype_uchar", CCompTypedefs.m_atstype_uchar);
 
-        types.put("atstype_size", CCompTypedefs.m_atstype_size);
-        
         types.put("atstype_string", CCompTypedefs.m_atstype_string);
+        types.put("atstype_strptr", CCompTypedefs.m_atstype_strptr);
+
+        types.put("atstype_float", CCompTypedefs.m_atstype_float);
+        types.put("atstype_double", CCompTypedefs.m_atstype_double);
+        types.put("atstype_ldouble", CCompTypedefs.m_atstype_ldouble);
+
+        types.put("atstype_ptr", CCompTypedefs.m_atstype_ptr);
+        types.put("atstype_ptrk", CCompTypedefs.m_atstype_ptrk);
+
+        types.put("atstype_arrptr", CCompTypedefs.m_atstype_arrptr);
 
         types.put("atstype_arrpsz", CCompTypedefs.m_atstype_arrpsz);
 
@@ -149,9 +168,12 @@ public class CCompUtils {
     public static void populateAllFuncNames(Map<String, String> funcs) {
         populateFuncNames(funcs, CCompBasics.class);
         populateFuncNames(funcs, CCompInteger.class);
+        populateFuncNames(funcs, CCompChar.class);
         populateFuncNames(funcs, CCompFloat.class);
         populateFuncNames(funcs, CCompArrayPtr.class);
         populateFuncNames(funcs, CCompString.class);
+        populateFuncNames(funcs, CCompPointer.class);
+        
 
     }
 }

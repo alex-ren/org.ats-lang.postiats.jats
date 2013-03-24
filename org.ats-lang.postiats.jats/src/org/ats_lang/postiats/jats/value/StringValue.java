@@ -2,46 +2,58 @@ package org.ats_lang.postiats.jats.value;
 
 import org.ats_lang.postiats.jats.type.StringType;
 
-public class StringValue extends PrimValue {
+// null terminated char array
+public class StringValue implements ATSValue {
 
     public static final StringType m_type = StringType.cType;
 
+    private CharValue[] m_arr;
+    
     public StringValue(String v) {
-        super(v);
+        char [] arr = v.toCharArray();
+        m_arr = new CharValue[arr.length + 1];
+        for (int i = 0; i < m_arr.length - 1; ++i) {
+            m_arr[i] = new CharValue(arr[i]);
+        }
+        m_arr[m_arr.length - 1] = new CharValue('\0');
+        
     }
     
-    public StringValue(Object v) {
-        super(v);
-        if (!(v instanceof String)) {
-            throw new Error ("StringValue, type conversion not supported.");
-        }
+    public StringValue(CharValue[] arr) {
+        m_arr = arr;
     }
     
     public static StringValue create(String v) {
         return new StringValue(v);
     }
     
-    @Override
-    public StringValue castFrom(PrimValue pv) {
-        return StringValue.castFromV(pv);
+    public PtrValue toPtrValue() {
+        return new PtrValue(m_arr);
     }
-
-    public static StringValue castFromV(PrimValue pv) {
-        if (pv instanceof StringValue) { 
-            return new StringValue(((StringValue)pv).getContent());
+    
+    @Override
+    public void copyfrom(ATSValue v) {
+        if (v instanceof StringValue) {
+            m_arr = ((StringValue) v).m_arr;
         } else {
-            throw new Error("StringValue::castFrom");
+            throw new Error("StringValue::copyfrom: copy from non-string value.");
         }
     }
     
     @Override
     public StringValue deepcopy() {
-        return new StringValue((String)(this.getContent()));
+        return new StringValue(m_arr);
     }
 
     @Override
     public String getContent() {
-        return (String)super.m_mem;
+        int len = 0;
+        len = m_arr.length - 1;
+        char [] arr = new char[len];
+        for (int i = 0; i < arr.length; ++i) {
+            arr[i] = m_arr[i].getContent();
+        }
+        return new String(arr);
     }
 
     @Override

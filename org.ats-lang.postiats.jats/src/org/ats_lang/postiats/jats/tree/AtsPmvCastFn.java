@@ -5,7 +5,12 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.PrimType;
+import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.PrimValue;
+import org.ats_lang.postiats.jats.value.PtrValue;
+import org.ats_lang.postiats.jats.value.StringValue;
 
 public class AtsPmvCastFn implements ATSNode {
     protected String m_d2c;
@@ -28,7 +33,32 @@ public class AtsPmvCastFn implements ATSNode {
     // AtsPmvCastFn is a non-op.
     public ATSValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ValueScope scope) {
-        return m_arg.evaluate(types, funcs, scope);
+        ATSValue v = m_arg.evaluate(types, funcs, scope);
+        
+        if (m_d2c.equals("cast")) {
+            // System.out.println("==cast " + v.getType() + " to " + m_hit);
+            if (v.getType() == m_hit) {
+                return v.deepcopy();
+            }
+            
+            // ptr2string
+            if (v instanceof PtrValue && m_hit == StringType.cType) {
+                return ((PtrValue)v).toStringValue();
+            }
+            if (m_hit instanceof PrimType && v instanceof PrimValue) {
+                return ((PrimType)m_hit).castFrom((PrimValue)v);
+            } else {
+                throw new Error ("Casting unsupported: cast");
+            }
+        } else if (m_d2c.equals("string2ptr")) {
+            return ((StringValue) v).toPtrValue();
+        } else if (m_d2c.equals("ptr1_of_ptr0")) {
+            return v;  
+        } else if (m_d2c.equals("string1_of_string0")) {
+            return v; 
+        } else {
+            throw new Error ("Unknown cast: " + m_d2c);
+        }
     }
 
 }

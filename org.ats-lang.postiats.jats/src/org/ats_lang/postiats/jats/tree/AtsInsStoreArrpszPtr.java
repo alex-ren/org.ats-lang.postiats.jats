@@ -5,9 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.ArrayType;
 import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.ArrayValue;
 import org.ats_lang.postiats.jats.value.PtrValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 import org.ats_lang.postiats.jats.value.StructValue;
@@ -46,9 +44,11 @@ public class AtsInsStoreArrpszPtr implements ATSNode {
         ATSValue asz = m_asz.evaluate(types, funcs, scope);
         int len = (Integer)asz.getContent();  // must be an integer
 
-        ArrayType arr_type = new ArrayType(m_tyelt, len);
-        ArrayValue arr_v = arr_type.createDefault();
-        PtrValue arr_p = new PtrValue(arr_v);
+        ATSValue [] arr = new ATSValue[len];
+        for (int i = 0; i < len; ++i) {
+            arr[i] = m_tyelt.createDefault();
+        }
+        PtrValue arr_p = new PtrValue(arr);
         
         StructValue tmp = (StructValue)scope.getValue(m_tmp);
         tmp.updateItem("ptr", arr_p);

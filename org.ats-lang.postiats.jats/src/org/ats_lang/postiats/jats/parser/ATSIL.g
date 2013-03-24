@@ -9,6 +9,7 @@ options {
 tokens {
   VAR; //  = 'var';
   VAR_VOID;
+  
   PROGRAM;
   BLOCK;
   
@@ -18,10 +19,11 @@ tokens {
   
   EXP_LIST;
   PARA_LIST;
-  ATSTYPE_LIST;
+  TYPE_LIST;
 
   GLOBAL;
   STATIC;
+  
   TYPEDEF;
   STRUCT;
 
@@ -50,7 +52,7 @@ tokens {
   DOWHILE;
   GOTOTAG;
   
-  ATSINSload;
+  // statement
   ATSINS_STORE;
   ATSINS_STORE_ARRPSZ_ASZ;
   ATSINS_STORE_ARRPSZ_PTR;
@@ -63,14 +65,24 @@ tokens {
   ATS_RETURN;
   ATS_RETURN_VOID;
   
+  // expression
   ATSPMV_CASTFN;
+  
 	ATSPMV_INT;
+	ATSPMVintrep;
+	
 	ATSPMV_TRUE;
 	ATSPMV_FALSE;
 	ATSPMV_CHAR;
+	ATSPMV_FLOAT;
 	ATSPMV_STRING;
+	
 	ATSPMV_I0NT;
 	ATSPMV_F0LOAT;
+	
+	ATSCSTSPmyfil;
+	ATSCSTSPmyloc;
+	
 	ATSPMV_SIZEOF;
 	ATS_DEREF;
 	ATS_EMPTY;
@@ -82,14 +94,8 @@ tokens {
 	ATS_SEL_ARR_IND;
 	ATS_SEL_BOX_REC;
 	
-	ATS_DYN_CST_MAC;
-	ATS_DYN_CST_CASTFN;
-	ATS_DYN_CST_EXTFUN;
-	
-	ATSdynload0;
-	ATSdynload1;
-	
 	ATSMAIN;
+
 
 }
 
@@ -110,11 +116,11 @@ public String getEscaped() {
 }
 }
 
-rule: program
+rule: program EOF
     ;
     
 program
-    : gstat* -> ^(PROGRAM gstat*)  // omit the macro_commet
+    : gstat* main_impl? -> ^(PROGRAM gstat* main_impl?)  // omit the macro_commet
     ;
 
 gstat
@@ -126,7 +132,6 @@ gstat
     | tmpdec Semicol!
     | ats_dyn_cst Semicol!
     | ats_dyn_load1 Semicol!
-    | main_impl -> // ignore this node
     ;
 
 main_impl
@@ -135,21 +140,24 @@ main_impl
     func_call Semicol
     atsmain LParen explst RParen Semicol
     simple_return Semicol
-    RBrace
+    RBrace -> ^(ATSMAIN ^(VAR ^(TYPE TYPE_INT) ID) func_call atsmain)
     ;
 
 atsmain
-    : 'ATSmainats_void_0'
-    | 'ATSmainats_argc_argv_0'
-    | 'ATSmainats_argc_argv_envp_0'
-    ;
-    
-ats_dyn_cst
-    : 'ATSdyncst_mac' LParen ID RParen -> ^(ATS_DYN_CST_MAC ID)
-    | 'ATSdyncst_castfn' LParen ID RParen -> ^(ATS_DYN_CST_CASTFN ID)
-    | 'ATSdyncst_extfun' LParen ID Comma LParen atstypelst RParen Comma atstype RParen -> ^(ATS_DYN_CST_EXTFUN ID atstypelst atstype)
+    : 'ATSmainats_void_0' -> ATSmainats_void_0
+    | 'ATSmainats_argc_argv_0' -> ATSmainats_argc_argv_0
+    | 'ATSmainats_argc_argv_envp_0' -> ATSmainats_argc_argv_envp_0
+    | 'ATSmainats_void_int' -> ATSmainats_void_int
+    | 'ATSmainats_argc_argv_int' -> ATSmainats_argc_argv_int
+    | 'ATSmainats_argc_argv_envp_int' -> ATSmainats_argc_argv_envp_int
     ;
 
+ats_dyn_cst
+    : 'ATSdyncst_mac' LParen ID RParen -> ^(ATSdyncst_mac ID)
+    | 'ATSdyncst_castfn' LParen ID RParen -> ^(ATSdyncst_castfn ID)
+    | 'ATSdyncst_extfun' LParen ID Comma LParen atstypelst RParen Comma atstype RParen -> ^(ATSdyncst_extfun ID atstypelst atstype)
+    ;             
+ 
 typedef
     : Typedef structure ID Semicol -> ^(TYPEDEF ID structure)
     ;
@@ -190,6 +198,11 @@ bstat
     | ats_return_void Semicol!
     | simple_return Semicol!
     | ats_dyn_load0 Semicol!
+    | simple_assignment Semicol!
+    ;
+    
+simple_assignment
+    : ID Assign exp -> ^(ATSINS_MOVE ID exp)
     ;
     
 simple_return
@@ -206,13 +219,13 @@ ats_dyn_load0
     ;
     
 atsins_load
-    : 'ATSINSload' LParen exp Comma exp RParen -> ^(ATSINSload exp exp)
+    : ATSINSload LParen exp Comma exp RParen -> ^(ATSINSload exp exp)
     ;
 
 atsins_store
-    : 'ATSINSstore' LParen exp Comma exp RParen -> ^(ATSINS_STORE exp exp)
+    : ATSINSstore LParen exp Comma exp RParen -> ^(ATSINSstore exp exp)
     ;
-    
+
 atsins_store_arrpsz_asz
     : 'ATSINSstore_arrpsz_asz' LParen ID Comma exp RParen -> ^(ATSINS_STORE_ARRPSZ_ASZ ID exp)
     ;
@@ -251,12 +264,12 @@ ats_return
     ;
 
 ats_return_void
-    : 'ATSreturn_void' LParen exp RParen -> ^(ATS_RETURN_VOID exp)
+    : 'ATSreturn_void' LParen exp? RParen -> ^(ATS_RETURN_VOID exp?)
     ;
 
 ifstat
-    : ('ATSif' /*| 'ATSifnot'*/) LParen exp RParen 'ATSthen' LParen RParen LBrace thenb=block RBrace ('ATSelse' LParen RParen LBrace elseb=block RBrace)?
-      -> ^(IFSTAT ^(IF exp $thenb) ^(ELSE $elseb))
+    : ('ATSif' | 'if' /*| 'ATSifnot'*/) LParen exp RParen ('ATSthen' LParen RParen)? LBrace thenb=block RBrace ('ATSelse' LParen RParen LBrace elseb=block RBrace)?
+      -> ^(IFSTAT ^(IF exp $thenb) ^(ELSE $elseb)?)
     ;
     
 whilestat
@@ -288,10 +301,15 @@ exp
     | ats_ck_iseqz
     
     | atom_exp
-    
+    | ats_cst_pmy
 
     ;
 
+ats_cst_pmy
+    : 'ATSCSTSPmyfil' LParen exp RParen -> ^(ATSCSTSPmyfil exp)
+    | 'ATSCSTSPmyloc' LParen exp RParen -> ^(ATSCSTSPmyloc exp)
+    ;
+    
 ats_ck_iseqz
     : ATSCKiseqz LParen exp RParen -> ^(ATSCKiseqz exp)
     ;
@@ -306,10 +324,15 @@ ats_pvm_castfn
 
 ats_simple_cast
     : 'ATSPMVint' LParen exp RParen -> ^(ATSPMV_INT exp)
+    | 'ATSPMVintrep' LParen exp RParen {System.out.println("ATSPMVintrep not supported");} -> ^(ATSPMVintrep exp)
+    
     | 'ATSPMVbool_true' LParen RParen -> ATSPMV_TRUE
     | 'ATSPMVbool_false' LParen RParen -> ATSPMV_FALSE
+    
     | 'ATSPMVchar' LParen exp RParen -> ^(ATSPMV_CHAR exp)
+    | 'ATSPMVfloat' LParen exp RParen -> ^(ATSPMV_FLOAT exp)
     | 'ATSPMVstring' LParen exp RParen -> ^(ATSPMV_STRING exp)
+    
     | 'ATSPMVi0nt' LParen exp RParen -> ^(ATSPMV_I0NT exp)
     | 'ATSPMVf0loat' LParen exp RParen -> ^(ATSPMV_F0LOAT exp)
     ;    
@@ -353,7 +376,7 @@ atom_exp
     | FLOAT
     | CHAR
     | STRING
-    | Bool    
+    | BOOL    
     | ID
     | LParen! exp RParen!
     ;
@@ -383,15 +406,15 @@ paratype
     ;
     
 para_decorator
-    : 'atsrefarg0_type' -> PARA_TYPE_REF0
-    | 'atsrefarg1_type' -> PARA_TYPE_REF1
+    : atsrefarg0_type -> PARA_TYPE_REF0
+    | atsrefarg1_type -> PARA_TYPE_REF1
     ;
 
 func_decorator
-    : 'ATSstaticdec()' -> ^(GLOBAL)  // same effect as GLOBAL
-    | 'ATSglobaldec()' -> STATIC
+    : ATSstaticdec -> ^(GLOBAL)  // same effect as GLOBAL
+    | ATSglobaldec -> STATIC
     ;
-    
+
 atstmpdec_void
     : 'ATStmpdec_void' LParen ID Comma atstype RParen -> ^(VAR_VOID atstype ID)
     ;
@@ -401,7 +424,7 @@ atstmpdec:
     ;
 
 atstypelst
-    : atstype (Comma atstype)*  -> ^(ATSTYPE_LIST atstype+)
+    : atstype (Comma atstype)*  -> ^(TYPE_LIST atstype+)
     ;
     
 atstype
@@ -410,42 +433,83 @@ atstype
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
     ;
 
+kind_decorator
+    : atstkind_type -> TYPE_DEC_TYPE
+    | atstkind_t0ype -> TYPE_DEC_T0YPE
+    ;
+
 prim_type
     : type_int -> TYPE_INT
-    | type_char -> TYPE_CHAR
-    | type_ulint -> TYPE_ULINT
-    | type_bool -> TYPE_BOOL
-    | type_string -> TYPE_STRING
-    | type_float -> TYPE_FLOAT
-    | type_ptr -> TYPE_PTR
-    | type_ref -> TYPE_REF
-    | type_arrptr -> TYPE_ARRPTR
-//    | type_str_arr -> TYPE_STRARR
+//    | type_char -> TYPE_CHAR
+//    | type_ulint -> TYPE_ULINT
+//    | type_bool -> TYPE_BOOL
+//    | type_string -> TYPE_STRING
+//    | type_float -> TYPE_FLOAT
+//    | type_ptr -> TYPE_PTR
+//    | type_ref -> TYPE_REF
+//    | type_arrptr -> TYPE_ARRPTR
+    | type_str_arr -> TYPE_ARRPTR  // still a pointer
     ;
 
 type_int    : 'int';
-type_char   : 'char';
-type_ulint  : 'unsigned' 'long' 'int';
-type_bool   : 'bool';
-type_string : 'string';
-type_float  : 'float';
-type_ptr    : 'ptr';
-type_ref    : 'ref';
-type_arrptr : 'arrptr';
+//type_char   : 'char';
+//type_ulint  : 'unsigned' 'long' 'int';
+//type_bool   : 'bool';
+//type_string : 'string';
+//type_float  : 'float';
+//type_ptr    : 'ptr';
+//type_ref    : 'ref';
+//type_arrptr : 'arrptr';
 type_str_arr: 'char **';
+
+
+// =====================================================
+// lexer
 
 Main: 'main';
 
-kind_decorator
-    : 'atstkind_type' -> TYPE_DEC_TYPE
-    | 'atstkind_t0ype' -> TYPE_DEC_T0YPE
-    ;
+// =====================================================
+// pats_ccomp_basics.h
 
-ATSCKiseqz: 'ATSCKiseqz';
+ATSstaticdec: 'ATSstaticdec()';
+ATSglobaldec: 'ATSglobaldec()';
 
+ATSdyncst_mac: 'ATSdyncst_mac';
+ATSdyncst_castfn: 'ATSdyncst_castfn'; 
+ATSdyncst_extfun: 'ATSdyncst_extfun';
+      
+      
 ATSdynload0: 'ATSdynload0';
 ATSdynload1: 'ATSdynload1';
 
+ATSmainats_void_0: 'ATSmainats_void_0';
+ATSmainats_argc_argv_0: 'ATSmainats_argc_argv_0';
+ATSmainats_argc_argv_envp_0: 'ATSmainats_argc_argv_envp_0';
+ATSmainats_void_int: 'ATSmainats_void_int';
+ATSmainats_argc_argv_int: 'ATSmainats_argc_argv_int';
+ATSmainats_argc_argv_envp_int: 'ATSmainats_argc_argv_envp_int';
+
+
+
+   
+// =====================================================
+// pats_ccomp_typedefs.h 
+
+atstkind_type: 'atstkind_type';
+atstkind_t0ype: 'atstkind_t0ype';
+
+atsrefarg0_type: 'atsrefarg0_type';
+atsrefarg1_type: 'atsrefarg1_type';
+    
+// =====================================================
+ATSINSload: 'ATSINSload';
+
+ATSINSstore: 'ATSINSstore';
+
+ATSCKiseqz: 'ATSCKiseqz';
+
+
+// =====================================================
 
 MACRO_IF0:    '#if(0)';
 MACRO_ENDIF:  '#endif';
@@ -453,9 +517,13 @@ MACRO_IFNDEF: '#ifndef';
 MACRO_IF:     '#if';
 MACRO_INCLUDE:'#include';
 
+// =====================================================
+
 Return  : 'return';
 Typedef : 'typedef';
 Struct  : 'struct';
+
+// =====================================================
 
 Semicol   : ';';
 Colon     : ':';
@@ -484,8 +552,10 @@ RParen    : ')';
 Assign    : '=';  
 Comma     : ',';  
 QMark     : '?';  
-  
-Bool  
+
+// =====================================================
+
+BOOL  
   :  'true'   
   |  'false'   
   ;  
@@ -501,20 +571,6 @@ FLOAT
     |   '.' ('0'..'9')+ EXPONENT?
     |   ('0'..'9')+ EXPONENT
     ;
-    
-COMMENT
-    :   '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
-    |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
-    |   '#if(0)' ( options {greedy=false;} : . )* '#endif' {$channel=HIDDEN;}  // todo 
-    |   '#define' ( options {greedy=false;} : . )* ('\n') {$channel=HIDDEN;}  // todo
-    ;
-
-WS  : ( ' '
-      | '\t'
-      | '\r'
-      | '\n'
-      ) {$channel=HIDDEN;}
-      ;
 
 STRING
 @init { final StringBuilder buf = new StringBuilder(); }
@@ -525,7 +581,7 @@ STRING
                '/' | '?' | ' '
               ) { buf.appendCodePoint(i); }
              | ESC_SEQ [buf]
-           )+ '"' {m_str = buf.toString();} // { setText(buf.toString()); /*System.out.println(getText());*/ } 
+           )* '"' {m_str = buf.toString();} // { setText(buf.toString()); /*System.out.println(getText());*/ } 
     ;
 
 CHAR
@@ -547,12 +603,12 @@ ESC_SEQ [StringBuilder buf]
              |'n' { buf.append('\n'); }
              |'f' { buf.append('\f'); }
              |'r' { buf.append('\r'); }
-             |'\"'{ buf.append('\\'); }
+             |'\"'{ buf.append('\"'); }
              |'\''{ buf.append('\''); }
              |'\\'{ buf.append('\\'); }
              )
-    |   UNICODE_ESC  // todo
-    |   OCTAL_ESC  // todo
+    |   UNICODE_ESC {System.out.println("UNICODE_ESC not supported.");} // todo
+    |   OCTAL_ESC   {int code = Integer.parseInt($OCTAL_ESC.text.substring(1)); buf.append((char)code); }  
     ;
 
 fragment
@@ -567,4 +623,20 @@ UNICODE_ESC
     :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
     ;
 
-    
+// =====================================================
+
+COMMENT
+    :   '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    |   '#if(0)' ( options {greedy=false;} : . )* '#endif' {$channel=HIDDEN;}  // todo 
+    |   '#define' ( options {greedy=false;} : . )* ('\n') {$channel=HIDDEN;}  // todo
+    ;
+
+WS  : ( ' '
+      | '\t'
+      | '\r'
+      | '\n'
+      ) {$channel=HIDDEN;}
+      ;
+      
+      

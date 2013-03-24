@@ -23,54 +23,41 @@ options {
 }
 
 @members {
-    private Map<String, ATSType> m_types;
-    private Map<String, FuncDef> m_funcs;
-    
-    private void defineType(String id, ATSType type) {
-        m_types.put(id, type);
-    }
-    
-    private void defineFunc(UserFunc func) {
-        m_funcs.put(func.getName(), func);
-    }
-    
-    public Map<String, ATSType> getTypes() {
-        return m_types;
-    }
-    
-    public Map<String, FuncDef> getFuncs() {
-        return m_funcs;
-    }
-    
-//    private void setTypes(Map<String, ATSType> types) {
-//        m_types = types;
-//    }
-//    
-//    private void setFuncs(Map<String, FuncDef> funcs) {
-//        m_funcs = funcs;
-//    }
+    private Program m_prog;
+
 }
 
 // START:rules
-program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [ProgramNode node]
+program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [Program prog]
 @init {
-  m_types = types;
-  m_funcs = funcs;
-  ProgramNode pn = new ProgramNode();
-  node = pn;
+  m_prog = new Program(types, funcs);
+  prog = m_prog;
 }
-    : ^(PROGRAM gstat[pn]*)
+    : ^(PROGRAM gstat* main_impl?)
     ;
 
-gstat [ProgramNode pn]
+gstat
     : type_def
     | func_decl
-    | func_def  {defineFunc($func_def.definition);}
-    | var_def {pn.addStat($var_def.node);}
+    | func_def  {m_prog.defineFunc($func_def.definition);}
+    | var_def {m_prog.addStat($var_def.node);}
     | ats_dyn_cst
     | ats_dyn_load1
     ;
 
+main_impl
+    : ^(ATSMAIN var_def func_call atsmain) {m_prog.setMain($var_def.node, $func_call.node, $atsmain.mainName);}
+    ;
+
+atsmain returns [String mainName]
+    : ATSmainats_void_0 {mainName = $ATSmainats_void_0.text;}
+    | ATSmainats_argc_argv_0 {mainName = $ATSmainats_argc_argv_0.text;}
+    | ATSmainats_argc_argv_envp_0 {mainName = $ATSmainats_argc_argv_envp_0.text;}
+    | ATSmainats_void_int {mainName = $ATSmainats_void_int.text;}
+    | ATSmainats_argc_argv_int {mainName = $ATSmainats_argc_argv_int.text;}
+    | ATSmainats_argc_argv_envp_int {mainName = $ATSmainats_argc_argv_envp_int.text;}
+    ;
+    
 // Simply ignore ats_dyn_load1   
 ats_dyn_load1
     : ^(ATSdynload1 ID)
@@ -78,9 +65,9 @@ ats_dyn_load1
     
 // Simply ignore ats_dyn_cst         
 ats_dyn_cst
-    : ^(ATS_DYN_CST_MAC ID)
-    | ^(ATS_DYN_CST_CASTFN ID)
-    | ^(ATS_DYN_CST_EXTFUN ID atstypelst atstype)
+    : ^(ATSdyncst_mac ID) 
+    | ^(ATSdyncst_castfn ID)
+    | ^(ATSdyncst_extfun ID atstypelst atstype)
     ;
 
 block returns [BlockNode node]
@@ -121,7 +108,7 @@ atsins_load returns [AtsInsLoad node]
     ;
     
 atsins_store returns [AtsInsStore node]
-    : ^(ATSINS_STORE dest=exp cont=exp) {node = new AtsInsStore($dest.node, $cont.node);}
+    : ^(ATSINSstore dest=exp cont=exp) {node = new AtsInsStore($dest.node, $cont.node);}
     ;
     
 atsins_store_arrpsz_asz returns [AtsInsStoreArrpszAsz node]
@@ -197,9 +184,9 @@ elseStat [IfNode parent]
     
 exp returns [ATSNode node]
     : func_call {node = $func_call.node;}
-
-    | ats_pvm_castfn {node = $ats_pvm_castfn.node;}
+    
     | ats_empty {node = $ats_empty.node;}
+    | ats_pvm_castfn {node = $ats_pvm_castfn.node;}
     | ats_simple_cast {node = $ats_simple_cast.node;}
     | ats_pmv_sizeof {node = $ats_pmv_sizeof.node;}
     | ats_deref {node = $ats_deref.node;}
@@ -212,7 +199,13 @@ exp returns [ATSNode node]
     | ats_ck_iseqz {node = $ats_ck_iseqz.node;}   
     
     | atom_exp {node = $atom_exp.node;}
+    | ats_cst_pmy {node = $ats_cst_pmy.node;}
     ;
+    
+ats_cst_pmy returns [ATSNode node]
+    : ^(ATSCSTSPmyfil exp) {node = $exp.node;}
+    | ^(ATSCSTSPmyloc exp) {node = $exp.node;}
+    ;    
 
 ats_ck_iseqz returns [AtsCkIseqz node]
     : ^(ATSCKiseqz exp) {node = new AtsCkIseqz($exp.node);}
@@ -228,12 +221,16 @@ ats_empty returns [AtsEmpty node]
 
 ats_simple_cast returns [ATSNode node]
     : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
-    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
-    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}    
+   
     | ATSPMV_TRUE {node = new ValueNode(BoolType.createTrue());}
     | ATSPMV_FALSE {node = new ValueNode(BoolType.createFalse());}
+    
     | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
+    | ^(ATSPMV_FLOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}         
     | ^(ATSPMV_STRING exp) {node = new AtsPmvSimpleCastNode(StringType.cType, $exp.node);}
+    
+    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
+    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}     
 
     ;
 
@@ -275,9 +272,9 @@ atom_exp returns [ATSNode node]
     : ID     {node = new IdentifierNode($ID.text);}
     | INT    {node = new ValueNode(IntType.fromString($INT.text));}
     | FLOAT  {node = new ValueNode(DoubleType.fromString($FLOAT.text));}
-    | CHAR   {node = new ValueNode(CharType.fromString(LiteralUtils.getStringEcsaped($CHAR.text)));}
+    | CHAR   {node = new ValueNode(CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
     | STRING {node = new ValueNode(StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
-    | Bool   {node = new ValueNode(BoolType.fromString($Bool.text));}
+    | BOOL   {node = new ValueNode(BoolType.fromString($BOOL.text));}
     ;
 
 func_call returns [FuncCallNode node]
@@ -302,7 +299,7 @@ var_def returns [DefinitionNode node]
     ;
 
 atstypelst
-    : ^(ATSTYPE_LIST atstype+)
+    : ^(TYPE_LIST atstype+)
     ;
     
 atstype returns [ATSType type]
@@ -312,7 +309,7 @@ atstype returns [ATSType type]
     ;
 
 name_type returns [ATSType type]
-    : ID {type = m_types.get($ID.text); 
+    : ID {type = m_prog.getTypes().get($ID.text); 
           if (null == type) {
               System.out.println("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
               throw new Error("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
@@ -362,7 +359,7 @@ paralst returns [List<FuncPara> paralst]
     ;
 
 para returns [FuncPara para]
-    : paratype ID {para = new FuncPara($paratype.type, $ID.text);}
+    : paratype ID? {para = new FuncPara($paratype.type, $ID.text);}
     ;
 
 paratype returns [ATSType type]
@@ -375,7 +372,7 @@ func_def returns [UserFunc definition]
     ;
 
 type_def
-    : ^(TYPEDEF ID struct_def[$ID.text]) {defineType($ID.text, $struct_def.type);}   // todo move to struct_def
+    : ^(TYPEDEF ID struct_def[$ID.text]) {m_prog.defineType($ID.text, $struct_def.type);}   // todo move to struct_def
     ;
 
 struct_def [String name] returns [StructType type]

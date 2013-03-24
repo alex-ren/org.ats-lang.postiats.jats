@@ -7,66 +7,83 @@ public class PtrValue implements ATSValue {
     
     public static final PtrType m_type = PtrType.cType;
     
-    private ATSValue m_mem;
-    // It's possible that the pointer points to an element in an array.
-    private ArrayValue m_arr;
+    public static final PtrValue c_stdout = new PtrValue(new ATSValue[1]);
+    public static final PtrValue c_stderr = new PtrValue(new ATSValue[1]);
+    
+    // It's possible that the array only has one element.
+    private ATSValue[] m_arr;
     private int m_ind;
 
-    // for pointer
-    public PtrValue(ATSValue v) {
-    	m_mem = v;
-    	m_arr = null;
-    	m_ind = 0;    	
+    public boolean isEqual(PtrValue p) {
+        return m_arr == p.m_arr;
     }
     
-    public PtrValue(ArrayValue arr) {
-        m_mem = arr.get(0);
+    public PtrValue() {
+        m_arr = null;
+        m_ind = -1;
+    }
+    
+    // for pointer
+    public PtrValue(ATSValue v) {
+    	m_arr = new ATSValue[] {v};
+    	m_ind = 0;
+    }
+    
+    public PtrValue(ATSValue[] arr) {
         m_arr = arr;
         m_ind = 0;      
     }
-    
-    private PtrValue(ATSValue mem, ArrayValue arr, int ind) {
-        m_mem = mem;
-        m_arr = arr;
-        m_ind = ind;
-    }
 
     // v is actually an element of arr
-    public PtrValue(ArrayValue arr, int ind) {
+    public PtrValue(ATSValue[] arr, int ind) {
         m_arr = arr;
         m_ind = ind;
-        m_mem = arr.get(ind);
     }
     
 	public ATSValue deRef(ATSType type) {
-	    if (type != m_mem.getType()) {
-	        System.out.println("need " + m_mem.getType() + ", we get " + type);
+	    ATSValue mem = m_arr[m_ind];
+	    if (type != mem.getType()) {
+	        System.out.println("need " + mem.getType() + ", we get " + type);
 	        throw new Error("deref on wrong type");
 	    }
-		return m_mem;
+//	    System.out.println("type is " + type);
+		return mem;
 	}
+	
+    public ATSValue deRef(int index) {
+        return m_arr[index];
+    }
+    
 
 	public void incIndex() {
 	    m_ind++;
-	    m_mem = m_arr.get(m_ind);
 	}
 	
 	public void addByteSize(int sz) {
-	    int len = m_mem.getType().getSize();
+	    ATSValue mem = m_arr[m_ind];
+	    int len = mem.getType().getSize();
 	    if (sz % len != 0) {
 	        throw new Error("PtrValue::addByteSize, ptr boundry error");
 	    }
 	    
 	    m_ind += sz / len;
-	    m_mem = m_arr.get(m_ind);
+	}
+	
+	public int subIndex(PtrValue p) {
+	    if (this.m_arr != p.m_arr) {
+	        throw new Error("subtraction between two unrelated pointers");
+	    }
 	    
-	    
+	    return m_ind - p.m_ind;
+	}
+	
+	public StringValue toStringValue() {
+	    return new StringValue((CharValue[])m_arr);
 	}
 	
 	@Override
 	public void copyfrom(ATSValue v) {
 		if (v instanceof PtrValue) {
-			m_mem = ((PtrValue) v).m_mem;
 			m_arr = ((PtrValue) v).m_arr;
 			m_ind = ((PtrValue) v).m_ind;
 		} else {
@@ -76,12 +93,12 @@ public class PtrValue implements ATSValue {
 
 	@Override
 	public ATSValue getContent() {
-		return m_mem;
+		throw new Error("not supported");
 	}
 
     @Override
     public PtrValue deepcopy() {
-        return new PtrValue(m_mem, m_arr, m_ind);
+        return new PtrValue(m_arr, m_ind);
     }
     
     @Override

@@ -19,6 +19,8 @@ public class LiteralUtils {
     }
     
     public static String getCharEcsaped(String input) {
+//        System.out.println("getCharEcsaped, input is " + input);
+//        System.out.println("getCharEcsaped, input2 is " + '\000');
         CharStream stream = new ANTLRStringStream(input);
         ATSILLexer lexer0 = new ATSILLexer(stream);
         try {
@@ -30,5 +32,8 @@ public class LiteralUtils {
         return lexer0.getEscaped();
     }
     
+    public static void main(String [] argv) {
+        System.out.println("sss = " + String.valueOf((char)1));
+    }
     
 }

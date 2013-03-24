@@ -51,6 +51,7 @@ public class UserFunc implements FuncDef{
                 scope.addValue(iter_para.next().getId(), iter_val.next());
             }
         }
+        // System.out.println("evaluating function: " + m_id);
         
         return m_body.evaluate(types, funcs, scope);
     }

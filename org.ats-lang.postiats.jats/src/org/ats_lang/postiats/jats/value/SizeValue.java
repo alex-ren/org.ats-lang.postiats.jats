@@ -34,7 +34,14 @@ public class SizeValue extends PrimValue {
             if (v >= 0) {
                 return new SizeValue(v);
             } else {
-                throw new Error("SizeValue::castFrom negetive number");
+                throw new Error("SizeValue::castFrom (IntValue)negetive number");
+            }
+        } else if (pv instanceof SSizeValue){
+            Integer v = ((SSizeValue)pv).getContent();
+            if (v >= 0) {
+                return new SizeValue(v);
+            } else {
+                throw new Error("SizeValue::castFrom (SSizeValue) negetive number");
             }
         } else {
             throw new Error("SizeValue::castFrom");

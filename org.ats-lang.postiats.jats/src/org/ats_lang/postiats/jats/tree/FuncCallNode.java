@@ -14,6 +14,7 @@ import org.ats_lang.postiats.jats.value.ATSValue;
 public class FuncCallNode implements ATSNode {
     private String m_id;
     private List<ATSNode> m_paras;
+    static int m_indent = 0;
     
     public FuncCallNode(String id, List<ATSNode> paras) {
         m_id = id;
@@ -23,6 +24,7 @@ public class FuncCallNode implements ATSNode {
     @Override
     public ATSValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ValueScope scope) {
+
         List<ATSValue> m_args = null;
         
         if (m_paras != null) {
@@ -42,13 +44,27 @@ public class FuncCallNode implements ATSNode {
         // Only global scope can be seen inside the function.
         ValueScope aScope = scope.getParent().newScope();
         
-        // System.out.println("name is " + m_id + " ================");
+//        printIndent(m_indent);
+//        System.out.println("Entering function: " + m_id);
+        m_indent += 4;
+        ATSValue ret;
         if (fun instanceof UserFunc) {
-            return ((UserFunc)fun).evaluate(types, funcs, aScope, m_args);
+            ret = ((UserFunc)fun).evaluate(types, funcs, aScope, m_args);
         } else {
-            return ((LibFunc)fun).evaluate(m_args);
+            ret = ((LibFunc)fun).evaluate(m_args);
         }
+        m_indent -= 4;
+//        printIndent(m_indent);
+//        System.out.println("Leaving function: " + m_id);
+        return ret;
     
+    }
+    
+    private void printIndent(int n) {
+        System.out.println();
+        for (int j = 0; j < n; ++j) {
+            System.out.print(" ");
+        }
     }
 
 }

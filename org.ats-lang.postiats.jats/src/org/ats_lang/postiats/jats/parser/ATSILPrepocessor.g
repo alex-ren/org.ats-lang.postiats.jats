@@ -60,7 +60,7 @@ newline
 
 line_end
     : NEWLINE -> template(t={$NEWLINE.text}) "<t>"
-    | EOF 
+    | EOF
     ;
     
 NEWLINE
@@ -76,7 +76,7 @@ IFNDEF_LINE
     : '#ifndef' ~('\r' | '\n')*
     ;
     
-IF0_LINE : '#if (0)' ~('\r' | '\n')*
+IF0_LINE : '#if' ' '* '(0)' ~('\r' | '\n')*
     ;
     
 ENDIF_LINE

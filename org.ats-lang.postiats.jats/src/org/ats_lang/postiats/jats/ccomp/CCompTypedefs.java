@@ -3,39 +3,70 @@
  */
 package org.ats_lang.postiats.jats.ccomp;
 
-import org.ats_lang.postiats.jats.type.BoolType;
-import org.ats_lang.postiats.jats.type.DoubleType;
-import org.ats_lang.postiats.jats.type.IntType;
-import org.ats_lang.postiats.jats.type.PtrType;
-import org.ats_lang.postiats.jats.type.SizeType;
-import org.ats_lang.postiats.jats.type.StringType;
-import org.ats_lang.postiats.jats.type.StructType;
-import org.ats_lang.postiats.jats.type.ULIntType;
-import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.type.*;
+
 import org.ats_lang.postiats.jats.value.IntValue;
 import org.ats_lang.postiats.jats.value.PtrValue;
 import org.ats_lang.postiats.jats.value.SizeValue;
 
 public class CCompTypedefs {
 
-
-    public static PtrType m_atstype_ptrk = PtrType.cType;
-
+    public static VoidType m_atstype_void = VoidType.cType;
+    
     public static VoidType m_atsvoid_t0ype = VoidType.cType;
 
     public static IntType m_atstype_int = IntType.cType;
     
+    public static UIntType m_atstype_uint = UIntType.cType;
+    
+    public static LIntType m_atstype_lint = LIntType.cType;
+    
     public static ULIntType m_atstype_ulint = ULIntType.cType;
-
+    
+    public static LLIntType m_atstype_llint = LLIntType.cType;
+    
+    public static ULLIntType m_atstype_ullint = ULLIntType.cType;
+    
+    public static SIntType m_atstype_sint = SIntType.cType;
+    
+    public static USIntType m_atstype_usint = USIntType.cType;
+    
+    public static SSizeType m_atstype_ssize = SSizeType.cType;
+    
+    public static SizeType m_atstype_size = SizeType.cType;
+    
+    public static BoolType m_atstype_bool = BoolType.cType;
+    
+    public static CharType m_atstype_char = CharType.cType;
+    
+    public static SCharType m_atstype_schar = SCharType.cType;
+    
+    public static UCharType m_atstype_uchar = UCharType.cType;
+    
+    public static StringType m_atstype_string = StringType.cType;
+   
+    public static StringType m_atstype_strptr = StringType.cType;
+    
+    public static DoubleType m_atstype_float = DoubleType.cType;
+    
     public static DoubleType m_atstype_double = DoubleType.cType;
 
-    public static BoolType m_atstype_bool = BoolType.cType;
+    public static LDoubleType m_atstype_ldouble = LDoubleType.cType;
+
+    public static PtrType m_atstype_ptr = PtrType.cType;
+    
+    public static PtrType m_atstype_ptrk = PtrType.cType;
+    
+    public static PtrType m_atstype_ref = PtrType.cType;
+    
+    public static PtrType m_atstype_boxed = PtrType.cType;
+    
+    public static PtrType m_atstype_datconptr = PtrType.cType;
+    
+    public static PtrType atstype_datcontyp = PtrType.cType;
 
     public static PtrType m_atstype_arrptr = PtrType.cType;
 
-    public static SizeType m_atstype_size = SizeType.cType;
-    
-    public static StringType m_atstype_string = StringType.cType;
     
     public static StructType m_atstype_arrpsz;
     
@@ -213,10 +244,15 @@ public class CCompTypedefs {
             return m_mem;
         }
         
+        public Object deRef(int index) {
+            return m_arr[index];
+        }
+        
         public void incIndex() {
             m_ind++;
             m_mem = m_arr[m_ind];
         }
+
         
         public void addByteSize(int sz) {
             if (sz % m_elesz != 0) {

@@ -20,6 +20,7 @@ public class IdentifierNode implements ATSNode {
     
     @Override
     public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
+        ATSValue v = scope.getValue(m_id);
         return scope.getValue(m_id);
     }
 

@@ -26,4 +26,11 @@
 		<nature>org.deved.antlride.core.nature</nature>
 		<nature>net.sourceforge.metrics.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>test/atof_dats.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/ATS-Postiats/doc/EXAMPLE/INTRO/atof_dats.c</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
