@@ -19,17 +19,16 @@ implement
 main0 () = let
 //
 val N = 0
-val () = println! ("f91(10) = ", f91(10))
-// val () = assertloc (f91 (N+0) = 91)
-// val () = assertloc (f91 (N+1) = 91)
-// val () = assertloc (f91 (N+2) = 91)
-// val () = assertloc (f91 (N+3) = 91)
-// val () = assertloc (f91 (N+4) = 91)
-// val () = assertloc (f91 (N+5) = 91)
-// val () = assertloc (f91 (N+6) = 91)
-// val () = assertloc (f91 (N+7) = 91)
-// val () = assertloc (f91 (N+8) = 91)
-// val () = assertloc (f91 (N+9) = 91)
+val () = assertloc (f91 (N+0) = 91)
+val () = assertloc (f91 (N+1) = 91)
+val () = assertloc (f91 (N+2) = 91)
+val () = assertloc (f91 (N+3) = 91)
+val () = assertloc (f91 (N+4) = 91)
+val () = assertloc (f91 (N+5) = 91)
+val () = assertloc (f91 (N+6) = 91)
+val () = assertloc (f91 (N+7) = 91)
+val () = assertloc (f91 (N+8) = 91)
+val () = assertloc (f91 (N+9) = 91)
 //
 in
   // nothing

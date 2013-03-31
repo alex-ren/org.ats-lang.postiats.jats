@@ -85,11 +85,12 @@ implement
 main0 (
   argc, argv
 ) = {
+  val x = "sss": string1
+  val () = println! (x)
   val () =
     if (argc <= 1) then atof_usage (argv[0])
   val () = assertloc (argc >= 2)
   val () = println! ("atof(\"", argv[1], "\") = ", atof(argv[1]))
-  val () = fprint_string(stdout_ref, "")
 } // end of [main0]
 
 (* ****** ****** *)
