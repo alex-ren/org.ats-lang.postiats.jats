@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.ValueScope;
+import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.BoolValue;
@@ -40,7 +40,7 @@ public class IfNode implements ATSNode {
 
     @Override
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ValueScope scope) {
+            Map<String, FuncDef> funcs, LValueScope scope) {
         for (Choice ch: m_choices) {
             ATSValue b = ch.m_exp.evaluate(types, funcs, scope);
             if (BoolValue.isTrue(b)) {

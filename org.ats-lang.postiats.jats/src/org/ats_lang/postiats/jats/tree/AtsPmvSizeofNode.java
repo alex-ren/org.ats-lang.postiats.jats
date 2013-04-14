@@ -19,5 +19,5 @@ public class AtsPmvSizeofNode implements ATSNode {
     public SizeValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
         return new SizeValue(m_hit.getSize());
     }
-
+x
 }

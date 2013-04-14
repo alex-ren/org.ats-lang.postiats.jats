@@ -18,5 +18,5 @@ public class ValueNode implements ATSNode {
     public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
         return m_v;
     }
-
+x
 }

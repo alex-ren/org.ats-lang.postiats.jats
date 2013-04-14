@@ -46,7 +46,7 @@ gstat
     ;
 
 main_impl
-    : ^(ATSMAIN var_def func_call atsmain) {m_prog.setMain($var_def.node, $func_call.node, $atsmain.mainName);}
+    : ^(ATSMAIN ID func_call atsmain) {m_prog.setMain($ID.text, $func_call.node, $atsmain.mainName);}
     ;
 
 atsmain returns [String mainName]
@@ -58,7 +58,7 @@ atsmain returns [String mainName]
     | ATSmainats_argc_argv_envp_int {mainName = $ATSmainats_argc_argv_envp_int.text;}
     ;
     
-// Simply ignore ats_dyn_load1   
+// Simply ignore ats_dyn_load1    
 ats_dyn_load1
     : ^(ATSdynload1 ID)
     ;
@@ -104,7 +104,8 @@ atsins returns [ATSNode node]
     ;
 
 atsins_load returns [AtsInsLoad node]
-    : ^(ATSINSload dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
+    // : ^(ATSINSload dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
+    : ^(ATSINSload dest=ID cont=exp) {node = new AtsInsLoad($ID.text, $cont.node);}
     ;
     
 atsins_store returns [AtsInsStore node]
@@ -303,8 +304,8 @@ atstypelst
     ;
     
 atstype returns [ATSType type]
-    : ^(TYPE prim_type) {type = $prim_type.type;}
-    | ^(TYPE name_type)  {type = $name_type.type;}
+    : // ^(TYPE prim_type) {type = $prim_type.type;}
+      ^(TYPE name_type)  {type = $name_type.type;}
     | ^(TYPE kind_decorator name_type) {type = $name_type.type;}  // We don't handle decorator now. {type = new KindType($kind_decorator.kind, $name_type.type);}
     ;
 
@@ -322,18 +323,18 @@ kind_decorator returns [ATSType.Decorator kind]
     | TYPE_DEC_T0YPE {kind = ATSType.Decorator.T0YPE;}
     ;
     
-// todo
-prim_type returns [ATSType type]
-    : TYPE_INT    {type = IntType.cType;}
-    | TYPE_CHAR   {type = CharType.cType;}
-    | TYPE_ULINT  {type = ULIntType.cType;}
-    | TYPE_BOOL   {type = BoolType.cType;}
-    | TYPE_STRING {type = StringType.cType;}
-    | TYPE_FLOAT  {type = DoubleType.cType;}
-    | TYPE_PTR  {System.out.println("TYPE_PTR not supported");} // todo
-    | TYPE_REF  {System.out.println("TYPE_REF not supported");} // todo
-    | TYPE_ARRPTR  {System.out.println("TYPE_ARRPTR not supported");} // todo
-    ;
+//// todo
+//prim_type returns [ATSType type]
+//    : TYPE_INT    {type = IntType.cType;}
+//    | TYPE_CHAR   {System.out.println("TYPE_CHAR not supported");} // todo
+//    | TYPE_ULINT  {System.out.println("TYPE_ULINT not supported");} // todo
+//    | TYPE_BOOL   {System.out.println("TYPE_BOOL not supported");} // todo
+//    | TYPE_STRING {System.out.println("TYPE_STRING not supported");} // todo
+//    | TYPE_FLOAT  {System.out.println("TYPE_FLOAT not supported");} // todo
+//    | TYPE_PTR  {System.out.println("TYPE_PTR not supported");} // todo
+//    | TYPE_REF  {System.out.println("TYPE_REF not supported");} // todo
+//    | TYPE_ARRPTR  {System.out.println("TYPE_ARRPTR not supported");} // todo
+//    ;
 
 
 // Simply ignore func_decl

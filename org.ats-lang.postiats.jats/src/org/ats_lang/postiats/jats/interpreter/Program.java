@@ -46,8 +46,8 @@ public class Program {
         m_statements.add(stat);
     }
 
-    public void setMain(DefinitionNode err, FuncCallNode initFunc, String mainName) {
-        m_main = new MainFunc(err, initFunc, mainName);
+    public void setMain(String errname, FuncCallNode initFunc, String mainName) {
+        m_main = new MainFunc(errname, initFunc, mainName);
     }
 
     public List<ATSNode> getStat() {
@@ -55,12 +55,12 @@ public class Program {
     }
 
     private class MainFunc {
-        public DefinitionNode m_err;
+        public String m_errname;
         public FuncCallNode m_initFunc;
         public String m_mainName;
         
-        public MainFunc(DefinitionNode err, FuncCallNode initFunc, String mainName) {
-            m_err = err;
+        public MainFunc(String errname, FuncCallNode initFunc, String mainName) {
+            m_errname = errname;
             m_initFunc = initFunc;
             m_mainName = mainName;
         }
@@ -69,7 +69,7 @@ public class Program {
     
     public void run(String [] argv) {
         // initialize all the global variables, and put them into global scope
-        ValueScope globalScope = new ValueScope();
+        LValueScope globalScope = new LValueScope();
         
         globalScope.addValue("atspre_FILE_stdout", PtrValue.c_stdout);
         globalScope.addValue("atspre_FILE_stderr", PtrValue.c_stderr);
@@ -80,11 +80,10 @@ public class Program {
         
         // =======================
         // new scope for the main
-        ValueScope mainScope = globalScope.newScope();
-//        no use now
-//        // The variable for error
-//        ATSValue err =  m_main.m_err.evaluate(m_types, m_funcs, mainScope);
-//        
+        LValueScope mainScope = globalScope.newScope();
+        // todo add the error to the current scope
+        // something like mainScope.addValue(errname, LValue(int))
+
         // =======================
                 
         // initialization function
@@ -102,6 +101,9 @@ public class Program {
         
         PtrValue mainEnvp = new PtrValue();  // no envp at all
         
+        // todo
+        // I should put appropriate arguments (including error) into the list based
+        // what main function is actually used.
         List<ATSValue> mainArgs = new ArrayList<ATSValue>();
         mainArgs.add(mainArgc);
         mainArgs.add(mainArgv);
@@ -117,6 +119,7 @@ public class Program {
 //        #define ATSmainats_void_int(err) err = mainats_void_int()
 //        #define ATSmainats_argc_argv_int(argc, argv, err) err = mainats_argc_argv_int(argc, argv)
 //        #define ATSmainats_argc_argv_envp_int(argc, argv, envp, err) err = mainats_argc_argv_envp_int(argc, argv, envp)
+        
         if (m_main.m_mainName == "ATSmainats_void_0") {
             mainName = "mainats_void_0";
         } else if (m_main.m_mainName == "ATSmainats_argc_argv_0") {
@@ -140,7 +143,7 @@ public class Program {
             return;
         }
         
-        ValueScope scope = globalScope.newScope();
+        LValueScope scope = globalScope.newScope();
         ((UserFunc)fun).evaluate(m_types, m_funcs, scope, mainArgs);
         
         return;

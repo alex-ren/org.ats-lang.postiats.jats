@@ -18,7 +18,7 @@ import org.ats_lang.postiats.jats.type.ATSType;
  */
 public interface ATSValue {
 
-    public void copyfrom(ATSValue v);
+    public void copyfrom(Object v);
     
     public ATSValue deepcopy();
     

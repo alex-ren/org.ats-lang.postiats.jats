@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.type.ATSType.Decorator;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.ArrayValue;
 
@@ -11,25 +12,26 @@ public class ArrayType implements ATSType {
         m_type = type;
         m_len = len;
     }
-
-    @Override
-    public String toString() {
-        return ArrayValue.class.getSimpleName();
-    }
-    
+//
+//    @Override
+//    public String toString() {
+//        return ArrayValue.class.getSimpleName();
+//    }
+//    
     @Override
     public int getSize() {
         return m_len * m_type.getSize();
     }
+//
+//    @Override
+//    public ArrayValue createDefault() {
+//        ATSValue [] arr = new ATSValue[m_len];
+//        for (int i = 0; i < m_len; ++i) {
+//            arr[i] = m_type.createDefault();
+//        }
+//        
+//        return new ArrayValue(this, arr);
+//    }
 
-    @Override
-    public ArrayValue createDefault() {
-        ATSValue [] arr = new ATSValue[m_len];
-        for (int i = 0; i < m_len; ++i) {
-            arr[i] = m_type.createDefault();
-        }
-        
-        return new ArrayValue(this, arr);
-    }
 
 }

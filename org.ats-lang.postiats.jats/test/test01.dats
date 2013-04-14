@@ -2,35 +2,54 @@
 
 staload "prelude/DATS/integer.dats"
 
-typedef tuple_box = '(int, int)
-typedef tuple_flat = @(int, int)
 
+fun foo_bt_val (x: '(int, int)): void = let
+  val () = println! ("int is ", x.0)
+in
+end
 
-fun foo_bt_val (x: tuple_box): void = ()
-fun foo_ft_val (x: tuple_flat): void = ()
+fun foo_ft_val (x: @(int, double)): void = let
+  val () = println! ("int is ", x.0)
+in
+end
 
-fun foo_bt_var (x: &tuple_box): void = let
-  val () = x := '(52, 62)
+fun foo_bt_var (x: &'(int, char)): void = let
+  val () = x := '(52, 'c')
   // val () = x.0 := 52  // error
 in
 end
 
-fun foo_ft_var (x: &tuple_flat): void = let
-  val () = x := @(71, 82)
-  val () = x.0 := 72  // error
+fun foo_ft_var (x: & @(int, string)): void = let
+  val () = x := @(72, "cde")
+  val () = x.1 := "def"
 in
 end
 
-implement main0 () = let
-  val x_bt_val = '(1, 2): tuple_box
-  val x_ft_val = @(3, 4): tuple_flat
+fun foo_int (): int = 3
 
-  var x_bt_var = '(5, 6): tuple_box
-  var x_ft_var = @(7, 8): tuple_flat
+implement main0 () = let
+ 
+  val x = foo_int ()
+  val x = x + 1
+  
+  var x = foo_int ()
+  var x = x + 1
+  val () = x := x + 2
+  
+  val x_bt_val = '(0, 1)
+  val x_bt_val = '(1, 2)
+  val () = foo_bt_val x_bt_val
 
 // =====================
 
-  val () = x_bt_var := '(51, 61)
+  val x_ft_val = @(2, 0.1)
+  val x_ft_val = @(3, 1.2)
+  val () = foo_ft_val x_ft_val
+
+// =====================
+ 
+  var x_bt_var = '(5, 'a')
+  val () = x_bt_var := '(51, 'b')
   val () = assertloc (x_bt_var.0 = 51)
   // val () = x_bt_var.0 := 3  // error
 
@@ -38,26 +57,19 @@ implement main0 () = let
   val () = assertloc (x_bt_var.0 = 52)
 
 // =====================
+  var x_ft_var = @(7, "abc"): (int, string)
+  val () = x_ft_var.0 := 70
+  val () = assertloc (x_ft_var.0 = 70)
+ 
+   val () = x_ft_var := (71, "bcd")
+   val () = assertloc (x_ft_var.1 = "bcd")
+// 
+   val () = foo_ft_var (x_ft_var)
+   val () = assertloc (x_ft_var.0 = 72)
+   val () = assertloc (x_ft_var.1 = "def")
 
-  val () = x_ft_var.0 := 71
-  val () = assertloc (x_ft_var.0 = 71)
-  val () = x_ft_var := @(71, 81)
-  val () = assertloc (x_ft_var.1 = 81)
-
-  val () = foo_ft_var (x_ft_var)
-  val () = assertloc (x_ft_var.0 = 72)
-  val () = assertloc (x_ft_var.1 = 82)
-
-// =====================
-
-  val x_str0_val = "abc": string0
-  var x_str0_var = "def"
-
-  val () = println! x_str0_val
-  val () = println! x_str0_var
 
   // val x_list_val = list_cons ('a', list_cons ('b', list_nil)) // not supported
-
 
 in
 end

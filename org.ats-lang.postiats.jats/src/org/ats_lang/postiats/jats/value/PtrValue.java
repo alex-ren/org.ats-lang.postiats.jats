@@ -82,7 +82,7 @@ public class PtrValue implements ATSValue {
 	}
 	
 	@Override
-	public void copyfrom(ATSValue v) {
+	public void copyfrom(Object v) {
 		if (v instanceof PtrValue) {
 			m_arr = ((PtrValue) v).m_arr;
 			m_ind = ((PtrValue) v).m_ind;

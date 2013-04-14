@@ -19,6 +19,7 @@ public class CCompArrayPtr {
 //    } // en of [atspre_arrpsz_get_ptrsize]
     // Version 1: for interpreter
     public static PtrValue atspre_arrpsz_get_ptrsize(StructValue psz, PtrValue asz) {
+        
         asz.deRef(psz.getItem("size").getType()).copyfrom(psz.getItem("size"));
         return (PtrValue)psz.getItem("ptr");  // omit one deepcopy
     }

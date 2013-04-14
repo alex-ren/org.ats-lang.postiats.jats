@@ -6,6 +6,7 @@ import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.ValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.value.PtrValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsPMove implements ATSNode {
@@ -21,11 +22,12 @@ public class AtsInsPMove implements ATSNode {
     
     @Override
     // #define ATSINSpmove(tmp, hit, val) (*(hit*)tmp = val)
-    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
+    public SingletonValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ValueScope scope) {
         if (m_tmp instanceof IdentifierNode) {
-            ATSValue val_v = m_val.evaluate(types, funcs, scope);
-            ATSValue tmp_ptr = (ATSValue)scope.getValue(((IdentifierNode)m_tmp).getName());
-            ATSValue tmp_v = (ATSValue)tmp_ptr.getContent();
+            Object val_v = m_val.evaluate(types, funcs, scope);
+            // It must be a PtrValue
+            PtrValue tmp_ptr = (PtrValue)scope.getValue(((IdentifierNode)m_tmp).getName());
+            ATSValue tmp_v = tmp_ptr.deRef(m_hit);
             tmp_v.copyfrom(val_v);
             
             return SingletonValue.VOID;
@@ -33,5 +35,5 @@ public class AtsInsPMove implements ATSNode {
             throw new Error("ATSINSpmove: only name is supported now");
         }
     }
-    
+    x
 }

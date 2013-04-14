@@ -19,10 +19,10 @@ public class StructType implements ATSType {
         m_members.add(new Pair(id, ty));
     }
 
-    @Override
-    public String toString() {
-        return m_name;
-    }
+//    @Override
+//    public String toString() {
+//        return m_name;
+//    }
     
     @Override
     public int getSize() {
@@ -43,12 +43,13 @@ public class StructType implements ATSType {
         }
     }
 
-    @Override
-    public StructValue createDefault() {
-        HashMap<String, ATSValue> map = new HashMap<String, ATSValue>();
-        for (Pair p: m_members) {
-            map.put(p.m_id, p.m_ty.createDefault());
-        }
-        return new StructValue(this, map);
-    }
+//    @Override
+//    public StructValue createDefault() {
+//        HashMap<String, ATSValue> map = new HashMap<String, ATSValue>();
+//        for (Pair p: m_members) {
+//            map.put(p.m_id, p.m_ty.createDefault());
+//        }
+//        return new StructValue(this, map);
+//    }
+
 }

@@ -85,8 +85,6 @@ implement
 main0 (
   argc, argv
 ) = {
-  val x = "sss": string1
-  val () = println! (x)
   val () =
     if (argc <= 1) then atof_usage (argv[0])
   val () = assertloc (argc >= 2)

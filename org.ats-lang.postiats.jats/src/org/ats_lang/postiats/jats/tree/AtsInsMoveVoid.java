@@ -18,11 +18,11 @@ public class AtsInsMoveVoid implements ATSNode {
 
     @Override
     // #define ATSINSmove_void(tmp, command) command
-    public ATSValue evaluate(Map<String, ATSType> types,
+    public SingletonValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ValueScope scope) {
-        ATSValue v = m_val.evaluate(types, funcs, scope);
+        Object v = m_val.evaluate(types, funcs, scope);
         return SingletonValue.VOID;
     }
-    
+    x
 
 }

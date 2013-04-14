@@ -28,15 +28,15 @@ tokens {
   STRUCT;
 
   TYPE;
-  TYPE_INT;
-  TYPE_CHAR;
-  TYPE_ULINT;
-  TYPE_BOOL;
-  TYPE_STRING;
-  TYPE_FLOAT;
-  TYPE_PTR;
-  TYPE_REF;
-  TYPE_ARRPTR;
+//  TYPE_INT;
+//  TYPE_CHAR;
+//  TYPE_ULINT;
+//  TYPE_BOOL;
+//  TYPE_STRING;
+//  TYPE_FLOAT;
+//  TYPE_PTR;
+//  TYPE_REF;
+//  TYPE_ARRPTR;
   
   TYPE_DEC_TYPE;
   TYPE_DEC_T0YPE;
@@ -134,13 +134,23 @@ gstat
     | ats_dyn_load1 Semicol!
     ;
 
+//int
+//main
+//(
+//int argc, char **argv, char **envp
+//) {
+//int err = 0 ;
+//_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test02_056$dats__dynload() ;
+//ATSmainats_void_0(err) ;
+//return (err) ;
+//} /* end of [main] */
 main_impl
-    : type_int Main LParen paralst RParen LBrace
-    type_int ID Assign INT Semicol
+    : 'int' Main LParen 'int' ID Comma 'char **' ID Comma 'char **' ID RParen LBrace
+    'int' ID Assign INT Semicol
     func_call Semicol
     atsmain LParen explst RParen Semicol
     simple_return Semicol
-    RBrace -> ^(ATSMAIN ^(VAR ^(TYPE TYPE_INT) ID) func_call atsmain)
+    RBrace -> ^(ATSMAIN ID func_call atsmain)
     ;
 
 atsmain
@@ -428,8 +438,8 @@ atstypelst
     ;
     
 atstype
-    : prim_type -> ^(TYPE prim_type)
-    | ID -> ^(TYPE ID)
+    : // prim_type -> ^(TYPE prim_type)
+      ID -> ^(TYPE ID)
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
     ;
 
@@ -438,29 +448,29 @@ kind_decorator
     | atstkind_t0ype -> TYPE_DEC_T0YPE
     ;
 
-prim_type
-    : type_int -> TYPE_INT
-//    | type_char -> TYPE_CHAR
-//    | type_ulint -> TYPE_ULINT
-//    | type_bool -> TYPE_BOOL
-//    | type_string -> TYPE_STRING
-//    | type_float -> TYPE_FLOAT
-//    | type_ptr -> TYPE_PTR
-//    | type_ref -> TYPE_REF
-//    | type_arrptr -> TYPE_ARRPTR
-    | type_str_arr -> TYPE_ARRPTR  // still a pointer
-    ;
+//prim_type
+//    : type_int -> TYPE_INT
+////    | type_char -> TYPE_CHAR
+////    | type_ulint -> TYPE_ULINT
+////    | type_bool -> TYPE_BOOL
+////    | type_string -> TYPE_STRING
+////    | type_float -> TYPE_FLOAT
+////    | type_ptr -> TYPE_PTR
+////    | type_ref -> TYPE_REF
+////    | type_arrptr -> TYPE_ARRPTR
+//    | type_str_arr -> TYPE_ARRPTR  // still a pointer
+//    ;
 
-type_int    : 'int';
-//type_char   : 'char';
-//type_ulint  : 'unsigned' 'long' 'int';
-//type_bool   : 'bool';
-//type_string : 'string';
-//type_float  : 'float';
-//type_ptr    : 'ptr';
-//type_ref    : 'ref';
-//type_arrptr : 'arrptr';
-type_str_arr: 'char **';
+//type_int    : 'int';
+////type_char   : 'char';
+////type_ulint  : 'unsigned' 'long' 'int';
+////type_bool   : 'bool';
+////type_string : 'string';
+////type_float  : 'float';
+////type_ptr    : 'ptr';
+////type_ref    : 'ref';
+////type_arrptr : 'arrptr';
+//type_str_arr: 'char **';
 
 
 // =====================================================

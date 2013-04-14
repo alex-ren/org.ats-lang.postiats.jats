@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.ValueScope;
+import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
@@ -37,7 +37,7 @@ public class AtsInsStoreFltrecOfs implements ATSNode {
 
     @Override
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ValueScope scope) {
+            Map<String, FuncDef> funcs, LValueScope scope) {
         ATSValue v = m_val.evaluate(types, funcs, scope);
         
         StructValue tmp = (StructValue)scope.getValue(m_tmp);

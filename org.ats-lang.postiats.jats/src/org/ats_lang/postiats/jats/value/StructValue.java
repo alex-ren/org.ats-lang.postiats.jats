@@ -6,7 +6,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.type.StructType;
 
 public class StructValue implements ATSValue {
-	Map<String, ATSValue> m_mem;
+	Map<String, Object> m_mem;
 	StructType m_type;
 
 	public StructValue(StructType type, Map<String, ATSValue> map) {
@@ -18,7 +18,7 @@ public class StructValue implements ATSValue {
 	    m_mem.get(id).copyfrom(v);
 	}
 	
-	public ATSValue getItem(String id) {
+	public Object getItem(String id) {
 	    return m_mem.get(id);
 	}
 
