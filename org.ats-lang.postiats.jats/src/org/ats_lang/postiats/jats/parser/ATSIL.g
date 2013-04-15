@@ -14,7 +14,7 @@ tokens {
   BLOCK;
   
   FUNC_DECL;
-  FUNC_DEF;
+  FUNC_DEF; 
   FUNC_CALL;
   
   EXP_LIST;

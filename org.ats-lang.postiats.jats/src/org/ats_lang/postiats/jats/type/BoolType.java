@@ -8,7 +8,7 @@ public class BoolType extends PrimType {
     public static final BoolType cType0 = new BoolType(Decorator.T0YPE);
     
     public static final int m_size = 1;
-
+ 
 //    public static BoolValue createTrue() {
 //        return new BoolValue(true);
 //    }

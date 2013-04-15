@@ -5,13 +5,16 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
-public class AtsInsLoad implements ATSNode {
+public class AtsInsLoad extends ATSTypeNode {
     private String m_tmp;
+    private // todo
     private ATSNode m_pmv;
     
     public AtsInsLoad(String tmp, ATSNode pmv) {
+    	super(VoidType.cType);
         m_tmp = tmp;
         m_pmv = pmv;
     }

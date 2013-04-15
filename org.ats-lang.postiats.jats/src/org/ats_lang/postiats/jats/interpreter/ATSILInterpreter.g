@@ -24,6 +24,7 @@ options {
 
 @members {
     private Program m_prog;
+    private Scope<ATSType> m_tyscope;
 
 }
 
@@ -32,6 +33,8 @@ program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [Program
 @init {
   m_prog = new Program(types, funcs);
   prog = m_prog;
+  
+  m_tyscope = new MapScope<ATSType>();
 }
     : ^(PROGRAM gstat* main_impl?)
     ;
