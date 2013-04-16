@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class USIntType extends PrimType {
     
-    public static final USIntType cType = new USIntType(Decorator.TYPE);
+//    public static final USIntType cType = new USIntType(Decorator.TYPE);
     public static final USIntType cType0 = new USIntType(Decorator.T0YPE);
     
     public static final int m_size = 4;

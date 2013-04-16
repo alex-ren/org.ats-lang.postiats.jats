@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class SCharType extends PrimType {
     
-    public static final SCharType cType = new SCharType(Decorator.TYPE);
+//    public static final SCharType cType = new SCharType(Decorator.TYPE);
     public static final SCharType cType0 = new SCharType(Decorator.T0YPE);
     
     public static final int m_size = 1;

@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class SIntType extends PrimType {
     
-    public static final SIntType cType = new SIntType(Decorator.TYPE);
+//    public static final SIntType cType = new SIntType(Decorator.TYPE);
     public static final SIntType cType0 = new SIntType(Decorator.T0YPE);
     
     public static final int m_size = 4;

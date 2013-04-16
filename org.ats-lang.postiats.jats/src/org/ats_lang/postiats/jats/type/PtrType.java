@@ -8,7 +8,7 @@ public class PtrType extends ATSKindType {
     public static final int m_size = 4;
 
     public static final PtrType cType = new PtrType(Decorator.TYPE);
-    public static final PtrType cType0 = new PtrType(Decorator.T0YPE);
+//    public static final PtrType cType0 = new PtrType(Decorator.T0YPE);
     
     
 //    @Override

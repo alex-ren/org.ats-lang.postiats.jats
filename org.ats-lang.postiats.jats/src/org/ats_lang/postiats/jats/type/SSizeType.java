@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.SSizeValue;
 
 public class SSizeType extends PrimType {
     
-    public static final SSizeType cType = new SSizeType(Decorator.TYPE);
+//    public static final SSizeType cType = new SSizeType(Decorator.TYPE);
     public static final SSizeType cType0 = new SSizeType(Decorator.T0YPE);
     
     public static final int m_size = 4;

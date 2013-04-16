@@ -1,11 +1,13 @@
 package org.ats_lang.postiats.jats.type;
 
+
+
 import org.ats_lang.postiats.jats.value.StringValue;
 
-public class StringType extends ATSKindType {
+public class StringType implements ATSType {
 
-    public static final StringType cType = new StringType(Decorator.TYPE);
-    public static final StringType cType0 = new StringType(Decorator.T0YPE);
+//    public static final StringType cType = new StringType(Decorator.TYPE);
+//    public static final StringType cType0 = new StringType(Decorator.T0YPE);
     
     public static final int m_size = PtrType.m_size;
     
@@ -28,8 +30,8 @@ public class StringType extends ATSKindType {
 //        return new StringValue("");
 //    }
 
-    private StringType(Decorator dec) {
-        super(dec);
-    }
+//    private StringType(Decorator dec) {
+//        super(dec);
+//    }
 
 }

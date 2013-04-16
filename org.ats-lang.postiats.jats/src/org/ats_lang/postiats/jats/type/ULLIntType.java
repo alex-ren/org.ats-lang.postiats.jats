@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.ULLIntValue;
 
 public class ULLIntType extends PrimType {
 
-    public static final ULLIntType cType = new ULLIntType(Decorator.TYPE);
+//    public static final ULLIntType cType = new ULLIntType(Decorator.TYPE);
     public static final ULLIntType cType0 = new ULLIntType(Decorator.T0YPE);
     
     public static final int m_size = 8;
