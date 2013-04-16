@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.PrimValue;
 
 public class IntType extends PrimType {
     
-    public static final IntType cType = new IntType(Decorator.TYPE);
+//    public static final IntType cType = new IntType(Decorator.TYPE);
     public static final IntType cType0 = new IntType(Decorator.T0YPE);
     
     

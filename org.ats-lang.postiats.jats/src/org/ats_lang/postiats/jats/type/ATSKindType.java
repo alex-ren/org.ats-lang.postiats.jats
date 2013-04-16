@@ -19,9 +19,9 @@ public abstract class ATSKindType implements ATSType {
         return m_dec;
     }
 
-    public void setKind(Decorator dec) {
-        m_dec = dec;
-        
-    }
+//    public void setKind(Decorator dec) {
+//        m_dec = dec;
+//        
+//    }
 
 }

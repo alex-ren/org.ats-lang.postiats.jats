@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.value.LIntValue;
 
 public class LIntType extends PrimType {
 
-    public static final LIntType cType = new LIntType(Decorator.TYPE);
+//    public static final LIntType cType = new LIntType(Decorator.TYPE);
     public static final LIntType cType0 = new LIntType(Decorator.T0YPE);
     
     public static final int m_size = 4;
