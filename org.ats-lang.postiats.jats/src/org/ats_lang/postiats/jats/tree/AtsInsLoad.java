@@ -3,7 +3,6 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.VoidType;
@@ -29,13 +28,11 @@ public class AtsInsLoad extends ATSTypeNode {
             Object src = m_pmv.evaluate(types, funcs, scope);
             
             if (m_tmpty instanceof RefType) {
-            	Object holder = scope.getValue(m_tmp);
-            	// The holder must be PtrValue or map or Object[]
-            	
-            	// get the real type
-            	ATSType realty = ((RefType)m_tmpty).defType();
-            	RefType.update(holder, src, realty);
+            	Object dst = scope.getValue(m_tmp);
+            	ATSType srcType = m_pmv.getType();
+            	RefType.update(dst, (RefType)m_tmpty, src, srcType);
             } else {
+                // Initialize value.
             	scope.addValue(m_tmp, src);
             }
             

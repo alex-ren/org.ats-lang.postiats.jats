@@ -6,7 +6,7 @@ import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoolType;
-import org.ats_lang.postiats.jats.value.LValue;
+import org.ats_lang.postiats.jats.value.Ptrk;
 
 public class AtsCkIseqz implements ATSNode {
     private ATSNode m_exp;
@@ -20,9 +20,9 @@ public class AtsCkIseqz implements ATSNode {
             Map<String, FuncDef> funcs, LValueScope scope) {
         Object v = m_exp.evaluate(types, funcs, scope);
 
-        if (v instanceof LValue) {
+        if (v instanceof Ptrk) {
             System.out.println("lvalue in condition");
-            v = ((LValue) v).getValue();
+            v = ((Ptrk) v).getValue();
         }
 
         if (v instanceof Integer) {

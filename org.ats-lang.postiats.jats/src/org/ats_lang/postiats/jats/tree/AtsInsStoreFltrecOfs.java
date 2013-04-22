@@ -3,17 +3,17 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
-import org.ats_lang.postiats.jats.value.StructValue;
 
-public class AtsInsStoreFltrecOfs implements ATSNode {
-    private String m_tmp;
-    private String m_lab;
-    private ATSType m_tyrec;
-    private ATSNode m_val;
+public class AtsInsStoreFltrecOfs extends ATSTypeNode {
+    private String m_tmp;  // name of the structure
+    private String m_lab;  // name of the member
+    private ATSType m_tyrec;  // type of the structure
+    private ATSNode m_val;  // value of the member
     
     
     // #define ATSINSstore_fltrec_ofs(tmp, tyrec, lab, val) ((tmp).lab = val)
@@ -29,6 +29,7 @@ public class AtsInsStoreFltrecOfs implements ATSNode {
 //    ATSINSstore_fltrec_ofs (tmp11, postiats_tyrec_0, atslab$0, ATSPMVi0nt(0)) ;
 
     public AtsInsStoreFltrecOfs(String tmp, ATSType tyrec, String lab, ATSNode val) {
+        super(VoidType.cType);
         m_tmp = tmp;
         m_tyrec = tyrec;
         m_lab = lab;
@@ -36,8 +37,8 @@ public class AtsInsStoreFltrecOfs implements ATSNode {
     }
 
     @Override
-    public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
+    public Object evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         ATSValue v = m_val.evaluate(types, funcs, scope);
         
         StructValue tmp = (StructValue)scope.getValue(m_tmp);

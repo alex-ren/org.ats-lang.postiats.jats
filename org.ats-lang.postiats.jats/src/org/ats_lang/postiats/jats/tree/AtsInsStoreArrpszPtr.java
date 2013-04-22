@@ -3,22 +3,31 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.ArrayType;
+import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.PtrValue;
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
-import org.ats_lang.postiats.jats.value.StructValue;
 
-public class AtsInsStoreArrpszPtr implements ATSNode {
-    private String m_tmp;
-    private ATSType m_tyelt;
-    private ATSNode m_asz;
+public class AtsInsStoreArrpszPtr extends ATSTypeNode {
+    private String m_tmp;  // name of the array
+    private ATSType m_tyelt;  // Type of the element of the array
+    private ATSNode m_asz;  // size of the array
     
-    public AtsInsStoreArrpszPtr(String tmp, ATSType tyelt, ATSNode asz) {
+    public AtsInsStoreArrpszPtr(Map<String, ATSType> tyscope, String tmp, ATSType tyelt, ATSNode asz) {
+        super(VoidType.cType);
         m_tmp = tmp;
         m_tyelt = tyelt;
         m_asz = asz;
+        
+        ATSType tyarr = tyscope.get(tmp);
+        if (tyarr instanceof ArrayType) {
+            ((ArrayType)tyarr).update(tyelt);
+        } else {
+            throw new Error("Wrong Type");
+        }
     }
 
     @Override
@@ -39,19 +48,28 @@ public class AtsInsStoreArrpszPtr implements ATSNode {
 //    ATSINSstore_arrpsz_ptr(tmp0, atstkind_t0ype(atstype_double), 3) ;
 
     public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         
-        ATSValue asz = m_asz.evaluate(types, funcs, scope);
-        int len = (Integer)asz.getContent();  // must be an integer
+        Object asz = m_asz.evaluate(types, funcs, scope);
+        
+        if (asz instanceof Ptrk) {
+            asz = ((Ptrk)asz).getValue();
+        }
+        
+        Integer sz = null;
+        
+        if (asz instanceof Integer) {
+            sz = (Integer)asz;
+        } else {
+            throw new Error("Type error");
+        }
 
-        ATSValue [] arr = new ATSValue[len];
-        for (int i = 0; i < len; ++i) {
+        Object [] arr = new Object[sz];
+        for (int i = 0; i < sz; ++i) {
             arr[i] = m_tyelt.createDefault();
         }
-        PtrValue arr_p = new PtrValue(arr);
+        scope.addValue(m_tmp, arr);
         
-        StructValue tmp = (StructValue)scope.getValue(m_tmp);
-        tmp.updateItem("ptr", arr_p);
         return SingletonValue.VOID;
     }
 

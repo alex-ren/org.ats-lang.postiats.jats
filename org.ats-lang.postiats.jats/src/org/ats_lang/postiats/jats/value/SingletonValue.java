@@ -8,7 +8,7 @@ public class SingletonValue implements ATSValue {
 	    VOID = new SingletonValue();
 	}
 
-    public static final SingletonValue NULL;
+    public static final SingletonValue NULL;  // used for initial value
     public static final SingletonValue VOID;
     
 	private SingletonValue() {}

@@ -23,8 +23,8 @@ public class PtrValue implements ATSValue {
         m_ind = -1;
     }
     
-    // for pointer
-    public PtrValue(ATSValue v) {
+    // for holder or pointer
+    public PtrValue(Object v) {
     	m_arr = new ATSValue[] {v};
     	m_ind = 0;
     }
@@ -104,6 +104,6 @@ public class PtrValue implements ATSValue {
     @Override
     public PtrType getType() {
         return m_type;
-    }
+    }x
 
 }

@@ -24,7 +24,7 @@ options {
 
 @members {
     private Program m_prog;
-    private Scope<ATSType> m_tyscope;
+    private ATSScope<ATSType> m_tyscope;
 
 }
 
@@ -34,7 +34,7 @@ program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [Program
   m_prog = new Program(types, funcs);
   prog = m_prog;
   
-  m_tyscope = new MapScope<ATSType>();
+  m_tyscope = m_prog.getTypeScope();
 }
     : ^(PROGRAM gstat* main_impl?)
     ;
@@ -108,7 +108,7 @@ atsins returns [ATSNode node]
 
 atsins_load returns [AtsInsLoad node]
     // : ^(ATSINSload dest=exp cont=exp) {node = new AtsInsLoad($dest.node, $cont.node);}
-    : ^(ATSINSload dest=ID cont=exp) {node = new AtsInsLoad($ID.text, $cont.node);}
+    : ^(ATSINSload dest=ID cont=exp) {node = new AtsInsLoad($ID.text, m_tyscope.getValue($ID.text), $cont.node);}
     ;
     
 atsins_store returns [AtsInsStore node]
@@ -120,7 +120,7 @@ atsins_store_arrpsz_asz returns [AtsInsStoreArrpszAsz node]
     ;
     
 atsins_store_arrpsz_ptr returns [AtsInsStoreArrpszPtr node]
-    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) {node = new AtsInsStoreArrpszPtr($ID.text, $atstype.type, $exp.node);}
+    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) {node = new AtsInsStoreArrpszPtr(this.m_tyscope, $ID.text, $atstype.type, $exp.node);}
     ;
     
 atsins_store_fltrec_ofs returns [AtsInsStoreFltrecOfs node]
@@ -297,9 +297,9 @@ explst returns [List<ATSNode> lst]
 //    : ^(ASSIGN ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
 //    ;
     
-var_def returns [DefinitionNode node]
-    : ^(VAR atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
-    | ^(VAR_VOID atstype ID) {node = new DefinitionNode($atstype.type, $ID.text);}
+var_def[ATSScope<ATSType> tyscope] returns [DefinitionNode node]
+    : ^(VAR atstype ID) {node = new DefinitionNode(tyscope, $atstype.type, $ID.text);}
+    | ^(VAR_VOID atstype ID) {node = new DefinitionNode(tyscope, $atstype.type, $ID.text);}
     ;
 
 atstypelst
@@ -313,7 +313,7 @@ atstype returns [ATSType type]
     ;
 
 name_type returns [ATSType type]
-    : ID {type = m_prog.getTypes().get($ID.text); 
+    : ID {type = m_tyscope.getValue($ID.text); 
           if (null == type) {
               System.out.println("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
               throw new Error("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
@@ -376,15 +376,17 @@ func_def returns [UserFunc definition]
     ;
 
 type_def
-    : ^(TYPEDEF ID struct_def[$ID.text]) {m_prog.defineType($ID.text, $struct_def.type);}   // todo move to struct_def
+    : ^(TYPEDEF ID struct_def[$ID.text]) {m_tyscope.put($ID.text, $struct_def.type);}   // todo move to struct_def
     ;
 
 struct_def [String name] returns [StructType type]
 @init {
   StructType ty = new StructType(name);
   type = ty;
+  
+  ATSScope<ATSType> tyscope = m_tyscope.newScope();
 }
-    : ^(STRUCT (var_def { DefinitionNode tynode = (DefinitionNode)$var_def.node;
+    : ^(STRUCT (var_def[tyscope] { DefinitionNode tynode = (DefinitionNode)$var_def.node;
                           ty.addMember(tynode.getID(), tynode.getType());
                          }
                 )+

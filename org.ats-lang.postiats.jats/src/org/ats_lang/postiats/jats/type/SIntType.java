@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.SIntValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
@@ -37,6 +38,9 @@ public class SIntType extends PrimType {
 
     private SIntType(Decorator dec) {
         super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
     }
 
 }

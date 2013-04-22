@@ -30,17 +30,17 @@ public class Program {
 	}
 
     
-    public void defineType(String id, ATSType type) {
-        m_types.put(id, type);
-    }
+//    public void defineType(String id, ATSType type) {
+//        m_types.put(id, type);
+//    }
     
     public void defineFunc(UserFunc func) {
         m_funcs.put(func.getName(), func);
     }
     
-    public Map<String, ATSType> getTypes() {
-        return m_types;
-    }
+//    public Map<String, ATSType> getTypes() {
+//        return m_types;
+//    }
     
     public void addStat(ATSNode stat) {
         m_statements.add(stat);

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.value.LValue;
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.Ptr;
 
 public class AtsDerefNode implements ATSNode {
@@ -23,9 +23,9 @@ public class AtsDerefNode implements ATSNode {
     public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, LValueScope scope) {
         Object v = m_node.evaluate(types, funcs, scope);
         
-        if (v instanceof LValue){
+        if (v instanceof Ptrk){
             System.out.println("pointer to pointer");
-            v = ((LValue)v).getValue();
+            v = ((Ptrk)v).getValue();
         }
         
         if (v instanceof Ptr) {

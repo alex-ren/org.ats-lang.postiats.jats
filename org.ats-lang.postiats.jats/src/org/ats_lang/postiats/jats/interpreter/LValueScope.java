@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.utils.MapScope;
-import org.ats_lang.postiats.jats.value.LValue;
+import org.ats_lang.postiats.jats.value.ATSPtr;
 
 
 /*
@@ -32,8 +32,8 @@ public class LValueScope implements ATSScope<Object> {
           m_scope.addValue(id, v);
       } else {
           // two kinds of semantics
-          if (ele instanceof LValue) {  // update
-              ((LValue) ele).updateValue(v);
+          if (ele instanceof ATSPtr) {  // update
+              ((ATSPtr) ele).updateValue(v);
           }
           else if (ele instanceof Map<?, ?>) {
               // todo update the content of the Map

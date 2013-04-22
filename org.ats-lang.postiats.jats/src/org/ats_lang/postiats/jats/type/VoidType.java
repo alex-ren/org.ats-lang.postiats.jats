@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.type;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
-public class VoidType extends ATSKindType {
+public class VoidType implements ATSType {
     public static final VoidType cType = new VoidType();
     
 //    @Override
@@ -21,8 +21,9 @@ public class VoidType extends ATSKindType {
 //        return SingletonValue.VOID;
 //    }
 
-    private VoidType() {
-        super(Decorator.T0YPE);
+    @Override
+    public Object createDefault() {
+        return null;
     }
 
 

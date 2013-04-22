@@ -42,6 +42,9 @@ $(eval $(call make-ats_program, fib))
 $(eval $(call make-ats_program, temp))
 $(eval $(call make-ats_program, test01))
 $(eval $(call make-ats_program, test02))
+$(eval $(call make-ats_program, test03))
+$(eval $(call make-ats_program, test04))
+$(eval $(call make-ats_program, gfib))
 ######
 
 clean:: ; $(RMF) *~

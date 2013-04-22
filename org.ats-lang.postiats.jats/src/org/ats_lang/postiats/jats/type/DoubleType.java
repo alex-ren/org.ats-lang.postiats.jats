@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.DoubleValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
@@ -36,6 +37,9 @@ public class DoubleType extends PrimType {
 
     private DoubleType(Decorator dec) {
         super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
     }
 
 }

@@ -26,6 +26,9 @@ public class BoolType extends PrimType {
     
     private BoolType(Decorator dec) {
         super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
     }
     
 //    @Override

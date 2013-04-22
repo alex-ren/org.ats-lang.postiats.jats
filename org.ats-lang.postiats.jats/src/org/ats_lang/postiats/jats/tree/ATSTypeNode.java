@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
+
 import org.ats_lang.postiats.jats.type.ATSType;
 
 public abstract class ATSTypeNode implements ATSNode {
@@ -13,6 +13,7 @@ public abstract class ATSTypeNode implements ATSNode {
 		m_ty = ty;
 	}
 	
+	@Override
 	public ATSType getType() {
 		return m_ty;
 	}

@@ -26,6 +26,6 @@ public interface ATSValue {
     
     public ATSType getType();
 
-}
+}x
 
 

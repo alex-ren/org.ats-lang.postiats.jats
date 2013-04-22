@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.PrimValue;
 import org.ats_lang.postiats.jats.value.SSizeValue;
 
@@ -37,6 +38,9 @@ public class SSizeType extends PrimType {
 
     private SSizeType(Decorator dec) {
         super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
     }
 
 }

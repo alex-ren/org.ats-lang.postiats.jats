@@ -8,7 +8,7 @@ public interface ATSType {
     
 	public int getSize();
 	
-//	public ATSValue createDefault();
+	Object createDefault();
 //	
 //    public String toString();
 }

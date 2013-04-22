@@ -43,9 +43,9 @@ public class CCompTypedefs {
     
     public static UCharType m_atstype_uchar = UCharType.cType;
     
-    public static StringType m_atstype_string = StringType.cType;
-   
-    public static StringType m_atstype_strptr = StringType.cType;
+//    public static StringType m_atstype_string = StringType.cType;
+
+//    public static StringType m_atstype_strptr = StringType.cType;
     
     public static DoubleType m_atstype_float = DoubleType.cType;
     

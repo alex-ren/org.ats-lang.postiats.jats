@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.PrimValue;
 import org.ats_lang.postiats.jats.value.ULLIntValue;
 
@@ -37,6 +38,9 @@ public class ULLIntType extends PrimType {
 
     private ULLIntType(Decorator dec) {
         super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
     }
 
 }

@@ -3,10 +3,11 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.VoidType;
-import org.ats_lang.postiats.jats.value.LValue;
+import org.ats_lang.postiats.jats.utils.ATSScope;
+
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsStore extends ATSTypeNode {
@@ -22,16 +23,22 @@ public class AtsInsStore extends ATSTypeNode {
     @Override
     // #define ATSINSstore(pmv1, pmv2) (pmv1 = pmv2)
     public SingletonValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
-        Object v2 = m_pmv2.evaluate(types, funcs, scope);
-        Object v1 = m_pmv1.evaluate(types, funcs, scope);
-        if (v1 instanceof LValue) {
-            ((LValue)v1).updateValue(v2);
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+        Object dst = m_pmv1.evaluate(types, funcs, scope);
+        Object src = m_pmv2.evaluate(types, funcs, scope);
+
+        ATSType dstType = m_pmv1.getType();
+        ATSType srcType = m_pmv2.getType();
+        
+        if (dstType instanceof RefType) {
+            RefType.update(dst, (RefType)dstType, src, srcType);
         } else {
-            throw new Error ("AtsInsStore non holder appeared.");
+            throw new Error("Updating non-ref value");
         }
         
         return SingletonValue.VOID;
 
     }
+    
+
 }

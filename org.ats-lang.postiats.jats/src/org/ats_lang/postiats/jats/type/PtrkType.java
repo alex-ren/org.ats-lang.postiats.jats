@@ -1,12 +1,15 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
+import java.util.Map;
 
-public class PtrkType extends ATSKindType {
+public class PtrkType extends PrimType implements ATSUpdatableType {
 
+    private ATSType m_type;
+    
     public static final int m_size = 4;
+    
 
-    public static final PtrkType cType = new PtrkType(Decorator.TYPE);
+    public static final PtrkType cType = new PtrkType(VoidType.cType);
 //    public static final PtrkType cType0 = new PtrkType(Decorator.T0YPE);
     
     
@@ -26,8 +29,29 @@ public class PtrkType extends ATSKindType {
 //    }
     
 
-    private PtrkType(Decorator dec) {
-        super(dec);
+    private PtrkType(ATSType ty) {
+        super(Decorator.TYPE);
+        m_type = ty;
+    }
+
+    @Override
+    public void update(ATSType innerType) {
+        if (m_type instanceof VoidType) {
+            throw new Error("non-changable");
+        } else {
+            m_type = innerType;
+        }
+    }
+
+    @Override
+    public ATSType getInnerType() {
+        return m_type;
+    }
+
+    @Override
+    public PtrkType createUpdatable(ATSType ty) {
+        PtrkType ret = new PtrkType(null);
+        return ret;
     }
 
 }
