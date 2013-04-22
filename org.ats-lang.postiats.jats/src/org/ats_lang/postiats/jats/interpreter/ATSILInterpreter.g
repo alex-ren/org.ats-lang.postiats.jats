@@ -24,7 +24,7 @@ options {
 
 @members {
     private Program m_prog;
-    private ATSScope<ATSType> m_tyscope;
+    private ATSScope<ATSType> m_tyscope;  // name of values and corresponding types
 
 }
 
@@ -34,7 +34,7 @@ program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [Program
   m_prog = new Program(types, funcs);
   prog = m_prog;
   
-  m_tyscope = m_prog.getTypeScope();
+  m_tyscope = new MapScope();
 }
     : ^(PROGRAM gstat* main_impl?)
     ;
@@ -125,7 +125,7 @@ atsins_store_arrpsz_ptr returns [AtsInsStoreArrpszPtr node]
     
 atsins_store_fltrec_ofs returns [AtsInsStoreFltrecOfs node]
     : ^(ATSINS_STORE_FLTREC_OFS tmp=ID atstype lab=ID exp)
-      {node = new AtsInsStoreFltrecOfs($tmp.text, $atstype.type, $lab.text, $exp.node);}
+      {node = new AtsInsStoreFltrecOfs(this.m_tyscope, $tmp.text, $atstype.type, $lab.text, $exp.node);}
     ;
     
 atsins_move returns [AtsInsMove node]
@@ -297,9 +297,9 @@ explst returns [List<ATSNode> lst]
 //    : ^(ASSIGN ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
 //    ;
     
-var_def[ATSScope<ATSType> tyscope] returns [DefinitionNode node]
-    : ^(VAR atstype ID) {node = new DefinitionNode(tyscope, $atstype.type, $ID.text);}
-    | ^(VAR_VOID atstype ID) {node = new DefinitionNode(tyscope, $atstype.type, $ID.text);}
+var_def returns [DefinitionNode node]
+    : ^(VAR atstype ID) {node = new DefinitionNode(m_typscope, $atstype.type, $ID.text);}
+    | ^(VAR_VOID atstype ID) {node = new DefinitionNode(m_typscope, $atstype.type, $ID.text);}
     ;
 
 atstypelst
@@ -313,7 +313,7 @@ atstype returns [ATSType type]
     ;
 
 name_type returns [ATSType type]
-    : ID {type = m_tyscope.getValue($ID.text); 
+    : ID {type = m_prog.getTypes().get($ID.text); 
           if (null == type) {
               System.out.println("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
               throw new Error("ATSILInterpreter::name_type, Type " + $ID.text + " is not provided.");
@@ -345,9 +345,9 @@ func_decl
     : ^(FUNC_DECL ID func_decorator? atstype paralst?)
     ;
 
-para_decorator
-    : PARA_TYPE_REF0
-    | PARA_TYPE_REF1
+para_decorator returns [FuncPara.ParaDecorator dec]
+    : PARA_TYPE_REF0 {dec = FuncPara.ParaDecorator.REF0;}
+    | PARA_TYPE_REF1 {dec = FuncPara.ParaDecorator.REF1;}
     ;
     
 func_decorator returns [ATSNode.FunDecorator dec]
@@ -363,14 +363,28 @@ paralst returns [List<FuncPara> paralst]
     ;
 
 para returns [FuncPara para]
-    : paratype ID? {para = new FuncPara($paratype.type, $ID.text);}
+    : paratype ID? {para = new FuncPara($paratype.type, $ID.text);
+                    m_typscope.addValue($ID.text, $paraType.type);}
     ;
 
 paratype returns [ATSType type]
-    : ^(PARA_TYPE para_decorator? atstype) {type = $atstype.type;}
+    : ^(PARA_TYPE para_decorator? atstype) 
+      {type = $atstype.type;
+       if ($para_deFuncPara.dec == FuncPara.ParaDecorator.REF1) {
+           type = new RefType(type);
+       }
+      }
     ;
     
 func_def returns [UserFunc definition]
+@init {
+// add scope for the function body 
+m_typescope = m_typescope.newScope();
+}
+@final {
+// remove the scope since we leave the function body
+m_typescope = m_typescope.getParent();
+}
     : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
       {definition = new UserFunc($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
@@ -383,15 +397,13 @@ struct_def [String name] returns [StructType type]
 @init {
   StructType ty = new StructType(name);
   type = ty;
-  
-  ATSScope<ATSType> tyscope = m_tyscope.newScope();
 }
-    : ^(STRUCT (var_def[tyscope] { DefinitionNode tynode = (DefinitionNode)$var_def.node;
-                          ty.addMember(tynode.getID(), tynode.getType());
+    : ^(STRUCT (^(VAR atstype ID) { ty.addMember($ID.text, $atstype.type);
                          }
                 )+
         )
     ;
+
 
 
 

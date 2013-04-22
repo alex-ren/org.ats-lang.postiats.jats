@@ -16,13 +16,13 @@ public class AtsInsStoreArrpszPtr extends ATSTypeNode {
     private ATSType m_tyelt;  // Type of the element of the array
     private ATSNode m_asz;  // size of the array
     
-    public AtsInsStoreArrpszPtr(Map<String, ATSType> tyscope, String tmp, ATSType tyelt, ATSNode asz) {
+    public AtsInsStoreArrpszPtr(ATSScope<ATSType> tyscope, String tmp, ATSType tyelt, ATSNode asz) {
         super(VoidType.cType);
         m_tmp = tmp;
         m_tyelt = tyelt;
         m_asz = asz;
         
-        ATSType tyarr = tyscope.get(tmp);
+        ATSType tyarr = tyscope.getValue(tmp);
         if (tyarr instanceof ArrayType) {
             ((ArrayType)tyarr).update(tyelt);
         } else {
