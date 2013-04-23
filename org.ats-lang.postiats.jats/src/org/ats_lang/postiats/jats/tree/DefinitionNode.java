@@ -49,9 +49,9 @@ public class DefinitionNode extends ATSTypeNode {
     }
 
     @Override
-    public Object evaluate(Map<String, ATSType> types,
+    public SingletonValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        scope.addValue(m_id, m_ty.createDefault());
+        scope.addValue(m_id, m_ty.createNormalDefault());
         return SingletonValue.VOID;
     }
 }

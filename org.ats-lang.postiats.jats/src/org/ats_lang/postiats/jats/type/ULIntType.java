@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.PrimValue;
 import org.ats_lang.postiats.jats.value.ULIntValue;
 
-public class ULIntType extends PrimType {
+public class ULIntType extends ATSPrimType {
 
 //    public static final ULIntType cType = new ULIntType(Decorator.TYPE);
     public static final ULIntType cType0 = new ULIntType(Decorator.T0YPE);

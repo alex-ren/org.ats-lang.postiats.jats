@@ -13,6 +13,11 @@ public class Ptrk {
         m_ptrval = 1;
         m_content = ty.createDefault();
     }
+    
+    public Ptrk(Object obj) {
+    	m_ptrval = 1;
+    	m_content = obj;
+    }
 
     // return the element stored in the lvalue pointed to by this pointer
     public Object getValue() {

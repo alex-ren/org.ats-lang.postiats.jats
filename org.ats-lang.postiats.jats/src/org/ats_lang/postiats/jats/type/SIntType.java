@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.SIntValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class SIntType extends PrimType {
+public class SIntType extends ATSPrimType {
     
 //    public static final SIntType cType = new SIntType(Decorator.TYPE);
     public static final SIntType cType0 = new SIntType(Decorator.T0YPE);

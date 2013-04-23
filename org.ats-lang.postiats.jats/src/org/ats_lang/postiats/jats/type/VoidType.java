@@ -15,15 +15,15 @@ public class VoidType implements ATSType {
     public int getSize() {
         return 0;
     }
-//
-//    @Override
-//    public ATSValue createDefault() {
-//        return SingletonValue.VOID;
-//    }
+    
+	@Override
+    public Object createNormalDefault() {
+		return SingletonValue.VOID;
+    }
 
-    @Override
-    public Object createDefault() {
-        return null;
+	@Override
+    public Object createRefDefault() {
+	    throw new Error("not supported");
     }
 
 

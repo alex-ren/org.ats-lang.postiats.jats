@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.DoubleValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class DoubleType extends PrimType {
+public class DoubleType extends ATSPrimType {
 //    public static final DoubleType cType = new DoubleType(Decorator.TYPE);
     public static final DoubleType cType0 = new DoubleType(Decorator.T0YPE);
     

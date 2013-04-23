@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.LDoubleValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class LDoubleType extends PrimType {
+public class LDoubleType extends ATSPrimType {
 //    public static final LDoubleType cType = new LDoubleType(Decorator.TYPE);
     public static final LDoubleType cType0 = new LDoubleType(Decorator.T0YPE);
     

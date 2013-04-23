@@ -4,10 +4,14 @@ package org.ats_lang.postiats.jats.interpreter;
 public class TTemp {
     // A.java
     static public class A {
+    	public void show() {
+    		System.out.println(this);
+    	}
     }
 
     // B.java
     static public class B extends A {
+    	
     }
 
     public static void main(String[] args) {
@@ -17,5 +21,8 @@ public class TTemp {
         
         
         System.out.println("ddrefref11".matches(".*ref\\d+"));
+        
+        B objb = new B();
+        objb.show();
     }
 }

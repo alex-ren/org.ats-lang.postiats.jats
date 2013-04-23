@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.lang.model.type.PrimitiveType;
+
 import org.ats_lang.postiats.jats.value.ATSValue;
 
 public class StructType extends ATSKindType {
@@ -63,32 +65,43 @@ public class StructType extends ATSKindType {
 //    }
     
     
-    public static void update(Map<String, Object> dst, Map<String, Object> src, StructType sty) {
-        for (Map.Entry<String, Object> ent: dst.entrySet()) {
-            String name = ent.getKey();
-            ATSType ty = sty.getMember(name);
-            if (ty instanceof StructType) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> mdst = (Map<String, Object>)ent.getValue();
-                @SuppressWarnings("unchecked")
-                Map<String, Object> msrc = (Map<String, Object>)src.get(name);
-                
-                StructType.update(mdst, msrc, (StructType)ty);
-            } else {
-                dst.put(name, src.get(name));
-            }
-        }
-        
+//    public static void update(Map<String, Object> dst, Map<String, Object> src, StructType sty) {
+//        for (Map.Entry<String, Object> ent: dst.entrySet()) {
+//            String name = ent.getKey();
+//            ATSType ty = sty.getMember(name);
+//            if (ty instanceof StructType) {
+//                @SuppressWarnings("unchecked")
+//                Map<String, Object> mdst = (Map<String, Object>)ent.getValue();
+//                @SuppressWarnings("unchecked")
+//                Map<String, Object> msrc = (Map<String, Object>)src.get(name);
+//                
+//                StructType.update(mdst, msrc, (StructType)ty);
+//            } else {
+//                dst.put(name, src.get(name));
+//            }
+//        }
+//    }
+
+	@Override
+    public Map<String, Object> createNormalDefault() {
+	    return new HashMap<String, Object>();
     }
 
-    @Override
-    public Object createDefault() {
+	@Override
+    public Object createRefDefault() {
         Map<String, Object> m = new HashMap<String, Object>();
         for (Pair p: m_members) {
-            m.put(p.m_id, p.m_ty.createDefault());
+        	if (p.m_ty instanceof PrimitiveType) {
+        		m.put(p.m_id, p.m_ty.createNormalDefault());
+        	} else if (p.m_ty instanceof StructType) {
+        		m.put(p.m_id, p.m_ty.createRefDefault());
+        	} else {
+        		throw new Error("not supported");
+        	}
+            
         }
         return m;
-        
     }
+
 
 }

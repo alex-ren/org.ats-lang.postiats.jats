@@ -1,6 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
-public abstract class ATSUpdatableType extends PrimType {
+public abstract class ATSUpdatableType extends ATSPrimType {
     private ATSType m_type;
     
     protected ATSUpdatableType(ATSType type) {

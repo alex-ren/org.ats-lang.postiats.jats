@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.type;
 import org.ats_lang.postiats.jats.value.BoolValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class BoolType extends PrimType {
+public class BoolType extends ATSPrimType {
 //    public static final BoolType cType = new BoolType(Decorator.TYPE);
     public static final BoolType cType0 = new BoolType(Decorator.T0YPE);
     

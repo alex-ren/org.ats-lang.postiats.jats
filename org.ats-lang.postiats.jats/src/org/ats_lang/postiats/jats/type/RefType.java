@@ -43,21 +43,36 @@ public class RefType implements ATSType {
 	    }
 	}
 	
+	// v := RefType
+	// =>
+	// v : Map or v : Ptr
+	static public Object cloneValue(Object v, ATSType ty) {
+		if (ty instanceof StructType) {
+			return StructType.cloneValue(v, (StructType)ty);
+		} else {
+			if (v instanceof Ptrk) {
+				return ((Ptrk) v).getValue();
+			} else {
+				throw new Error("type mismatch");
+			}
+		}
+	}
+	
 	@Override
 	public int getSize() {
 	    throw new Error("getSize not supported for RefType");
 	}
 
     @Override
-    public Object createDefault() {
-        if (m_type instanceof StructType) {
-            return ((StructType)m_type).createDefault();
-        } else {
-            return new Ptrk(m_type);
-            
-        }
+    public Object createNormalDefault() {
+    	return m_type.createRefDefault();
     }
-	
+    
+    @Override
+    public Object createRefDefault() {
+    	throw new Error("Ref of ref is unsupported");
+    }
+    
 	
 
 }

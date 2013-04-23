@@ -4,7 +4,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.value.UCharValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
 
-public class UCharType extends PrimType {
+public class UCharType extends ATSPrimType {
     
 //    public static final UCharType cType = new UCharType(Decorator.TYPE);
     public static final UCharType cType0 = new UCharType(Decorator.T0YPE);

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.PrimType;
+import org.ats_lang.postiats.jats.type.ATSPrimType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.PrimValue;
@@ -45,8 +45,8 @@ public class AtsPmvCastFn implements ATSNode {
             if (v instanceof PtrValue && m_hit == StringType.cType) {
                 return ((PtrValue)v).toStringValue();
             }
-            if (m_hit instanceof PrimType && v instanceof PrimValue) {
-                return ((PrimType)m_hit).castFrom((PrimValue)v);
+            if (m_hit instanceof ATSPrimType && v instanceof PrimValue) {
+                return ((ATSPrimType)m_hit).castFrom((PrimValue)v);
             } else {
                 throw new Error ("Casting unsupported: cast");
             }
