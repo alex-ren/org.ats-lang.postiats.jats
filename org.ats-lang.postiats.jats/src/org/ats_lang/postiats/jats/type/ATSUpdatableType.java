@@ -1,12 +1,25 @@
 package org.ats_lang.postiats.jats.type;
 
-import java.util.Map;
-
-public interface ATSUpdatableType {
-    // create an updatable one and insert it into scope
-    public ATSType createUpdatable(ATSType ty);
+public abstract class ATSUpdatableType extends PrimType {
+    private ATSType m_type;
     
-    public ATSType getInnerType();
-    public void update(ATSType ty);
+    protected ATSUpdatableType(ATSType type) {
+        super(Decorator.TYPE);
+        m_type = type;
+    }
+    // create an updatable one and insert it into scope
+    public abstract ATSType createUpdatable(ATSType ty);
+    
+    public ATSType getInnerType() {
+        return m_type;
+    }
+    
+    public void update(ATSType innerType) {
+        if (m_type instanceof VoidType) {
+            throw new Error("non-changable");
+        } else {
+            m_type = innerType;
+        }
+    }
 
 }

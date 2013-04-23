@@ -32,7 +32,8 @@ public class AtsInsStoreArrpszAsz extends ATSTypeNode {
     public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
 
         // Do nothing. The real operation is done in AtsInsStoreArrpszPtr.
-        return SingletonValue.VOID;
+        throw new Error("not supported");
+//        return SingletonValue.VOID;
     }
 
 }

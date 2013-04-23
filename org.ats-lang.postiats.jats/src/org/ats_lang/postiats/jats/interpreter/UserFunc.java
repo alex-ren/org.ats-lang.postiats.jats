@@ -7,6 +7,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.tree.BlockNode;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
 public class UserFunc implements FuncDef{
@@ -41,8 +42,8 @@ public class UserFunc implements FuncDef{
     /*
      * scope: The scope, which is used as the current scope should be provided by the caller.
      */
-    public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope, List<ATSValue> args) {
+    public Object evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope<Object> scope, List<ATSValue> args) {
         if (null != m_paras) {
             Iterator<FuncPara> iter_para = m_paras.iterator();
             Iterator<ATSValue> iter_val = args.iterator();

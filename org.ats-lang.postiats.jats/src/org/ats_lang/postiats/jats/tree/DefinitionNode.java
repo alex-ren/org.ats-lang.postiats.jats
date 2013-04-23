@@ -23,21 +23,21 @@ public class DefinitionNode extends ATSTypeNode {
     public DefinitionNode(ATSScope<ATSType> tyscope, ATSType ty, String id) {
         super(VoidType.cType);
         if (ty instanceof ATSUpdatableType) {
-            ty = ((ATSUpdatableType)ty).createUpdatable(null);
+            ty = ((ATSUpdatableType) ty).createUpdatable(null);
         }
-        
+
         if (DefinitionNode.isRefName(id)) {
             ty = new RefType(ty);
         }
-        
+
         m_id = id;
         m_ty = ty;
-        
+
         tyscope.addValue(m_id, m_ty);
     }
 
     public static boolean isRefName(String name) {
-        return name.matches(".*ref\\d+");  // reference
+        return name.matches(".*ref\\d+"); // reference
     }
 
     public ATSType getType() {
@@ -51,11 +51,7 @@ public class DefinitionNode extends ATSTypeNode {
     @Override
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        if (m_ty instanceof ATSUpdatableType) {
-            // do nothing (do later)
-        } else {
-            scope.addValue(m_id, m_ty.createDefault());
-        }
+        scope.addValue(m_id, m_ty.createDefault());
         return SingletonValue.VOID;
     }
 }

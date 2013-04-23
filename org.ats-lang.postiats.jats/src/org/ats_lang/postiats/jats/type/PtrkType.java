@@ -2,10 +2,8 @@ package org.ats_lang.postiats.jats.type;
 
 import java.util.Map;
 
-public class PtrkType extends PrimType implements ATSUpdatableType {
+public class PtrkType extends ATSUpdatableType {
 
-    private ATSType m_type;
-    
     public static final int m_size = 4;
     
 
@@ -30,22 +28,7 @@ public class PtrkType extends PrimType implements ATSUpdatableType {
     
 
     private PtrkType(ATSType ty) {
-        super(Decorator.TYPE);
-        m_type = ty;
-    }
-
-    @Override
-    public void update(ATSType innerType) {
-        if (m_type instanceof VoidType) {
-            throw new Error("non-changable");
-        } else {
-            m_type = innerType;
-        }
-    }
-
-    @Override
-    public ATSType getInnerType() {
-        return m_type;
+        super(ty);
     }
 
     @Override

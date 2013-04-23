@@ -8,6 +8,8 @@ import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.tree.DefinitionNode;
 import org.ats_lang.postiats.jats.tree.FuncCallNode;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
+import org.ats_lang.postiats.jats.utils.MapScope;
 import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.IntValue;
 import org.ats_lang.postiats.jats.value.PtrValue;
@@ -69,7 +71,7 @@ public class Program {
     
     public void run(String [] argv) {
         // initialize all the global variables, and put them into global scope
-        LValueScope globalScope = new LValueScope();
+        ATSScope<Object> globalScope = new MapScope<Object>();
         
         globalScope.addValue("atspre_FILE_stdout", PtrValue.c_stdout);
         globalScope.addValue("atspre_FILE_stderr", PtrValue.c_stderr);
@@ -80,7 +82,7 @@ public class Program {
         
         // =======================
         // new scope for the main
-        LValueScope mainScope = globalScope.newScope();
+        ATSScope<Object> mainScope = globalScope.newScope();
         // todo add the error to the current scope
         // something like mainScope.addValue(errname, LValue(int))
 
@@ -143,7 +145,7 @@ public class Program {
             return;
         }
         
-        LValueScope scope = globalScope.newScope();
+        ATSScope<Object> scope = globalScope.newScope();
         ((UserFunc)fun).evaluate(m_types, m_funcs, scope, mainArgs);
         
         return;

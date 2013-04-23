@@ -18,16 +18,17 @@ public class AtsInsStoreArrpszPtr extends ATSTypeNode {
     
     public AtsInsStoreArrpszPtr(ATSScope<ATSType> tyscope, String tmp, ATSType tyelt, ATSNode asz) {
         super(VoidType.cType);
-        m_tmp = tmp;
-        m_tyelt = tyelt;
-        m_asz = asz;
-        
-        ATSType tyarr = tyscope.getValue(tmp);
-        if (tyarr instanceof ArrayType) {
-            ((ArrayType)tyarr).update(tyelt);
-        } else {
-            throw new Error("Wrong Type");
-        }
+        throw new Error("not supported");
+//        m_tmp = tmp;
+//        m_tyelt = tyelt;
+//        m_asz = asz;
+//        
+//        ATSType tyarr = tyscope.getValue(tmp);
+//        if (tyarr instanceof ArrayType) {
+//            ((ArrayType)tyarr).update(tyelt);
+//        } else {
+//            throw new Error("Wrong Type");
+//        }
     }
 
     @Override
@@ -49,28 +50,28 @@ public class AtsInsStoreArrpszPtr extends ATSTypeNode {
 
     public ATSValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        
-        Object asz = m_asz.evaluate(types, funcs, scope);
-        
-        if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue();
-        }
-        
-        Integer sz = null;
-        
-        if (asz instanceof Integer) {
-            sz = (Integer)asz;
-        } else {
-            throw new Error("Type error");
-        }
-
-        Object [] arr = new Object[sz];
-        for (int i = 0; i < sz; ++i) {
-            arr[i] = m_tyelt.createDefault();
-        }
-        scope.addValue(m_tmp, arr);
-        
-        return SingletonValue.VOID;
+        throw new Error("not supported");
+//        Object asz = m_asz.evaluate(types, funcs, scope);
+//        
+//        if (asz instanceof Ptrk) {
+//            asz = ((Ptrk)asz).getValue();
+//        }
+//        
+//        Integer sz = null;
+//        
+//        if (asz instanceof Integer) {
+//            sz = (Integer)asz;
+//        } else {
+//            throw new Error("Type error");
+//        }
+//
+//        Object [] arr = new Object[sz];
+//        for (int i = 0; i < sz; ++i) {
+//            arr[i] = m_tyelt.createDefault();
+//        }
+//        scope.addValue(m_tmp, arr);
+//        
+//        return SingletonValue.VOID;
     }
 
 }
