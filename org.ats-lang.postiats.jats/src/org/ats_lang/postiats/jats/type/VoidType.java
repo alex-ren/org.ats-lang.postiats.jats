@@ -1,6 +1,5 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class VoidType implements ATSType {

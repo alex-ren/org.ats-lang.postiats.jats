@@ -1,8 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
-import org.ats_lang.postiats.jats.value.PrimValue;
-import org.ats_lang.postiats.jats.value.ULLIntValue;
+
 
 public class ULLIntType extends ATSPrimType {
 

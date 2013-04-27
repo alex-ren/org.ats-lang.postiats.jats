@@ -3,27 +3,25 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.ATSPrimType;
+import org.ats_lang.postiats.jats.type.ArrPtrType;
 import org.ats_lang.postiats.jats.type.StringType;
-import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
-import org.ats_lang.postiats.jats.value.PtrValue;
-import org.ats_lang.postiats.jats.value.StringValue;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 
-public class AtsPmvCastFn implements ATSNode {
+public class AtsPmvCastFn extends ATSTypeNode {
     protected String m_d2c;
     protected ATSType m_hit;
     protected ATSNode m_arg;
-    
-    // #define ATSPMVcastfn(d2c, hit, arg) ((hit*)arg)
+
+    // #define ATSPMVcastfn(d2c, hit, arg) ((hit)arg)
     // example
-    // 
-//    typedef void *atstype_ptrk ;
-//    ATStmpdec(tmp12$2, atstkind_type(atstype_ptrk)) ;
-//    ATSPMVcastfn(cast, atstkind_type(atstype_ptrk), tmp12$2)
+    //
+    // typedef void *atstype_ptrk ;
+    // ATStmpdec(tmp12$2, atstkind_type(atstype_ptrk)) ;
+    // ATSPMVcastfn(cast, atstkind_type(atstype_ptrk), tmp12$2)
+    // hit = not RefType
     public AtsPmvCastFn(String d2c, ATSType hit, ATSNode arg) {
+        super(hit);
         m_d2c = d2c;
         m_hit = hit;
         m_arg = arg;
@@ -31,34 +29,42 @@ public class AtsPmvCastFn implements ATSNode {
 
     @Override
     // AtsPmvCastFn is a non-op.
-    public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
-        ATSValue v = m_arg.evaluate(types, funcs, scope);
-        
+    public Object evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+        Object v = m_arg.evaluate(types, funcs, scope);
+        System.out.println("==cast " + m_arg.getType() + " to " + m_hit);
+
         if (m_d2c.equals("cast")) {
-            // System.out.println("==cast " + v.getType() + " to " + m_hit);
-            if (v.getType() == m_hit) {
-                return v.deepcopy();
+            ATSType arg_type = m_arg.getType();
+
+            if (arg_type == m_hit) {
+                throw new Error("check this case");
+                // return v.deepcopy();
             }
-            
+
             // ptr2string
-            if (v instanceof PtrValue && m_hit == StringType.cType) {
-                return ((PtrValue)v).toStringValue();
+            if (arg_type instanceof ArrPtrType && m_hit == StringType.cType) {
+                throw new Error("check this case");
             }
-            if (m_hit instanceof ATSPrimType && v instanceof PrimValue) {
-                return ((ATSPrimType)m_hit).castFrom((PrimValue)v);
-            } else {
-                throw new Error ("Casting unsupported: cast");
-            }
+
+            // encoding type conversion here
+            // if (m_hit instanceof ATSPrimType && v instanceof PrimValue) {
+            // return ((ATSPrimType)m_hit).castFrom((PrimValue)v);
+            // } else {
+            // throw new Error ("Casting unsupported: cast");
+            // }
+            return v;
         } else if (m_d2c.equals("string2ptr")) {
-            return ((StringValue) v).toPtrValue();
+            return v;
         } else if (m_d2c.equals("ptr1_of_ptr0")) {
-            return v;  
+            return v;
         } else if (m_d2c.equals("string1_of_string0")) {
-            return v; 
+            return v;
         } else {
-            throw new Error ("Unknown cast: " + m_d2c);
+            throw new Error("Unknown cast: " + m_d2c);
         }
     }
+
+    todo create string value
 
 }

@@ -1,7 +1,8 @@
 package org.ats_lang.postiats.jats.type;
 
-import org.ats_lang.postiats.jats.value.BoolValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
+import org.ats_lang.postiats.jats.value.Ptrk;
+
+
 
 public class BoolType extends ATSPrimType {
 //    public static final BoolType cType = new BoolType(Decorator.TYPE);
@@ -17,10 +18,27 @@ public class BoolType extends ATSPrimType {
 //        return new BoolValue(false);
 //    }
 //
-//    public static BoolValue fromString(String text) {
-//
-//        return new BoolValue(new Boolean(text));
-//    }
+    public static Object fromString(String text) {
+
+        return new Boolean(text);
+    }
+    
+    
+    // ty := BoolType or RefType(BoolType)
+    public static Boolean isTrue(Object b, ATSType ty) {
+        if (b instanceof Boolean) {
+            return (Boolean) b;
+        } else if (b instanceof Ptrk) {  // 
+            b = ((Ptrk) b).getValue();
+            if (b instanceof Boolean) {
+                return (Boolean) b;
+            } else {
+                throw new Error("Type mismatch");
+            }
+        } else {
+            throw new Error("Type mismatch");
+        }
+    }
 
     
     

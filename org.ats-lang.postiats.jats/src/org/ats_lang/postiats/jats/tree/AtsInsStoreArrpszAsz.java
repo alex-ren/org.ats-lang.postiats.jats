@@ -6,7 +6,6 @@ import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
-import org.ats_lang.postiats.jats.value.ATSValue;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 
@@ -29,11 +28,10 @@ public class AtsInsStoreArrpszAsz extends ATSTypeNode {
 	//    } atstype_arrpsz ;
 	//    ATStmpdec(tmp0, atstype_arrpsz) ;
 	//    ATSINSstore_arrpsz_asz(tmp0, 3) ;
-    public ATSValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+    public SingletonValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
 
         // Do nothing. The real operation is done in AtsInsStoreArrpszPtr.
-        throw new Error("not supported");
-//        return SingletonValue.VOID;
+        return SingletonValue.VOID;
     }
 
 }

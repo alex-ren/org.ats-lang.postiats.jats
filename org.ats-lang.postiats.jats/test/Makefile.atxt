@@ -1,0 +1,155 @@
+%{
+//
+staload
+STDIO = "libc/SATS/stdio.sats"
+staload TIME = "libc/SATS/time.sats"
+//
+dynload "libatsdoc/dynloadall.dats"
+//
+staload "libatsdoc/SATS/libatsdoc_atext.sats"
+//
+%}\
+%{
+
+fun comment
+  (x: string): atext = atext_nil ()
+// end of [comment]
+
+fun make_entry
+  (nm: string): atext = let
+//
+val ent = sprintf ("\
+all:: %s\n\
+%s: %s.exe\n\
+%s.exe: %s_dats.c ; \
+  $(CCOPT) -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -o $@ $<\n\
+%s_dats.c: %s.dats ; \
+  $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output %s_dats.c --dynamic %s.dats\n\
+clean:: ; $(RMF) %s_dats.o\n\
+clean:: ; $(RMF) %s_dats.c\n\
+cleanall:: ; $(RMF) %s.exe\n\
+", @(nm, nm, nm, nm, nm, nm, nm, nm, nm, nm, nm, nm)
+) // end of [val]
+//
+val ent = string_of_strptr (ent)
+in
+  atext_strcst (ent)
+end // end of [make_entry]
+
+fun make2_entry
+  (nm: string, cflags: string, libs: string): atext = let
+//
+val ent = sprintf ("\
+all:: %s\n\
+%s: %s.exe\n\
+%s.exe: %s_dats.c ; \
+  $(CCOPT) -D_GNU_SOURCE -O2 \
+    -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime %s -o $@ $< %s\n\
+%s_dats.c: %s.dats ; \
+  $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output %s_dats.c --dynamic %s.dats\n\
+clean:: ; $(RMF) %s_dats.o\n\
+clean:: ; $(RMF) %s_dats.c\n\
+cleanall:: ; $(RMF) %s.exe\n\
+", @(nm, nm, nm, nm, nm, cflags, libs, nm, nm, nm, nm, nm, nm, nm)
+) // end of [val]
+//
+val ent = string_of_strptr (ent)
+//
+in
+  atext_strcst (ent)
+end // end of [make2_entry]
+
+%}\
+#
+#
+# This Makefile is automatically generated
+# from executing the following command-line:
+#
+# make -f Makefile.gen
+#
+#
+
+######
+
+CCOPT=gcc -std=c99
+PATSHOMEQ="$(PATSHOME)"
+PATSOPT=$(PATSHOMEQ)/src/patsopt
+PATSLIB=$(PATSHOMEQ)/ccomp/atslib/lib
+
+######
+
+all::
+
+######
+
+LNS=ln -s
+RMF=rm -f
+
+######
+
+#  #make_entry("acker")
+#  #make_entry("atoi")
+#  #make_entry("bintree")
+#  #make_entry("extfcall")
+#  #make_entry("fact1")
+#  #make_entry("fact2")
+#  #make2_entry("fact3", "-DATS_MEMALLOC_LIBC", "")
+#  #make_entry("fcopy")
+#  #make2_entry("fcopy2", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB) -latslib")
+#  #make_entry("fib1")
+#  #make_entry("fib2")
+#  #make2_entry("fibmem", "-DATS_MEMALLOC_LIBC", "")
+#  #make_entry("fprtuple")
+#  #make_entry("gfact")
+#  #make_entry("hello")
+#  #make_entry("intecho")
+#  #make_entry("intrange")
+#  #make_entry("mutailrec")
+#  #make_entry("sumodd")
+#  #make_entry("strprefix")
+#  #make_entry("tally")
+
+
+#make_entry("atof")
+#make_entry("f91")
+#make_entry("fact")
+#make_entry("fib")
+#make_entry("gfib")
+#make_entry("temp")
+
+#make2_entry("test01", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test02", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test03", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test04", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test05", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test06", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test07", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test08", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test09", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test10", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test11", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test12", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test13", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test14", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test15", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test16", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test17", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test18", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+
+#make2_entry("areverse", "-DATS_MEMALLOC_LIBC", "")
+
+######
+
+clean:: ; $(RMF) *~
+clean:: ; $(RMF) *_?ats.o *_?ats.c
+clean:: ; $(RMF) *_atxt.txt
+clean:: ; $(RMF) *_atxt.dats
+clean:: ; $(RMF) Makefile.exe
+
+cleanall:: clean
+
+###### end of [Makefile] ######
+\
+%{
+implement main () = fprint_filsub (stdout_ref, "Makefile_atxt.txt")
+%}\

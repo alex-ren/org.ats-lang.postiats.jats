@@ -22,6 +22,7 @@ public class AtsInsStore extends ATSTypeNode {
 
     @Override
     // #define ATSINSstore(pmv1, pmv2) (pmv1 = pmv2)
+    // pmv1 := RefType
     public SingletonValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         Object dst = m_pmv1.evaluate(types, funcs, scope);
@@ -31,7 +32,7 @@ public class AtsInsStore extends ATSTypeNode {
         ATSType srcType = m_pmv2.getType();
         
         if (dstType instanceof RefType) {
-            RefType.update(dst, (RefType)dstType, src, srcType);
+            RefType.update(dst, ((RefType)dstType).defType(), src, srcType);
         } else {
             throw new Error("Updating non-ref value");
         }

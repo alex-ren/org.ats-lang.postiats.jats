@@ -3,21 +3,23 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoolType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.Ptrk;
 
-public class AtsCkIseqz implements ATSNode {
+public class AtsCkIseqz extends ATSTypeNode {
     private ATSNode m_exp;
 
     public AtsCkIseqz(ATSNode exp) {
+        super(BoolType.cType0);
         m_exp = exp;
     }
 
+    // #define ATSCKiseqz(x) ((x)==0)
     @Override
     public Boolean evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         Object v = m_exp.evaluate(types, funcs, scope);
 
         if (v instanceof Ptrk) {
@@ -30,11 +32,6 @@ public class AtsCkIseqz implements ATSNode {
         } else {
             throw new Error("type mismatch in condition");
         }
-    }
-
-    @Override
-    public BoolType getType() {
-        return BoolType.cType;
     }
 
 }

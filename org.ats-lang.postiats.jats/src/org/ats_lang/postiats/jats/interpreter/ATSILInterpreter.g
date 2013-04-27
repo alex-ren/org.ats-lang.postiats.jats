@@ -125,7 +125,7 @@ atsins_store_arrpsz_ptr returns [AtsInsStoreArrpszPtr node]
     
 atsins_store_fltrec_ofs returns [AtsInsStoreFltrecOfs node]
     : ^(ATSINS_STORE_FLTREC_OFS tmp=ID atstype lab=ID exp)
-      {node = new AtsInsStoreFltrecOfs(this.m_tyscope, $tmp.text, $atstype.type, $lab.text, $exp.node);}
+      {node = new AtsInsStoreFltrecOfs(m_tyscope.getValue($tmp.text), $tmp.text, $atstype.type, $lab.text, $exp.node);}
     ;
     
 atsins_move returns [AtsInsMove node]
@@ -141,11 +141,11 @@ atsins_pmove returns [AtsInsPMove node]
     ;
     
 atsins_move_arrpsz_ptr returns [AtsInsMoveArrpszPtr node]
-    : ^(ATSINS_MOVE_ARRPSZ_PTR ID exp) {node = new AtsInsMoveArrpszPtr($ID.text, $exp.node);}
+    : ^(ATSINS_MOVE_ARRPSZ_PTR ID exp) {node = new AtsInsMoveArrpszPtr(m_tyscope.getValue($ID.text), ID$ID.text, $exp.node);}
     ;
     
 atsins_update_ptrinc returns [AtsInsUpdatePtrInc node]
-    : ^(ATSINS_UPDATE_PTRINC ID atstype) {node = new AtsInsUpdatePtrInc($ID.text, $atstype.type);} 
+    : ^(ATSINS_UPDATE_PTRINC ID atstype) {node = new AtsInsUpdatePtrInc(m_tyscope.getValue($ID.text), $ID.text, $atstype.type);} 
     ;
 
 ats_return returns [AtsReturnNode node]
@@ -226,8 +226,8 @@ ats_empty returns [AtsEmpty node]
 ats_simple_cast returns [ATSNode node]
     : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
    
-    | ATSPMV_TRUE {node = new ValueNode(BoolType.createTrue());}
-    | ATSPMV_FALSE {node = new ValueNode(BoolType.createFalse());}
+    | ATSPMV_TRUE {node = new ValueNode(BoolType.cType, BoolType.createTrue());}
+    | ATSPMV_FALSE {node = new ValueNode(BoolType.cType, BoolType.createFalse());}
     
     | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
     | ^(ATSPMV_FLOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}         
@@ -251,8 +251,8 @@ ats_ref_arg returns [AtsPmvRefArg node]
     | ^(ATSPMV_REFARG1 exp) {node = new AtsPmvRefArg($exp.node);}  // neglect refarg
     ;
    
-ats_pmv_ptrof returns [AtsPmvPtrofNode node]
-    : ^(ATSPMV_PTROF ID) {node = new AtsPmvPtrofNode($ID.text);}
+ats_pmv_ptrof returns [AtsPmvPtrof node]
+    : ^(ATSPMV_PTROF ID) {node = new AtsPmvPtrof(m_tyscope.get($ID.text), ID$ID.text);}
     ;
     
 ats_sel_recsin returns [AtsSelRecsinNode node]
@@ -263,8 +263,8 @@ ats_sel_flt_rec returns [AtsSelFltRecNode node]
     : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID) {node = new AtsSelFltRecNode($pmv.node, $atstype.type, $lab.text);}
     ;
 
-ats_sel_box_rec returns [AtsSelBoxRecNode node]
-    : ^(ATS_SEL_BOX_REC exp atstype ID) {node = new AtsSelBoxRecNode($exp.node, $atstype.type, $ID.text);}
+ats_sel_box_rec returns [AtsSelBoxRec node]
+    : ^(ATS_SEL_BOX_REC exp atstype ID) {node = new AtsSelBoxRec($exp.node, $atstype.type, $ID.text);}
     ;
     
 //ats_sel_arr_ind returns [AtsSelArrIndNode node]
@@ -273,12 +273,12 @@ ats_sel_box_rec returns [AtsSelBoxRecNode node]
 
 
 atom_exp returns [ATSNode node]
-    : ID     {node = new IdentifierNode($ID.text);}
-    | INT    {node = new ValueNode(IntType.fromString($INT.text));}
-    | FLOAT  {node = new ValueNode(DoubleType.fromString($FLOAT.text));}
-    | CHAR   {node = new ValueNode(CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
-    | STRING {node = new ValueNode(StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
-    | BOOL   {node = new ValueNode(BoolType.fromString($BOOL.text));}
+    : ID     {node = new IdentifierNode(m_tyscope.getValue($ID.text), $ID.text);}
+    | INT    {node = new ValueNode(IntType.cType, IntType.fromString($INT.text));}
+    | FLOAT  {node = new ValueNode(DoubleType.cType, DoubleType.fromString($FLOAT.text));}
+    | CHAR   {node = new ValueNode(CharType.cType, CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
+    | STRING {node = new ValueNode(StringType.cType, StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
+    | BOOL   {node = new ValueNode(BoolType.cType, BoolType.fromString($BOOL.text));}
     ;
 
 func_call returns [FuncCallNode node]

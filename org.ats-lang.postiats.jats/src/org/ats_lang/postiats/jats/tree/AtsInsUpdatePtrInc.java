@@ -3,14 +3,15 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.PtrValue;
+import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
+import org.ats_lang.postiats.jats.value.ArrPtr;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
-public class AtsInsUpdatePtrInc implements ATSNode {
+public class AtsInsUpdatePtrInc extends ATSTypeNode {
     private String m_tmp;
+    private ATSType m_ty;  // type of m_tmp
     private ATSType m_tyelt;
     
     // #define ATSINSupdate_ptrinc(tmp, tyelt) (tmp = (tyelt*)tmp + 1)
@@ -18,19 +19,24 @@ public class AtsInsUpdatePtrInc implements ATSNode {
 //    typedef void* atstype_arrptr ;
 //    ATStmpdec(tmp1, atstype_arrptr) ;
 //    ATSINSupdate_ptrinc(tmp1, atstkind_t0ype(atstype_double)) ;
-    public AtsInsUpdatePtrInc(String tmp, ATSType tyelt) {
+    
+    // ty = ArrayType
+    public AtsInsUpdatePtrInc(ATSType ty, String tmp, ATSType tyelt) {
+        super(VoidType.cType);
         m_tmp = tmp;
+        m_ty = ty;
         m_tyelt = tyelt;
 
     }
 
     @Override
-    public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
+    public SingletonValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         
-        ATSValue tmp = scope.getValue(m_tmp);
-        if (tmp instanceof PtrValue) {
-            ((PtrValue)tmp).incIndex();            
+        Object tmp = scope.getValue(m_tmp);
+        
+        if (tmp instanceof ArrPtr) {
+            ((ArrPtr)tmp).inc();            
         } else {
             throw new Error("AtsInsUpdatePtrInc on non-ptr value");
         }

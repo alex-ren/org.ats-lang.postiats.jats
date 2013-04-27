@@ -1,9 +1,12 @@
 package org.ats_lang.postiats.jats.type;
 
-import java.util.Map;
+import org.ats_lang.postiats.jats.value.Ptrk;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 
 public class ArrayType extends ATSUpdatableType {
+    
+    public static final ArrayType cType = new ArrayType(VoidType.cType);
     
     private ArrayType(ATSType type) {
         super(type);
@@ -16,26 +19,29 @@ public class ArrayType extends ATSUpdatableType {
 //    
     @Override
     public int getSize() {
-        return PtrkType.cType.getSize();
+        throw new Error("Not supported");
+//        return PtrkType.cType.getSize();
     }
-//
-//    @Override
-//    public ArrayValue createDefault() {
-//        ATSValue [] arr = new ATSValue[m_len];
-//        for (int i = 0; i < m_len; ++i) {
-//            arr[i] = m_type.createDefault();
-//        }
-//        
-//        return new ArrayValue(this, arr);
-//    }
     
-    public static final ArrayType cType = new ArrayType(VoidType.cType);
-    
-
     @Override
     public ArrayType createUpdatable(ATSType ty) {
         ArrayType ret = new ArrayType(ty);
         return ret;
+    }
+    
+    @Override
+    public SingletonValue createNormalDefault() {
+        throw new Error("Not supported");
+    }
+    
+    @Override
+    public Ptrk createRefDefault() {
+        throw new Error("Not supported");
+    }
+    
+    @Override
+    public Decorator getKind() {
+        throw new Error("Not supported");
     }
 
 }

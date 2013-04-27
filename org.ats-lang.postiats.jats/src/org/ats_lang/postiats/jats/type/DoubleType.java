@@ -1,8 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
-import org.ats_lang.postiats.jats.value.DoubleValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
+
 
 public class DoubleType extends ATSPrimType {
 //    public static final DoubleType cType = new DoubleType(Decorator.TYPE);
@@ -10,9 +9,9 @@ public class DoubleType extends ATSPrimType {
     
     public static final int m_size = 8;
 
-//    public static DoubleValue fromString(String text) {
-//        return new DoubleValue(new Double(text));
-//    }
+    public static Object fromString(String text) {
+        return new Double(text);
+    }
 
 //    @Override
 //    public String toString() {

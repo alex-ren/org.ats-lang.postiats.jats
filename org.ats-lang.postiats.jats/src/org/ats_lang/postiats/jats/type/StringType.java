@@ -2,23 +2,36 @@ package org.ats_lang.postiats.jats.type;
 
 
 
-import org.ats_lang.postiats.jats.value.StringValue;
+public class StringType extends ATSKindType {
 
-public class StringType implements ATSType {
-
-//    public static final StringType cType = new StringType(Decorator.TYPE);
-//    public static final StringType cType0 = new StringType(Decorator.T0YPE);
+    public static final StringType cType = new StringType(Decorator.TYPE); 
     
-    public static final int m_size = PtrType.m_size;
+    public StringType(Decorator dec) {
+        super(dec);
+    }
+    
+//    public static final int m_size = PtrType.m_size;
     
 //    @Override
 //    public String toString() {
 //        return StringValue.class.getSimpleName();
 //    }
 //    
+    
     @Override
     public int getSize() {
-        return m_size;
+        throw new Error("not supported");
+    }
+
+    @Override
+    public Object createNormalDefault() {
+        throw new Error("not supported");
+    }
+
+    @Override
+    public Object createRefDefault() {
+        // TODO Auto-generated method stub
+        throw new Error("not supported");
     }
 
 //    public static StringValue fromString(String text) {

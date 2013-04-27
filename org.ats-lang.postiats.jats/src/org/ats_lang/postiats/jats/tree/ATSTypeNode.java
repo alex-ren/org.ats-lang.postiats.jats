@@ -1,8 +1,5 @@
 package org.ats_lang.postiats.jats.tree;
 
-import java.util.Map;
-
-import org.ats_lang.postiats.jats.interpreter.FuncDef;
 
 import org.ats_lang.postiats.jats.type.ATSType;
 
@@ -16,6 +13,10 @@ public abstract class ATSTypeNode implements ATSNode {
 	@Override
 	public ATSType getType() {
 		return m_ty;
+	}
+	
+	public void updateType(ATSType ty) {
+	    m_ty = ty;
 	}
 
 }

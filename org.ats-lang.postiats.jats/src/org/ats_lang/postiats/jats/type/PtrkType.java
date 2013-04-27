@@ -5,8 +5,6 @@ import java.util.Map;
 public class PtrkType extends ATSUpdatableType {
 
     public static final int m_size = 4;
-    
-
     public static final PtrkType cType = new PtrkType(VoidType.cType);
 //    public static final PtrkType cType0 = new PtrkType(Decorator.T0YPE);
     
@@ -33,8 +31,12 @@ public class PtrkType extends ATSUpdatableType {
 
     @Override
     public PtrkType createUpdatable(ATSType ty) {
-        PtrkType ret = new PtrkType(null);
+        PtrkType ret = new PtrkType(ty);
         return ret;
+    }
+    
+    static public Object deref(Object v) {
+        return v;
     }
 
 }

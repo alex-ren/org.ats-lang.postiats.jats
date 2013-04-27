@@ -1,8 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
-import org.ats_lang.postiats.jats.value.IntValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
+
 
 public class IntType extends ATSPrimType {
     
@@ -13,9 +12,9 @@ public class IntType extends ATSPrimType {
     public static final int m_size = 4;
     
    
-//    public static IntValue fromString(String text) {
-//        return new IntValue(new Integer(text));
-//    }
+    public static Object fromString(String text) {
+        return new Integer(text);
+    }
 //    
 //    @Override
 //    public String toString() {

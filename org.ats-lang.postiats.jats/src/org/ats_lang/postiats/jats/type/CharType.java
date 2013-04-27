@@ -1,8 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
-import org.ats_lang.postiats.jats.value.CharValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
+
 
 public class CharType extends ATSPrimType {
     
@@ -11,9 +10,9 @@ public class CharType extends ATSPrimType {
     
     public static final int m_size = 1;
 
-//    public static CharValue fromString(String text) {
-//        return new CharValue(new Character(text.charAt(0)));
-//    }
+    public static Object fromString(String text) {
+        return new Character(text.charAt(0));
+    }
 //    
 //    @Override
 //    public String toString() {

@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.BoolValue;
+import org.ats_lang.postiats.jats.type.BoolType;
+import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
-public class IfNode implements ATSNode {
+public class IfNode extends ATSTypeNode {
     private List<Choice> m_choices;
     private ATSNode m_else;
     
     public IfNode() {
+        super(VoidType.cType);
         m_choices = new ArrayList<Choice>();
     }
     
@@ -39,11 +40,11 @@ public class IfNode implements ATSNode {
     }
 
     @Override
-    public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
+    public SingletonValue evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         for (Choice ch: m_choices) {
-            ATSValue b = ch.m_exp.evaluate(types, funcs, scope);
-            if (BoolValue.isTrue(b)) {
+            Object b = ch.m_exp.evaluate(types, funcs, scope);
+            if (BoolType.isTrue(b, ch.m_exp.getType())) {
                 ch.m_block.evaluate(types, funcs, scope);
                 return SingletonValue.VOID;
             }

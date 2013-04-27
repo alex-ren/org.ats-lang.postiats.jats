@@ -15,7 +15,7 @@ public abstract class ATSPrimType extends ATSKindType {
     
     @Override
     public Ptrk createRefDefault() {
-        return new Ptrk(this);
+        return new Ptrk(this.createNormalDefault());
     }
 
 //    public PrimValue castFrom(PrimValue pv);

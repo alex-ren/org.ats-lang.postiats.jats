@@ -1,8 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
-import org.ats_lang.postiats.jats.value.UCharValue;
-import org.ats_lang.postiats.jats.value.PrimValue;
+
 
 public class UCharType extends ATSPrimType {
     

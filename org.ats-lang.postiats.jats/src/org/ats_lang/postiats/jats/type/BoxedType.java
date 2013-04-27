@@ -3,6 +3,8 @@ package org.ats_lang.postiats.jats.type;
 import java.util.Map;
 
 public class BoxedType extends ATSUpdatableType {
+
+    public static final BoxedType cType = new BoxedType(VoidType.cType);
     
     private BoxedType(ATSType ty) {
         super(ty);
@@ -12,8 +14,6 @@ public class BoxedType extends ATSUpdatableType {
     public int getSize() {
         return PtrkType.cType.getSize();
     }
-
-    public static final BoxedType cType = new BoxedType(VoidType.cType);
 
     @Override
     public BoxedType createUpdatable(ATSType ty) {
