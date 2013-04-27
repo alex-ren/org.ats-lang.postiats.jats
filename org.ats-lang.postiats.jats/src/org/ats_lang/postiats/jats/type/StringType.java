@@ -34,9 +34,15 @@ public class StringType extends ATSKindType {
         throw new Error("not supported");
     }
 
-//    public static StringValue fromString(String text) {
-//        return new StringValue(text);
-//    }
+    public static Character[] fromString(String text) {
+    	Character[] str = new Character[text.length() + 1];
+    	for (int i = 0; i < text.length(); ++i) {
+    		str[i] = text.charAt(i);
+    	}
+    	str[str.length - 1] = Character.MIN_VALUE;  // '\u0000'
+        return str;
+    }
+    
 //
 //    @Override
 //    public StringValue createDefault() {

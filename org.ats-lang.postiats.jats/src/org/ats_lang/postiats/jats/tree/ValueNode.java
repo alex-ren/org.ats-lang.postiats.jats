@@ -6,6 +6,7 @@ import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
+// literal input
 public class ValueNode extends ATSTypeNode {
     private Object m_v;
     

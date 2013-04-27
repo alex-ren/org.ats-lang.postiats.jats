@@ -65,6 +65,4 @@ public class AtsPmvCastFn extends ATSTypeNode {
         }
     }
 
-    todo create string value
-
 }

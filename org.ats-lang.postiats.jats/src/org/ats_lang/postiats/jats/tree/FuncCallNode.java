@@ -11,7 +11,7 @@ import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.value.ATSValue;
 
-public class FuncCallNode implements ATSNode {
+public class FuncCallNode extends ATSTypeNode {
     private String m_id;
     private List<ATSNode> m_paras;
     static int m_indent = 0;
