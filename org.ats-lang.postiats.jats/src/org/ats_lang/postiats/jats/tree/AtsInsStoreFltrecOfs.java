@@ -15,6 +15,7 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
     private String m_lab;  // name of the member
     private ATSType m_ty;  // type of the object
     private ATSNode m_val;  // value of the member
+    private StructType m_tyrec;  // type of the structure
     
     
     // #define ATSINSstore_fltrec_ofs(tmp, tyrec, lab, val) ((tmp).lab = val)
@@ -33,7 +34,14 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
     public AtsInsStoreFltrecOfs(ATSType tmpty, String tmp, ATSType tyrec, String lab, ATSNode val) {
         super(VoidType.cType);
         m_tmp = tmp;
+        m_lab = lab;
         m_ty = tmpty;
+        m_val = val;
+        if (tyrec instanceof StructType) {
+            m_tyrec = (StructType) tyrec;
+        } else {
+            throw new Error("type mismatch");
+        }
         
         // check for fun
         if (m_ty instanceof RefType) {
@@ -47,8 +55,8 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
     	    throw new Error("Type mismatch");
     	}
 
-        m_lab = lab;
-        m_val = val;
+        
+        
     }
 
     @Override

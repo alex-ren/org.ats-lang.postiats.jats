@@ -4,12 +4,9 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.ATSUpdatableType;
-import org.ats_lang.postiats.jats.type.ArrayType;
-import org.ats_lang.postiats.jats.type.PtrkType;
+import org.ats_lang.postiats.jats.type.ArrPszType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.VoidType;
-import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
@@ -22,9 +19,13 @@ public class DefinitionNode extends ATSTypeNode {
 
     public DefinitionNode(ATSScope<ATSType> tyscope, ATSType ty, String id) {
         super(VoidType.cType);
-        if (ty instanceof ATSUpdatableType) {
-            ty = ((ATSUpdatableType) ty).createUpdatable(null);
-        }
+        
+        // obsolete 04/29/2013
+////        // Caution: this is important
+//        // ArrPszType
+//        if (ty instanceof ArrPszType) {
+//            ty = ArrPszType.createUpdatable();
+//        }
 
         if (DefinitionNode.isRefName(id)) {
             ty = new RefType(ty);

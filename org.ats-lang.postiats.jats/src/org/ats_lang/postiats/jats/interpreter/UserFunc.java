@@ -8,7 +8,6 @@ import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.tree.BlockNode;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
-import org.ats_lang.postiats.jats.value.ATSValue;
 
 public class UserFunc implements FuncDef{
     private String m_id;
@@ -43,10 +42,10 @@ public class UserFunc implements FuncDef{
      * scope: The scope, which is used as the current scope should be provided by the caller.
      */
     public Object evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope, List<ATSValue> args) {
+            Map<String, FuncDef> funcs, ATSScope<Object> scope, List<Object> args) {
         if (null != m_paras) {
             Iterator<FuncPara> iter_para = m_paras.iterator();
-            Iterator<ATSValue> iter_val = args.iterator();
+            Iterator<Object> iter_val = args.iterator();
             
             while (iter_para.hasNext()) {
                 scope.addValue(iter_para.next().getId(), iter_val.next());

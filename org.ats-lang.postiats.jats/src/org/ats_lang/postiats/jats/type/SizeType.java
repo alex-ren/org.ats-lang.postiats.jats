@@ -19,6 +19,14 @@ public class SizeType extends ATSPrimType {
 //        return SizeValue.class.getSimpleName();
 //    }
     
+    public static Integer castFrom(Object v) {
+        if (v instanceof Integer) {
+            return (Integer) v;
+        } else {
+            throw new Error("conversion not supported");
+        }
+    }
+    
     @Override
     public int getSize() {
         return m_size;

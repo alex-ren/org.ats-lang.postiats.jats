@@ -4,10 +4,15 @@ public class SingletonValue {
 	static {
 	    NULL = new SingletonValue();
 	    VOID = new SingletonValue();
+	    c_stdout = new SingletonValue();
+	    c_stderr = new SingletonValue();
 	}
 
     public static final SingletonValue NULL;  // used for initial value
     public static final SingletonValue VOID;
+    
+    public static final SingletonValue c_stdout;
+    public static final SingletonValue c_stderr;
     
 	private SingletonValue() {}
 	

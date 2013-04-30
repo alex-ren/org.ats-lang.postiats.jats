@@ -57,8 +57,10 @@ tokens {
   ATSINS_STORE_ARRPSZ_ASZ;
   ATSINS_STORE_ARRPSZ_PTR;
   ATSINS_STORE_FLTREC_OFS;
+  ATSINSstore_boxrec_ofs;
   ATSINS_MOVE;
   ATSINS_MOVE_VOID;
+  ATSINSmove_boxrec;
   ATSINS_PMOVE;
   ATSINS_MOVE_ARRPSZ_PTR;
   ATSINS_UPDATE_PTRINC;
@@ -199,8 +201,10 @@ bstat
     | atsins_store_arrpsz_asz Semicol!
     | atsins_store_arrpsz_ptr Semicol!
     | atsins_store_fltrec_ofs Semicol!
+    | atsins_store_boxrec_ofs Semicol!
     | atsins_move Semicol!
     | atsins_move_void Semicol!
+    | atsins_move_boxrec Semicol!
     | atsins_pmove Semicol!
     | atsins_move_arrpsz_ptr Semicol!
     | atsins_update_ptrinc Semicol!
@@ -245,8 +249,13 @@ atsins_store_arrpsz_ptr
     ;
 
 atsins_store_fltrec_ofs
-    : 'ATSINSstore_fltrec_ofs' LParen ida=ID Comma atstype Comma idb=ID Comma exp RParen
-       -> ^(ATSINS_STORE_FLTREC_OFS $ida atstype $idb exp)
+    : 'ATSINSstore_fltrec_ofs' LParen tmp=ID Comma atstype Comma lab=ID Comma exp RParen
+       -> ^(ATSINS_STORE_FLTREC_OFS $tmp atstype $lab exp)
+    ;
+
+atsins_store_boxrec_ofs
+    : 'ATSINSstore_boxrec_ofs' LParen tmp=ID Comma atstype Comma lab=ID Comma exp RParen
+       -> ^(ATSINSstore_boxrec_ofs $tmp atstype $lab exp)
     ;
     
 atsins_move
@@ -255,6 +264,10 @@ atsins_move
 
 atsins_move_void
     : 'ATSINSmove_void' LParen ID Comma exp RParen -> ^(ATSINS_MOVE_VOID exp)
+    ;
+    
+atsins_move_boxrec
+    : 'ATSINSmove_boxrec' LParen ID Comma atstype RParen -> ^(ATSINSmove_boxrec ID atstype)
     ;
     
 atsins_pmove

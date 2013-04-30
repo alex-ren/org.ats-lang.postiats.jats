@@ -7,31 +7,54 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LibFunc;
 import org.ats_lang.postiats.jats.interpreter.UserFunc;
-import org.ats_lang.postiats.jats.interpreter.LValueScope;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.type.FuncType;
+import org.ats_lang.postiats.jats.type.RefType;
+import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public class FuncCallNode extends ATSTypeNode {
+    private FuncType m_functype;
     private String m_id;
     private List<ATSNode> m_paras;
     static int m_indent = 0;
     
-    public FuncCallNode(String id, List<ATSNode> paras) {
-        m_id = id;
-        m_paras = paras;
-    }
-    
-    @Override
-    public ATSValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, LValueScope scope) {
+    public FuncCallNode(ATSType functype, String id, List<ATSNode> paras) {
+        super(VoidType.cType);
+        if (functype instanceof FuncType) {
+            m_functype = (FuncType)functype;
+            m_id = id;
+            m_paras = paras;
+            this.updateType(m_functype.getReturnType());
+        } else {
+            throw new Error("type error");
+        }
 
-        List<ATSValue> m_args = null;
+    }
+
+    private void printIndent(int n) {
+        System.out.println();
+        for (int j = 0; j < n; ++j) {
+            System.out.print(" ");
+        }
+    }
+
+    @Override
+    public Object evaluate(Map<String, ATSType> types,
+            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+        List<Object> m_args = null;
         
         if (m_paras != null) {
-            m_args = new ArrayList<ATSValue>();
+            m_args = new ArrayList<Object>();
             for (ATSNode para : m_paras) {
                 // clone is important
-                m_args.add(para.evaluate(types, funcs, scope).deepcopy());
+                Object arg = para.evaluate(types, funcs, scope);
+                ATSType argtype = para.getType();
+                if (argtype instanceof RefType) {
+                    // reference needs to be deep copied.
+                    arg = RefType.cloneValue(arg, ((RefType) argtype).defType());
+                }
+                m_args.add(arg);
             }
         }
         
@@ -42,12 +65,12 @@ public class FuncCallNode extends ATSTypeNode {
         }
 
         // Only global scope can be seen inside the function.
-        LValueScope aScope = scope.getParent().newScope();
+        ATSScope<Object> aScope = scope.getParent().newScope();
         
 //        printIndent(m_indent);
 //        System.out.println("Entering function: " + m_id);
         m_indent += 4;
-        ATSValue ret;
+        Object ret;
         if (fun instanceof UserFunc) {
             ret = ((UserFunc)fun).evaluate(types, funcs, aScope, m_args);
         } else {
@@ -57,14 +80,6 @@ public class FuncCallNode extends ATSTypeNode {
 //        printIndent(m_indent);
 //        System.out.println("Leaving function: " + m_id);
         return ret;
-    
-    }
-    
-    private void printIndent(int n) {
-        System.out.println();
-        for (int j = 0; j < n; ++j) {
-            System.out.print(" ");
-        }
     }
 
 }

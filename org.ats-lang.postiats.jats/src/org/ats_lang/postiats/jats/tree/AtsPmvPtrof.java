@@ -15,7 +15,8 @@ public class AtsPmvPtrof extends ATSTypeNode {
     
     // ty = RefType
     public AtsPmvPtrof(ATSType ty, String lval) {
-        super(PtrkType.cType.createUpdatable(((RefType)ty).defType()));
+//        super(PtrkType.cType.createUpdatable(((RefType)ty).defType()));
+        super(PtrkType.cType);
         m_lval = lval;
     }
 

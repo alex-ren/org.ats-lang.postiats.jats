@@ -1,62 +1,75 @@
 package org.ats_lang.postiats.jats.ccomp;
 
-import org.ats_lang.postiats.jats.value.BoolValue;
-import org.ats_lang.postiats.jats.value.CharValue;
-import org.ats_lang.postiats.jats.value.IntValue;
+import org.ats_lang.postiats.jats.type.BoolType;
+import org.ats_lang.postiats.jats.type.FuncType;
+import org.ats_lang.postiats.jats.type.IntType;
+import org.ats_lang.postiats.jats.type.SizeType;
+import org.ats_lang.postiats.jats.type.StringType;
+import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
+
 
 
 public class CCompChar {
     
  // ===================================================
     
-    public static BoolValue atspre_eq_char_char(CharValue x1, CharValue x2) {
-        Character i1 = x1.getContent();
-        Character i2 = x2.getContent();
-        
-        return new BoolValue(i1 == i2);
-        
+    public static boolean atspre_eq_char_char(char x1, char x2) {
+        return x1 == x2;
     }
     
-    public static BoolValue atspre_eq_char0_char0(CharValue x1, CharValue x2) {
+    public static boolean atspre_eq_char0_char0(char x1, char x2) {
         return atspre_eq_char_char(x1, x2);
     }
     
-    public static BoolValue atspre_eq_char1_char1(CharValue x1, CharValue x2) {
+    public static boolean atspre_eq_char1_char1(char x1, char x2) {
         return atspre_eq_char_char(x1, x2);
     }
     
-    public static BoolValue atspre_neq_char_char(CharValue x1, CharValue x2) {
-        Character i1 = x1.getContent();
-        Character i2 = x2.getContent();
-        
-        return new BoolValue(i1 != i2);
+    public static boolean atspre_neq_char_char(char x1, char x2) {
+        return x1 != x2;
         
     }
     
-    public static BoolValue atspre_neq_char0_char0(CharValue x1, CharValue x2) {
+    public static boolean atspre_neq_char0_char0(char x1, char x2) {
         return atspre_neq_char_char(x1, x2);
     }
     
-    public static BoolValue atspre_neq_char1_char1(CharValue x1, CharValue x2) {
+    public static boolean atspre_neq_char1_char1(char x1, char x2) {
         return atspre_neq_char_char(x1, x2);
     }
     
-    public static BoolValue atspre_isdigit_char(CharValue c) {
-        Character ch = c.getContent();
-        return new BoolValue(Character.isDigit(ch));
+    public static boolean atspre_isdigit_char(char c) {
+        return Character.isDigit(c);
         
     }
     
-    public static IntValue atspre_sub_char_char(CharValue c1, CharValue c2) {
-        Character x1 = c1.getContent();
-        Character x2 = c2.getContent();
-        int ret = x1 - x2;
-        return new IntValue(ret);
+    public static Integer atspre_sub_char_char(char c1, char c2) {
+        int ret = c1 - c2;
+        return ret;
     }
     
-    public static IntValue atspre_sub_char0_char0(CharValue c1, CharValue c2) {
+    public static Integer atspre_sub_char0_char0(char c1, char c2) {
         return atspre_sub_char_char(c1, c2);
     }
     
+    static public void populateFuncType(ATSScope<Object> typscope) {
+        FuncType intFunc = new FuncType(IntType.cType0, null);
+        FuncType sizeFunc = new FuncType(SizeType.cType0, null);
+        FuncType boolFunc = new FuncType(BoolType.cType0, null);
+        FuncType voidFunc = new FuncType(VoidType.cType, null);
+        FuncType strFunc = new FuncType(StringType.cType, null);
+        FuncType sarrptrFunc = new FuncType(StringType.cType, null);
+
+        typscope.addValue("atspre_eq_char_char", boolFunc);
+        typscope.addValue("atspre_eq_char0_char0", boolFunc);
+        typscope.addValue("atspre_eq_char1_char1", boolFunc);
+        typscope.addValue("atspre_neq_char_char", boolFunc);
+        typscope.addValue("atspre_neq_char0_char0", boolFunc);
+        typscope.addValue("atspre_neq_char1_char1", boolFunc);
+        typscope.addValue("atspre_isdigit_char", boolFunc);
+        typscope.addValue("atspre_sub_char_char", intFunc);
+        typscope.addValue("atspre_sub_char0_char0", intFunc);
+    }
 
 }

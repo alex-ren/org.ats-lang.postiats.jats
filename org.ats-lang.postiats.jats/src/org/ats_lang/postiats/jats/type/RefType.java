@@ -28,9 +28,9 @@ public class RefType implements ATSType {
 	// srcType = dstType or srcType = RefType(dstType)
 	static public void update(Object dst, ATSType dstType, Object src, ATSType srcType) {
 	    if (dst instanceof Ptrk) {
-	        // dstType = IntType or dstType = PtrType or dstType = BoxedType (StructType)
+	        // dstType = IntType or dstType = PtrType or dstType = BoxedType
 	        if (srcType instanceof RefType) {
-	            // srcType = RefType (IntType) or srcType = RefType (PtrType) or srcType = RefType (BoxedType (StructType))
+	            // srcType = RefType (IntType) or srcType = RefType (PtrType) or srcType = RefType (BoxedType)
 	            ((Ptrk)dst).update(((Ptrk)src).getValue());
 	        } else {
 	            // srcType = IntType or or srcType = PtrType or srcType = BoxedType (StructType)

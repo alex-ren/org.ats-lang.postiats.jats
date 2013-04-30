@@ -5,19 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.tree.ATSNode;
-import org.ats_lang.postiats.jats.tree.DefinitionNode;
 import org.ats_lang.postiats.jats.tree.FuncCallNode;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.utils.MapScope;
-import org.ats_lang.postiats.jats.value.ATSValue;
-import org.ats_lang.postiats.jats.value.IntValue;
-import org.ats_lang.postiats.jats.value.PtrValue;
-import org.ats_lang.postiats.jats.value.StringValue;
+import org.ats_lang.postiats.jats.value.SingletonValue;
+
 
 public class Program {
-    private Map<String, ATSType> m_types;
-    private Map<String, FuncDef> m_funcs;
+    private Map<String, ATSType> m_types;  // type definition
+    private Map<String, FuncDef> m_funcs;  // function definition
     
     private List<ATSNode> m_statements;
     
@@ -36,13 +34,14 @@ public class Program {
         m_types.put(id, type);
     }
     
+    public ATSType getType(String id) {
+        return m_types.get(id);
+    }
+    
     public void defineFunc(UserFunc func) {
         m_funcs.put(func.getName(), func);
     }
-    
-    public Map<String, ATSType> getTypes() {
-        return m_types;
-    }
+
     
     public void addStat(ATSNode stat) {
         m_statements.add(stat);
@@ -73,9 +72,10 @@ public class Program {
         // initialize all the global variables, and put them into global scope
         ATSScope<Object> globalScope = new MapScope<Object>();
         
-        globalScope.addValue("atspre_FILE_stdout", PtrValue.c_stdout);
-        globalScope.addValue("atspre_FILE_stderr", PtrValue.c_stderr);
+        globalScope.addValue("atspre_FILE_stdout", SingletonValue.c_stdout);
+        globalScope.addValue("atspre_FILE_stderr", SingletonValue.c_stderr);
         
+        // global statement
         for (ATSNode state : m_statements) {
             state.evaluate(m_types, m_funcs, globalScope);
         }
@@ -92,21 +92,21 @@ public class Program {
         m_main.m_initFunc.evaluate(m_types, m_funcs, mainScope);
         
         // ==transform arguments=====================
-        IntValue mainArgc = new IntValue(argv.length);
+        Integer mainArgc = argv.length;
         
-        StringValue [] arrArgv = new StringValue[argv.length];
+        char[][] arrArgv = new char[argv.length][];
         for (int i = 0; i < argv.length; ++i) {
-            arrArgv[i] = new StringValue(argv[i]);
+            arrArgv[i] = StringType.fromString(argv[i]);
         }
 
-        PtrValue mainArgv = new PtrValue(arrArgv);
+        char[][]  mainArgv = arrArgv;
         
-        PtrValue mainEnvp = new PtrValue();  // no envp at all
+        Object mainEnvp = SingletonValue.NULL;  // no envp at all
         
         // todo
         // I should put appropriate arguments (including error) into the list based
         // what main function is actually used.
-        List<ATSValue> mainArgs = new ArrayList<ATSValue>();
+        List<Object> mainArgs = new ArrayList<Object>();
         mainArgs.add(mainArgc);
         mainArgs.add(mainArgv);
         mainArgs.add(mainEnvp);

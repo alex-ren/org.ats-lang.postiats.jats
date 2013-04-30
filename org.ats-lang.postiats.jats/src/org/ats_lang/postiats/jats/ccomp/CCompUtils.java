@@ -4,14 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.LibFunc;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.value.ATSValue;
+import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public class CCompUtils {
 
@@ -27,41 +26,35 @@ public class CCompUtils {
 
             if (name.startsWith(CCompUtils.prefix)) {
                 // System.out.println(name);
-                Class<?>[] paraTypes = method.getParameterTypes();
-                Class<?> retType = method.getReturnType();
+//                Class<?>[] paraTypes = method.getParameterTypes();
+//                Class<?> retType = method.getReturnType();
 
                 // check whether the function is for use of interpreter
                 boolean forInterpreter = true;
-                // check the return type
-                if (CCompCompositeValue.class.isAssignableFrom(retType)) {
-                    forInterpreter = false;
-                }
-                // check the type of the parameters
-                if (forInterpreter == true) {
-                    for (int argc = 0; argc < paraTypes.length; argc++) {
-                        if (CCompCompositeValue.class
-                                .isAssignableFrom(paraTypes[argc])) {
-                            forInterpreter = false;
-                            break;
-                        }
-                    }
-                }
+//                // check the return type
+//                if (CCompCompositeValue.class.isAssignableFrom(retType)) {
+//                    forInterpreter = false;
+//                }
+//                // check the type of the parameters
+//                if (forInterpreter == true) {
+//                    for (int argc = 0; argc < paraTypes.length; argc++) {
+//                        if (CCompCompositeValue.class
+//                                .isAssignableFrom(paraTypes[argc])) {
+//                            forInterpreter = false;
+//                            break;
+//                        }
+//                    }
+//                }
 
                 if (forInterpreter == true) {
-                    final int argc = paraTypes.length;
                     LibFunc func = new LibFunc() {
-                        public ATSValue evaluate(List<ATSValue> paras) {
-                            Iterator<ATSValue> iter = null;
-
+                        public Object evaluate(List<Object> paras) {
+                            Object[] args = new Object[0];
                             if (paras != null) {
-                                iter = paras.iterator();
-                            }
-                            Object[] args = new Object[argc];
-                            for (int i = 0; i < argc; ++i) {
-                                args[i] = iter.next();
+                                args = paras.toArray();
                             }
                             try {
-                                return (ATSValue) method.invoke(null, args);
+                                return method.invoke(null, args);
                             } catch (IllegalArgumentException e) {
                                 e.printStackTrace();
                                 throw new Error("evaluate fails");
@@ -73,6 +66,7 @@ public class CCompUtils {
                                 throw new Error("evaluate fails");
                             }
                         }
+
                     };
 
                     funcs.put(name, func);
@@ -95,6 +89,13 @@ public class CCompUtils {
         populateFuncs(funcs, CCompString.class);
         populateFuncs(funcs, CCompPointer.class);
 
+    }
+    
+    public static void populateAllFuncTypes(ATSScope<Object> tyscope) {
+        
+        CCompInteger.populateFuncType(tyscope);
+        
+        
     }
 
     // =======================
@@ -130,7 +131,7 @@ public class CCompUtils {
         types.put("atstype_double", CCompTypedefs.m_atstype_double);
         types.put("atstype_ldouble", CCompTypedefs.m_atstype_ldouble);
 
-        types.put("atstype_ptr", CCompTypedefs.m_atstype_ptr);
+        // types.put("atstype_ptr", CCompTypedefs.m_atstype_ptr);
         types.put("atstype_ptrk", CCompTypedefs.m_atstype_ptrk);
 
         types.put("atstype_arrptr", CCompTypedefs.m_atstype_arrptr);

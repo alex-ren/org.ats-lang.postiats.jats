@@ -15,6 +15,14 @@ public class IntType extends ATSPrimType {
     public static Object fromString(String text) {
         return new Integer(text);
     }
+    
+    public static Integer castFrom(Object v) {
+        if (v instanceof Integer) {
+            return (Integer) v;
+        } else {
+            throw new Error("conversion not supported");
+        }
+    }
 //    
 //    @Override
 //    public String toString() {
@@ -42,5 +50,7 @@ public class IntType extends ATSPrimType {
             throw new Error("Wrong kind");
         }
     }
+    
+    
 
 }

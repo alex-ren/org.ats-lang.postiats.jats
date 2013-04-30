@@ -1,8 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
-import java.util.Map;
 
-public class PtrkType extends ATSUpdatableType {
+public class PtrkType extends ATSPrimType { // ATSUpdatableType {
 
     public static final int m_size = 4;
     public static final PtrkType cType = new PtrkType(VoidType.cType);
@@ -26,14 +25,15 @@ public class PtrkType extends ATSUpdatableType {
     
 
     private PtrkType(ATSType ty) {
-        super(ty);
+//        super(ty);
+        super(Decorator.TYPE);
     }
 
-    @Override
-    public PtrkType createUpdatable(ATSType ty) {
-        PtrkType ret = new PtrkType(ty);
-        return ret;
-    }
+//    @Override
+//    public PtrkType createUpdatable(ATSType ty) {
+//        PtrkType ret = new PtrkType(ty);
+//        return ret;
+//    }
     
     static public Object deref(Object v) {
         return v;

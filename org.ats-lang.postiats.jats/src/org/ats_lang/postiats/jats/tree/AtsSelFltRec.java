@@ -23,6 +23,7 @@ public class AtsSelFltRec extends ATSTypeNode {
         m_tyrec = tyrec;  // StructType
         m_lab = lab;
         
+        // member of reference is still a reference
         if (m_pmv.getType() instanceof RefType) {
             this.updateType(new RefType(this.getType()));
         }
@@ -54,7 +55,7 @@ public class AtsSelFltRec extends ATSTypeNode {
             if (m_tyrec.getMember(m_lab) instanceof StructType) {
                 return v.get(m_lab);  // v.get(m_lab) : Map
             } else {
-                Ptrk.StructMember sm = new Ptrk.StructMember(v, m_lab);
+                Ptrk.StructMember sm = new Ptrk.StructMember(v, m_lab, m_tyrec);
                 Ptrk refv = new Ptrk(sm);
                 return refv;
             }

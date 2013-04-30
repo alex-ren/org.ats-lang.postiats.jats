@@ -1,22 +1,17 @@
 package org.ats_lang.postiats.jats.type;
 
-public class StrPtrType extends ATSUpdatableType {
+public class StrPtrType extends ATSPrimType {
 
-    public static final StrPtrType cType = new StrPtrType(VoidType.cType);
+    public static final StrPtrType cType = new StrPtrType();
     
     @Override
     public int getSize() {
         return PtrkType.cType.getSize();
     }
 
-    private StrPtrType(ATSType ty) {
-        super(ty);
+    private StrPtrType() {
+        super(Decorator.TYPE);
     }
     
-    @Override
-    public StrPtrType createUpdatable(ATSType ty) {
-    	StrPtrType ret = new StrPtrType(ty);
-        return ret;
-    }
 
 }

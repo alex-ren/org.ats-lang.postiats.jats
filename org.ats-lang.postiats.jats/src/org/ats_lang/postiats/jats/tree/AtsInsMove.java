@@ -18,7 +18,7 @@ public class AtsInsMove extends ATSTypeNode {
     private ATSType m_type;  
     private ATSNode m_val;
 
-    public AtsInsMove(String tmp, ATSType ty, ATSNode val) {
+    public AtsInsMove(ATSType ty, String tmp, ATSNode val) {
     	super(VoidType.cType);
         m_tmp = tmp;
         m_type = ty;

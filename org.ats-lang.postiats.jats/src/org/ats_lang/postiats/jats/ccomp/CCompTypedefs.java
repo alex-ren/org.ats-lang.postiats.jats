@@ -54,7 +54,7 @@ public class CCompTypedefs {
     
     public static PtrkType m_atstype_ptrk = PtrkType.cType;
     
-//    public static PtrType m_atstype_ref = PtrType.cType;
+    public static PtrkType m_atstype_ref = PtrkType.cType;
     
     public static BoxedType m_atstype_boxed = BoxedType.cType;
     
@@ -65,7 +65,7 @@ public class CCompTypedefs {
     public static ArrPtrType m_atstype_arrptr = ArrPtrType.cType;
 
     
-    public static ArrayType m_atstype_arrpsz = ArrayType.cType;
+    public static ArrPszType m_atstype_arrpsz = ArrPszType.cType;
     
     public static StructType m_demo;
     

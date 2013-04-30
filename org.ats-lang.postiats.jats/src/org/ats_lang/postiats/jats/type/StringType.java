@@ -34,8 +34,8 @@ public class StringType extends ATSKindType {
         throw new Error("not supported");
     }
 
-    public static Character[] fromString(String text) {
-    	Character[] str = new Character[text.length() + 1];
+    public static char[] fromString(String text) {
+        char[] str = new char[text.length() + 1];
     	for (int i = 0; i < text.length(); ++i) {
     		str[i] = text.charAt(i);
     	}
@@ -43,6 +43,9 @@ public class StringType extends ATSKindType {
         return str;
     }
     
+    public static String toString(char[] buf) {
+        return new String(buf, 0, buf.length - 1);
+    }
 //
 //    @Override
 //    public StringValue createDefault() {
