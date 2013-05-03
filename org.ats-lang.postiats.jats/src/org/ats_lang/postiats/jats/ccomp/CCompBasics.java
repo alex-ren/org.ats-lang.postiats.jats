@@ -1,19 +1,23 @@
 package org.ats_lang.postiats.jats.ccomp;
 
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
+import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.SizeType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
+import org.ats_lang.postiats.jats.value.Ptrk.StringElement;
 
 public class CCompBasics {
 
     
-    public static char[] atspre_argv_get_at(char[][] argv, Integer i) {
+    public static Ptrk atspre_argv_get_at(Ptrk[] argv, Integer i) {
         return argv[i];
         
     }
@@ -23,7 +27,7 @@ public class CCompBasics {
         return SingletonValue.VOID; 
     }
     
-    public static SingletonValue atspre_exit_errmsg(Integer ecode, char[] msg) {
+    public static SingletonValue atspre_exit_errmsg(Integer ecode, Ptrk msg) {
         System.err.print("exit(ATS): " + StringType.toString(msg));
         System.exit(ecode);
         return SingletonValue.VOID; 
@@ -53,19 +57,20 @@ public class CCompBasics {
 //    (
 //      atstype_bool b, atstype_string msg
 //    )
-    public static SingletonValue atspre_assert_errmsg_bool(Boolean b, char[] msg) {
-        if (!b) {
+    public static SingletonValue atspre_assert_errmsg_bool(Boolean b, Ptrk msg) {
+        
+        if (b.equals(false)) {
             System.err.print(StringType.toString(msg));
             System.exit(1);
         }
         return SingletonValue.VOID;
     }
     
-    public static SingletonValue atspre_assert_errmsg_bool0(Boolean b, char[] msg) {
+    public static SingletonValue atspre_assert_errmsg_bool0(Boolean b, Ptrk msg) {
         return atspre_assert_errmsg_bool(b, msg);
     }
     
-    public static SingletonValue atspre_assert_errmsg_bool1(Boolean b, char[] msg) {
+    public static SingletonValue atspre_assert_errmsg_bool1(Boolean b, Ptrk msg) {
         return atspre_assert_errmsg_bool(b, msg);
     }
 
@@ -90,14 +95,15 @@ public class CCompBasics {
         return atspre_fprint_newline(SingletonValue.c_stderr);
     }
     
-    static public void populateFuncType(ATSScope<Object> typscope) {
+    static public void populateFuncType(ATSScope<ATSType> typscope) {
         FuncType intFunc = new FuncType(IntType.cType0, null);
         FuncType sizeFunc = new FuncType(SizeType.cType0, null);
         FuncType boolFunc = new FuncType(BoolType.cType0, null);
         FuncType voidFunc = new FuncType(VoidType.cType, null);
-        FuncType strFunc = new FuncType(StringType.cType, null);
+        FuncType ptrkFunc = new FuncType(PtrkType.cType, null);
+        
 
-        typscope.addValue("atspre_argv_get_at", strFunc);
+        typscope.addValue("atspre_argv_get_at", ptrkFunc);
         typscope.addValue("atspre_exit", voidFunc);
         typscope.addValue("atspre_exit_errmsg", voidFunc);
         typscope.addValue("atspre_exit_void", voidFunc);

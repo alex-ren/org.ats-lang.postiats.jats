@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.value.Ptrk;
 
-public class BoxedType extends ATSKindType {  // ATSPrimType {  // ATSUpdatableType {
+public class BoxedType implements ATSType {  // ATSKindType {  // ATSPrimType {  // ATSUpdatableType {
 
-    public static final BoxedType cType = new BoxedType(VoidType.cType);
+     public static final BoxedType cType = new BoxedType();
     
-    private BoxedType(ATSType ty) {
+    private BoxedType() {
 //        super(ty);
-        super(Decorator.TYPE);
+//        super(Decorator.TYPE);
     }
     
     @Override
@@ -28,6 +28,35 @@ public class BoxedType extends ATSKindType {  // ATSPrimType {  // ATSUpdatableT
     public Ptrk createRefDefault() {
         return new Ptrk(new HashMap<String, Object>());
     }
+
+    @Override
+    public boolean equals(ATSType ty) {
+        if (this == ty || ty instanceof PtrkType) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+//    public static void checkupdateRefBoxedType(ATSType ty) {
+//        // update type
+//        if (ty instanceof RefType) {
+//            ATSType innerty = ((RefType) ty).defType();
+//            if (innerty instanceof BoxedType) {
+//            } else if (innerty instanceof PtrkType) {
+//                ((RefType) ty).updateType(BoxedType.cType);
+//            } else {
+//                System.out.println("innerty is " + innerty);
+//                throw new Error("Type mismatch");
+//            }
+//        } else if (ty instanceof BoxedType) {
+//        } else {
+//            System.out.println("ty is " + ty);
+//            throw new Error("Type mismatch");
+//        } 
+//    }
+    
+
     
 //    @Override
 //    public BoxedType createUpdatable(ATSType ty) {

@@ -50,9 +50,11 @@ public class CCompUtils {
                     LibFunc func = new LibFunc() {
                         public Object evaluate(List<Object> paras) {
                             Object[] args = new Object[0];
+                            System.out.println("paras is " + paras);
                             if (paras != null) {
                                 args = paras.toArray();
                             }
+//                            System.out.println("args is " + args);
                             try {
                                 return method.invoke(null, args);
                             } catch (IllegalArgumentException e) {
@@ -88,12 +90,20 @@ public class CCompUtils {
         populateFuncs(funcs, CCompArrayPtr.class);
         populateFuncs(funcs, CCompString.class);
         populateFuncs(funcs, CCompPointer.class);
+        populateFuncs(funcs, CCompDebug.class);
 
     }
     
-    public static void populateAllFuncTypes(ATSScope<Object> tyscope) {
+    public static void populateAllFuncTypes(ATSScope<ATSType> tyscope) {
         
+        CCompArrayPtr.populateFuncType(tyscope);
+        CCompBasics.populateFuncType(tyscope);
+        CCompChar.populateFuncType(tyscope);
+        CCompFloat.populateFuncType(tyscope);
         CCompInteger.populateFuncType(tyscope);
+        CCompPointer.populateFuncType(tyscope);
+        CCompString.populateFuncType(tyscope);
+        CCompDebug.populateFuncType(tyscope);
         
         
     }
@@ -124,8 +134,10 @@ public class CCompUtils {
         types.put("atstype_schar", CCompTypedefs.m_atstype_schar);
         types.put("atstype_uchar", CCompTypedefs.m_atstype_uchar);
 
-        types.put("atstype_string", CCompTypedefs.m_atstype_string);
-        types.put("atstype_strptr", CCompTypedefs.m_atstype_strptr);
+//        types.put("atstype_string", CCompTypedefs.m_atstype_string);
+        types.put("atstype_string", CCompTypedefs.m_atstype_ptrk);
+        
+//        types.put("atstype_strptr", CCompTypedefs.m_atstype_strptr);
 
         types.put("atstype_float", CCompTypedefs.m_atstype_float);
         types.put("atstype_double", CCompTypedefs.m_atstype_double);
@@ -137,44 +149,46 @@ public class CCompUtils {
         types.put("atstype_arrptr", CCompTypedefs.m_atstype_arrptr);
 
         types.put("atstype_arrpsz", CCompTypedefs.m_atstype_arrpsz);
+        
+        types.put("atstype_boxed", CCompTypedefs.m_atstype_boxed);
 
         types.put("demo", CCompTypedefs.m_demo);
 
         return types;
     }
 
-    // used by translator
-    // add class name to function name
-    public static int populateFuncNames(Map<String, String> funcs, Class<?> cls) {
-        Method[] methods = cls.getDeclaredMethods();
-        String classname = cls.getSimpleName();
-        int nFuncs = 0;
-
-        for (final Method method : methods) {
-            String name = method.getName();
-
-            if (name.startsWith(CCompUtils.prefix)) {
-                // System.out.println(name);
-
-                funcs.put(name, classname + "." + name);
-                nFuncs++;
-            }
-        }
-
-        return nFuncs;
-
-    }
-
-    // used by translator
-    public static void populateAllFuncNames(Map<String, String> funcs) {
-        populateFuncNames(funcs, CCompBasics.class);
-        populateFuncNames(funcs, CCompInteger.class);
-        populateFuncNames(funcs, CCompChar.class);
-        populateFuncNames(funcs, CCompFloat.class);
-        populateFuncNames(funcs, CCompArrayPtr.class);
-        populateFuncNames(funcs, CCompString.class);
-        populateFuncNames(funcs, CCompPointer.class);
-        
-
-    }
+//    // used by translator
+//    // add class name to function name
+//    public static int populateFuncNames(Map<String, String> funcs, Class<?> cls) {
+//        Method[] methods = cls.getDeclaredMethods();
+//        String classname = cls.getSimpleName();
+//        int nFuncs = 0;
+//
+//        for (final Method method : methods) {
+//            String name = method.getName();
+//
+//            if (name.startsWith(CCompUtils.prefix)) {
+//                // System.out.println(name);
+//
+//                funcs.put(name, classname + "." + name);
+//                nFuncs++;
+//            }
+//        }
+//
+//        return nFuncs;
+//
+//    }
+//
+//    // used by translator
+//    public static void populateAllFuncNames(Map<String, String> funcs) {
+//        populateFuncNames(funcs, CCompBasics.class);
+//        populateFuncNames(funcs, CCompInteger.class);
+//        populateFuncNames(funcs, CCompChar.class);
+//        populateFuncNames(funcs, CCompFloat.class);
+//        populateFuncNames(funcs, CCompArrayPtr.class);
+//        populateFuncNames(funcs, CCompString.class);
+//        populateFuncNames(funcs, CCompPointer.class);
+//        
+//
+//    }
 }

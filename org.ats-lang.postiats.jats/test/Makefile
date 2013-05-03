@@ -243,6 +243,22 @@ clean:: ; $(RMF) temp_dats.o
 clean:: ; $(RMF) temp_dats.c
 cleanall:: ; $(RMF) temp.exe
 
+all:: basic
+basic: basic.exe
+basic.exe: basic_dats.c ;   $(CCOPT) -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -o $@ $<
+basic_dats.c: basic.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output basic_dats.c --dynamic basic.dats
+clean:: ; $(RMF) basic_dats.o
+clean:: ; $(RMF) basic_dats.c
+cleanall:: ; $(RMF) basic.exe
+
+all:: printtest
+printtest: printtest.exe
+printtest.exe: printtest_dats.c ;   $(CCOPT) -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -o $@ $<
+printtest_dats.c: printtest.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output printtest_dats.c --dynamic printtest.dats
+clean:: ; $(RMF) printtest_dats.o
+clean:: ; $(RMF) printtest_dats.c
+cleanall:: ; $(RMF) printtest.exe
+
 
 all:: test01
 test01: test01.exe
@@ -387,6 +403,22 @@ test18_dats.c: test18.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output tes
 clean:: ; $(RMF) test18_dats.o
 clean:: ; $(RMF) test18_dats.c
 cleanall:: ; $(RMF) test18.exe
+
+all:: test19
+test19: test19.exe
+test19.exe: test19_dats.c ;   $(CCOPT) -D_GNU_SOURCE -O2     -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -DATS_MEMALLOC_LIBC -o $@ $< -L$(PATSLIB)
+test19_dats.c: test19.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output test19_dats.c --dynamic test19.dats
+clean:: ; $(RMF) test19_dats.o
+clean:: ; $(RMF) test19_dats.c
+cleanall:: ; $(RMF) test19.exe
+
+all:: test20
+test20: test20.exe
+test20.exe: test20_dats.c ;   $(CCOPT) -D_GNU_SOURCE -O2     -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -DATS_MEMALLOC_LIBC -o $@ $< -L$(PATSLIB)
+test20_dats.c: test20.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output test20_dats.c --dynamic test20.dats
+clean:: ; $(RMF) test20_dats.o
+clean:: ; $(RMF) test20_dats.c
+cleanall:: ; $(RMF) test20.exe
 
 
 all:: areverse

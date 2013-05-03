@@ -44,8 +44,8 @@ public class AtsInsMoveArrpszPtr extends ATSTypeNode {
 //    ATStmpdec(tmp1, atstype_arrptr) ;
 //    ATSINSmove_arrpsz_ptr(tmp1, tmp0) ;
     
-    // tmp := ArrayType
-    // psz := ArrayType
+    // tmp := ArrPtrType
+    // psz := ArrPszType
     public SingletonValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         

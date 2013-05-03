@@ -39,4 +39,9 @@ public class ArrPszType implements ATSType {
         throw new Error("not supported");
     }
 
+    @Override
+    public boolean equals(ATSType ty) {
+        return this == ty;
+    }
+
 }

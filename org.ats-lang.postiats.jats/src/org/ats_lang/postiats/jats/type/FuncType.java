@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.ats_lang.postiats.jats.interpreter.FuncPara;
@@ -34,5 +35,34 @@ public class FuncType implements ATSType {
 	public ATSType getReturnType() {
 	    return m_rettype;
 	}
+
+    @Override
+    public boolean equals(ATSType ty) {
+        if (this == ty) {
+            return true;
+        } else if (ty instanceof FuncType) {
+            if (!m_rettype.equals(((FuncType) ty).m_rettype)) {
+                return false;
+            }
+            List<FuncPara> leftlst = m_paralst;
+            List<FuncPara> rightlst = ((FuncType) ty).m_paralst;
+            if (leftlst.size() != rightlst.size()) {
+                return false;
+            }
+            Iterator<FuncPara> leftiter = leftlst.iterator();
+            Iterator<FuncPara> rightiter = rightlst.iterator();
+            
+            while (leftiter.hasNext()) {
+                FuncPara left = leftiter.next();
+                FuncPara right = rightiter.next();
+                if (!left.equals(right)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

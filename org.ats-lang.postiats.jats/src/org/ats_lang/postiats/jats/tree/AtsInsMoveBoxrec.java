@@ -6,6 +6,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoxedType;
+import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
@@ -19,22 +20,12 @@ public class AtsInsMoveBoxrec extends ATSTypeNode {
 
     // boxty = BoxedType or RefType (BoxedType)
     // tyrec = StructType
-    public AtsInsMoveBoxrec(ATSType tmptype, String tmp, ATSType tyrec) {
+    public AtsInsMoveBoxrec(ATSType tmpty, String tmp, ATSType tyrec) {
         super(VoidType.cType);
         
         m_tmp = tmp;
         m_tyrec = tyrec;
-        m_tmptype = tmptype;
-
-        // update type
-//        if (tmptype instanceof RefType) {
-//            tmptype = ((RefType) tmptype).defType();
-//        }
-//        if (tmptype instanceof BoxedType) {
-//            ((BoxedType)tmptype).update(tyrec);
-//        } else {
-//            throw new Error("Wrong Type");
-//        }
+        m_tmptype = tmpty;
         
     }
     

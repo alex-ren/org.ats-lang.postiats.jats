@@ -17,6 +17,10 @@ public class RefType implements ATSType {
 		return m_type;
 	}
 	
+	public void updateType(ATSType ty) {
+	    m_type = ty;
+	}
+	
 	// refobj := RefType
 	// x := RefType (a) => x : Ptr or x: Map
 	static public Object ptrof(Object refobj) {
@@ -31,7 +35,7 @@ public class RefType implements ATSType {
 	        // dstType = IntType or dstType = PtrType or dstType = BoxedType
 	        if (srcType instanceof RefType) {
 	            // srcType = RefType (IntType) or srcType = RefType (PtrType) or srcType = RefType (BoxedType)
-	            ((Ptrk)dst).update(((Ptrk)src).getValue());
+	            ((Ptrk)dst).update(RefType.cloneValue(src, ((RefType) srcType).defType()));
 	        } else {
 	            // srcType = IntType or or srcType = PtrType or srcType = BoxedType (StructType)
 	            ((Ptrk)dst).update(src);
@@ -57,10 +61,11 @@ public class RefType implements ATSType {
     static public Object cloneValue(Object v, ATSType ty) {
 		if (ty instanceof StructType) {
 			return StructType.cloneValue((Map<String, Object>)v, (StructType)ty);
-		} else {
+		} else {  // ty = PtrkType
 			if (v instanceof Ptrk) {
 				return ((Ptrk) v).getValue();
 			} else {
+			    System.out.println("cloneValue v is " + v);
 				throw new Error("type mismatch");
 			}
 		}
@@ -79,6 +84,15 @@ public class RefType implements ATSType {
     @Override
     public Object createRefDefault() {
     	throw new Error("Ref of ref is unsupported");
+    }
+
+    @Override
+    public boolean equals(ATSType ty) {
+        if (ty instanceof RefType) {
+            return m_type.equals(((RefType) ty).defType());
+        } else {
+            return false;
+        }
     }
     
 	

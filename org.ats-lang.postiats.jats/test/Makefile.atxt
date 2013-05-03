@@ -116,6 +116,8 @@ RMF=rm -f
 #make_entry("fib")
 #make_entry("gfib")
 #make_entry("temp")
+#make_entry("basic")
+#make_entry("printtest")
 
 #make2_entry("test01", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test02", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
@@ -135,6 +137,8 @@ RMF=rm -f
 #make2_entry("test16", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test17", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test18", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test19", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test20", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 
 #make2_entry("areverse", "-DATS_MEMALLOC_LIBC", "")
 

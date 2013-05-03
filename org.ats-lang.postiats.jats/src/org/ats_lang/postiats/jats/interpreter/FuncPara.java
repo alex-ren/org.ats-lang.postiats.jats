@@ -18,5 +18,9 @@ public class FuncPara {
 		m_type = type;
 		m_id = id;
 	}
+	
+	public boolean equals(FuncPara para) {
+	    return m_type.equals(para.m_type);
+	}
 
 }

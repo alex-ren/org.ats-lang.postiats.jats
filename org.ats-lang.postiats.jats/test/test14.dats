@@ -50,16 +50,8 @@ staload _(*anon*) = "atshwxi/testing/DATS/randgen.dats"
 //
 (* ****** ****** *)
 
-%{^
-#include <time.h>
-#include <stdlib.h>
-atsvoid_t0ype
-srand48_with_time ()
-{
-  srand48(time(0)) ; return ;
-}
-%}
-extern fun srand48_with_time (): void = "ext#"
+
+fun srand48_with_time (): void = ()
 
 (* ****** ****** *)
 

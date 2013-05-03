@@ -9,6 +9,7 @@ public interface ATSType {
 	
 	Object createNormalDefault();
 	Object createRefDefault();
+	boolean equals(ATSType ty);
 //	
 //    public String toString();
 

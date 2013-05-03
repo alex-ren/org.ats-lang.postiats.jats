@@ -40,5 +40,7 @@ implement
 main (
 ) = 0 where {
   val N = 12
-  val () = println! ("fact(", N, ") = ", (fact(N)).1)
+  val ret = (fact(N)).1
+  val () = println! ("fact(", N, ") = ", ret)
+  val () = assertloc (ret = 479001600)
 }

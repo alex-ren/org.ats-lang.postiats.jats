@@ -51,11 +51,14 @@ public class AtsSelFltRec extends ATSTypeNode {
         Map<String, Object> v = (Map<String, Object>) m_pmv.evaluate(types,
                 funcs, scope);
 
+//        System.out.println("AtsSelFltRec.evaluate v is " + v + " and addr is " + System.identityHashCode(v));
+        
         if (m_pmv.getType() instanceof RefType) {
             if (m_tyrec.getMember(m_lab) instanceof StructType) {
                 return v.get(m_lab);  // v.get(m_lab) : Map
             } else {
                 Ptrk.StructMember sm = new Ptrk.StructMember(v, m_lab, m_tyrec);
+
                 Ptrk refv = new Ptrk(sm);
                 return refv;
             }

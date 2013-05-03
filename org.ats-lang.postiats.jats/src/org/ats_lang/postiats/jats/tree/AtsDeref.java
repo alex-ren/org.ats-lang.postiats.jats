@@ -18,7 +18,6 @@ public class AtsDeref extends ATSTypeNode {
     
     @Override
     // #define ATSderef(pmv, hit) (*(hit*)pmv)
-    // deference shall return ATSValue
     public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         Object v = m_node.evaluate(types, funcs, scope);
         return PtrkType.deref(v);

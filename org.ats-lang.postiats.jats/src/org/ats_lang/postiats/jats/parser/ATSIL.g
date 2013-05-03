@@ -38,6 +38,8 @@ tokens {
 //  TYPE_REF;
 //  TYPE_ARRPTR;
   
+  TYPE_ARR;
+  
   TYPE_DEC_TYPE;
   TYPE_DEC_T0YPE;
   
@@ -91,7 +93,7 @@ tokens {
 	ATSPMV_REFARG0;
 	ATSPMV_REFARG1;
 	ATSPMV_PTROF;
-	ATS_SEL_RECSIN;
+	ATSselrecsin;
 	ATS_SEL_FLT_REC;
 	ATS_SEL_ARR_IND;
 	ATS_SEL_BOX_REC;
@@ -212,6 +214,7 @@ bstat
     | ats_return_void Semicol!
     | simple_return Semicol!
     | ats_dyn_load0 Semicol!
+    | ats_dyn_load_set Semicol!
     | simple_assignment Semicol!
     ;
     
@@ -230,6 +233,10 @@ ats_dyn_load1
     
 ats_dyn_load0
     : ATSdynload0 LParen ID RParen -> ^(ATSdynload0 ID)
+    ;
+    
+ats_dyn_load_set
+    : ATSdynloadset LParen ID RParen -> ^(ATSdynloadset ID)
     ;
     
 atsins_load
@@ -378,7 +385,7 @@ ats_pmv_ptrof
     ;
     
 ats_sel_recsin
-      : 'ATSselrecsin' LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATS_SEL_RECSIN $pmv atstype $lab)
+      : 'ATSselrecsin' LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATSselrecsin $pmv atstype $lab)
       ;
    
 ats_sel_flt_rec
@@ -454,6 +461,7 @@ atstype
     : // prim_type -> ^(TYPE prim_type)
       ID -> ^(TYPE ID)
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
+    | 'atstype_tyarr' LParen atstype RParen -> ^(TYPE TYPE_ARR atstype)
     ;
 
 kind_decorator
@@ -504,6 +512,8 @@ ATSdyncst_extfun: 'ATSdyncst_extfun';
       
 ATSdynload0: 'ATSdynload0';
 ATSdynload1: 'ATSdynload1';
+
+ATSdynloadset: 'ATSdynloadset';
 
 ATSmainats_void_0: 'ATSmainats_void_0';
 ATSmainats_argc_argv_0: 'ATSmainats_argc_argv_0';

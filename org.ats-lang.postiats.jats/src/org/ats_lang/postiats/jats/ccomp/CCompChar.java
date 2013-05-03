@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.ccomp;
 
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
@@ -53,13 +54,11 @@ public class CCompChar {
         return atspre_sub_char_char(c1, c2);
     }
     
-    static public void populateFuncType(ATSScope<Object> typscope) {
+    static public void populateFuncType(ATSScope<ATSType> typscope) {
         FuncType intFunc = new FuncType(IntType.cType0, null);
         FuncType sizeFunc = new FuncType(SizeType.cType0, null);
         FuncType boolFunc = new FuncType(BoolType.cType0, null);
         FuncType voidFunc = new FuncType(VoidType.cType, null);
-        FuncType strFunc = new FuncType(StringType.cType, null);
-        FuncType sarrptrFunc = new FuncType(StringType.cType, null);
 
         typscope.addValue("atspre_eq_char_char", boolFunc);
         typscope.addValue("atspre_eq_char0_char0", boolFunc);

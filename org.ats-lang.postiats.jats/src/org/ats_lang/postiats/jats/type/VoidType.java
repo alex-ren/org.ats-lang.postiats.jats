@@ -25,5 +25,10 @@ public class VoidType implements ATSType {
 	    throw new Error("not supported");
     }
 
+    @Override
+    public boolean equals(ATSType ty) {
+        return this == ty;
+    }
+
 
 }

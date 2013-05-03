@@ -29,12 +29,12 @@ options {
 }
 
 // START:rules
-program[Map<String, ATSType> types, Map<String, FuncDef> funcs] returns [Program prog]
+program[Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope tyscope] returns [Program prog]
 @init {
   m_prog = new Program(types, funcs);
   prog = m_prog;
   
-  m_tyscope = new MapScope();  // mapping of value to type
+  m_tyscope = tyscope;  // mapping of value to type
 }
     : ^(PROGRAM gstat* main_impl?)
     ;
@@ -65,12 +65,11 @@ atsmain returns [String mainName]
 ats_dyn_load1
     : ^(ATSdynload1 ID)
     ;
-    
-// Simply ignore ats_dyn_cst         
+     
 ats_dyn_cst
     : ^(ATSdyncst_mac ID) 
     | ^(ATSdyncst_castfn ID)
-    | ^(ATSdyncst_extfun ID atstypelst atstype)
+    | ^(ATSdyncst_extfun ID atstypelst atstype) {m_tyscope.addValue($ID.text, new FuncType($atstype.type, null));}
     ;
 
 block returns [BlockNode node]
@@ -106,6 +105,7 @@ atsins returns [ATSNode node]
     | ats_return {node = $ats_return.node;}
     | ats_return_void {node = $ats_return_void.node;}
     | ats_dyn_load0 {node = $ats_dyn_load0.node;} 
+    | ats_dyn_load_set {node = $ats_dyn_load_set.node;}
     ;
 
 atsins_load returns [AtsInsLoad node]
@@ -148,7 +148,7 @@ atsins_move_boxrec returns [AtsInsMoveBoxrec node]
     ;
     
 atsins_pmove returns [AtsInsPMove node]
-    : ^(ATSINS_PMOVE tmp=exp atstype val=exp) {node = new AtsInsPMove($tmp.node, $atstype.type, $val.node);}
+    : ^(ATSINS_PMOVE tmp=ID atstype val=exp) {node = new AtsInsPMove(m_tyscope.getValue($ID.text), $ID.text, $atstype.type, $val.node);}
     ;
     
 atsins_move_arrpsz_ptr returns [AtsInsMoveArrpszPtr node]
@@ -164,13 +164,21 @@ ats_return returns [AtsReturn node]
     ;
     
 ats_return_void returns [AtsReturn node]
-    : ^(ATS_RETURN_VOID exp?) {node = new AtsReturn($exp.node);}
+@init {
+  ATSNode retnode = new ValueNode(VoidType.cType, SingletonValue.VOID);
+}
+    : ^(ATS_RETURN_VOID (exp{retnode = $exp.node;})?) {node = new AtsReturn(retnode);}
     ;
 
 ats_dyn_load0 returns [ATSNode node]
-    : ^(ATSdynload0 ID)  {node = new DefinitionNode(m_tyscope, IntType.cType0, $ID.text);}
+    : ^(ATSdynload0 ID)  {node = new ATSdynload0(m_tyscope, $ID.text);}
+    ;
+
+ats_dyn_load_set returns [ATSNode node]
+    : ^(ATSdynloadset ID)  {node = new AtsInsMove(IntType.cType0, $ID.text, new ValueNode(IntType.cType0, IntType.fromString("1")));}
     ;
     
+        
 ifstat returns [IfNode node]
 @init {
   IfNode ifnode = new IfNode();
@@ -242,7 +250,7 @@ ats_simple_cast returns [ATSNode node]
     
     | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType0, $exp.node);}
     | ^(ATSPMV_FLOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType0, $exp.node);}         
-    | ^(ATSPMV_STRING exp) {node = new AtsPmvSimpleCastNode(StringType.cType, $exp.node);}
+    | ^(ATSPMV_STRING exp) {node = new AtsPmvSimpleCastNode(PtrkType.cType, $exp.node);}
     
     | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(IntType.cType0, $exp.node);}
     | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType0, $exp.node);}     
@@ -267,7 +275,7 @@ ats_pmv_ptrof returns [AtsPmvPtrof node]
     ;
     
 ats_sel_recsin returns [AtsSelRecsinNode node]
-      : ^(ATS_SEL_RECSIN pmv=ID atstype lab=ID) {node = new AtsSelRecsinNode($pmv.text, $atstype.type, $lab.text);}
+      : ^(ATSselrecsin pmv=ID atstype lab=ID) {node = new AtsSelRecsinNode($pmv.text, $atstype.type, $lab.text);}
       ;
    
 ats_sel_flt_rec returns [AtsSelFltRec node]
@@ -288,12 +296,12 @@ atom_exp returns [ATSNode node]
     | INT    {node = new ValueNode(IntType.cType0, IntType.fromString($INT.text));}
     | FLOAT  {node = new ValueNode(DoubleType.cType0, DoubleType.fromString($FLOAT.text));}
     | CHAR   {node = new ValueNode(CharType.cType0, CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
-    | STRING {node = new ValueNode(StringType.cType, StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
+    | STRING {node = new ValueNode(PtrkType.cType, StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
     | BOOL   {node = new ValueNode(BoolType.cType0, BoolType.fromString($BOOL.text));}
     ;
 
 func_call returns [FuncCallNode node]
-    : ^(FUNC_CALL ID explst?) {node = new FuncCallNode(m_tyscope.getValue($ID.text), $ID.text, $explst.lst);}
+    : ^(FUNC_CALL ID explst?) {/*System.out.println("func call " + $ID.text);*/ node = new FuncCallNode(m_tyscope.getValue($ID.text), $ID.text, $explst.lst);}
     ;
 
 explst returns [List<ATSNode> lst]
@@ -321,6 +329,7 @@ atstype returns [ATSType type]
     : // ^(TYPE prim_type) {type = $prim_type.type;}
       ^(TYPE name_type)  {type = $name_type.type;}
     | ^(TYPE kind_decorator name_type) {type = $name_type.type;}  // We don't handle decorator now. {type = new KindType($kind_decorator.kind, $name_type.type);}
+    | ^(TYPE TYPE_ARR atstype) {type = PtrkType.cType;}  // array is ptrktype
     ;
 
 name_type returns [ATSType type]
@@ -351,7 +360,7 @@ kind_decorator returns [ATSKindType.Decorator kind]
 //    ;
 
 func_decl
-    : ^(FUNC_DECL ID func_decorator? atstype paralst?) {m_tyscope.addValue($ID.text, new FuncType($atstype.type, $paralst.paralst));}
+    : ^(FUNC_DECL ID func_decorator? atstype paralst[null]?) {m_tyscope.addValue($ID.text, new FuncType($atstype.type, $paralst.paralst));}
     ;
 
 para_decorator returns [FuncPara.ParaDecorator dec]
@@ -364,23 +373,27 @@ func_decorator returns [ATSNode.FunDecorator dec]
     | STATIC {dec = ATSNode.FunDecorator.STATIC;}
     ;
     
-paralst returns [List<FuncPara> paralst]
+paralst [ATSScope<ATSType> tyscope] returns [List<FuncPara> paralst]
 @init {
   paralst = new ArrayList<FuncPara>();
 }
-    : ^(PARA_LIST (para {paralst.add($para.para);})+)
+    : ^(PARA_LIST (para[tyscope] {paralst.add($para.para);})+)
     ;
 
-para returns [FuncPara para]
-    : paratype ID? {para = new FuncPara($paratype.type, $ID.text);
-                    m_tyscope.addValue($ID.text, $paratype.type);}
+para [ATSScope<ATSType> tyscope] returns [FuncPara para]
+    : paratype ID? {
+        if (tyscope != null) {
+          para = new FuncPara($paratype.type, $ID.text);
+          m_tyscope.addValue($ID.text, $paratype.type);
+        }
+      }
     ;
 
 paratype returns [ATSType type]
     : ^(PARA_TYPE para_decorator? atstype) 
       {type = $atstype.type;
        if ($para_decorator.dec == FuncPara.ParaDecorator.REF1) {
-           type = new RefType(type);
+           type = PtrkType.cType;  // type information is lost
        }
       }
     ;
@@ -390,11 +403,14 @@ func_def returns [UserFunc definition]
 // add scope for the function body 
 m_tyscope = m_tyscope.newScope();
 }
-@final {
+
+@after {
 // remove the scope since we leave the function body
 m_tyscope = m_tyscope.getParent();
+m_tyscope.addValue(definition.getName(), new FuncType(definition.getRetType(), definition.getParalst()));
+
 }
-    : ^(FUNC_DEF ID func_decorator? atstype paralst? block) 
+    : ^(FUNC_DEF ID func_decorator? atstype paralst[m_tyscope]? block) 
       {definition = new UserFunc($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
 

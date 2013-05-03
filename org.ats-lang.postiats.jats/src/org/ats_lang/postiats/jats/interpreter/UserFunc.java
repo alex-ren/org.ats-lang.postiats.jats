@@ -38,6 +38,14 @@ public class UserFunc implements FuncDef{
         }
     }
     
+    public ATSType getRetType() {
+        return m_type;
+    }
+    
+    public List<FuncPara> getParalst() {
+        return m_paras;
+    }
+    
     /*
      * scope: The scope, which is used as the current scope should be provided by the caller.
      */

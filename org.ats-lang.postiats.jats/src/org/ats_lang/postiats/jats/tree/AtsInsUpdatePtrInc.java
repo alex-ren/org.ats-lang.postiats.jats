@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.ArrPtrType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ArrPtr;
@@ -20,12 +21,17 @@ public class AtsInsUpdatePtrInc extends ATSTypeNode {
 //    ATStmpdec(tmp1, atstype_arrptr) ;
 //    ATSINSupdate_ptrinc(tmp1, atstkind_t0ype(atstype_double)) ;
     
-    // ty = ArrayType
+    // ty = ArrPtrType
     public AtsInsUpdatePtrInc(ATSType ty, String tmp, ATSType tyelt) {
         super(VoidType.cType);
         m_tmp = tmp;
         m_ty = ty;
         m_tyelt = tyelt;
+        if (m_ty instanceof ArrPtrType) {
+            
+        } else {
+            throw new Error("not supported");
+        }
 
     }
 

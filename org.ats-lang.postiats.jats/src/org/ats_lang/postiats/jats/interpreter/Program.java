@@ -10,6 +10,7 @@ import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.utils.MapScope;
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 
@@ -94,12 +95,12 @@ public class Program {
         // ==transform arguments=====================
         Integer mainArgc = argv.length;
         
-        char[][] arrArgv = new char[argv.length][];
+        Ptrk[] arrArgv = new Ptrk[argv.length];
         for (int i = 0; i < argv.length; ++i) {
             arrArgv[i] = StringType.fromString(argv[i]);
         }
 
-        char[][]  mainArgv = arrArgv;
+        Ptrk[]  mainArgv = arrArgv;
         
         Object mainEnvp = SingletonValue.NULL;  // no envp at all
         

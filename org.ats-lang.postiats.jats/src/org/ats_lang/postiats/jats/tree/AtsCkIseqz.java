@@ -21,6 +21,7 @@ public class AtsCkIseqz extends ATSTypeNode {
     public Boolean evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         Object v = m_exp.evaluate(types, funcs, scope);
+//        System.out.println("ATSCKiseqz " + v);
 
         if (v instanceof Ptrk) {
             System.out.println("lvalue in condition");

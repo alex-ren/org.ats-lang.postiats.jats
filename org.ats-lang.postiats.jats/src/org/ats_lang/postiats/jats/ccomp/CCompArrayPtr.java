@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.ccomp;
 
+import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.ArrPtrType;
 import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
@@ -49,15 +51,14 @@ public class CCompArrayPtr {
 //        return parr;    // omit one deepcopy
 //    }
     
-    static public void populateFuncType(ATSScope<Object> typscope) {
+    static public void populateFuncType(ATSScope<ATSType> typscope) {
         FuncType intFunc = new FuncType(IntType.cType0, null);
         FuncType sizeFunc = new FuncType(SizeType.cType0, null);
         FuncType boolFunc = new FuncType(BoolType.cType0, null);
         FuncType voidFunc = new FuncType(VoidType.cType, null);
-        FuncType strFunc = new FuncType(StringType.cType, null);
-        FuncType sarrptrFunc = new FuncType(StringType.cType, null);
+        FuncType arrptrFunc = new FuncType(ArrPtrType.cType, null);
 
-        typscope.addValue("atspre_arrpsz_get_ptrsize", sarrptrFunc);
+        typscope.addValue("atspre_arrpsz_get_ptrsize", arrptrFunc);
     }
 
 }

@@ -16,6 +16,8 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.ats_lang.postiats.jats.ccomp.CCompUtils;
 import org.ats_lang.postiats.jats.parser.*;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.utils.ATSScope;
+import org.ats_lang.postiats.jats.utils.MapScope;
 
 
 
@@ -27,8 +29,28 @@ public class Test {
      * @throws IOException 
      */
     public static void main(String[] args) throws RecognitionException, IOException {
-        String [] filenames = {"test/f91_dats.c", "test/atof_dats.c"};  // /*"test/test01.txt", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/test_dats.c", */"test/atof_dats.c" };
-        // ATStmpdec_void(tmp92, atsvoid_t0ype) ;ATSINSmove_void(tmp92, atspre_print_string(ATSPMVstring("atof(\""))) ;
+        String [] filenames = {// "test/printtest_dats.c", "test/basic_dats.c", "test/f91_dats.c", "test/fact_dats.c", "test/fib_dats.c", "test/atof_dats.c",
+                "test/test01_dats.c",
+                "test/test02_dats.c",
+                "test/test03_dats.c",
+                "test/test04_dats.c",
+                "test/test05_dats.c",
+                "test/test06_dats.c",
+                "test/test07_dats.c",
+                
+                "test/test08_dats.c",
+                "test/test09_dats.c",
+                "test/test10_dats.c",
+                "test/test11_dats.c",
+                "test/test12_dats.c",
+                "test/test13_dats.c",
+//                "test/test14_dats.c",
+                "test/test15_dats.c",
+                "test/test16_dats.c",
+                "test/test17_dats.c",
+                "test/test18_dats.c"
+        
+        };
 
         for (String filename: filenames) {
             System.out.println("==Processing file " + filename + "==========");
@@ -64,22 +86,25 @@ public class Test {
             // tree parsing
             ATSILInterpreter walker = new ATSILInterpreter(nodes);
 
-            // populate types and funcstions
+            // populate types and functions
             Map<String, ATSType> types = CCompUtils.getLibTypes();
             
             Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
             CCompUtils.populateAllFuncs(funcs);
             
+            ATSScope<ATSType> tyscope = new MapScope<ATSType>();
+            CCompUtils.populateAllFuncTypes(tyscope);
+            
             // collect the definition of all the functions
-            Program prog = walker.program(types, funcs);
+            Program prog = walker.program(types, funcs, tyscope);
             
             System.out.println("==fun the program==========================");
-            prog.run(new String[] {filename, "3"});
+            prog.run(new String[] {filename, "3.3432"});
             
             /* ******** ******** */
 
             
-            System.out.println("\n" + "==" + filename + " is O.K. " + "==========");
+            System.out.println("\n" + "==" + filename + " is O.K. " + "\n==============================================================================\n");
         }
     }
 

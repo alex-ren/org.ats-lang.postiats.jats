@@ -12,11 +12,10 @@ public class AtsSelRecsinNode extends ATSTypeNode {
     private String m_lab;
 
     public AtsSelRecsinNode(String pmv, ATSType type, String lab) {
-        super(null); 
-        throw new Error("not supported");
-//        m_pmv = pmv;
-//        m_type = type;
-//        m_lab = lab;
+        super(type); 
+        m_pmv = pmv;
+        m_type = type;
+        m_lab = lab;
     }
 
     @Override
@@ -26,7 +25,7 @@ public class AtsSelRecsinNode extends ATSTypeNode {
 //    ATSselrecsin(tmp16, atstkind_t0ype(atstype_int), atslab$1)
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        throw new Error("not supported");
+        return scope.getValue(m_pmv);
     }
 
 }

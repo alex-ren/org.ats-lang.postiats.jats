@@ -32,9 +32,9 @@ public class AtsInsMove extends ATSTypeNode {
 		Object v = m_val.evaluate(types, funcs, scope);
 		ATSType ty = m_val.getType();
 		if (ty instanceof RefType) {
+//		    System.out.println("AtsInsMove RefType");
 			// copy the content of v since it's a reference
-			// v = ?
-			RefType.cloneValue(v, ((RefType) ty).defType());
+			v = RefType.cloneValue(v, ((RefType) ty).defType());
 		}
 		
 		if (m_type instanceof RefType) {
@@ -45,7 +45,7 @@ public class AtsInsMove extends ATSTypeNode {
 				scope.addValue(m_tmp, v);
 			} else {
 				// Since this is still initialization, I just use the new Ptrk as the reference
-				// and totally discard the already allocated one. (Just for simpler code.)				
+				// and totally discard the already allocated one. (Just for simpler code.)		
 				scope.addValue(m_tmp, new Ptrk(v));
 			}
 		} else {

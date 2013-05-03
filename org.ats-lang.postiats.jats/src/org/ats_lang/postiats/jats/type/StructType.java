@@ -2,6 +2,7 @@ package org.ats_lang.postiats.jats.type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,14 @@ public class StructType extends ATSKindType {
             m_id = id;
             m_ty = ty;
         }
+
+        boolean equals(Pair p) {
+            if (m_id.equals(p.m_id) && m_ty.equals(p.m_ty)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public static void update(Map<String, Object> dst, Map<String, Object> src,
@@ -81,11 +90,12 @@ public class StructType extends ATSKindType {
     public Object createRefDefault() {
         Map<String, Object> m = new HashMap<String, Object>();
         for (Pair p : m_members) {
-            if (p.m_ty instanceof PrimitiveType) {
+            if (p.m_ty instanceof ATSPrimType) {
                 m.put(p.m_id, p.m_ty.createNormalDefault());
             } else if (p.m_ty instanceof StructType) {
                 m.put(p.m_id, p.m_ty.createRefDefault());
             } else {
+                System.out.println("createRefDefault p.m_ty is " + p.m_ty);
                 throw new Error("not supported");
             }
 
@@ -109,6 +119,28 @@ public class StructType extends ATSKindType {
             }
         }
         return dst;
+    }
+
+    @Override
+    public boolean equals(ATSType ty) {
+        if (ty instanceof StructType) {
+            List<Pair> right = ((StructType) ty).m_members;
+            if (m_members.size() != right.size()) {
+                return false;
+            }
+            Iterator<Pair> iterleft = m_members.iterator();
+            Iterator<Pair> iterright = right.iterator();
+            while (iterleft.hasNext()) {
+                Pair pairleft = iterleft.next();
+                Pair pairright = iterright.next();
+                if (!pairleft.equals(pairright)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

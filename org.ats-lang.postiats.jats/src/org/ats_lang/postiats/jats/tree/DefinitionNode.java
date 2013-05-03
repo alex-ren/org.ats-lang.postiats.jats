@@ -5,6 +5,8 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.ArrPszType;
+import org.ats_lang.postiats.jats.type.BoxedType;
+import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
@@ -26,15 +28,19 @@ public class DefinitionNode extends ATSTypeNode {
 //        if (ty instanceof ArrPszType) {
 //            ty = ArrPszType.createUpdatable();
 //        }
+        m_ty = ty;
+        m_id = id;
+        
+        if (ty instanceof BoxedType) {
+            ty = PtrkType.cType;
+        }
 
         if (DefinitionNode.isRefName(id)) {
             ty = new RefType(ty);
+            m_ty = new RefType(m_ty);
         }
-
-        m_id = id;
-        m_ty = ty;
-
-        tyscope.addValue(m_id, m_ty);
+        
+        tyscope.addValue(m_id, ty);
     }
 
     public static boolean isRefName(String name) {

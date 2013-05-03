@@ -38,5 +38,14 @@ public class PtrkType extends ATSPrimType { // ATSUpdatableType {
     static public Object deref(Object v) {
         return v;
     }
+    
+    @Override
+    public boolean equals(ATSType ty) {
+        if (ty == this || ty instanceof BoxedType) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

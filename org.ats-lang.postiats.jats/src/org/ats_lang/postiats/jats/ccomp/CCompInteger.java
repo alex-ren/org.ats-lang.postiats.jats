@@ -3,6 +3,7 @@ package org.ats_lang.postiats.jats.ccomp;
 
 import java.util.Map;
 
+import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
@@ -17,6 +18,7 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
  */
 public class CCompInteger {
 
+    
     public static Integer atspre_g0int2int_int_int(Object x) {
         return IntType.castFrom(x);
     }
@@ -39,6 +41,14 @@ public class CCompInteger {
         return x1 >= x2;
     }
     
+    public static Boolean atspre_g0int_eq_int(Integer x1, Integer x2) {
+        return x1.equals(x2);
+    }
+    
+    public static Boolean atspre_g0int_neq_int(Integer x1, Integer x2) {
+        return !x1.equals(x2);
+    }
+    
     public static Boolean atspre_g0int_lt_int(Integer x1, Integer x2) {
         return x1 < x2;
         
@@ -51,8 +61,8 @@ public class CCompInteger {
  // ===================================================
     
     public static Integer atspre_g0int_add_int(Integer x1, Integer x2) {
+//        System.out.println("x1 is " + x1 + ", x2 is " + x2);
         return x1 + x2;
-        
     }
 
     public static Integer atspre_g0int_sub_int(Integer x1, Integer x2) {
@@ -90,6 +100,16 @@ public class CCompInteger {
         return atspre_g0int_gte_int(x1, x2);
     }
     
+    
+    public static Boolean atspre_g1int_eq_int(Integer x1, Integer x2) {
+//        System.out.println("x1 is " + x1 + ", x2 is " + x2 + ", x1 == x2 is " + (x1 == x2));
+        return atspre_g0int_eq_int(x1, x2);
+    }
+    
+    public static Boolean atspre_g1int_neq_int(Integer x1, Integer x2) {
+        return atspre_g0int_neq_int(x1, x2);
+    }
+    
     public static Boolean atspre_g1int_lt_int(Integer x1, Integer x2) {
         return atspre_g0int_lt_int(x1, x2);
     }
@@ -113,18 +133,18 @@ public class CCompInteger {
         return atspre_g0int_div_int(x1, x2);
     }
     
- // ===================================================
+
     public static Integer atspre_g0uint2uint_size_size(Integer x) {
         return x;
     }
+
+    // =================================================== 
     
-    static public void populateFuncType(ATSScope<Object> typscope) {
+    static public void populateFuncType(ATSScope<ATSType> typscope) {
         FuncType intFunc = new FuncType(IntType.cType0, null);
         FuncType sizeFunc = new FuncType(SizeType.cType0, null);
         FuncType boolFunc = new FuncType(BoolType.cType0, null);
         FuncType voidFunc = new FuncType(VoidType.cType, null);
-        
-        
         
         typscope.addValue("atspre_g0int2int_int_int", intFunc);
         typscope.addValue("atspre_g1int2int_int_int", intFunc);
@@ -132,6 +152,8 @@ public class CCompInteger {
         
         typscope.addValue("atspre_g0int_gt_int", boolFunc);
         typscope.addValue("atspre_g0int_gte_int", boolFunc);
+        typscope.addValue("atspre_g0int_eq_int", boolFunc);
+        typscope.addValue("atspre_g0int_neq_int", boolFunc);
         typscope.addValue("atspre_g0int_lt_int", boolFunc);
         typscope.addValue("atspre_g0int_lte_int", boolFunc);
         
@@ -145,6 +167,8 @@ public class CCompInteger {
         
         typscope.addValue("atspre_g1int_gt_int", boolFunc);
         typscope.addValue("atspre_g1int_gte_int", boolFunc);
+        typscope.addValue("atspre_g1int_eq_int", boolFunc);
+        typscope.addValue("atspre_g1int_neq_int", boolFunc);
         typscope.addValue("atspre_g1int_lt_int", boolFunc);
         typscope.addValue("atspre_g1int_lte_int", boolFunc);
         
@@ -153,7 +177,7 @@ public class CCompInteger {
         typscope.addValue("atspre_g1int_mul_int", intFunc);
         typscope.addValue("atspre_g1int_div_int", intFunc);
         
-        
+        typscope.addValue("atspre_g0uint2uint_size_size", intFunc);
     }
     
 }

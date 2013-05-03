@@ -36,6 +36,7 @@ public class BoolType extends ATSPrimType {
                 throw new Error("Type mismatch");
             }
         } else {
+            System.out.println("Boolean.isTrue() object is " + b);
             throw new Error("Type mismatch");
         }
     }

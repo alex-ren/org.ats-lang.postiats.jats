@@ -17,6 +17,11 @@ public abstract class ATSPrimType extends ATSKindType {
     public Ptrk createRefDefault() {
         return new Ptrk(this.createNormalDefault());
     }
+    
+    @Override
+    public boolean equals(ATSType ty) {
+        return this == ty;
+    }
 
 //    public PrimValue castFrom(PrimValue pv);
 }

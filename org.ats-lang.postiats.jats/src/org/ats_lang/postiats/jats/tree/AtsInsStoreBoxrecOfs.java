@@ -5,6 +5,7 @@ import java.util.Map;
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.BoxedType;
+import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.type.VoidType;
@@ -31,18 +32,6 @@ public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
         }
         m_val = val;
 
-        // check for fun
-        if (m_ty instanceof RefType) {
-            ATSType ty = ((RefType) m_ty).defType();
-            if (ty instanceof BoxedType) {
-            } else {
-                throw new Error("Type mismatch");
-            }
-        } else if (m_ty.equals(tyrec)) {
-        } else {
-            throw new Error("Type mismatch");
-        }
-
     }
 
     // #define ATSINSstore_boxrec_ofs(tmp, tyrec, lab, val) (((tyrec*)(tmp))->lab = val)
@@ -64,7 +53,7 @@ public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
         if (target_ty instanceof RefType) {
             target = RefType.cloneValue(target, target_ty);
         }
-        recm.put(m_tmp, target);
+        recm.put(m_lab, target);
         
         return SingletonValue.VOID;       
             
