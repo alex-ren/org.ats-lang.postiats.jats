@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.type;
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 
 
-public class LIntType extends ATSPrimType {
+public class LIntType extends ATSEltType {
 
 //    public static final LIntType cType = new LIntType(Decorator.TYPE);
     public static final LIntType cType0 = new LIntType(Decorator.T0YPE);
@@ -23,6 +23,15 @@ public class LIntType extends ATSPrimType {
     public int getSize() {
         return m_size;
     }
+    
+
+    private LIntType(Decorator dec) {
+        super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
+    }
+
 //
 //    @Override
 //    public LIntValue createDefault() {
@@ -33,13 +42,6 @@ public class LIntType extends ATSPrimType {
 //    public LIntValue castFrom(PrimValue pv) {
 //        return LIntValue.castFromV(pv);
 //    }
-
-    private LIntType(Decorator dec) {
-        super(dec);
-        if (dec != Decorator.T0YPE) {
-            throw new Error("Wrong kind");
-        }
-    }
 
     
 }

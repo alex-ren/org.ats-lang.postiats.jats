@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.type;
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 
 
-public class LDoubleType extends ATSPrimType {
+public class LDoubleType extends ATSEltType {
 //    public static final LDoubleType cType = new LDoubleType(Decorator.TYPE);
     public static final LDoubleType cType0 = new LDoubleType(Decorator.T0YPE);
     
@@ -22,6 +22,15 @@ public class LDoubleType extends ATSPrimType {
     public int getSize() {
         return m_size;
     }
+    
+
+    private LDoubleType(Decorator dec) {
+        super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
+    }
+    
 //
 //    @Override
 //    public LDoubleValue createDefault() {
@@ -34,11 +43,5 @@ public class LDoubleType extends ATSPrimType {
 //        return LDoubleValue.castFromV(pv);
 //    }
 
-    private LDoubleType(Decorator dec) {
-        super(dec);
-        if (dec != Decorator.T0YPE) {
-            throw new Error("Wrong kind");
-        }
-    }
 
 }

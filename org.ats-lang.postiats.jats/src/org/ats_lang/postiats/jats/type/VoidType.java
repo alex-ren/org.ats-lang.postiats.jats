@@ -5,6 +5,7 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 public class VoidType implements ATSType {
     public static final VoidType cType = new VoidType();
     
+    public static final int m_size = 0;
 //    @Override
 //    public String toString() {
 //        return "void";
@@ -12,7 +13,7 @@ public class VoidType implements ATSType {
     
     @Override
     public int getSize() {
-        return 0;
+        return m_size;
     }
     
 	@Override

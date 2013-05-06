@@ -7,77 +7,19 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 
 
 public class RefType implements ATSType {
-	private ATSType m_type;
+	private ATSReferableType m_type;
 	
-	public RefType(ATSType type) {
+	public RefType(ATSReferableType type) {
 		m_type = type;
 	}
-
-	public ATSType defType() {
-		return m_type;
-	}
-	
-	public void updateType(ATSType ty) {
-	    m_type = ty;
-	}
-	
-	// refobj := RefType
-	// x := RefType (a) => x : Ptr or x: Map
-	static public Object ptrof(Object refobj) {
-	    return refobj;
-	}
-	
-  	// dst: Map, ATSPtr
-	// dst := RefType(dstType)
-	// srcType = dstType or srcType = RefType(dstType)
-	static public void update(Object dst, ATSType dstType, Object src, ATSType srcType) {
-	    if (dst instanceof Ptrk) {
-	        // dstType = IntType or dstType = PtrType or dstType = BoxedType
-	        if (srcType instanceof RefType) {
-	            // srcType = RefType (IntType) or srcType = RefType (PtrType) or srcType = RefType (BoxedType)
-	            ((Ptrk)dst).update(RefType.cloneValue(src, ((RefType) srcType).defType()));
-	        } else {
-	            // srcType = IntType or or srcType = PtrType or srcType = BoxedType (StructType)
-	            ((Ptrk)dst).update(src);
-	        }
-	    } else if (dst instanceof Map<?,?>) {
-	        // dstType = StructType
-	        // Therefore, srcType = StructType or srcType = RefType (StructType)
-            @SuppressWarnings("unchecked")
-            Map<String, Object> mdst = (Map<String, Object>) dst;
-            @SuppressWarnings("unchecked")
-            Map<String, Object> msrc = (Map<String, Object>) src;
-	        
-            StructType.update(mdst, msrc, (StructType)dstType);
-	    } else {
-	        throw new Error("Wrong Type.");
-	    }
-	}
-	
-	// v := RefType (ty)
-	// v : Map or v : Ptr
-	// Clone the value stored by the reference if necessary
-	@SuppressWarnings("unchecked")
-    static public Object cloneValue(Object v, ATSType ty) {
-		if (ty instanceof StructType) {
-			return StructType.cloneValue((Map<String, Object>)v, (StructType)ty);
-		} else {  // ty = PtrkType
-			if (v instanceof Ptrk) {
-				return ((Ptrk) v).getValue();
-			} else {
-			    System.out.println("cloneValue v is " + v);
-				throw new Error("type mismatch");
-			}
-		}
-	}
-	
+		
 	@Override
 	public int getSize() {
 	    throw new Error("getSize not supported for RefType");
 	}
 
     @Override
-    public Object createNormalDefault() {
+    public Ptrk createNormalDefault() {
     	return m_type.createRefDefault();
     }
     
@@ -88,13 +30,68 @@ public class RefType implements ATSType {
 
     @Override
     public boolean equals(ATSType ty) {
+    	if (this == ty) {
+    		return true;
+    	}
+    	
         if (ty instanceof RefType) {
             return m_type.equals(((RefType) ty).defType());
         } else {
             return false;
         }
     }
-    
+
+	public ATSReferableType defType() {
+		return m_type;
+	}
 	
+	public void updateType(ATSReferableType ty) {
+	    m_type = ty;
+	}
+	
+	// refobj := RefType
+	// x := RefType (a) => x : Ptr
+	static public Ptrk ptrof(Ptrk refobj) {
+	    return refobj;
+	}
+	
+  	// dst: Ptrk
+	// srcType = dstType or srcType = RefType(dstType)
+	static public void update(Object dst, Object src, ATSType srcType) {
+	    if (dst instanceof Ptrk) {
+	        // dstType = IntType or dstType = PtrType or dstType = BoxedType
+	        if (srcType instanceof RefType) {
+	            ATSReferableType realtype = ((RefType) srcType).defType();
+	        	((Ptrk) dst).update(RefType.getValue(src, realtype), realtype);
+	        } else if (srcType instanceof ATSReferableType) {
+	            // srcType = IntType or or srcType = PtrType or srcType = BoxedType (StructType)
+	            ((Ptrk)dst).update(src, (ATSReferableType)srcType);
+	        } else {
+	        	throw new Error("Wrong Type.");
+	        }
+	    } else {
+	        throw new Error("Wrong Type.");
+	    }
+	}
+	
+	// v := RefType (ty)
+	// v : Ptr
+	// Clone the value stored by the reference if necessary
+    static public Object cloneValue(Object v, ATSReferableType ty) {
+		if (v instanceof Ptrk) {
+			return ((Ptrk) v).cloneValue(ty);
+		} else {
+			throw new Error("type mismatch");
+		}
+	}
+    
+    static public Object getValue(Object v, ATSReferableType ty) {
+		if (v instanceof Ptrk) {
+			return ((Ptrk) v).getValue(ty);
+		} else {
+			throw new Error("type mismatch");
+		}
+    }
+
 
 }

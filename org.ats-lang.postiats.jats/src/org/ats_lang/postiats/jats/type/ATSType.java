@@ -7,9 +7,12 @@ public interface ATSType {
     
 	public int getSize();
 	
-	Object createNormalDefault();
-	Object createRefDefault();
 	boolean equals(ATSType ty);
+	
+	Object createNormalDefault();
+	
+	Object createRefDefault();
+	
 //	
 //    public String toString();
 

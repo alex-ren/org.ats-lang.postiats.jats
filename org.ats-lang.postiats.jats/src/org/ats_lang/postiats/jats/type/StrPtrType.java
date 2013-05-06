@@ -1,6 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
-public class StrPtrType extends ATSPrimType {
+public class StrPtrType extends ATSReferableType {
 
     public static final StrPtrType cType = new StrPtrType();
     

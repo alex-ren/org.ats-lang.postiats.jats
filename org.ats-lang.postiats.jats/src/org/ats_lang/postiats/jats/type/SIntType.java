@@ -2,7 +2,7 @@ package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 
-public class SIntType extends ATSPrimType {
+public class SIntType extends ATSEltType {
     
 //    public static final SIntType cType = new SIntType(Decorator.TYPE);
     public static final SIntType cType0 = new SIntType(Decorator.T0YPE);

@@ -3,7 +3,7 @@ package org.ats_lang.postiats.jats.type;
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 
 
-public class USIntType extends ATSPrimType {
+public class USIntType extends ATSEltType {
     
 //    public static final USIntType cType = new USIntType(Decorator.TYPE);
     public static final USIntType cType0 = new USIntType(Decorator.T0YPE);
@@ -23,6 +23,14 @@ public class USIntType extends ATSPrimType {
     public int getSize() {
         return m_size;
     }
+
+    private USIntType(Decorator dec) {
+        super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
+    }
+
 //
 //    @Override
 //    public USIntValue createDefault() {
@@ -33,13 +41,6 @@ public class USIntType extends ATSPrimType {
 //    public USIntValue castFrom(PrimValue pv) {
 //        return USIntValue.castFromV(pv);
 //    }
-
-    private USIntType(Decorator dec) {
-        super(dec);
-        if (dec != Decorator.T0YPE) {
-            throw new Error("Wrong kind");
-        }
-    }
 
 
 }

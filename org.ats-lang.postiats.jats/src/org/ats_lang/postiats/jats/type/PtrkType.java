@@ -1,9 +1,10 @@
 package org.ats_lang.postiats.jats.type;
 
 
-public class PtrkType extends ATSPrimType { // ATSUpdatableType {
+public class PtrkType extends ATSEltType { // ATSUpdatableType {
 
     public static final int m_size = 4;
+    
     public static final PtrkType cType = new PtrkType(VoidType.cType);
 //    public static final PtrkType cType0 = new PtrkType(Decorator.T0YPE);
     
@@ -17,17 +18,19 @@ public class PtrkType extends ATSPrimType { // ATSUpdatableType {
     public int getSize() {
         return m_size;
     }
-
-//    @Override
-//    public PtrValue createDefault() {
-//        return new PtrValue(SingletonValue.VOID);
-//    }
     
 
     private PtrkType(ATSType ty) {
 //        super(ty);
         super(Decorator.TYPE);
     }
+
+
+//    @Override
+//    public PtrValue createDefault() {
+//        return new PtrValue(SingletonValue.VOID);
+//    }
+    
 
 //    @Override
 //    public PtrkType createUpdatable(ATSType ty) {

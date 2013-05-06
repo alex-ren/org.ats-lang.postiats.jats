@@ -3,13 +3,24 @@ package org.ats_lang.postiats.jats.type;
 import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 
 
-public class SizeType extends ATSPrimType {
+public class SizeType extends ATSEltType {
 
 //    public static final SizeType cType = new SizeType(Decorator.TYPE);
     public static final SizeType cType0 = new SizeType(Decorator.T0YPE);
     
     public static final int m_size = 4;
     
+    @Override
+    public int getSize() {
+        return m_size;
+    }
+
+    private SizeType(Decorator dec) {
+        super(dec);
+        if (dec != Decorator.T0YPE) {
+            throw new Error("Wrong kind");
+        }
+    }
 //    public static SizeValue fromString(String text) {
 //        return new SizeValue(new Integer(text));
 //    }
@@ -27,10 +38,6 @@ public class SizeType extends ATSPrimType {
         }
     }
     
-    @Override
-    public int getSize() {
-        return m_size;
-    }
 
 //    @Override
 //    public SizeValue createDefault() {
@@ -42,11 +49,5 @@ public class SizeType extends ATSPrimType {
 //        return SizeValue.castFromV(pv);
 //    }
 
-    private SizeType(Decorator dec) {
-        super(dec);
-        if (dec != Decorator.T0YPE) {
-            throw new Error("Wrong kind");
-        }
-    }
 
 }
