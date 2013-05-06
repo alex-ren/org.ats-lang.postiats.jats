@@ -3,7 +3,10 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.type.ATSReferableType;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.ArrayType;
+import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ArrPsz;
@@ -12,10 +15,10 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsStoreArrpszPtr extends ATSTypeNode {
     private String m_tmp;  // name of the array
-    private ATSType m_tyelt;  // Type of the element of the array
+    private ATSReferableType m_tyelt;  // Type of the element of the array
     private ATSNode m_asz;  // size of the array
     
-    public AtsInsStoreArrpszPtr(ATSType tyarr, String tmp, ATSType tyelt, ATSNode asz) {
+    public AtsInsStoreArrpszPtr(ATSType tyarr, String tmp, ATSReferableType tyelt, ATSNode asz) {
         super(VoidType.cType);
         m_tmp = tmp;
         m_tyelt = tyelt;
@@ -53,7 +56,7 @@ public class AtsInsStoreArrpszPtr extends ATSTypeNode {
                
         // m_asz := RefType(IntType)
         if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue();
+            asz = ((Ptrk)asz).getValue(IntType.cType0);
         }
         
         Integer sz = null;
@@ -63,11 +66,10 @@ public class AtsInsStoreArrpszPtr extends ATSTypeNode {
         } else {
             throw new Error("Type error");
         }
+        
+        ArrayType arrtype = new ArrayType(m_tyelt, sz);
 
-        Object [] arr = new Object[sz];
-        for (int i = 0; i < sz; ++i) {
-            arr[i] = m_tyelt.createNormalDefault();
-        }
+        Object [] arr = arrtype.createNormalDefault();
         
         Object arrpsz = scope.getValue(m_tmp);
         if (arrpsz instanceof ArrPsz) {

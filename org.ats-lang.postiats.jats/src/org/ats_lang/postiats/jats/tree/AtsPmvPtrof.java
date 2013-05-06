@@ -7,6 +7,7 @@ import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
+import org.ats_lang.postiats.jats.value.Ptrk;
 
 
 public class AtsPmvPtrof extends ATSTypeNode {
@@ -28,7 +29,12 @@ public class AtsPmvPtrof extends ATSTypeNode {
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         Object v = scope.getValue(m_lval);
-        return RefType.ptrof(v);
+        if (v instanceof Ptrk) {
+        	return RefType.ptrof((Ptrk) v);
+        } else {
+        	throw new Error("type mismatch");
+        }
+        
     }
 
 }

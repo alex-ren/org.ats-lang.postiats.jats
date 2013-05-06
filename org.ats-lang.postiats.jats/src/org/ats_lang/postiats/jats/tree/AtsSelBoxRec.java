@@ -32,8 +32,8 @@ public class AtsSelBoxRec extends ATSTypeNode {
 
         // x := RefType (BoxedType (StructType)) => x : Ptrk
         if (m_pmv.getType() instanceof RefType) {
-            Ptrk p = (Ptrk) m_pmv.evaluate(types, funcs, scope);
-            Object m = p.getValue();
+            Object p = m_pmv.evaluate(types, funcs, scope);
+            Object m = RefType.getValue(p, m_tyrec);
             @SuppressWarnings("unchecked")
             Map<String, Object> v = (Map<String, Object>) m;
             return v.get(m_lab);

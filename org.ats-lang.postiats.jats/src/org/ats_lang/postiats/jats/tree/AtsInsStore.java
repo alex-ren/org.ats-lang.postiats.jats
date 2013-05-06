@@ -32,7 +32,7 @@ public class AtsInsStore extends ATSTypeNode {
         ATSType srcType = m_pmv2.getType();
         
         if (dstType instanceof RefType) {
-            RefType.update(dst, ((RefType)dstType).defType(), src, srcType);
+            RefType.update(dst, src, srcType);
         } else {
             throw new Error("Updating non-ref value");
         }

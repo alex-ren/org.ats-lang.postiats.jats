@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.BoxedType;
-import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.type.VoidType;
@@ -15,7 +13,7 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 public class AtsInsStoreFltrecOfs extends ATSTypeNode {
     private String m_tmp;  // name of the structure object
     private String m_lab;  // name of the member
-    private ATSType m_ty;  // type of the object
+    private ATSType m_ty;  // type of the object // can be RefType
     private ATSNode m_val;  // value of the member
     private StructType m_tyrec;  // type of the structure
     
@@ -65,42 +63,28 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
     @Override
     public SingletonValue evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object v = m_val.evaluate(types, funcs, scope);
-        ATSType vt = m_val.getType();
-        
+
+        Object target = m_val.evaluate(types, funcs, scope);
+        ATSType target_ty = m_val.getType();
+
         Object rec = scope.getValue(m_tmp);
         
-        if (rec instanceof Map<?, ?>) {
-        	if (m_ty instanceof RefType) {
-                ATSType ty = ((RefType) m_ty).defType();
-        	    if (ty instanceof StructType) {
-        	        ATSType dstType = ((StructType) ty).getMember(m_lab);
-        	        if (dstType instanceof StructType) {
-        	            // The member is a flat structure.
-        	            @SuppressWarnings("unchecked")
-                        Object dst = ((Map<String, Object>)rec).get(m_lab);
-                        RefType.update(dst, dstType, v, vt);
-        	        } else {  // The member is of PrimType.
-                        if (vt instanceof RefType) {
-                            v = RefType.cloneValue(v, vt);
-                        }
-                        @SuppressWarnings("unchecked")
-                        Map<String, Object> mrec = (Map<String, Object>)rec;
-                        mrec.put(m_lab, v);
-        	        }
-
-        	    } else {
-        	        throw new Error("Type mismatch");
-        	    }
-        		
-        	} else {
-        	    if (vt instanceof RefType) {
-        	        v = RefType.cloneValue(v, vt);
-        	    }
-        	    @SuppressWarnings("unchecked")
-                Map<String, Object> mrec = (Map<String, Object>)rec;
-                mrec.put(m_lab, v);
-        	}
+        // m_ty == RefType
+        if (m_ty instanceof RefType) {
+        	
+            if (target_ty instanceof RefType) {
+                target = RefType.getValue(target, ((RefType) target_ty).defType());
+            }
+            
+        	RefType.updateFltrecOfs(rec, target, m_lab, m_tyrec);
+        } else if (m_ty instanceof StructType) {
+            if (target_ty instanceof RefType) {
+                target = RefType.cloneValue(target, ((RefType) target_ty).defType());
+            }
+            
+            @SuppressWarnings("unchecked")
+            Map<String, Object> mrec = (Map<String, Object>)rec;
+            mrec.put(m_lab, target);
         } else {
         	throw new Error("non record");
         }

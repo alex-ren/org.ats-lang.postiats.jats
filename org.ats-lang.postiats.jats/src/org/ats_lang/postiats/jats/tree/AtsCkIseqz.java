@@ -25,7 +25,7 @@ public class AtsCkIseqz extends ATSTypeNode {
 
         if (v instanceof Ptrk) {
             System.out.println("lvalue in condition");
-            v = ((Ptrk) v).getValue();
+            v = ((Ptrk) v).getValue(BoolType.cType0);
         }
 
         if (v instanceof Integer) {

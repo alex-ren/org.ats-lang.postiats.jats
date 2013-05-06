@@ -5,17 +5,15 @@ import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.SizeType;
-import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.Ptrk;
-import org.ats_lang.postiats.jats.value.Ptrk.StringElement;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class CCompString {
 
     public static SingletonValue atspre_fprint_string(SingletonValue out, Ptrk x) {
-        String str = StringType.toString(x);
+        String str = x.createString();
         if (out.equals(SingletonValue.c_stderr)) {
             System.err.print(str);
         } else if (out.equals(SingletonValue.c_stdout)) {
@@ -37,8 +35,8 @@ public class CCompString {
 
 
     public static boolean atspre_eq_string_string(Ptrk x1, Ptrk x2) {
-        String s1 = StringType.toString(x1);
-        String s2 = StringType.toString(x2);
+        String s1 = x1.createString();
+        String s2 = x2.createString();
         return s1.equals(s2);
     }
     

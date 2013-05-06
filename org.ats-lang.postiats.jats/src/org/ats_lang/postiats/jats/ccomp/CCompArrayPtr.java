@@ -6,7 +6,6 @@ import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.SizeType;
-import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ArrPsz;
@@ -29,7 +28,7 @@ public class CCompArrayPtr {
     // Version 1: for interpreter
     public static ArrPtr atspre_arrpsz_get_ptrsize(ArrPsz arrpsz, Ptrk asz) {
         int size = arrpsz.getAsz();
-        asz.update(size);
+        asz.update(size, IntType.cType0);
         return new ArrPtr(arrpsz);
     }
     

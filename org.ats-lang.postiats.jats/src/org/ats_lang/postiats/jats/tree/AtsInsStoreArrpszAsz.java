@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ArrPsz;
@@ -36,7 +37,7 @@ public class AtsInsStoreArrpszAsz extends ATSTypeNode {
         
         // m_asz := RefType(IntType)
         if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue();
+            asz = ((Ptrk)asz).getValue(IntType.cType0);
         }
         
         Integer sz = null;

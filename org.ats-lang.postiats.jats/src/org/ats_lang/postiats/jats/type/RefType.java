@@ -75,7 +75,7 @@ public class RefType implements ATSType {
 	}
 	
 	// v := RefType (ty)
-	// v : Ptr
+	// v : Ptrk
 	// Clone the value stored by the reference if necessary
     static public Object cloneValue(Object v, ATSReferableType ty) {
 		if (v instanceof Ptrk) {
@@ -85,6 +85,8 @@ public class RefType implements ATSType {
 		}
 	}
     
+	// v := RefType (ty)
+	// v : Ptrk
     static public Object getValue(Object v, ATSReferableType ty) {
 		if (v instanceof Ptrk) {
 			return ((Ptrk) v).getValue(ty);
@@ -92,6 +94,27 @@ public class RefType implements ATSType {
 			throw new Error("type mismatch");
 		}
     }
-
+    
+    static public Object deref(Object v) {
+        return v;
+    }
+    
+    // dst := RefType(recType)
+    static public void updateFltrecOfs(Object dst, Object src, String memName, StructType recType) {
+    	if (dst instanceof Ptrk) {
+    		((Ptrk) dst).updateFltrecOfs(src, memName, recType);
+    	} else {
+    		throw new Error("type mismatch");
+    	}
+    }
+    
+    // dst := RefType(recType)
+    static public Ptrk SelFltrecOfs(Object dst, String memName, StructType recType) {
+    	if (dst instanceof Ptrk) {
+    		return ((Ptrk) dst).SelFltrecOfs(memName, recType);
+    	} else {
+    		throw new Error("type mismatch");
+    	}
+    }
 
 }

@@ -1,14 +1,15 @@
 package org.ats_lang.postiats.jats.value;
 
+import org.ats_lang.postiats.jats.type.ATSReferableType;
 import org.ats_lang.postiats.jats.type.ATSType;
 
 
 public class ArrPsz {
     private int m_asz;
     private Object[] m_ptr;
-    private ATSType m_elety;
+    private ATSReferableType m_elety;
 
-    public ArrPsz(ATSType elety) {
+    public ArrPsz(ATSReferableType elety) {
         m_asz = 0;
         m_ptr = null;
     }
@@ -21,7 +22,7 @@ public class ArrPsz {
         m_ptr = ptr;
     }
     
-    public void setElementType(ATSType elety) {
+    public void setElementType(ATSReferableType elety) {
         m_elety = elety;
     }
     
@@ -33,7 +34,7 @@ public class ArrPsz {
         return m_ptr;
     }
     
-    public ATSType getElementType() {
+    public ATSReferableType getElementType() {
         return m_elety;
     }
 }

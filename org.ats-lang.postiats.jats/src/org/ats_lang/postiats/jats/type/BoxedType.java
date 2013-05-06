@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.value.Ptrk;
 
-public class BoxedType extends ATSReferableType {
+public class BoxedType extends ATSEltType {
 
 	public static final BoxedType cType = new BoxedType();
 
@@ -18,10 +18,10 @@ public class BoxedType extends ATSReferableType {
 		return PtrkType.cType.getSize();
 	}
 
-	@Override
-	public Map<String, Object> createNormalDefault() {
-		return new HashMap<String, Object>();
-	}
+//	@Override
+//	public Map<String, Object> createNormalDefault() {
+//		return new HashMap<String, Object>();
+//	}
 
 	@Override
 	public boolean equals(ATSType ty) {

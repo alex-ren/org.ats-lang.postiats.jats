@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.Ptrk.Location;
 
 
@@ -125,30 +126,30 @@ public class StringType extends ATSReferableType {
 //        // TODO Auto-generated method stub
 //        throw new Error("not supported");
 //    }
-//
-//    public static Ptrk fromString(String text) {
-//        char[] str = new char[text.length() + 1];
-//    	for (int i = 0; i < text.length(); ++i) {
-//    		str[i] = text.charAt(i);
-//    	}
-//    	str[str.length - 1] = Character.MIN_VALUE;  // '\u0000'
-//    	StringElement strele = new StringElement(str, 0);
-//        return new Ptrk(strele);
-//    }
+
+    public static Ptrk fromString(String text) {
+        char[] str = new char[text.length() + 1];
+    	for (int i = 0; i < text.length(); ++i) {
+    		str[i] = text.charAt(i);
+    	}
+    	str[str.length - 1] = Character.MIN_VALUE;  // '\u0000'
+    	StringType strtype = new StringType(str.length);
+    	return Ptrk.createPtrk(strtype, str);
+    }
     
-    public static String toString(char[] buf) {
+    // buf is null-ended
+    public static String createString(char[] buf) {
         return new String(buf, 0, buf.length - 1);
     }
     
-    public static String toString(char[] buf, int start, int len) {
+    public static String createString(char[] buf, int start, int len) {
         return new String(buf, start, len);
     }
     
-//
-//    public static String toString(Ptrk msg) {
-//        return msg.formString();
-//    }
-//
+    public static String createString(Ptrk msg) {
+        return msg.createString();
+    }
+
 //    @Override
 //    public StringValue createDefault() {
 //        return new StringValue("");

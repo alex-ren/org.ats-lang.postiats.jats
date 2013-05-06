@@ -6,13 +6,11 @@ import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.SizeType;
-import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
 import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
-import org.ats_lang.postiats.jats.value.Ptrk.StringElement;
 
 public class CCompBasics {
 
@@ -28,7 +26,7 @@ public class CCompBasics {
     }
     
     public static SingletonValue atspre_exit_errmsg(Integer ecode, Ptrk msg) {
-        System.err.print("exit(ATS): " + StringType.toString(msg));
+        System.err.print("exit(ATS): " + msg.createString());
         System.exit(ecode);
         return SingletonValue.VOID; 
     }
@@ -60,7 +58,7 @@ public class CCompBasics {
     public static SingletonValue atspre_assert_errmsg_bool(Boolean b, Ptrk msg) {
         
         if (b.equals(false)) {
-            System.err.print(StringType.toString(msg));
+            System.err.print(msg.createString());
             System.exit(1);
         }
         return SingletonValue.VOID;

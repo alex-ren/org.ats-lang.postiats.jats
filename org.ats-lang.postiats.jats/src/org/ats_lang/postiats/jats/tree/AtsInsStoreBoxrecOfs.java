@@ -41,8 +41,7 @@ public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
         Object rec = scope.getValue(m_tmp);
         
         if (rec instanceof Ptrk) {  // m_ty = RefType(BoxedType)
-            rec = ((Ptrk) rec).getValue();
-            
+            rec = ((Ptrk) rec).getValue(BoxedType.cType);
         }
         
         @SuppressWarnings("unchecked")
@@ -51,7 +50,7 @@ public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
         Object target = m_val.evaluate(types, funcs, scope);
         ATSType target_ty = m_val.getType();
         if (target_ty instanceof RefType) {
-            target = RefType.cloneValue(target, target_ty);
+            target = RefType.cloneValue(target, ((RefType) target_ty).defType());
         }
         recm.put(m_lab, target);
         

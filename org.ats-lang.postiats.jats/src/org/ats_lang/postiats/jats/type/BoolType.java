@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
+
 
 
 
@@ -26,37 +28,28 @@ public class BoolType extends ATSEltType {
         return m_size;
     }
     
-    
-//    public static BoolValue createTrue() {
-//        return new BoolValue(true);
-//    }
-//
-//    public static BoolValue createFalse() {
-//        return new BoolValue(false);
-//    }
-//
     public static Object fromString(String text) {
 
         return new Boolean(text);
     }
     
     
-//    // ty := BoolType or RefType(BoolType)
-//    public static Boolean isTrue(Object b, ATSType ty) {
-//        if (b instanceof Boolean) {
-//            return (Boolean) b;
-//        } else if (b instanceof Ptrk) {  // 
-//            b = ((Ptrk) b).getValue(BoolType.cType0);
-//            if (b instanceof Boolean) {
-//                return (Boolean) b;
-//            } else {
-//                throw new Error("Type mismatch");
-//            }
-//        } else {
-//            System.out.println("Boolean.isTrue() object is " + b);
-//            throw new Error("Type mismatch");
-//        }
-//    }
+    // ty := BoolType or RefType(BoolType)
+    public static Boolean isTrue(Object b, ATSType ty) {
+        if (b instanceof Boolean) {
+            return (Boolean) b;
+        } else if (b instanceof Ptrk) {  // 
+            b = ((Ptrk) b).getValue(BoolType.cType0);
+            if (b instanceof Boolean) {
+                return (Boolean) b;
+            } else {
+                throw new Error("Type mismatch");
+            }
+        } else {
+            System.out.println("Boolean.isTrue() object is " + b);
+            throw new Error("Type mismatch");
+        }
+    }
 
     
 

@@ -68,6 +68,17 @@ public class StructType extends ATSReferableType {
         m_members.add(new Pair(id, ty));
         m_typemap.put(id, ty);
     }
+    
+    public int calcOffset(String id) {
+    	int offset = 0;
+    	for (Pair pt: m_members) {
+    		if (pt.m_id.equals(id)) {
+    			break;
+    		}
+    		offset += pt.m_ty.getSize();
+    	}
+    	return offset;
+    }
 
     public ATSReferableType getMember(String id) {
         return m_typemap.get(id);
@@ -134,7 +145,7 @@ public class StructType extends ATSReferableType {
         for (Map.Entry<String, Object> ent : ssrc.entrySet()) {
             String name = ent.getKey();
             ATSReferableType memty = m_typemap.get(name);
-			if (memty instanceof ATSEltType || memty instanceof BoxedType) {
+			if (memty instanceof ATSEltType) {
 				sdst.put(name, ssrc.get(name));
 			} else if (memty instanceof StringType) {
 				((StringType)memty).copyFrom(sdst.get(name), ent.getValue());
@@ -162,7 +173,7 @@ public class StructType extends ATSReferableType {
 
 		@Override
 		public void update(Object src) {
-			if (m_elety instanceof ATSEltType || m_elety instanceof BoxedType) {
+			if (m_elety instanceof ATSEltType) {
 				m_content.put(m_name, src);
 			} else if (m_elety instanceof StringType) {
 				((StringType)m_elety).copyFrom(m_content.get(m_name), src);
@@ -201,7 +212,7 @@ public class StructType extends ATSReferableType {
 			return new StructMemberLocation(structsrc, curname, curtype);
 		}
 		
-		if (curtype instanceof ATSEltType || curtype instanceof BoxedType) {
+		if (curtype instanceof ATSEltType) {
 			throw new Error("type mismatch");
 		} else if (curtype instanceof StringType) {
 				return ((StringType) curtype).getLoc(structsrc.get(curname), offset);

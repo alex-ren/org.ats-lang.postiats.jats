@@ -3,6 +3,7 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.type.ATSReferableType;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.ArrPszType;
 import org.ats_lang.postiats.jats.type.BoxedType;
@@ -31,13 +32,14 @@ public class DefinitionNode extends ATSTypeNode {
         m_ty = ty;
         m_id = id;
         
-        if (ty instanceof BoxedType) {
-            ty = PtrkType.cType;
-        }
+//        // BoxedType to PtrkType
+//        if (ty instanceof BoxedType) {
+//            ty = PtrkType.cType;
+//        }
 
         if (DefinitionNode.isRefName(id)) {
-            ty = new RefType(ty);
-            m_ty = new RefType(m_ty);
+            ty = new RefType((ATSReferableType)ty);
+            m_ty = new RefType((ATSReferableType)m_ty);
         }
         
         tyscope.addValue(m_id, ty);

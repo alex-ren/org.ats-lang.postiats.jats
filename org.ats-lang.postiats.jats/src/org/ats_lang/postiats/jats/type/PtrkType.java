@@ -38,9 +38,6 @@ public class PtrkType extends ATSEltType { // ATSUpdatableType {
 //        return ret;
 //    }
     
-    static public Object deref(Object v) {
-        return v;
-    }
     
     @Override
     public boolean equals(ATSType ty) {

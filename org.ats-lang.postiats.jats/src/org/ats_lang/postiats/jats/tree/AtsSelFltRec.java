@@ -3,6 +3,7 @@ package org.ats_lang.postiats.jats.tree;
 import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.type.ATSReferableType;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.StructType;
@@ -25,7 +26,7 @@ public class AtsSelFltRec extends ATSTypeNode {
         
         // member of reference is still a reference
         if (m_pmv.getType() instanceof RefType) {
-            this.updateType(new RefType(this.getType()));
+            this.updateType(new RefType((ATSReferableType)this.getType()));
         }
     }
     
@@ -46,24 +47,18 @@ public class AtsSelFltRec extends ATSTypeNode {
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
 
-        // v := RefType (StructType) or StructType => v : Map
+        // v := RefType (StructType) or StructType => v : Ptrk
         @SuppressWarnings("unchecked")
-        Map<String, Object> v = (Map<String, Object>) m_pmv.evaluate(types,
-                funcs, scope);
+        Object v = m_pmv.evaluate(types, funcs, scope);
 
 //        System.out.println("AtsSelFltRec.evaluate v is " + v + " and addr is " + System.identityHashCode(v));
         
         if (m_pmv.getType() instanceof RefType) {
-            if (m_tyrec.getMember(m_lab) instanceof StructType) {
-                return v.get(m_lab);  // v.get(m_lab) : Map
-            } else {
-                Ptrk.StructMember sm = new Ptrk.StructMember(v, m_lab, m_tyrec);
-
-                Ptrk refv = new Ptrk(sm);
-                return refv;
-            }
+        	return RefType.SelFltrecOfs(v, m_lab, m_tyrec);
         } else {
-            return v.get(m_lab);
+        	@SuppressWarnings("unchecked")
+            Map<String, Object> mrec = (Map<String, Object>) v;
+            return mrec.get(m_lab);
         }
 
     }

@@ -29,8 +29,20 @@ public class Ptrk {
     	return m_loc.getValue();
     }
     
+    
     public Object cloneValue(ATSReferableType elety) {
     	return elety.cloneValue(this.getValue(elety));
+    }
+    
+    // update a member
+    public void updateFltrecOfs(Object src, String memName, StructType recType) {
+    	int shift = recType.calcOffset(memName);
+    	Location loc = m_content.getLoc(m_offset + shift, recType.getMember(memName));
+    	loc.update(src);
+    }
+    
+    public Ptrk SelFltrecOfs(String memName, StructType recType) {
+    	return new Ptrk(m_content, m_offset + recType.calcOffset(memName));
     }
 
 
@@ -68,9 +80,13 @@ public class Ptrk {
     		m_type = ty;
     	}
     	
+    	public Object get() {
+    		return m_mem;
+    	}
+    	
     	// loctype may be equal to m_type
     	public Location getLoc(final int offset, ATSReferableType loctype) {
-    		if (m_type instanceof ATSEltType || m_type instanceof BoxedType) {
+    		if (m_type instanceof ATSEltType) {
     			if (offset == 0) {
     				return new Location() {
 						
@@ -145,6 +161,12 @@ public class Ptrk {
 				throw new Error("Type mismatch");
 			}
 		}
+    	
+    }
+    
+    public String createString() {
+    	char[] buf = (char[]) m_content.get();
+    	return StringType.createString(buf);
     	
     }
 }

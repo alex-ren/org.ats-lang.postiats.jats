@@ -32,7 +32,7 @@ options {
 program[Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope tyscope] returns [Program prog]
 @init {
   m_prog = new Program(types, funcs);
-  prog = m_prog;
+  prog = m_prog; 
   
   m_tyscope = tyscope;  // mapping of value to type
 }
@@ -122,7 +122,7 @@ atsins_store_arrpsz_asz returns [AtsInsStoreArrpszAsz node]
     ;
     
 atsins_store_arrpsz_ptr returns [AtsInsStoreArrpszPtr node]
-    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) {node = new AtsInsStoreArrpszPtr(m_tyscope.getValue($ID.text), $ID.text, $atstype.type, $exp.node);}
+    : ^(ATSINS_STORE_ARRPSZ_PTR ID atstype exp) {node = new AtsInsStoreArrpszPtr(m_tyscope.getValue($ID.text), $ID.text, (ATSReferableType)$atstype.type, $exp.node);}
     ;
     
 atsins_store_fltrec_ofs returns [AtsInsStoreFltrecOfs node]
@@ -148,7 +148,7 @@ atsins_move_boxrec returns [AtsInsMoveBoxrec node]
     ;
     
 atsins_pmove returns [AtsInsPMove node]
-    : ^(ATSINS_PMOVE tmp=ID atstype val=exp) {node = new AtsInsPMove(m_tyscope.getValue($ID.text), $ID.text, $atstype.type, $val.node);}
+    : ^(ATSINS_PMOVE tmp=ID atstype val=exp) {node = new AtsInsPMove(m_tyscope.getValue($ID.text), $ID.text, (ATSReferableType)$atstype.type, $val.node);}
     ;
     
 atsins_move_arrpsz_ptr returns [AtsInsMoveArrpszPtr node]
@@ -262,7 +262,7 @@ ats_pmv_sizeof returns [AtsPmvSizeofNode node]
     ;
     
 ats_deref returns [AtsDeref node]
-    : ^(ATS_DEREF atstype exp) {node = new AtsDeref($atstype.type, $exp.node);}
+    : ^(ATS_DEREF atstype exp) {node = new AtsDeref((ATSReferableType)$atstype.type, $exp.node);}
     ;
 
 ats_ref_arg returns [AtsPmvRefArg node]
@@ -423,7 +423,7 @@ struct_def [String name] returns [StructType type]
   StructType ty = new StructType(name);
   type = ty;
 }
-    : ^(STRUCT (^(VAR atstype ID) { ty.addMember($ID.text, $atstype.type);
+    : ^(STRUCT (^(VAR atstype ID) { ty.addMember($ID.text, (ATSReferableType)$atstype.type);
                          }
                 )+
         )

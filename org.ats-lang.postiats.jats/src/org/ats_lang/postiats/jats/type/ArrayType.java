@@ -67,7 +67,7 @@ public class ArrayType extends ATSReferableType {
     	Object [] sdst = (Object[])dst;
     	Object [] ssrc = (Object[])src;
     	for (int i = 0; i < ssrc.length; ++i) {
-			if (m_elety instanceof ATSEltType || m_elety instanceof BoxedType) {
+			if (m_elety instanceof ATSEltType) {
 				sdst[i] = ssrc[i];
 			} else if (m_elety instanceof StringType) {
 				((StringType)m_elety).copyFrom(sdst[i], ssrc[i]);
@@ -98,7 +98,7 @@ public class ArrayType extends ATSReferableType {
 
 		@Override
 		public void update(Object src) {
-			if (m_elety instanceof ATSEltType || m_elety instanceof BoxedType) {
+			if (m_elety instanceof ATSEltType) {
 				m_content[m_loc] = src;
 			} else if (m_elety instanceof StringType) {
 				((StringType)m_elety).copyFrom(m_content[m_loc], src);
@@ -128,7 +128,7 @@ public class ArrayType extends ATSReferableType {
 			return new ArrayElementLocation(arrsrc, q, m_elety);
 		}
 		
-		if (m_elety instanceof ATSEltType || m_elety instanceof BoxedType) {
+		if (m_elety instanceof ATSEltType) {
 			throw new Error("type mismatch");
 		} else if (m_elety instanceof StringType) {
 				return ((StringType) m_elety).getLoc(arrsrc[q], r);
