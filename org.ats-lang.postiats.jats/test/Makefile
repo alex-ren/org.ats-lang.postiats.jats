@@ -420,6 +420,14 @@ clean:: ; $(RMF) test20_dats.o
 clean:: ; $(RMF) test20_dats.c
 cleanall:: ; $(RMF) test20.exe
 
+all:: test21
+test21: test21.exe
+test21.exe: test21_dats.c ;   $(CCOPT) -D_GNU_SOURCE -O2     -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -DATS_MEMALLOC_LIBC -o $@ $< -L$(PATSLIB)
+test21_dats.c: test21.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output test21_dats.c --dynamic test21.dats
+clean:: ; $(RMF) test21_dats.o
+clean:: ; $(RMF) test21_dats.c
+cleanall:: ; $(RMF) test21.exe
+
 
 all:: areverse
 areverse: areverse.exe

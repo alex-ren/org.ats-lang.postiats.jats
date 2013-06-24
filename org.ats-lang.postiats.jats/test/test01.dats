@@ -67,6 +67,7 @@ implement main0 () = let
    val () = foo_ft_var (x_ft_var)
    val () = assertloc (x_ft_var.0 = 72)
    val () = assertloc (x_ft_var.1 = "def")
+   val () = println! ("done")
 
 
   // val x_list_val = list_cons ('a', list_cons ('b', list_nil)) // not supported

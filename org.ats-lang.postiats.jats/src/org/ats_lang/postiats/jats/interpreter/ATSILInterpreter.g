@@ -320,7 +320,7 @@ var_def returns [DefinitionNode node]
     : ^(VAR atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text);}
     | ^(VAR_VOID atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text);}
     ;
-
+ 
 atstypelst
     : ^(TYPE_LIST atstype+)
     ;
@@ -329,9 +329,9 @@ atstype returns [ATSType type]
     : // ^(TYPE prim_type) {type = $prim_type.type;}
       ^(TYPE name_type)  {type = $name_type.type;}
     | ^(TYPE kind_decorator name_type) {type = $name_type.type;}  // We don't handle decorator now. {type = new KindType($kind_decorator.kind, $name_type.type);}
-    | ^(TYPE TYPE_ARR atstype) {type = PtrkType.cType;}  // array is ptrktype
+//    | ^(TYPE TYPE_ARR atstype) {type = PtrkType.cType;}  // array is ptrktype
     ;
-
+ 
 name_type returns [ATSType type]
     : ID {type = m_prog.getType($ID.text); 
           if (null == type) {

@@ -7,6 +7,9 @@ import org.ats_lang.postiats.jats.type.BoxedType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.StructType;
 
+/*
+ * Ptrk contains no information of type. It's similar to void *.
+ */
 public class Ptrk {
     private int m_offset;
     private Mem m_content; // either ArrayElement or not
@@ -24,6 +27,7 @@ public class Ptrk {
     }
 
     // return the element stored in the lvalue pointed to by this pointer
+    // There is no copy.
     public Object getValue(ATSReferableType elety) {
     	m_loc = m_content.getLoc(m_offset, elety);
     	return m_loc.getValue();
@@ -37,6 +41,7 @@ public class Ptrk {
     // update a member
     public void updateFltrecOfs(Object src, String memName, StructType recType) {
     	int shift = recType.calcOffset(memName);
+//    	System.out.println("shift is " + shift);
     	Location loc = m_content.getLoc(m_offset + shift, recType.getMember(memName));
     	loc.update(src);
     }
@@ -57,6 +62,7 @@ public class Ptrk {
 
     // v := elety
     // update the content of the lvalue pointed to by this pointer
+    // v is deep copied.
     public void update(Object v, ATSReferableType elety) {
     	m_loc = m_content.getLoc(m_offset, elety);
     	m_loc.update(v);
@@ -67,8 +73,8 @@ public class Ptrk {
     }
     
     static public interface Location {
-    	public void update(Object src);
-    	public Object getValue();  // this is not a copy.
+    	public void update(Object src);  // src is deep copied as long as it's not elementary.
+    	public Object getValue();  // return value is not a copy, but the actual object.
     }
     
     static public class Mem {

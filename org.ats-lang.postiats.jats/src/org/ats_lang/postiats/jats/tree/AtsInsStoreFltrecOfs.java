@@ -68,6 +68,7 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
         ATSType target_ty = m_val.getType();
 
         Object rec = scope.getValue(m_tmp);
+//        System.out.println("lab is " + m_lab);
         
         // m_ty == RefType
         if (m_ty instanceof RefType) {
@@ -84,6 +85,7 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
             
             @SuppressWarnings("unchecked")
             Map<String, Object> mrec = (Map<String, Object>)rec;
+            
             mrec.put(m_lab, target);
         } else {
         	throw new Error("non record");

@@ -9,6 +9,7 @@ main () = 0 where {
   val () = foo (x)
   val () = x := "456"
   val () = println! (x)
+   val () = assertloc (x = "456")
 } // end of [main]
 
 (* ****** ****** *)

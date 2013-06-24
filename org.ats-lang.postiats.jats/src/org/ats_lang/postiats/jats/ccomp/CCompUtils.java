@@ -50,7 +50,7 @@ public class CCompUtils {
                     LibFunc func = new LibFunc() {
                         public Object evaluate(List<Object> paras) {
                             Object[] args = new Object[0];
-                            System.out.println("paras is " + paras);
+//                            System.out.println("paras is " + paras);
                             if (paras != null) {
                                 args = paras.toArray();
                             }

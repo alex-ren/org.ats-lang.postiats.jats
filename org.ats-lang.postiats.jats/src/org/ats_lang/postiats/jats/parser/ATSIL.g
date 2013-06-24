@@ -38,7 +38,7 @@ tokens {
 //  TYPE_REF;
 //  TYPE_ARRPTR;
   
-  TYPE_ARR;
+//  TYPE_ARR;
   
   TYPE_DEC_TYPE;
   TYPE_DEC_T0YPE;
@@ -461,7 +461,7 @@ atstype
     : // prim_type -> ^(TYPE prim_type)
       ID -> ^(TYPE ID)
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
-    | 'atstype_tyarr' LParen atstype RParen -> ^(TYPE TYPE_ARR atstype)
+//    | 'atstype_tyarr' LParen atstype RParen -> ^(TYPE TYPE_ARR atstype)
     ;
 
 kind_decorator

@@ -6,10 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.type.PrimitiveType;
 
-import org.ats_lang.postiats.jats.type.ArrayType.ArrayElementLocation;
-import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.Ptrk.Location;
 
 public class StructType extends ATSReferableType {
@@ -199,7 +196,7 @@ public class StructType extends ATSReferableType {
 		Pair curp = null;
 		for (Pair p: m_members) {
 			curp = p;
-			if (offset <= p.m_ty.getSize()) {
+			if (offset < p.m_ty.getSize()) {
 				break;
 			}
 			offset -= p.m_ty.getSize();
@@ -213,6 +210,7 @@ public class StructType extends ATSReferableType {
 		}
 		
 		if (curtype instanceof ATSEltType) {
+		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeeecurtype is " + curtype);
 			throw new Error("type mismatch");
 		} else if (curtype instanceof StringType) {
 				return ((StringType) curtype).getLoc(structsrc.get(curname), offset);

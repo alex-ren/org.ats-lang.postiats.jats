@@ -43,8 +43,8 @@ public class FuncCallNode extends ATSTypeNode {
     @Override
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        printIndent(m_indent);
-        System.out.println("Entering function: " + m_id);
+//        printIndent(m_indent);
+//        System.out.println("Entering function: " + m_id);
         m_indent += 4;
         
         FuncDef fun = funcs.get(m_id);
@@ -67,8 +67,8 @@ public class FuncCallNode extends ATSTypeNode {
                     arg = RefType.cloneValue(arg, ((RefType) argtype).defType());
 //                    System.out.println("FuncCallNode deep copy");
                 }
-                printIndent(m_indent);
-                System.out.println("para.getType is " + argtype + ", arg is " + arg + " @" + System.identityHashCode(arg));
+//                printIndent(m_indent);
+//                System.out.println("para.getType is " + argtype + ", arg is " + arg + " @" + System.identityHashCode(arg));
                 m_args.add(arg);
             }
         }
