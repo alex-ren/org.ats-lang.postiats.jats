@@ -1,4 +1,5 @@
 
+
 staload "prelude/DATS/integer.dats"
 
 fun foo_val (s: string): void = ()
@@ -7,14 +8,19 @@ fun foo_var (s: &string): void = let
 in end
 
 implement main0 () = let
-  var x1 = "abc"
-  val x2 = "bcd"
+  val x1 = "abc": string
   val () = foo_val x1
-  val () = foo_var x1
-  val () = assertloc (x1 = "good")
 
-  val () = x1 := x2
-  val () = assertloc (x2 != "good")
+  var x2 = "bcd"
+  val () = foo_val x2
+  val () = foo_var x2
+
+  val x3 = (1, "def")
+  val () = foo_val (x3.1)
+
+  val () = assertloc (x2 = "good")
+
+
+
 in end
-
 

@@ -25,4 +25,7 @@ implement main0 () = let
   val () = yy.1.0 := 3
   val _ = foo_int (yy.1.0)
 
+  val () = assertloc (yy.1.0 = 3)
 in end
+
+

@@ -1,15 +1,14 @@
 package org.ats_lang.postiats.jats.ccomp;
 
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.ArrPtrType;
 import org.ats_lang.postiats.jats.type.BoolType;
 import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
+import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.SizeType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.ArrPsz;
-import org.ats_lang.postiats.jats.value.ArrPtr;
 import org.ats_lang.postiats.jats.value.Ptrk;
 
 
@@ -26,11 +25,29 @@ public class CCompArrayPtr {
 //      *(size_t*)asz = psz.size ; return (psz.ptr) ;
 //    } // en of [atspre_arrpsz_get_ptrsize]
     // Version 1: for interpreter
-    public static ArrPtr atspre_arrpsz_get_ptrsize(ArrPsz arrpsz, Ptrk asz) {
+    public static Ptrk atspre_arrpsz_get_ptrsize(ArrPsz arrpsz, Ptrk asz) {
         int size = arrpsz.getAsz();
         asz.update(size, IntType.cType0);
-        return new ArrPtr(arrpsz);
+        return arrpsz.getPtr();
     }
+    
+//    ATSinline()
+//    atstype_arrptr
+//    atspre_arrayptr_make_arrpsz
+//      (atstype_arrpsz psz) { return (psz).ptr ; }
+//    // end of [atspre_arrayptr_make_arrpsz]
+    public static Ptrk atspre_arrayptr_make_arrpsz(ArrPsz arrpsz) {
+        return arrpsz.getPtr();
+    }
+    
+//    ATSinline()
+//    atsvoid_t0ype
+//    atspre_arrayptr_free
+//      (atstype_arrptr ptr) { ATS_MFREE (ptr) ; return ; }
+//    // end of [atspre_arrayptr_free]
+    public static void atspre_arrayptr_free(Ptrk ptr) {
+        ptr.release();
+  }
     
 //    // Version 2: for translator
 //    public static CPtrValue atspre_arrpsz_get_ptrsize(CCompTypedefs.atstype_arrpsz psz, CPtrValue asz) {
@@ -55,9 +72,11 @@ public class CCompArrayPtr {
         FuncType sizeFunc = new FuncType(SizeType.cType0, null);
         FuncType boolFunc = new FuncType(BoolType.cType0, null);
         FuncType voidFunc = new FuncType(VoidType.cType, null);
-        FuncType arrptrFunc = new FuncType(ArrPtrType.cType, null);
+        FuncType ptrkFunc = new FuncType(PtrkType.cType, null);
 
-        typscope.addValue("atspre_arrpsz_get_ptrsize", arrptrFunc);
+        typscope.addValue("atspre_arrpsz_get_ptrsize", ptrkFunc);
+        typscope.addValue("atspre_arrayptr_make_arrpsz", ptrkFunc);
+        typscope.addValue("atspre_arrayptr_free", voidFunc);
     }
 
 }

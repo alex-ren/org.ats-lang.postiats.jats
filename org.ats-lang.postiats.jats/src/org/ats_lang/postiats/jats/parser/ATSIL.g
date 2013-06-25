@@ -38,7 +38,7 @@ tokens {
 //  TYPE_REF;
 //  TYPE_ARRPTR;
   
-//  TYPE_ARR;
+  TYPE_ARR;
   
   TYPE_DEC_TYPE;
   TYPE_DEC_T0YPE;
@@ -93,10 +93,7 @@ tokens {
 	ATSPMV_REFARG0;
 	ATSPMV_REFARG1;
 	ATSPMV_PTROF;
-	ATSselrecsin;
-	ATS_SEL_FLT_REC;
-	ATS_SEL_ARR_IND;
-	ATS_SEL_BOX_REC;
+	
 	
 	ATSMAIN;
 
@@ -324,10 +321,13 @@ exp
     | ats_deref
     | ats_ref_arg
     | ats_pmv_ptrof
+    
     | ats_sel_recsin
     | ats_sel_flt_rec
     | ats_sel_box_rec
-//    | ats_sel_arr_ind
+    | ats_sel_arr_ind
+    | ats_sel_arrptr_ind
+
     | ats_ck_iseqz
     
     | atom_exp
@@ -384,21 +384,26 @@ ats_pmv_ptrof
     : 'ATSPMVptrof' LParen ID RParen -> ^(ATSPMV_PTROF ID)
     ;
     
+// ===================================
 ats_sel_recsin
-      : 'ATSselrecsin' LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATSselrecsin $pmv atstype $lab)
+      : ATSselrecsin LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATSselrecsin $pmv atstype $lab)
       ;
    
 ats_sel_flt_rec
-    : 'ATSselfltrec' LParen pmv=exp Comma atstype Comma lab=ID RParen -> ^(ATS_SEL_FLT_REC $pmv atstype $lab)
+    : ATSselfltrec LParen pmv=exp Comma atstype Comma lab=ID RParen -> ^(ATSselfltrec $pmv atstype $lab)
     ;
 
 ats_sel_box_rec
-    : 'ATSselboxrec' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_BOX_REC exp atstype ID)
+    : ATSselboxrec LParen exp Comma atstype Comma ID RParen -> ^(ATSselboxrec exp atstype ID)
     ;
     
-//ats_sel_arr_ind
-//    : 'ATSselarrind' LParen exp Comma atstype Comma ID RParen -> ^(ATS_SEL_ARR_IND exp atstype ID)
-//    ;
+ats_sel_arr_ind
+    : ATSselarrind LParen exp Comma atstype Comma ID RParen -> ^(ATSselarrind exp atstype ID)
+    ;
+
+ats_sel_arrptr_ind
+    : ATSselarrptrind LParen pmv=exp Comma atstype Comma LBracket lab=exp RBracket RParen -> ^(ATSselarrptrind $pmv atstype $lab)
+    ;
 
 
 atom_exp
@@ -461,7 +466,7 @@ atstype
     : // prim_type -> ^(TYPE prim_type)
       ID -> ^(TYPE ID)
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
-//    | 'atstype_tyarr' LParen atstype RParen -> ^(TYPE TYPE_ARR atstype)
+    | 'atstype_tyarr' LParen atstype RParen -> ^(TYPE TYPE_ARR atstype)
     ;
 
 kind_decorator
@@ -523,8 +528,15 @@ ATSmainats_argc_argv_int: 'ATSmainats_argc_argv_int';
 ATSmainats_argc_argv_envp_int: 'ATSmainats_argc_argv_envp_int';
 
 
+// =====================================================
 
-   
+
+ATSselrecsin: 'ATSselrecsin';
+ATSselfltrec: 'ATSselfltrec';
+ATSselboxrec: 'ATSselboxrec';
+ATSselarrind: 'ATSselarrind';
+ATSselarrptrind: 'ATSselarrptrind';
+
 // =====================================================
 // pats_ccomp_typedefs.h 
 
@@ -538,6 +550,8 @@ atsrefarg1_type: 'atsrefarg1_type';
 ATSINSload: 'ATSINSload';
 
 ATSINSstore: 'ATSINSstore';
+
+ATSINSxstore: 'ATSINSxstore';
 
 ATSCKiseqz: 'ATSCKiseqz';
 

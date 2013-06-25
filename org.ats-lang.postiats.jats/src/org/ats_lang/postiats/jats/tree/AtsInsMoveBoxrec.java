@@ -35,7 +35,7 @@ public class AtsInsMoveBoxrec extends ATSTypeNode {
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         
         if (m_tmptype instanceof RefType) {
-            RefType.update(scope.getValue(m_tmp), new HashMap<String, Object>(), BoxedType.cType);
+            RefType.update(scope.getValue(m_tmp), new HashMap<String, Object>(), BoxedType.cType);  // BoxedType <-> HashMap
         } else {
             scope.addValue(m_tmp, new HashMap<String, Object>());
         }

@@ -1,6 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
-public class ATSTempType implements ATSType {
+public abstract class ATSTempType implements ATSType {
 	
 	protected ATSTempType() {		
 	}
@@ -9,11 +9,11 @@ public class ATSTempType implements ATSType {
 	public int getSize() {
 		throw new Error("not supported");
 	}
-
-	@Override
-	public Object createNormalDefault() {
-		throw new Error("not supported");
-	}
+//
+//	@Override
+//	public Object createNormalDefault() {
+//		throw new Error("not supported");
+//	}
 
 	@Override
 	public Object createRefDefault() {

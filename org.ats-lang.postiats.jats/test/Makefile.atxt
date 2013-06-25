@@ -140,6 +140,8 @@ RMF=rm -f
 #make2_entry("test19", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test20", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test21", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test22_string", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test23_array", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 
 #make2_entry("areverse", "-DATS_MEMALLOC_LIBC", "")
 

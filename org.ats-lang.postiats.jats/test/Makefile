@@ -428,6 +428,22 @@ clean:: ; $(RMF) test21_dats.o
 clean:: ; $(RMF) test21_dats.c
 cleanall:: ; $(RMF) test21.exe
 
+all:: test22_string
+test22_string: test22_string.exe
+test22_string.exe: test22_string_dats.c ;   $(CCOPT) -D_GNU_SOURCE -O2     -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -DATS_MEMALLOC_LIBC -o $@ $< -L$(PATSLIB)
+test22_string_dats.c: test22_string.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output test22_string_dats.c --dynamic test22_string.dats
+clean:: ; $(RMF) test22_string_dats.o
+clean:: ; $(RMF) test22_string_dats.c
+cleanall:: ; $(RMF) test22_string.exe
+
+all:: test23_array
+test23_array: test23_array.exe
+test23_array.exe: test23_array_dats.c ;   $(CCOPT) -D_GNU_SOURCE -O2     -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -DATS_MEMALLOC_LIBC -o $@ $< -L$(PATSLIB)
+test23_array_dats.c: test23_array.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output test23_array_dats.c --dynamic test23_array.dats
+clean:: ; $(RMF) test23_array_dats.o
+clean:: ; $(RMF) test23_array_dats.c
+cleanall:: ; $(RMF) test23_array.exe
+
 
 all:: areverse
 areverse: areverse.exe

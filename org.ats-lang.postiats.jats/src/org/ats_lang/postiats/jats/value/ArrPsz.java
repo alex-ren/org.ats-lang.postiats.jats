@@ -1,40 +1,38 @@
 package org.ats_lang.postiats.jats.value;
 
 import org.ats_lang.postiats.jats.type.ATSReferableType;
-import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.ArrayType;
 
 
 public class ArrPsz {
-    private int m_asz;
-    private Object[] m_ptr;
-    private ATSReferableType m_elety;
+    private ArrayType m_arrType;
+    private Ptrk m_ptr;
 
-    public ArrPsz(ATSReferableType elety) {
-        m_asz = 0;
+    public ArrPsz() {
+        m_arrType = null;
         m_ptr = null;
     }
     
-    public void setAsz(int asz) {
-        m_asz = asz;
-    }
+//    public void setSize(int asz) {
+//        // no-op.
+//        return;        
+//    }
     
-    public void setPtr(Object[] ptr) {
-        m_ptr = ptr;
-    }
-    
-    public void setElementType(ATSReferableType elety) {
-        m_elety = elety;
+    public void init(int asz, ATSReferableType elety) {
+        m_arrType = new ArrayType(elety, asz);
+        Object [] arr = m_arrType.createNormalDefault();
+        m_ptr = Ptrk.createPtrk(m_arrType, arr);
     }
     
     public int getAsz() {
-        return m_asz;
+        return m_arrType.getArraySize();
     }
     
-    public Object[] getPtr() {
+    public Ptrk getPtr() {
         return m_ptr;
     }
     
-    public ATSReferableType getElementType() {
-        return m_elety;
-    }
+//    public ATSReferableType getElementType() {
+//        return m_elety;
+//    }
 }

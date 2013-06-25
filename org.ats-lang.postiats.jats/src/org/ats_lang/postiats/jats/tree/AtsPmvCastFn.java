@@ -53,12 +53,6 @@ public class AtsPmvCastFn extends ATSTypeNode {
                 throw new Error("check this case");
             }
 
-            // encoding type conversion here
-            // if (m_hit instanceof ATSPrimType && v instanceof PrimValue) {
-            // return ((ATSPrimType)m_hit).castFrom((PrimValue)v);
-            // } else {
-            // throw new Error ("Casting unsupported: cast");
-            // }
             return v;
         } else if (m_d2c.equals("string2ptr")) {
             if (!m_arg.getType().equals(PtrkType.cType)) {
@@ -77,6 +71,14 @@ public class AtsPmvCastFn extends ATSTypeNode {
             }
             return v;
         } else if (m_d2c.equals("string1_of_string0")) {
+            if (!m_arg.getType().equals(PtrkType.cType)) {
+                throw new Error("check this case");
+            }
+            if (!m_hit.equals(PtrkType.cType)) {
+                throw new Error("check this case");
+            }
+            return v;
+        } else if (m_d2c.equals("arrayptr2ptr")) {
             if (!m_arg.getType().equals(PtrkType.cType)) {
                 throw new Error("check this case");
             }

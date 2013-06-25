@@ -7,5 +7,18 @@ public class ArrPtrType extends ATSTempType {
     private ArrPtrType() {
     }
 
+    @Override
+    public Object createNormalDefault() {
+        return null;
+    }
+
+//    @Override
+//    public boolean equals(ATSType ty) {
+//        if (this == ty) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 }
 

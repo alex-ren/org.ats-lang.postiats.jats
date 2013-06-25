@@ -40,6 +40,12 @@ public class CCompString {
         return s1.equals(s2);
     }
     
+    public static boolean atspre_neq_string_string(Ptrk x1, Ptrk x2) {
+        String s1 = x1.createString();
+        String s2 = x2.createString();
+        return !s1.equals(s2);
+    }
+    
     static public void populateFuncType(ATSScope<ATSType> typscope) {
         FuncType intFunc = new FuncType(IntType.cType0, null);
         FuncType sizeFunc = new FuncType(SizeType.cType0, null); 
@@ -51,6 +57,7 @@ public class CCompString {
         typscope.addValue("atspre_print_string", voidFunc);
         typscope.addValue("atspre_prerr_string", voidFunc);
         typscope.addValue("atspre_eq_string_string", boolFunc);
+        typscope.addValue("atspre_neq_string_string", boolFunc);
     }
 
 }

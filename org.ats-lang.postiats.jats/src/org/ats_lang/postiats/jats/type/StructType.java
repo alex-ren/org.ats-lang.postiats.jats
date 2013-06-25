@@ -206,12 +206,13 @@ public class StructType extends ATSReferableType {
 		String curname = curp.m_id;
 		
 		if (curtype.equals(loctype)) {
+//		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeee 001 curtype is " + curtype);
 			return new StructMemberLocation(structsrc, curname, curtype);
 		}
 		
 		if (curtype instanceof ATSEltType) {
-		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeeecurtype is " + curtype);
-		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeloctype is " + loctype);
+		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeee 002 curtype is " + curtype);
+		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeee 003 loctype is " + loctype);
 			throw new Error("type mismatch");
 		} else if (curtype instanceof StringType) {
 				return ((StringType) curtype).getLoc(structsrc.get(curname), offset);

@@ -9,16 +9,15 @@ import org.ats_lang.postiats.jats.type.StructType;
 
 /*
  * Ptrk contains no information of type. It's similar to void *.
+ * On the other hand, it contains Mem, which has the information of the type.
  */
 public class Ptrk {
     private int m_offset;
     private Mem m_content; // either ArrayElement or not
-    private Location m_loc;
 
     private Ptrk(Mem obj, int offset) {
     	m_offset = offset;
         m_content = obj;
-        m_loc = null;
     }
     
     public static Ptrk createPtrk(ATSReferableType ty, Object v) {
@@ -29,8 +28,8 @@ public class Ptrk {
     // return the element stored in the lvalue pointed to by this pointer
     // There is no copy.
     public Object getValue(ATSReferableType elety) {
-    	m_loc = m_content.getLoc(m_offset, elety);
-    	return m_loc.getValue();
+    	Location loc = m_content.getLoc(m_offset, elety);
+    	return loc.getValue();
     }
     
     
@@ -59,13 +58,18 @@ public class Ptrk {
     public Object def() {
         return this;
     }
+    
+    public void release() {
+        m_offset = 0;
+        m_content = null;
+    }
 
     // v := elety
     // update the content of the lvalue pointed to by this pointer
     // v is deep copied.
     public void update(Object v, ATSReferableType elety) {
-    	m_loc = m_content.getLoc(m_offset, elety);
-    	m_loc.update(v);
+    	Location loc = m_content.getLoc(m_offset, elety);
+    	loc.update(v);
     }
 
     public int subIndex(Ptrk from) {

@@ -279,16 +279,20 @@ ats_sel_recsin returns [AtsSelRecsinNode node]
       ;
    
 ats_sel_flt_rec returns [AtsSelFltRec node]
-    : ^(ATS_SEL_FLT_REC pmv=exp atstype lab=ID) {node = new AtsSelFltRec($pmv.node, (StructType)$atstype.type, $lab.text);}
+    : ^(ATSselfltrec pmv=exp atstype lab=ID) {node = new AtsSelFltRec($pmv.node, (StructType)$atstype.type, $lab.text);}
     ;
 
 ats_sel_box_rec returns [AtsSelBoxRec node]
-    : ^(ATS_SEL_BOX_REC exp atstype ID) {node = new AtsSelBoxRec($exp.node, (StructType)$atstype.type, $ID.text);}
+    : ^(ATSselboxrec exp atstype ID) {node = new AtsSelBoxRec($exp.node, (StructType)$atstype.type, $ID.text);}
     ;
     
-//ats_sel_arr_ind returns [AtsSelArrIndNode node]
-//    : ^(ATS_SEL_ARR_IND exp atstype ID) {node = new AtsSelArrIndNode($exp.node, $atstype.type, $ID.text);}
-//    ;
+ats_sel_arr_ind returns [AtsSelArrIndNode node]
+    : ^(ATSselarrind exp atstype ID) {node = new AtsSelArrIndNode($exp.node, $atstype.type, $ID.text);}
+    ;
+
+ats_sel_arrptr_ind returns [AtsSelArrPtrIndNode node]
+    : ^(ATSselarrptrind pmv=exp atstype lab=exp) {node = new AtsSelArrPtrIndNode($pmv.node, $atstype.type, $lab.node);}
+    ;
 
 
 atom_exp returns [ATSNode node]
@@ -329,7 +333,7 @@ atstype returns [ATSType type]
     : // ^(TYPE prim_type) {type = $prim_type.type;}
       ^(TYPE name_type)  {type = $name_type.type;}
     | ^(TYPE kind_decorator name_type) {type = $name_type.type;}  // We don't handle decorator now. {type = new KindType($kind_decorator.kind, $name_type.type);}
-//    | ^(TYPE TYPE_ARR atstype) {type = PtrkType.cType;}  // array is ptrktype
+    | ^(TYPE TYPE_ARR atstype) {type = PtrkType.cType;}  // array is PtrkType, here we lost some type information.
     ;
  
 name_type returns [ATSType type]

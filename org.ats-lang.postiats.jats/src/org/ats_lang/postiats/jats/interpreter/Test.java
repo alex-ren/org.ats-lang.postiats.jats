@@ -30,14 +30,14 @@ public class Test {
      */
     public static void main(String[] args) throws RecognitionException, IOException {
         String [] filenames = {
-        		"test/printtest_dats.c"
-        		,"test/basic_dats.c"
-        		,"test/f91_dats.c"
-        		,"test/fact_dats.c"
-        		,"test/fib_dats.c"
-        		,"test/atof_dats.c"
-                ,"test/test01_dats.c"
-                ,"test/test02_dats.c"
+//        		"test/printtest_dats.c"
+//        		,"test/basic_dats.c"
+//        		,"test/f91_dats.c"
+//        		,"test/fact_dats.c"
+//        		,"test/fib_dats.c"
+//        		,"test/atof_dats.c"
+//                ,"test/test01_dats.c"
+//                ,"test/test02_dats.c"
 //                ,"test/test03_dats.c"
 //                ,"test/test04_dats.c"
 //                ,"test/test05_dats.c"
@@ -50,11 +50,17 @@ public class Test {
 //                ,"test/test11_dats.c"
 //                ,"test/test12_dats.c"
 //                ,"test/test13_dats.c"
-//                "test/test14_dats.c",
-//                ,"test/test15_dats.c"
+                "test/test14_dats.c"  // array
+//                ,"test/test15_dats.c"  // array
 //                ,"test/test16_dats.c"
 //                ,"test/test17_dats.c"
 //                ,"test/test18_dats.c"
+//                ,"test/test19_dats.c"
+//                ,"test/test20_dats.c"
+//                ,"test/test21_dats.c"
+//                ,"test/test22_string_dats.c"
+//                ,"test/test23_array_dats.c"  // array
+                // ,"test/areverse_dats.c"
         
         };
 

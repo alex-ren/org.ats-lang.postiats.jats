@@ -4,13 +4,11 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.ArrPszType;
-import org.ats_lang.postiats.jats.type.BoxedType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
 import org.ats_lang.postiats.jats.value.ArrPsz;
-import org.ats_lang.postiats.jats.value.ArrPtr;
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 
@@ -52,7 +50,7 @@ public class AtsInsMoveArrpszPtr extends ATSTypeNode {
         Object psz = m_psz.evaluate(types, funcs, scope);
         // m_psz := ArrPszType
         if (psz instanceof ArrPsz) {
-            ArrPtr arrp = new ArrPtr((ArrPsz) psz);
+            Ptrk arrp = ((ArrPsz) psz).getPtr();
             scope.addValue(m_tmp, arrp);
             return SingletonValue.VOID;
         } else {

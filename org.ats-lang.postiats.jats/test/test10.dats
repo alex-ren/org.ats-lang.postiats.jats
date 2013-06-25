@@ -10,6 +10,8 @@ implement main0 () = let
   val a1 = '(3, 4)
   val b1 = foo a1
 
+  val () = assertloc (b1 = 3)
+
 
 in end
 

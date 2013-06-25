@@ -67,14 +67,9 @@ public class AtsInsStoreArrpszPtr extends ATSTypeNode {
             throw new Error("Type error");
         }
         
-        ArrayType arrtype = new ArrayType(m_tyelt, sz);
-
-        Object [] arr = arrtype.createNormalDefault();
-        
         Object arrpsz = scope.getValue(m_tmp);
         if (arrpsz instanceof ArrPsz) {
-            ((ArrPsz) arrpsz).setPtr(arr);
-            ((ArrPsz) arrpsz).setElementType(m_tyelt);
+            ((ArrPsz) arrpsz).init(sz, m_tyelt);
         } else {
             throw new Error("Type mismatch");
         }

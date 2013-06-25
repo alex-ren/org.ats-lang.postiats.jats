@@ -13,5 +13,6 @@ implement main0 () = let
   val b = foo a
   val c = foo2 (a.0)
   val c2 = foo2 (a2.0)
+  val () = assertloc (b = 1 && c2 = 3)
 
 in end

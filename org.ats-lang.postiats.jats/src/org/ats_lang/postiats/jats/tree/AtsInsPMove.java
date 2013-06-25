@@ -9,7 +9,7 @@ import org.ats_lang.postiats.jats.type.ArrPtrType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
-import org.ats_lang.postiats.jats.value.ArrPtr;
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsPMove extends ATSTypeNode {
@@ -36,11 +36,11 @@ public class AtsInsPMove extends ATSTypeNode {
         Object val = m_val.evaluate(types, funcs, scope);
         ATSType valtype = m_val.getType();
         
-        ArrPtr arrp = (ArrPtr)scope.getValue(m_tmp);
+        Ptrk arrp = (Ptrk)scope.getValue(m_tmp);
         if (valtype instanceof RefType) {
         	arrp.update(RefType.getValue(val, ((RefType) valtype).defType()), m_hit);
         } else if (valtype instanceof ATSReferableType) {
-        	arrp.update(val, m_hit);
+        	arrp.update(val, m_hit); 
         } else {
             throw new Error("ATSINSpmove: only name is supported now");
         }

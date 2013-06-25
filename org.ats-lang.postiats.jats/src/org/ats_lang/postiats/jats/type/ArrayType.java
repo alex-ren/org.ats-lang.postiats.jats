@@ -2,6 +2,9 @@ package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.value.Ptrk.Location;
 
+/*
+ * This type is for describing flat array.
+ */
 public class ArrayType extends ATSReferableType {
     private int m_len;
     private ATSReferableType m_elety;
@@ -20,6 +23,10 @@ public class ArrayType extends ATSReferableType {
     @Override
     public int getSize() {
         return m_len * m_elety.getSize();
+    }
+    
+    public int getArraySize() {
+        return m_len;
     }
 
     

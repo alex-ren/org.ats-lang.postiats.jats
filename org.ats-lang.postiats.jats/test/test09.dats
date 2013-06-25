@@ -9,5 +9,6 @@ implement main0 () = let
   val b = foo_int 3
   val () = a1 := b
   val () = a2 := b
+  val () = assertloc (a1 = a2)
 
 in end
