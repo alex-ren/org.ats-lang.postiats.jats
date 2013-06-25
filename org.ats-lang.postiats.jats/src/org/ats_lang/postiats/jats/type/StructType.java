@@ -211,6 +211,7 @@ public class StructType extends ATSReferableType {
 		
 		if (curtype instanceof ATSEltType) {
 		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeeecurtype is " + curtype);
+		    System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeloctype is " + loctype);
 			throw new Error("type mismatch");
 		} else if (curtype instanceof StringType) {
 				return ((StringType) curtype).getLoc(structsrc.get(curname), offset);

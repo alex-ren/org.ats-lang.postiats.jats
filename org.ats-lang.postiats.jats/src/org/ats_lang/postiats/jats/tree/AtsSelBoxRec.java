@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.BoxedType;
 import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
@@ -29,13 +30,17 @@ public class AtsSelBoxRec extends ATSTypeNode {
     // ATSINSmove(tmp7, foo2_1(ATSselboxrec(tmpref4, postiats_tyrec_0, atslab$0))) ;
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-
+//    	System.out.println("==============AtsSelBoxRec");
         // x := RefType (BoxedType (StructType)) => x : Ptrk
         if (m_pmv.getType() instanceof RefType) {
+//        	System.out.println("==============AtsSelBoxRec-0001");
             Object p = m_pmv.evaluate(types, funcs, scope);
-            Object m = RefType.getValue(p, m_tyrec);
+//            System.out.println("==============AtsSelBoxRec-0002");
+            Object m = RefType.getValue(p, BoxedType.cType);
+//            System.out.println("==============AtsSelBoxRec-0003");
             @SuppressWarnings("unchecked")
             Map<String, Object> v = (Map<String, Object>) m;
+//            System.out.println("==============AtsSelBoxRec-0004");
             return v.get(m_lab);
         } else {  // x := BoxType (StructType) => x : Map
             @SuppressWarnings("unchecked")

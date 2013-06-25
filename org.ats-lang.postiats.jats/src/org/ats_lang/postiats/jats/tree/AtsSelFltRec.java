@@ -46,6 +46,7 @@ public class AtsSelFltRec extends ATSTypeNode {
 //    ATSselfltrec(ATSderef(arg0), postiats_tyrec_0, atslab$0)
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//    	System.out.println("==============AtsSelFltRec");
 
         // v := RefType (StructType) or StructType => v : Ptrk
         @SuppressWarnings("unchecked")
@@ -54,7 +55,11 @@ public class AtsSelFltRec extends ATSTypeNode {
 //        System.out.println("AtsSelFltRec.evaluate v is " + v + " and addr is " + System.identityHashCode(v));
         
         if (m_pmv.getType() instanceof RefType) {
-        	return RefType.SelFltrecOfs(v, m_lab, m_tyrec);
+        	
+        	Ptrk ret = RefType.SelFltrecOfs(v, m_lab, m_tyrec);
+//        	System.out.println("==============AtsSelFltRec-00001");
+        	return ret;
+        	
         } else {
         	@SuppressWarnings("unchecked")
             Map<String, Object> mrec = (Map<String, Object>) v;

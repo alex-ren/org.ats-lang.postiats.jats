@@ -87,6 +87,7 @@ public class RefType implements ATSType {
     
 	// v := RefType (ty)
 	// v : Ptrk
+    // There is no copy.
     static public Object getValue(Object v, ATSReferableType ty) {
 		if (v instanceof Ptrk) {
 			return ((Ptrk) v).getValue(ty);
