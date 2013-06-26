@@ -10,6 +10,7 @@ import org.ats_lang.postiats.jats.type.StructType;
 /*
  * Ptrk contains no information of type. It's similar to void *.
  * On the other hand, it contains Mem, which has the information of the type.
+ * Ptrk is treated as a non-changeable type.
  */
 public class Ptrk {
     private int m_offset;
@@ -25,6 +26,10 @@ public class Ptrk {
     	return new Ptrk(content, 0);    	
     }
 
+    public static Ptrk createPtrkOffset(Ptrk p, int len) {
+        return new Ptrk(p.m_content, p.m_offset + len);
+    }
+    
     // return the element stored in the lvalue pointed to by this pointer
     // There is no copy.
     public Object getValue(ATSReferableType elety) {
@@ -48,11 +53,11 @@ public class Ptrk {
     public Ptrk SelFltrecOfs(String memName, StructType recType) {
     	return new Ptrk(m_content, m_offset + recType.calcOffset(memName));
     }
-
-
-    public Ptrk addByteSize(int len) {
-    	return new Ptrk(m_content, m_offset + len);
+    
+    public Ptrk SelArrInd(Integer sz, ATSReferableType elety) {
+        return new Ptrk(m_content, m_offset + elety.getSize() * sz);
     }
+
 
     // return the lvalue pointed to by the pointer
     public Object def() {

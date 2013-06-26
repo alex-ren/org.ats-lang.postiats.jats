@@ -24,7 +24,7 @@ public class RefType implements ATSType {
     }
     
     @Override
-    public Object createRefDefault() {
+    public Ptrk createRefDefault() {
     	throw new Error("Ref of ref is unsupported");
     }
 

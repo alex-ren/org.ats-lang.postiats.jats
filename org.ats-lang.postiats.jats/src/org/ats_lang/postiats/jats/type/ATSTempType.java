@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
+
 public abstract class ATSTempType implements ATSType {
 	
 	protected ATSTempType() {		
@@ -16,7 +18,7 @@ public abstract class ATSTempType implements ATSType {
 //	}
 
 	@Override
-	public Object createRefDefault() {
+	public Ptrk createRefDefault() {
 		throw new Error("not supported");
 	}
 

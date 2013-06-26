@@ -6,12 +6,12 @@ import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
-public class AtsSelArrIndNode extends ATSTypeNode {
+public class AtsSelArrInd extends ATSTypeNode {
     private ATSNode m_node;
     private ATSType m_type;
     private String m_lab;
 
-    public AtsSelArrIndNode(ATSNode node, ATSType type, String lab) {
+    public AtsSelArrInd(ATSNode node, ATSType type, String lab) {
         super(null);
         throw new Error("not supported");
 //        m_node = node;
@@ -21,6 +21,8 @@ public class AtsSelArrIndNode extends ATSTypeNode {
 
 
     @Override
+    // #define ATSselarrind(pmv, tyarr, lab) (((tyarr)pmv).lab)
+    // example
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope) {
         // TODO Auto-generated method stub

@@ -43,7 +43,7 @@ public class AtsInsUpdatePtrInc extends ATSTypeNode {
         Object tmp = scope.getValue(m_tmp);
         
         if (tmp instanceof Ptrk) {
-            Ptrk np = ((Ptrk)tmp).addByteSize(m_tyelt.getSize());  
+            Ptrk np = Ptrk.createPtrkOffset((Ptrk)tmp, m_tyelt.getSize());  
             // Caution: must put the new Ptrk back
             scope.addValue(m_tmp, np);
         } else {

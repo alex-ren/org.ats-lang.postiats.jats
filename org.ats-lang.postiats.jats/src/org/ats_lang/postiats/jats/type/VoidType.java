@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class VoidType implements ATSType {
@@ -22,7 +23,7 @@ public class VoidType implements ATSType {
     }
 
 	@Override
-    public Object createRefDefault() {
+    public Ptrk createRefDefault() {
 	    throw new Error("not supported");
     }
 

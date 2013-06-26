@@ -14,7 +14,7 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 public class CCompPointer {
     
     public static Ptrk atspre_ptr_add_bytesize(Ptrk p, Integer ofs) {
-        return p.addByteSize(ofs);
+        return Ptrk.createPtrkOffset(p, ofs);
     }
     
     public static Ptrk atspre_ptr0_add_bytesize(Ptrk p, Integer ofs) {

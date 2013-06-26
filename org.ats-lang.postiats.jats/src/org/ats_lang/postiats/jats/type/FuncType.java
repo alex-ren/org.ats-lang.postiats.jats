@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ats_lang.postiats.jats.interpreter.FuncPara;
+import org.ats_lang.postiats.jats.value.Ptrk;
 
 public class FuncType implements ATSType {
 
@@ -13,12 +14,12 @@ public class FuncType implements ATSType {
 	}
 
 	@Override
-	public Object createNormalDefault() {
+	public Object createNormalDefault() { 
 		throw new Error("not supported");
 	}
 
 	@Override
-	public Object createRefDefault() {
+	public Ptrk createRefDefault() {
 		throw new Error("not supported");
 	}
 	
