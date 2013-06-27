@@ -3,7 +3,6 @@ package org.ats_lang.postiats.jats.value;
 import org.ats_lang.postiats.jats.type.ATSEltType;
 import org.ats_lang.postiats.jats.type.ATSReferableType;
 import org.ats_lang.postiats.jats.type.ArrayType;
-import org.ats_lang.postiats.jats.type.BoxedType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.StructType;
 
@@ -13,9 +12,25 @@ import org.ats_lang.postiats.jats.type.StructType;
  * Ptrk is treated as a non-changeable type.
  */
 public class Ptrk {
+    static {
+        c_stdin = new Ptrk();
+        c_stdout = new Ptrk();
+        c_stderr = new Ptrk();
+    }
+    
+    public static final Ptrk c_stdin;
+    public static final Ptrk c_stdout;
+    public static final Ptrk c_stderr;
+    
+    
     private int m_offset;
     private Mem m_content; // either ArrayElement or not
 
+    private Ptrk() {
+        m_offset = 0;
+        m_content = null;
+    }
+    
     private Ptrk(Mem obj, int offset) {
     	m_offset = offset;
         m_content = obj;
@@ -37,7 +52,8 @@ public class Ptrk {
     	return loc.getValue();
     }
     
-    
+    // return the clone of element stored in the lvalue pointed to by this pointer
+    // There is copy.
     public Object cloneValue(ATSReferableType elety) {
     	return elety.cloneValue(this.getValue(elety));
     }

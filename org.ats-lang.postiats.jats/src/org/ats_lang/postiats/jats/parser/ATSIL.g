@@ -92,7 +92,6 @@ tokens {
 	ATS_EMPTY;
 	ATSPMV_REFARG0;
 	ATSPMV_REFARG1;
-	ATSPMV_PTROF;
 	
 	
 	ATSMAIN;
@@ -197,6 +196,7 @@ bstat
     
     | atsins_load Semicol!
     | atsins_store Semicol!
+    | atsins_xstore Semicol!
     | atsins_store_arrpsz_asz Semicol!
     | atsins_store_arrpsz_ptr Semicol!
     | atsins_store_fltrec_ofs Semicol!
@@ -242,6 +242,10 @@ atsins_load
 
 atsins_store
     : ATSINSstore LParen exp Comma exp RParen -> ^(ATSINSstore exp exp)
+    ;
+
+atsins_xstore
+    : ATSINSxstore LParen ID Comma exp Comma exp RParen -> ^(ATSINSxstore ID exp exp)
     ;
 
 atsins_store_arrpsz_asz
@@ -321,6 +325,7 @@ exp
     | ats_deref
     | ats_ref_arg
     | ats_pmv_ptrof
+    | ats_pmv_ptrof_void
     
     | ats_sel_recsin
     | ats_sel_flt_rec
@@ -348,13 +353,13 @@ ats_empty
     : 'ATSempty' LParen RParen -> ATS_EMPTY
     ;
     
-ats_pvm_castfn
+ats_pvm_castfn 
     : 'ATSPMVcastfn' LParen ID Comma atstype Comma exp RParen -> ^(ATSPMV_CASTFN ID atstype exp)
     ;
 
 ats_simple_cast
     : 'ATSPMVint' LParen exp RParen -> ^(ATSPMV_INT exp)
-    | 'ATSPMVintrep' LParen exp RParen {System.out.println("ATSPMVintrep not supported");} -> ^(ATSPMVintrep exp)
+    | 'ATSPMVintrep' LParen exp RParen -> ^(ATSPMVintrep exp)
     
     | 'ATSPMVbool_true' LParen RParen -> ATSPMV_TRUE
     | 'ATSPMVbool_false' LParen RParen -> ATSPMV_FALSE
@@ -381,9 +386,13 @@ ats_ref_arg
     ;
    
 ats_pmv_ptrof
-    : 'ATSPMVptrof' LParen ID RParen -> ^(ATSPMV_PTROF ID)
+    : ATSPMVptrof LParen ID RParen -> ^(ATSPMVptrof ID)
     ;
     
+ats_pmv_ptrof_void
+    : ATSPMVptrof_void LParen ID RParen -> ^(ATSPMVptrof_void ID)
+    ;    
+
 // ===================================
 ats_sel_recsin
       : ATSselrecsin LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATSselrecsin $pmv atstype $lab)
@@ -395,7 +404,7 @@ ats_sel_flt_rec
 
 ats_sel_box_rec
     : ATSselboxrec LParen exp Comma atstype Comma ID RParen -> ^(ATSselboxrec exp atstype ID)
-    ;
+    ; 
     
 ats_sel_arr_ind
     : ATSselarrind LParen exp Comma atstype Comma ID RParen -> ^(ATSselarrind exp atstype ID)
@@ -538,6 +547,12 @@ ATSselarrind: 'ATSselarrind';
 ATSselarrptrind: 'ATSselarrptrind';
 
 // =====================================================
+
+ATSPMVptrof: 'ATSPMVptrof';
+ATSPMVptrof_void: 'ATSPMVptrof_void';
+
+// =====================================================
+
 // pats_ccomp_typedefs.h 
 
 atstkind_type: 'atstkind_type';

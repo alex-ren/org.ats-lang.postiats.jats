@@ -80,9 +80,6 @@ val () = gprint_newline ()
 //
 val p = ptrcast (A)
 prval pfarr = arrayptr_takeout (A)
-// todo val arr = !p
-// val () = arr.[0] := 1.0
-val () = (!p).[0] := 1.0
 val () = revarr (!p, asz)
 prval () = arrayptr_addback (pfarr | A)
 //

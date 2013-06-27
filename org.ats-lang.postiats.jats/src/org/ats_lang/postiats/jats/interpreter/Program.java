@@ -9,7 +9,6 @@ import org.ats_lang.postiats.jats.tree.FuncCallNode;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
-import org.ats_lang.postiats.jats.utils.MapScope;
 import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
@@ -17,14 +16,16 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 public class Program {
     private Map<String, ATSType> m_types;  // type definition
     private Map<String, FuncDef> m_funcs;  // function definition
+    private ATSScope<Object> m_gvscope;  // global value definition
     
     private List<ATSNode> m_statements;
     
     private MainFunc m_main;
 
-    public Program(Map<String, ATSType> types, Map<String, FuncDef> funcs) {
+    public Program(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> gvscope) {
         m_types = types;
         m_funcs = funcs;
+        m_gvscope = gvscope;
         
 		m_statements = new ArrayList<ATSNode>();
 		m_main = null;
@@ -70,20 +71,15 @@ public class Program {
     }
     
     public void run(String [] argv) {
-        // initialize all the global variables, and put them into global scope
-        ATSScope<Object> globalScope = new MapScope<Object>();
-        
-        globalScope.addValue("atspre_FILE_stdout", SingletonValue.c_stdout);
-        globalScope.addValue("atspre_FILE_stderr", SingletonValue.c_stderr);
-        
-        // global statement
+
+        // executing global statement
         for (ATSNode state : m_statements) {
-            state.evaluate(m_types, m_funcs, globalScope);
+            state.evaluate(m_types, m_funcs, m_gvscope);
         }
         
         // =======================
         // new scope for the main
-        ATSScope<Object> mainScope = globalScope.newScope();
+        ATSScope<Object> mainScope = m_gvscope.newScope();
         // todo add the error to the current scope
         // something like mainScope.addValue(errname, LValue(int))
 
@@ -146,7 +142,7 @@ public class Program {
             return;
         }
         
-        ATSScope<Object> scope = globalScope.newScope();
+        ATSScope<Object> scope = m_gvscope.newScope();
         ((UserFunc)fun).evaluate(m_types, m_funcs, scope, mainArgs);
         
         return;

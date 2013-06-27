@@ -6,7 +6,6 @@ import org.ats_lang.postiats.jats.type.FuncType;
 import org.ats_lang.postiats.jats.type.IntType;
 import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.SizeType;
-import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.VoidType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.Ptrk;
@@ -54,6 +53,8 @@ public class CCompPointer {
         typscope.addValue("atspre_sub_ptr1_ptr1", intFunc);
     }
     
+    static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {
+    }
     
     
 }

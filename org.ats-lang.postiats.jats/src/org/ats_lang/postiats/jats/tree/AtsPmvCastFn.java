@@ -86,6 +86,22 @@ public class AtsPmvCastFn extends ATSTypeNode {
                 throw new Error("check this case");
             }
             return v;
+        } else if (m_d2c.equals("arrayptr_encode2")) {
+            if (!m_arg.getType().equals(PtrkType.cType)) {
+                throw new Error("check this case");
+            }
+            if (!m_hit.equals(PtrkType.cType)) {
+                throw new Error("check this case");
+            }
+            return v;
+        } else if (m_d2c.equals("arrayptrout2ptr")) {
+            if (!m_arg.getType().equals(PtrkType.cType)) {
+                throw new Error("check this case");
+            }
+            if (!m_hit.equals(PtrkType.cType)) {
+                throw new Error("check this case");
+            }
+            return v;
         } else {
             throw new Error("Unknown cast: " + m_d2c);
         }

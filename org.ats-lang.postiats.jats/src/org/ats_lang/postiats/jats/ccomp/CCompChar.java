@@ -70,5 +70,9 @@ public class CCompChar {
         typscope.addValue("atspre_sub_char_char", intFunc);
         typscope.addValue("atspre_sub_char0_char0", intFunc);
     }
+    
+    static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {
+    }
+    
 
 }

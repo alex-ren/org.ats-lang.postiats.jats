@@ -18,6 +18,7 @@ import org.ats_lang.postiats.jats.parser.*;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.utils.MapScope;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 
 
@@ -30,37 +31,35 @@ public class Test {
      */
     public static void main(String[] args) throws RecognitionException, IOException {
         String [] filenames = {
-//        		"test/printtest_dats.c"
-//        		,"test/basic_dats.c"
-//        		,"test/f91_dats.c"
-//        		,"test/fact_dats.c"
-//        		,"test/fib_dats.c"
-//        		,"test/atof_dats.c"
-//                ,"test/test01_dats.c"
-//                ,"test/test02_dats.c"
-//                ,"test/test03_dats.c"
-//                ,"test/test04_dats.c"
-//                ,"test/test05_dats.c"
-//                ,"test/test06_dats.c"
-//                ,"test/test07_dats.c"
-//                
-//                ,"test/test08_dats.c"
-//                ,"test/test09_dats.c"
-//                ,"test/test10_dats.c"
-//                ,"test/test11_dats.c"
-//                ,"test/test12_dats.c"
-//                ,"test/test13_dats.c"
-                "test/test14_dats.c"  // array
-//                ,"test/test15_dats.c"  // array
-//                ,"test/test16_dats.c"
-//                ,"test/test17_dats.c"
-//                ,"test/test18_dats.c"
-//                ,"test/test19_dats.c"
-//                ,"test/test20_dats.c"
-//                ,"test/test21_dats.c"
-//                ,"test/test22_string_dats.c"
-//                ,"test/test23_array_dats.c"  // array
-                // ,"test/areverse_dats.c"
+        		"test/printtest_dats.c"
+        		,"test/basic_dats.c"
+        		,"test/f91_dats.c"
+        		,"test/fact_dats.c"
+        		,"test/fib_dats.c"
+        		,"test/atof_dats.c"
+                ,"test/test01_dats.c"
+                ,"test/test02_dats.c"
+                ,"test/test03_dats.c"
+                ,"test/test04_dats.c"
+                ,"test/test05_dats.c"
+                ,"test/test06_dats.c"
+                ,"test/test07_dats.c"
+                ,"test/test08_dats.c"
+                ,"test/test09_dats.c"
+                ,"test/test10_dats.c"
+                ,"test/test11_dats.c"
+                ,"test/test12_dats.c"
+                ,"test/test13_dats.c"
+                ,"test/test14_dats.c"  // array
+                ,"test/test15_dats.c"  // array
+                ,"test/test16_dats.c"
+                ,"test/test17_dats.c"
+                ,"test/test18_dats.c"
+                ,"test/test19_dats.c"
+                ,"test/test20_dats.c"
+                ,"test/test21_dats.c"
+                ,"test/test22_string_dats.c"
+                ,"test/test23_array_dats.c"  // array
         
         };
 
@@ -104,11 +103,16 @@ public class Test {
             Map<String, FuncDef> funcs = new HashMap<String, FuncDef>();
             CCompUtils.populateAllFuncs(funcs);
             
+            // initialize all the global variables, and put them into global scope
+            ATSScope<Object> gvscope = new MapScope<Object>();
+            CCompUtils.populateAllGlobalValues(gvscope);
+            
             ATSScope<ATSType> tyscope = new MapScope<ATSType>();
             CCompUtils.populateAllFuncTypes(tyscope);
+            CCompUtils.populateAllGlobalValueTypes(tyscope);
             
             // collect the definition of all the functions
-            Program prog = walker.program(types, funcs, tyscope);
+            Program prog = walker.program(types, funcs, gvscope, tyscope);
             
             System.out.println("==fun the program==========================");
             prog.run(new String[] {filename, "3.3432"});

@@ -73,10 +73,10 @@ public class CCompBasics {
     }
 
     
-    public static SingletonValue atspre_fprint_newline(SingletonValue out) {
-        if (out == SingletonValue.c_stderr) {
+    public static SingletonValue atspre_fprint_newline(Ptrk out) {
+        if (out == Ptrk.c_stderr) {
             System.err.println();
-        } else if (out == SingletonValue.c_stdout) {
+        } else if (out == Ptrk.c_stdout) {
             System.out.println();
         } else {
             throw new Error("Unknown FILE type");
@@ -86,11 +86,11 @@ public class CCompBasics {
     }
     
     public static SingletonValue atspre_print_newline() {
-        return atspre_fprint_newline(SingletonValue.c_stdout);
+        return atspre_fprint_newline(Ptrk.c_stdout);
     }
     
     public static SingletonValue atspre_prerr_newline() {
-        return atspre_fprint_newline(SingletonValue.c_stderr);
+        return atspre_fprint_newline(Ptrk.c_stderr);
     }
     
     static public void populateFuncType(ATSScope<ATSType> typscope) {
@@ -117,4 +117,10 @@ public class CCompBasics {
         
         
     }
+    
+    static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {
+    }
+    
+    
 }
+

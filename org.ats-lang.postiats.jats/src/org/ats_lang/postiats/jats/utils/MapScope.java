@@ -30,7 +30,8 @@ public class MapScope<T> implements ATSScope<T> {
                 return m_parent.getValue(id);
             } else {
                 System.out.println("MapScope, value for " + id + " is not found.");
-                return null;
+                throw new Error("ddddddddddddddd");
+//                return null;
             }
         }
     }

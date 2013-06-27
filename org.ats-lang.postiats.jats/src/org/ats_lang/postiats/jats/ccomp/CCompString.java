@@ -12,11 +12,11 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class CCompString {
 
-    public static SingletonValue atspre_fprint_string(SingletonValue out, Ptrk x) {
+    public static SingletonValue atspre_fprint_string(Ptrk out, Ptrk x) {
         String str = x.createString();
-        if (out.equals(SingletonValue.c_stderr)) {
+        if (out == Ptrk.c_stderr) {
             System.err.print(str);
-        } else if (out.equals(SingletonValue.c_stdout)) {
+        } else if (out == Ptrk.c_stdout) {
             System.out.print(str);
         } else {
             throw new Error("Unknown FILE type");
@@ -26,11 +26,11 @@ public class CCompString {
     }
 
     public static SingletonValue atspre_print_string(Ptrk x) {
-        return atspre_fprint_string(SingletonValue.c_stdout, x);
+        return atspre_fprint_string(Ptrk.c_stdout, x);
     }
 
     public static SingletonValue atspre_prerr_string(Ptrk x) {
-        return atspre_fprint_string(SingletonValue.c_stderr, x);
+        return atspre_fprint_string(Ptrk.c_stderr, x);
     }
 
 
@@ -58,6 +58,9 @@ public class CCompString {
         typscope.addValue("atspre_prerr_string", voidFunc);
         typscope.addValue("atspre_eq_string_string", boolFunc);
         typscope.addValue("atspre_neq_string_string", boolFunc);
+    }
+    
+    static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {
     }
 
 }

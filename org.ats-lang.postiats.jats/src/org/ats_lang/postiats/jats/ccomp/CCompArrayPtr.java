@@ -78,6 +78,9 @@ public class CCompArrayPtr {
         typscope.addValue("atspre_arrayptr_make_arrpsz", ptrkFunc);
         typscope.addValue("atspre_arrayptr_free", voidFunc);
     }
+    
+    static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {
+    }
 
 }
 
