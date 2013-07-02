@@ -12,9 +12,9 @@ import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.Ptrk;
 
 public class AtsSelArrPtrInd extends ATSTypeNode {
-    ATSNode m_pmv;
-    ATSReferableType m_tyelt;
-    ATSNode m_lab;
+    public ATSNode m_pmv;
+    public ATSReferableType m_tyelt;
+    public ATSNode m_lab;
 
     public AtsSelArrPtrInd(ATSNode pmv, ATSType tyelt, ATSNode lab) {
         // member of array is actually a reference
@@ -28,32 +28,40 @@ public class AtsSelArrPtrInd extends ATSTypeNode {
         m_tyelt = (ATSReferableType)tyelt;
         m_lab = lab;
     }
+//
+//    @Override
+//    // #define ATSselarrptrind(pmv, tyelt, lab) (((tyelt*)pmv)lab)
+//    // example
+//    // ATSINSxstore(tmp3$1,
+//    // ATSselarrptrind(arg0, atstkind_t0ype(atstype_double), [arg1]),
+//    // ATSselarrptrind(arg0, atstkind_t0ype(atstype_double), [arg2])
+//    // ) ;
+//    public Ptrk evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        Object pmv = m_pmv.evaluate(types, funcs, scope);  // array
+//        Object asz = m_lab.evaluate(types, funcs, scope);  // index
+//        
+//        if (asz instanceof Ptrk) {
+//            asz = ((Ptrk)asz).getValue(SizeType.cType0);
+//        }
+//        Integer sz = null;
+//        if (asz instanceof Integer) {
+//         sz = (Integer)asz;
+//        } else {
+//         throw new Error("Type error");
+//        }
+//        
+//        Ptrk ret = ((Ptrk)pmv).SelArrInd(sz, m_tyelt);
+//        return ret;
+//
+//    }
+    
 
     @Override
-    // #define ATSselarrptrind(pmv, tyelt, lab) (((tyelt*)pmv)lab)
-    // example
-    // ATSINSxstore(tmp3$1,
-    // ATSselarrptrind(arg0, atstkind_t0ype(atstype_double), [arg1]),
-    // ATSselarrptrind(arg0, atstkind_t0ype(atstype_double), [arg2])
-    // ) ;
-    public Ptrk evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object pmv = m_pmv.evaluate(types, funcs, scope);  // array
-        Object asz = m_lab.evaluate(types, funcs, scope);  // index
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
-        if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue(SizeType.cType0);
-        }
-        Integer sz = null;
-        if (asz instanceof Integer) {
-         sz = (Integer)asz;
-        } else {
-         throw new Error("Type error");
-        }
-        
-        Ptrk ret = ((Ptrk)pmv).SelArrInd(sz, m_tyelt);
-        return ret;
-
     }
 
 }
+

@@ -17,8 +17,8 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
  * Variable definition  
  */
 public class DefinitionNode extends ATSTypeNode {
-    private ATSType m_ty;
-    private String m_id;
+    public ATSType m_ty;
+    public String m_id;
 
     public DefinitionNode(ATSScope<ATSType> tyscope, ATSType ty, String id) {
         super(VoidType.cType);
@@ -56,11 +56,23 @@ public class DefinitionNode extends ATSTypeNode {
     public String getID() {
         return m_id;
     }
+//
+//    @Override
+//    public SingletonValue evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        scope.addValue(m_id, m_ty.createNormalDefault());
+//        return SingletonValue.VOID;
+//    }
+//    
 
     @Override
-    public SingletonValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        scope.addValue(m_id, m_ty.createNormalDefault());
-        return SingletonValue.VOID;
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
+        
     }
+    
+    
 }
+
+
+

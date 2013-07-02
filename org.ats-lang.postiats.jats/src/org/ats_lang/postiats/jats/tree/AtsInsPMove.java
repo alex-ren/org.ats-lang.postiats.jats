@@ -13,10 +13,10 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsPMove extends ATSTypeNode {
-    private ATSType m_tmpty;
-    private String m_tmp;
-    private ATSReferableType m_hit;
-    private ATSNode m_val;
+    public ATSType m_tmpty;
+    public String m_tmp;
+    public ATSReferableType m_hit;
+    public ATSNode m_val;
     
     public AtsInsPMove(ATSType tmpty, String tmp, ATSReferableType hit, ATSNode val) {
         super(VoidType.cType);
@@ -30,21 +30,30 @@ public class AtsInsPMove extends ATSTypeNode {
         m_val = val;
     }
     
+//    @Override
+//    // #define ATSINSpmove(tmp, hit, val) (*(hit*)tmp = val)
+//    public SingletonValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        Object val = m_val.evaluate(types, funcs, scope);
+//        ATSType valtype = m_val.getType();
+//        
+//        Ptrk arrp = (Ptrk)scope.getValue(m_tmp);
+//        if (valtype instanceof RefType) {
+//        	arrp.update(RefType.getValue(val, ((RefType) valtype).defType()), m_hit);
+//        } else if (valtype instanceof ATSReferableType) {
+//        	arrp.update(val, m_hit); 
+//        } else {
+//            throw new Error("ATSINSpmove: only name is supported now");
+//        }
+//        
+//        return SingletonValue.VOID;
+//    }
+//    
+
     @Override
-    // #define ATSINSpmove(tmp, hit, val) (*(hit*)tmp = val)
-    public SingletonValue evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object val = m_val.evaluate(types, funcs, scope);
-        ATSType valtype = m_val.getType();
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
-        Ptrk arrp = (Ptrk)scope.getValue(m_tmp);
-        if (valtype instanceof RefType) {
-        	arrp.update(RefType.getValue(val, ((RefType) valtype).defType()), m_hit);
-        } else if (valtype instanceof ATSReferableType) {
-        	arrp.update(val, m_hit); 
-        } else {
-            throw new Error("ATSINSpmove: only name is supported now");
-        }
-        
-        return SingletonValue.VOID;
     }
 }
+
+

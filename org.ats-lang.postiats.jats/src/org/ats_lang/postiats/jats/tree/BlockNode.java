@@ -12,7 +12,7 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 
 // The node holds the body of the function.
 public class BlockNode extends ATSTypeNode {
-    private List<ATSNode> m_statements;
+    public List<ATSNode> m_statements;
 
     public void addStat(ATSNode stat) {
         m_statements.add(stat);
@@ -22,20 +22,29 @@ public class BlockNode extends ATSTypeNode {
     	super(VoidType.cType);
         m_statements = new ArrayList<ATSNode>();
     }
+//
+//	@Override
+//    public Object evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        for (ATSNode state: m_statements) {
+//        	Object v = state.evaluate(types, funcs, scope);
+//            if (v instanceof AtsReturn.ReturnValue) {
+//            	return (AtsReturn.ReturnValue) v;
+//            }
+//        }
+//        return SingletonValue.VOID;
+//    }
+	
 
-	@Override
-    public Object evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        for (ATSNode state: m_statements) {
-        	Object v = state.evaluate(types, funcs, scope);
-            if (v instanceof AtsReturn.ReturnValue) {
-            	return (AtsReturn.ReturnValue) v;
-            }
-        }
-        return SingletonValue.VOID;
+    @Override
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
+        
     }
 
 }
+
+
 
 
 	

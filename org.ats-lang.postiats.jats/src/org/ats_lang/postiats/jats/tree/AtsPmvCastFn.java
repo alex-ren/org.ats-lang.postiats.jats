@@ -10,9 +10,9 @@ import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public class AtsPmvCastFn extends ATSTypeNode {
-    protected String m_d2c;
-    protected ATSType m_hit;
-    protected ATSNode m_arg;
+    public String m_d2c;
+    public ATSType m_hit;
+    public ATSNode m_arg;
 
     // #define ATSPMVcastfn(d2c, hit, arg) ((hit)arg)
     // example
@@ -28,83 +28,93 @@ public class AtsPmvCastFn extends ATSTypeNode {
         m_arg = arg;
     }
 
-    @Override
-    // AtsPmvCastFn is a non-op.
-    public Object evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object v = m_arg.evaluate(types, funcs, scope);
-//        System.out.println("==cast " + m_arg.getType() + " to " + m_hit);
-        
-
-        if (m_d2c.equals("cast")) {
-            ATSType arg_type = m_arg.getType();
-
-            if (arg_type == m_hit) {
+//    @Override
+//    // AtsPmvCastFn is a non-op.
+//    public Object evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        Object v = m_arg.evaluate(types, funcs, scope);
+////        System.out.println("==cast " + m_arg.getType() + " to " + m_hit);
+//        
+//
+//        if (m_d2c.equals("cast")) {
+//            ATSType arg_type = m_arg.getType();
+//
+//            if (arg_type == m_hit) {
+////                throw new Error("check this case");
+//                // return v.deepcopy();
+//            }
+//            
+//            if (arg_type instanceof RefType) {
 //                throw new Error("check this case");
-                // return v.deepcopy();
-            }
-            
-            if (arg_type instanceof RefType) {
-                throw new Error("check this case");
-            }
+//            }
+//
+//            // ptr2string
+//            if (arg_type instanceof ArrPtrType) {
+//                throw new Error("check this case");
+//            }
+//
+//            return v;
+//        } else if (m_d2c.equals("string2ptr")) {
+//            if (!m_arg.getType().equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            if (!m_hit.equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            return v;
+//        } else if (m_d2c.equals("ptr1_of_ptr0")) {
+//            if (!m_arg.getType().equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            if (!m_hit.equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            return v;
+//        } else if (m_d2c.equals("string1_of_string0")) {
+//            if (!m_arg.getType().equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            if (!m_hit.equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            return v;
+//        } else if (m_d2c.equals("arrayptr2ptr")) {
+//            if (!m_arg.getType().equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            if (!m_hit.equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            return v;
+//        } else if (m_d2c.equals("arrayptr_encode2")) {
+//            if (!m_arg.getType().equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            if (!m_hit.equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            return v;
+//        } else if (m_d2c.equals("arrayptrout2ptr")) {
+//            if (!m_arg.getType().equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            if (!m_hit.equals(PtrkType.cType)) {
+//                throw new Error("check this case");
+//            }
+//            return v;
+//        } else {
+//            throw new Error("Unknown cast: " + m_d2c);
+//        }
+//    }  // arrayptr2ptr
 
-            // ptr2string
-            if (arg_type instanceof ArrPtrType) {
-                throw new Error("check this case");
-            }
 
-            return v;
-        } else if (m_d2c.equals("string2ptr")) {
-            if (!m_arg.getType().equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            if (!m_hit.equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            return v;
-        } else if (m_d2c.equals("ptr1_of_ptr0")) {
-            if (!m_arg.getType().equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            if (!m_hit.equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            return v;
-        } else if (m_d2c.equals("string1_of_string0")) {
-            if (!m_arg.getType().equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            if (!m_hit.equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            return v;
-        } else if (m_d2c.equals("arrayptr2ptr")) {
-            if (!m_arg.getType().equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            if (!m_hit.equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            return v;
-        } else if (m_d2c.equals("arrayptr_encode2")) {
-            if (!m_arg.getType().equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            if (!m_hit.equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            return v;
-        } else if (m_d2c.equals("arrayptrout2ptr")) {
-            if (!m_arg.getType().equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            if (!m_hit.equals(PtrkType.cType)) {
-                throw new Error("check this case");
-            }
-            return v;
-        } else {
-            throw new Error("Unknown cast: " + m_d2c);
-        }
-    }  // arrayptr2ptr
-
+    @Override
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
+        
+    }
+    
+    
 }
+
+

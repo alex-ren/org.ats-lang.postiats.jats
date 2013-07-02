@@ -14,9 +14,9 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsMoveBoxrec extends ATSTypeNode {
-    ATSType m_tyrec;
-    String m_tmp;
-    ATSType m_tmptype;
+    public ATSType m_tyrec;
+    public String m_tmp;
+    public ATSType m_tmptype;
 
     // boxty = BoxedType or RefType (BoxedType)
     // tyrec = StructType
@@ -29,18 +29,27 @@ public class AtsInsMoveBoxrec extends ATSTypeNode {
         
     }
     
-    // #define ATSINSmove_boxrec(tmp, tyrec) (tmp = ATS_MALLOC(sizeof(tyrec)))
+//    // #define ATSINSmove_boxrec(tmp, tyrec) (tmp = ATS_MALLOC(sizeof(tyrec)))
+//    @Override
+//    public Object evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        
+//        if (m_tmptype instanceof RefType) {
+//            RefType.update(scope.getValue(m_tmp), new HashMap<String, Object>(), BoxedType.cType);  // BoxedType <-> HashMap
+//        } else {
+//            scope.addValue(m_tmp, new HashMap<String, Object>());
+//        }
+//        
+//        return SingletonValue.VOID;
+//    }
+    
+
     @Override
-    public Object evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
-        if (m_tmptype instanceof RefType) {
-            RefType.update(scope.getValue(m_tmp), new HashMap<String, Object>(), BoxedType.cType);  // BoxedType <-> HashMap
-        } else {
-            scope.addValue(m_tmp, new HashMap<String, Object>());
-        }
-        
-        return SingletonValue.VOID;
     }
 
 }
+
+

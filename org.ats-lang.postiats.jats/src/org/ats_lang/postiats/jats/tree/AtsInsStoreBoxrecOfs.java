@@ -14,11 +14,11 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
-    private String m_tmp; // name of the structure object
-    private String m_lab; // name of the member
-    private ATSType m_ty; // type of the object // can be RefType(BoxedType)
-    private StructType m_tyrec; // type of the structure
-    private ATSNode m_val; // value of the member
+    public String m_tmp; // name of the structure object
+    public String m_lab; // name of the member
+    public ATSType m_ty; // type of the object // can be RefType(BoxedType)
+    public StructType m_tyrec; // type of the structure
+    public ATSNode m_val; // value of the member
 
     public AtsInsStoreBoxrecOfs(ATSType tmpty, String tmp, ATSType tyrec, String lab, ATSNode val) {
         super(VoidType.cType);
@@ -33,29 +33,37 @@ public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
         m_val = val;
 
     }
+//
+//    // #define ATSINSstore_boxrec_ofs(tmp, tyrec, lab, val) (((tyrec*)(tmp))->lab = val)
+//    @Override
+//    public SingletonValue evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        Object rec = scope.getValue(m_tmp);
+//        
+//        if (rec instanceof Ptrk) {  // m_ty = RefType(BoxedType)
+//            rec = ((Ptrk) rec).getValue(BoxedType.cType);
+//        }
+//        
+//        @SuppressWarnings("unchecked")
+//        Map<String, Object> recm = (Map<String, Object>) rec;
+//        
+//        Object target = m_val.evaluate(types, funcs, scope);
+//        ATSType target_ty = m_val.getType();
+//        if (target_ty instanceof RefType) {
+//            target = RefType.cloneValue(target, ((RefType) target_ty).defType());
+//        }
+//        recm.put(m_lab, target);
+//        
+//        return SingletonValue.VOID;       
+//            
+//    }
+    
 
-    // #define ATSINSstore_boxrec_ofs(tmp, tyrec, lab, val) (((tyrec*)(tmp))->lab = val)
     @Override
-    public SingletonValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object rec = scope.getValue(m_tmp);
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
-        if (rec instanceof Ptrk) {  // m_ty = RefType(BoxedType)
-            rec = ((Ptrk) rec).getValue(BoxedType.cType);
-        }
-        
-        @SuppressWarnings("unchecked")
-        Map<String, Object> recm = (Map<String, Object>) rec;
-        
-        Object target = m_val.evaluate(types, funcs, scope);
-        ATSType target_ty = m_val.getType();
-        if (target_ty instanceof RefType) {
-            target = RefType.cloneValue(target, ((RefType) target_ty).defType());
-        }
-        recm.put(m_lab, target);
-        
-        return SingletonValue.VOID;       
-            
     }
 
 }
+

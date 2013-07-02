@@ -1,16 +1,14 @@
 package org.ats_lang.postiats.jats.tree;
 
-import java.util.Map;
-
-import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public interface ATSNode {
     public enum FunDecorator {STATIC, GLOBAL};
-	public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope);
+//	public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope);
 	
 	public ATSType getType();
+	
+	public Object accept(ATSTreeVisitor visitor);
 //	
 //	public static class ValueType {
 //		private ATSType m_ty;

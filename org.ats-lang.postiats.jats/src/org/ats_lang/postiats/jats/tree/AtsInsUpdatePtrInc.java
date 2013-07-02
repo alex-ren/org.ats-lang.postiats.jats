@@ -11,9 +11,9 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsUpdatePtrInc extends ATSTypeNode {
-    private String m_tmp;
-    private ATSType m_ty;  // type of m_tmp
-    private ATSType m_tyelt;
+    public String m_tmp;
+    public ATSType m_ty;  // type of m_tmp
+    public ATSType m_tyelt;
     
     // #define ATSINSupdate_ptrinc(tmp, tyelt) (tmp = (tyelt*)tmp + 1)
     // example
@@ -35,22 +35,30 @@ public class AtsInsUpdatePtrInc extends ATSTypeNode {
         }
 
     }
+//
+//    @Override
+//    public SingletonValue evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        
+//        Object tmp = scope.getValue(m_tmp);
+//        
+//        if (tmp instanceof Ptrk) {
+//            Ptrk np = Ptrk.createPtrkOffset((Ptrk)tmp, m_tyelt.getSize());  
+//            // Caution: must put the new Ptrk back
+//            scope.addValue(m_tmp, np);
+//        } else {
+//            throw new Error("AtsInsUpdatePtrInc on non-ptr value");
+//        }
+//        
+//        return SingletonValue.VOID;
+//    }
+
 
     @Override
-    public SingletonValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
-        Object tmp = scope.getValue(m_tmp);
-        
-        if (tmp instanceof Ptrk) {
-            Ptrk np = Ptrk.createPtrkOffset((Ptrk)tmp, m_tyelt.getSize());  
-            // Caution: must put the new Ptrk back
-            scope.addValue(m_tmp, np);
-        } else {
-            throw new Error("AtsInsUpdatePtrInc on non-ptr value");
-        }
-        
-        return SingletonValue.VOID;
     }
-
 }
+
+

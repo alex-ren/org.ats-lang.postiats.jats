@@ -60,8 +60,8 @@ public class UserFunc implements FuncDef{
             }
         }
         // System.out.println("evaluating function: " + m_id);
-        
-        return m_body.evaluate(types, funcs, scope);
+        EvaluateVisitor visitor = new EvaluateVisitor(types, funcs, scope);
+        return visitor.visit(m_body);
     }
 
 }

@@ -13,10 +13,16 @@ public class AtsEmpty extends ATSTypeNode {
         super(VoidType.cType);
     }
 
+//    @Override
+//    public SingletonValue evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        // null operation
+//        return SingletonValue.VOID;
+//    }
+
     @Override
-    public SingletonValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        // null operation
-        return SingletonValue.VOID;
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
+        
     }
 }

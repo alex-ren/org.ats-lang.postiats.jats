@@ -11,7 +11,7 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 
 
 public class AtsPmvPtrof extends ATSTypeNode {
-    private String m_lval;
+    public String m_lval;
     
     
     // ty = RefType
@@ -20,21 +20,31 @@ public class AtsPmvPtrof extends ATSTypeNode {
         super(PtrkType.cType);
         m_lval = lval;
     }
+//
+//    @Override
+//    // #define ATSPMVptrof(lval) (&(lval))
+//    // example
+////    ATStmpdec(tmp2, atstkind_t0ype(atstype_size))
+////    ATSPMVptrof(tmp2)
+//    public Object evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        Object v = scope.getValue(m_lval);
+//        if (v instanceof Ptrk) {
+//        	return RefType.ptrof((Ptrk) v);
+//        } else {
+//        	throw new Error("type mismatch");
+//        }
+//        
+//    }
+//    
 
     @Override
-    // #define ATSPMVptrof(lval) (&(lval))
-    // example
-//    ATStmpdec(tmp2, atstkind_t0ype(atstype_size))
-//    ATSPMVptrof(tmp2)
-    public Object evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object v = scope.getValue(m_lval);
-        if (v instanceof Ptrk) {
-        	return RefType.ptrof((Ptrk) v);
-        } else {
-        	throw new Error("type mismatch");
-        }
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
     }
 
 }
+
+
+

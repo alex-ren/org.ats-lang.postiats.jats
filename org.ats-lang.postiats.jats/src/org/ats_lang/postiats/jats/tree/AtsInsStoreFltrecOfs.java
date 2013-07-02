@@ -11,11 +11,11 @@ import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsStoreFltrecOfs extends ATSTypeNode {
-    private String m_tmp;  // name of the structure object
-    private String m_lab;  // name of the member
-    private ATSType m_ty;  // type of the object // can be RefType
-    private ATSNode m_val;  // value of the member
-    private StructType m_tyrec;  // type of the structure
+    public String m_tmp;  // name of the structure object
+    public String m_lab;  // name of the member
+    public ATSType m_ty;  // type of the object // can be RefType
+    public ATSNode m_val;  // value of the member
+    public StructType m_tyrec;  // type of the structure
     
     
     // #define ATSINSstore_fltrec_ofs(tmp, tyrec, lab, val) ((tmp).lab = val)
@@ -59,39 +59,47 @@ public class AtsInsStoreFltrecOfs extends ATSTypeNode {
         
         
     }
+//
+//    @Override
+//    public SingletonValue evaluate(Map<String, ATSType> types,
+//            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//
+//        Object target = m_val.evaluate(types, funcs, scope);
+//        ATSType target_ty = m_val.getType();
+//
+//        Object rec = scope.getValue(m_tmp);
+////        System.out.println("lab is " + m_lab);
+//        
+//        // m_ty == RefType
+//        if (m_ty instanceof RefType) {
+//        	
+//            if (target_ty instanceof RefType) {
+//                target = RefType.getValue(target, ((RefType) target_ty).defType());
+//            }
+//            
+//        	RefType.updateFltrecOfs(rec, target, m_lab, m_tyrec);
+//        } else if (m_ty instanceof StructType) {
+//            if (target_ty instanceof RefType) {
+//                target = RefType.cloneValue(target, ((RefType) target_ty).defType());
+//            }
+//            
+//            @SuppressWarnings("unchecked")
+//            Map<String, Object> mrec = (Map<String, Object>)rec;
+//            
+//            mrec.put(m_lab, target);
+//        } else {
+//        	throw new Error("non record");
+//        }
+//        
+//        return SingletonValue.VOID;        
+//    }
+//    
 
     @Override
-    public SingletonValue evaluate(Map<String, ATSType> types,
-            Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-
-        Object target = m_val.evaluate(types, funcs, scope);
-        ATSType target_ty = m_val.getType();
-
-        Object rec = scope.getValue(m_tmp);
-//        System.out.println("lab is " + m_lab);
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
-        // m_ty == RefType
-        if (m_ty instanceof RefType) {
-        	
-            if (target_ty instanceof RefType) {
-                target = RefType.getValue(target, ((RefType) target_ty).defType());
-            }
-            
-        	RefType.updateFltrecOfs(rec, target, m_lab, m_tyrec);
-        } else if (m_ty instanceof StructType) {
-            if (target_ty instanceof RefType) {
-                target = RefType.cloneValue(target, ((RefType) target_ty).defType());
-            }
-            
-            @SuppressWarnings("unchecked")
-            Map<String, Object> mrec = (Map<String, Object>)rec;
-            
-            mrec.put(m_lab, target);
-        } else {
-        	throw new Error("non record");
-        }
-        
-        return SingletonValue.VOID;        
     }
 
 }
+

@@ -72,9 +72,10 @@ public class Program {
     
     public void run(String [] argv) {
 
+        EvaluateVisitor gvisitor = new EvaluateVisitor(m_types, m_funcs, m_gvscope);
         // executing global statement
         for (ATSNode state : m_statements) {
-            state.evaluate(m_types, m_funcs, m_gvscope);
+            state.accept(gvisitor);
         }
         
         // =======================
@@ -86,7 +87,8 @@ public class Program {
         // =======================
                 
         // initialization function
-        m_main.m_initFunc.evaluate(m_types, m_funcs, mainScope);
+        EvaluateVisitor initVisitor = new EvaluateVisitor(m_types, m_funcs, mainScope);
+        m_main.m_initFunc.accept(initVisitor);
         
         // ==transform arguments=====================
         Integer mainArgc = argv.length;

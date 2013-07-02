@@ -10,20 +10,25 @@ import org.ats_lang.postiats.jats.type.RefType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public class AtsDeref extends ATSTypeNode {
-    private ATSNode m_node;
+    public ATSNode m_node;
 
     public AtsDeref(ATSReferableType type, ATSNode node) {
         super(new RefType(type));
         m_node = node;
     }
     
+//    @Override
+//    // #define ATSderef(pmv, hit) (*(hit*)pmv)
+//    public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        Object v = m_node.evaluate(types, funcs, scope);
+//        return RefType.deref(v);
+//        
+//    }
+
     @Override
-    // #define ATSderef(pmv, hit) (*(hit*)pmv)
-    public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        Object v = m_node.evaluate(types, funcs, scope);
-        return RefType.deref(v);
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
         
     }
-
 
 }

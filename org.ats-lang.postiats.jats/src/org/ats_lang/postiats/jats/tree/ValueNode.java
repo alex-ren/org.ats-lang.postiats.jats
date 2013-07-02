@@ -8,15 +8,27 @@ import org.ats_lang.postiats.jats.utils.ATSScope;
 
 // literal input
 public class ValueNode extends ATSTypeNode {
-    private Object m_v;
+    public Object m_v;
     
     public ValueNode(ATSType ty, Object v) {
         super(ty);
         m_v = v;
     }
 
+//    @Override
+//    public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
+//        return m_v;
+//    }
+//    
+
     @Override
-    public Object evaluate(Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> scope) {
-        return m_v;
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
+        
     }
+    
+    
+    
 }
+
+
