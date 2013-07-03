@@ -14,11 +14,11 @@ public class UIntType extends ATSEltType {
 //    public static UIntValue fromString(String text) {
 //        return new UIntValue(new Integer(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return UIntValue.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

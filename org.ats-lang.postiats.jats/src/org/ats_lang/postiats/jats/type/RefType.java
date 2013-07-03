@@ -117,5 +117,9 @@ public class RefType implements ATSType {
     		throw new Error("type mismatch");
     	}
     }
+    
+    public String toString() {
+        return Ptrk.class.getSimpleName();
+    }
 
 }

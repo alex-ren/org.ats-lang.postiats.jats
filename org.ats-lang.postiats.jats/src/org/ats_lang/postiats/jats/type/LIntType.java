@@ -14,10 +14,10 @@ public class LIntType extends ATSEltType {
 //        return new LIntValue(new Integer(text));
 //    }
 //    
-//    @Override
-//    public String toString() {
-//        return LIntValue.class.getSimpleName();
-//    }
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

@@ -14,12 +14,12 @@ public class LLIntType extends ATSEltType {
 //    public static LLIntValue fromString(String text) {
 //        return new LLIntValue(new Long(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return LLIntValue.class.getSimpleName();
-//    }
-//    
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
+    
     @Override
     public int getSize() {
         return m_size;

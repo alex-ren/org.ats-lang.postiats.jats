@@ -60,6 +60,7 @@ public class Test {
                 ,"test/test21_dats.c"
                 ,"test/test22_string_dats.c"
                 ,"test/test23_array_dats.c"  // array
+                ,"test/test24_dats.c"
         
         };
 
@@ -112,10 +113,10 @@ public class Test {
             CCompUtils.populateAllGlobalValueTypes(tyscope);
             
             // collect the definition of all the functions
-            Program prog = walker.program(types, funcs, gvscope, tyscope);
+            Program prog = walker.program(types, funcs, tyscope);
             
-            System.out.println("==fun the program==========================");
-            prog.run(new String[] {filename, "3.3432"});
+            System.out.println("==run the program==========================");
+            prog.run(gvscope, new String[] {filename, "3.3432"});
             
             /* ******** ******** */
 

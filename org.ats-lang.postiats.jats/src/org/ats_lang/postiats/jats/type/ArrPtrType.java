@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
+
 public class ArrPtrType extends ATSTempType {
 
     public static final ArrPtrType cType = new ArrPtrType();
@@ -12,13 +14,16 @@ public class ArrPtrType extends ATSTempType {
         return null;
     }
 
-//    @Override
-//    public boolean equals(ATSType ty) {
-//        if (this == ty) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-}
+    public String toString() {
+        return Ptrk.class.getSimpleName();
+    }
 
+    // @Override
+    // public boolean equals(ATSType ty) {
+    // if (this == ty) {
+    // return true;
+    // } else {
+    // return false;
+    // }
+    // }
+}

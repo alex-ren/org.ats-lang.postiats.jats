@@ -13,11 +13,11 @@ public class LDoubleType extends ATSEltType {
 //        return new LDoubleValue(new Double(text));
 //    }
 //
-//    @Override
-//    public String toString() {
-//        return LDoubleValue.class.getSimpleName();
-//    }
-//    
+    @Override
+    public String toString() {
+        return Double.class.getSimpleName();
+    }
+    
     @Override
     public int getSize() {
         return m_size;

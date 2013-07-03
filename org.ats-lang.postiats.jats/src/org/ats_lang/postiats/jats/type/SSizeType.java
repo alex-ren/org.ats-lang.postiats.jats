@@ -14,11 +14,11 @@ public class SSizeType extends ATSEltType {
 //    public static SSizeValue fromString(String text) {
 //        return new SSizeValue(new Integer(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return SSizeValue.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

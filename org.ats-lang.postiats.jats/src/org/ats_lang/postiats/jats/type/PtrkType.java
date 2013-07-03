@@ -1,5 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
+import org.ats_lang.postiats.jats.value.Ptrk;
+
 
 public class PtrkType extends ATSEltType { // ATSUpdatableType {
 
@@ -9,10 +11,9 @@ public class PtrkType extends ATSEltType { // ATSUpdatableType {
 //    public static final PtrkType cType0 = new PtrkType(Decorator.T0YPE);
     
     
-//    @Override
-//    public String toString() {
-//        return CCompTypedefs.class.getSimpleName() + "." + CCompTypedefs.CPtrValue.class.getSimpleName();
-//    }
+    public String toString() {
+        return Ptrk.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

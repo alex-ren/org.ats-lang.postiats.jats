@@ -7,6 +7,7 @@ public class VoidType implements ATSType {
     public static final VoidType cType = new VoidType();
     
     public static final int m_size = 0;
+//    
 //    @Override
 //    public String toString() {
 //        return "void";

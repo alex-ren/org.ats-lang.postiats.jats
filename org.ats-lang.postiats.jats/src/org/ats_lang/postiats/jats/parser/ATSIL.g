@@ -9,6 +9,8 @@ options {
 tokens {
   VAR; //  = 'var';
   VAR_VOID;
+  STAT_VAR; //  = 'var';
+  STAT_VAR_VOID;
   
   PROGRAM;
   BLOCK;
@@ -129,9 +131,14 @@ gstat
         (Semicol -> ^(FUNC_DECL ID func_decorator? $rettype paralst?)
         | LBrace block RBrace -> ^(FUNC_DEF ID func_decorator? $rettype paralst? block)
         )
-    | tmpdec Semicol!
+    | stat_tmpdec Semicol!
     | ats_dyn_cst Semicol!
     | ats_dyn_load1 Semicol!
+    | the_atsexncon_initize
+    ;
+    
+the_atsexncon_initize:
+    'extern void the_atsexncon_initize (atstype_exncon *d2c, char *exnmsg)' Semicol ->
     ;
 
 //int
@@ -174,6 +181,11 @@ typedef
 
 structure
     : Struct LBrace (atstype ID Semicol)+ RBrace -> ^(STRUCT ^(VAR atstype ID)+)
+    ;
+    
+stat_tmpdec
+    : stat_atstmpdec
+    | stat_atstmpdec_void
     ;
     
 tmpdec
@@ -395,23 +407,23 @@ ats_pmv_ptrof_void
 
 // ===================================
 ats_sel_recsin
-      : ATSselrecsin LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATSselrecsin $pmv atstype $lab)
+      : ATSSELrecsin LParen pmv=ID Comma atstype Comma lab=ID RParen -> ^(ATSSELrecsin $pmv atstype $lab)
       ;
    
 ats_sel_flt_rec
-    : ATSselfltrec LParen pmv=exp Comma atstype Comma lab=ID RParen -> ^(ATSselfltrec $pmv atstype $lab)
+    : ATSSELfltrec LParen pmv=exp Comma atstype Comma lab=ID RParen -> ^(ATSSELfltrec $pmv atstype $lab)
     ;
 
 ats_sel_box_rec
-    : ATSselboxrec LParen exp Comma atstype Comma ID RParen -> ^(ATSselboxrec exp atstype ID)
+    : ATSSELboxrec LParen exp Comma atstype Comma ID RParen -> ^(ATSSELboxrec exp atstype ID)
     ; 
     
 ats_sel_arr_ind
-    : ATSselarrind LParen exp Comma atstype Comma ID RParen -> ^(ATSselarrind exp atstype ID)
+    : ATSSELarrind LParen exp Comma atstype Comma ID RParen -> ^(ATSSELarrind exp atstype ID)
     ;
 
 ats_sel_arrptr_ind
-    : ATSselarrptrind LParen pmv=exp Comma atstype Comma LBracket lab=exp RBracket RParen -> ^(ATSselarrptrind $pmv atstype $lab)
+    : ATSSELarrptrind LParen pmv=exp Comma atstype Comma LBracket lab=exp RBracket RParen -> ^(ATSSELarrptrind $pmv atstype $lab)
     ;
 
 
@@ -445,8 +457,8 @@ paralst
 para : paratype ID?;
 
 paratype
-    : atstype -> ^(PARA_TYPE atstype)
-    | para_decorator LParen atstype RParen -> ^(PARA_TYPE para_decorator atstype)
+    : para_decorator LParen atstype_noparadec RParen -> ^(PARA_TYPE para_decorator atstype_noparadec)
+    | atstype_noparadec -> ^(PARA_TYPE atstype_noparadec)
     ;
     
 para_decorator
@@ -459,12 +471,20 @@ func_decorator
     | ATSglobaldec -> STATIC
     ;
 
+stat_atstmpdec_void
+    : 'ATSstatmpdec_void' LParen ID Comma atstype RParen -> ^(STAT_VAR_VOID atstype ID)
+    ;
+    
+stat_atstmpdec
+    : 'ATSstatmpdec' LParen ID Comma atstype RParen -> ^(STAT_VAR atstype ID)
+    ;
+    
 atstmpdec_void
     : 'ATStmpdec_void' LParen ID Comma atstype RParen -> ^(VAR_VOID atstype ID)
     ;
     
-atstmpdec:
-    'ATStmpdec' LParen ID Comma atstype RParen -> ^(VAR atstype ID)
+atstmpdec
+    : 'ATStmpdec' LParen ID Comma atstype RParen -> ^(VAR atstype ID)
     ;
 
 atstypelst
@@ -472,10 +492,15 @@ atstypelst
     ;
     
 atstype
+    : atstype_noparadec
+    | para_decorator LParen atstype_noparadec RParen -> atstype_noparadec  // neglect para_decorator
+    ;
+    
+atstype_noparadec
     : // prim_type -> ^(TYPE prim_type)
       ID -> ^(TYPE ID)
     | kind_decorator LParen ID RParen -> ^(TYPE kind_decorator ID)
-    | 'atstype_tyarr' LParen atstype RParen -> ^(TYPE TYPE_ARR atstype)
+    | 'atstype_tyarr' LParen atstype_noparadec RParen -> ^(TYPE TYPE_ARR atstype_noparadec)
     ;
 
 kind_decorator
@@ -540,11 +565,11 @@ ATSmainats_argc_argv_envp_int: 'ATSmainats_argc_argv_envp_int';
 // =====================================================
 
 
-ATSselrecsin: 'ATSselrecsin';
-ATSselfltrec: 'ATSselfltrec';
-ATSselboxrec: 'ATSselboxrec';
-ATSselarrind: 'ATSselarrind';
-ATSselarrptrind: 'ATSselarrptrind';
+ATSSELrecsin: 'ATSSELrecsin';
+ATSSELfltrec: 'ATSSELfltrec';
+ATSSELboxrec: 'ATSSELboxrec';
+ATSSELarrind: 'ATSSELarrind';
+ATSSELarrptrind: 'ATSSELarrptrind';
 
 // =====================================================
 

@@ -72,7 +72,7 @@ typedefs-for-tyrecs-and-tysums(beg)
 typedef
 struct {
 atstkind_t0ype(atstype_int) atslab$0; 
-atstkind_t0ype(atstype_int) atslab$1; 
+atstkind_t0ype(atstype_char) atslab$1; 
 } postiats_tyrec_0 ;
 /*
 typedefs-for-tyrecs-and-tysums(end)
@@ -108,9 +108,14 @@ assumelst-declaration(beg)
 /*
 assumelst-declaration(end)
 */
+ATSstatmpdec(statmp1, atstkind_t0ype(atstype_int)) ;
 ATSstaticdec()
 atstkind_t0ype(atstype_int)
-foo_0(postiats_tyrec_0) ;
+init_0(atstkind_t0ype(atstype_int), atstkind_t0ype(atstype_int)) ;
+
+ATSstaticdec()
+atsvoid_t0ype
+foo_bt_var_2(atsrefarg1_type(atstype_boxed)) ;
 
 #if(0)
 ATSglobaldec()
@@ -119,34 +124,72 @@ mainats_void_0() ;
 #endif // end of [QUALIFIED]
 
 /*
-/home/grad2/aren/workspace/Postiats/projects/org.ats-lang.postiats.jats/test/test07.dats: 45(line=6, offs=5) -- 76(line=6, offs=36)
+/home/grad2/aren/workspace/Postiats/projects/org.ats-lang.postiats.jats/test/test24.dats: 43(line=4, offs=5) -- 77(line=4, offs=39)
 */
 /*
 local: 
-global: foo_0$0(level=0)
+global: init_0$0(level=0)
 local: 
 global: 
 */
 ATSstaticdec()
 atstkind_t0ype(atstype_int)
-foo_0(postiats_tyrec_0 arg0)
+init_0(atstkind_t0ype(atstype_int) arg0, atstkind_t0ype(atstype_int) arg1)
 {
 /* tmpvardeclst(beg) */
 ATStmpdec(tmpret0, atstkind_t0ype(atstype_int)) ;
 /* tmpvardeclst(end) */
 /* funbodyinstrlst(beg) */
-__patsflab_foo_0:
-ATSINSmove(tmpret0, ATSSELfltrec(arg0, postiats_tyrec_0, atslab$0)) ;
+__patsflab_init_0:
+ATSINSmove(tmpret0, atspre_g0int_add_int(arg0, arg1)) ;
 /* funbodyinstrlst(end) */
 ATSreturn(tmpret0) ;
-} /* end of [foo_0] */
+} /* end of [init_0] */
 
 /*
-/home/grad2/aren/workspace/Postiats/projects/org.ats-lang.postiats.jats/test/test07.dats: 94(line=8, offs=17) -- 144(line=12, offs=7)
+/home/grad2/aren/workspace/Postiats/projects/org.ats-lang.postiats.jats/test/test24.dats: 104(line=8, offs=5) -- 178(line=11, offs=4)
 */
 /*
-local: foo_0$0(level=0)
-global: foo_0$0(level=0), mainats_void_0$1$0(level=0)
+local: 
+global: foo_bt_var_2$0(level=0)
+local: 
+global: 
+*/
+ATSstaticdec()
+atsvoid_t0ype
+foo_bt_var_2(atsrefarg1_type(atstype_boxed) arg0)
+{
+/* tmpvardeclst(beg) */
+ATStmpdec_void(tmpret2, atsvoid_t0ype) ;
+ATStmpdec(tmp3, atstype_boxed) ;
+/* tmpvardeclst(end) */
+/* funbodyinstrlst(beg) */
+__patsflab_foo_bt_var_2:
+/*
+letpush(beg)
+*/
+ATSINSmove_boxrec(tmp3, postiats_tyrec_0) ;
+ATSINSstore_boxrec_ofs (tmp3, postiats_tyrec_0, atslab$0, statmp1) ;
+ATSINSstore_boxrec_ofs (tmp3, postiats_tyrec_0, atslab$1, ATSPMVchar('c')) ;
+ATSINSstore(ATSderef(arg0, atstype_boxed), tmp3) ;
+/*
+letpush(end)
+*/
+
+ATSINSmove_void(tmpret2, ATSempty()) ;
+/*
+INSletpop()
+*/
+/* funbodyinstrlst(end) */
+ATSreturn_void(tmpret2) ;
+} /* end of [foo_bt_var_2] */
+
+/*
+/home/grad2/aren/workspace/Postiats/projects/org.ats-lang.postiats.jats/test/test24.dats: 196(line=13, offs=17) -- 211(line=14, offs=7)
+*/
+/*
+local: 
+global: mainats_void_0$3$0(level=0)
 local: 
 global: 
 */
@@ -155,28 +198,23 @@ atsvoid_t0ype
 mainats_void_0()
 {
 /* tmpvardeclst(beg) */
-ATStmpdec_void(tmpret1, atsvoid_t0ype) ;
-ATStmpdec(tmp2, postiats_tyrec_0) ;
-ATStmpdec(tmp3, atstkind_t0ype(atstype_int)) ;
+ATStmpdec_void(tmpret4, atsvoid_t0ype) ;
 /* tmpvardeclst(end) */
 /* funbodyinstrlst(beg) */
 __patsflab_main_void_0:
 /*
 letpush(beg)
 */
-ATSINSstore_fltrec_ofs (tmp2, postiats_tyrec_0, atslab$0, ATSPMVi0nt(1)) ;
-ATSINSstore_fltrec_ofs (tmp2, postiats_tyrec_0, atslab$1, ATSPMVi0nt(2)) ;
-ATSINSmove(tmp3, foo_0(tmp2)) ;
 /*
 letpush(end)
 */
 
-ATSINSmove_void(tmpret1, ATSempty()) ;
+ATSINSmove_void(tmpret4, ATSempty()) ;
 /*
 INSletpop()
 */
 /* funbodyinstrlst(end) */
-ATSreturn_void(tmpret1) ;
+ATSreturn_void(tmpret4) ;
 } /* end of [mainats_void_0] */
 
 
@@ -184,23 +222,24 @@ ATSreturn_void(tmpret1) ;
 ** for initialization(dynloading)
 */
 atsvoid_t0ype
-_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test07_056$dats__dynload()
+_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test24_056$dats__dynload()
 {
 ATSdynload0(
-_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test07_056$dats__dynloadflag
+_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test24_056$dats__dynloadflag
 ) ;
 ATSif(
 ATSCKiseqz(
-_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test07_056$dats__dynloadflag
+_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test24_056$dats__dynloadflag
 )
 ) ATSthen() {
-ATSdynloadset(_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test07_056$dats__dynloadflag) ;
+ATSdynloadset(_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test24_056$dats__dynloadflag) ;
 /*
 dynexnlst-initize(beg)
 */
 /*
 dynexnlst-initize(end)
 */
+ATSINSmove(statmp1, init_0(ATSPMVi0nt(3), ATSPMVi0nt(4))) ;
 } /* ATSendif */
 ATSreturn_void() ;
 } /* end of [*_dynload] */
@@ -223,7 +262,7 @@ main
 int argc, char **argv, char **envp
 ) {
 int err = 0 ;
-_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test07_056$dats__dynload() ;
+_057$home_057$grad2_057$aren_057$workspace_057$Postiats_057$projects_057$org_056$ats_055$lang_056$postiats_056$jats_057$test_057$test24_056$dats__dynload() ;
 ATSmainats_void_0(err) ;
 return (err) ;
 } /* end of [main] */

@@ -12,16 +12,16 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 
 public class CCompPointer {
     
-    public static Ptrk atspre_ptr_add_bytesize(Ptrk p, Integer ofs) {
+    public static Ptrk atspre_add_ptr_bsz(Ptrk p, Integer ofs) {
         return Ptrk.createPtrkOffset(p, ofs);
     }
     
-    public static Ptrk atspre_ptr0_add_bytesize(Ptrk p, Integer ofs) {
-        return atspre_ptr_add_bytesize(p, ofs);
+    public static Ptrk atspre_add_ptr0_bsz(Ptrk p, Integer ofs) {
+        return atspre_add_ptr_bsz(p, ofs);
     }
     
-    public static Ptrk atspre_ptr1_add_bytesize(Ptrk p, Integer ofs) {
-        return atspre_ptr_add_bytesize(p, ofs);
+    public static Ptrk atspre_add_ptr1_bsz(Ptrk p, Integer ofs) {
+        return atspre_add_ptr_bsz(p, ofs);
     }
     
     
@@ -44,9 +44,9 @@ public class CCompPointer {
         FuncType voidFunc = new FuncType(VoidType.cType, null);
         FuncType ptrkFunc = new FuncType(PtrkType.cType, null);
 
-        typscope.addValue("atspre_ptr_add_bytesize", ptrkFunc);
-        typscope.addValue("atspre_ptr0_add_bytesize", ptrkFunc);
-        typscope.addValue("atspre_ptr1_add_bytesize", ptrkFunc);
+        typscope.addValue("atspre_add_ptr_bsz", ptrkFunc);
+        typscope.addValue("atspre_add_ptr0_bsz", ptrkFunc);
+        typscope.addValue("atspre_add_ptr1_bsz", ptrkFunc);
         
         typscope.addValue("atspre_sub_ptr_ptr", intFunc);
         typscope.addValue("atspre_sub_ptr0_ptr0", intFunc);

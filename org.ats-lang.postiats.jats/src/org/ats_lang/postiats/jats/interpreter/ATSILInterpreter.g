@@ -29,9 +29,9 @@ options {
 }
 
 // START:rules
-program[Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope<Object> gvscope, ATSScope tyscope] returns [Program prog]
+program[Map<String, ATSType> types, Map<String, FuncDef> funcs, ATSScope tyscope] returns [Program prog]
 @init {
-  m_prog = new Program(types, funcs, gvscope);
+  m_prog = new Program(types, funcs);
   prog = m_prog; 
   
   m_tyscope = tyscope;  // mapping of value to type
@@ -43,7 +43,7 @@ gstat
     : type_def
     | func_decl
     | func_def  {m_prog.defineFunc($func_def.definition);}
-    | var_def {m_prog.addStat($var_def.node);}
+    | stat_var_def {m_prog.addStat($stat_var_def.node);}
     | ats_dyn_cst
     | ats_dyn_load1
     ;
@@ -287,23 +287,23 @@ ats_pmv_ptrof_void returns [AtsPmvPtrofVoid node]
     ;    
     
 ats_sel_recsin returns [AtsSelRecsinNode node]
-      : ^(ATSselrecsin pmv=ID atstype lab=ID) {node = new AtsSelRecsinNode($pmv.text, $atstype.type, $lab.text);}
+      : ^(ATSSELrecsin pmv=ID atstype lab=ID) {node = new AtsSelRecsinNode($pmv.text, $atstype.type, $lab.text);}
       ;
    
 ats_sel_flt_rec returns [AtsSelFltRec node]
-    : ^(ATSselfltrec pmv=exp atstype lab=ID) {node = new AtsSelFltRec($pmv.node, (StructType)$atstype.type, $lab.text);}
+    : ^(ATSSELfltrec pmv=exp atstype lab=ID) {node = new AtsSelFltRec($pmv.node, (StructType)$atstype.type, $lab.text);}
     ;
 
 ats_sel_box_rec returns [AtsSelBoxRec node]
-    : ^(ATSselboxrec exp atstype ID) {node = new AtsSelBoxRec($exp.node, (StructType)$atstype.type, $ID.text);}
+    : ^(ATSSELboxrec exp atstype ID) {node = new AtsSelBoxRec($exp.node, (StructType)$atstype.type, $ID.text);}
     ;
     
 ats_sel_arr_ind returns [AtsSelArrInd node]
-    : ^(ATSselarrind exp atstype ID) {node = new AtsSelArrInd($exp.node, $atstype.type, $ID.text);}
+    : ^(ATSSELarrind exp atstype ID) {node = new AtsSelArrInd($exp.node, $atstype.type, $ID.text);}
     ;
 
 ats_sel_arrptr_ind returns [AtsSelArrPtrInd node] 
-    : ^(ATSselarrptrind pmv=exp atstype lab=exp) {node = new AtsSelArrPtrInd($pmv.node, $atstype.type, $lab.node);}
+    : ^(ATSSELarrptrind pmv=exp atstype lab=exp) {node = new AtsSelArrPtrInd($pmv.node, $atstype.type, $lab.node);}
     ;
 
 
@@ -331,10 +331,17 @@ explst returns [List<ATSNode> lst]
 //var_assign returns [ATSNode node]
 //    : ^(ASSIGN ID exp) {node = new AssignmentNode($ID.text, $exp.node);}
 //    ;
+
+
+stat_var_def returns [DefinitionNode node]
+    : ^(STAT_VAR atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text, true);}
+    | ^(STAT_VAR_VOID atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text, true);}
+    ;
     
+        
 var_def returns [DefinitionNode node]
-    : ^(VAR atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text);}
-    | ^(VAR_VOID atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text);}
+    : ^(VAR atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text, false);}
+    | ^(VAR_VOID atstype ID) {node = new DefinitionNode(m_tyscope, $atstype.type, $ID.text, false);}
     ;
  
 atstypelst

@@ -13,11 +13,11 @@ public class SCharType extends ATSEltType {
 //    public static SCharValue fromString(String text) {
 //        return new SCharValue(new Character(text.charAt(0)));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return SCharValue.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Character.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

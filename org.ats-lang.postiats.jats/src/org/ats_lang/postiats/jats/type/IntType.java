@@ -35,12 +35,12 @@ public class IntType extends ATSEltType {
             throw new Error("conversion not supported");
         }
     }
-//    
-//    @Override
-//    public String toString() {
-//        return IntValue.class.getSimpleName();
-//    }
-//    
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
+    
 
 //
 //    @Override

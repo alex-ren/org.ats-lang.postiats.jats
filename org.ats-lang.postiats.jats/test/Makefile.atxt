@@ -71,7 +71,7 @@ end // end of [make2_entry]
 
 ######
 
-CCOPT=gcc -std=c99
+CCOPT=gcc -std=c99 -D_XOPEN_SOURCE
 PATSHOMEQ="$(PATSHOME)"
 PATSOPT=$(PATSHOMEQ)/src/patsopt
 PATSLIB=$(PATSHOMEQ)/ccomp/atslib/lib
@@ -142,6 +142,7 @@ RMF=rm -f
 #make2_entry("test21", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test22_string", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 #make2_entry("test23_array", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
+#make2_entry("test24", "-DATS_MEMALLOC_LIBC", "-L$(PATSLIB)")
 
 #make2_entry("areverse", "-DATS_MEMALLOC_LIBC", "")
 

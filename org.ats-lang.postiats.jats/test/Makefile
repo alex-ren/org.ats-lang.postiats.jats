@@ -9,7 +9,7 @@
 
 ######
 
-CCOPT=gcc -std=c99
+CCOPT=gcc -std=c99 -D_XOPEN_SOURCE
 PATSHOMEQ="$(PATSHOME)"
 PATSOPT=$(PATSHOMEQ)/src/patsopt
 PATSLIB=$(PATSHOMEQ)/ccomp/atslib/lib
@@ -443,6 +443,14 @@ test23_array_dats.c: test23_array.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib 
 clean:: ; $(RMF) test23_array_dats.o
 clean:: ; $(RMF) test23_array_dats.c
 cleanall:: ; $(RMF) test23_array.exe
+
+all:: test24
+test24: test24.exe
+test24.exe: test24_dats.c ;   $(CCOPT) -D_GNU_SOURCE -O2     -I$(PATSHOMEQ) -I$(PATSHOMEQ)/ccomp/runtime -DATS_MEMALLOC_LIBC -o $@ $< -L$(PATSLIB)
+test24_dats.c: test24.dats ;   $(PATSOPT) -IATS$(PATSHOMEQ)/contrib --output test24_dats.c --dynamic test24.dats
+clean:: ; $(RMF) test24_dats.o
+clean:: ; $(RMF) test24_dats.c
+cleanall:: ; $(RMF) test24.exe
 
 
 all:: areverse

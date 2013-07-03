@@ -13,12 +13,12 @@ public class ULIntType extends ATSEltType {
 //    public static ULIntValue fromString(String text) {
 //        return new ULIntValue(new Integer(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return ULIntValue.class.getSimpleName();
-//    }
-//    
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
+    
     @Override
     public int getSize() {
         return m_size;

@@ -14,11 +14,11 @@ public class ULLIntType extends ATSEltType {
 //    public static ULLIntValue fromString(String text) {
 //        return new ULLIntValue(new Long(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return ULLIntType.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

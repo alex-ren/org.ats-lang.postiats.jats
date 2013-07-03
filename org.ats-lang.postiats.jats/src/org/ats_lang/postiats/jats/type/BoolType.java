@@ -18,10 +18,10 @@ public class BoolType extends ATSEltType {
         }
     }
     
-//    @Override
-//    public String toString() {
-//        return BoolValue.class.getSimpleName();
-//    }
+    @Override
+    public String toString() {
+        return boolean.class.getSimpleName();
+    }
 
     @Override
     public int getSize() {

@@ -12,26 +12,25 @@ static public void main(String [] args) {
 }
 >>
 
-program_t(filename, stats, main) ::= <<
-package postiats;
-
-import org.ats_lang.postiats.jats.value.BoolValue;
-import org.ats_lang.postiats.jats.value.CharValue;
-import org.ats_lang.postiats.jats.value.IntValue;
-import org.ats_lang.postiats.jats.value.ULIntValue;
-import org.ats_lang.postiats.jats.value.SizeValue;
-import org.ats_lang.postiats.jats.value.DoubleValue;
-import org.ats_lang.postiats.jats.value.StringValue;
-import org.ats_lang.postiats.jats.ccomp.CCompCompositeValue;
-
-import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;
-
-import org.ats_lang.postiats.jats.ccomp.CCompArrayPtr;
-import org.ats_lang.postiats.jats.ccomp.CCompBasics;
-import org.ats_lang.postiats.jats.ccomp.CCompFloat;
-import org.ats_lang.postiats.jats.ccomp.CCompInteger;
-import org.ats_lang.postiats.jats.ccomp.CCompString;
-
+program_t(filename, stats, main) ::= <<                 
+<! package postiats;                                                   !>
+<!                                                                     !>
+<! import org.ats_lang.postiats.jats.value.BoolValue;                  !>
+<! import org.ats_lang.postiats.jats.value.CharValue;                  !>
+<! import org.ats_lang.postiats.jats.value.IntValue;                   !>
+<! import org.ats_lang.postiats.jats.value.ULIntValue;                 !>
+<! import org.ats_lang.postiats.jats.value.SizeValue;                  !>
+<! import org.ats_lang.postiats.jats.value.DoubleValue;                !>
+<! import org.ats_lang.postiats.jats.value.StringValue;                !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompCompositeValue;        !>
+<!                                                                     !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;              !>
+<!                                                                     !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompArrayPtr;              !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompBasics;                !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompFloat;                 !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompInteger;               !>
+<! import org.ats_lang.postiats.jats.ccomp.CCompString;                !>
 
 public class <filename> {
     <stats; separator="\n\n">
@@ -41,6 +40,16 @@ public class <filename> {
 }
 
 
+>>
+
+// =======================================================
+
+global_var_st(var) ::= <<
+<if(var)>static public <var>;<endif>
+>>
+
+var_def_st(type, name, init) ::= <<
+<type> <name> = <init>;
 >>
 
 
@@ -102,13 +111,6 @@ public <cls_name> deepcopy() {
 }
 >>
 
-global_var_st(var) ::= <<
-<if(var)>static public <var>;<endif>
->>
-
-var_def_st(type, name) ::= <<
-<type> <name> = <type>.m_type.createDefault();
->>
 
 
 var_decl_st(type, name) ::= <<

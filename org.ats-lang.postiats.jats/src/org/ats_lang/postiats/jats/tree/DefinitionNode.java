@@ -19,8 +19,9 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 public class DefinitionNode extends ATSTypeNode {
     public ATSType m_ty;
     public String m_id;
+    public boolean m_isStat;
 
-    public DefinitionNode(ATSScope<ATSType> tyscope, ATSType ty, String id) {
+    public DefinitionNode(ATSScope<ATSType> tyscope, ATSType ty, String id, boolean isStat) {
         super(VoidType.cType);
         
         // obsolete 04/29/2013
@@ -31,6 +32,7 @@ public class DefinitionNode extends ATSTypeNode {
 //        }
         m_ty = ty;
         m_id = id;
+        m_isStat = isStat;
         
 //        // BoxedType to PtrkType
 //        if (ty instanceof BoxedType) {
@@ -56,6 +58,7 @@ public class DefinitionNode extends ATSTypeNode {
     public String getID() {
         return m_id;
     }
+    
 //
 //    @Override
 //    public SingletonValue evaluate(Map<String, ATSType> types,

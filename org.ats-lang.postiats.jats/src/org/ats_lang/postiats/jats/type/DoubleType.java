@@ -9,10 +9,10 @@ public class DoubleType extends ATSEltType {
     public static final int m_size = 8;
 
 
-//    @Override
-//    public String toString() {
-//        return DoubleValue.class.getSimpleName();
-//    }
+    @Override
+    public String toString() {
+        return Double.class.getSimpleName();
+    }
     
 
     private DoubleType(Decorator dec) {

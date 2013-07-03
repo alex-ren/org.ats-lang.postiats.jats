@@ -24,11 +24,11 @@ public class SizeType extends ATSEltType {
 //    public static SizeValue fromString(String text) {
 //        return new SizeValue(new Integer(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return SizeValue.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
     
     public static Integer castFrom(Object v) {
         if (v instanceof Integer) {

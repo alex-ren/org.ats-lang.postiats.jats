@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.tree;
 
+
 public interface ATSTreeVisitor {
     Object visit(AtsCkIseqz node);
 
@@ -72,5 +73,7 @@ public interface ATSTreeVisitor {
     Object visit(IfNode node);
 
     Object visit(ValueNode node);
+    
+    Object visit(UserFunc node);
 
 }

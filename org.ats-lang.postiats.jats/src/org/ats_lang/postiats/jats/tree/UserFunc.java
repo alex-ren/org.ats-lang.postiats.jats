@@ -1,15 +1,16 @@
-package org.ats_lang.postiats.jats.interpreter;
+package org.ats_lang.postiats.jats.tree;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ats_lang.postiats.jats.tree.ATSNode;
-import org.ats_lang.postiats.jats.tree.BlockNode;
+import org.ats_lang.postiats.jats.interpreter.EvaluateVisitor;
+import org.ats_lang.postiats.jats.interpreter.FuncDef;
+import org.ats_lang.postiats.jats.interpreter.FuncPara;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
-public class UserFunc implements FuncDef{
+public class UserFunc implements FuncDef, ATSNode {
     private String m_id;
     private ATSNode.FunDecorator m_dec;  // function decorator
     private ATSType m_type;  // return type
@@ -62,6 +63,16 @@ public class UserFunc implements FuncDef{
         // System.out.println("evaluating function: " + m_id);
         EvaluateVisitor visitor = new EvaluateVisitor(types, funcs, scope);
         return visitor.visit(m_body);
+    }
+
+    @Override
+    public ATSType getType() {
+        throw new Error("not supported");
+    }
+
+    @Override
+    public Object accept(ATSTreeVisitor visitor) {
+        return visitor.visit(this);
     }
 
 }

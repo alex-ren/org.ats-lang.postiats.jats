@@ -42,6 +42,7 @@ import org.ats_lang.postiats.jats.tree.DefinitionNode;
 import org.ats_lang.postiats.jats.tree.FuncCallNode;
 import org.ats_lang.postiats.jats.tree.IdentifierNode;
 import org.ats_lang.postiats.jats.tree.IfNode;
+import org.ats_lang.postiats.jats.tree.UserFunc;
 import org.ats_lang.postiats.jats.tree.ValueNode;
 import org.ats_lang.postiats.jats.tree.AtsReturn.ReturnValue;
 import org.ats_lang.postiats.jats.type.ATSReferableType;
@@ -458,10 +459,26 @@ public class EvaluateVisitor implements ATSTreeVisitor {
               throw new Error("check this case");
           }
           return v;
+      } else if (node.m_d2c.equals("g1ofg0_string")) {
+          if (!node.m_arg.getType().equals(PtrkType.cType)) {
+              throw new Error("check this case");
+          }
+          if (!node.m_hit.equals(PtrkType.cType)) {
+              throw new Error("check this case");
+          }
+          return v;
+      } else if (node.m_d2c.equals("g1ofg0_ptr")) {
+          if (!node.m_arg.getType().equals(PtrkType.cType)) {
+              throw new Error("check this case");
+          }
+          if (!node.m_hit.equals(PtrkType.cType)) {
+              throw new Error("check this case");
+          }
+          return v;          
       } else {
           throw new Error("Unknown cast: " + node.m_d2c);
       }
-
+      
     }
 
     @Override
@@ -748,6 +765,11 @@ public class EvaluateVisitor implements ATSTreeVisitor {
     public Object visit(ValueNode node) {
         return node.m_v;
 
+    }
+
+    @Override
+    public Object visit(UserFunc node) {
+        throw new Error("not supported since there is no need to visit function definition alone");
     }
 
 }

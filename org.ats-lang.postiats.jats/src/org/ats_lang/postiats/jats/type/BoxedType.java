@@ -23,6 +23,10 @@ public class BoxedType extends ATSEltType {
 //		return new HashMap<String, Object>();
 //	}
 
+    public String toString() {
+        return Ptrk.class.getSimpleName();
+    }
+    
 	@Override
 	public boolean equals(ATSType ty) {
 		if (this == ty || ty instanceof PtrkType) {

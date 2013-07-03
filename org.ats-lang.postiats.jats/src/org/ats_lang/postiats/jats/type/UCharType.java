@@ -13,11 +13,11 @@ public class UCharType extends ATSEltType {
 //    public static UCharValue fromString(String text) {
 //        return new UCharValue(new Character(text.charAt(0)));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return UCharValue.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Character.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

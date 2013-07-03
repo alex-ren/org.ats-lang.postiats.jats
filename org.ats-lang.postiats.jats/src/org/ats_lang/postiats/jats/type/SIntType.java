@@ -13,11 +13,11 @@ public class SIntType extends ATSEltType {
 //    public static SIntValue fromString(String text) {
 //        return new SIntValue(new Integer(text));
 //    }
-//    
-//    @Override
-//    public String toString() {
-//        return SIntValue.class.getSimpleName();
-//    }
+    
+    @Override
+    public String toString() {
+        return Integer.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

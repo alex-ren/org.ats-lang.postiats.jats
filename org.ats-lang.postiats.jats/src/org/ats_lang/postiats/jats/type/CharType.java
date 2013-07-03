@@ -36,10 +36,9 @@ public class CharType extends ATSEltType {
     public static Object fromString(String text) {
         return new Character(text.charAt(0));
     }
-//    
-//    @Override
-//    public String toString() {
-//        return CharValue.class.getSimpleName();
-//    }
-//  }
+    
+    @Override
+    public String toString() {
+        return Character.class.getSimpleName();
+    }
 }
