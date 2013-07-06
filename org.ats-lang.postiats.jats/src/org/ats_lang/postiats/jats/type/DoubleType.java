@@ -4,7 +4,7 @@ package org.ats_lang.postiats.jats.type;
 
 public class DoubleType extends ATSEltType {
 //    public static final DoubleType cType = new DoubleType(Decorator.TYPE);
-    public static final DoubleType cType0 = new DoubleType(Decorator.T0YPE);
+    public static final DoubleType cType = new DoubleType(Decorator.T0YPE);
     
     public static final int m_size = 8;
 
@@ -31,6 +31,12 @@ public class DoubleType extends ATSEltType {
 
     public static Object fromString(String text) {
         return new Double(text);
+    }
+
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
     
 //    @Override

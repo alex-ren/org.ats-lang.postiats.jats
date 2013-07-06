@@ -87,7 +87,7 @@ public class EvaluateVisitor implements ATSTreeVisitor {
 
         if (v instanceof Ptrk) {
             System.out.println("lvalue in condition");
-            v = ((Ptrk) v).getValue(BoolType.cType0);
+            v = ((Ptrk) v).getValue(BoolType.cType);
         }
 
         if (v instanceof Integer) {
@@ -248,7 +248,7 @@ public class EvaluateVisitor implements ATSTreeVisitor {
         
         // m_asz := RefType(IntType)
         if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue(IntType.cType0);
+            asz = ((Ptrk)asz).getValue(IntType.cType);
         }
         
         Integer sz = null;
@@ -581,7 +581,7 @@ public class EvaluateVisitor implements ATSTreeVisitor {
         Object asz = node.m_lab.accept(this);  // index
         
         if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue(SizeType.cType0);
+            asz = ((Ptrk)asz).getValue(SizeType.cType);
         }
         Integer sz = null;
         if (asz instanceof Integer) {

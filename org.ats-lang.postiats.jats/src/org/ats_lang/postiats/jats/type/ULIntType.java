@@ -6,7 +6,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 public class ULIntType extends ATSEltType {
 
 //    public static final ULIntType cType = new ULIntType(Decorator.TYPE);
-    public static final ULIntType cType0 = new ULIntType(Decorator.T0YPE);
+    public static final ULIntType cType = new ULIntType(Decorator.T0YPE);
     
     public static final int m_size = 4;
 //    
@@ -30,6 +30,11 @@ public class ULIntType extends ATSEltType {
         if (dec != Decorator.T0YPE) {
             throw new Error("Wrong kind");
         }
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
 
 //

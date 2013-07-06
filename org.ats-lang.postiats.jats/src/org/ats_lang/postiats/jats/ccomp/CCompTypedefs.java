@@ -12,43 +12,43 @@ public class CCompTypedefs {
     
     public static VoidType m_atsvoid_t0ype = VoidType.cType;
 
-    public static IntType m_atstype_int = IntType.cType0;
+    public static IntType m_atstype_int = IntType.cType;
     
-    public static UIntType m_atstype_uint = UIntType.cType0;
+    public static UIntType m_atstype_uint = UIntType.cType;
     
-    public static LIntType m_atstype_lint = LIntType.cType0;
+    public static LIntType m_atstype_lint = LIntType.cType;
     
-    public static ULIntType m_atstype_ulint = ULIntType.cType0;
+    public static ULIntType m_atstype_ulint = ULIntType.cType;
     
-    public static LLIntType m_atstype_llint = LLIntType.cType0;
+    public static LLIntType m_atstype_llint = LLIntType.cType;
     
-    public static ULLIntType m_atstype_ullint = ULLIntType.cType0;
+    public static ULLIntType m_atstype_ullint = ULLIntType.cType;
     
-    public static SIntType m_atstype_sint = SIntType.cType0;
+    public static SIntType m_atstype_sint = SIntType.cType;
     
-    public static USIntType m_atstype_usint = USIntType.cType0;
+    public static USIntType m_atstype_usint = USIntType.cType;
     
-    public static SSizeType m_atstype_ssize = SSizeType.cType0;
+    public static SSizeType m_atstype_ssize = SSizeType.cType;
     
-    public static SizeType m_atstype_size = SizeType.cType0;
+    public static SizeType m_atstype_size = SizeType.cType;
     
-    public static BoolType m_atstype_bool = BoolType.cType0;
+    public static BoolType m_atstype_bool = BoolType.cType;
     
-    public static CharType m_atstype_char = CharType.cType0;
+    public static CharType m_atstype_char = CharType.cType;
     
-    public static SCharType m_atstype_schar = SCharType.cType0;
+    public static SCharType m_atstype_schar = SCharType.cType;
     
-    public static UCharType m_atstype_uchar = UCharType.cType0;
+    public static UCharType m_atstype_uchar = UCharType.cType;
     
 //    public static StringType m_atstype_string = StringType.cType;
 
 //    public static StrPtrType m_atstype_strptr = StrPtrType.cType;
     
-    public static DoubleType m_atstype_float = DoubleType.cType0;
+    public static DoubleType m_atstype_float = DoubleType.cType;
     
-    public static DoubleType m_atstype_double = DoubleType.cType0;
+    public static DoubleType m_atstype_double = DoubleType.cType;
 
-    public static LDoubleType m_atstype_ldouble = LDoubleType.cType0;
+    public static LDoubleType m_atstype_ldouble = LDoubleType.cType;
 
 //    public static PtrType m_atstype_ptr = PtrType.cType;
     

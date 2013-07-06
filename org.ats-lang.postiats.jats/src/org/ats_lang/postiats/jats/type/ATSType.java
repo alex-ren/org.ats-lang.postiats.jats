@@ -15,6 +15,8 @@ public interface ATSType {
 	
 	Ptrk createRefDefault();
 	
+	public Object accept(ATSTypeVisitor visitor);
+	
 //	
 //    public String toString();
 

@@ -66,4 +66,9 @@ public class FuncType implements ATSType {
         }
     }
 
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+
 }

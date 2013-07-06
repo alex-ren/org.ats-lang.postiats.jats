@@ -14,6 +14,7 @@ public class ArrayType extends ATSReferableType {
         m_len = len;
         m_elety = elety;
     }
+
 //
 //    @Override
 //    public String toString() {
@@ -148,4 +149,10 @@ public class ArrayType extends ATSReferableType {
 		}
 	}
 
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+    
 }

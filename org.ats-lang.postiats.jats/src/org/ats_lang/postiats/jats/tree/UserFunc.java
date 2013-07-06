@@ -11,7 +11,7 @@ import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public class UserFunc implements FuncDef, ATSNode {
-    private String m_id;
+    private String m_id;  // function name
     private ATSNode.FunDecorator m_dec;  // function decorator
     private ATSType m_type;  // return type
     private List<FuncPara> m_paras;

@@ -7,7 +7,7 @@ import org.ats_lang.postiats.jats.value.Ptrk;
 
 public class BoolType extends ATSEltType {
 //    public static final BoolType cType = new BoolType(Decorator.TYPE);
-    public static final BoolType cType0 = new BoolType(Decorator.T0YPE);
+    public static final BoolType cType = new BoolType(Decorator.T0YPE);
     
     public static final int m_size = 1;
     
@@ -39,7 +39,7 @@ public class BoolType extends ATSEltType {
         if (b instanceof Boolean) {
             return (Boolean) b;
         } else if (b instanceof Ptrk) {  // 
-            b = ((Ptrk) b).getValue(BoolType.cType0);
+            b = ((Ptrk) b).getValue(BoolType.cType);
             if (b instanceof Boolean) {
                 return (Boolean) b;
             } else {
@@ -49,6 +49,11 @@ public class BoolType extends ATSEltType {
             System.out.println("Boolean.isTrue() object is " + b);
             throw new Error("Type mismatch");
         }
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
 
     

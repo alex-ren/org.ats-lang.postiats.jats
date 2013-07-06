@@ -6,7 +6,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 public class SCharType extends ATSEltType {
     
 //    public static final SCharType cType = new SCharType(Decorator.TYPE);
-    public static final SCharType cType0 = new SCharType(Decorator.T0YPE);
+    public static final SCharType cType = new SCharType(Decorator.T0YPE);
     
     public static final int m_size = 1;
 //
@@ -40,6 +40,11 @@ public class SCharType extends ATSEltType {
 //    public SCharValue castFrom(PrimValue pv) {
 //        return SCharValue.castFromV(pv);
 //    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
 
 
 

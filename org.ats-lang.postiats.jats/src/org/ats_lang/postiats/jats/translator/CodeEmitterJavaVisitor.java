@@ -44,11 +44,11 @@ import org.ats_lang.postiats.jats.type.VoidType;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-public class EmitterJavaVisitor implements ATSTreeVisitor {
+public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     private STGroup m_stg;
     
-    public EmitterJavaVisitor(STGroup stg) {
+    public CodeEmitterJavaVisitor(STGroup stg) {
         m_stg = stg;
     }
     

@@ -9,13 +9,18 @@ public class ArrPtrType extends ATSTempType {
     private ArrPtrType() {
     }
 
-    @Override
+    @Override 
     public Object createNormalDefault() {
         return null;
     }
 
     public String toString() {
         return Ptrk.class.getSimpleName();
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
 
     // @Override

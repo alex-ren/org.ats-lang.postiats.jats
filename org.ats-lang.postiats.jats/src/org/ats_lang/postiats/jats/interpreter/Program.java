@@ -9,6 +9,7 @@ import org.ats_lang.postiats.jats.tree.FuncCallNode;
 import org.ats_lang.postiats.jats.tree.UserFunc;
 import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.StringType;
+import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
 import org.ats_lang.postiats.jats.value.Ptrk;
 import org.ats_lang.postiats.jats.value.SingletonValue;
@@ -16,20 +17,33 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class Program {
     private Map<String, ATSType> m_types;  // type definition
+    private List<StructType> m_userTypes;  // list of type definition
     private Map<String, FuncDef> m_funcs;  // function definition
-    private List<ATSNode> m_statements;  // statements for global variables in the file
+    private List<UserFunc> m_userFuncs;    // list of user-defined function definitions
+    private List<ATSNode> m_gstats;  // statements for global variables in the file
     private MainFunc m_main;
 
     public Program(Map<String, ATSType> types, Map<String, FuncDef> funcs) {
         m_types = types;
+        m_userTypes = new ArrayList<StructType>();
         m_funcs = funcs;
-        
-		m_statements = new ArrayList<ATSNode>();
+        m_userFuncs = new ArrayList<UserFunc>();
+        m_gstats = new ArrayList<ATSNode>();
+        m_main = null;
 	}
+    
+    public List<StructType> getUserTypes() {
+        return m_userTypes;
+    }
+    
+    public List<UserFunc> getUserFuncs() {
+        return m_userFuncs;
+    }
 
     
-    public void defineType(String id, ATSType type) {
+    public void defineType(String id, StructType type) {
         m_types.put(id, type);
+        m_userTypes.add(type);
     }
     
     public ATSType getType(String id) {
@@ -38,24 +52,25 @@ public class Program {
     
     public void defineFunc(UserFunc func) {
         m_funcs.put(func.getName(), func);
+        m_userFuncs.add(func);
     }
 
     
     public void addStat(ATSNode stat) {
-        m_statements.add(stat);
+        m_gstats.add(stat);
     }
 
     public void setMain(String errname, FuncCallNode initFunc, String mainName) {
         m_main = new MainFunc(errname, initFunc, mainName);
     }
 
-    public List<ATSNode> getStats() {
-        return m_statements;
+    public List<ATSNode> getGstats() {
+        return m_gstats;
     }
-    
-    public Map<String, FuncDef> getFuncs() {
-        return m_funcs;
-    }
+//    
+//    public Map<String, FuncDef> getFuncs() {
+//        return m_funcs;
+//    }
 
     private class MainFunc {
         public String m_errname;
@@ -75,7 +90,7 @@ public class Program {
 
         EvaluateVisitor gvisitor = new EvaluateVisitor(m_types, m_funcs, gvscope);
         // executing global statement
-        for (ATSNode state : m_statements) {
+        for (ATSNode state : m_gstats) {
             state.accept(gvisitor);
         }
         

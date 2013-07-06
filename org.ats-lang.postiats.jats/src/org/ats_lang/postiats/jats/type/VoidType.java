@@ -33,5 +33,10 @@ public class VoidType implements ATSType {
         return this == ty;
     }
 
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+
 
 }

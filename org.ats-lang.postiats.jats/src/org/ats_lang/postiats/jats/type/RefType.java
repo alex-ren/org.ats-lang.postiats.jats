@@ -122,4 +122,9 @@ public class RefType implements ATSType {
         return Ptrk.class.getSimpleName();
     }
 
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+
 }

@@ -180,7 +180,7 @@ ats_dyn_load0 returns [ATSNode node]
     ;
 
 ats_dyn_load_set returns [ATSNode node]
-    : ^(ATSdynloadset ID)  {node = new AtsInsMove(IntType.cType0, $ID.text, new ValueNode(IntType.cType0, IntType.fromString("1")));}
+    : ^(ATSdynloadset ID)  {node = new AtsInsMove(IntType.cType, $ID.text, new ValueNode(IntType.cType, IntType.fromString("1")));}
     ;
     
         
@@ -250,18 +250,18 @@ ats_empty returns [AtsEmpty node]
     ;
 
 ats_simple_cast returns [ATSNode node]
-    : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType0, $exp.node);}
+    : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
     | ^(ATSPMVintrep exp) {node = new AtsPmvIntRepNode($exp.node);}
    
-    | ATSPMV_TRUE {node = new ValueNode(BoolType.cType0, true);}
-    | ATSPMV_FALSE {node = new ValueNode(BoolType.cType0, false);}
+    | ATSPMV_TRUE {node = new ValueNode(BoolType.cType, true);}
+    | ATSPMV_FALSE {node = new ValueNode(BoolType.cType, false);}
     
-    | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType0, $exp.node);}
-    | ^(ATSPMV_FLOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType0, $exp.node);}         
+    | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
+    | ^(ATSPMV_FLOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}         
     | ^(ATSPMV_STRING exp) {node = new AtsPmvSimpleCastNode(PtrkType.cType, $exp.node);}
     
-    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(IntType.cType0, $exp.node);}
-    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType0, $exp.node);}     
+    | ^(ATSPMV_I0NT exp) {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
+    | ^(ATSPMV_F0LOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}     
 
     ;
 
@@ -309,11 +309,11 @@ ats_sel_arrptr_ind returns [AtsSelArrPtrInd node]
 
 atom_exp returns [ATSNode node]
     : ID     {node = new IdentifierNode(m_tyscope.getValue($ID.text), $ID.text);}
-    | INT    {node = new ValueNode(IntType.cType0, IntType.fromString($INT.text));}
-    | FLOAT  {node = new ValueNode(DoubleType.cType0, DoubleType.fromString($FLOAT.text));}
-    | CHAR   {node = new ValueNode(CharType.cType0, CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
+    | INT    {node = new ValueNode(IntType.cType, IntType.fromString($INT.text));}
+    | FLOAT  {node = new ValueNode(DoubleType.cType, DoubleType.fromString($FLOAT.text));}
+    | CHAR   {node = new ValueNode(CharType.cType, CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
     | STRING {node = new ValueNode(PtrkType.cType, StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
-    | BOOL   {node = new ValueNode(BoolType.cType0, BoolType.fromString($BOOL.text));}
+    | BOOL   {node = new ValueNode(BoolType.cType, BoolType.fromString($BOOL.text));}
     ;
 
 func_call returns [FuncCallNode node]

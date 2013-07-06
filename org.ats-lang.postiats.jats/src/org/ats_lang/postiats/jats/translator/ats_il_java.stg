@@ -42,8 +42,6 @@ public class <filename> {
 
 >>
 
-// =======================================================
-
 global_var_st(var) ::= <<
 <if(var)>static public <var>;<endif>
 >>
@@ -51,6 +49,20 @@ global_var_st(var) ::= <<
 var_def_st(type, name, init) ::= <<
 <type> <name> = <init>;
 >>
+
+
+struct_type_def(name, members) ::= <<
+static StructType <name> = new StructType("<name>");
+static {
+    <members; separator="\n">
+}
+>>
+
+struct_type_mem(name, id, type) ::= <<
+<name>.addMember("<id>", <type>);
+>>
+
+// =======================================================
 
 
 class_st(cls_name, cls_desc, body) ::= <<

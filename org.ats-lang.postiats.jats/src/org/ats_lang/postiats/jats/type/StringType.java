@@ -150,6 +150,11 @@ public class StringType extends ATSReferableType {
         return msg.createString();
     }
 
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+
 //    @Override
 //    public StringValue createDefault() {
 //        return new StringValue("");

@@ -12,7 +12,7 @@ public class AtsCkIseqz extends ATSTypeNode {
     public ATSNode m_exp;
 
     public AtsCkIseqz(ATSNode exp) {
-        super(BoolType.cType0);
+        super(BoolType.cType);
         m_exp = exp;
     }
 //

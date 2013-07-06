@@ -14,6 +14,11 @@ public class ArrPszType extends ATSTempType {
     public Object createNormalDefault() {
         return new ArrPsz();
     }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
     
 //    @Override
 //    public boolean equals(ATSType ty) {

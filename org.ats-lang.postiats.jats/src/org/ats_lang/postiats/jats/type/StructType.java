@@ -19,6 +19,14 @@ public class StructType extends ATSReferableType {
         m_name = name;
         m_typemap = new HashMap<String, ATSReferableType>();
     }
+    
+    public String getName() {
+        return m_name;
+    }
+    
+    public List<Pair> getMembers() {
+        return m_members;
+    }
 
     @Override
     public Map<String, Object> createNormalDefault() {
@@ -94,9 +102,9 @@ public class StructType extends ATSReferableType {
         return accu;
     }
 
-    private class Pair {
-        String m_id;
-        ATSReferableType m_ty;
+    public static class Pair {
+        public String m_id;
+        public ATSReferableType m_ty;
 
         public Pair(String id, ATSReferableType ty) {
             m_id = id;
@@ -230,6 +238,11 @@ public class StructType extends ATSReferableType {
         } else {
             throw new Error("Type mismatch");
         }
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
 
 }

@@ -6,7 +6,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 public class SizeType extends ATSEltType {
 
 //    public static final SizeType cType = new SizeType(Decorator.TYPE);
-    public static final SizeType cType0 = new SizeType(Decorator.T0YPE);
+    public static final SizeType cType = new SizeType(Decorator.T0YPE);
     
     public static final int m_size = 4;
     
@@ -36,6 +36,11 @@ public class SizeType extends ATSEltType {
         } else {
             throw new Error("conversion not supported");
         }
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
     
 

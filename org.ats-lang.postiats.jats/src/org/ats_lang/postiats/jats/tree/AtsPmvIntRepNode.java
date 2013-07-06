@@ -12,7 +12,7 @@ public class AtsPmvIntRepNode extends ATSTypeNode {
     public ATSNode m_exp;
 
     public AtsPmvIntRepNode(ATSNode exp) {
-        super(IntType.cType0);
+        super(IntType.cType);
         m_exp = exp;
     }
 //    

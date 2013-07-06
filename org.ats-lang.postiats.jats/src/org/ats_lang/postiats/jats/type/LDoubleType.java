@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 
 public class LDoubleType extends ATSEltType {
 //    public static final LDoubleType cType = new LDoubleType(Decorator.TYPE);
-    public static final LDoubleType cType0 = new LDoubleType(Decorator.T0YPE);
+    public static final LDoubleType cType = new LDoubleType(Decorator.T0YPE);
     
     public static final int m_size = 8;
 //
@@ -29,6 +29,11 @@ public class LDoubleType extends ATSEltType {
         if (dec != Decorator.T0YPE) {
             throw new Error("Wrong kind");
         }
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
     
 //

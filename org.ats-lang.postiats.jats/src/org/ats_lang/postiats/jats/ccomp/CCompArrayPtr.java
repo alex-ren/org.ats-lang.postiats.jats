@@ -27,7 +27,7 @@ public class CCompArrayPtr {
     // Version 1: for interpreter
     public static Ptrk atspre_arrpsz_get_ptrsize(ArrPsz arrpsz, Ptrk asz) {
         int size = arrpsz.getAsz();
-        asz.update(size, IntType.cType0);
+        asz.update(size, IntType.cType);
         return arrpsz.getPtr();
     }
     
@@ -68,9 +68,9 @@ public class CCompArrayPtr {
 //    }
     
     static public void populateFuncType(ATSScope<ATSType> typscope) {
-        FuncType intFunc = new FuncType(IntType.cType0, null);
-        FuncType sizeFunc = new FuncType(SizeType.cType0, null);
-        FuncType boolFunc = new FuncType(BoolType.cType0, null);
+        FuncType intFunc = new FuncType(IntType.cType, null);
+        FuncType sizeFunc = new FuncType(SizeType.cType, null);
+        FuncType boolFunc = new FuncType(BoolType.cType, null);
         FuncType voidFunc = new FuncType(VoidType.cType, null);
         FuncType ptrkFunc = new FuncType(PtrkType.cType, null);
 

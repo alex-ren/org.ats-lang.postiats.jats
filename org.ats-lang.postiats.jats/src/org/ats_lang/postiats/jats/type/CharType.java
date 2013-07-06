@@ -6,7 +6,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 public class CharType extends ATSEltType {
     
 //    public static final CharType cType = new CharType(Decorator.TYPE);
-    public static final CharType cType0 = new CharType(Decorator.T0YPE);
+    public static final CharType cType = new CharType(Decorator.T0YPE);
     
     public static final int m_size = 1;
 
@@ -40,5 +40,10 @@ public class CharType extends ATSEltType {
     @Override
     public String toString() {
         return Character.class.getSimpleName();
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
 }

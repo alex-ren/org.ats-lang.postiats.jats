@@ -49,4 +49,9 @@ public class PtrkType extends ATSEltType { // ATSUpdatableType {
         }
     }
 
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+
 }

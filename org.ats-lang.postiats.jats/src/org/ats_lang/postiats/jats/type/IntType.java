@@ -6,7 +6,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 public class IntType extends ATSEltType {
     
 //    public static final IntType cType = new IntType(Decorator.TYPE);
-    public static final IntType cType0 = new IntType(Decorator.T0YPE);
+    public static final IntType cType = new IntType(Decorator.T0YPE);
 
     public static final int m_size = 4;
     
@@ -39,6 +39,11 @@ public class IntType extends ATSEltType {
     @Override
     public String toString() {
         return Integer.class.getSimpleName();
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
     
 

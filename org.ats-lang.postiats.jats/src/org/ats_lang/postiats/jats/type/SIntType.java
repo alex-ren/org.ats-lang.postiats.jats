@@ -5,7 +5,7 @@ import org.ats_lang.postiats.jats.type.ATSKindType.Decorator;
 public class SIntType extends ATSEltType {
     
 //    public static final SIntType cType = new SIntType(Decorator.TYPE);
-    public static final SIntType cType0 = new SIntType(Decorator.T0YPE);
+    public static final SIntType cType = new SIntType(Decorator.T0YPE);
     
     public static final int m_size = 4;
     
@@ -39,6 +39,11 @@ public class SIntType extends ATSEltType {
         if (dec != Decorator.T0YPE) {
             throw new Error("Wrong kind");
         }
+    }
+
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
     }
 
 }

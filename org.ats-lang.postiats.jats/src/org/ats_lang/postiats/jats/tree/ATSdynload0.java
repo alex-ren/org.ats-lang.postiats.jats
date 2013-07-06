@@ -14,7 +14,7 @@ public class ATSdynload0 extends ATSTypeNode {
 
     public ATSdynload0(ATSScope<ATSType> tyscope, String dyn0) {
         super(VoidType.cType);
-        tyscope.addValue(dyn0, IntType.cType0);
+        tyscope.addValue(dyn0, IntType.cType);
         m_dyn0 = dyn0;
     }
 

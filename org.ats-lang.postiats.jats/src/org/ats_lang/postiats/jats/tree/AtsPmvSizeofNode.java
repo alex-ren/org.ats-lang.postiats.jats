@@ -11,7 +11,7 @@ public class AtsPmvSizeofNode extends ATSTypeNode {
     public ATSType m_hit;
 
     public AtsPmvSizeofNode(ATSType hit) {
-        super(SizeType.cType0);
+        super(SizeType.cType);
         m_hit = hit;
     }
     

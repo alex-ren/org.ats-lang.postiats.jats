@@ -43,6 +43,11 @@ public class BoxedType extends ATSEltType {
 		return dst;
 	}
 
+    @Override
+    public Object accept(ATSTypeVisitor visitor) {
+        return visitor.visit(this);
+    }
+
 	// public static void checkupdateRefBoxedType(ATSType ty) {
 	// // update type
 	// if (ty instanceof RefType) {
