@@ -1,5 +1,9 @@
 package org.ats_lang.postiats.jats.translator;
 
+import java.util.List;
+
+import org.ats_lang.postiats.jats.interpreter.FuncPara;
+import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.tree.ATSTreeVisitor;
 import org.ats_lang.postiats.jats.tree.ATSdynload0;
 import org.ats_lang.postiats.jats.tree.AtsCkIseqz;
@@ -234,8 +238,11 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(BlockNode node) {
-        // TODO Auto-generated method stub
-        return null;
+        ST st = m_stg.getInstanceOf("block_st");
+        for (ATSNode stat: node.m_statements) {
+            st.add("bstats", stat.accept(this));
+        }
+        return st;
     }
 
     @Override
@@ -244,7 +251,7 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
             return null;
         }
         
-        ST st = m_stg.getInstanceOf("var_def_st");
+        ST st = m_stg.getInstanceOf("gvar_def_st");
         st.add("type", node.m_ty.toString());
         st.add("name", node.m_id);
         
@@ -253,12 +260,12 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
         } else if (node.m_ty instanceof StructType) {
             st.add("init", node.m_ty.toString() + ".createNormalDefault()");
         } else {
-            throw new Error("not supported");
+            return "ddd";
         }
         
         if (node.m_isStat) {
-            ST stVarDef = m_stg.getInstanceOf("global_var_st");
-            stVarDef.add("var", st);
+            ST stVarDef = m_stg.getInstanceOf("stats_gvar_st");
+            stVarDef.add("gvar", st);
             return stVarDef;
             
         } else {
@@ -293,8 +300,48 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(UserFunc node) {
-        // TODO Auto-generated method stub
-        return null;
+        ST st = m_stg.getInstanceOf("fun_def_st");
+        
+        st.add("type", node.getRetType().toString());
+        
+        st.add("name", node.getName());
+        
+        ST paras_st = m_stg.getInstanceOf("paras_st");
+        List<FuncPara> paraLst = node.getParalst();
+        for (FuncPara para: paraLst) {
+            ST para_st = m_stg.getInstanceOf("para_st");
+            para_st.add("type", para.getType());
+            para_st.add("name", para.getId());
+            paras_st.add("paras", para_st);
+        }
+        
+        st.add("paras", paras_st);
+        
+        st.add("body", node.getBody().accept(this));
+        
+        
+        return st;
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

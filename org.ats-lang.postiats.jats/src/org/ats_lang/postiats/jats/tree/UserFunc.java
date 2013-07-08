@@ -47,6 +47,9 @@ public class UserFunc implements FuncDef, ATSNode {
         return m_paras;
     }
     
+    public BlockNode getBody() {
+        return m_body;
+    }
     /*
      * scope: The scope, which is used as the current scope should be provided by the caller.
      */

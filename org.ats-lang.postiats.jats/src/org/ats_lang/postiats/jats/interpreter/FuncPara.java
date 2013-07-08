@@ -14,6 +14,10 @@ public class FuncPara {
 	    return m_id;
 	}
 	
+	public ATSType getType() {
+	    return m_type;
+	}
+	
 	public FuncPara(ATSType type, String id) {
 		m_type = type;
 		m_id = id;

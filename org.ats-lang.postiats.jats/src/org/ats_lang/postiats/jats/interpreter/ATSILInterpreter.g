@@ -383,7 +383,7 @@ kind_decorator returns [ATSKindType.Decorator kind]
 //    ;
 
 func_decl
-    : ^(FUNC_DECL ID func_decorator? atstype paralst[null]?) {m_tyscope.addValue($ID.text, new FuncType($atstype.type, $paralst.paralst));}
+    : ^(FUNC_DECL ID func_decorator? atstype paralst[null]) {m_tyscope.addValue($ID.text, new FuncType($atstype.type, $paralst.paralst));}
     ;
 
 para_decorator returns [FuncPara.ParaDecorator dec]
@@ -400,7 +400,7 @@ paralst [ATSScope<ATSType> tyscope] returns [List<FuncPara> paralst]
 @init {
   paralst = new ArrayList<FuncPara>();
 }
-    : ^(PARA_LIST (para[tyscope] {paralst.add($para.para);})+)
+    : ^(PARA_LIST (para[tyscope] {paralst.add($para.para);})*) 
     ;
 
 para [ATSScope<ATSType> tyscope] returns [FuncPara para]
@@ -433,7 +433,7 @@ m_tyscope = m_tyscope.getParent();
 m_tyscope.addValue(definition.getName(), new FuncType(definition.getRetType(), definition.getParalst()));
 
 }
-    : ^(FUNC_DEF ID func_decorator? atstype paralst[m_tyscope]? block) 
+    : ^(FUNC_DEF ID func_decorator? atstype paralst[m_tyscope] block) 
       {definition = new UserFunc($ID.text, $func_decorator.dec, $atstype.type, $paralst.paralst, $block.node);}
     ;
 

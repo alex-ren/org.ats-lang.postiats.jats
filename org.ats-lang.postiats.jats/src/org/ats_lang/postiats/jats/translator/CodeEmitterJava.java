@@ -1,14 +1,12 @@
 package org.ats_lang.postiats.jats.translator;
 
 import java.util.List;
-import java.util.Map;
 
-import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.interpreter.Program;
 import org.ats_lang.postiats.jats.tree.ATSNode;
-import org.ats_lang.postiats.jats.tree.ATSTreeVisitor;
+
 import org.ats_lang.postiats.jats.tree.UserFunc;
-import org.ats_lang.postiats.jats.type.ATSTypeVisitor;
+
 import org.ats_lang.postiats.jats.type.StructType;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -29,52 +27,61 @@ public class CodeEmitterJava {
         
         
 
-        ST stProg = group.getInstanceOf("program_t");
+        ST stProg = group.getInstanceOf("program_st");
         stProg.add("filename", "Test01");
 
         
+        // emit user-defined types
         List<StructType> userTypes = m_prog.getUserTypes();
         if (userTypes.size() > 0) {
             System.out.println("+++++++++++++++++++++++++++++user-defined types");
         }
-        ATSTypeVisitor typeVisitor = new TypeEmitterJavaVisitor(group);
+        TypeJavaInitVisitor typeVisitor = new TypeJavaInitVisitor(group);
         emitUserTypes(typeVisitor, userTypes, stProg);
         
-        
+        // emit initialization of global variables
         List<ATSNode> gstats = m_prog.getGstats();
         if (gstats.size() > 0) {
             System.out.println("+++++++++++++++++++++++++++++gloval variables");
         }
-        ATSTreeVisitor codeVisitor = new CodeEmitterJavaVisitor(group);
+        CodeEmitterJavaVisitor codeVisitor = new CodeEmitterJavaVisitor(group);
         emitGStats(codeVisitor, gstats, stProg);
 
-        
-        
+        // emit user-defined functions
         List<UserFunc> userFuncs = m_prog.getUserFuncs();
+        if (userFuncs.size() > 0) {
+            System.out.println("+++++++++++++++++++++++++++++user-defined functions");
+        }
+        emitFuncs(codeVisitor, userFuncs, stProg);
+
+        
         
         
         String result = stProg.render();
         return result;
     }
-    
-    public ST emitFunc(FuncDef func) {
-        return null;
-    }
+
     
     // emit code for initializing global variable
-    public void emitGStats(ATSTreeVisitor vistor, List<ATSNode> stats, ST st) {
+    public void emitGStats(CodeEmitterJavaVisitor visitor, List<ATSNode> stats, ST st) {
         for (ATSNode stat: stats) {
-            st.add("stats", stat.accept(vistor));
+            st.add("stats", stat.accept(visitor));
         }        
     }
     
     // emit code for initializing static variables for types
-    public void emitUserTypes(ATSTypeVisitor vistor, List<StructType> utypes, ST st) {
+    public void emitUserTypes(TypeJavaInitVisitor visitor, List<StructType> utypes, ST st) {
         for (StructType utype: utypes) {
-            st.add("stats", utype.accept(vistor));
+            st.add("stats", utype.accept(visitor));
         }        
     }
     
+    // emit code for functions
+    public void emitFuncs(CodeEmitterJavaVisitor visitor, List<UserFunc> funcs, ST st) {
+        for (UserFunc func: funcs) {
+            st.add("stats", func.accept(visitor));
+        }        
+    }
     
     
 }

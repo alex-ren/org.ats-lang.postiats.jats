@@ -12,7 +12,7 @@ static public void main(String [] args) {
 }
 >>
 
-program_t(filename, stats, main) ::= <<                 
+program_st(filename, stats, main) ::= <<                 
 <! package postiats;                                                   !>
 <!                                                                     !>
 <! import org.ats_lang.postiats.jats.value.BoolValue;                  !>
@@ -42,24 +42,42 @@ public class <filename> {
 
 >>
 
-global_var_st(var) ::= <<
-<if(var)>static public <var>;<endif>
+stats_gvar_st(gvar) ::= <<
+<if(gvar)>static public <gvar>;<endif>
 >>
 
-var_def_st(type, name, init) ::= <<
+gvar_def_st(type, name, init) ::= <<
 <type> <name> = <init>;
 >>
 
 
-struct_type_def(name, members) ::= <<
+stats_structtype_st(name, structtype_members) ::= <<
 static StructType <name> = new StructType("<name>");
 static {
-    <members; separator="\n">
+    <structtype_members; separator="\n">
 }
 >>
 
-struct_type_mem(name, id, type) ::= <<
+structtype_members_st(name, id, type) ::= <<
 <name>.addMember("<id>", <type>);
+>>
+
+fun_def_st(type, name, paras, body) ::= <<
+static public <type> <name>(<paras>) {
+    <body>
+}
+>>
+
+paras_st(paras) ::= <<
+<paras; separator=", ">
+>>
+
+para_st(type, name) ::= <<
+<type> <name>
+>>
+
+block_st(bstats) ::= <<
+<bstats; separator="\n">
 >>
 
 // =======================================================
@@ -128,24 +146,8 @@ public <cls_name> deepcopy() {
 var_decl_st(type, name) ::= <<
 public <type> <name>;
 >>
+// ========================================
 
-fun_def_st(type, name, paras, body) ::= <<
-static public <type> <name>(<paras>) {
-    <body>
-}
->>
-
-paras_st(paras) ::= <<
-<paras; separator=", ">
->>
-
-para_st(type, name) ::= <<
-<type> <name>
->>
-
-fun_body_st(bstats) ::= <<
-<bstats; separator="\n">
->>
 
 ifstatement_st (aifstat, aelseifstats, aelsestat) ::= <<
 <aifstat><aelseifstats; separator="s"><aelsestat>

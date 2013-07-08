@@ -90,7 +90,7 @@ public class StructType extends ATSReferableType {
 
     @Override
     public String toString() {
-        return m_name;
+        return "Map<String, Object>";
     }
 
     @Override
@@ -221,10 +221,6 @@ public class StructType extends ATSReferableType {
         }
 
         if (curtype instanceof ATSEltType) {
-            System.out.println("eeeeeeeeeeeeeeeeeeeeeeee 002 curtype is "
-                    + curtype);
-            System.out.println("eeeeeeeeeeeeeeeeeeeeeeee 003 loctype is "
-                    + loctype);
             throw new Error("type mismatch");
         } else if (curtype instanceof StringType) {
             return ((StringType) curtype)

@@ -7,11 +7,11 @@ public class VoidType implements ATSType {
     public static final VoidType cType = new VoidType();
     
     public static final int m_size = 0;
-//    
-//    @Override
-//    public String toString() {
-//        return "void";
-//    }
+    
+    @Override
+    public String toString() {
+        return SingletonValue.class.getSimpleName();
+    }
     
     @Override
     public int getSize() {

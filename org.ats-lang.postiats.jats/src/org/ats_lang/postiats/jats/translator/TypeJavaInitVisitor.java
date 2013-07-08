@@ -2,7 +2,8 @@ package org.ats_lang.postiats.jats.translator;
 
 import java.util.List;
 
-import org.ats_lang.postiats.jats.type.ATSType;
+import javax.lang.model.type.TypeVisitor;
+
 import org.ats_lang.postiats.jats.type.ATSTypeVisitor;
 import org.ats_lang.postiats.jats.type.ArrPszType;
 import org.ats_lang.postiats.jats.type.ArrPtrType;
@@ -24,131 +25,153 @@ import org.ats_lang.postiats.jats.type.SSizeType;
 import org.ats_lang.postiats.jats.type.SizeType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.StructType;
-import org.ats_lang.postiats.jats.type.StructType.Pair;
 import org.ats_lang.postiats.jats.type.UCharType;
 import org.ats_lang.postiats.jats.type.UIntType;
 import org.ats_lang.postiats.jats.type.ULIntType;
 import org.ats_lang.postiats.jats.type.ULLIntType;
 import org.ats_lang.postiats.jats.type.USIntType;
 import org.ats_lang.postiats.jats.type.VoidType;
+import org.ats_lang.postiats.jats.type.StructType.Pair;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-public class TypeEmitterJavaVisitor implements ATSTypeVisitor {
+public class TypeJavaInitVisitor implements ATSTypeVisitor {
+
     private STGroup m_stg;
     
-    public TypeEmitterJavaVisitor(STGroup stg) {
+    public TypeJavaInitVisitor(STGroup stg) {
         m_stg = stg;
     }
-
+    
     @Override
     public Object visit(ArrayType ty) {
-        throw new Error("not supported");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(ArrPszType ty) {
-        throw new Error("not supported");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(ArrPtrType ty) {
-        throw new Error("not supported");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(BoolType ty) {
-        return BoolType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(BoxedType ty) {
-        return BoxedType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(CharType ty) {
-        return CharType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(DoubleType ty) {
-        return DoubleType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(FuncType ty) {
-        throw new Error("not supported");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(IntType ty) {
-        return IntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(LDoubleType ty) {
-        return LDoubleType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(LIntType ty) {
-        return LIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(LLIntType ty) {
-        return LLIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(PtrkType ty) {
-        return PtrkType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(RefType ty) {
-        throw new Error("not supported");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(SCharType ty) {
-        return SCharType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(SIntType ty) {
-        return SIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(SizeType ty) {
-        return SizeType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(SSizeType ty) {
-        return SSizeType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(StringType ty) {
-        throw new Error("not supported");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(StructType ty) {
-        ST st = m_stg.getInstanceOf("struct_type_def");
+        ST st = m_stg.getInstanceOf("stats_structtype_st");
         st.add("name", ty.getName());
         
-        List<Pair> userTypes = ty.getMembers();
-        for (Pair p: userTypes) {
-            ST stMem = m_stg.getInstanceOf("struct_type_mem");
+        ATSTypeVisitor tyMemVisitor = new TypeJavaInstanceVisitor(m_stg);
+        
+        List<Pair> members = ty.getMembers();
+        for (Pair p: members) {
+            ST stMem = m_stg.getInstanceOf("structtype_members_st");
             stMem.add("name", ty.getName());
             stMem.add("id", p.m_id);
-            stMem.add("type", p.m_ty.accept(this));
+            stMem.add("type", p.m_ty.accept(tyMemVisitor));
             
-            st.add("members", stMem);
+            st.add("structtype_members", stMem);
         }
         
         return st;
@@ -156,34 +179,38 @@ public class TypeEmitterJavaVisitor implements ATSTypeVisitor {
 
     @Override
     public Object visit(UCharType ty) {
-        return UCharType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(UIntType ty) {
-        return UIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(ULIntType ty) {
-        return ULIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(ULLIntType ty) {
-        return ULLIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(USIntType ty) {
-        return USIntType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object visit(VoidType ty) {
-        return VoidType.class.getSimpleName() + ".cType";
+        // TODO Auto-generated method stub
+        return null;
     }
-
-
 
 }

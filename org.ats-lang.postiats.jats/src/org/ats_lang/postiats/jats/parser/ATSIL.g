@@ -127,9 +127,9 @@ program
 
 gstat
     : typedef
-    | func_decorator? rettype=atstype ID LParen paralst? RParen
-        (Semicol -> ^(FUNC_DECL ID func_decorator? $rettype paralst?)
-        | LBrace block RBrace -> ^(FUNC_DEF ID func_decorator? $rettype paralst? block)
+    | func_decorator? rettype=atstype ID LParen paralst RParen
+        (Semicol -> ^(FUNC_DECL ID func_decorator? $rettype paralst)
+        | LBrace block RBrace -> ^(FUNC_DEF ID func_decorator? $rettype paralst block)
         )
     | stat_tmpdec Semicol!
     | ats_dyn_cst Semicol!
@@ -451,7 +451,7 @@ explst
 //    ;
 
 paralst
-    : para (Comma para)* -> ^(PARA_LIST para+)
+    : para? (Comma para)* -> ^(PARA_LIST para*)
     ;
     
 para : paratype ID?;
