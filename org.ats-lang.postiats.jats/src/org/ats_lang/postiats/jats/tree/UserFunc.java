@@ -55,7 +55,7 @@ public class UserFunc implements FuncDef, ATSNode {
      */
     public Object evaluate(Map<String, ATSType> types,
             Map<String, FuncDef> funcs, ATSScope<Object> scope, List<Object> args) {
-        if (null != m_paras) {
+        if (m_paras.isEmpty() == false) {
             Iterator<FuncPara> iter_para = m_paras.iterator();
             Iterator<Object> iter_val = args.iterator();
             

@@ -56,16 +56,17 @@ public class RefType implements ATSType {
 	}
 	
   	// dst: Ptrk
-	// srcType = dstType or srcType = RefType(dstType)
+	// dstType = RefType(XX)
+	// dstType = RefType(srcType) or dstType = srcType
 	static public void update(Object dst, Object src, ATSType srcType) {
 	    if (dst instanceof Ptrk) {
 	        // dstType = IntType or dstType = PtrType or dstType = BoxedType
 	        if (srcType instanceof RefType) {
 	            ATSReferableType realtype = ((RefType) srcType).defType();
-	        	((Ptrk) dst).update(RefType.getValue(src, realtype), realtype);
+	            updateFromRefType((Ptrk)dst, src, realtype);
 	        } else if (srcType instanceof ATSReferableType) {
 	            // srcType = IntType or or srcType = PtrType or srcType = BoxedType (StructType)
-	            ((Ptrk)dst).update(src, (ATSReferableType)srcType);
+	            updateFromNonRefType((Ptrk)dst, src, (ATSReferableType)srcType);
 	        } else {
 	        	throw new Error("Wrong Type.");
 	        }
@@ -73,6 +74,19 @@ public class RefType implements ATSType {
 	        throw new Error("Wrong Type.");
 	    }
 	}
+	   
+    // dst: Ptrk
+    // srcType = dstType
+    static public void updateFromRefType(Ptrk dst, Object src, ATSReferableType realType) {
+        ((Ptrk) dst).update(RefType.getValue(src, realType), realType);
+    }
+    
+    // dst: Ptrk
+    // srcType = dstType
+    static public void updateFromNonRefType(Ptrk dst, Object src, ATSReferableType ty) {
+        ((Ptrk) dst).update(src, ty);
+    }
+
 	
 	// v := RefType (ty)
 	// v : Ptrk
@@ -101,6 +115,7 @@ public class RefType implements ATSType {
     }
     
     // dst := RefType(recType)
+    // src is deep copied into dst
     static public void updateFltrecOfs(Object dst, Object src, String memName, StructType recType) {
     	if (dst instanceof Ptrk) {
     		((Ptrk) dst).updateFltrecOfs(src, memName, recType);

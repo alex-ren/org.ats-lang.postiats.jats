@@ -8,11 +8,14 @@ import org.ats_lang.postiats.jats.utils.ATSScope;
 
 // literal input
 public class ValueNode extends ATSTypeNode {
+    // support IntType, DoubleType, CharType, PtrkType(String actually), BoolType
     public Object m_v;
+    public String m_text;
     
-    public ValueNode(ATSType ty, Object v) {
+    public ValueNode(ATSType ty, Object v, String text) {
         super(ty);
         m_v = v;
+        m_text = text;
     }
 
 //    @Override

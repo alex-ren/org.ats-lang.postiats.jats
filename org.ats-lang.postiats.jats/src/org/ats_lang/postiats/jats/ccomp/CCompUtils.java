@@ -18,13 +18,14 @@ public class CCompUtils {
     public static final String prefix = "atspre_";
     public static final String libfix = "atslib_";
 
-    // used by interpreter
     public static int populateFuncs(Map<String, FuncDef> funcs, Class<?> cls) {
+        final String classname = cls.getSimpleName();
+        
         Method[] methods = cls.getDeclaredMethods();
         int nFuncs = 0;
 
         for (final Method method : methods) {
-            String name = method.getName();
+            final String name = method.getName();
 
             if (name.startsWith(CCompUtils.prefix) || name.startsWith(CCompUtils.libfix)) {
 //                 System.out.println(name);
@@ -50,7 +51,10 @@ public class CCompUtils {
 
                 if (forInterpreter == true) {
                     LibFunc func = new LibFunc() {
+
                         public Object evaluate(List<Object> paras) {
+                            // System.out.println("evaluating function " +
+                            // name);
                             Object[] args = new Object[0];
                             // System.out.println("paras is " + paras);
                             if (paras != null) {
@@ -61,14 +65,24 @@ public class CCompUtils {
                                 return method.invoke(null, args);
                             } catch (IllegalArgumentException e) {
                                 e.printStackTrace();
+                                System.out.println("function " + name
+                                        + " throw exception");
                                 throw new Error("evaluate fails");
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
+                                System.out.println("function " + name
+                                        + " throw exception");
                                 throw new Error("evaluate fails");
                             } catch (InvocationTargetException e) {
                                 e.printStackTrace();
+                                System.out.println("function " + name
+                                        + " throw exception");
                                 throw new Error("evaluate fails");
                             }
+                        }
+
+                        public String getModuleName() {
+                            return classname;
                         }
 
                     };
@@ -82,7 +96,26 @@ public class CCompUtils {
         return nFuncs;
     }
 
-    // used by interpreter
+
+    public static void populateAllFuncs(Map<String, FuncDef> funcs) {
+
+        populateFuncs(funcs, CCompArrayPtr.class);
+        populateFuncs(funcs, CCompBasics.class);
+        populateFuncs(funcs, CCompChar.class);
+
+        populateFuncs(funcs, CCompDebug.class);
+        populateFuncs(funcs, CCompFileBas.class);
+        populateFuncs(funcs, CCompFloat.class);
+        populateFuncs(funcs, CCompInteger.class);
+        populateFuncs(funcs, CCompMemory.class);
+        populateFuncs(funcs, CCompPointer.class);
+        populateFuncs(funcs, CCompStdlib.class);
+
+        populateFuncs(funcs, CCompString.class);
+
+    }
+    
+    
     public static int populateGlabalValues(ATSScope<Object> gvscope,
             Class<?> cls) {
 
@@ -109,7 +142,6 @@ public class CCompUtils {
         return nFields;
     }
     
- // used by interpreter
     public static void populateAllGlobalValues(ATSScope<Object> gvscope) {
         populateGlabalValues(gvscope, CCompArrayPtr.class);
         populateGlabalValues(gvscope, CCompBasics.class);
@@ -129,26 +161,6 @@ public class CCompUtils {
  
     }
 
-    // used by interpreter
-    public static void populateAllFuncs(Map<String, FuncDef> funcs) {
-        populateFuncs(funcs, CCompArrayPtr.class);
-        populateFuncs(funcs, CCompBasics.class);
-        populateFuncs(funcs, CCompChar.class);
-
-        populateFuncs(funcs, CCompDebug.class);
-        populateFuncs(funcs, CCompFileBas.class);
-        
-        populateFuncs(funcs, CCompFloat.class);
-        populateFuncs(funcs, CCompInteger.class);
-
-        populateFuncs(funcs, CCompMemory.class);
-        populateFuncs(funcs, CCompPointer.class);
-        populateFuncs(funcs, CCompStdlib.class);
-
-        populateFuncs(funcs, CCompString.class);
-
-    }
-    
 
     public static void populateAllGlobalValueTypes(ATSScope<ATSType> tyscope) {
 
@@ -240,39 +252,4 @@ public class CCompUtils {
         return types;
     }
 
-    // // used by translator
-    // // add class name to function name
-    // public static int populateFuncNames(Map<String, String> funcs, Class<?>
-    // cls) {
-    // Method[] methods = cls.getDeclaredMethods();
-    // String classname = cls.getSimpleName();
-    // int nFuncs = 0;
-    //
-    // for (final Method method : methods) {
-    // String name = method.getName();
-    //
-    // if (name.startsWith(CCompUtils.prefix)) {
-    // // System.out.println(name);
-    //
-    // funcs.put(name, classname + "." + name);
-    // nFuncs++;
-    // }
-    // }
-    //
-    // return nFuncs;
-    //
-    // }
-    //
-    // // used by translator
-    // public static void populateAllFuncNames(Map<String, String> funcs) {
-    // populateFuncNames(funcs, CCompBasics.class);
-    // populateFuncNames(funcs, CCompInteger.class);
-    // populateFuncNames(funcs, CCompChar.class);
-    // populateFuncNames(funcs, CCompFloat.class);
-    // populateFuncNames(funcs, CCompArrayPtr.class);
-    // populateFuncNames(funcs, CCompString.class);
-    // populateFuncNames(funcs, CCompPointer.class);
-    //
-    //
-    // }
 }

@@ -24,7 +24,7 @@ public class BoxedType extends ATSEltType {
 //	}
 
     public String toString() {
-        return Ptrk.class.getSimpleName();
+        return "Map<String, Object>";
     }
     
 	@Override

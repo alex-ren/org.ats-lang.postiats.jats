@@ -24,8 +24,8 @@ public class CCompFileBas {
     }
     
     static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {
-        tyscope.addValue("atspre_FILE_stdin", PtrkType.cType);
-        tyscope.addValue("atspre_FILE_stdout", PtrkType.cType);
-        tyscope.addValue("atspre_FILE_stderr", PtrkType.cType);
+        tyscope.addValueWithModule("atspre_FILE_stdin", PtrkType.cType, CCompFileBas.class.getSimpleName());
+        tyscope.addValueWithModule("atspre_FILE_stdout", PtrkType.cType, CCompFileBas.class.getSimpleName());
+        tyscope.addValueWithModule("atspre_FILE_stderr", PtrkType.cType, CCompFileBas.class.getSimpleName());
     }
 }

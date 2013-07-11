@@ -1,17 +1,11 @@
 package org.ats_lang.postiats.jats.tree;
 
-import java.util.Map;
 
-import org.ats_lang.postiats.jats.interpreter.FuncDef;
 import org.ats_lang.postiats.jats.type.ATSType;
-import org.ats_lang.postiats.jats.type.BoxedType;
-import org.ats_lang.postiats.jats.type.PtrkType;
-import org.ats_lang.postiats.jats.type.RefType;
+
 import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.type.VoidType;
-import org.ats_lang.postiats.jats.utils.ATSScope;
-import org.ats_lang.postiats.jats.value.Ptrk;
-import org.ats_lang.postiats.jats.value.SingletonValue;
+
 
 public class AtsInsStoreBoxrecOfs extends ATSTypeNode {
     public String m_tmp; // name of the structure object

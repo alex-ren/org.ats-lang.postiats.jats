@@ -79,16 +79,25 @@ public class EvaluateVisitor implements ATSTreeVisitor {
         return node.accept(this);
     }
 
+
+    private void printIndent(int n) {
+        System.out.println();
+        for (int j = 0; j < n; ++j) {
+            System.out.print(" ");
+        }
+    }
+    private static int m_indent = 0;
+    
     @Override
     // #define ATSCKiseqz(x) ((x)==0)
     public Object visit(AtsCkIseqz node) {
         Object v = node.m_exp.accept(this);
         // System.out.println("ATSCKiseqz " + v);
-
-        if (v instanceof Ptrk) {
-            System.out.println("lvalue in condition");
-            v = ((Ptrk) v).getValue(BoolType.cType);
-        }
+//
+//        if (v instanceof Ptrk) {
+//            System.out.println("lvalue in condition");
+//            v = ((Ptrk) v).getValue(BoolType.cType);
+//        }
 
         if (v instanceof Integer) {
             return (Integer) v == 0;
@@ -246,22 +255,9 @@ public class EvaluateVisitor implements ATSTreeVisitor {
     public Object visit(AtsInsStoreArrpszPtr node) {
         Object asz = node.m_asz.accept(this);
         
-        // m_asz := RefType(IntType)
-        if (asz instanceof Ptrk) {
-            asz = ((Ptrk)asz).getValue(IntType.cType);
-        }
-        
-        Integer sz = null;
-        
-        if (asz instanceof Integer) {
-            sz = (Integer)asz;
-        } else {
-            throw new Error("Type error");
-        }
-        
         Object arrpsz = m_scope.getValue(node.m_tmp);
         if (arrpsz instanceof ArrPsz) {
-            ((ArrPsz) arrpsz).init(sz, node.m_tyelt);
+            ((ArrPsz)arrpsz).init(asz, node.m_tyelt);
         } else {
             throw new Error("Type mismatch");
         }
@@ -688,62 +684,65 @@ public class EvaluateVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(FuncCallNode node) {
-//      printIndent(m_indent);
-//      System.out.println("Entering function: " + m_id);
+//        printIndent(m_indent);
+//        System.out.println("Entering function: " + node.m_id);
         FuncCallNode.m_indent += 4;
-      
-      FuncDef fun = m_funcs.get(node.m_id);
-      if (null == fun) {
-          System.out.println("FuncCallNode::evaluate, fun " + node.m_id + " is not found");
-          throw new Error("FuncCallNode::evaluate, fun " + node.m_id + " is not found");
-      }
 
-      
-      List<Object> m_args = null;
-      
-      if (node.m_paras != null) {
-          m_args = new ArrayList<Object>();
-          for (ATSNode para : node.m_paras) {
-              // clone is important
-              Object arg = para.accept(this);
-              ATSType argtype = para.getType();
-              if (argtype instanceof RefType) {
-                  // reference needs to be deep copied.
-                  arg = RefType.cloneValue(arg, ((RefType) argtype).defType());
-//                  System.out.println("FuncCallNode deep copy");
-              }
-//              printIndent(m_indent);
-//              System.out.println("para.getType is " + argtype + ", arg is " + arg + " @" + System.identityHashCode(arg));
-              m_args.add(arg);
-          }
-      }
-      
+        FuncDef fun = m_funcs.get(node.m_id);
+        if (null == fun) {
+            System.out.println("FuncCallNode::evaluate, fun " + node.m_id
+                    + " is not found");
+            throw new Error("FuncCallNode::evaluate, fun " + node.m_id
+                    + " is not found");
+        }
 
+        List<Object> m_args = null;
 
-      // Only global scope can be seen inside the function.
-      ATSScope<Object> aScope = m_scope.getParent().newScope();
-      
+        if (node.m_paras != null) {
+            m_args = new ArrayList<Object>();
+            for (ATSNode para : node.m_paras) {
+                // clone is important
+                Object arg = para.accept(this);
+                ATSType argtype = para.getType();
+                if (argtype instanceof RefType) {
+                    // reference needs to be deep copied.
+                    arg = RefType.cloneValue(arg, ((RefType) argtype).defType());
+                    // System.out.println("FuncCallNode deep copy");
+                }
+                // printIndent(m_indent);
+                // System.out.println("para.getType is " + argtype + ", arg is "
+                // + arg + " @" + System.identityHashCode(arg));
+                m_args.add(arg);
+            }
+        }
 
-      Object ret;
-      if (fun instanceof UserFunc) {
-          ret = ((UserFunc)fun).evaluate(m_types, m_funcs, aScope, m_args);
-      } else {
-          ret = ((LibFunc)fun).evaluate(m_args);
-      }
-      FuncCallNode.m_indent -= 4;
-//      printIndent(m_indent);
-//      System.out.println("Leaving function: " + m_id);
-      if (ret instanceof ReturnValue) {
-          return ((ReturnValue) ret).getValue();
-      } else {
-          return ret;
-      }
+        // Only global scope can be seen inside the function.
+        ATSScope<Object> aScope = m_scope.getParent().newScope();
+
+        Object ret;
+        if (fun instanceof UserFunc) {
+            ret = ((UserFunc) fun).evaluate(m_types, m_funcs, aScope, m_args);
+        } else {
+            ret = ((LibFunc) fun).evaluate(m_args);
+        }
+        FuncCallNode.m_indent -= 4;
+//        printIndent(m_indent);
+//        System.out.println("Leaving function: " + node.m_id);
+        if (ret instanceof ReturnValue) {
+            return ((ReturnValue) ret).getValue();
+        } else {
+            return ret;
+        }
 
     }
 
     @Override
     public Object visit(IdentifierNode node) {
-        return m_scope.getValue(node.m_id);
+        Object ret = m_scope.getValue(node.m_id);
+        if (null == ret) {
+//            System.out.println(node.m_id + " is null.");
+        }
+        return ret;
 
     }
 

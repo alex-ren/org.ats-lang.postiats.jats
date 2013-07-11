@@ -1,36 +1,15 @@
 group ats_il_java;
 
-main_no_arg_st() ::= <<
-static public void main(String [] args) {
-    mainats();
-}
->>
-
-main_args_st() ::= <<
-static public void main(String [] args) {
-    mainats()s;
-}
->>
-
 program_st(filename, stats, main) ::= <<                 
-<! package postiats;                                                   !>
-<!                                                                     !>
-<! import org.ats_lang.postiats.jats.value.BoolValue;                  !>
-<! import org.ats_lang.postiats.jats.value.CharValue;                  !>
-<! import org.ats_lang.postiats.jats.value.IntValue;                   !>
-<! import org.ats_lang.postiats.jats.value.ULIntValue;                 !>
-<! import org.ats_lang.postiats.jats.value.SizeValue;                  !>
-<! import org.ats_lang.postiats.jats.value.DoubleValue;                !>
-<! import org.ats_lang.postiats.jats.value.StringValue;                !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompCompositeValue;        !>
-<!                                                                     !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompTypedefs;              !>
-<!                                                                     !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompArrayPtr;              !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompBasics;                !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompFloat;                 !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompInteger;               !>
-<! import org.ats_lang.postiats.jats.ccomp.CCompString;                !>
+package postiats;                                                   
+                                                                                 
+
+import org.ats_lang.postiats.jats.type.*;
+import org.ats_lang.postiats.jats.value.*;
+import org.ats_lang.postiats.jats.ccomp.*;   
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class <filename> {
     <stats; separator="\n\n">
@@ -48,6 +27,18 @@ stats_gvar_st(gvar) ::= <<
 
 gvar_def_st(type, name, init) ::= <<
 <type> <name> = <init>;
+>>
+
+elt_type_init_val_st() ::= <<
+null
+>>
+
+ref_type_init_val_st(realty) ::= <<
+<realty>.createRefDefault()
+>>
+
+nonref_type_init_val_st(ty) ::= <<
+<ty>.createNormalDefault()
 >>
 
 
@@ -79,6 +70,268 @@ para_st(type, name) ::= <<
 block_st(bstats) ::= <<
 <bstats; separator="\n">
 >>
+
+ifstatement_st (aifstat, aelseifstats, aelsestat) ::= <<
+<aifstat><aelseifstats; separator="s"><aelsestat>
+>>
+
+ifstat_st(exp, block) ::= <<
+if (<exp> == true) {
+    <block>
+} 
+>>
+
+elseifstat_st(exp, block) ::= <<
+else if (<exp> == true) {
+    <block>
+} 
+>>
+
+elsestat_st(block) ::= <<
+else {
+    <block>
+}
+>>
+
+
+fun_call_st(name, arglst) ::= <<
+<name>(<arglst:{e |<e>}; separator=", ">)
+>>
+
+arg_st(type, arg) ::= <<
+<arg>
+>>
+
+arg_copy_st(type_ins, type_java, arg) ::= <<
+(<type_java>)RefType.cloneValue(<arg>, <type_ins>)
+>>
+
+atsins_move_ref_ref_st(tmp, val, type) ::= <<
+RefType.updateFromRefType(<tmp>, <val>, <type>);
+>>
+
+atsins_move_ref_val_st(tmp, val, type) ::= <<
+RefType.updateFromNonRefType(<tmp>, <val>, <type>);
+>>
+
+atsins_move_val_ref_st(tmp, val, type, type_java) ::= <<
+<tmp> = (<type_java>)RefType.cloneValue(<val>, <type>);
+>>
+
+atsins_move_val_val_st(tmp, val, type) ::= <<
+<tmp> = <val>;
+>>
+
+atsins_move_void_st(val) ::= <<
+<if(val)><val>;<endif>
+>>
+
+ats_ck_iseqz_st(val) ::= <<
+(<val> == 0)
+>>
+
+ats_dynload0_st(dyn_val) ::= <<
+Integer <dyn_val> = 0;
+>>
+
+ats_return_st(val) ::= <<
+return<if(val)> <val>;<else>;<endif>
+>>
+
+ats_return_copy_st(val, type) ::= <<
+return<if(val)> xxxRefType.cloneValue(<val>, <type>);<else>;<endif>
+>>
+
+atsins_store_ref_ref_st(dst, src, type) ::= <<
+RefType.updateFromRefType(<dst>, <src>, <type>);
+>>
+
+atsins_store_ref_val_st(dst, src, type) ::= <<
+RefType.updateFromNonRefType(<dst>, <src>, <type>);
+>>
+
+atsins_move_boxrec_st(tmp) ::= <<
+<tmp> = new HashMap\<String, Object>();
+>>
+
+atsins_move_boxrec_ref_st(tmp) ::= <<
+RefType.updateFromNonRefType(<tmp>, new HashMap\<String, Object>(), BoxedType.cType);
+>>
+
+atsins_store_boxref_ofs_val_val_st(tmp, lab, val) ::= <<
+<tmp>.put("<lab>", <val>);
+>>
+
+atsins_store_boxref_ofs_val_ref_st(tmp, lab, val, labtype) ::= <<
+<tmp>.put("<lab>", RefType.cloneValue(<val>, <labtype>));
+>>
+
+atsins_store_boxref_ofs_ref_val_st(tmp, lab, val) ::= <<
+((Map\<String, Object>)<tmp>.getValue(BoxedType.cType)).put("<lab>", <val>);
+>>
+
+atsins_store_boxref_ofs_ref_ref_st(tmp, lab, val, labtype) ::= <<
+((Map\<String, Object>)<tmp>.getValue(BoxedType.cType)).put("<lab>", RefType.cloneValue(<val>, <labtype>));
+>>
+
+ats_sel_box_rec_st(pmv, lab, labty) ::= <<
+(<labty>)<pmv>.get("<lab>")
+>>
+
+ats_sel_box_rec_ref_st(pmv, lab, labty) ::= <<
+(<labty>)((Map\<String, Object>)RefType.getValue(<pmv>, BoxedType.cType)).get("<lab>")
+>>
+
+ats_sel_recsin_st(pmv, tyrec, lab) ::= <<
+<pmv>
+>>
+
+ats_sel_flt_rec_st(pmv, lab, tylab_java) ::= <<
+(<tylab_java>)<pmv>.get("<lab>")
+>>
+
+ats_sel_flt_rec_ref_st(pmv, lab, tyrec) ::= <<
+RefType.SelFltrecOfs(<pmv>, "<lab>", <tyrec>)
+>>
+
+atsins_store_fltrec_ofs_val_val_st(tmp, tyrec, tylab, lab, val) ::= <<
+<tmp>.put("<lab>", <val>);
+>>
+
+atsins_store_fltrec_ofs_val_ref_st(tmp, tyrec, tylab, lab, val) ::= <<
+<tmp>.put("<lab>", RefType.cloneValue(<val>, <tylab>));
+>>
+
+atsins_store_fltrec_ofs_ref_val_st(tmp, tyrec, tylab, lab, val) ::= <<
+RefType.updateFltrecOfs(<tmp>, <val>, "<lab>", <tyrec>);
+>>
+
+atsins_store_fltrec_ofs_ref_ref_st(tmp, tyrec, tylab, lab, val) ::= <<
+RefType.updateFltrecOfs(<tmp>, RefType.getValue(<val>, <tylab>), "<lab>", <tyrec>);
+>>
+
+
+atsins_store_arrpsz_ptr_st(tmp, tyelt, tsz) ::= <<
+<tmp>.init(<tsz>, <tyelt>);
+>>
+
+atsins_move_arrpsz_ptr_st(tmp, psz) ::= <<
+<tmp> = ((ArrPsz) <psz>).getPtr();
+>>
+
+atsins_pmove_ref_st(tmp, hit, val, tyval) ::= <<
+<tmp>.update(RefType.getValue(<val>, <tyval>), <hit>);
+>>
+
+atsins_pmove_st(tmp, hit, val, tyval) ::= <<
+<tmp>.update(<val>, <hit>);
+>>
+
+atsins_update_ptrinc_st(tmp, sz) ::=<<
+<tmp> = Ptrk.createPtrkOffset(<tmp>, <sz>);  
+>>
+
+ats_pvm_castfn_st(hit, exp) ::= <<
+<!no op!>/*castfn_currently_no_op*/<exp>
+>>
+
+ats_pmv_sizeof_st(sz) ::= <<
+<sz>
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+identifier_st(id) ::= <<
+<id>
+>>
+
+atom_exp_st(e) ::= <<
+<e>
+>>
+
+string_exp_st(str) ::= <<
+StringType.fromString(<str>)
+>>
+
+void_exp_st(e) ::= <<
+SingletonValue.VOID
+>>
+
+main_args_convert_st() ::= <<
+Integer mainArgc = args.length + 1;
+
+Ptrk[] arrArgv = new Ptrk[mainArgc];
+arrArgv[0] = StringType.fromString("<filename>");
+
+for (int i = 1; i \< mainArgc; ++i) {
+    arrArgv[i] = StringType.fromString(args[i - 1]);
+}
+
+ArrayType argvTy = new ArrayType(PtrkType.cType, mainArgc);
+
+Ptrk mainArgv = Ptrk.createPtrk(argvTy, arrArgv);
+>>
+
+mainats_void_0_st(init_func) ::= <<
+static public void main(String [] args) {
+    <init_func>;
+    mainats_void_0();
+}
+>>
+
+mainats_argc_argv_0_st(init_func) ::= <<
+static public void main(String [] args) {
+    <init_func>;
+    <main_args_convert_st()>
+    mainats_argc_argv_0(mainArgc, mainArgv);
+}
+>>
+
+mainats_argc_argv_envp_0_st(init_func) ::= <<
+static public void main(String [] args) {
+    <init_func>;
+    <main_args_convert_st()>
+    mainats_argc_argv_envp_0(mainArgc, mainArgv, null);
+}
+>>
+
+mainats_void_int_st(init_func) ::= <<
+static public void main(String [] args) {
+    <init_func>;
+    mainats_void_int();
+}
+>>
+
+mainats_argc_argv_int_st(init_func) ::= <<
+static public void main(String [] args) {
+    <init_func>;
+    <main_args_convert_st()>
+    mainats_argc_argv_int(mainArgc, mainArgv);
+}
+>>
+
+mainats_argc_argv_envp_int_st(init_func) ::= <<
+static public void main(String [] args) {
+    <init_func>;
+    <main_args_convert_st()>
+    mainats_argc_argv_envp_int(mainArgc, mainArgv, null);
+}
+>>
+
+ats_ptrof_st(lval) ::= <<
+RefType.ptrof(<lval>)
+>>
+
 
 // =======================================================
 
@@ -149,113 +402,28 @@ public <type> <name>;
 // ========================================
 
 
-ifstatement_st (aifstat, aelseifstats, aelsestat) ::= <<
-<aifstat><aelseifstats; separator="s"><aelsestat>
->>
-
-ifstat_st(exp, block) ::= <<
-if (<exp>.isTrue()) {
-    <block>
-}
->>
-
-elseifstat_st(exp, block) ::= <<
- else if (<exp>.isTrue) {
-    <block>
-}
->>
-
-elsestat_st(block) ::= <<
- else {
-    <block>
-}
->>
-
 new_prim_st(valuetype, content) ::= <<
 <valuetype>.create(<content>)
 >>
 
-fun_call_st (name, explst) ::= <<
-<name>(<explst:{e |<e>.deepcopy()}; separator=", ">)
->>
 
 atsins_load_st(dest, cont) ::= <<
 <dest>.copyfrom(<cont>);
 >>
 
-atsins_store_st(dest, cont) ::= <<
-<dest>.copyfrom(<cont>);
->>
 
-atsins_store_arrpsz_asz_st(tmp, asz) ::= <<
-<tmp>.size.copyfrom(<asz>);
->>
 
-atsins_store_arrpsz_ptr_st(tmp, tyelt, tsz) ::= <<
-<tmp>.ptr.m_elesz = <tyelt>.m_type.getSize();
-<tmp>.ptr.m_arr = new <tyelt> [SizeValue.castFromV(<tsz>).getContent()];
-for (int i = 0; i \< <tmp>.ptr.m_arr.length; ++i) {
-    <tmp>.ptr.m_arr[i] = <tyelt>.m_type.createDefault();
-}
-<tmp>.ptr.m_ind = 0;
-<tmp>.ptr.m_mem = <tmp>.ptr.m_arr[0];
->>
 
-atsins_store_fltrec_ofs_st(tmp, tyrec, lab, val) ::= <<
-<tmp>.<lab>.copyfrom(<val>);
->>
 
-atsins_move_st(tmp, val) ::= <<
-<tmp>.copyfrom(<val>);
->>
 
-atsins_move_void_st(val) ::= <<
-<if(val)><val>;<endif>
->>
 
-atsins_pmove_st(tmp, hit, val) ::= <<
-((<hit>) <tmp>.m_mem).copyfrom(<val>);
->>
 
-atsins_move_arrpsz_ptr_st(tmp, psz) ::= <<
-<tmp>.copyfrom(<psz>.ptr);
->>
 
-atsins_update_ptrinc_st(tmp, tyelt) ::=<<
-<tmp>.incIndex();
->>
 
-ats_return_st(exp) ::= <<
-return<if(exp)> <exp>.deepcopy();<else>;<endif>
->>
 
-ats_pvm_castfn_st(hit, exp) ::= <<
-<!no op!>/*castfn_currently_no_op*/<exp>
->>
 
-ats_pmv_sizeof_st(type) ::= <<
-SizeValue.create(<type>.m_type.getSize())
->>
 
-ats_deref_st(pmv, hit) ::= <<
-((<hit>) <pmv>.deRef())
->>
 
-ats_ptrof_st(lval, type) ::= <<
-CCompTypedefs.CPtrValue.create(<lval>, <type>.m_type.getSize())
->>
-
-ats_sel_recsin_st(pmv, tyrec, lab) ::= <<
-<pmv>
->>
-
-ats_sel_flt_rec_st(pmv, tyrec, lab) ::= <<
-(<pmv>).<lab>
->>
-
-ats_sel_box_rec_st(pmv, tyrec, lab) ::= <<
-((<tyrec>) (<pmv>.deRef())).<lab>
->>
 
 
 

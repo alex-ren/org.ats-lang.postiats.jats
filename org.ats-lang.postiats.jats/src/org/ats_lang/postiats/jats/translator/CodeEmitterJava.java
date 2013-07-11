@@ -3,6 +3,7 @@ package org.ats_lang.postiats.jats.translator;
 import java.util.List;
 
 import org.ats_lang.postiats.jats.interpreter.Program;
+import org.ats_lang.postiats.jats.interpreter.Program.MainFunc;
 import org.ats_lang.postiats.jats.tree.ATSNode;
 
 import org.ats_lang.postiats.jats.tree.UserFunc;
@@ -28,7 +29,7 @@ public class CodeEmitterJava {
         
 
         ST stProg = group.getInstanceOf("program_st");
-        stProg.add("filename", "Test01");
+        stProg.add("filename", m_prog.getFileName());
 
         
         // emit user-defined types
@@ -44,7 +45,7 @@ public class CodeEmitterJava {
         if (gstats.size() > 0) {
             System.out.println("+++++++++++++++++++++++++++++gloval variables");
         }
-        CodeEmitterJavaVisitor codeVisitor = new CodeEmitterJavaVisitor(group);
+        CodeEmitterJavaVisitor codeVisitor = new CodeEmitterJavaVisitor(group, m_prog.getFuncs());
         emitGStats(codeVisitor, gstats, stProg);
 
         // emit user-defined functions
@@ -53,7 +54,9 @@ public class CodeEmitterJava {
             System.out.println("+++++++++++++++++++++++++++++user-defined functions");
         }
         emitFuncs(codeVisitor, userFuncs, stProg);
-
+        
+        // emit main function
+        emitMain(codeVisitor, group, stProg, m_prog.getMain());
         
         
         
@@ -81,6 +84,30 @@ public class CodeEmitterJava {
         for (UserFunc func: funcs) {
             st.add("stats", func.accept(visitor));
         }        
+    }
+    
+    // emit the wrapper for the real main function
+    public void emitMain(CodeEmitterJavaVisitor visitor, STGroup stg, ST stProg, MainFunc mainfunc) {
+        ST stMain = null;
+        
+        if (mainfunc.m_mainName == "ATSmainats_void_0") {
+            stMain = stg.getInstanceOf("mainats_void_0_st");
+        } else if (mainfunc.m_mainName == "ATSmainats_argc_argv_0") {
+            stMain = stg.getInstanceOf("mainats_argc_argv_0_st");
+        } else if (mainfunc.m_mainName == "ATSmainats_argc_argv_envp_0") {
+            stMain = stg.getInstanceOf("mainats_argc_argv_envp_0_st");
+        } else if (mainfunc.m_mainName == "ATSmainats_void_int") {
+            stMain = stg.getInstanceOf("mainats_void_int_st");
+        } else if (mainfunc.m_mainName == "ATSmainats_argc_argv_int") {
+            stMain = stg.getInstanceOf("mainats_argc_argv_int_st");
+        } else if (mainfunc.m_mainName == "ATSmainats_argc_argv_envp_int") {
+            stMain = stg.getInstanceOf("mainats_argc_argv_envp_int_st");
+        } else {
+            throw new Error("no support");
+        }
+        
+        stMain.add("init_func", mainfunc.m_initFunc.accept(visitor));
+        stProg.add("stats", stMain);
     }
     
     

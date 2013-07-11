@@ -438,11 +438,11 @@ atom_exp
     ;
 
 func_call
-    : ID LParen explst? RParen -> ^(FUNC_CALL ID explst?)
+    : ID LParen explst RParen -> ^(FUNC_CALL ID explst)
     ;
     
 explst
-    : exp (Comma exp)* -> ^(EXP_LIST exp+)
+    : (exp (Comma exp)*)? -> ^(EXP_LIST exp*)
     ;
 
     

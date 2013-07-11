@@ -1,6 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.value.ArrPsz;
+import org.ats_lang.postiats.jats.value.Ptrk;
 
 
 public class ArrPszType extends ATSTempType {
@@ -11,13 +12,18 @@ public class ArrPszType extends ATSTempType {
     }
 
     @Override
-    public Object createNormalDefault() {
+    public ArrPsz createNormalDefault() {
         return new ArrPsz();
     }
 
     @Override
     public Object accept(ATSTypeVisitor visitor) {
         return visitor.visit(this);
+    }
+    
+    @Override 
+    public String toString() {
+        return ArrPsz.class.getSimpleName();
     }
     
 //    @Override

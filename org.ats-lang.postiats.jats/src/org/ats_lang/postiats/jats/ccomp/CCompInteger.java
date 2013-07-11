@@ -62,7 +62,7 @@ public class CCompInteger {
     // ===================================================
 
     public static Integer atspre_g0int_add_int(Integer x1, Integer x2) {
-        // System.out.println("x1 is " + x1 + ", x2 is " + x2);
+//         System.out.println("x1 is " + x1 + ", x2 is " + x2);
         return x1 + x2;
     }
 

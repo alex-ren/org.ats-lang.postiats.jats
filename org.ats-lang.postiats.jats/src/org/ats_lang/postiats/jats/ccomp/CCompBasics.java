@@ -15,8 +15,9 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 public class CCompBasics {
 
     
-    public static Ptrk atspre_argv_get_at(Ptrk[] argv, Integer i) {
-        return argv[i];
+    public static Ptrk atspre_argv_get_at(Ptrk argv, Integer i) {
+        Ptrk ret = argv.SelArrInd(i, PtrkType.cType);
+        return (Ptrk)ret.getValue(PtrkType.cType);
         
     }
     

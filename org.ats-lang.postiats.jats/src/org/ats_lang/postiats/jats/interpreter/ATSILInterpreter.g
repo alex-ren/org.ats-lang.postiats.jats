@@ -170,7 +170,7 @@ ats_return returns [AtsReturn node]
     
 ats_return_void returns [AtsReturn node]
 @init {
-  ATSNode retnode = new ValueNode(VoidType.cType, SingletonValue.VOID);
+  ATSNode retnode = new ValueNode(VoidType.cType, SingletonValue.VOID, "");
 }
     : ^(ATS_RETURN_VOID (exp{retnode = $exp.node;})?) {node = new AtsReturn(retnode);}
     ;
@@ -180,7 +180,7 @@ ats_dyn_load0 returns [ATSNode node]
     ;
 
 ats_dyn_load_set returns [ATSNode node]
-    : ^(ATSdynloadset ID)  {node = new AtsInsMove(IntType.cType, $ID.text, new ValueNode(IntType.cType, IntType.fromString("1")));}
+    : ^(ATSdynloadset ID)  {node = new AtsInsMove(IntType.cType, $ID.text, new ValueNode(IntType.cType, IntType.fromString("1"), "1"));}
     ;
     
         
@@ -253,8 +253,8 @@ ats_simple_cast returns [ATSNode node]
     : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
     | ^(ATSPMVintrep exp) {node = new AtsPmvIntRepNode($exp.node);}
    
-    | ATSPMV_TRUE {node = new ValueNode(BoolType.cType, true);}
-    | ATSPMV_FALSE {node = new ValueNode(BoolType.cType, false);}
+    | ATSPMV_TRUE {node = new ValueNode(BoolType.cType, true, "true");}
+    | ATSPMV_FALSE {node = new ValueNode(BoolType.cType, false, "false");}
     
     | ^(ATSPMV_CHAR exp) {node = new AtsPmvSimpleCastNode(CharType.cType, $exp.node);}
     | ^(ATSPMV_FLOAT exp) {node = new AtsPmvSimpleCastNode(DoubleType.cType, $exp.node);}         
@@ -308,16 +308,16 @@ ats_sel_arrptr_ind returns [AtsSelArrPtrInd node]
 
 
 atom_exp returns [ATSNode node]
-    : ID     {node = new IdentifierNode(m_tyscope.getValue($ID.text), $ID.text);}
-    | INT    {node = new ValueNode(IntType.cType, IntType.fromString($INT.text));}
-    | FLOAT  {node = new ValueNode(DoubleType.cType, DoubleType.fromString($FLOAT.text));}
-    | CHAR   {node = new ValueNode(CharType.cType, CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)));}
-    | STRING {node = new ValueNode(PtrkType.cType, StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)));} 
-    | BOOL   {node = new ValueNode(BoolType.cType, BoolType.fromString($BOOL.text));}
+    : ID     {node = new IdentifierNode(m_tyscope.getEntry($ID.text), $ID.text);}
+    | INT    {node = new ValueNode(IntType.cType, IntType.fromString($INT.text), $INT.text);}
+    | FLOAT  {node = new ValueNode(DoubleType.cType, DoubleType.fromString($FLOAT.text), $FLOAT.text);}
+    | CHAR   {node = new ValueNode(CharType.cType, CharType.fromString(LiteralUtils.getCharEcsaped($CHAR.text)), $CHAR.text);}
+    | STRING {node = new ValueNode(PtrkType.cType, StringType.fromString(LiteralUtils.getStringEcsaped($STRING.text)), $STRING.text);} 
+    | BOOL   {node = new ValueNode(BoolType.cType, BoolType.fromString($BOOL.text), $BOOL.text);}
     ;
 
 func_call returns [FuncCallNode node]
-    : ^(FUNC_CALL ID explst?) {/*System.out.println("func call " + $ID.text);*/ node = new FuncCallNode(m_tyscope.getValue($ID.text), $ID.text, $explst.lst);}
+    : ^(FUNC_CALL ID explst) {/*System.out.println("func call " + $ID.text);*/ node = new FuncCallNode(m_tyscope.getValue($ID.text), $ID.text, $explst.lst);}
     ;
 
 explst returns [List<ATSNode> lst]
@@ -325,7 +325,7 @@ explst returns [List<ATSNode> lst]
   List<ATSNode> es = new ArrayList<ATSNode>();
   lst = es;
 }
-    : ^(EXP_LIST (exp {es.add($exp.node);})+)
+    : ^(EXP_LIST (exp {es.add($exp.node);})*)
     ;
     
 //var_assign returns [ATSNode node]

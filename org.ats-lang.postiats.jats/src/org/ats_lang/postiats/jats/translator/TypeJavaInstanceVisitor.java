@@ -1,5 +1,6 @@
 package org.ats_lang.postiats.jats.translator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ats_lang.postiats.jats.type.ATSType;
@@ -108,7 +109,7 @@ public class TypeJavaInstanceVisitor implements ATSTypeVisitor {
 
     @Override
     public Object visit(RefType ty) {
-        throw new Error("not supported");
+        return "new RefType(" + ty.defType().accept(this) + ")";
     }
 
     @Override

@@ -34,13 +34,13 @@ public class CCompString {
     }
 
 
-    public static boolean atspre_eq_string_string(Ptrk x1, Ptrk x2) {
+    public static Boolean atspre_eq_string_string(Ptrk x1, Ptrk x2) {
         String s1 = x1.createString();
         String s2 = x2.createString();
         return s1.equals(s2);
     }
     
-    public static boolean atspre_neq_string_string(Ptrk x1, Ptrk x2) {
+    public static Boolean atspre_neq_string_string(Ptrk x1, Ptrk x2) {
         String s1 = x1.createString();
         String s2 = x2.createString();
         return !s1.equals(s2);

@@ -8,6 +8,8 @@ import org.ats_lang.postiats.jats.tree.ATSNode;
 import org.ats_lang.postiats.jats.tree.FuncCallNode;
 import org.ats_lang.postiats.jats.tree.UserFunc;
 import org.ats_lang.postiats.jats.type.ATSType;
+import org.ats_lang.postiats.jats.type.ArrayType;
+import org.ats_lang.postiats.jats.type.PtrkType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.StructType;
 import org.ats_lang.postiats.jats.utils.ATSScope;
@@ -16,12 +18,25 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 
 
 public class Program {
-    private Map<String, ATSType> m_types;  // type definition
-    private List<StructType> m_userTypes;  // list of type definition
-    private Map<String, FuncDef> m_funcs;  // function definition
+    private Map<String, ATSType> m_types;  // type definition including both library and user-defined types
+    private List<StructType> m_userTypes;  // list of user-defined types
+    private Map<String, FuncDef> m_funcs;  // function definition including both library and user-defined functions
     private List<UserFunc> m_userFuncs;    // list of user-defined function definitions
     private List<ATSNode> m_gstats;  // statements for global variables in the file
     private MainFunc m_main;
+    private String m_fileName;
+    
+    public void setFileName(String fileName) {
+        m_fileName = fileName;
+    }
+    
+    public String getFileName() {
+        return m_fileName;
+    }
+    
+    public Map<String, FuncDef> getFuncs() {
+        return m_funcs;
+    }
 
     public Program(Map<String, ATSType> types, Map<String, FuncDef> funcs) {
         m_types = types;
@@ -40,6 +55,9 @@ public class Program {
         return m_userFuncs;
     }
 
+    public MainFunc getMain() {
+        return m_main;
+    }
     
     public void defineType(String id, StructType type) {
         m_types.put(id, type);
@@ -72,7 +90,7 @@ public class Program {
 //        return m_funcs;
 //    }
 
-    private class MainFunc {
+    public class MainFunc {
         public String m_errname;
         public FuncCallNode m_initFunc;
         public String m_mainName;
@@ -85,7 +103,7 @@ public class Program {
 
     }
     
-    // gvscope: global value definition including global variables and functions
+    // gvscope: global value definition including global variables (in library) and functions
     public void run(ATSScope<Object> gvscope, String [] argv) {
 
         EvaluateVisitor gvisitor = new EvaluateVisitor(m_types, m_funcs, gvscope);
@@ -99,12 +117,12 @@ public class Program {
         ATSScope<Object> mainScope = gvscope.newScope();
         // todo add the error to the current scope
         // something like mainScope.addValue(errname, LValue(int))
-
         // =======================
                 
         // initialization function
         EvaluateVisitor initVisitor = new EvaluateVisitor(m_types, m_funcs, mainScope);
         m_main.m_initFunc.accept(initVisitor);
+        
         
         // ==transform arguments=====================
         Integer mainArgc = argv.length;
@@ -113,8 +131,10 @@ public class Program {
         for (int i = 0; i < argv.length; ++i) {
             arrArgv[i] = StringType.fromString(argv[i]);
         }
+        
+        ArrayType argvTy = new ArrayType(PtrkType.cType, argv.length);
 
-        Ptrk[]  mainArgv = arrArgv;
+        Ptrk mainArgv = Ptrk.createPtrk(argvTy, arrArgv);
         
         Object mainEnvp = SingletonValue.NULL;  // no envp at all
         

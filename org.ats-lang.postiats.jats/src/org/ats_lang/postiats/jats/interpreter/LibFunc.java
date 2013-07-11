@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface LibFunc extends FuncDef {
 
-    public Object evaluate(List<Object> args);
+    public abstract Object evaluate(List<Object> args);
+    
+    public String getModuleName();
     
 }

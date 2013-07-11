@@ -1,6 +1,7 @@
 package org.ats_lang.postiats.jats.type;
 
 import org.ats_lang.postiats.jats.value.Ptrk;
+import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class ArrPtrType extends ATSTempType {
 
@@ -10,10 +11,11 @@ public class ArrPtrType extends ATSTempType {
     }
 
     @Override 
-    public Object createNormalDefault() {
-        return null;
+    public SingletonValue createNormalDefault() {
+        return SingletonValue.NULL;
     }
-
+    
+    @Override 
     public String toString() {
         return Ptrk.class.getSimpleName();
     }

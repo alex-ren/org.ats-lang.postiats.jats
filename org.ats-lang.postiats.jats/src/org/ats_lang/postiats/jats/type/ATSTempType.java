@@ -24,7 +24,7 @@ public abstract class ATSTempType implements ATSType {
 
 	@Override
 	public boolean equals(ATSType ty) {
-		throw new Error("not supported");
+	    return this == ty;
 	}
 
 }

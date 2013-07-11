@@ -20,7 +20,7 @@ public class BoolType extends ATSEltType {
     
     @Override
     public String toString() {
-        return boolean.class.getSimpleName();
+        return Boolean.class.getSimpleName();
     }
 
     @Override
