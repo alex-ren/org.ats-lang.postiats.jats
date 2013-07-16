@@ -22,39 +22,39 @@ public class <filename> {
 >>
 
 stats_gvar_st(gvar) ::= <<
-<if(gvar)>static public <gvar>;<endif>
+/*DefinitionNode*/<if(gvar)>static public <gvar>;<endif>
 >>
 
 gvar_def_st(type, name, init) ::= <<
-<type> <name> = <init>;
+/*DefinitionNode*/<type> <name> = <init>;
 >>
 
 elt_type_init_val_st() ::= <<
-null
+/*DefinitionNode*/null
 >>
 
 ref_type_init_val_st(realty) ::= <<
-<realty>.createRefDefault()
+/*DefinitionNode*/<realty>.createRefDefault()
 >>
 
 nonref_type_init_val_st(ty) ::= <<
-<ty>.createNormalDefault()
+/*DefinitionNode*/<ty>.createNormalDefault()
 >>
 
 
 stats_structtype_st(name, structtype_members) ::= <<
-static StructType <name> = new StructType("<name>");
+/*StructType*/static StructType <name> = new StructType("<name>");
 static {
     <structtype_members; separator="\n">
 }
 >>
 
 structtype_members_st(name, id, type) ::= <<
-<name>.addMember("<id>", <type>);
+/*StructType*/<name>.addMember("<id>", <type>);
 >>
 
 fun_def_st(type, name, paras, body) ::= <<
-static public <type> <name>(<paras>) {
+/*UserFunc*/static public <type> <name>(<paras>) {
     <body>
 }
 >>
@@ -68,11 +68,11 @@ para_st(type, name) ::= <<
 >>
 
 block_st(bstats) ::= <<
-<bstats; separator="\n">
+/*BlockNode*/<bstats; separator="\n">
 >>
 
 ifstatement_st (aifstat, aelseifstats, aelsestat) ::= <<
-<aifstat><aelseifstats; separator="s"><aelsestat>
+/*IfNode*/<aifstat><aelseifstats; separator="s"><aelsestat>
 >>
 
 ifstat_st(exp, block) ::= <<
@@ -95,7 +95,7 @@ else {
 
 
 fun_call_st(name, arglst) ::= <<
-<name>(<arglst:{e |<e>}; separator=", ">)
+/*FuncCallNode*/<name>(<arglst:{e |<e>}; separator=", ">)
 >>
 
 arg_st(type, arg) ::= <<
@@ -107,35 +107,35 @@ arg_copy_st(type_ins, type_java, arg) ::= <<
 >>
 
 atsins_move_ref_ref_st(tmp, val, type) ::= <<
-RefType.updateFromRefType(<tmp>, <val>, <type>);
+/*AtsInsMove*/RefType.updateFromRefType(<tmp>, <val>, <type>);
 >>
 
 atsins_move_ref_val_st(tmp, val, type) ::= <<
-RefType.updateFromNonRefType(<tmp>, <val>, <type>);
+/*AtsInsMove*/RefType.updateFromNonRefType(<tmp>, <val>, <type>);
 >>
 
 atsins_move_val_ref_st(tmp, val, type, type_java) ::= <<
-<tmp> = (<type_java>)RefType.cloneValue(<val>, <type>);
+/*AtsInsMove*/<tmp> = (<type_java>)RefType.cloneValue(<val>, <type>);
 >>
 
 atsins_move_val_val_st(tmp, val, type) ::= <<
-<tmp> = <val>;
+/*AtsInsMove*/<tmp> = <val>;
 >>
 
 atsins_move_void_st(val) ::= <<
-<if(val)><val>;<endif>
+/*AtsInsMoveVoid*/<if(val)><val>;<endif>
 >>
 
 ats_ck_iseqz_st(val) ::= <<
-(<val> == 0)
+/*AtsCkIseqz*/(<val> == 0)
 >>
 
 ats_dynload0_st(dyn_val) ::= <<
-Integer <dyn_val> = 0;
+/*ATSdynload0*/Integer <dyn_val> = 0;
 >>
 
 ats_return_st(val) ::= <<
-return<if(val)> <val>;<else>;<endif>
+/*AtsReturn*/return<if(val)> <val>;<else>;<endif>
 >>
 
 ats_return_copy_st(val, type) ::= <<
@@ -143,113 +143,125 @@ return<if(val)> xxxRefType.cloneValue(<val>, <type>);<else>;<endif>
 >>
 
 atsins_store_ref_ref_st(dst, src, type) ::= <<
-RefType.updateFromRefType(<dst>, <src>, <type>);
+/*AtsInsStore*/RefType.updateFromRefType(<dst>, <src>, <type>);
 >>
 
 atsins_store_ref_val_st(dst, src, type) ::= <<
-RefType.updateFromNonRefType(<dst>, <src>, <type>);
+/*AtsInsStore*/RefType.updateFromNonRefType(<dst>, <src>, <type>);
 >>
 
 atsins_move_boxrec_st(tmp) ::= <<
-<tmp> = new HashMap\<String, Object>();
+/*AtsInsMoveBoxrec*/<tmp> = new HashMap\<String, Object>();
 >>
 
 atsins_move_boxrec_ref_st(tmp) ::= <<
-RefType.updateFromNonRefType(<tmp>, new HashMap\<String, Object>(), BoxedType.cType);
+/*AtsInsMoveBoxrec*/RefType.updateFromNonRefType(<tmp>, new HashMap\<String, Object>(), BoxedType.cType);
 >>
 
 atsins_store_boxref_ofs_val_val_st(tmp, lab, val) ::= <<
-<tmp>.put("<lab>", <val>);
+/*AtsInsStoreBoxrecOfs*/<tmp>.put("<lab>", <val>);
 >>
 
 atsins_store_boxref_ofs_val_ref_st(tmp, lab, val, labtype) ::= <<
-<tmp>.put("<lab>", RefType.cloneValue(<val>, <labtype>));
+/*AtsInsStoreBoxrecOfs*/<tmp>.put("<lab>", RefType.cloneValue(<val>, <labtype>));
 >>
 
 atsins_store_boxref_ofs_ref_val_st(tmp, lab, val) ::= <<
-((Map\<String, Object>)<tmp>.getValue(BoxedType.cType)).put("<lab>", <val>);
+/*AtsInsStoreBoxrecOfs*/((Map\<String, Object>)<tmp>.getValue(BoxedType.cType)).put("<lab>", <val>);
 >>
 
 atsins_store_boxref_ofs_ref_ref_st(tmp, lab, val, labtype) ::= <<
-((Map\<String, Object>)<tmp>.getValue(BoxedType.cType)).put("<lab>", RefType.cloneValue(<val>, <labtype>));
+/*AtsInsStoreBoxrecOfs*/((Map\<String, Object>)<tmp>.getValue(BoxedType.cType)).put("<lab>", RefType.cloneValue(<val>, <labtype>));
 >>
 
 ats_sel_box_rec_st(pmv, lab, labty) ::= <<
-(<labty>)<pmv>.get("<lab>")
+/*AtsSelBoxRec*/(<labty>)<pmv>.get("<lab>")
 >>
 
 ats_sel_box_rec_ref_st(pmv, lab, labty) ::= <<
-(<labty>)((Map\<String, Object>)RefType.getValue(<pmv>, BoxedType.cType)).get("<lab>")
+/*AtsSelBoxRec*/(<labty>)((Map\<String, Object>)RefType.getValue(<pmv>, BoxedType.cType)).get("<lab>")
 >>
 
 ats_sel_recsin_st(pmv, tyrec, lab) ::= <<
-<pmv>
+/*ats_sel_recsin_st*/<pmv>
 >>
 
 ats_sel_flt_rec_st(pmv, lab, tylab_java) ::= <<
-(<tylab_java>)<pmv>.get("<lab>")
+/*AtsSelFltRec*/(<tylab_java>)<pmv>.get("<lab>")
 >>
 
-ats_sel_flt_rec_ref_st(pmv, lab, tyrec) ::= <<
+/*AtsSelFltRec*/ats_sel_flt_rec_ref_st(pmv, lab, tyrec) ::= <<
 RefType.SelFltrecOfs(<pmv>, "<lab>", <tyrec>)
 >>
 
 atsins_store_fltrec_ofs_val_val_st(tmp, tyrec, tylab, lab, val) ::= <<
-<tmp>.put("<lab>", <val>);
+/*AtsInsStoreFltrecOfs*/<tmp>.put("<lab>", <val>);
 >>
 
 atsins_store_fltrec_ofs_val_ref_st(tmp, tyrec, tylab, lab, val) ::= <<
-<tmp>.put("<lab>", RefType.cloneValue(<val>, <tylab>));
+/*AtsInsStoreFltrecOfs*/<tmp>.put("<lab>", RefType.cloneValue(<val>, <tylab>));
 >>
 
 atsins_store_fltrec_ofs_ref_val_st(tmp, tyrec, tylab, lab, val) ::= <<
-RefType.updateFltrecOfs(<tmp>, <val>, "<lab>", <tyrec>);
+/*AtsInsStoreFltrecOfs*/RefType.updateFltrecOfs(<tmp>, <val>, "<lab>", <tyrec>);
 >>
 
 atsins_store_fltrec_ofs_ref_ref_st(tmp, tyrec, tylab, lab, val) ::= <<
-RefType.updateFltrecOfs(<tmp>, RefType.getValue(<val>, <tylab>), "<lab>", <tyrec>);
+/*AtsInsStoreFltrecOfs*/RefType.updateFltrecOfs(<tmp>, RefType.getValue(<val>, <tylab>), "<lab>", <tyrec>);
 >>
 
 
 atsins_store_arrpsz_ptr_st(tmp, tyelt, tsz) ::= <<
-<tmp>.init(<tsz>, <tyelt>);
+/*AtsInsStoreArrpszPtr*/<tmp>.init(<tsz>, <tyelt>);
 >>
 
 atsins_move_arrpsz_ptr_st(tmp, psz) ::= <<
-<tmp> = ((ArrPsz) <psz>).getPtr();
+/*AtsInsMoveArrpszPtr*/<tmp> = ((ArrPsz) <psz>).getPtr();
 >>
 
 atsins_pmove_ref_st(tmp, hit, val, tyval) ::= <<
-<tmp>.update(RefType.getValue(<val>, <tyval>), <hit>);
+/*AtsInsPMove*/<tmp>.update(RefType.getValue(<val>, <tyval>), <hit>);
 >>
 
 atsins_pmove_st(tmp, hit, val, tyval) ::= <<
-<tmp>.update(<val>, <hit>);
+/*AtsInsPMove*/<tmp>.update(<val>, <hit>);
 >>
 
 atsins_update_ptrinc_st(tmp, sz) ::=<<
-<tmp> = Ptrk.createPtrkOffset(<tmp>, <sz>);  
+/*AtsInsUpdatePtrInc*/<tmp> = Ptrk.createPtrkOffset(<tmp>, <sz>);  
 >>
 
 ats_pvm_castfn_st(hit, exp) ::= <<
-<!no op!>/*castfn_currently_no_op*/<exp>
+/*AtsPmvCastFn*/<!no op!>/*castfn_currently_no_op*/<exp>
 >>
 
 ats_pmv_sizeof_st(sz) ::= <<
-<sz>
+/*AtsPmvSizeofNode*/<sz>
 >>
 
+ats_ptrof_st(lval) ::= <<
+/*AtsPmvPtrof*/RefType.ptrof(<lval>)
+>>
 
+ats_pvm_ptrof_void_st() ::= <<
+/*AtsPmvPtrofVoid*/null
+>>
 
+atsins_xstore_st(tmp, pmv1, pmv2, tyins, type) ::= <<
+/*AtsInsXStore*/<tmp> = (<type>)RefType.cloneValue(<pmv1>, <tyins>);
+RefType.updateFromRefType(<pmv1>, <pmv2>, <tyins>);
+RefType.updateFromNonRefType(<pmv2>, <tmp>, <tyins>);
+>>
 
+ats_sel_arrptr_ind_ref_st(pmv, labref, tyelt) ::= <<
+/*AtsSelArrPtrInd*/AtsSelArrPtrInd<pmv>.SelArrInd((Integer)<labref>.getValue(SizeType.cType), <tyelt>)
+>>
 
+ats_sel_arrptr_ind_st(pmv, lab, tyelt) ::= <<
+/*AtsSelArrPtrInd*/<pmv>.SelArrInd(<lab>, <tyelt>)
+>>
 
-
-
-
-
-
-
+// ====== expression
 
 identifier_st(id) ::= <<
 <id>
@@ -266,6 +278,8 @@ StringType.fromString(<str>)
 void_exp_st(e) ::= <<
 SingletonValue.VOID
 >>
+
+// ====== main function
 
 main_args_convert_st() ::= <<
 Integer mainArgc = args.length + 1;
@@ -327,90 +341,6 @@ static public void main(String [] args) {
     mainats_argc_argv_envp_int(mainArgc, mainArgv, null);
 }
 >>
-
-ats_ptrof_st(lval) ::= <<
-RefType.ptrof(<lval>)
->>
-
-
-// =======================================================
-
-
-class_st(cls_name, cls_desc, body) ::= <<
-private static class <cls_name> implements CCompCompositeValue {
-    // line <cls_desc>
-    <body>
-}
->>
-
-class_body_st(name_type_map, size) ::= <<
-
-// size info
-public static final int m_size = <size>;
-
-// type info
-public static class m_type {
-    public static int getSize() {
-        return m_size;
-    }
-
-    public static <cls_name> createDefault() {
-        <cls_name> obj = new <cls_name>();
-        <! obj.mem = IntValue.createDefault(); !>
-        <name_type_map.keys:{k| obj.<k> = <name_type_map.(k)>.m_type.createDefault();}; separator="\n">
-
-        return obj;
-    }
-}
-
-// member info
-<! IntValue mem; !>
-<name_type_map.keys:{k| <var_decl_st(type={<name_type_map.(k)>}, name={<k>})>}; separator="\n">
-
-// constructor
-private <cls_name>() {
-}
-
-@Override
-public void copyfrom(CCompCompositeValue v) {
-    if (v instanceof <cls_name>) {
-        <cls_name> from = (<cls_name>) v;
-        <! this.mem.copyfrom(from.mem); !>
-        <name_type_map.keys:{k| this.<k>.copyfrom(from.<k>);}; separator="\n">
-
-    } else {
-        throw new Error("Wrong type");
-    }
-
-}
-
-@Override
-public <cls_name> deepcopy() {
-    <cls_name> obj = new <cls_name>();
-    <! obj.mem = mem.deepcopy(); !>
-    <name_type_map.keys:{k| obj.<k> = <k>.deepcopy();}; separator="\n">
-
-    return obj;
-}
->>
-
-
-
-var_decl_st(type, name) ::= <<
-public <type> <name>;
->>
-// ========================================
-
-
-new_prim_st(valuetype, content) ::= <<
-<valuetype>.create(<content>)
->>
-
-
-atsins_load_st(dest, cont) ::= <<
-<dest>.copyfrom(<cont>);
->>
-
 
 
 

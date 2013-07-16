@@ -60,6 +60,17 @@ public class CCompFloat {
 
     // ===================================================
 
+    public static Integer atspre_g0float_compare_double(Double x1, Double x2) {
+        if (x1 < x2) {
+            return -1;
+        } else if (x1 > x2) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    // ===================================================
+
     static public void populateFuncType(ATSScope<ATSType> typscope) {
         FuncType intFunc = new FuncType(IntType.cType, null);
         FuncType sizeFunc = new FuncType(SizeType.cType, null);
@@ -76,6 +87,8 @@ public class CCompFloat {
         typscope.addValue("atspre_fprint_double", voidFunc);
         typscope.addValue("atspre_print_double", voidFunc);
         typscope.addValue("atspre_prerr_double", voidFunc);
+        
+        typscope.addValue("atspre_g0float_compare_double", intFunc);
     }
 
     static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {

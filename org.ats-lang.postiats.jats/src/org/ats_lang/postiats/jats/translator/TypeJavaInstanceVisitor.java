@@ -1,9 +1,6 @@
 package org.ats_lang.postiats.jats.translator;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.ATSTypeVisitor;
 import org.ats_lang.postiats.jats.type.ArrPszType;
 import org.ats_lang.postiats.jats.type.ArrPtrType;
@@ -25,7 +22,6 @@ import org.ats_lang.postiats.jats.type.SSizeType;
 import org.ats_lang.postiats.jats.type.SizeType;
 import org.ats_lang.postiats.jats.type.StringType;
 import org.ats_lang.postiats.jats.type.StructType;
-import org.ats_lang.postiats.jats.type.StructType.Pair;
 import org.ats_lang.postiats.jats.type.UCharType;
 import org.ats_lang.postiats.jats.type.UIntType;
 import org.ats_lang.postiats.jats.type.ULIntType;

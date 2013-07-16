@@ -1,5 +1,5 @@
 
-staload "prelude/DATS/integer.dats"
+// staload "prelude/DATS/integer.dats"
 
 fun foo1 (x: ptr): int = 3
 fun foo2 (x: ptr): ptr = x

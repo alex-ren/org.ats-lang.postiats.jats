@@ -36,7 +36,7 @@ macdef gadd = gadd_val<a>
 macdef gsub = gsub_val<a>
 macdef gpred = gpred_val<a>
 //
-macdef gn = gnumint<a>
+macdef gn = gnumber_int<a>
 //
 in
 //

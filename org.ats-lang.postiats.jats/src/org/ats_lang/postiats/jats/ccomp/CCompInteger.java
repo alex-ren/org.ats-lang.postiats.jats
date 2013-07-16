@@ -268,7 +268,18 @@ public class CCompInteger {
     public static Integer atspre_g0uint2uint_size_size(Integer x) {
         return x;
     }
+    
+    // ===================================================
 
+    public static Integer atspre_g0int_compare_int(Integer x1, Integer x2) {
+        if (x1 < x2) {
+            return -1;
+        } else if (x1 > x2) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     // ===================================================
 
     static public void populateFuncType(ATSScope<ATSType> typscope) {
@@ -347,6 +358,9 @@ public class CCompInteger {
         typscope.addValue("atspre_g1uint_lte_size", boolFunc);
 
         typscope.addValue("atspre_g0uint2uint_size_size", intFunc);
+        
+        typscope.addValue("atspre_g0int_compare_int", intFunc);
+        
     }
 
     static public void populateGlobalValueType(ATSScope<ATSType> tyscope) {

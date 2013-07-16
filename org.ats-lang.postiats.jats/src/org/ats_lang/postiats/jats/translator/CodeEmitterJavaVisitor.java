@@ -287,8 +287,13 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(AtsInsXStore node) {
-        // TODO Auto-generated method stub
-        return "todo: AtsInsXStore";
+        ST st = m_stg.getInstanceOf("atsins_xstore_st");
+        st.add("tmp", node.m_tmp);
+        st.add("pmv1", node.m_pmv1.accept(this));
+        st.add("pmv2", node.m_pmv2.accept(this));
+        st.add("tyins", node.m_elety.accept(new TypeJavaInstanceVisitor(m_stg)));
+        st.add("type", node.m_elety.toString());
+        return st;
     }
 
     @Override
@@ -300,8 +305,7 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(AtsPmvIntRepNode node) {
-        // TODO Auto-generated method stub
-        return "todo: AtsPmvIntRepNode";
+        return node.m_exp.accept(this);
     }
 
     @Override
@@ -313,8 +317,8 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(AtsPmvPtrofVoid node) {
-        // TODO Auto-generated method stub
-        return "todo: AtsPmvPtrofVoid";
+        ST st = m_stg.getInstanceOf("ats_pvm_ptrof_void_st");
+        return st;
     }
 
     @Override
@@ -359,8 +363,18 @@ public class CodeEmitterJavaVisitor implements ATSTreeVisitor {
 
     @Override
     public Object visit(AtsSelArrPtrInd node) {
-        // TODO Auto-generated method stub
-        return "todo: AtsSelArrPtrInd";
+        ST st = null;
+        if (node.m_lab.getType() instanceof RefType) {
+            st = m_stg.getInstanceOf("ats_sel_arrptr_ind_ref_st");
+            st.add("labref", node.m_lab.accept(this));
+        } else {
+            st = m_stg.getInstanceOf("ats_sel_arrptr_ind_st");
+            st.add("lab", node.m_lab.accept(this));
+        }
+        
+        st.add("pmv", node.m_pmv.accept(this));
+        st.add("tyelt", node.m_tyelt.accept(new TypeJavaInstanceVisitor(m_stg)));
+        return st;
     }
 
     @Override

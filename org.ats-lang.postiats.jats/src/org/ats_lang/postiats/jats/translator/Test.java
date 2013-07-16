@@ -49,6 +49,7 @@ public class Test {
                  ,"test/f91_dats.c"
                  ,"test/fact_dats.c"
                  ,"test/fib_dats.c"
+                 ,"test/gfib_dats.c"
                  ,"test/atof_dats.c"
                  ,"test/test01_dats.c"
                  ,"test/test02_dats.c"
@@ -138,7 +139,7 @@ public class Test {
             System.out.println("\n" + "==" + file + " starts here. " + "\n==============================================================================\n");
             
             String content = emiter.emit();
-             System.out.println(content);
+//            System.out.println(content);
             
             /* ******** ******** */
 
@@ -154,6 +155,42 @@ public class Test {
             bw.close();
 
             System.out.println(file + " is O.K.\n\n");
+            
+            try {
+                Class<?> c = Class.forName("postiats." + classname);
+                try {
+                    Method meth = c.getMethod("main", String[].class);
+                    String[] params = null; // init params accordingly
+                    params = new String[2];
+                    params[0] = classname;
+                    params[1] = "4.999";
+                    try {
+                        meth.invoke(null, (Object) params);
+                    } catch (IllegalArgumentException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } // static method doesn't have an instance
+                } catch (SecurityException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            } catch (ClassNotFoundException e) {
+                System.out.println("Generating " + classname + " failed.");
+                e.printStackTrace();
+            }
+
+            System.out.println("\n======================" + file
+                    + " execution is O.K.\n\n");
 
         }
         

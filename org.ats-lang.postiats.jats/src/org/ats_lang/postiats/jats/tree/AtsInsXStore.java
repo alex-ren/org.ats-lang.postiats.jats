@@ -12,14 +12,17 @@ import org.ats_lang.postiats.jats.value.SingletonValue;
 
 public class AtsInsXStore extends ATSTypeNode {
 
-    public ATSReferableType m_elety;
+    public ATSReferableType m_elety;  // the type of m_tmp
     public String m_tmp;
-    public ATSNode m_pmv1;
-    public ATSNode m_pmv2;
+    public ATSNode m_pmv1;  // of RefType
+    public ATSNode m_pmv2;  // of RefType
     
     public AtsInsXStore(ATSReferableType elety, String tmp, ATSNode pmv1, ATSNode pmv2) {
         super(VoidType.cType);
         if (!elety.equals(((RefType)pmv1.getType()).defType())) {
+            throw new Error("Type mismatch.");
+        }
+        if (!elety.equals(((RefType)pmv2.getType()).defType())) {
             throw new Error("Type mismatch.");
         }
         m_elety = elety;

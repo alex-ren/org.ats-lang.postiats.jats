@@ -36,6 +36,7 @@ public class Test {
         		,"test/f91_dats.c"
         		,"test/fact_dats.c"
         		,"test/fib_dats.c"
+        		,"test/gfib_dats.c"
         		,"test/atof_dats.c"
                 ,"test/test01_dats.c"
                 ,"test/test02_dats.c"

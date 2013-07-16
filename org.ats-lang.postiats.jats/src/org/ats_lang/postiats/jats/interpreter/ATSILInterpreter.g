@@ -251,7 +251,7 @@ ats_empty returns [AtsEmpty node]
 
 ats_simple_cast returns [ATSNode node]
     : ^(ATSPMV_INT exp)  {node = new AtsPmvSimpleCastNode(IntType.cType, $exp.node);}
-    | ^(ATSPMVintrep exp) {node = new AtsPmvIntRepNode($exp.node);}
+    | ^(ATSPMVintrep INT) {node = new AtsPmvIntRepNode(new ValueNode(IntType.cType, IntType.fromString($INT.text), $INT.text));}
    
     | ATSPMV_TRUE {node = new ValueNode(BoolType.cType, true, "true");}
     | ATSPMV_FALSE {node = new ValueNode(BoolType.cType, false, "false");}

@@ -1,11 +1,6 @@
 package org.ats_lang.postiats.jats.tree;
 
-import java.util.Map;
-
-import org.ats_lang.postiats.jats.interpreter.FuncDef;
-import org.ats_lang.postiats.jats.type.ATSType;
 import org.ats_lang.postiats.jats.type.IntType;
-import org.ats_lang.postiats.jats.utils.ATSScope;
 
 public class AtsPmvIntRepNode extends ATSTypeNode {
 
@@ -13,6 +8,10 @@ public class AtsPmvIntRepNode extends ATSTypeNode {
 
     public AtsPmvIntRepNode(ATSNode exp) {
         super(IntType.cType);
+        if (exp instanceof ValueNode) {
+        } else {
+            throw new Error("type mismatch");
+        }
         m_exp = exp;
     }
 //    
