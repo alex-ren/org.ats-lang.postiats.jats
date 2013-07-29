@@ -1,0 +1,64 @@
+group python_code;
+
+
+func_call_ins_st(holder, funlab, args) ::= <<
+<holder> = <funlab>(<args; separator=", ">)
+>>
+
+func_def_ins(name, paralst, body, ret) ::= <<
+def <name> (<paralst; separator=", ">):
+  <body>
+  return <ret>
+
+>>
+
+
+cond_ins_st(holder, cond, btrue, bfalse) ::= <<
+if <cond>: 
+  <btrue>
+else:
+  <bfalse>
+
+>>
+
+
+move_ins_st(holder, vp) ::= <<
+<holder> = <vp>
+>>
+
+var_def_ins_used_st(holder) ::= <<>>
+
+var_def_ins_unused_st(holder) ::= <<>>
+
+tid_st(id) ::= <<
+<id>
+>>
+
+
+atom_value_st(v) ::= <<
+<v>
+>>
+
+
+inslst_st(inslst) ::= <<<inslst; separator="\n">
+>>
+
+program_st(inslst) ::= <<
+def lge(x, y):
+  return x >= y
+
+def add(x, y):
+  return x + y
+  
+def sub(x, y):
+  return x - y
+
+def mul(x, y):
+  return x * y
+
+def printx(x):
+  print x
+
+<inslst>
+>>
+

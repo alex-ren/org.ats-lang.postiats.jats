@@ -1,0 +1,49 @@
+group tree;
+
+program_st(decs) ::= <<                 
+<decs; separator="\n">
+
+>>
+
+app_exp_st(fun, args) ::= <<
+<fun>(<args; separator=", ">)
+>>
+
+atom_exp_st(v) ::= <<
+<v>
+>>
+
+fun_def_st(fname, paralst, body) ::= <<
+fun <fname> (<paralst; separator=", ">) =
+  <body>
+>>
+
+id_exp_st(id) ::= <<
+<id>
+>>
+
+if_exp_st(cond, btrue, bfalse) ::= <<
+if <cond> then
+  <btrue>
+else
+  <bfalse>
+>>
+
+lam_exp_st(paralst, body) ::= <<
+lam (<paralst; separator=", ">) => <body>
+>>
+
+let_exp_st(decs, exp) ::= <<
+let
+  <decs; separator="\n">
+in
+  <exp>
+end
+>>
+
+val_def_st(id, exp) ::= <<
+val <id> = <exp>
+>>
+
+
+

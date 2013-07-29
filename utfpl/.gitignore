@@ -1,0 +1,7 @@
+/antlr-output
+/bin
+.*.swp
+/.classpath
+/.project
+/.settings
+

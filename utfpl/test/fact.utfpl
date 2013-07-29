@@ -1,0 +1,24 @@
+/*
+** computing the factorial numbers
+*/
+
+val x = let
+  fun fact (n) =
+    if lge(n, 1) then mul (n, fact (sub(n, 1))) else 1
+  
+  val yy = 2
+  
+  val xp = (lam (x) => add(x, yy))(3)
+  val _ = printx (xp)
+  val _ = printx ("\n")
+  val _ = printx ("should see \nfact (10) = 3628800\n")
+  val _ = printx ("fact (10) = ")
+  val _ = printx (fact (10))
+  val _ = printx ("\n")
+in
+  fact (10)
+end // end of [let]
+
+/* ****** ****** */
+
+/* end of [fact.stfpl] */

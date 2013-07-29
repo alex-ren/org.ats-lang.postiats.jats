@@ -1,0 +1,54 @@
+group ins;
+
+
+func_call_ins_st(holder, funlab, args) ::= <<
+<holder> = <funlab>(<args; separator=", ">)
+>>
+
+func_def_ins(name, paralst, body, ret) ::= <<
+fun <name> (<paralst; separator=", ">)
+{
+  <body>
+  return <ret>
+}
+
+>>
+
+
+cond_ins_st(holder, cond, btrue, bfalse) ::= <<
+if <cond> then
+  <btrue>
+else
+  <bfalse>
+
+>>
+
+
+move_ins_st(holder, vp) ::= <<
+<holder> = <vp>
+>>
+
+var_def_ins_used_st(holder) ::= <<
+var <holder>
+>>
+
+var_def_ins_unused_st(holder) ::= <<
+>>
+
+tid_st(id) ::= <<
+<id>
+>>
+
+
+atom_value_st(v) ::= <<
+<v>
+>>
+
+
+inslst_st(inslst) ::= <<<inslst; separator="\n">
+>>
+
+program_st(inslst) ::= <<
+<inslst>
+>>
+
