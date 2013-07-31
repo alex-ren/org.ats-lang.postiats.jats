@@ -11,12 +11,16 @@ public class TID implements ValPrim {
     
     private boolean m_used;
     
+    public boolean isVoid() {
+        return m_id.equals("_");
+    }
+    
     public void setUsed() {
         m_used = true;
     }
     
     public boolean getUsed() {
-        return m_used;
+        return !isVoid() && m_used;
     }
     
     public boolean isLiteral() {

@@ -1,0 +1,30 @@
+
+
+val K = 5
+
+val _ = g_create_lock (K)
+
+fun main (x) =
+if eq (x, 0) then NULL
+else let
+  val _ = run_task (dp, x)
+  val y = sub (x, 1)
+in
+  main (y)
+end
+
+fun dp (k) = let
+  val left = k
+  val right = mod (add (k, 1), K)
+  val _ = g_mutex_lock (left)
+  val _ = g_mutex_lock (right)
+  val _ = process ()
+  val _ = g_mutex_unlock (left)
+  val _ = g_mutex_unlock (right)
+in
+  dp (k)
+end
+
+val _ = main (K)
+ 
+  

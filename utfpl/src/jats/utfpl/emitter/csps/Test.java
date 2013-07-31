@@ -1,6 +1,8 @@
-package jats.utfpl.instruction;
+package jats.utfpl.emitter.csps;
 
-import jats.utfpl.instruction.InstructionPrinter.Type;
+
+import jats.utfpl.instruction.InsTransformer;
+import jats.utfpl.instruction.UtfplInstruction;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
@@ -32,7 +34,7 @@ public class Test {
      */
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/fact.utfpl"
+                "test/dp.utfpl"
         
         };
 
@@ -75,36 +77,16 @@ public class Test {
             List<UtfplInstruction> inslst = (List<UtfplInstruction>)prog.accept(insV);
             
             /* ***************** ****************** */
-            InstructionPrinter insPrinter = new InstructionPrinter(Type.INS);
-            String outputINS = insPrinter.print(inslst);
+            CspsVisitor insPrinter = new CspsVisitor();
+            String outputCSPS = insPrinter.print(inslst);
             System.out.println("==instructions are ==========================");
-            System.out.println(outputINS);
+            System.out.println(outputCSPS);
             
-            FileWriter fwINS = new FileWriter("test/" + classname
-                    + ".ins");
-            BufferedWriter bwINS = new BufferedWriter(fwINS);
-            bwINS.write(outputINS);
-            bwINS.close();
-            
-            /* ***************** ****************** */
-            InstructionPrinter pyPrinter = new InstructionPrinter(Type.PYTHON);
-            String outputPY = pyPrinter.print(inslst);
-            
-            FileWriter fwPY = new FileWriter("test/" + classname
-                    + ".py");
-            BufferedWriter bwPY = new BufferedWriter(fwPY);
-            bwPY.write(outputPY);
-            bwPY.close();
-
-            /* ***************** ****************** */
-            InstructionPrinter jsPrinter = new InstructionPrinter(Type.JS);
-            String outputJS = jsPrinter.print(inslst);
-            
-            FileWriter fwJS = new FileWriter("test/" + classname
-                    + ".js");
-            BufferedWriter bwJS = new BufferedWriter(fwJS);
-            bwJS.write(outputJS);
-            bwJS.close();
+            FileWriter fwCSPS = new FileWriter("test/" + classname
+                    + ".csps");
+            BufferedWriter bwCSPS = new BufferedWriter(fwCSPS);
+            bwCSPS.write(outputCSPS);
+            bwCSPS.close();
             
             /* ******** ******** */
 

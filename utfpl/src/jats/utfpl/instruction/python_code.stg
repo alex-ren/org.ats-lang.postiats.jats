@@ -5,6 +5,10 @@ func_call_ins_st(holder, funlab, args) ::= <<
 <holder> = <funlab>(<args; separator=", ">)
 >>
 
+func_call_ins_no_ret_st(funlab, args) ::= <<
+<funlab>(<args; separator=", ">)
+>>
+
 func_def_ins(name, paralst, body, ret) ::= <<
 def <name> (<paralst; separator=", ">):
   <body>

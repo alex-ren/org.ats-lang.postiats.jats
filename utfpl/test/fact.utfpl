@@ -3,15 +3,13 @@
 */
 
 val x = let
+  val one = 1
+  val mull = lam (x, y) => mul(one, mul(x, y))
+  
   fun fact (n) =
-    if lge(n, 1) then mul (n, fact (sub(n, 1))) else 1
-  
-  val yy = 2
-  
-  val xp = (lam (x) => add(x, yy))(3)
-  val _ = printx (xp)
-  val _ = printx ("\n")
-  val _ = printx ("should see \nfact (10) = 3628800\n")
+    if lge(n, 1) then mull (n, fact (sub(n, 1))) else 1
+
+  val _ = printx ("should see \nfact (10) = \n3628800\n")
   val _ = printx ("fact (10) = ")
   val _ = printx (fact (10))
   val _ = printx ("\n")

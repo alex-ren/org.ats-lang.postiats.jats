@@ -1,0 +1,42 @@
+var x
+var one
+one = 1
+var mull
+fun mull (x, y)
+{
+  var ret_20
+  var app_21
+  app_21 = mul(x, y)
+  ret_20 = mul(one, app_21)
+  return ret_20
+}
+
+fun fact (n)
+{
+  var ret_22
+  var app_23
+  app_23 = lge(n, 1)
+  if app_23 then
+    var app_24
+    var app_25
+    app_25 = sub(n, 1)
+    app_24 = fact(app_25)
+    ret_22 = mull(n, app_24)
+  else
+    ret_22 = 1
+
+  return ret_22
+}
+
+var _
+_ = printx("should see \nfact (10) = \n3628800\n")
+var _
+_ = printx("fact (10) = ")
+var _
+var app_26
+app_26 = fact(10)
+_ = printx(app_26)
+var _
+_ = printx("\n")
+x = fact(10)
+

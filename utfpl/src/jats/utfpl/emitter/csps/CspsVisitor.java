@@ -1,5 +1,14 @@
-package jats.utfpl.instruction;
+package jats.utfpl.emitter.csps;
 
+import jats.utfpl.instruction.AtomValue;
+import jats.utfpl.instruction.CondIns;
+import jats.utfpl.instruction.FuncCallIns;
+import jats.utfpl.instruction.FuncDefIns;
+import jats.utfpl.instruction.InsVisitor;
+import jats.utfpl.instruction.MoveIns;
+import jats.utfpl.instruction.UtfplInstruction;
+import jats.utfpl.instruction.ValPrim;
+import jats.utfpl.instruction.VarDefIns;
 import jats.utfpl.tree.TID;
 
 import java.net.URL;
@@ -10,51 +19,16 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
 
-public class InstructionPrinter implements InsVisitor {
-    public enum Type {
-        PYTHON,
-        INS,
-        JS
-    }
+public class CspsVisitor implements InsVisitor {
 
     private STGroup m_stg;
     
     
-    public InstructionPrinter(Type ty) {
-        switch (ty) {
-        case PYTHON:
-            setPython();
-            break;
-        case INS:
-            setInstruction();
-            break;
-        case JS:
-            setJS();
-            break;
-        default:
-            throw new Error("should not see me");
-        }
+    public CspsVisitor() {
+        URL fileURL = this.getClass().getResource("/jats/utfpl/emitter/csps/csps.stg");
+        m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
+    }
         
-    }
-    
-    private void setPython() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/python_code.stg");
-        m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
-
-    }
-    
-    private void setInstruction() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/ins.stg");
-        m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
-
-    }
-    
-    private void setJS() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/js_code.stg");
-        m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
-
-    }
-    
     public String print(List<UtfplInstruction> inslst) {
         ST st = printProgram(inslst);
         return st.render();
