@@ -30,6 +30,11 @@ exp returns [Exp node]
     | app_exp {node = $app_exp.node;}
     | let_exp {node = $let_exp.node;}
     | atom_exp {node = $atom_exp.node;}
+    | tuple_exp {node = $tuple_exp.node;}
+    ;
+    
+tuple_exp returns [TupleExp node]
+    : ^(TUPLE exp explst) {node = new TupleExp($exp.node, $explst.explst);}
     ;
 
 lam_exp returns [LamExp node]
@@ -55,6 +60,7 @@ atom_exp returns [Exp node]
     | STRING {node = new AtomExp($STRING.text);}
     | BOOL {node = new AtomExp($BOOL.text);}
     | id_exp {node = $id_exp.node;}
+    | NULL {node = TupleExp.Void;}
     ;
     
 id_exp returns [IdExp node]

@@ -45,5 +45,8 @@ val_def_st(id, exp) ::= <<
 val <id> = <exp>
 >>
 
+tuple_exp_st (explst) ::= <<
+(<explst; separator=", ">)
+>>
 
 

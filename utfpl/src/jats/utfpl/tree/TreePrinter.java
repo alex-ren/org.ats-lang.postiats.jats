@@ -1,6 +1,8 @@
 package jats.utfpl.tree;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -121,6 +123,20 @@ public class TreePrinter implements TreeVisitor {
             st.add("decs", dec.accept(this));
         }
         return st;
+    }
+
+    @Override
+    public Object visit(TupleExp node) {
+        ST st = m_stg.getInstanceOf("tuple_exp_st");
+        if (node != TupleExp.Void) {
+            List<Object> explst = new ArrayList<Object>();
+            for (Exp exp : node.m_components) {
+                explst.add(exp.accept(this));
+            }
+            st.add("explst", explst);
+        }
+        return st;
+        
     }
 
 }

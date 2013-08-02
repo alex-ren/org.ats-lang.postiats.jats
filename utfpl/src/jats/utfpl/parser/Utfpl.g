@@ -17,6 +17,7 @@ tokens {
   LAM;
   APP;
   PROGRAM;
+  TUPLE;
   NULL;  
 }
 
@@ -45,7 +46,7 @@ program
     
 exp : lam_exp
     | if_exp
-    | app_exp
+    | add_exp
     ;
 
 
@@ -61,6 +62,10 @@ let_exp:
     Let decs In exp End -> ^(LET decs exp)
     ;
     
+add_exp
+    : app_exp ((Add | Subtract)^ app_exp)*
+    ;
+    
 app_exp
     : (atom_exp -> atom_exp) (LParen explst RParen -> ^(APP $app_exp explst) )* 
     ;
@@ -73,7 +78,7 @@ atom_exp
     | STRING
     | BOOL    
     | ID
-    | LParen! exp RParen!
+    | LParen (exp -> exp) (Comma explst -> ^(TUPLE $atom_exp explst))? RParen
     | LParen RParen -> NULL
     ;
     

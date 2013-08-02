@@ -106,4 +106,14 @@ public class NamingVisitor implements TreeVisitor {
         return null;        
     }
 
+    @Override
+    public Object visit(TupleExp node) {
+        if (node != TupleExp.Void) {
+            for (Exp exp : node.m_components) {
+                exp.accept(this);
+            }
+        }
+        return null;
+    }
+
 }

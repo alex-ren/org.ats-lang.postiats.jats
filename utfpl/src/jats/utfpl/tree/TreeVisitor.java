@@ -11,6 +11,7 @@ public interface TreeVisitor {
     public Object visit(IfExp node);
     public Object visit(LamExp node);
     public Object visit(LetExp node);
+    public Object visit(TupleExp node);
 
 
 }
