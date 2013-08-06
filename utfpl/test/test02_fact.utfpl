@@ -3,9 +3,6 @@
 */
 
 val x = let
-  val qq = (1, 2)
-  val pp = ()
-  val one = 1
   val mull = lam (x, y) => mul(one, mul(x, y))
   
   fun fact (n) =

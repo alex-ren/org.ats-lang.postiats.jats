@@ -1,0 +1,25 @@
+#import "MyStack";
+#import "MyLib";
+
+// ======================
+
+var<MyStack> GStack = new MyStack();
+
+
+// ======================
+
+var g = 3;
+
+main0(tid, x) = enter{GStack.newFrame(tid);}
+   -> {var y = call(add, 1, x); GStack.push(tid, y);}
+   -> {var y = GStack.get(tid, 0); var z = y * g; GStack.push(tid, z);}
+   -> a -> return{var z = GStack.get(tid, 1); GStack.deleteFrame(tid); GStack.push(tid, z);}
+   -> Skip;
+
+foo(tid, x) = enter{GStack.newFrame(tid);} -> Evt_foo -> return{GStack.deleteFrame(tid)} -> Skip;
+
+
+Main = {GStack.newFrame();} -> main0(0, 1);
+       foo (0, GStack.get(0, 0));
+       Skip;
+

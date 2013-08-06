@@ -1,0 +1,22 @@
+
+
+var g
+
+
+fun foo (x) = let
+  val () = g := mul (g, x)
+in
+  ()
+end
+
+fun main (x) = let
+  val _ = g := 1
+  val _ = createThread (foo, x)
+  val _ = g := g + 1
+in
+  ()
+end
+
+val _ = main (2)
+
+

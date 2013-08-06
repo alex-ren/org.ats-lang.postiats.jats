@@ -23,7 +23,8 @@ public class Test {
      */
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/fact.utfpl"
+                "test/test01_tuple.utfpl"
+                ,"test/test02_fact.utfpl"
         
         };
 

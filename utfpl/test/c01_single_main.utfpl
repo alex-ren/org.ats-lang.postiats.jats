@@ -1,0 +1,24 @@
+
+
+var g = 3
+
+fun main0 (x) = let
+  val y = add (1, x)
+  val z = mul (y, g)
+  prval () = createEvt ("a")
+in
+  z
+end
+
+fun foo (x) = let
+  prval () = createEvt ("foo")
+in
+  ()
+end
+
+val z = main0 (1) 
+val _ = foo (z)
+
+
+
+

@@ -15,6 +15,7 @@ import jats.utfpl.tree.LetExp;
 import jats.utfpl.tree.Program;
 import jats.utfpl.tree.TID;
 import jats.utfpl.tree.TreeVisitor;
+import jats.utfpl.tree.TupleExp;
 import jats.utfpl.tree.ValDef;
 
 /*
@@ -214,6 +215,11 @@ public class InsTransformer implements TreeVisitor {
         setTIDIn(holder);
         return node.m_exp.accept(this);
         
+    }
+
+    @Override
+    public Object visit(TupleExp node) {
+        throw new Error("not supported");
     }
 
 }
