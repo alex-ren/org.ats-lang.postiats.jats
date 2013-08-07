@@ -1,22 +1,21 @@
 
 
-var g
+var g_foo
+var g_main
 
 
 fun foo (x) = let
-  val () = g := mul (g, x)
+  val () = g_foo := getTid()
 in
   ()
 end
 
 fun main (x) = let
-  val _ = g := 1
-  val _ = createThread (foo, x)
-  val _ = g := g + 1
+  val _ = g_main := getTid()
 in
   ()
 end
 
-val _ = main (2)
-
+val _ = createThread (foo, 1)
+val _ = createThread (main, 1)
 
