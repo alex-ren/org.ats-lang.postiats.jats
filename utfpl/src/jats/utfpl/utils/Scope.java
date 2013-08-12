@@ -12,6 +12,8 @@ public interface Scope<T> {
 
     public Scope<T> getParent();
     
+    public int getLevel();
+    
     // Caution: No constraints that v.newScope().getParent() == v
     public Scope<T> newScope();
     

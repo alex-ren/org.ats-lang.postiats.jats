@@ -64,11 +64,12 @@ public class TreePrinter implements TreeVisitor {
         // id_exp_st(id) ::= <<
         ST st = m_stg.getInstanceOf("id_exp_st");
         if (node.m_tid == null) {
-            System.err.println("error, id is " + node.m_id);
+            st.add("id", node.m_sid);
+            // System.err.println("error, id is " + node.m_id);
+        } else {
+            st.add("id", node.m_tid.toString());
         }
-        st.add("id", node.m_tid.toString());
-//        st.add("id", node.m_id);
-        
+       
         return st;
     }
 
@@ -109,10 +110,16 @@ public class TreePrinter implements TreeVisitor {
     @Override
     public Object visit(ValDef node) {
         // val_def_st(id, exp) ::= <<
-        ST st = m_stg.getInstanceOf("val_def_st");
-        st.add("id", node.m_id.accept(this));
-        st.add("exp", node.m_exp.accept(this));
-        return st;
+        if (null == node.m_id) {
+            ST st = m_stg.getInstanceOf("val_def_noname_st");
+            st.add("exp", node.m_exp.accept(this));
+            return st;
+        } else {
+            ST st = m_stg.getInstanceOf("val_def_st");
+            st.add("id", node.m_id.accept(this));
+            st.add("exp", node.m_exp.accept(this));
+            return st;
+        }
     }
 
     @Override
@@ -127,16 +134,40 @@ public class TreePrinter implements TreeVisitor {
 
     @Override
     public Object visit(TupleExp node) {
-        ST st = m_stg.getInstanceOf("tuple_exp_st");
-        if (node != TupleExp.Void) {
-            List<Object> explst = new ArrayList<Object>();
-            for (Exp exp : node.m_components) {
-                explst.add(exp.accept(this));
+        ST st = null;
+        if (node.isSingle()) {
+            st = m_stg.getInstanceOf("tuple_exp_single_st");
+            st.add("exp", node.m_components.get(0).accept(this));
+        } else {
+            st = m_stg.getInstanceOf("tuple_exp_st");
+            if (node != TupleExp.Void) {
+                List<Object> explst = new ArrayList<Object>();
+                for (Exp exp : node.m_components) {
+                    explst.add(exp.accept(this));
+                }
+                st.add("explst", explst);
             }
-            st.add("explst", explst);
         }
         return st;
+    }
+
+    @Override
+    public Object visit(VarDef node) {
+        ST st = m_stg.getInstanceOf("var_def_st");
+        st.add("id", node.m_id.accept(this));
+        if (null != node.m_exp) {
+            st.add("exp", node.m_exp.accept(this));
+        }
         
+        return st;
+    }
+
+    @Override
+    public Object visit(VarAssign node) {
+        ST st = m_stg.getInstanceOf("var_assign_st");
+        st.add("id", node.m_id.accept(this));
+        st.add("exp", node.m_exp.accept(this));
+        return st;
     }
 
 }

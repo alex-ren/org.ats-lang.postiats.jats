@@ -1,0 +1,11 @@
+
+val x = 3
+// var y = 4
+// var z = 5
+// var q
+
+val t1 = (1,)
+val t2 = (1, 2)
+
+// var arr[3] = {x, y, z}
+// var arr2[5]

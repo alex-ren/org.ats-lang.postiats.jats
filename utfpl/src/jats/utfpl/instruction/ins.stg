@@ -2,11 +2,11 @@ group ins;
 
 
 func_call_ins_st(holder, funlab, args) ::= <<
-<holder> = <funlab>(<args; separator=", ">)
+--app-- <holder> = <funlab>(<args; separator=", ">)
 >>
 
 func_call_ins_no_ret_st(funlab, args) ::= <<
-_ = <funlab>(<args; separator=", ">)
+--app-- _ = <funlab>(<args; separator=", ">)
 >>
 
 func_def_ins(name, paralst, body, ret) ::= <<
@@ -29,7 +29,7 @@ else
 
 
 move_ins_st(holder, vp) ::= <<
-<holder> = <vp>
+--move--<holder> = <vp>
 >>
 
 var_def_ins_used_st(holder) ::= <<

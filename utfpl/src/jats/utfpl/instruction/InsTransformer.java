@@ -17,6 +17,8 @@ import jats.utfpl.tree.TID;
 import jats.utfpl.tree.TreeVisitor;
 import jats.utfpl.tree.TupleExp;
 import jats.utfpl.tree.ValDef;
+import jats.utfpl.tree.VarAssign;
+import jats.utfpl.tree.VarDef;
 
 /*
  * convention:
@@ -59,9 +61,17 @@ public class InsTransformer implements TreeVisitor {
 
     @Override
     public Object visit(ValDef node) {
-        m_inslst.add(new VarDefIns(node.m_id.m_tid));
-        setTIDIn(node.m_id.m_tid);
-        return node.m_exp.accept(this);
+        TID holder = getTIDIn();
+        
+        if (node.m_id != null) {
+            setTIDIn(node.m_id.m_tid);
+        } else {
+            setTIDIn(TID.ANONY);
+        }
+        
+        Object ret = node.m_exp.accept(this);  // The move instruction is created here.
+        setTIDIn(holder); 
+        return ret;  
     }
 
     @Override
@@ -72,6 +82,7 @@ public class InsTransformer implements TreeVisitor {
             paralst.add(id.m_tid);
         }
         
+        // create new transformer
         InsTransformer bodyVisitor = new InsTransformer();
         TID ret = TID.create("ret");
         ret.setUsed();
@@ -91,7 +102,7 @@ public class InsTransformer implements TreeVisitor {
         TID holder = getTIDIn();
         if (null == holder) {
             holder = TID.create("app");
-            m_inslst.add(new VarDefIns(holder));
+            // m_inslst.add(new VarDefIns(holder));
         }
         holder.setUsed();
         
@@ -220,6 +231,22 @@ public class InsTransformer implements TreeVisitor {
     @Override
     public Object visit(TupleExp node) {
         throw new Error("not supported");
+    }
+
+    @Override
+    public Object visit(VarDef node) {
+        m_inslst.add(new VarDefIns(node.m_id.m_tid));
+        setTIDIn(node.m_id.m_tid);
+        return node.m_exp.accept(this);
+    }
+
+    @Override
+    public Object visit(VarAssign node) {
+        TID Holder = getTIDIn();
+        setTIDIn(node.m_id.m_tid);
+        Object ret = node.m_exp.accept(this);
+        setTIDIn(Holder);
+        return ret;
     }
 
 }

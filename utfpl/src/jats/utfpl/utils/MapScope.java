@@ -6,10 +6,16 @@ import java.util.Map;
 public class MapScope<T> implements Scope<T> {
     private MapScope<T> m_parent;
     private Map<String, Entry<T> > m_vars;
+    private int m_level;
 
     private MapScope(MapScope<T> p) {
         m_parent = p;
         m_vars = new HashMap<String, Entry<T> >();
+        if (null != p) {
+            m_level = p.getLevel() + 1;
+        } else {
+            m_level = 0;
+        }
     }
     
     public MapScope() {
@@ -77,6 +83,11 @@ public class MapScope<T> implements Scope<T> {
         Entry<T> ent = getEntry(id);
         
         return null != ent? ent.m_val: null;
+    }
+
+    @Override
+    public int getLevel() {
+        return m_level;
     }
 
 }

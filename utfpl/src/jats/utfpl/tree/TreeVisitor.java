@@ -3,6 +3,8 @@ package jats.utfpl.tree;
 public interface TreeVisitor {
     public Object visit(Program node);
     public Object visit(ValDef node);
+    public Object visit(VarDef node);
+    public Object visit(VarAssign node);
     public Object visit(FunDef node);
     
     public Object visit(AppExp node);

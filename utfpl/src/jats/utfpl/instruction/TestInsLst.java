@@ -25,18 +25,11 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-
-public class Test {
-
-    /**
-     * @param args
-     * @throws IOException 
-     * @throws RecognitionException 
-     */
+public class TestInsLst {
+    
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
                 "test/test02_fact.utfpl"
-                , "test/test03_var.utfpl"
         
         };
 
@@ -91,27 +84,7 @@ public class Test {
             BufferedWriter bwINS = new BufferedWriter(fwINS);
             bwINS.write(outputINS);
             bwINS.close();
-            
-            /* ***************** ****************** */
-            InstructionPrinter pyPrinter = new InstructionPrinter(Type.PYTHON);
-            String outputPY = pyPrinter.print(inslst);
-            
-            FileWriter fwPY = new FileWriter("test/" + classname
-                    + ".py");
-            BufferedWriter bwPY = new BufferedWriter(fwPY);
-            bwPY.write(outputPY);
-            bwPY.close();
-
-            /* ***************** ****************** */
-            InstructionPrinter jsPrinter = new InstructionPrinter(Type.JS);
-            String outputJS = jsPrinter.print(inslst);
-            
-            FileWriter fwJS = new FileWriter("test/" + classname
-                    + ".js");
-            BufferedWriter bwJS = new BufferedWriter(fwJS);
-            bwJS.write(outputJS);
-            bwJS.close();
-            
+                        
             /* ******** ******** */
 
             
@@ -119,5 +92,4 @@ public class Test {
         }
 
     }
-
 }

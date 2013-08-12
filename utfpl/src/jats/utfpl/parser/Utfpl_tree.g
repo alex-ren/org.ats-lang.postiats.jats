@@ -21,7 +21,7 @@ options {
  
 
 rule returns [Program prog]
-    : ^(PROGRAM decs) {prog = new Program($decs.decs);}
+    : ^(PROGRAM gdecs) {prog = new Program($gdecs.gdecs);}
     ;
 
 exp returns [Exp node]
@@ -74,6 +74,18 @@ explst returns [List<Exp> explst]
     : ^(EXPLST (exp{explst.add($exp.node);})*) 
     ;
 
+gdecs returns [List<Dec> gdecs]
+@init {
+  gdecs = new ArrayList<Dec>();
+}
+    : (gdec {gdecs.add($gdec.node);})* 
+    ;
+
+gdec returns [Dec node]
+    : ^(Var ID exp?) {node = new VarDef(new IdExp($ID.text), $exp.node);}
+    | dec {node = $dec.node;}
+    ;
+
 decs returns [List<Dec> decs]
 @init {
   decs = new ArrayList<Dec>();
@@ -82,7 +94,8 @@ decs returns [List<Dec> decs]
     ;
     
 dec returns [Dec node]
-    : ^(VAR id_exp exp) {node = new ValDef($id_exp.node, $exp.node);}
+    : ^(Val pat=exp v=exp) {node = new ValDef($pat.node, $v.node);}
+    | ^(ASSIGN ID exp) {node = new VarAssign(new IdExp($ID.text), $exp.node);}
     | ^(FUN id_exp paralst exp) {node = new FunDef($id_exp.node, $paralst.paralst, $exp.node);}
     ;
 

@@ -45,8 +45,24 @@ val_def_st(id, exp) ::= <<
 val <id> = <exp>
 >>
 
+val_def_noname_st(exp) ::= <<
+<exp>
+>>
+
+var_def_st(id, exp) ::= <<
+var <id><if(exp)> := <exp><endif>
+>>
+
+var_assign_st(id, exp) ::= <<
+<id> := <exp>
+>>
+
 tuple_exp_st (explst) ::= <<
 (<explst; separator=", ">)
+>>
+
+tuple_exp_single_st (exp) ::= <<
+(<exp>,)
 >>
 
 

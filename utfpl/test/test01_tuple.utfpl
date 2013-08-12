@@ -1,14 +1,17 @@
 
-val x = 3
-var y = 4
-var z = 5
-var q
-
 val t1 = (1,)
 val t2 = (1, 2)
+val t3 = ()
 
-var arr[3] = {x, y, z}
-var arr2[5]
+val _ = 3
+val () = 4
+
+var x := 4
+var y
+
+y := 5
+
+fun foo (tup) = tup
 
 
 

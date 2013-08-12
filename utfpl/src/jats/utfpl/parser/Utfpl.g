@@ -7,7 +7,8 @@ options {
 
 
 tokens {
-  VAR; //  = 'var';
+  // VAR; //  = 'var';
+  ASSIGN;
   FUN;
   PARALST;
   EXPLST;
@@ -41,7 +42,7 @@ rule: program EOF
     ;
     
 program
-    : decs -> ^(PROGRAM decs)
+    : gdecs -> ^(PROGRAM gdecs)
     ;
     
 exp : lam_exp
@@ -86,12 +87,22 @@ explst
     : (exp (Comma exp)*)? -> ^(EXPLST exp*)
     ;
 
+gdecs
+    : gdec* -> gdec*
+    ;
+
+gdec
+    : Var ID (ColonAssign exp)? -> ^(Var ID exp?)
+    | dec
+    ;
+    
 decs
     : dec* -> ^(DECLST dec*)
     ;
 
 dec
-    : Val ID Assign exp -> ^(VAR ID exp)
+    : Val pat=exp Assign v=exp -> ^(Val $pat $v)
+    | ID ColonAssign exp -> ^(ASSIGN ID exp)
     | Fun ID LParen paralst RParen Assign exp -> ^(FUN ID paralst exp)
     ;
 
@@ -127,6 +138,7 @@ RBracket  : ']';
 LParen    : '(';  
 RParen    : ')';  
 Assign    : '=';  
+ColonAssign: ':=';  
 Comma     : ',';  
 QMark     : '?';  
 
@@ -137,6 +149,7 @@ End       : 'end';
 Imply     : '=>';
 Lambda    : 'lam';
 Val       : 'val';
+Var       : 'var';
 
 Fun       : 'fun';
 

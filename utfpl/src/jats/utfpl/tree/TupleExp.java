@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TupleExp implements Exp {
-    static public TupleExp Void = new TupleExp();
+    static public TupleExp Void = new TupleExp();  // empty tuple
     
     List<Exp> m_components;
     
     private TupleExp() {
         m_components = null;
+    }
+    
+    public boolean isSingle() {
+        if (m_components != null && m_components.size() == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public TupleExp(Exp e, List<Exp> es) {

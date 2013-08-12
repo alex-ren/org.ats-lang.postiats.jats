@@ -2,16 +2,18 @@
 ** computing the factorial numbers
 */
 
+
 val x = let
-  val mull = lam (x, y) => mul(one, mul(x, y))
+  val mull = lam (x, y) => mul(1, mul(x, y))
   
   fun fact (n) =
-    if lge(n, 1) then mull (n, fact (sub(n, 1))) else 1
+    if gte(n, 1) then mull (n, fact (sub(n, 1))) else 1
 
   val _ = printx ("should see \nfact (10) = \n3628800\n")
   val _ = printx ("fact (10) = ")
   val _ = printx (fact (10))
   val _ = printx ("\n")
+  val xx = mul (3, 4)
 in
   fact (10)
 end // end of [let]

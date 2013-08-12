@@ -1,8 +1,10 @@
 package jats.utfpl.tree;
 
+import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
+import jats.utfpl.utils.MapScope;
 
 import java.io.IOException;
 
@@ -14,7 +16,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 
-public class Test {
+public class Test_02_naming {
 
     /**
      * @param args
@@ -66,7 +68,10 @@ public class Test {
             
             // collect the definition of all the functions
             Program prog = walker.rule();
-            NamingVisitor nameV = new NamingVisitor();
+            
+            MapScope<TID> libScope = new MapScope<TID>();
+            CCompUtils.populateAllFunctions(libScope);
+            NamingVisitor nameV = new NamingVisitor(libScope);
             prog.accept(nameV);
             
             TreePrinter tp = new TreePrinter();
