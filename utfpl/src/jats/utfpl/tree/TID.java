@@ -11,6 +11,7 @@ public class TID implements ValPrim {
     private String m_id;
     private int m_uid;
     private Type m_type;
+    private boolean m_declared;  // indicating that the TID has been declared 
     
     private boolean m_used;
     
@@ -20,6 +21,10 @@ public class TID implements ValPrim {
     
     public void setUsed() {
         m_used = true;
+    }
+    
+    public void setDeclared() {
+    	m_declared = true;
     }
     
     public boolean getUsed() {
@@ -50,6 +55,7 @@ public class TID implements ValPrim {
         m_type = type;
         
         m_used = false;
+        m_declared = false;
     }
     
     public static TID create(String id) {

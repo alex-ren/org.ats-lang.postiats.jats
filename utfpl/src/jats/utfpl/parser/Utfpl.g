@@ -14,7 +14,7 @@ tokens {
   EXPLST;
   DECLST;
   LET;
-  IF;
+  IF; 
   LAM;
   APP;
   PROGRAM;

@@ -33,11 +33,11 @@ move_ins_st(holder, vp) ::= <<
 >>
 
 var_def_ins_used_st(holder) ::= <<
-var <holder>
+--var_def_ins_used_st-- var <holder>
 >>
 
 var_def_ins_unused_st(holder) ::= <<
-var <holder>
+--var_def_ins_unused_st-- var <holder>
 >>
 
 tid_st(id) ::= <<

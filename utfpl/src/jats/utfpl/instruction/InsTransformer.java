@@ -49,6 +49,8 @@ public class InsTransformer implements TreeVisitor {
     
     public InsTransformer() {
         m_inslst = new ArrayList<UtfplInstruction>();
+        m_tidIn = null;
+        m_vpOut = null;
     }
 
     @Override
@@ -87,7 +89,7 @@ public class InsTransformer implements TreeVisitor {
         TID ret = TID.create("ret");
         ret.setUsed();
         bodyVisitor.setTIDIn(ret);
-        bodyVisitor.m_inslst.add(new VarDefIns(ret));
+//        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
         @SuppressWarnings("unchecked")
         List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
