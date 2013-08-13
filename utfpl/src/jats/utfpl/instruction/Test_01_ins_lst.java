@@ -25,11 +25,14 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class TestInsLst {
+public class Test_01_ins_lst {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
                 "test/test02_fact.utfpl"
+                , "test/test03_var.utfpl"
+                , "test/test04_if.utfpl"
+                , "test/test05_func_def.utfpl"
         
         };
 

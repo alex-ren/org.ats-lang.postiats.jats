@@ -1,7 +1,9 @@
 package jats.utfpl.instruction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;
@@ -30,8 +32,8 @@ import jats.utfpl.tree.VarDef;
 
 public class InsTransformer implements TreeVisitor {
     private List<UtfplInstruction> m_inslst;
-    private TID m_tidIn;
-    private ValPrim m_vpOut;
+    private TID m_tidIn;  // holder designated by caller
+    private ValPrim m_vpOut;  // entity returned by the callee, may be a holder
     
     private TID getTIDIn() {
         TID ret = m_tidIn;
@@ -160,7 +162,7 @@ public class InsTransformer implements TreeVisitor {
         TID holder = getTIDIn();
         if (null == holder) {
             holder = TID.create("if");
-            m_inslst.add(new VarDefIns(holder));
+//            m_inslst.add(new VarDefIns(holder));
         }
         holder.setUsed();
         
@@ -202,7 +204,7 @@ public class InsTransformer implements TreeVisitor {
         TID ret = TID.create("ret");
         ret.setUsed();
         bodyVisitor.setTIDIn(ret);
-        bodyVisitor.m_inslst.add(new VarDefIns(ret));
+//        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
         @SuppressWarnings("unchecked")
         List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
@@ -210,7 +212,7 @@ public class InsTransformer implements TreeVisitor {
         FuncDefIns ins = new FuncDefIns(holder, paralst, body, ret);
         m_inslst.add(ins);
         m_vpOut = holder;        
-        return m_inslst;        
+        return m_inslst;
     }
 
     @Override
@@ -218,7 +220,7 @@ public class InsTransformer implements TreeVisitor {
         TID holder = getTIDIn();
         if (null == holder) {
             holder = TID.create("let");
-            m_inslst.add(new VarDefIns(holder));
+//            m_inslst.add(new VarDefIns(holder));
         }
         
         for (Dec dec: node.m_decs) {
@@ -237,9 +239,19 @@ public class InsTransformer implements TreeVisitor {
 
     @Override
     public Object visit(VarDef node) {
-        m_inslst.add(new VarDefIns(node.m_id.m_tid));
-        setTIDIn(node.m_id.m_tid);
-        return node.m_exp.accept(this);
+//        m_inslst.add(new VarDefIns(node.m_id.m_tid));
+    	// type system guarantees that node.m_id != null
+    	TID holder = getTIDIn();
+        
+        Object ret = null;
+        if (null != node.m_exp) {
+        	setTIDIn(node.m_id.m_tid);
+        	ret = node.m_exp.accept(this);
+        } else {
+        	ret = m_inslst;
+        }
+        setTIDIn(holder);
+        return ret;
     }
 
     @Override

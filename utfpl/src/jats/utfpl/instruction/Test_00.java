@@ -26,7 +26,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 
-public class Test {
+public class Test_00 {
 
     /**
      * @param args
@@ -36,7 +36,6 @@ public class Test {
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
                 "test/test02_fact.utfpl"
-                , "test/test03_var.utfpl"
         
         };
 

@@ -148,16 +148,16 @@ public class InstructionPrinter implements InsVisitor {
         
     }
 
-    @Override
-    public Object visit(VarDefIns ins) {
-        ST st;
-        if (ins.m_tid.getUsed()) {
-            st = m_stg.getInstanceOf("var_def_ins_used_st");
-        } else {
-            st = m_stg.getInstanceOf("var_def_ins_unused_st");
-        }
-        
-        st.add("holder", ins.m_tid);
-        return st;
-    }
+//    @Override
+//    public Object visit(VarDefIns ins) {
+//        ST st;
+//        if (ins.m_tid.getUsed()) {
+//            st = m_stg.getInstanceOf("var_def_ins_used_st");
+//        } else {
+//            st = m_stg.getInstanceOf("var_def_ins_unused_st");
+//        }
+//        
+//        st.add("holder", ins.m_tid);
+//        return st;
+//    }
 }

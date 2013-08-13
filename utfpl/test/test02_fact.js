@@ -19,13 +19,11 @@ function printx(x) {
 }
 
 function mull_gv14(x_gv15, y_gv16) {
-  var ret_gv19
   app_gv20 = mul(x_gv15, y_gv16)
   ret_gv19 = mul(1, app_gv20)
   return ret_gv19
 }
 function fact_gv13(n_gv17) {
-  var ret_gv21
   app_gv22 = gte(n_gv17, 1)
   if (app_gv22) { 
     app_gv24 = sub(n_gv17, 1)
