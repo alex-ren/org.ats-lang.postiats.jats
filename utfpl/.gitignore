@@ -2,7 +2,6 @@
 /bin
 .*.swp
 /.classpath
-/.project
 /.settings
 *~
 
