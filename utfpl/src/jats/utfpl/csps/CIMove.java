@@ -4,10 +4,10 @@ import jats.utfpl.instruction.ValPrim;
 import jats.utfpl.tree.TID;
 
 public class CIMove implements CInstruction {
-    private TID m_holder;
-    private ValPrim m_vp;
+    private CTempID m_holder;
+    private CTemp m_vp;
 
-    public CIMove(TID holder, ValPrim vp) {
+    public CIMove(CTempID holder, CTemp vp) {
         m_holder = holder;
         m_vp = vp;
     }

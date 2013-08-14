@@ -2,11 +2,20 @@ package jats.utfpl.csps;
 
 import jats.utfpl.tree.TID;
 
-public class CTempID {
-    static private enum Type {Def, Use};
-    
+public class CTempID implements CTemp {
     private TID m_tid;
-    private Type m_type;
-    private int m_stackLoc;
+   
+    private StackLocation m_loc;
+    
+    public CTempID(TID tid) {
+        m_tid = tid;
+        m_loc = null;
+    }
+
+    public boolean isEscaped() {
+        // todo
+        // Currently always return true.
+        return true;
+    }
 
 }

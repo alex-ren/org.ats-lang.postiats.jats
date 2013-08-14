@@ -3,10 +3,10 @@ package jats.utfpl.csps;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CBlock implements CGroup {
+public class CEventBlock implements CGroup {
     private List<CInstruction> m_inslst;
     
-    public CBlock() {
+    public CEventBlock() {
         m_inslst = new ArrayList<CInstruction>();
     }
 

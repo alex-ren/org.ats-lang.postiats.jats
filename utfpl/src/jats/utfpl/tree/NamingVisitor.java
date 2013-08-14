@@ -40,7 +40,7 @@ public class NamingVisitor implements TreeVisitor {
         
         m_scope = m_scope.newScope();
         for (IdExp para: node.m_paralst) {
-            tid = TID.create(para.m_sid);
+            tid = TID.createPara(para.m_sid);
             para.updateTID(tid);
             this.m_scope.addValue(tid.getID(), tid);
         }
@@ -74,7 +74,7 @@ public class NamingVisitor implements TreeVisitor {
 //       System.out.println("LamExp");
        m_scope = m_scope.newScope();
        for (IdExp para: node.m_paralst) {
-           TID tid = TID.create(para.m_sid);
+           TID tid = TID.createPara(para.m_sid);
            para.updateTID(tid);
            this.m_scope.addValue(tid.getID(), tid);
        }
@@ -102,6 +102,7 @@ public class NamingVisitor implements TreeVisitor {
         return null;
     }
     
+    // Find all the function definitions in the scope.
     private void scanScope(List<Dec> decs, MapScope<TID> scope) {
         String name = null;
         TID tid = null;

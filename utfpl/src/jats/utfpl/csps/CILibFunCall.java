@@ -5,8 +5,8 @@ import jats.utfpl.tree.TID;
 import java.util.List;
 
 public class CILibFunCall implements CInstruction {
-    private TID m_funlab;
-    private List<TID> m_args;
-    private TID m_ret;
+    private CTempID m_funlab;
+    private List<CTemp> m_args;
+    private CTempID m_ret;
 
 }

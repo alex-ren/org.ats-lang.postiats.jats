@@ -6,13 +6,13 @@ import jats.utfpl.instruction.ValPrim;
 import jats.utfpl.tree.TID;
 
 public class CCondBlock implements CGroup {
-    private ValPrim m_vp; // condition
+    private CTemp m_cond; // condition
     private List<CGroup> m_tb; // true branch
     private List<CGroup> m_fb; // false branch
-    private TID m_holder;
+    private CTempID m_holder;
 
-    public CCondBlock(ValPrim vp, List<CGroup> tb, List<CGroup> fb, TID holder) {
-        m_vp = vp;
+    public CCondBlock(CTemp cond, List<CGroup> tb, List<CGroup> fb, CTempID holder) {
+        m_cond = cond;
         m_tb = tb;
         m_fb = fb;
         m_holder = holder;
