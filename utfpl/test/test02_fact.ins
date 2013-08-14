@@ -1,28 +1,28 @@
-fun mull_gv14 (x_gv15, y_gv16)
+fun mull_gv15 (x_gv16, y_gv17)
 {
-  func_call-- app_gv20 = mul(x_gv15, y_gv16)
-  func_call-- ret_gv19 = mul(1, app_gv20)
-  return ret_gv19
+  func_call-- app_gv21 = mul(x_gv16, y_gv17)
+  func_call-- ret_gv20 = mul(1, app_gv21)
+  return ret_gv20
 }
 
-fun fact_gv13 (n_gv17)
+fun fact_gv14 (n_gv18)
 {
-  func_call-- app_gv22 = gte(n_gv17, 1)
-  if app_gv22 then
-    func_call-- app_gv24 = sub(n_gv17, 1)
-    func_call-- app_gv23 = fact_gv13(app_gv24)
-    func_call-- ret_gv21 = mull_gv14(n_gv17, app_gv23)
+  func_call-- app_gv23 = gte(n_gv18, 1)
+  if app_gv23 then
+    func_call-- app_gv25 = sub(n_gv18, 1)
+    func_call-- app_gv24 = fact_gv14(app_gv25)
+    func_call-- ret_gv22 = mull_gv15(n_gv18, app_gv24)
   else
-    move-- ret_gv21 = 1
+    move-- ret_gv22 = 1
 
-  return ret_gv21
+  return ret_gv22
 }
 
 func_call-- _ = printx("should see \nfact (10) = \n3628800\n")
 func_call-- _ = printx("fact (10) = ")
-func_call-- app_gv25 = fact_gv13(10)
-func_call-- _ = printx(app_gv25)
+func_call-- app_gv26 = fact_gv14(10)
+func_call-- _ = printx(app_gv26)
 func_call-- _ = printx("\n")
-func_call-- xx_gv18 = mul(3, 4)
-func_call-- x_gv12 = fact_gv13(10)
+func_call-- xx_gv19 = mul(3, 4)
+func_call-- x_gv13 = fact_gv14(10)
 

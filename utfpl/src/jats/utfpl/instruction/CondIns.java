@@ -22,4 +22,9 @@ public class CondIns implements UtfplInstruction {
         return visitor.visit(this);
     }
 
+    @Override
+    public boolean hasSideEffect() {
+        return true;  // todo
+    }
+
 }

@@ -7,7 +7,9 @@ public class CCompUtils {
     private static String [] m_funcs = new String[] {
         "add", "sub", "mul", "div"
         , "lt", "lte", "gt", "gte", "eq"
-        , "printx"};
+        , "printx"
+        , "createEvt"
+        };
 
     public static void populateAllFunctions(MapScope<TID> scope) {
         for (String func: m_funcs) {

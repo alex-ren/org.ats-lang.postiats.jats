@@ -1,0 +1,7 @@
+var x := 3
+var y := 4
+
+val z = mul (x, y)
+
+y := z
+

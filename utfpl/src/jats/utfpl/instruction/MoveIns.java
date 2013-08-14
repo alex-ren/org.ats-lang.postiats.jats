@@ -15,6 +15,17 @@ public class MoveIns implements UtfplInstruction{
     public Object accept(InsVisitor visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public boolean hasSideEffect() {
+        if (m_holder.isGlobal()) {
+            return true;
+        } else if (m_vp instanceof TID && ((TID)m_vp).isGlobal()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 
 }

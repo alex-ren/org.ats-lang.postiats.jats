@@ -6,10 +6,10 @@ import java.util.List;
 
 public class FuncCallIns implements UtfplInstruction {
     public TID m_holder;
-    public ValPrim m_funlab;
+    public TID m_funlab;
     public List<ValPrim> m_args;
     
-    public FuncCallIns(TID holder, ValPrim funlab, List<ValPrim> args) {
+    public FuncCallIns(TID holder, TID funlab, List<ValPrim> args) {
         m_holder = holder;
         m_funlab = funlab;
         m_args = args;
@@ -18,5 +18,14 @@ public class FuncCallIns implements UtfplInstruction {
     @Override
     public Object accept(InsVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public boolean hasSideEffect() {
+        if (m_holder.isLibFun()) {
+            return false;
+        } else {
+            return true;  // todo check the body of function
+        }
     }
 }

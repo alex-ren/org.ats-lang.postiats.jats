@@ -33,6 +33,8 @@ public class Test_01_ins_lst {
                 , "test/test03_var.utfpl"
                 , "test/test04_if.utfpl"
                 , "test/test05_func_def.utfpl"
+                ,  "test/test06_func_call.utfpl"
+                , "test/c01_single_main.utfpl"
         
         };
 
@@ -82,11 +84,11 @@ public class Test_01_ins_lst {
             System.out.println("==instructions are ==========================");
             System.out.println(outputINS);
             
-            FileWriter fwINS = new FileWriter("test/" + classname
-                    + ".ins");
-            BufferedWriter bwINS = new BufferedWriter(fwINS);
-            bwINS.write(outputINS);
-            bwINS.close();
+//            FileWriter fwINS = new FileWriter("test/" + classname
+//                    + ".ins");
+//            BufferedWriter bwINS = new BufferedWriter(fwINS);
+//            bwINS.write(outputINS);
+//            bwINS.close();
                         
             /* ******** ******** */
 

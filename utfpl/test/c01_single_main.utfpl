@@ -1,19 +1,19 @@
 
 
-var g = 3
+var g := 3
 
 fun main0 (x) = let
   val y = add (1, x)
   val z = mul (y, g)
-  prval () = createEvt ("a")
+  val () = createEvt ("a")
 in
   z
 end
 
 fun foo (x) = let
-  prval () = createEvt ("foo")
+  val () = createEvt ("foo")
 in
-  ()
+  3
 end
 
 val z = main0 (1) 

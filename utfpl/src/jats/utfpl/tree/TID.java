@@ -11,29 +11,18 @@ public class TID implements ValPrim {
     private String m_id;
     private int m_uid;
     private Type m_type;
-    private boolean m_declared;  // indicating that the TID has been declared 
     
-    private boolean m_used;
+    public boolean isLibFun() {
+        return Type.eLibFun == m_type;
+    }
+    
+    public boolean isGlobal() {
+        return Type.eGloVar == m_type;
+    }
     
     public boolean isVoid() {
         return this == TID.ANONY;
     }
-    
-    public void setUsed() {
-        m_used = true;
-    }
-    
-    public void setDeclared() {
-    	m_declared = true;
-    }
-    
-    public boolean getUsed() {
-        return !isVoid() && m_used;
-    }
-    
-//    public boolean isLiteral() {
-//        return m_literal;
-//    }
     
     public String getID() {
         return m_id;
@@ -43,7 +32,7 @@ public class TID implements ValPrim {
         if (Type.eLibFun == m_type) {
             return m_id;
         } else {
-            return m_id + "_gv" + m_uid;
+            return m_id + "_" + m_uid;
         }
     }
     
@@ -53,9 +42,7 @@ public class TID implements ValPrim {
         s_cnt++;
         m_uid = s_cnt;
         m_type = type;
-        
-        m_used = false;
-        m_declared = false;
+
     }
     
     public static TID create(String id) {
@@ -73,8 +60,4 @@ public class TID implements ValPrim {
         return tid;
     }
     
-//    public static TID createUnique(String id) {
-//        TID tid = new TID(id, true);
-//        return tid;
-//    }
 }

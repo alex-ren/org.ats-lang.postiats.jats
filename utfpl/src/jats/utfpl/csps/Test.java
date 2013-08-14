@@ -1,4 +1,4 @@
-package jats.utfpl.emitter.csps;
+package jats.utfpl.csps;
 
 
 import jats.utfpl.instruction.InsTransformer;

@@ -9,6 +9,7 @@ public class FuncDefIns implements UtfplInstruction {
     public List<TID> m_paralst;
     public List<UtfplInstruction> m_body;
     public TID m_ret;
+    private Boolean m_hasSideEffect;  // indicating whether the body of this function has side effect.
     
     
     public FuncDefIns(TID name, List<TID> paralst, List<UtfplInstruction> body, TID ret) {
@@ -16,7 +17,17 @@ public class FuncDefIns implements UtfplInstruction {
         m_paralst = paralst;
         m_body = body;
         m_ret = ret;
+        m_hasSideEffect = null;
     }
+    
+    public void flagSideEffect() {
+        m_hasSideEffect = true;
+    }
+    
+    public boolean hasSideEffect() {
+        return m_hasSideEffect;
+    }
+    
     
     @Override
     public Object accept(InsVisitor visitor) {

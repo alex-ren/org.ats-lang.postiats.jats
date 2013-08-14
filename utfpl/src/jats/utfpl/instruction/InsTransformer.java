@@ -89,7 +89,6 @@ public class InsTransformer implements TreeVisitor {
         // create new transformer
         InsTransformer bodyVisitor = new InsTransformer();
         TID ret = TID.create("ret");
-        ret.setUsed();
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
@@ -108,7 +107,6 @@ public class InsTransformer implements TreeVisitor {
             holder = TID.create("app");
             // m_inslst.add(new VarDefIns(holder));
         }
-        holder.setUsed();
         
         node.m_fun.accept(this);
         ValPrim funlab = m_vpOut;
@@ -120,7 +118,7 @@ public class InsTransformer implements TreeVisitor {
             args.add(m_vpOut);            
         }
 
-        FuncCallIns app = new FuncCallIns(holder, funlab, args);
+        FuncCallIns app = new FuncCallIns(holder, (TID)funlab, args);
         m_inslst.add(app);
         m_vpOut = holder;
         return m_inslst;
@@ -130,7 +128,6 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(AtomExp node) {
         TID holder = getTIDIn();
         if (null != holder) {
-            holder.setUsed();
             MoveIns ins = new MoveIns(holder, new AtomValue(node.m_text));
             m_inslst.add(ins);
             m_vpOut = holder;
@@ -146,7 +143,6 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(IdExp node) {
         TID holder = getTIDIn();
         if (null != holder) {
-            holder.setUsed();
             MoveIns ins = new MoveIns(holder, node.m_tid);
             m_inslst.add(ins);
             m_vpOut = holder;
@@ -164,7 +160,6 @@ public class InsTransformer implements TreeVisitor {
             holder = TID.create("if");
 //            m_inslst.add(new VarDefIns(holder));
         }
-        holder.setUsed();
         
         node.m_cond.accept(this);
         ValPrim vpCond = m_vpOut;  //
@@ -193,7 +188,6 @@ public class InsTransformer implements TreeVisitor {
         if (null == holder) {
             holder = TID.create("lam");
         }
-        holder.setUsed();
         
         List<TID> paralst = new ArrayList<TID>();
         for (IdExp id: node.m_paralst) {
@@ -202,7 +196,6 @@ public class InsTransformer implements TreeVisitor {
         
         InsTransformer bodyVisitor = new InsTransformer();
         TID ret = TID.create("ret");
-        ret.setUsed();
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
