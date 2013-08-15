@@ -17,4 +17,11 @@ public class StackLocation {
         m_frame++;
         m_offset = 0;
     }
+    
+    public StackLocation clone() {
+        StackLocation ret = new StackLocation();
+        ret.m_offset = this.m_offset;
+        ret.m_frame = this.m_frame;
+        return ret;
+    }
 }

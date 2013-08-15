@@ -2,8 +2,6 @@ package jats.utfpl.csps;
 
 import java.util.List;
 
-import jats.utfpl.instruction.ValPrim;
-import jats.utfpl.tree.TID;
 
 public class CCondBlock implements CGroup {
     private CTemp m_cond; // condition
@@ -17,4 +15,26 @@ public class CCondBlock implements CGroup {
         m_fb = fb;
         m_holder = holder;
     }
+    
+    public CTempID getHolder() {
+        return m_holder;
+    }
+    
+    public List<CGroup> getTrueBranch() {
+        return m_tb;
+    }
+    
+    public List<CGroup> getFalseBranch() {
+        return m_fb;
+    }
+    
+    public void setTrueBranch(List<CGroup> cgs) {
+        m_tb = cgs;
+    }
+    
+    public void setFalseBranch(List<CGroup> cgs) {
+        m_fb = cgs;
+    }
 }
+
+

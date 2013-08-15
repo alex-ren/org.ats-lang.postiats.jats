@@ -6,11 +6,19 @@ public class TID implements ValPrim {
     static private int s_cnt = 0;
     static public TID ANONY = new TID("()", Type.other);
     
-    enum Type {eLibFun, eGloVar, ePara, other};
+    enum Type {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, other};
     
     private String m_id;
     private int m_uid;
     private Type m_type;
+    
+    public boolean isLocal() {
+        return Type.other == m_type;
+    }
+    
+    public boolean isPara() {
+        return Type.ePara == m_type;
+    }
     
     public boolean isLibFun() {
         return Type.eLibFun == m_type;
@@ -45,8 +53,13 @@ public class TID implements ValPrim {
 
     }
     
-    public static TID create(String id) {
-        TID tid = new TID(id, Type.other);
+    public static TID createLocalVar(String id) {
+        TID tid = new TID(id, Type.eLocalVar);
+        return tid;
+    }
+    
+    public static TID createUserFun(String id) {
+        TID tid = new TID(id, Type.eUserFun);
         return tid;
     }
     

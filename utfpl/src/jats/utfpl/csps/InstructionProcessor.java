@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import jats.utfpl.instruction.AtomValue;
@@ -134,20 +135,90 @@ public class InstructionProcessor {
         return insGroupList;
     }
     
+    // change "from" to "to"
+    static public List<CGroup> CGroupLstSubs(List<CGroup> cgs, Map<CTempID, CTempID> subMap) {
+        // todo
+        return null;
+    }
+    
     // assign location to CTempID
-    static public List<CProcess> CGroupLst2CProcess(TID name, List<CTempID> paras, List<CGroup> cgs) {
-        StackLocation loc = new StackLocation();
+    // cgs: input
+    // extraProcess: output: Extra process generated will be appended to the list
+    // Caution: The inut "cgs" is changed when the function returns.
+    static public List<CGroup> CGroupLst2CProcess(
+            TID funLab, CTempID retHolder, List<CTempID> paras, 
+            List<CGroup> cgs, StackLocation loc, 
+            List<CProcess> extraProcesses) {
         
-        Iterator<CGroup> iter = cgs.iterator();
+        List<CGroup> retList = new ArrayList<CGroup>();
+        
+        ListIterator<CGroup> iter = cgs.listIterator();
         while (iter.hasNext()) {
             CGroup cg = iter.next();
             if (cg instanceof CEventBlock) {
                 CEventBlock cblock = (CEventBlock)cg;
                 AnalyzeCBlock(cblock, loc);
+                retList.add(cblock);
             } else if (cg instanceof CCondBlock) {
                 CCondBlock cb = (CCondBlock)cg;
-                StackLocation locT = loc;
+                
+                // parse the true branch
+                StackLocation locT = loc.clone();
+                CGroupLst2CProcess(funLab, cb.getHolder(), paras, 
+                        cb.getTrueBranch(), locT, extraProcesses)
+                cb.setTrueBranch(
+                        );
+                
                 StackLocation locF = loc.clone();
+                CGroupLst2CProcess(funLab, cb.getHolder(), paras, 
+                        cb.getFalseBranch(), locF, extraProcesses)
+                cb.setFalseBranch(
+                        );
+                
+                retList.add(cb);
+                
+                if (iter.hasNext()) {
+                    // extra para for the newly created process
+                    TID newParaTID = TID.createPara(cb.getHolder().getID());
+                    CTempID newPara = new CTempID(newParaTID);
+
+                    Map<CTempID, CTempID> subMap = new HashMap<CTempID, CTempID>();
+                    subMap.put(cb.getHolder(), newPara);
+                    
+                    TID newRetTID = TID.createLocalVar("ret");
+                    CTempID newRetHolder = new CTempID(newRetTID);
+                    subMap.put(retHolder, newRetHolder);
+                    
+                    // substitute new CTempID
+                    int nextInd = iter.nextIndex();
+                    List<CGroup> restCgs = CGroupLstSubs(cgs.subList(nextInd, cgs.size()), subMap);
+                    
+                    
+                    // name for the newly created process
+                    TID newFunLab = TID.createUserFun(funLab.getID() + "_if_");
+
+                    // reuse the paras, no substitution
+                    List<CTempID> newParas = new ArrayList<CTempID>(paras);
+                    newParas.add(newPara);
+
+                    List<CGroup> newCgs = CGroupLst2CProcess(newFunLab, newRet, newParas, restCgs, loc, extraProcesses);
+                    CProcess newProcess = new CProcess(newFunLab, newParas, newCgs);
+                    extraProcesses.add(newProcess);
+                    
+                    CProcessCallBlock newGroup= new CProcessCallBlock(newFunLab, xx, cb.getHolder());
+                    retList.add(newGroup);
+                    return retList;
+                    
+                } else {
+                    
+                    
+                }
+
+                break;
+                
+                
+                
+                
                 // todo
                 // parse true branch
                 // parse false branch
@@ -160,6 +231,9 @@ public class InstructionProcessor {
                 
             }
         }
+        
+        // todo
+        return null;
     }
     
     static public void AnalyzeCBlock(CEventBlock block, StackLocation loc) {

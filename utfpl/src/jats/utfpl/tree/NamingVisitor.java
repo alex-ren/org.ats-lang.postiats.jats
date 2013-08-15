@@ -109,7 +109,7 @@ public class NamingVisitor implements TreeVisitor {
         for (Dec dec: decs) {
             if (dec instanceof FunDef) {
                 name = ((FunDef)dec).m_id.m_sid;
-                tid = TID.create(name);
+                tid = TID.createUserFun(name);
             } else {
                 // nothing
             }
@@ -122,7 +122,7 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(ValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
         if (null != node.m_id) {
-            TID tid = TID.create(node.m_id.m_sid);
+            TID tid = TID.createLocalVar(node.m_id.m_sid);
             node.m_id.updateTID(tid);
             this.m_scope.addValue(tid.getID(), tid);
         }

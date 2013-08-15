@@ -88,7 +88,7 @@ public class InsTransformer implements TreeVisitor {
         
         // create new transformer
         InsTransformer bodyVisitor = new InsTransformer();
-        TID ret = TID.create("ret");
+        TID ret = TID.createLocalVar("ret");
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
@@ -104,7 +104,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(AppExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.create("app");
+            holder = TID.createLocalVar("app");
             // m_inslst.add(new VarDefIns(holder));
         }
         
@@ -157,7 +157,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(IfExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.create("if");
+            holder = TID.createLocalVar("if");
 //            m_inslst.add(new VarDefIns(holder));
         }
         
@@ -186,7 +186,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(LamExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.create("lam");
+            holder = TID.createUserFun("lam");
         }
         
         List<TID> paralst = new ArrayList<TID>();
@@ -195,7 +195,7 @@ public class InsTransformer implements TreeVisitor {
         }
         
         InsTransformer bodyVisitor = new InsTransformer();
-        TID ret = TID.create("ret");
+        TID ret = TID.createLocalVar("ret");
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
@@ -212,7 +212,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(LetExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.create("let");
+            holder = TID.createLocalVar("let");
 //            m_inslst.add(new VarDefIns(holder));
         }
         
