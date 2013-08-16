@@ -33,12 +33,12 @@ public class InstructionProcessor {
         CTempID ret = map.get(tid);
         if (null == ret) {
             ret = new CTempID(tid);
-            map.put(tid, ret);
+            map.put(tid, ret);  // This is important.
         } 
         return ret;
     }
     
-    static public List<CTemp> ValPrim2CTemp(List<ValPrim> vps, Map<TID, CTempID> map) {
+    static public List<CTemp> ValPrimLst2CTempLst(List<ValPrim> vps, Map<TID, CTempID> map) {
         List<CTemp> ret = new ArrayList<CTemp>();
         for (ValPrim vp: vps) {
             ret.add(ValPrim2CTemp(vp, map));            
@@ -57,6 +57,9 @@ public class InstructionProcessor {
         return funlst;
     }
     
+    /*
+     * Check whether this function has side effect.
+     */
     static public Map<FuncDefIns, Boolean> markSideEffectFunLst(List<FuncDefIns> funlst) {
         // todo
         Map<FuncDefIns, Boolean> fmap = new HashMap<FuncDefIns, Boolean>();
@@ -70,25 +73,32 @@ public class InstructionProcessor {
         
     }
     
-    // Keep the input list unmodified.
+    /*
+     * Keep the input list unmodified. One instruction can deal
+     * with only one global variable.
+     */
     static public List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> inslst) {
         // todo
         return null;
         
     }
     
-    // translate UtfplInstruction's into a preliminary form of CSPS instructions
-    // Turning ValPrim into CTemp
-    static List<CGroup> InsLst2CGroupLst(List<UtfplInstruction> inslst) {
-        Map<TID, CTempID> map = new HashMap<TID, CTempID>();
-        
+    /*
+     * translate UtfplInstruction's into a preliminary form of CSPS instructions
+     * Turning ValPrim into CTemp, or in essence turning TID into CTempID. 
+     * The identity of each CTempID is important. It's possible that two different
+     * CTempID has the same TID.
+     */
+    
+    static List<CGroup> InsLst2CGroupLst(List<UtfplInstruction> inslst, Map<TID, CTempID> subMap) {
+
         List<CGroup> insGroupList = new ArrayList<CGroup>();
         CEventBlock cblock = new CEventBlock();
         
         for (UtfplInstruction ins: inslst) {
             if (ins instanceof MoveIns) {
                 MoveIns aIns = (MoveIns)ins;
-                CIMove nIns = new CIMove(TID2CTempID(aIns.m_holder, map), ValPrim2CTemp(aIns.m_vp, map));
+                CIMove nIns = new CIMove(TID2CTempID(aIns.m_holder, subMap), ValPrim2CTemp(aIns.m_vp, subMap));
                 cblock.add(nIns);
                 if (ins.hasSideEffect()) {
                     insGroupList.add(cblock);
@@ -100,16 +110,18 @@ public class InstructionProcessor {
                 FuncCallIns aIns = (FuncCallIns)ins;
                 if (ins.hasSideEffect()) {
                     CProcessCallBlock cprocess = new CProcessCallBlock(
-                            TID2CTempID(aIns.m_funlab, map), 
-                            ValPrim2CTemp(aIns.m_args, map), 
-                            TID2CTempID(aIns.m_holder, map));
+                            aIns.m_funlab, 
+                            ValPrimLst2CTempLst(aIns.m_args, subMap), 
+                            TID2CTempID(aIns.m_holder, subMap));
                     if (0 != cblock.size()) {
                         insGroupList.add(cblock);
                         cblock = new CEventBlock();
                     }
                     insGroupList.add(cprocess);
                 } else {
-                    CIFunCall nIns = new CIFunCall(TID2CTempID(aIns.m_funlab, map), ValPrim2CTemp(aIns.m_args, map), TID2CTempID(aIns.m_holder, map));
+                    CIFunCall nIns = new CIFunCall(aIns.m_funlab, 
+                    		                       ValPrimLst2CTempLst(aIns.m_args, subMap), 
+                    		                       TID2CTempID(aIns.m_holder, subMap));
                     cblock.add(nIns);
                 }
             } else if (ins instanceof CondIns) {
