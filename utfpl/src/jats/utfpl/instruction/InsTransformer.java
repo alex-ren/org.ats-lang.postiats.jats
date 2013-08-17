@@ -88,7 +88,7 @@ public class InsTransformer implements TreeVisitor {
         
         // create new transformer
         InsTransformer bodyVisitor = new InsTransformer();
-        TID ret = TID.createLocalVar("ret");
+        TID ret = TID.createRetHolder("ret");
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         

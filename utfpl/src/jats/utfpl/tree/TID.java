@@ -6,7 +6,7 @@ public class TID implements ValPrim {
     static private int s_cnt = 0;
     static public TID ANONY = new TID("()", Type.other);
     
-    enum Type {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, other};
+    enum Type {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, eRetHolder, other};
     
     private String m_id;
     private int m_uid;
@@ -77,5 +77,11 @@ public class TID implements ValPrim {
         TID tid = new TID(id, Type.ePara);
         return tid;
     }
+    
+    public static TID createRetHolder(String id) {
+        TID tid = new TID(id, Type.eRetHolder);
+        return tid;
+    }
+    
     
 }
