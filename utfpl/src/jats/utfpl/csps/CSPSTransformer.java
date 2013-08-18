@@ -16,7 +16,7 @@ import jats.utfpl.instruction.UtfplInstruction;
 import jats.utfpl.instruction.ValPrim;
 import jats.utfpl.tree.TID;
 
-public class InstructionProcessor {
+public class CSPSTransformer {
     
     static public CTemp ValPrim2CTemp(ValPrim vp, Map<TID, CTempID> map) {
         if (vp instanceof AtomValue) {
@@ -88,6 +88,7 @@ public class InstructionProcessor {
      * Turning ValPrim into CTemp, or in essence turning TID into CTempID. 
      * The identity of each CTempID is important. It's possible that two different
      * CTempID has the same TID.
+     * subMap: inout
      */
     
     static List<CGroup> InsLst2CGroupLst(List<UtfplInstruction> inslst, Map<TID, CTempID> subMap) {
@@ -127,10 +128,29 @@ public class InstructionProcessor {
             } else if (ins instanceof CondIns) {
                 CondIns aIns = (CondIns)ins;
                 if (ins.hasSideEffect()) {
-                    List<CGroup> btrue = InsLst2CGroupLst(aIns.m_btrue);
-                    List<CGroup> bfalse = InsLst2CGroupLst(aIns.m_bfalse);
+                	CTempID ctTrue = new CTempID(aIns.m_holder);
+                	CTempID ctFalse = new CTempID(aIns.m_holder);
+                	CTempID ctHolder = new CTempID(aIns.m_holder);
+                	
+                	Map<TID, CTempID> subMapTrue = new HashMap<TID, CTempID>(subMap);
+                	Map<TID, CTempID> subMapFalse = new HashMap<TID, CTempID>(subMap);
+                	
+                	subMapTrue.put(aIns.m_holder, ctTrue);
+                	subMapFalse.put(aIns.m_holder, ctFalse);
+                	subMap.put(aIns.m_holder, ctHolder);
+                	
+                    List<CGroup> btrue = InsLst2CGroupLst(aIns.m_btrue, subMapTrue);
+                    List<CGroup> bfalse = InsLst2CGroupLst(aIns.m_bfalse, subMapFalse);
                     
-                    CCondBlock ccond = new CCondBlock(ValPrim2CTemp(aIns.m_cond, map), btrue, bfalse, TID2CTempID(aIns.m_holder, map));
+                    CCondBlock ccond = new CCondBlock(
+                    		ValPrim2CTemp(aIns.m_cond, subMap), 
+                    		btrue, 
+                    		bfalse, 
+                    		ctHolder,
+                    		ctTrue,
+                    		ctFalse);
+                    // Now there are 3 CTempID for one TID.
+                    
                     if (0 != cblock.size()) {
                         insGroupList.add(cblock);
                         cblock = new CEventBlock();
@@ -140,11 +160,27 @@ public class InstructionProcessor {
                 } else {
                     throw new Error("todo");
                 }
+            } else if (ins instanceof FuncDefIns) {
+                FuncDefIns fun = FunDef2CGroupLst((FuncDefIns)ins, subMap);
+                if (0 != cblock.size()) {
+                    insGroupList.add(cblock);
+                    cblock = new CEventBlock();
+                }
+                insGroupList.add(fun);
+                
             } else {
-                // simply neglect
+            	throw new Error("no such case");
+            	
             }
         }
         return insGroupList;
+    }
+    
+    static FuncDefIns FunDef2CGroupLst(FuncDefIns funDef, Map<TID, CTempID> subMap) {
+    	
+    	// todo
+    	return null;
+    	
     }
     
     // change "from" to "to"
