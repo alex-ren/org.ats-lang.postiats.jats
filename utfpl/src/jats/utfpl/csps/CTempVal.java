@@ -9,5 +9,9 @@ public class CTempVal implements CTemp {
         m_v = v;
         
     }
+    
+    public Object accept(CSPSVisitor visitor) {
+        return  visitor.visit(this);
+    }
 
 }

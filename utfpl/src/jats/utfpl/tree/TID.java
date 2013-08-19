@@ -1,7 +1,5 @@
 package jats.utfpl.tree;
 
-import java.util.Map;
-
 import jats.utfpl.instruction.ValPrim;
 
 public class TID implements ValPrim {

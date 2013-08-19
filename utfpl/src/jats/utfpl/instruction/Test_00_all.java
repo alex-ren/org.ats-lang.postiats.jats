@@ -26,7 +26,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 
-public class Test_00 {
+public class Test_00_all {
 
     /**
      * @param args

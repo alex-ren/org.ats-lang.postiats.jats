@@ -14,7 +14,9 @@ import jats.utfpl.utils.MapScope;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -23,16 +25,11 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class Test_01_ins_lst {
+public class Test_02_ins_process {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/test02_fact.utfpl"
-                , "test/test03_var.utfpl"
-                , "test/test04_if.utfpl"
-                , "test/test05_func_def.utfpl"
-                ,  "test/test06_func_call.utfpl"
-                , "test/c01_single_main.utfpl"
+                "test/test20_csps_trans_.utfpl"
         
         };
 
@@ -76,11 +73,20 @@ public class Test_01_ins_lst {
             @SuppressWarnings("unchecked")
             List<UtfplInstruction> inslst = (List<UtfplInstruction>)prog.accept(insV);
             
+            Map<TID, TID> subMap = new HashMap<TID, TID>();
+            
+            TID mainFunLab = TID.createUserFun("main");
+            List<UtfplInstruction> inslst2 = InstructionProcessor.InsLstProcess(inslst, subMap, mainFunLab, TID.ANONY);
+            
             /* ***************** ****************** */
             InstructionPrinter insPrinter = new InstructionPrinter(Type.INS);
             String outputINS = insPrinter.print(inslst);
             System.out.println("==instructions are ==========================");
             System.out.println(outputINS);
+            
+            String outputINS2 = insPrinter.print(inslst2);
+            System.out.println("==instructions after processing are ==========================");
+            System.out.println(outputINS2);
             
 //            FileWriter fwINS = new FileWriter("test/" + classname
 //                    + ".ins");

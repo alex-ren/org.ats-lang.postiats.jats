@@ -1,0 +1,22 @@
+
+var gx := 3
+
+fun foo (x) = let
+  gx := 4
+  val y = sub (x, 1)
+  val b = gte (y, 1)
+  val z = if (b) then let
+        val t = add (x, 2)
+      in
+        mul (t, 3)
+      end else let
+        val t1 = sub (x, 2)
+        val t2 = sub (t1, 3)
+      in
+        div (t2, 3)
+      end
+  val q = hello (z)
+  
+in
+  mojo (q, y)
+end

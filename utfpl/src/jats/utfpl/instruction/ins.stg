@@ -2,7 +2,7 @@ group ins;
 
 
 func_call_ins_st(holder, funlab, args) ::= <<
-func_call-- <holder> = <funlab>(<args; separator=", ">)
+<!func_call-- !><holder> = <funlab>(<args; separator=", ">)
 >>
 
 func_call_ins_no_ret_st(funlab, args) ::= <<
@@ -12,6 +12,7 @@ func_call-- _ = <funlab>(<args; separator=", ">)
 func_def_ins(name, paralst, body, ret) ::= <<
 fun <name> (<paralst; separator=", ">)
 {
+  // ret is <ret>
   <body>
   return <ret>
 }

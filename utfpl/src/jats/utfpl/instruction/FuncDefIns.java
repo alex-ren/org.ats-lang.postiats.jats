@@ -25,7 +25,9 @@ public class FuncDefIns implements UtfplInstruction {
     }
     
     public boolean hasSideEffect() {
-        return m_hasSideEffect;
+        // todo
+        // now all functions have side effect.
+        return true;
     }
     
     

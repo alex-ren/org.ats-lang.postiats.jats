@@ -32,7 +32,7 @@ public class MoveIns implements UtfplInstruction{
     public MoveIns createSubs(Map<TID, TID> subMap) {
         
         return new MoveIns(InstructionProcessor.subsTID(m_holder, subMap),
-                           InstructionProcessor.subsTID(m_vp, subMap));
+                           InstructionProcessor.subsVP(m_vp, subMap));
     }
     
 

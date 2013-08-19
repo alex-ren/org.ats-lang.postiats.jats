@@ -11,4 +11,11 @@ public class CIMove implements CInstruction {
         m_holder = holder;
         m_vp = vp;
     }
+    
+    @Override
+    public Object accept(CSPSVisitor visitor) {
+        return visitor.visit(this);
+    }
 }
+
+

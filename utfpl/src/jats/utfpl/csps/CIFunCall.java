@@ -15,4 +15,10 @@ public class CIFunCall implements CInstruction {
         m_ret = ret;
         
     }
+    
+    @Override
+    public Object accept(CSPSVisitor visitor) {
+        return visitor.visit(this);
+    }
 }
+

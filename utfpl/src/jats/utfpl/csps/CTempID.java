@@ -15,15 +15,15 @@ public class CTempID implements CTemp {
     
     public static class EntityLocation {
         public TID m_funLab;
-        public CGroup m_grp;
+        public CBlock m_grp;
         
-        public EntityLocation(TID funLab, CGroup grp) {
+        public EntityLocation(TID funLab, CBlock grp) {
             m_funLab = funLab;
             m_grp = grp;
         }
     }
     
-    static public CTempID createDef(TID tid, TID funLab, CGroup grp) {
+    static public CTempID createDef(TID tid, TID funLab, CBlock grp) {
         return new CTempID(tid, new EntityLocation(funLab, grp));
     }
     
@@ -35,7 +35,7 @@ public class CTempID implements CTemp {
     }
     
     
-    public void addUsageLoc(TID funLab, CGroup grp) {
+    public void addUsageLoc(TID funLab, CBlock grp) {
         m_usageLst.add(new EntityLocation(funLab, grp));
     }
 
@@ -55,6 +55,10 @@ public class CTempID implements CTemp {
     
     public String getID() {
         return m_tid.getID();
+    }
+    
+    public Object accept(CSPSVisitor visitor) {
+        return visitor.visit(this);
     }
     
 

@@ -1,9 +1,7 @@
 package jats.utfpl.instruction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;

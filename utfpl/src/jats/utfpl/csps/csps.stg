@@ -1,43 +1,68 @@
-group ins;
+group csps;
+
+grp_lst_evt_st(lst) ::= <<
+<lst> -> Skip
+>>
+
+grp_lst_proc_st(lst) ::= <<
+<lst>
+>>
+
+event_process_st(evt, proc) ::= <<
+<evt> -> <proc>
+>>
+
+event_event_st(evt1, evt2) ::= <<
+<evt1> -> <evt2>
+>>
+
+process_event_st(proc, evt) ::= <<
+<proc>; <evt>
+>>
+
+process_process_st(proc1, proc2) ::= <<
+<proc1>; <proc2>
+>>
+
+event_block_st(inslst) ::= <<
+step{<inslst; separator="; ">}
+>>
+
+cond_block_st(cond, btrue, bfalse) ::= <<
+ifa (<cond>) then {<btrue>}
+else {<bfalse>}
+>>
+
+process_call_block_st(lab, paralst) ::= <<
+<lab>(<paralst; separator=", ")
+>>
+
+advanced_block_lst_st(blklst) ::= <<
+<blklst; separator="; ">
+>>
+
+global_var_def_st(var) ::= <<
+var <var>;
+>>
+
+process_def_st(lab, paras, body) ::= <<
+<lab>(<paras; separator=", ") = <body>
+>>
+
+deflst_st(deflst) ::= <<
+<deflst; separator="\n\n">
+>>
+
+
 
 
 func_call_ins_st(holder, funlab, args) ::= <<
 <holder> = <funlab>(<args; separator=", ">)
 >>
 
-func_call_ins_no_ret_st(funlab, args) ::= <<
-_ = <funlab>(<args; separator=", ">)
->>
-
-func_def_ins(name, paralst, body, ret) ::= <<
-fun <name> (<paralst; separator=", ">)
-{
-  <body>
-  return <ret>
-}
-
->>
-
-
-cond_ins_st(holder, cond, btrue, bfalse) ::= <<
-if <cond> then
-  <btrue>
-else
-  <bfalse>
-
->>
-
 
 move_ins_st(holder, vp) ::= <<
 <holder> = <vp>
->>
-
-var_def_ins_used_st(holder) ::= <<
-var <holder>
->>
-
-var_def_ins_unused_st(holder) ::= <<
-var <holder>
 >>
 
 tid_st(id) ::= <<
@@ -50,12 +75,8 @@ atom_value_st(v) ::= <<
 >>
 
 
-inslst_st(inslst) ::= <<<inslst; separator="\n">
->>
-
-program_st(inslst) ::= <<
-<inslst>
-
-
+program_st(gvlst, proclst) ::= <<
+// todo
+<proclst; separator="\n\m">
 >>
 

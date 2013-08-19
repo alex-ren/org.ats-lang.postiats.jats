@@ -1,9 +1,5 @@
 package jats.utfpl.instruction;
 
-import jats.utfpl.tree.TID;
-
-import java.util.Map;
-
 public class AtomValue implements ValPrim {
     private String m_obj;
     

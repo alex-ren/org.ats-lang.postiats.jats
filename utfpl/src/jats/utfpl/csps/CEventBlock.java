@@ -3,8 +3,8 @@ package jats.utfpl.csps;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CEventBlock implements CGroup {
-    private List<CInstruction> m_inslst;
+public class CEventBlock implements CBlock {
+    public List<CInstruction> m_inslst;
     
     public CEventBlock() {
         m_inslst = new ArrayList<CInstruction>();
@@ -16,5 +16,10 @@ public class CEventBlock implements CGroup {
     
     public int size() {
         return m_inslst.size();
+    }
+    
+    @Override
+    public Object accept(CSPSVisitor visitor) {
+        return visitor.visit(this);
     }
 }

@@ -34,6 +34,6 @@ public class FuncCallIns implements UtfplInstruction {
         return new FuncCallIns(
                 InstructionProcessor.subsTID(m_holder, subMap), 
                 m_funlab, 
-                InstructionProcessor.subsTID(m_args, subMap));
+                InstructionProcessor.subsVPLst(m_args, subMap));
     }
 }

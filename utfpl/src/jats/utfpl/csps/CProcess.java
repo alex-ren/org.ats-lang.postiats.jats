@@ -7,13 +7,11 @@ import jats.utfpl.tree.TID;
 public class CProcess {
     private TID m_name;
     private List<CTempID> m_paras;
-    private List<CGroup> m_body;
-    private TID m_ret;
+    private List<CBlock> m_body;
     
-    public CProcess(TID name, List<CTempID> paras, List<CGroup> body, TID ret) {
+    public CProcess(TID name, List<CTempID> paras, List<CBlock> body) {
         m_name = name;
         m_paras = paras;
         m_body = body;
-        m_ret = ret;
     }
 }
