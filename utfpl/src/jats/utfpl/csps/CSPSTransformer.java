@@ -18,33 +18,28 @@ import jats.utfpl.tree.TID;
 
 public class CSPSTransformer {
     
-    static public CTemp ValPrim2CTemp(ValPrim vp, Map<TID, CTempID> map) {
+    static public CTemp ValPrim2CTemp(ValPrim vp, Map<TID, CTempID> map, TID funLab, CGroup grp) {
         if (vp instanceof AtomValue) {
             return new CTempVal((AtomValue) vp);
         } else if (vp instanceof TID) {
             TID tid = (TID)vp;
-            return TID2CTempID(tid, map);
+            return TID2CTempID(tid, map, funLab, grp);
         } else {
             throw new Error("shall not happen");
         }
     }
     
-    static public CTempID TID2CTempID(TID tid, Map<TID, CTempID> map) {
+    static public CTempID TID2CTempID(TID tid, Map<TID, CTempID> map, TID funLab, CGroup grp) {
         CTempID ret = map.get(tid);
         if (null == ret) {
-            ret = new CTempID(tid);
+            ret = CTempID.createDef(tid, funLab, grp);
             map.put(tid, ret);  // This is important.
-        } 
-        return ret;
-    }
-    
-    static public List<CTemp> ValPrimLst2CTempLst(List<ValPrim> vps, Map<TID, CTempID> map) {
-        List<CTemp> ret = new ArrayList<CTemp>();
-        for (ValPrim vp: vps) {
-            ret.add(ValPrim2CTemp(vp, map));            
+        } else {
+            ret.addUsageLoc(funLab, grp);
         }
         return ret;
     }
+    
     
     static public List<FuncDefIns> getAllFunctions(List<UtfplInstruction> inslst) {
         // Assume here that there is no function inside function for simplicity.
@@ -91,7 +86,16 @@ public class CSPSTransformer {
      * subMap: inout
      */
     
-    static List<CGroup> InsLst2CGroupLst(List<UtfplInstruction> inslst, Map<TID, CTempID> subMap) {
+    static List<CProcess> InsLst2CGroupLst(List<UtfplInstruction> inslst, 
+                                         Map<TID, CTempID> subMap,
+                                         TID funLab,
+                                         List<TID> paraLst
+                                         ) {
+        List<CTempID> cParaLst = new ArrayList<CTempID>();
+        for (TID para: paraLst) {
+            CTempID cPara = TID2CTempID(para, subMap, funLab, null);
+            cParaLst.add(cPara);
+        }
 
         List<CGroup> insGroupList = new ArrayList<CGroup>();
         CEventBlock cblock = new CEventBlock();
@@ -99,7 +103,9 @@ public class CSPSTransformer {
         for (UtfplInstruction ins: inslst) {
             if (ins instanceof MoveIns) {
                 MoveIns aIns = (MoveIns)ins;
-                CIMove nIns = new CIMove(TID2CTempID(aIns.m_holder, subMap), ValPrim2CTemp(aIns.m_vp, subMap));
+                CTempID ctHolder = TID2CTempID(aIns.m_holder, subMap, funLab, cblock);
+                CTemp ctValue = ValPrim2CTemp(aIns.m_vp, subMap, funLab, cblock);
+                CIMove nIns = new CIMove(ctHolder, ctValue);
                 cblock.add(nIns);
                 if (ins.hasSideEffect()) {
                     insGroupList.add(cblock);

@@ -3,6 +3,7 @@ package jats.utfpl.instruction;
 import jats.utfpl.tree.TID;
 
 import java.util.List;
+import java.util.Map;
 
 public class FuncCallIns implements UtfplInstruction {
     public TID m_holder;
@@ -27,5 +28,12 @@ public class FuncCallIns implements UtfplInstruction {
         } else {
             return true;  // todo check the body of function
         }
+    }
+    
+    public FuncCallIns createSubs(Map<TID, TID> subMap) {
+        return new FuncCallIns(
+                InstructionProcessor.subsTID(m_holder, subMap), 
+                m_funlab, 
+                InstructionProcessor.subsTID(m_args, subMap));
     }
 }

@@ -1,5 +1,8 @@
 package jats.utfpl.csps;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jats.utfpl.tree.TID;
 
 public class CTempID implements CTemp {
@@ -7,9 +10,33 @@ public class CTempID implements CTemp {
    
     private StackLocation m_loc;
     
-    public CTempID(TID tid) {
+    private EntityLocation m_def;
+    private List<EntityLocation> m_usageLst;
+    
+    public static class EntityLocation {
+        public TID m_funLab;
+        public CGroup m_grp;
+        
+        public EntityLocation(TID funLab, CGroup grp) {
+            m_funLab = funLab;
+            m_grp = grp;
+        }
+    }
+    
+    static public CTempID createDef(TID tid, TID funLab, CGroup grp) {
+        return new CTempID(tid, new EntityLocation(funLab, grp));
+    }
+    
+    private CTempID(TID tid, EntityLocation defLoc) {
         m_tid = tid;
         m_loc = null;
+        m_def = defLoc;
+        m_usageLst = new ArrayList<EntityLocation>();
+    }
+    
+    
+    public void addUsageLoc(TID funLab, CGroup grp) {
+        m_usageLst.add(new EntityLocation(funLab, grp));
     }
 
     public boolean isEscaped() {
@@ -29,5 +56,6 @@ public class CTempID implements CTemp {
     public String getID() {
         return m_tid.getID();
     }
+    
 
 }
