@@ -29,6 +29,15 @@ public class CSPSTransformer {
         }
     }
     
+    static public List<CTemp> ValPrimLst2CTempLst(List<ValPrim> vpLst, Map<TID, CTempID> map, TID funLab, CGroup grp) {
+    	List<CTemp> nLst = new ArrayList<CTemp>();
+    	for (ValPrim vp: vpLst) {
+    		CTemp newVp = ValPrim2CTemp(vp, map, funLab, grp);
+    		nLst.add(newVp);
+    	}
+    	return nLst;
+    }
+    
     static public CTempID TID2CTempID(TID tid, Map<TID, CTempID> map, TID funLab, CGroup grp) {
         CTempID ret = map.get(tid);
         if (null == ret) {
@@ -116,19 +125,22 @@ public class CSPSTransformer {
             } else if (ins instanceof FuncCallIns) {
                 FuncCallIns aIns = (FuncCallIns)ins;
                 if (ins.hasSideEffect()) {
-                    CProcessCallBlock cprocess = new CProcessCallBlock(
-                            aIns.m_funlab, 
-                            ValPrimLst2CTempLst(aIns.m_args, subMap), 
-                            TID2CTempID(aIns.m_holder, subMap));
+                    CProcessCallBlock cprocess = new CProcessCallBlock(aIns.m_funlab);
+
+                	List<CTemp> nLst = ValPrimLst2CTempLst(aIns.m_args, subMap, funLab, cprocess);
+                	CTempID ctHolder = TID2CTempID(aIns.m_holder, subMap, funLab, cprocess);
+                    cprocess.reset(nLst, ctHolder);
+                    
                     if (0 != cblock.size()) {
                         insGroupList.add(cblock);
                         cblock = new CEventBlock();
                     }
                     insGroupList.add(cprocess);
                 } else {
-                    CIFunCall nIns = new CIFunCall(aIns.m_funlab, 
-                    		                       ValPrimLst2CTempLst(aIns.m_args, subMap), 
-                    		                       TID2CTempID(aIns.m_holder, subMap));
+                	List<CTemp> nLst = ValPrimLst2CTempLst(aIns.m_args, subMap, funLab, cblock);
+                	CTempID ctHolder = TID2CTempID(aIns.m_holder, subMap, funLab, cblock);
+                    CIFunCall nIns = new CIFunCall(aIns.m_funlab, nLst, ctHolder);
+
                     cblock.add(nIns);
                 }
             } else if (ins instanceof CondIns) {

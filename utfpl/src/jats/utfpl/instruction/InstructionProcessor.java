@@ -67,7 +67,7 @@ public class InstructionProcessor {
 				List<UtfplInstruction> insLstTrue = InsLstProcess(aIns.m_btrue, subMap, FuncLab, retHolder);
 				List<UtfplInstruction> insLstFalse = InsLstProcess(aIns.m_bfalse, subMap, FuncLab, retHolder);
 				if (iter.hasNext()) {  // has more instructions to deal with
-					if (!aIns.m_holder.isGlobal()) {  // 
+					if (!aIns.m_holder.isGlobal()) {  // Global variable as the holder, no need to merge.
                         // Since aIns is not the last instruction, aRetHolder !=
                         // retHolder.
 

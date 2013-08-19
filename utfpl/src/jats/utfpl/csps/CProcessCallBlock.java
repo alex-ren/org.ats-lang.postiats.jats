@@ -16,4 +16,16 @@ public class CProcessCallBlock implements CGroup {
         m_ret = ret;
         
     }
+    
+    public CProcessCallBlock(TID funlab) {
+        m_funlab = funlab;
+        m_args = null;
+        m_ret = null;
+    }
+    
+    public void reset(List<CTemp> args, CTempID ret) {
+        m_args = args;
+        m_ret = ret;
+        
+    }
 }
