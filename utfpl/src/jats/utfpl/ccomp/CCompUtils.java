@@ -1,6 +1,6 @@
 package jats.utfpl.ccomp;
 
-import jats.utfpl.tree.TID;
+import jats.utfpl.instruction.TID;
 import jats.utfpl.utils.MapScope;
 
 public class CCompUtils {

@@ -6,7 +6,7 @@ import java.util.List;
 public class TupleExp implements Exp {
     static public TupleExp Void = new TupleExp();  // empty tuple
     
-    List<Exp> m_components;
+    public List<Exp> m_components;
     
     private TupleExp() {
         m_components = null;

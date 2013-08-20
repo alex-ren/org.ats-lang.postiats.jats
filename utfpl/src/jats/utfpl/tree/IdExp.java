@@ -1,5 +1,7 @@
 package jats.utfpl.tree;
 
+import jats.utfpl.instruction.TID;
+
 
 public class IdExp implements Exp {
     public String m_sid;

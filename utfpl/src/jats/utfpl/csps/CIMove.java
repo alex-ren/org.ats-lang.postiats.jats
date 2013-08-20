@@ -1,20 +1,39 @@
 package jats.utfpl.csps;
 
-import jats.utfpl.instruction.ValPrim;
-import jats.utfpl.tree.TID;
-
 public class CIMove implements CInstruction {
-    private CTempID m_holder;
-    private CTemp m_vp;
+    public CTempID m_holder;
+    public CTemp m_vp;
+    
+    private CBlock m_blk;
 
-    public CIMove(CTempID holder, CTemp vp) {
+    public CIMove(CTempID holder, CTemp vp, CBlock blk) {
         m_holder = holder;
         m_vp = vp;
+        m_blk = blk;
     }
     
     @Override
     public Object accept(CSPSVisitor visitor) {
-        return visitor.visit(this);
+        return visitor.visit(this, m_blk);
+    }
+
+    @Override
+    public CBlock getBlock() {
+        return m_blk;
+    }
+
+    @Override
+    public void process(int level) {
+        m_holder.updateEscaped();
+        if (m_holder.isEscaped()) {
+            m_holder.toStack(level);
+        }
+        
+        if (m_vp instanceof CTempID) {
+            CTempID ctid = (CTempID)m_vp;
+            m_vp = ctid.createForStack(level);  // create a new CTempID
+        }
+        
     }
 }
 

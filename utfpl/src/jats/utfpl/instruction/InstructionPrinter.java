@@ -1,6 +1,5 @@
 package jats.utfpl.instruction;
 
-import jats.utfpl.tree.TID;
 
 import java.net.URL;
 import java.util.List;
@@ -36,10 +35,24 @@ public class InstructionPrinter implements InsVisitor {
         }
         
     }
+
+    public String print(ProgramIns prog) {
+        // program_st(varlst, inslst) ::= <<
+        ST st = m_stg.getInstanceOf("program_st");
+        
+        for (TID gv: prog.getGlobalVars()) {
+            st.add("vardeflst", gv);
+        }
+        for (UtfplInstruction ins: prog.getInsLst()) {
+            st.add("inslst", ins.accept(this));
+        }
+        return st.render();
+    }
     
     private void setPython() {
         URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/python_code.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
+        throw new Error("todo");
 
     }
     
@@ -52,18 +65,8 @@ public class InstructionPrinter implements InsVisitor {
     private void setJS() {
         URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/js_code.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
+        throw new Error("todo");
 
-    }
-    
-    public String print(List<UtfplInstruction> inslst) {
-        ST st = printProgram(inslst);
-        return st.render();
-    }
-    
-    private ST printProgram(List<UtfplInstruction> inslst) {
-        ST st = m_stg.getInstanceOf("program_st");
-        st.add("inslst", visitInsLst(inslst));
-        return st;
     }
     
     private ST visitInsLst(List<UtfplInstruction> inslst) {

@@ -1,10 +1,16 @@
 package jats.utfpl.csps;
 
-import jats.utfpl.instruction.InsVisitor;
-
-public interface CBlock {
+public abstract class CBlock {
     static public enum Type{evt, proc};
     
-    Object accept(CSPSVisitor visitor);
+    abstract Object accept(CSPSVisitor visitor);
+    
+    abstract int process(int offset);
+    
+    protected int m_level;
+    
+    public CBlock(int level) {
+        m_level = level;
+    }
 
 }

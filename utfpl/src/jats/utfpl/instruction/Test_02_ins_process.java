@@ -5,15 +5,14 @@ import jats.utfpl.instruction.InstructionPrinter.Type;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.tree.NamingVisitor;
 import jats.utfpl.tree.Program;
-import jats.utfpl.tree.TID;
 import jats.utfpl.tree.TreePrinter;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,43 +47,52 @@ public class Test_02_ins_process {
             
             /* ******** ******** */
             // parsing
-            UtfplParser parser = new UtfplParser(tokenStream);
-            UtfplParser.rule_return parser_ret = parser.rule();
+            UtfplParser parser = new UtfplParser(tokenStream);  // create worker
+            UtfplParser.rule_return parser_ret = parser.rule();  // worker works
             CommonTree tree = (CommonTree)parser_ret.getTree();
             CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
             
             /* ******** ******** */
             // tree parsing
-            Utfpl_tree walker = new Utfpl_tree(nodes);
+            Utfpl_tree walker = new Utfpl_tree(nodes);  // create worker
 
-            Program prog = walker.rule();
+            Program prog = walker.rule();  // worker works
+            
+            /* ***************** ****************** */
+            // naming construction
             MapScope<TID> libScope = new MapScope<TID>();
             CCompUtils.populateAllFunctions(libScope);
             NamingVisitor nameV = new NamingVisitor(libScope);
             prog.accept(nameV);
             
-            TreePrinter tp = new TreePrinter();
-            String output1 = tp.print(prog);
+            /* ***************** ****************** */
+            // print tree
+            TreePrinter tp = new TreePrinter();  // create worker
+            String output1 = tp.print(prog);  // worker works
             
             System.out.println("==program is ==========================");
             System.out.println(output1);
             
-            InsTransformer insV = new InsTransformer();
-            @SuppressWarnings("unchecked")
-            List<UtfplInstruction> inslst = (List<UtfplInstruction>)prog.accept(insV);
-            
-            Map<TID, TID> subMap = new HashMap<TID, TID>();
-            
-            TID mainFunLab = TID.createUserFun("main");
-            List<UtfplInstruction> inslst2 = InstructionProcessor.InsLstProcess(inslst, subMap, mainFunLab, TID.ANONY);
+            /* ***************** ****************** */
+            // generate program of instructions
+            InsTransformer insV = new InsTransformer();  // create worker
+            ProgramIns programIns = insV.trans(prog);  // worker works
             
             /* ***************** ****************** */
-            InstructionPrinter insPrinter = new InstructionPrinter(Type.INS);
-            String outputINS = insPrinter.print(inslst);
+            // print instructions
+            InstructionPrinter insPrinter = new InstructionPrinter(Type.INS);  // create worker
+            String outputINS = insPrinter.print(programIns);  // worker works
             System.out.println("==instructions are ==========================");
             System.out.println(outputINS);
             
-            String outputINS2 = insPrinter.print(inslst2);
+            /* ***************** ****************** */
+            // generate new program of instructions by processing
+            InstructionProcessor insProcessor = new InstructionProcessor();  // create worker
+            ProgramIns programIns2 = insProcessor.process(programIns);  // worker works
+            
+            /* ***************** ****************** */
+            // print instructions
+            String outputINS2 = insPrinter.print(programIns2);  // worker works
             System.out.println("==instructions after processing are ==========================");
             System.out.println(outputINS2);
             

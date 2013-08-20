@@ -1,5 +1,8 @@
 package jats.utfpl.csps;
 
-public interface CAdvancedBlock extends CBlock {
+public abstract class CAdvancedBlock extends CBlock {
+    public CAdvancedBlock(int level) {
+        super(level);
+    }
 
 }

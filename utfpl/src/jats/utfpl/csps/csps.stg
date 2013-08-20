@@ -1,11 +1,11 @@
 group csps;
 
 grp_lst_evt_st(lst) ::= <<
-<lst> -> Skip
+<lst> -> Skip;
 >>
 
 grp_lst_proc_st(lst) ::= <<
-<lst>
+<lst>;
 >>
 
 event_process_st(evt, proc) ::= <<
@@ -25,7 +25,7 @@ process_process_st(proc1, proc2) ::= <<
 >>
 
 event_block_st(inslst) ::= <<
-step{<inslst; separator="; ">}
+step{<inslst; separator=" ">}
 >>
 
 cond_block_st(cond, btrue, bfalse) ::= <<
@@ -33,50 +33,65 @@ ifa (<cond>) then {<btrue>}
 else {<bfalse>}
 >>
 
-process_call_block_st(lab, paralst) ::= <<
-<lab>(<paralst; separator=", ")
+process_call_block_st(lab, args) ::= <<
+<lab>(<args; separator=", ">)
 >>
 
-advanced_block_lst_st(blklst) ::= <<
-<blklst; separator="; ">
+move_ins_st(dst, src) ::= <<
+<dst> = <src>;
 >>
 
-global_var_def_st(var) ::= <<
-var <var>;
+fun_call_ins_st(dst, lab, args) ::= <<
+<dst> = <lab>(<args; separator=", ">);
 >>
 
-process_def_st(lab, paras, body) ::= <<
-<lab>(<paras; separator=", ") = <body>
->>
-
-deflst_st(deflst) ::= <<
-<deflst; separator="\n\n">
->>
-
-
-
-
-func_call_ins_st(holder, funlab, args) ::= <<
-<holder> = <funlab>(<args; separator=", ">)
->>
-
-
-move_ins_st(holder, vp) ::= <<
-<holder> = <vp>
->>
-
-tid_st(id) ::= <<
-<id>
->>
-
-
-atom_value_st(v) ::= <<
+temp_val_st(v) ::= <<
 <v>
 >>
 
-
-program_st(gvlst, proclst) ::= <<
-// todo
-<proclst; separator="\n\m">
+global_id_st(id) ::= <<
+<id>
 >>
+
+local_id_def_st(id) ::= <<
+var <id>
+>>
+
+local_id_use_st(id) ::= <<
+<id>
+>>
+
+gvar_lst_st(gvarlst) ::= <<
+<gvarlst:gvar_def_st(); separator="\n">
+>>
+
+gvar_def_st(gvar) ::= <<
+var <gvar>
+>>
+
+proc_lst_st(proclst) ::= <<
+<proclst; separator="\n">
+>>
+
+main_proc_st(mainlab, body) ::= <<
+<mainlab>() = <body>
+>>
+
+proc_st(lab, paras, body) ::= <<
+<lab>(<paras; separator="\n">) = <body>
+>>
+
+
+program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
+<gvar_lst_st(gvarlst)>
+
+<proc_lst_st(proclst)>
+
+<mainproc>
+
+<mainlab>()
+>>
+
+
+
 

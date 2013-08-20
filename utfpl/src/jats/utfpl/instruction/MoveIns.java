@@ -2,7 +2,6 @@ package jats.utfpl.instruction;
 
 import java.util.Map;
 
-import jats.utfpl.tree.TID;
 
 public class MoveIns implements UtfplInstruction{
     public TID m_holder;
@@ -31,7 +30,7 @@ public class MoveIns implements UtfplInstruction{
     
     public MoveIns createSubs(Map<TID, TID> subMap) {
         
-        return new MoveIns(InstructionProcessor.subsTID(m_holder, subMap),
+        return new MoveIns(TID.subsTID(m_holder, subMap),
                            InstructionProcessor.subsVP(m_vp, subMap));
     }
     

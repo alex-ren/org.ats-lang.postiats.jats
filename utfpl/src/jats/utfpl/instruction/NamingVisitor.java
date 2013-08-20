@@ -1,7 +1,22 @@
-package jats.utfpl.tree;
+package jats.utfpl.instruction;
 
 import java.util.List;
 
+import jats.utfpl.tree.AppExp;
+import jats.utfpl.tree.AtomExp;
+import jats.utfpl.tree.Dec;
+import jats.utfpl.tree.Exp;
+import jats.utfpl.tree.FunDef;
+import jats.utfpl.tree.IdExp;
+import jats.utfpl.tree.IfExp;
+import jats.utfpl.tree.LamExp;
+import jats.utfpl.tree.LetExp;
+import jats.utfpl.tree.Program;
+import jats.utfpl.tree.TreeVisitor;
+import jats.utfpl.tree.TupleExp;
+import jats.utfpl.tree.ValDef;
+import jats.utfpl.tree.VarAssign;
+import jats.utfpl.tree.VarDef;
 import jats.utfpl.utils.MapScope;
 
 public class NamingVisitor implements TreeVisitor {

@@ -1,6 +1,5 @@
 package jats.utfpl.instruction;
 
-import jats.utfpl.tree.TID;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class FuncCallIns implements UtfplInstruction {
 
     @Override
     public boolean hasSideEffect() {
-        if (m_holder.isLibFun()) {
+        if (m_funlab.isLibFun()) {
             return false;
         } else {
             return true;  // todo check the body of function
@@ -32,7 +31,7 @@ public class FuncCallIns implements UtfplInstruction {
     
     public FuncCallIns createSubs(Map<TID, TID> subMap) {
         return new FuncCallIns(
-                InstructionProcessor.subsTID(m_holder, subMap), 
+                TID.subsTID(m_holder, subMap), 
                 m_funlab, 
                 InstructionProcessor.subsVPLst(m_args, subMap));
     }

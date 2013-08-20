@@ -1,6 +1,7 @@
-package jats.utfpl.tree;
+package jats.utfpl.instruction;
 
-import jats.utfpl.instruction.ValPrim;
+import java.util.Map;
+
 
 public class TID implements ValPrim {
     static private int s_cnt = 0;
@@ -81,6 +82,15 @@ public class TID implements ValPrim {
     public static TID createRetHolder(String id) {
         TID tid = new TID(id, Type.eRetHolder);
         return tid;
+    }
+    
+    static public TID subsTID(TID tid, Map<TID, TID> subMap) {
+        TID newTID = subMap.get(tid);
+        if (null == newTID) {
+            return tid;
+        } else {
+            return newTID;
+        }
     }
 
     

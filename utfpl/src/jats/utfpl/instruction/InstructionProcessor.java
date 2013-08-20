@@ -1,6 +1,5 @@
 package jats.utfpl.instruction;
 
-import jats.utfpl.tree.TID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,23 +9,31 @@ import java.util.Map;
 
 
 public class InstructionProcessor {
+    
+    /*
+     * The content of process includes the following.
+     * 1. One block contains only one operation related to global variable.
+     * 2. Transformation of "if" branch.
+     */
+    public ProgramIns process(ProgramIns inputProg) {
+        
+        Map<TID, TID> subMap = new HashMap<TID, TID>();
+        TID mainFunLab = TID.createUserFun("main");
+        
+        // todo
+        // call addInsForGlobalVar
+        
+        List<UtfplInstruction> insLst = InsLstProcess(inputProg.getInsLst(), subMap, mainFunLab, TID.ANONY);
+        return new ProgramIns(inputProg.getGlobalVars(), insLst);
+    }
 	
     static public ValPrim subsVP(ValPrim vp, Map<TID, TID> subMap) {
         if (vp instanceof AtomValue) {
             return vp;
         } else if (vp instanceof TID) {
-            return subsTID((TID)vp, subMap);
+            return TID.subsTID((TID)vp, subMap);
         } else {
             throw new Error("not supported");
-        }
-    }
-
-    static public TID subsTID(TID tid, Map<TID, TID> subMap) {
-        TID newTID = subMap.get(tid);
-        if (null == newTID) {
-            return tid;
-        } else {
-            return newTID;
         }
     }
     
@@ -39,12 +46,13 @@ public class InstructionProcessor {
         return newVpLst;
     }
     
+
 	/*
 	 * Create a new list and the old list is unchanged.
 	 * Substitution is done along the way as well. Another way to put it,
 	 * the true instruction list is based on both "insLst" and "subMap".
 	 */
-	static public List<UtfplInstruction> InsLstProcess(
+	static private List<UtfplInstruction> InsLstProcess(
 			List<UtfplInstruction> insLst, 
 			Map<TID, TID> subMap,
 			TID FuncLab,
@@ -62,7 +70,7 @@ public class InstructionProcessor {
 			} else if (ins instanceof CondIns) {
 				CondIns aIns = (CondIns)ins;
 				
-				TID condRetHolder = subsTID(aIns.m_holder, subMap);
+				TID condRetHolder = TID.subsTID(aIns.m_holder, subMap);
 				ValPrim aCond = subsVP(aIns.m_cond, subMap);
 				
 				List<UtfplInstruction> insLstTrue = InsLstProcess(aIns.m_btrue, subMap, FuncLab, retHolder);
@@ -136,7 +144,7 @@ public class InstructionProcessor {
 	}
 	
 	
-    static public List<FuncDefIns> getAllFunctions(List<UtfplInstruction> inslst) {
+    static private List<FuncDefIns> getAllFunctions(List<UtfplInstruction> inslst) {
         // Assume here that there is no function inside function for simplicity.
         List<FuncDefIns> funlst = new ArrayList<FuncDefIns>();
         for (UtfplInstruction ins: inslst) {
@@ -152,9 +160,9 @@ public class InstructionProcessor {
      * Keep the input list unmodified. One instruction can deal
      * with only one global variable.
      */
-    static public List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> inslst) {
+    static private List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> inslst) {
         // todo
-        return null;
+        return inslst;
         
     }
     

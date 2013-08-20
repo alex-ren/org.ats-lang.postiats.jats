@@ -1,11 +1,10 @@
 package jats.utfpl.csps;
 
-import jats.utfpl.tree.TID;
 
 import java.util.List;
 
 
-public class CCondBlock implements CAdvancedBlock {
+public class CCondBlock extends CAdvancedBlock {
     public CTemp m_cond; // condition
     public List<CBlock> m_tb; // true branch
     public List<CBlock> m_fb; // false branch
@@ -17,10 +16,12 @@ public class CCondBlock implements CAdvancedBlock {
             CTemp cond
     		, List<CBlock> tb 
     		, List<CBlock> fb
+    		, int level
 //    		, CTempID holder
 //    		, CTempID holderTrue
 //    		, CTempID holderFalse
     		) {
+        super(level);
         m_cond = cond;
         m_tb = tb;
         m_fb = fb;
@@ -30,7 +31,8 @@ public class CCondBlock implements CAdvancedBlock {
         
     }
     
-    public CCondBlock() {
+    public CCondBlock(int level) {
+        super(level);
         m_cond = null;
         m_tb = null;
         m_fb = null;
@@ -77,6 +79,7 @@ public class CCondBlock implements CAdvancedBlock {
     public Object accept(CSPSVisitor visitor) {
         return visitor.visit(this);
     }
+
 }
 
 

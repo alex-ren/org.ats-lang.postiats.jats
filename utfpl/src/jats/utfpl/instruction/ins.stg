@@ -33,14 +33,6 @@ move_ins_st(holder, vp) ::= <<
 move-- <holder> = <vp>
 >>
 
-var_def_ins_used_st(holder) ::= <<
-var_def_ins_used_st-- var <holder>
->>
-
-var_def_ins_unused_st(holder) ::= <<
-var_def_ins_unused_st-- var <holder>
->>
-
 tid_st(id) ::= <<
 <id>
 >>
@@ -54,9 +46,29 @@ atom_value_st(v) ::= <<
 inslst_st(inslst) ::= <<<inslst; separator="\n">
 >>
 
-program_st(inslst) ::= <<
-<inslst>
+var_def_st(var) ::= <<
+var <var>
+>>
 
+var_lst_st(vardeflst)  ::= <<
+<vardeflst:var_def_st(); separator="\n">
+>>
+
+program_st(vardeflst, inslst) ::= <<
+<var_lst_st(vardeflst)>
+
+<inslst_st(inslst)>
 
 >>
 
+// The following templates are not used now.
+
+var_def_ins_unused_st(holder) ::= <<
+
+var_def_ins_unused_st-- var <holder>
+>>
+
+
+var_def_ins_used_st(holder) ::= <<
+var_def_ins_used_st-- var <holder>
+>>

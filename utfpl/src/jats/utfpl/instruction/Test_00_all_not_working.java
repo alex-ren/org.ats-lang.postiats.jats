@@ -5,9 +5,7 @@ import jats.utfpl.instruction.InstructionPrinter.Type;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.tree.NamingVisitor;
 import jats.utfpl.tree.Program;
-import jats.utfpl.tree.TID;
 import jats.utfpl.tree.TreePrinter;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
@@ -26,7 +24,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 
-public class Test_00_all {
+public class Test_00_all_not_working {
 
     /**
      * @param args
@@ -54,34 +52,39 @@ public class Test_00_all {
             
             /* ******** ******** */
             // parsing
-            UtfplParser parser = new UtfplParser(tokenStream);
-            UtfplParser.rule_return parser_ret = parser.rule();
+            UtfplParser parser = new UtfplParser(tokenStream);  // create worker
+            UtfplParser.rule_return parser_ret = parser.rule();  // worker works
             CommonTree tree = (CommonTree)parser_ret.getTree();
             CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
             
             /* ******** ******** */
             // tree parsing
-            Utfpl_tree walker = new Utfpl_tree(nodes);
+            Utfpl_tree walker = new Utfpl_tree(nodes);  // create worker
 
-            Program prog = walker.rule();
+            Program prog = walker.rule();  // worker works
             MapScope<TID> libScope = new MapScope<TID>();
             CCompUtils.populateAllFunctions(libScope);
             NamingVisitor nameV = new NamingVisitor(libScope);
             prog.accept(nameV);
             
-            TreePrinter tp = new TreePrinter();
-            String output1 = tp.print(prog);
+            TreePrinter tp = new TreePrinter();  // create worker
+            String output1 = tp.print(prog);  // worker works
             
             System.out.println("==program is ==========================");
             System.out.println(output1);
             
-            InsTransformer insV = new InsTransformer();
+            InsTransformer insV = new InsTransformer();  // create worker
             @SuppressWarnings("unchecked")
-            List<UtfplInstruction> inslst = (List<UtfplInstruction>)prog.accept(insV);
+            ProgramIns programIns = insV.trans(prog);  // worker works
+
+            
+            InstructionProcessor insProcessor = new InstructionProcessor();  // create worker
+            ProgramIns programIns2 = insProcessor.process(programIns);  // worker works
+
             
             /* ***************** ****************** */
             InstructionPrinter insPrinter = new InstructionPrinter(Type.INS);
-            String outputINS = insPrinter.print(inslst);
+            String outputINS = insPrinter.print(programIns);
             System.out.println("==instructions are ==========================");
             System.out.println(outputINS);
             
@@ -93,7 +96,7 @@ public class Test_00_all {
             
             /* ***************** ****************** */
             InstructionPrinter pyPrinter = new InstructionPrinter(Type.PYTHON);
-            String outputPY = pyPrinter.print(inslst);
+            String outputPY = pyPrinter.print(programIns);
             
             FileWriter fwPY = new FileWriter("test/" + classname
                     + ".py");
@@ -103,7 +106,7 @@ public class Test_00_all {
 
             /* ***************** ****************** */
             InstructionPrinter jsPrinter = new InstructionPrinter(Type.JS);
-            String outputJS = jsPrinter.print(inslst);
+            String outputJS = jsPrinter.print(programIns);
             
             FileWriter fwJS = new FileWriter("test/" + classname
                     + ".js");

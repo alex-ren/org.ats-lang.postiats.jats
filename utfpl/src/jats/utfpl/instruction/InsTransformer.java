@@ -13,7 +13,6 @@ import jats.utfpl.tree.IfExp;
 import jats.utfpl.tree.LamExp;
 import jats.utfpl.tree.LetExp;
 import jats.utfpl.tree.Program;
-import jats.utfpl.tree.TID;
 import jats.utfpl.tree.TreeVisitor;
 import jats.utfpl.tree.TupleExp;
 import jats.utfpl.tree.ValDef;
@@ -33,6 +32,8 @@ public class InsTransformer implements TreeVisitor {
     private TID m_tidIn;  // holder designated by caller
     private ValPrim m_vpOut;  // entity returned by the callee, may be a holder
     
+    private List<TID> m_globalVars;
+    
     private TID getTIDIn() {
         TID ret = m_tidIn;
         m_tidIn = null;
@@ -51,6 +52,13 @@ public class InsTransformer implements TreeVisitor {
         m_inslst = new ArrayList<UtfplInstruction>();
         m_tidIn = null;
         m_vpOut = null;
+        m_globalVars = new ArrayList<TID>();
+    }
+    
+    // The function cannot be called multiple times.
+    public ProgramIns trans(Program node) {
+        this.visit(node);
+        return new ProgramIns(m_globalVars, m_inslst);
     }
 
     @Override
@@ -242,6 +250,9 @@ public class InsTransformer implements TreeVisitor {
         	ret = m_inslst;
         }
         setTIDIn(holder);
+        
+        m_globalVars.add(node.m_id.m_tid);
+        
         return ret;
     }
 

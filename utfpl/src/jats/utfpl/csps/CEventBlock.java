@@ -3,10 +3,11 @@ package jats.utfpl.csps;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CEventBlock implements CBlock {
+public class CEventBlock extends CBlock {
     public List<CInstruction> m_inslst;
     
-    public CEventBlock() {
+    public CEventBlock(int level) {
+        super(level);
         m_inslst = new ArrayList<CInstruction>();
     }
 
@@ -21,5 +22,13 @@ public class CEventBlock implements CBlock {
     @Override
     public Object accept(CSPSVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public int process(int offset) {
+        for (CInstruction ins: m_inslst) {
+            offset = ins.process(offset);
+        }
+        return offset;
     }
 }

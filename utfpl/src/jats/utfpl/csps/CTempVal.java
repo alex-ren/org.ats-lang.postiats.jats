@@ -10,8 +10,8 @@ public class CTempVal implements CTemp {
         
     }
     
-    public Object accept(CSPSVisitor visitor) {
-        return  visitor.visit(this);
+    public Object accept(CSPSVisitor visitor, CBlock curBlk) {
+        return visitor.visit(this, curBlk);
     }
 
 }
