@@ -9,6 +9,10 @@ public abstract class CBlock {
     
     protected int m_level;
     
+    public int getLevel() {
+    	return m_level;
+    }
+    
     public CBlock(int level) {
         m_level = level;
     }

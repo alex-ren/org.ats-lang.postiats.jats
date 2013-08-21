@@ -23,16 +23,20 @@ public class CIMove implements CInstruction {
     }
 
     @Override
-    public void process(int level) {
+    public int process(int offset) {
         m_holder.updateEscaped();
         if (m_holder.isEscaped()) {
-            m_holder.toStack(level);
+            offset = m_holder.updateStackLocation(offset);
         }
         
         if (m_vp instanceof CTempID) {
             CTempID ctid = (CTempID)m_vp;
-            m_vp = ctid.createForStack(level);  // create a new CTempID
+            if (ctid.isEscaped()) {
+                m_vp = ctid.createForStack(m_blk.getLevel());  // create a new CTempID
+            }
         }
+        
+        return offset;
         
     }
 }

@@ -104,7 +104,7 @@ public class CSPSTransformer {
                                          ) {
 
         List<CBlock> insBlockList = new ArrayList<CBlock>();
-        CEventBlock cblock = new CEventBlock();
+        CEventBlock cblock = new CEventBlock(level);
         
         for (UtfplInstruction ins: inslst) {
             if (ins instanceof MoveIns) {
@@ -115,14 +115,14 @@ public class CSPSTransformer {
                 cblock.add(nIns);
                 if (aIns.hasSideEffect()) {
                     insBlockList.add(cblock);
-                    cblock = new CEventBlock();
+                    cblock = new CEventBlock(level);
                 } else {
                     continue;
                 }
             } else if (ins instanceof FuncCallIns) {
                 FuncCallIns aIns = (FuncCallIns)ins;
                 if (aIns.hasSideEffect()) {
-                    CProcessCallBlock cprocess = new CProcessCallBlock(aIns.m_funlab);
+                    CProcessCallBlock cprocess = new CProcessCallBlock(aIns.m_funlab, level);
 
                 	List<CTemp> nLst = ValPrimLst2CTempLst(aIns.m_args, subMap, funLab, cprocess, level);
                 	CTempID ctHolder = TID2CTempID(aIns.m_holder, subMap, funLab, cprocess, level);
@@ -130,7 +130,7 @@ public class CSPSTransformer {
                     
                     if (0 != cblock.size()) {
                         insBlockList.add(cblock);
-                        cblock = new CEventBlock();
+                        cblock = new CEventBlock(level);
                     }
                     insBlockList.add(cprocess);
                 } else {
@@ -143,7 +143,7 @@ public class CSPSTransformer {
             } else if (ins instanceof CondIns) {
                 CondIns aIns = (CondIns)ins;
                 if (ins.hasSideEffect()) {
-                    CCondBlock ccond = new CCondBlock();
+                    CCondBlock ccond = new CCondBlock(level);
                     CTemp ctCond = ValPrim2CTemp(aIns.m_cond, subMap, funLab, ccond, level);
                 	
                 	Map<TID, CTempID> subMapTrue = new HashMap<TID, CTempID>(subMap);
@@ -157,7 +157,7 @@ public class CSPSTransformer {
                     
                     if (0 != cblock.size()) {
                         insBlockList.add(cblock);
-                        cblock = new CEventBlock();
+                        cblock = new CEventBlock(level);
                     }
                     insBlockList.add(ccond);
                     
