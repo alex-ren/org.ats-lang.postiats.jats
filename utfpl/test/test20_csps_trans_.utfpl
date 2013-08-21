@@ -2,6 +2,7 @@
 var gx := 3
 
 fun foo (x) = let
+  val v = 1
   gx := 4
   val y = sub (x, 1)
   val b = gte (y, 1)
@@ -15,8 +16,12 @@ fun foo (x) = let
       in
         div (t2, 3)
       end
-  val q = hello (z)
+  val r = xyz (3)
+  val q = hello (z, r)
   
 in
-  mojo (q, y)
+  mojo (q, y, x)
 end
+
+fun xyz (x) = 1
+

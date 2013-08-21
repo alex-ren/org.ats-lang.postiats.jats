@@ -9,4 +9,12 @@ public class StackLocation {
         m_frame = frame;
     }
     
+    public int getOffset() {
+        return m_offset;
+    }
+    
+    public int getFrame() {
+        return m_frame;
+    }
+    
 }

@@ -15,6 +15,10 @@ public class FuncCallIns implements UtfplInstruction {
         m_args = args;
     }
     
+    public boolean isRet() {
+        return m_holder.isRet();
+    }
+    
     @Override
     public Object accept(InsVisitor visitor) {
         return visitor.visit(this);

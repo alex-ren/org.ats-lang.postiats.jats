@@ -1,0 +1,7 @@
+
+fun foo (x) = let
+in
+  if (x) then if (x) then 1 else 2
+  else if (x) then 3 else 4
+end
+

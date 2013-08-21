@@ -1,0 +1,11 @@
+
+/*
+ * The return value is got by call another process.
+ */
+ 
+var gx := 3
+
+fun foo (x) = xyz (x)
+
+fun xyz (x) = 1
+

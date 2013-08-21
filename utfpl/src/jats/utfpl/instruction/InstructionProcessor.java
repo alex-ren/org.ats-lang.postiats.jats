@@ -24,6 +24,7 @@ public class InstructionProcessor {
         // call addInsForGlobalVar
         
         List<UtfplInstruction> insLst = InsLstProcess(inputProg.getInsLst(), subMap, mainFunLab, TID.ANONY);
+        InsLstProcessRetCall(insLst, mainFunLab);
         return new ProgramIns(inputProg.getGlobalVars(), insLst);
     }
 	
@@ -52,6 +53,9 @@ public class InstructionProcessor {
 	 * Substitution is done along the way as well. Another way to put it,
 	 * the true instruction list is based on both "insLst" and "subMap".
 	 */
+    /*
+     * Effect analysis is done after this stage.
+     */
 	static private List<UtfplInstruction> InsLstProcess(
 			List<UtfplInstruction> insLst, 
 			Map<TID, TID> subMap,
@@ -129,7 +133,6 @@ public class InstructionProcessor {
 			    FuncCallIns aIns = (FuncCallIns)ins;
 			    FuncCallIns nIns = aIns.createSubs(subMap);
 			    nList.add(nIns);
-				
 			} else if (ins instanceof FuncDefIns) {
 			    FuncDefIns aIns = (FuncDefIns)ins;
 			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret);
@@ -142,6 +145,47 @@ public class InstructionProcessor {
 		return nList;
 		
 	}
+	
+    /*
+     * Effect analysis should be done before this stage.
+     */
+    static private void InsLstProcessRetCall(
+            List<UtfplInstruction> insLst, TID FuncLab) {
+        ListIterator<UtfplInstruction> iter = insLst.listIterator();
+        while (iter.hasNext()) {
+            UtfplInstruction ins = iter.next();
+            if (ins instanceof MoveIns) {
+                // no-op
+            } else if (ins instanceof CondIns) {
+                CondIns aIns = (CondIns)ins;
+                InsLstProcessRetCall(aIns.m_btrue, FuncLab);
+                InsLstProcessRetCall(aIns.m_bfalse, FuncLab);
+            } else if (ins instanceof FuncCallIns) {
+                FuncCallIns aIns = (FuncCallIns) ins;
+                if (aIns.hasSideEffect()) {
+                    if (aIns.isRet()) {
+                        // Add one more move instruction for the case that last
+                        // instruction
+                        // is a call of function which has side-effect. Such
+                        // function will
+                        // be turned into process in the next stage.
+                        TID tempHolder = TID.createLocalVar(FuncLab.getID()
+                                + "_tret");
+                        TID endHolder = aIns.m_holder;
+                        aIns.m_holder = tempHolder;
+                        MoveIns extraIns = new MoveIns(endHolder, tempHolder);
+                        iter.add(extraIns);
+                    }
+                }
+            } else if (ins instanceof FuncDefIns) {
+                FuncDefIns aIns = (FuncDefIns)ins;
+                InsLstProcessRetCall(aIns.m_body, aIns.m_name);  
+            } else {
+                throw new Error("Not supported");
+            }
+        }
+        return;
+    }
 	
 	
     static private List<FuncDefIns> getAllFunctions(List<UtfplInstruction> inslst) {
@@ -171,7 +215,7 @@ public class InstructionProcessor {
     /*
      * Check whether this function has side effect.
      */
-    static public Map<FuncDefIns, Boolean> markSideEffectFunLst(List<FuncDefIns> funlst) {
+    static private Map<FuncDefIns, Boolean> markSideEffectFunLst(List<FuncDefIns> funlst) {
         // todo
         Map<FuncDefIns, Boolean> fmap = new HashMap<FuncDefIns, Boolean>();
         for (FuncDefIns funDec: funlst) {

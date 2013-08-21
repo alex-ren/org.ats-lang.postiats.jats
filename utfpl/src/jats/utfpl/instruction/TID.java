@@ -13,8 +13,16 @@ public class TID implements ValPrim {
     private int m_uid;
     private Type m_type;
     
+    public boolean equals(String name) {
+        return toString().equals(name);
+    }
+    
+    public boolean isRet() {
+        return Type.eRetHolder == m_type;
+    }
+    
     public boolean isLocal() {
-        return Type.other == m_type;
+        return Type.eLocalVar == m_type;
     }
     
     public boolean isPara() {

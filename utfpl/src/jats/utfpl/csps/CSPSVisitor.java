@@ -8,11 +8,11 @@ public interface CSPSVisitor {
     
     public Object visit(CIMove ins, CBlock curBlk);
     public Object visit(CIFunCall ins, CBlock curBlk);
+    public Object visit(CIProcessDef proc, CBlock curBlk);
     
     public Object visit(CTempID v, CBlock curBlk);
     public Object visit(CTempVal v, CBlock curBlk);
-    
-    public Object visit(CIProcessDef proc);
+
     
 
 }

@@ -9,40 +9,67 @@ grp_lst_proc_st(lst) ::= <<
 >>
 
 event_process_st(evt, proc) ::= <<
-<evt> -> <proc>
+<evt> -> <proc;wrap="\n">
 >>
 
 event_event_st(evt1, evt2) ::= <<
-<evt1> -> <evt2>
+<evt1> -> <evt2;wrap="\n">
 >>
 
 process_event_st(proc, evt) ::= <<
-<proc>; <evt>
+<proc>; <evt;wrap="\n">
 >>
 
 process_process_st(proc1, proc2) ::= <<
-<proc1>; <proc2>
+<proc1>; <proc2;wrap="\n">
 >>
 
 event_block_st(inslst) ::= <<
-step{<inslst; separator=" ">}
+step{<inslst; wrap="\n    ", separator=" ">}
 >>
 
 cond_block_st(cond, btrue, bfalse) ::= <<
-ifa (<cond>) then {<btrue>}
-else {<bfalse>}
+ifa (<cond>) then {
+    <btrue> 
+} else { 
+    <bfalse> 
+}
 >>
 
 process_call_block_st(lab, args) ::= <<
 <lab>(<args; separator=", ">)
 >>
 
-move_ins_st(dst, src) ::= <<
-<dst> = <src>;
+move_ins_st(dst, src, v, push, ret) ::= <<
+<dst> = <src>; <if(ret)>deleteFrame();push(<v>);<elseif(push)>push(<v>);<endif>
 >>
 
-fun_call_ins_st(dst, lab, args) ::= <<
-<dst> = <lab>(<args; separator=", ">);
+fun_call_ins_st(dst, lab, args, v, push, ret) ::= <<
+<dst> = <lab>(<args; separator=", ">); <if(ret)>deleteFrame();push(<v>);<elseif(push)>push(<v>);<endif>
+>>
+
+para_def_st(v) ::= <<
+<v>
+>>
+
+val_def_st(v) ::= <<
+var <v>
+>>
+
+val_use_name_st(v) ::= <<
+<v>
+>>
+
+val_use_stack_st(v, loc) ::= <<
+<v>@(<get_from_stack_st(loc)>)
+>>
+
+get_from_stack_st(loc) ::= <<
+get(<loc.frame>, <loc.offset>)
+>>
+
+put_to_stack_st(v) ::= <<
+put(<v>)
 >>
 
 temp_val_st(v) ::= <<
@@ -50,14 +77,6 @@ temp_val_st(v) ::= <<
 >>
 
 global_id_st(id) ::= <<
-<id>
->>
-
-local_id_def_st(id) ::= <<
-var <id>
->>
-
-local_id_use_st(id) ::= <<
 <id>
 >>
 
@@ -70,15 +89,19 @@ var <gvar>
 >>
 
 proc_lst_st(proclst) ::= <<
-<proclst; separator="\n">
+<proclst; separator="\n\n">
 >>
 
 main_proc_st(mainlab, body) ::= <<
 <mainlab>() = <body>
 >>
 
-proc_st(lab, paras, body) ::= <<
-<lab>(<paras; separator="\n">) = <body>
+proc_def_st(lab, paras, esc_paras, body) ::= <<
+<lab>(<paras; separator="\n">) = <proc_preloge_st(esc_paras)> -> <body>
+>>
+
+proc_preloge_st(paras) ::= <<
+preloge{newframe(); <paras:{x| push(<x>)}; separator=";">}
 >>
 
 
@@ -87,9 +110,8 @@ program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
 
 <proc_lst_st(proclst)>
 
-<mainproc>
+==> <mainproc>
 
-<mainlab>()
 >>
 
 

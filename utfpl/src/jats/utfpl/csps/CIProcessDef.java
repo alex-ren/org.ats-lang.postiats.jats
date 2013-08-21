@@ -19,12 +19,26 @@ public class CIProcessDef implements CInstruction {
 
     @Override
     public Object accept(CSPSVisitor visitor) {
-        return visitor.visit(this);
+        return visitor.visit(this, m_blk);
     }
 
     @Override
     public CBlock getBlock() {
         return m_blk;
+    }
+
+    @Override
+    public int process(int offset) {
+        int newOffset = 0;
+        for (CTempID para: m_paras) {
+            newOffset = para.processFirstOccurrence(newOffset);
+        }
+
+        for (CBlock cb: m_body) {
+            newOffset = cb.process(newOffset);
+        }
+        
+        return offset;  // offset is not changed.
     }
     
 

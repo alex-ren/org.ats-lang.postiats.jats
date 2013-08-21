@@ -32,7 +32,7 @@ public class CSPSPrinter implements CSPSVisitor {
         st.add("mainproc", printMain(inputProg.m_main));
         st.add("mainlab", "main");
         
-        return st.render();
+        return st.render(80);
         
     }
     
@@ -172,8 +172,17 @@ public class CSPSPrinter implements CSPSVisitor {
 
     @Override
     public Object visit(CIMove ins, CBlock curBlk) {
-        // move_ins_st(dst, src) ::= <<
-        ST st = m_stg.getInstanceOf("move_ins_st");
+        ST st = null;
+       // move_ins_st(dst, src, v, push, ret) ::= <<
+        st = m_stg.getInstanceOf("move_ins_st");
+        st.add("v", ins.m_holder);
+        
+        if (ins.needStack()) {
+            st.add("push", true);
+        } else if (ins.isRet()) {
+            st.add("ret", true);
+        }
+
         st.add("dst", ins.m_holder.accept(this, curBlk));
         st.add("src", ins.m_vp.accept(this, curBlk));
         return st;
@@ -181,10 +190,20 @@ public class CSPSPrinter implements CSPSVisitor {
 
     @Override
     public Object visit(CIFunCall ins, CBlock curBlk) {
-        // fun_call_ins_st(dst, lab, args) ::= <<
-        ST st = m_stg.getInstanceOf("fun_call_ins_st");
+        ST st = null;
+        // fun_call_ins_st(dst, lab, argsv, push, ret) ::= <<
+        st = m_stg.getInstanceOf("fun_call_ins_st");
+        st.add("v", ins.m_ret);
+        
+        if (ins.needStack()) {
+            st.add("push", true);
+        } else if (ins.isRet()) {
+            st.add("ret", true);
+        }
+
         st.add("dst", ins.m_ret.accept(this, curBlk));
         st.add("lab", ins.m_funlab);
+        
         for (CTemp arg: ins.m_args) {
             st.add("args", arg.accept(this, curBlk));
         }
@@ -197,9 +216,27 @@ public class CSPSPrinter implements CSPSVisitor {
         if (v.getTID().isGlobal()) {
             st = m_stg.getInstanceOf("global_id_st");
             st.add("id", v);
-        } else {
-            st = m_stg.getInstanceOf("temp_val_st");
-            st.add("v", v);
+        } else {  // not global variable
+            if (v.isDefinition()) {
+                if (v.isPara()) {
+                    st = m_stg.getInstanceOf("para_def_st");
+                    st.add("v", v);
+                } else {
+                    st = m_stg.getInstanceOf("val_def_st");
+                    st.add("v", v);
+                }
+
+            } else {  // this is the usage
+                if (v.isDefinedInside(curBlk)) {
+                    st = m_stg.getInstanceOf("val_use_name_st");
+                    st.add("v", v);
+                } else {
+                    // val_use_stack_st(loc) ::= <<
+                    st = m_stg.getInstanceOf("val_use_stack_st");
+                    st.add("v", v);
+                    st.add("loc", v.getStackInfo());
+                }
+            }
         }
         return st;
     }
@@ -213,13 +250,16 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIProcessDef proc) {
-        // proc_st(lab, paras, body) ::= <<
-        ST st = m_stg.getInstanceOf("proc_st");
+    public Object visit(CIProcessDef proc, CBlock blk) {
+        // proc_def_st(lab, paras, body) ::= <<
+        ST st = m_stg.getInstanceOf("proc_def_st");
         st.add("lab", proc.m_name);
         
         for (CTempID para: proc.m_paras) {
             st.add("paras", para.accept(this, null));
+            if (para.isEscaped()) {
+                st.add("esc_paras", para.accept(this, null));
+            }
         }
         
         st.add("body", print(proc.m_body));

@@ -1,5 +1,6 @@
 package jats.utfpl.csps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.instruction.TID;
@@ -33,5 +34,24 @@ public class CProcessCallBlock extends CAdvancedBlock {
     @Override
     public Object accept(CSPSVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    int process(int offset) {
+        offset = m_ret.processFirstOccurrence(offset);
+        
+        List<CTemp> args = new ArrayList<CTemp>();
+        for (CTemp arg: m_args) {
+            if (arg instanceof CTempID) {
+                CTempID ctid = (CTempID)arg;
+                CTempID newTID = ctid.createForUsage(this.getLevel());  // create a new CTempID
+                args.add(newTID);
+            } else {
+                args.add(arg);
+            }
+        }
+        m_args = args;
+        
+        return offset;
     }
 }

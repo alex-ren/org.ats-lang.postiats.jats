@@ -19,27 +19,38 @@ public class CSPSTransformer {
     
     /*
      * The transformation includes the following.
-     * 1. Group instructions into block.
+     * 1. Group instructions into block. Prepare for the analysis of each values (def / use).
      * 2. Decide whether a value is used out of its visible scope.
      * 3. Add the concept of stack location.
      */
     public ProgramCSPS trans(ProgramIns inputProg) {
+        // 
         List<CIProcessDef> procLst = new ArrayList<CIProcessDef>();
         Map<TID, CTempID> subMap = new HashMap<TID, CTempID>();
         TID mainLab = TID.createUserFun("main");
         List<CBlock> body = InsLst2CBlockLst(inputProg.getInsLst(), subMap, mainLab, procLst, 0);
 
-        // todo
-        // add stack concept
+        // add the concept of stack
+        processBlockLstForStack(body);
         
+        // remove the CIProcessDef
+        CSPSEraser eraser= new CSPSEraser(body);
+        eraser.erase();
+
         ProgramCSPS outputProg = new ProgramCSPS(inputProg.getGlobalVars(), body, procLst);
         return outputProg;
     }
     
-    static private void processBlockLst(List<CBlock> blkLst, int level) {
+    /*
+     * The processing includes the following.
+     * 1. Decide whether a value is used out of its visible scope.
+     * 2. Add the concept of stack location according to the analysis result of 1.
+     *    After this, there would be no identical CTempID at all.
+     */
+    static private void processBlockLstForStack(List<CBlock> blkLst) {
         int offset = 0;
         for (CBlock blk: blkLst) {
-            blk.process(level);            
+            offset = blk.process(offset);            
         }
     }
     
@@ -91,7 +102,7 @@ public class CSPSTransformer {
      * translate UtfplInstruction's into a preliminary form of CSPS instructions
      * Turning ValPrim into CTemp, or in essence turning TID into CTempID. 
      * The identity of each CTempID is important. It's possible that two different
-     * CTempID has the same TID.
+     * CTempID has the same TID in the case for CCondBlock.
      * subMap: inout
      * outProcs: output
      *   The new functions defined in the input "inslst" will be put into the list.

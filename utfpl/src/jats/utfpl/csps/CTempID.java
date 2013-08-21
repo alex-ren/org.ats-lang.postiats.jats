@@ -3,8 +3,6 @@ package jats.utfpl.csps;
 import java.util.ArrayList;
 import java.util.List;
 
-import antlr.collections.Stack;
-
 import jats.utfpl.instruction.TID;
 
 /*
@@ -34,6 +32,52 @@ public class CTempID implements CTemp {
         }
     }
     
+    public boolean isRet() {
+        return m_tid.isRet();
+    }
+    
+    public boolean equals(String name) {
+        return m_tid.equals(name);
+    }
+    
+    public StackLocation getStackInfo() {
+        return m_loc;
+    }
+    
+    public boolean isPara() {
+        return m_tid.isPara();
+    }
+    
+    /*
+     * This function is called when an object of CTempID is seen at the first time.
+     * 
+     */
+    public int processFirstOccurrence(int offset) {
+        updateEscaped();
+        setDefinition();  // indicating that this is a definition.
+        if (isEscaped()) {
+            offset =  updateStackLocation(offset);
+        }
+        return offset;
+    }
+    
+    
+    public boolean isDefinition() {
+        return m_isDef;
+    }
+    
+    public boolean isDefinedInside(CBlock grp) {
+        if (m_def.m_grp == grp) {
+            return true;
+        } else {
+            if (m_tid.isPara() && m_def.m_level == grp.getLevel()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    
     public CTempID(TID tid,
     		StackLocation loc,
     		EntityLocation def,
@@ -49,21 +93,31 @@ public class CTempID implements CTemp {
     	m_isDef = isDef;
     }
     
-    public CTempID createForStack(int level) {
-    	// for closure, m_def.m_level - level may be less than 0
-    	StackLocation loc = new StackLocation(m_def.m_level - level, m_loc.m_offset);
+    
+    // Create a new CTempID indicating the usage of a value.
+    public CTempID createForUsage(int level) {
+        StackLocation loc = null;
+        if (isEscaped()) {
+
+            // for closure, m_def.m_level - level may be less than 0
+            loc = new StackLocation(m_def.m_level - level, m_loc.m_offset);
+        } else {
+            loc = m_loc;
+        }
     	CTempID ret = new CTempID(m_tid, loc, m_def, m_usageLst, m_isEscaped, false);
     	return ret;
-    	
     }
     
-    public int updateStackLocation(int offset) {
+    private void setDefinition() {
+        m_isDef = true;
+    }
+    
+    private int updateStackLocation(int offset) {
     	m_loc = new StackLocation(m_def.m_level, offset);
-    	m_isDef = true;
     	return offset + 1;
     }
     
-    public void updateEscaped() {
+    private void updateEscaped() {
     	if (m_tid.isPara()) {
     		for (EntityLocation loc: m_usageLst) {
     			if (loc.m_level != m_def.m_level) {

@@ -80,6 +80,26 @@ public class CCondBlock extends CAdvancedBlock {
         return visitor.visit(this);
     }
 
+    @Override
+    int process(int offset) {
+        if (m_cond instanceof CTempID) {
+            CTempID ctid = (CTempID)m_cond;
+            m_cond = ctid.createForUsage(this.getLevel());  // create a new CTempID
+        }
+        int offsetTrue = offset;
+        int offsetFalse = offset;
+        
+        for (CBlock cb: m_tb) {
+            offsetTrue = cb.process(offsetTrue);
+        }
+        
+        for (CBlock cb: m_fb) {
+            offsetFalse = cb.process(offsetFalse);
+        }
+        
+        return offset;  // offset is unchanged.
+    }
+
 }
 
 

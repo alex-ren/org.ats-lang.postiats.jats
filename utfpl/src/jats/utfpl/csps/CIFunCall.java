@@ -2,6 +2,7 @@ package jats.utfpl.csps;
 
 import jats.utfpl.instruction.TID;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CIFunCall implements CInstruction {
@@ -20,6 +21,15 @@ public class CIFunCall implements CInstruction {
         
     }
     
+    public boolean isRet() {
+        return m_ret.isRet();
+    }
+    
+    public boolean needStack() {
+        return m_ret.isEscaped();
+    }
+    
+
     @Override
     public Object accept(CSPSVisitor visitor) {
         return visitor.visit(this, m_blk);
@@ -29,5 +39,26 @@ public class CIFunCall implements CInstruction {
     public CBlock getBlock() {
         return m_blk;
     }
+
+    @Override
+    public int process(int offset) {
+        offset = m_ret.processFirstOccurrence(offset);
+        
+        List<CTemp> args = new ArrayList<CTemp>();
+        for (CTemp arg: m_args) {
+            if (arg instanceof CTempID) {
+                CTempID ctid = (CTempID)arg;
+                CTempID newTID = ctid.createForUsage(m_blk.getLevel());  // create a new CTempID
+                args.add(newTID);
+            } else {
+                args.add(arg);
+            }
+        }
+        m_args = args;
+        
+        return offset;
+        
+    }
+
 }
 

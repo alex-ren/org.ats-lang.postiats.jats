@@ -5,5 +5,5 @@ public interface CInstruction {
     public Object accept(CSPSVisitor visitor);
     public CBlock getBlock();
     
-    public int process(int level);
+    public int process(int offset);
 }

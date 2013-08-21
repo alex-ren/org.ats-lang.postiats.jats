@@ -12,6 +12,13 @@ public class CIMove implements CInstruction {
         m_blk = blk;
     }
     
+    public boolean isRet() {
+        return m_holder.isRet();
+    }
+    public boolean needStack() {
+        return m_holder.isEscaped();
+    }
+    
     @Override
     public Object accept(CSPSVisitor visitor) {
         return visitor.visit(this, m_blk);
@@ -24,16 +31,11 @@ public class CIMove implements CInstruction {
 
     @Override
     public int process(int offset) {
-        m_holder.updateEscaped();
-        if (m_holder.isEscaped()) {
-            offset = m_holder.updateStackLocation(offset);
-        }
+        offset = m_holder.processFirstOccurrence(offset);
         
         if (m_vp instanceof CTempID) {
             CTempID ctid = (CTempID)m_vp;
-            if (ctid.isEscaped()) {
-                m_vp = ctid.createForStack(m_blk.getLevel());  // create a new CTempID
-            }
+            m_vp = ctid.createForUsage(m_blk.getLevel());  // create a new CTempID
         }
         
         return offset;
