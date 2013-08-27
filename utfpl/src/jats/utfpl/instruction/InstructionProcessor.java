@@ -170,7 +170,7 @@ public class InstructionProcessor {
                         // function will
                         // be turned into process in the next stage.
                         TID tempHolder = TID.createLocalVar(FuncLab.getID()
-                                + "_tret");
+                                + "_tret", TID.Type.eUnknown);
                         TID endHolder = aIns.m_holder;
                         aIns.m_holder = tempHolder;
                         MoveIns extraIns = new MoveIns(endHolder, tempHolder);
@@ -186,33 +186,7 @@ public class InstructionProcessor {
         }
         return;
     }
-	
-	
-    static private List<FuncDefIns> getAllFunctions(List<UtfplInstruction> inslst) {
-        // Assume here that there is no function inside function for simplicity.
-        List<FuncDefIns> funlst = new ArrayList<FuncDefIns>();
-        for (UtfplInstruction ins: inslst) {
-            if (ins instanceof FuncDefIns) {
-                funlst.add((FuncDefIns) ins);
-            }
-        }
-        return funlst;
-    }
-    
-    
-    /*
-     * Keep the input list unmodified. One instruction can deal
-     * with only one global variable.
-     */
-    static private List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> insLst) {
-        GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
-        List<UtfplInstruction> body = visitor.addInsForGlobalVar(insLst);
-        return body;
-        
-    }
-    
 
-    
     /*
      * Check whether this function has side effect.
      */
@@ -259,7 +233,7 @@ public class InstructionProcessor {
         @Override
         public Object visit(FuncCallIns ins) {
             if (ins.hasSideEffect() && ins.m_holder.isGlobal()) {
-                TID temp = TID.createLocalVar(ins.m_funlab + "_tret");
+                TID temp = TID.createLocalVar(ins.m_funlab + "_tret", TID.Type.eUnknown);
                 FuncCallIns nCall = new FuncCallIns(temp, ins.m_funlab, ins.m_args);
                 MoveIns nMove = new MoveIns(ins.m_holder, temp);
                 m_list.add(nCall);
@@ -286,7 +260,7 @@ public class InstructionProcessor {
             if (ins.m_vp instanceof TID) {
                 TID src = (TID)ins.m_vp;
                 if (src.isGlobal() && ins.m_holder.isGlobal()) {
-                    TID temp = TID.createLocalVar(src.getID() + "_temp_");
+                    TID temp = TID.createLocalVar(src.getID() + "_temp_", TID.Type.eUnknown);
                     MoveIns step1 = new MoveIns(temp, src);
                     MoveIns step2 = new MoveIns(ins.m_holder, temp);
                     m_list.add(step1);

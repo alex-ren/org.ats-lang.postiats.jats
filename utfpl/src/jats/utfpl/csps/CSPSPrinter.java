@@ -243,8 +243,11 @@ public class CSPSPrinter implements CSPSVisitor {
                     st = m_stg.getInstanceOf("val_use_name_st");
                     st.add("v", v);
                 } else {
-                    // val_use_stack_st(loc) ::= <<
-                    st = m_stg.getInstanceOf("val_use_stack_st");
+                    if (v.getTID().isBool()) {
+                        st = m_stg.getInstanceOf("val_use_stack_bool_st");
+                    } else {
+                        st = m_stg.getInstanceOf("val_use_stack_st");
+                    }
                     st.add("v", v);
                     st.add("loc", v.getStackInfo());
                 }
@@ -255,8 +258,8 @@ public class CSPSPrinter implements CSPSVisitor {
 
     @Override
     public Object visit(CTempVal v, CBlock curBlk) {
-        // temp_val_st(v) ::= <<
-        ST st = m_stg.getInstanceOf("temp_val_st");
+        // temp_atom_val_st(v) ::= <<
+        ST st = m_stg.getInstanceOf("temp_atom_val_st");
         st.add("v", v.m_v);
         return st;
     }

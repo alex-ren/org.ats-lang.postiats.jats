@@ -110,7 +110,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(AppExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("app");
+            holder = TID.createLocalVar("app", TID.Type.eUnknown);
             // m_inslst.add(new VarDefIns(holder));
         }
         
@@ -163,12 +163,15 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(IfExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("if");
+            holder = TID.createLocalVar("if", TID.Type.eUnknown);
 //            m_inslst.add(new VarDefIns(holder));
         }
         
         node.m_cond.accept(this);
         ValPrim vpCond = m_vpOut;  //
+        if (vpCond instanceof TID) {
+            ((TID)vpCond).setType(TID.Type.eBool);
+        }
         
         InsTransformer tVisitor = new InsTransformer();
         tVisitor.setTIDIn(holder);
@@ -201,7 +204,7 @@ public class InsTransformer implements TreeVisitor {
         }
         
         InsTransformer bodyVisitor = new InsTransformer();
-        TID ret = TID.createLocalVar("ret");
+        TID ret = TID.createLocalVar("ret", TID.Type.eUnknown);
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
@@ -218,7 +221,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(LetExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("let");
+            holder = TID.createLocalVar("let", TID.Type.eUnknown);
 //            m_inslst.add(new VarDefIns(holder));
         }
         

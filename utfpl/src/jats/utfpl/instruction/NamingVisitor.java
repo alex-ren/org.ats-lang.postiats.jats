@@ -136,7 +136,7 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(ValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
         if (null != node.m_id) {
-            TID tid = TID.createLocalVar(node.m_id.m_sid);
+            TID tid = TID.createLocalVar(node.m_id.m_sid, TID.Type.eUnknown);
             node.m_id.updateTID(tid);
             this.m_scope.addValue(tid.getID(), tid);
         }
