@@ -45,99 +45,111 @@ public class CSPSPrinter implements CSPSVisitor {
     }
     
     private ST print(List<CBlock> blks) {
+        // blk_lst_st(blklst) ::= <<
+        ST st = m_stg.getInstanceOf("blk_lst_st");
         ListIterator<CBlock> iter = blks.listIterator();
-        
-        CBlock.Type preType = null;
-
-        Object previous = null;
-        
-        if (iter.hasNext()) {
-            CBlock cb = iter.next();
-            if (cb instanceof CEventBlock) {
-                preType = CBlock.Type.evt;
-                previous = cb.accept(this);
-                
-            } else if (cb instanceof CAdvancedBlock) {
-                preType = CBlock.Type.proc;
-                previous = cb.accept(this);
-            } else {
-                throw new Error("not supported");
-            }
-            while (iter.hasNext()) {
-                cb = iter.next();
-                if (cb instanceof CEventBlock) {
-                   
-                    switch (preType)
-                    {
-                    case proc: {
-                        ST st = m_stg.getInstanceOf("process_event_st");
-                        st.add("proc", previous);
-                        st.add("evt", cb.accept(this));
-                        previous = st;
-                        break;
-                    }
-                    case evt: {
-                        ST st = m_stg.getInstanceOf("event_event_st");
-                        st.add("evt1", previous);
-                        st.add("evt2", cb.accept(this));
-                        previous = st;
-                        break;
-                    }
-                    default:
-                        throw new Error("not supported");
-                    }
-                    
-                    preType = CBlock.Type.evt;
-                    
-                } else if (cb instanceof CAdvancedBlock) {
-                    switch (preType)
-                    {
-                    case proc: {
-                        ST st = m_stg.getInstanceOf("process_process_st");
-                        st.add("proc1", previous);
-                        st.add("proc2", cb.accept(this));
-                        previous = st;
-                        break;
-                    }
-                    case evt: {
-                        ST st = m_stg.getInstanceOf("event_process_st");
-                        st.add("evt", previous);
-                        st.add("proc", cb.accept(this));
-                        previous = st;
-                        break;
-                    }
-                    default:
-                        throw new Error("not supported");
-                    }
-                    
-                    preType = CBlock.Type.proc;
-                    
-                } else {
-                    throw new Error("not supported");
-                }
-            }  // end of [while]         
-        } else {
-            previous = null;
+        while (iter.hasNext()) {
+            st.add("blklst", iter.next().accept(this));
         }
-        
-        ST st = null;
-        switch (preType)
-        {
-        case proc: {
-            st = m_stg.getInstanceOf("grp_lst_proc_st");
-            break;
-        }
-        case evt: {
-            st = m_stg.getInstanceOf("grp_lst_evt_st");
-            break;
-        }
-        default:
-            throw new Error("not supported");
-        }
-        
-        st.add("lst", previous);
-
         return st;
+        
+//        CBlock.Type preType = null;
+//
+//        Object previous = null;
+//        
+//        ListIterator<CBlock> iter = blks.listIterator();
+//        
+//        if (iter.hasNext()) {
+//            CBlock cb = iter.next();
+//            if (cb instanceof CEventBlock) {
+//                preType = CBlock.Type.evt;
+//                previous = cb.accept(this);
+//                
+//            } else if (cb instanceof CAdvancedBlock) {
+//                preType = CBlock.Type.proc;
+//                previous = cb.accept(this);
+//            } else {
+//                throw new Error("not supported");
+//            }
+//            while (iter.hasNext()) {
+//                cb = iter.next();
+//                if (cb instanceof CEventBlock) {
+//                   
+//                    switch (preType)
+//                    {
+//                    case proc: {
+//                        ST st = m_stg.getInstanceOf("process_event_st");
+//                        st.add("proc", previous);
+//                        st.add("evt", cb.accept(this));
+//                        previous = st;
+//                        break;
+//                    }
+//                    case evt: {
+//                        ST st = m_stg.getInstanceOf("event_event_st");
+//                        st.add("evt1", previous);
+//                        st.add("evt2", cb.accept(this));
+//                        previous = st;
+//                        break;
+//                    }
+//                    default:
+//                        throw new Error("not supported");
+//                    }
+//                    
+//                    preType = CBlock.Type.evt;
+//                    
+//                } else if (cb instanceof CAdvancedBlock) {
+//                    switch (preType)
+//                    {
+//                    case proc: {
+//                        ST st = m_stg.getInstanceOf("process_process_st");
+//                        st.add("proc1", previous);
+//                        st.add("proc2", cb.accept(this));
+//                        previous = st;
+//                        break;
+//                    }
+//                    case evt: {
+//                        ST st = m_stg.getInstanceOf("event_process_st");
+//                        st.add("evt", previous);
+//                        st.add("proc", cb.accept(this));
+//                        previous = st;
+//                        break;
+//                    }
+//                    default:
+//                        throw new Error("not supported");
+//                    }
+//                    
+//                    preType = CBlock.Type.proc;
+//                    
+//                } else {
+//                    throw new Error("not supported");
+//                }
+//            }  // end of [while]         
+//        } else {
+//            previous = null;
+//        }
+//        
+//        ST st = null;
+//        if (null == preType) {
+//            st = m_stg.getInstanceOf("grp_empty_st");
+//        } else {
+//            switch (preType)
+//            {
+//            case proc: {
+//                st = m_stg.getInstanceOf("grp_lst_proc_st");
+//                break;
+//            }
+//            case evt: {
+//                st = m_stg.getInstanceOf("grp_lst_evt_st");
+//                break;
+//            }
+//            default:
+//                throw new Error("not supported");
+//            }
+//            
+//            st.add("lst", previous);
+//        }
+//
+//        return st;
     }
 
     @Override

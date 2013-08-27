@@ -1,0 +1,17 @@
+var gx_52
+
+move-- gx_52 = 3
+fun foo_50 (x_53)
+{
+  // ret is ret_55
+  ret_55 = xyz_51(x_53)
+  return ret_55
+}
+
+fun xyz_51 (x_54)
+{
+  // ret is ret_56
+  move-- ret_56 = 1
+  return ret_56
+}
+

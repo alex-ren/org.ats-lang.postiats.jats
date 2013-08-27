@@ -1,0 +1,18 @@
+var g_17
+
+fun fact_15 (x_16)
+{
+  // ret is ret_18
+  app_19 = gt(x_16, 0)
+  if app_19 then
+    app_21 = sub(x_16, 1)
+    app_20 = fact_15(app_21)
+    ret_18 = mul(app_20, x_16)
+  else
+    move-- ret_18 = 1
+
+  return ret_18
+}
+
+move-- g_17 = 0
+g_17 = fact_15(3)

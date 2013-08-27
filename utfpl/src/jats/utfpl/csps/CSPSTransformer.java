@@ -144,6 +144,7 @@ public class CSPSTransformer {
                         cblock = new CEventBlock(level);
                     }
                     insBlockList.add(cprocess);
+
                 } else {
                 	List<CTemp> nLst = ValPrimLst2CTempLst(aIns.m_args, subMap, funLab, cblock, level);
                 	CTempID ctHolder = TID2CTempID(aIns.m_holder, subMap, funLab, cblock, level);

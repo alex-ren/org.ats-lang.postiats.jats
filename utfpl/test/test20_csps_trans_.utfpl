@@ -18,7 +18,6 @@ fun foo (x) = let
       end
   val r = xyz (3)
   val q = hello (z, r)
-  
 in
   mojo (q, y, x)
 end

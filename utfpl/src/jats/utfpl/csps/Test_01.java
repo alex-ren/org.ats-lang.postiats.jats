@@ -17,7 +17,9 @@ import jats.utfpl.tree.TreePrinter;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,14 +37,16 @@ public class Test_01 {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/test20_csps_trans_.utfpl"
+//                "test/test20_csps_trans_.utfpl"
 //                , "test/test21_csps_trans_ret_proc_call.utfpl"
-                , "test/test22_csp_trans_2if.utfpl"
+//                , "test/test22_csp_trans_2if.utfpl"
+                "test/test23_csp_trans_fact.utfpl"
         
         };
 
         for (String filename: filenames) {
             System.out.println("==Processing file " + filename + "==========");
+            System.out.println("============================================");
             ANTLRFileStream fileStream = new ANTLRFileStream(filename);
             
             File file = new File(filename);
@@ -117,11 +121,11 @@ public class Test_01 {
             System.out.println("==CSP# code is ==========================");
             System.out.println(outputCSPS);
 
-//            FileWriter fwINS = new FileWriter("test/" + classname
-//                    + ".ins");
-//            BufferedWriter bwINS = new BufferedWriter(fwINS);
-//            bwINS.write(outputINS);
-//            bwINS.close();
+            FileWriter fwINS = new FileWriter("test/" + classname
+                    + ".csps");
+            BufferedWriter bwINS = new BufferedWriter(fwINS);
+            bwINS.write(outputINS);
+            bwINS.close();
                         
             /* ******** ******** */
 

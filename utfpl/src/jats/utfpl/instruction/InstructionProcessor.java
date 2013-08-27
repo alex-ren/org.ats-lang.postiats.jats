@@ -20,12 +20,12 @@ public class InstructionProcessor {
         Map<TID, TID> subMap = new HashMap<TID, TID>();
         TID mainFunLab = TID.createUserFun("main");
         
-        // todo
-        // call addInsForGlobalVar
+        GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
+        List<UtfplInstruction> insLst1 = visitor.addInsForGlobalVar(inputProg.getInsLst());
         
-        List<UtfplInstruction> insLst = InsLstProcess(inputProg.getInsLst(), subMap, mainFunLab, TID.ANONY);
-        InsLstProcessRetCall(insLst, mainFunLab);
-        return new ProgramIns(inputProg.getGlobalVars(), insLst);
+        List<UtfplInstruction> insLst2 = InsLstProcess(insLst1, subMap, mainFunLab, TID.ANONY);
+        InsLstProcessRetCall(insLst2, mainFunLab);
+        return new ProgramIns(inputProg.getGlobalVars(), insLst2);
     }
 	
     static public ValPrim subsVP(ValPrim vp, Map<TID, TID> subMap) {
@@ -204,9 +204,10 @@ public class InstructionProcessor {
      * Keep the input list unmodified. One instruction can deal
      * with only one global variable.
      */
-    static private List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> inslst) {
-        // todo
-        return inslst;
+    static private List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> insLst) {
+        GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
+        List<UtfplInstruction> body = visitor.addInsForGlobalVar(insLst);
+        return body;
         
     }
     
@@ -225,6 +226,83 @@ public class InstructionProcessor {
         }
         
         return fmap;
+        
+    }
+    
+    static class GlobalVarInsProcessor implements InsVisitor {
+        List<UtfplInstruction> m_list;
+        
+        public GlobalVarInsProcessor() {
+            m_list = new ArrayList<UtfplInstruction>();
+        }
+        
+        public List<UtfplInstruction> addInsForGlobalVar(List<UtfplInstruction> insLst) {
+            for (UtfplInstruction ins: insLst) {
+                ins.accept(this);
+            }
+            return m_list;
+        }
+
+        @Override
+        public Object visit(CondIns ins) {
+            GlobalVarInsProcessor visitorTrue = new GlobalVarInsProcessor();
+            List<UtfplInstruction> btrue = visitorTrue.addInsForGlobalVar(ins.m_btrue);
+            
+            GlobalVarInsProcessor visitorFalse = new GlobalVarInsProcessor();
+            List<UtfplInstruction> bfalse = visitorFalse.addInsForGlobalVar(ins.m_bfalse);
+            
+            CondIns nIns = new CondIns(ins.m_holder, ins.m_cond, btrue, bfalse);
+            m_list.add(nIns);
+            return m_list;
+        }
+
+        @Override
+        public Object visit(FuncCallIns ins) {
+            if (ins.hasSideEffect() && ins.m_holder.isGlobal()) {
+                TID temp = TID.createLocalVar(ins.m_funlab + "_tret");
+                FuncCallIns nCall = new FuncCallIns(temp, ins.m_funlab, ins.m_args);
+                MoveIns nMove = new MoveIns(ins.m_holder, temp);
+                m_list.add(nCall);
+                m_list.add(nMove);
+                return m_list;
+            } else {
+                m_list.add(ins);
+                return m_list;
+            }
+
+        }
+
+        @Override
+        public Object visit(FuncDefIns ins) {
+            GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
+            List<UtfplInstruction> body = visitor.addInsForGlobalVar(ins.m_body);
+            FuncDefIns nIns = new FuncDefIns(ins.m_name, ins.m_paralst, body, ins.m_ret);
+            m_list.add(nIns);
+            return m_list;
+        }
+
+        @Override
+        public Object visit(MoveIns ins) {
+            if (ins.m_vp instanceof TID) {
+                TID src = (TID)ins.m_vp;
+                if (src.isGlobal() && ins.m_holder.isGlobal()) {
+                    TID temp = TID.createLocalVar(src.getID() + "_temp_");
+                    MoveIns step1 = new MoveIns(temp, src);
+                    MoveIns step2 = new MoveIns(ins.m_holder, temp);
+                    m_list.add(step1);
+                    m_list.add(step2);
+                    return m_list;                    
+                }
+                else {
+                    m_list.add(ins);
+                    return m_list;
+                }
+            } else {
+                m_list.add(ins);
+                return m_list;
+            }
+
+        }
         
     }
 }

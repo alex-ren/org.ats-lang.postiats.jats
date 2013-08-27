@@ -61,6 +61,17 @@ public class CTempID implements CTemp {
         return offset;
     }
     
+    /*
+     * m_tid won't be global, which is guaranteed by 
+     */
+    public int processFirstOccurrenceProcCall(int offset) {
+        updateEscaped();
+        setDefinition();  // indicating that this is a definition.
+        offset = updateStackLocation(offset);  // no matter what, we increase 
+                           // the offset because proc would put the return value on the stack. 
+        return offset;
+    }
+    
     
     public boolean isDefinition() {
         return m_isDef;

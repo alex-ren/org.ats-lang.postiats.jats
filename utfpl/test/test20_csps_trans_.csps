@@ -1,0 +1,31 @@
+var gx_17
+
+move-- gx_17 = 3
+fun foo_15 (x_18)
+{
+  // ret is ret_29
+  move-- v_19 = 1
+  move-- gx_17 = 4
+  y_20 = sub(x_18, 1)
+  b_21 = gte(y_20, 1)
+  if b_21 then
+    t_23 = add(x_18, 2)
+    z_22 = mul(t_23, 3)
+  else
+    t1_24 = sub(x_18, 2)
+    t2_25 = sub(t1_24, 3)
+    z_22 = div(t2_25, 3)
+
+  r_26 = xyz_16(3)
+  q_27 = hello(z_22, r_26)
+  ret_29 = mojo(q_27, y_20, x_18)
+  return ret_29
+}
+
+fun xyz_16 (x_28)
+{
+  // ret is ret_30
+  move-- ret_30 = 1
+  return ret_30
+}
+

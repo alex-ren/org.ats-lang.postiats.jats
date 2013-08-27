@@ -38,7 +38,7 @@ public class CProcessCallBlock extends CAdvancedBlock {
 
     @Override
     int process(int offset) {
-        offset = m_ret.processFirstOccurrence(offset);
+        offset = m_ret.processFirstOccurrenceProcCall(offset);
         
         List<CTemp> args = new ArrayList<CTemp>();
         for (CTemp arg: m_args) {
