@@ -16,5 +16,9 @@ public class ProgramCSPS {
         m_main = main;
         m_procLst = procLst;
     }
+    
+    public Object accept(CSPSVisitor visitor) {
+        return visitor.visit(this);
+    }
 
 }

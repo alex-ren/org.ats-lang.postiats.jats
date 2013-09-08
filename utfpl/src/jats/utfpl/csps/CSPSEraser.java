@@ -84,4 +84,9 @@ public class CSPSEraser implements CSPSVisitor {
         throw new Error("Should not happen");
     }
 
+    @Override
+    public Object visit(ProgramCSPS prog) {
+        throw new Error("not support");
+    }
+
 }

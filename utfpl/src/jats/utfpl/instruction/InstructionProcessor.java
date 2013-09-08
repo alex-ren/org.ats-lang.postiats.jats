@@ -12,7 +12,7 @@ public class InstructionProcessor {
     
     /*
      * The content of process includes the following.
-     * 1. One block contains only one operation related to global variable.
+     * 1. One instruction contains only one operator related to global variable.
      * 2. Transformation of "if" branch.
      */
     public ProgramIns process(ProgramIns inputProg) {

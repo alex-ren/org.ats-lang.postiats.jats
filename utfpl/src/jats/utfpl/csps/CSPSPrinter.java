@@ -19,21 +19,9 @@ public class CSPSPrinter implements CSPSVisitor {
     }
     
     public String print(ProgramCSPS inputProg) {
-        // program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
-        ST st = m_stg.getInstanceOf("program_st");
-        for (TID gv: inputProg.m_globalVars) {
-            st.add("gvarlst", gv);
-        }
-        
-        for (CIProcessDef proc: inputProg.m_procLst) {
-            st.add("proclst", proc.accept(this));
-        }
-        
-        st.add("mainproc", printMain(inputProg.m_main));
-        st.add("mainlab", "main");
+        ST st = (ST)inputProg.accept(this);
         
         return st.render(80);
-        
     }
     
     private ST printMain(List<CBlock> body) {
@@ -278,6 +266,24 @@ public class CSPSPrinter implements CSPSVisitor {
         }
         
         st.add("body", print(proc.m_body));
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(ProgramCSPS prog) {
+        // program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
+        ST st = m_stg.getInstanceOf("program_st");
+        for (TID gv: prog.m_globalVars) {
+            st.add("gvarlst", gv);
+        }
+        
+        for (CIProcessDef proc: prog.m_procLst) {
+            st.add("proclst", proc.accept(this));
+        }
+        
+        st.add("mainproc", printMain(prog.m_main));
+        st.add("mainlab", "main");
         
         return st;
     }

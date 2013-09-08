@@ -13,6 +13,5 @@ public interface CSPSVisitor {
     public Object visit(CTempID v, CBlock curBlk);
     public Object visit(CTempVal v, CBlock curBlk);
 
-    
-
+    public Object visit(ProgramCSPS prog);
 }

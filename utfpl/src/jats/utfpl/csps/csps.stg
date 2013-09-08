@@ -122,6 +122,10 @@ program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
 
 // =====================
 var\<PStack> GStack = new PStack();
+channel ChSch 0;
+channel ChSchStart 0;
+
+
 // =====================
 <gvar_lst_st(gvarlst)>
 
