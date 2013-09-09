@@ -34,8 +34,7 @@ public class CIMove implements CInstruction {
         offset = m_holder.processFirstOccurrence(offset);
         
         if (m_vp instanceof CTempID) {
-            CTempID ctid = (CTempID)m_vp;
-            m_vp = ctid.createForUsage(m_blk.getLevel());  // create a new CTempID
+            ((CTempID)m_vp).updateForUsage(m_blk.getLevel());  // create a new CTempID
         }
         
         return offset;

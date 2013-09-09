@@ -2,7 +2,6 @@ package jats.utfpl.csps;
 
 import jats.utfpl.instruction.TID;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CIFunCall implements CInstruction {
@@ -43,18 +42,12 @@ public class CIFunCall implements CInstruction {
     @Override
     public int process(int offset) {
         offset = m_ret.processFirstOccurrence(offset);
-        
-        List<CTemp> args = new ArrayList<CTemp>();
+
         for (CTemp arg: m_args) {
             if (arg instanceof CTempID) {
-                CTempID ctid = (CTempID)arg;
-                CTempID newTID = ctid.createForUsage(m_blk.getLevel());  // create a new CTempID
-                args.add(newTID);
-            } else {
-                args.add(arg);
+                ((CTempID)arg).updateForUsage(m_blk.getLevel());
             }
         }
-        m_args = args;
         
         return offset;
         

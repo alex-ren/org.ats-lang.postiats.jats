@@ -26,7 +26,7 @@ public class CSPSTransformer {
     public ProgramCSPS trans(ProgramIns inputProg) {
         // 
         List<CIProcessDef> procLst = new ArrayList<CIProcessDef>();
-        Map<TID, CTempID> subMap = new HashMap<TID, CTempID>();
+        Map<TID, VariableInfo> subMap = new HashMap<TID, VariableInfo>();
         TID mainLab = TID.createUserFun("main");
         List<CBlock> body = InsLst2CBlockLst(inputProg.getInsLst(), subMap, mainLab, procLst, 0);
 
@@ -59,7 +59,7 @@ public class CSPSTransformer {
      * "map" may be updated.
      * "grp" is the group which holds the object of CTemp.
      */
-    static private CTemp ValPrim2CTemp(ValPrim vp, Map<TID, CTempID> map, TID funLab, CBlock grp, int level) {
+    static private CTemp ValPrim2CTemp(ValPrim vp, Map<TID, VariableInfo> map, TID funLab, CBlock grp, int level) {
         if (vp instanceof AtomValue) {
             return new CTempVal((AtomValue) vp);
         } else if (vp instanceof TID) {
@@ -73,7 +73,7 @@ public class CSPSTransformer {
     /*
      * Create a new list of CTemp from a list of ValPrim.
      */
-    static private List<CTemp> ValPrimLst2CTempLst(List<ValPrim> vpLst, Map<TID, CTempID> map, TID funLab, CBlock grp, int level) {
+    static private List<CTemp> ValPrimLst2CTempLst(List<ValPrim> vpLst, Map<TID, VariableInfo> map, TID funLab, CBlock grp, int level) {
     	List<CTemp> nLst = new ArrayList<CTemp>();
     	for (ValPrim vp: vpLst) {
     		CTemp newVp = ValPrim2CTemp(vp, map, funLab, grp, level);
@@ -83,17 +83,21 @@ public class CSPSTransformer {
     }
     
     /*
-     * If "tid" is not in the map, then it's a definition. 
-     * Create a new CTempID and put it into the map.
-     * Otherwise, "tid" is a usage, then update its field of usage.
+     * If "VariableInfo" is not in the map, then it's a definition. 
+     * Otherwise, it's a usage.
      */
-    static private CTempID TID2CTempID(TID tid, Map<TID, CTempID> map, TID funLab, CBlock grp, int level) {
-        CTempID ret = map.get(tid);
-        if (null == ret) {
-            ret = CTempID.createDef(tid, funLab, grp, level);
-            map.put(tid, ret);  // This is important.
+    static private CTempID TID2CTempID(TID tid, Map<TID, VariableInfo> map, TID funLab, CBlock grp, int level) {
+        EntityLocation loc = EntityLocation.create(tid, grp, level);
+        CTempID ret = null;
+        
+        VariableInfo vi = map.get(tid);
+        if (null == vi) {
+            vi = VariableInfo.create(tid, loc);
+            map.put(tid, vi);  // This is important.
+            ret = CTempID.createAsDef(vi, loc);
         } else {
-            ret.addUsageLoc(funLab, grp, level);
+            vi.addUsage(loc);
+            ret = CTempID.createAsUsage(vi, loc);
         }
         return ret;
     }
@@ -108,7 +112,7 @@ public class CSPSTransformer {
      *   The new functions defined in the input "inslst" will be put into the list.
      */
     static private List<CBlock> InsLst2CBlockLst(List<UtfplInstruction> inslst, 
-                                         Map<TID, CTempID> subMap,
+                                         Map<TID, VariableInfo> subMap,
                                          TID funLab,
                                          List<CIProcessDef> outProcs,
                                          int level
@@ -158,8 +162,8 @@ public class CSPSTransformer {
                     CCondBlock ccond = new CCondBlock(level);
                     CTemp ctCond = ValPrim2CTemp(aIns.m_cond, subMap, funLab, ccond, level);
                 	
-                	Map<TID, CTempID> subMapTrue = new HashMap<TID, CTempID>(subMap);
-                	Map<TID, CTempID> subMapFalse = new HashMap<TID, CTempID>(subMap);
+                	Map<TID, VariableInfo> subMapTrue = new HashMap<TID, VariableInfo>(subMap);
+                	Map<TID, VariableInfo> subMapFalse = new HashMap<TID, VariableInfo>(subMap);
                 	
                     List<CBlock> btrue = InsLst2CBlockLst(aIns.m_btrue, subMapTrue, funLab, outProcs, level);
                     List<CBlock> bfalse = InsLst2CBlockLst(aIns.m_bfalse, subMapFalse, funLab, outProcs, level);
@@ -179,7 +183,7 @@ public class CSPSTransformer {
             } else if (ins instanceof FuncDefIns) {
                 FuncDefIns aIns = (FuncDefIns)ins;
                 if (ins.hasSideEffect()) {
-                    Map<TID, CTempID> innerSubMap = new HashMap<TID, CTempID>(subMap);
+                    Map<TID, VariableInfo> innerSubMap = new HashMap<TID, VariableInfo>(subMap);
                     List<CIProcessDef> innerProcs = new ArrayList<CIProcessDef>();
                     CIProcessDef cProc = FunDef2CProcess(aIns, innerSubMap, innerProcs, cblock, level + 1);
                     cblock.add(cProc);
@@ -205,7 +209,7 @@ public class CSPSTransformer {
     
     static private CIProcessDef FunDef2CProcess(
             FuncDefIns funDef
-            , Map<TID, CTempID> subMap
+            , Map<TID, VariableInfo> subMap
             , List<CIProcessDef> outProcs
             , CBlock blk
             , int level) {
