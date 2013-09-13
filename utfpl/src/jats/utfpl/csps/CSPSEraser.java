@@ -58,29 +58,29 @@ public class CSPSEraser implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIMove ins, CBlock curBlk) {
+    public Object visit(CIMove ins) {
         throw new Error("Should not happen");
     }
 
     @Override
-    public Object visit(CIFunCall ins, CBlock curBlk) {
+    public Object visit(CIFunCall ins) {
         throw new Error("Should not happen");
     }
 
     @Override
-    public Object visit(CIProcessDef proc, CBlock curBlk) {
+    public Object visit(CIProcessDef proc) {
         CSPSEraser eraser = new CSPSEraser(proc.m_body);
         eraser.erase();
         return proc;
     }
 
     @Override
-    public Object visit(CTempID v, CBlock curBlk) {
+    public Object visit(CTempID v) {
         throw new Error("Should not happen");
     }
 
     @Override
-    public Object visit(CTempVal v, CBlock curBlk) {
+    public Object visit(CTempVal v) {
         throw new Error("Should not happen");
     }
 

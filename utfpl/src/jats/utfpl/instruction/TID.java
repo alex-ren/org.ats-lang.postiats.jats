@@ -6,6 +6,7 @@ import java.util.Map;
 public class TID implements ValPrim {
     static private int s_cnt = 0;
     static public TID ANONY = new TID("()", Category.other, Type.eVoid);
+    static public TID MAIN = new TID("_main_", Category.other, Type.eUnknown);
     
     enum Category {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, eRetHolder, other};
     enum Type {eBool, eInt, eVoid, eUnknown};

@@ -12,7 +12,7 @@ public class EntityLocation {
     }
     
     // Though, CBlock contains the information of level,
-    // for parameter, the grp is actually null.
+    // for parameter and global value, the grp is actually null.
     // Therefore, we need the information of level.
     private EntityLocation(TID funLab, CBlock grp, int level) {
         m_funLab = funLab;

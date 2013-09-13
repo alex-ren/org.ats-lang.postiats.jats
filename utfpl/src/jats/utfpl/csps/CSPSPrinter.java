@@ -1,7 +1,5 @@
 package jats.utfpl.csps;
 
-import jats.utfpl.instruction.TID;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ListIterator;
@@ -144,7 +142,7 @@ public class CSPSPrinter implements CSPSVisitor {
     public Object visit(CCondBlock blk) {
         ST st = m_stg.getInstanceOf("cond_block_st");
         // cond_block_st(cond, btrue, bfalse) ::= <<
-        st.add("cond", blk.m_cond.accept(this, blk));
+        st.add("cond", blk.m_cond.accept(this));
         st.add("btrue", print(blk.m_tb));
         st.add("bfalse", print(blk.m_fb));
         return st;
@@ -165,13 +163,13 @@ public class CSPSPrinter implements CSPSVisitor {
         ST st = m_stg.getInstanceOf("process_call_block_st");
         st.add("lab", blk.m_funlab);
         for (CTemp arg: blk.m_args) {
-            st.add("args", arg.accept(this, blk));
+            st.add("args", arg.accept(this));
         }
         return st;
     }
 
     @Override
-    public Object visit(CIMove ins, CBlock curBlk) {
+    public Object visit(CIMove ins) {
         ST st = null;
        // move_ins_st(dst, src, v, push, ret) ::= <<
         st = m_stg.getInstanceOf("move_ins_st");
@@ -183,13 +181,13 @@ public class CSPSPrinter implements CSPSVisitor {
             st.add("ret", true);
         }
 
-        st.add("dst", ins.m_holder.accept(this, curBlk));
-        st.add("src", ins.m_vp.accept(this, curBlk));
+        st.add("dst", ins.m_holder.accept(this));
+        st.add("src", ins.m_vp.accept(this));
         return st;
     }
 
     @Override
-    public Object visit(CIFunCall ins, CBlock curBlk) {
+    public Object visit(CIFunCall ins) {
         ST st = null;
         // fun_call_ins_st(dst, lab, argsv, push, ret) ::= <<
         st = m_stg.getInstanceOf("fun_call_ins_st");
@@ -201,17 +199,17 @@ public class CSPSPrinter implements CSPSVisitor {
             st.add("ret", true);
         }
 
-        st.add("dst", ins.m_ret.accept(this, curBlk));
+        st.add("dst", ins.m_ret.accept(this));
         st.add("lab", ins.m_funlab);
         
         for (CTemp arg: ins.m_args) {
-            st.add("args", arg.accept(this, curBlk));
+            st.add("args", arg.accept(this));
         }
         return st;
     }
 
     @Override
-    public Object visit(CTempID v, CBlock curBlk) {
+    public Object visit(CTempID v) {
         ST st = null;
         if (v.getTID().isGlobal()) {
             st = m_stg.getInstanceOf("global_id_st");
@@ -227,7 +225,7 @@ public class CSPSPrinter implements CSPSVisitor {
                 }
 
             } else {  // this is the usage
-                if (v.isDefinedInside(curBlk)) {
+                if (!v.isOutofScope()) {
                     st = m_stg.getInstanceOf("val_use_name_st");
                     st.add("v", v);
                 } else {
@@ -245,7 +243,7 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CTempVal v, CBlock curBlk) {
+    public Object visit(CTempVal v) {
         // temp_atom_val_st(v) ::= <<
         ST st = m_stg.getInstanceOf("temp_atom_val_st");
         st.add("v", v.m_v);
@@ -253,15 +251,15 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIProcessDef proc, CBlock blk) {
+    public Object visit(CIProcessDef proc) {
         // proc_def_st(lab, paras, body) ::= <<
         ST st = m_stg.getInstanceOf("proc_def_st");
         st.add("lab", proc.m_name);
         
         for (CTempID para: proc.m_paras) {
-            st.add("paras", para.accept(this, null));
+            st.add("paras", para.accept(this));
             if (para.isEscaped()) {
-                st.add("esc_paras", para.accept(this, null));
+                st.add("esc_paras", para.accept(this));
             }
         }
         
@@ -274,8 +272,8 @@ public class CSPSPrinter implements CSPSVisitor {
     public Object visit(ProgramCSPS prog) {
         // program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
         ST st = m_stg.getInstanceOf("program_st");
-        for (TID gv: prog.m_globalVars) {
-            st.add("gvarlst", gv);
+        for (VariableInfo gv: prog.m_globalVars) {
+            st.add("gvarlst", gv.getTID());
         }
         
         for (CIProcessDef proc: prog.m_procLst) {

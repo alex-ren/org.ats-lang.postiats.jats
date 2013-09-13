@@ -14,6 +14,10 @@ public class CTempID implements CTemp {
     private EntityLocation m_curLoc;  // The position of the current location of this entity of TID.
     
     public static CTempID createAsDef(VariableInfo vi, EntityLocation curLoc) {
+        if (vi.getTID().isGlobal()) {
+            throw new Error("Wrong usage. Only parameter and local varaible.");
+        }
+        
         CTempID ret = new CTempID(true, vi, curLoc);
         return ret;
     }
@@ -41,7 +45,7 @@ public class CTempID implements CTemp {
         } else {
             // nothing
         }
-    }
+    }   
 
     private int updateForDef(int offset) {
         if (!m_isDef) {
@@ -70,12 +74,10 @@ public class CTempID implements CTemp {
     }
     
     /*
-     * This function is called when an object of CTempID is seen at the first time.
-     * 
+     * This function is called when an object of CTempID is assigned at the first time.
      */
     public int processFirstOccurrence(int offset) {
         updateEscaped();
-        setDefinition();  // indicating that this is a definition.
         if (isEscaped()) {
             offset =  updateForDef(offset);
         }
@@ -83,11 +85,11 @@ public class CTempID implements CTemp {
     }
     
     /*
-     * m_tid won't be global, which is guaranteed by 
+     * m_tid won't be global, which is guaranteed by InstructionProcessor.GlobalVarInsProcessor.addInsForGlobalVar
+     * This function is called when an object of CTempID is assigned at the first time.
      */
     public int processFirstOccurrenceProcCall(int offset) {
         updateEscaped();
-        setDefinition();  // indicating that this is a definition.
         offset = updateForDef(offset);  // no matter what, we increase 
                            // the offset because proc would put the return value on the stack. 
         return offset;
@@ -97,24 +99,19 @@ public class CTempID implements CTemp {
     public boolean isDefinition() {
         return m_isDef;
     }
-    
-    public boolean isDefinedInside(CBlock grp) {
-        if (m_vi.getDefLoc().getBlock() == grp) {
-            return true;
-        } else {
-            // parameter in the same level (not in the inner function)
-            if (m_vi.getTID().isPara() && m_vi.getDefLoc().getLevel() == grp.getLevel()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    
-    private void setDefinition() {
-        m_isDef = true;
-    }
+//    
+//    private boolean isDefinedInside(CBlock grp) {
+//        if (m_vi.getDefLoc().getBlock() == grp) {
+//            return true;
+//        } else {
+//            // parameter in the same level (not in the inner function)
+//            if (m_vi.getTID().isPara() && m_vi.getDefLoc().getLevel() == grp.getLevel()) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
+//    }
     
     private void updateEscaped() {
         m_vi.updateEscaped();
@@ -132,13 +129,22 @@ public class CTempID implements CTemp {
         return m_vi.getTID().toString();
     }
     
-    public Object accept(CSPSVisitor visitor, CBlock curBlk) {
-        return visitor.visit(this, curBlk);
+    public Object accept(CSPSVisitor visitor) {
+        return visitor.visit(this);
     }
     
     public TID getTID() {
         return m_vi.getTID();
     }
     
+    public boolean isOutofScope() {
+        return m_vi.isOutofScope(m_curLoc);
+
+    }
 
 }
+
+
+
+
+

@@ -1,6 +1,6 @@
 package jats.utfpl.patcsps;
 
-public class PChannelDec implements PGlobalDec {
+public class PGDecChan implements PGDec {
 
     @Override
     public Object accept(PNodeVisitor visitor) {

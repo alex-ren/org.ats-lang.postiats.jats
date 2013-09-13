@@ -27,6 +27,14 @@ public class CSPSTransformer {
         // 
         List<CIProcessDef> procLst = new ArrayList<CIProcessDef>();
         Map<TID, VariableInfo> subMap = new HashMap<TID, VariableInfo>();
+        
+        // Global variable should be handled seperately.
+        List<VariableInfo> globalVarInfo = new ArrayList<VariableInfo>();
+        for (TID tid: inputProg.getGlobalVars()) {
+            VariableInfo vi = VariableInfo.createGlobalVariable(tid);
+            subMap.put(tid, vi);
+        }
+
         TID mainLab = TID.createUserFun("main");
         List<CBlock> body = InsLst2CBlockLst(inputProg.getInsLst(), subMap, mainLab, procLst, 0);
 
@@ -37,7 +45,7 @@ public class CSPSTransformer {
         CSPSEraser eraser= new CSPSEraser(body);
         eraser.erase();
 
-        ProgramCSPS outputProg = new ProgramCSPS(inputProg.getGlobalVars(), body, procLst);
+        ProgramCSPS outputProg = new ProgramCSPS(globalVarInfo, body, procLst);
         return outputProg;
     }
     
@@ -92,6 +100,9 @@ public class CSPSTransformer {
         
         VariableInfo vi = map.get(tid);
         if (null == vi) {
+            if (tid.isGlobal()) {
+                throw new Error("Wong usage. Only for parameter and local variable");
+            }
             vi = VariableInfo.create(tid, loc);
             map.put(tid, vi);  // This is important.
             ret = CTempID.createAsDef(vi, loc);
@@ -215,7 +226,7 @@ public class CSPSTransformer {
             , int level) {
         List<CTempID> paras = new ArrayList<CTempID>();
         for (TID para: funDef.m_paralst) {
-            CTempID cPara = TID2CTempID(para, subMap, funDef.m_name, null, level);
+            CTempID cPara = TID2CTempID(para, subMap, funDef.m_name, null /* CBlock is null */, level);
             paras.add(cPara);
         }
         

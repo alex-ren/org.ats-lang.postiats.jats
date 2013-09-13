@@ -81,7 +81,7 @@ public class CCondBlock extends CAdvancedBlock {
     }
 
     @Override
-    int process(int offset) {
+    public int process(int offset) {
         if (m_cond instanceof CTempID) {
             ((CTempID)m_cond).updateForUsage(this.getLevel());
         }

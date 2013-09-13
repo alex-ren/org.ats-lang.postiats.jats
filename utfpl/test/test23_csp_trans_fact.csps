@@ -1,18 +1,18 @@
-var g_17
+var g_18
 
-fun fact_15 (x_16)
+fun fact_16 (x_17)
 {
-  // ret is ret_18
-  app_19 = gt(x_16, 0)
-  if app_19 then
-    app_21 = sub(x_16, 1)
-    app_20 = fact_15(app_21)
-    ret_18 = mul(app_20, x_16)
+  // ret is ret_19
+  app_20 = gt(x_17, 0)
+  if app_20 then
+    app_22 = sub(x_17, 1)
+    app_21 = fact_16(app_22)
+    ret_19 = mul(app_21, x_17)
   else
-    move-- ret_18 = 1
+    move-- ret_19 = 1
 
-  return ret_18
+  return ret_19
 }
 
-move-- g_17 = 0
-g_17 = fact_15(3)
+move-- g_18 = 0
+g_18 = fact_16(3)

@@ -19,7 +19,7 @@ public class CIProcessDef implements CInstruction {
 
     @Override
     public Object accept(CSPSVisitor visitor) {
-        return visitor.visit(this, m_blk);
+        return visitor.visit(this);
     }
 
     @Override

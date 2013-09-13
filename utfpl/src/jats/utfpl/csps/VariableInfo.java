@@ -13,6 +13,11 @@ public class VariableInfo {
     private List<EntityLocation> m_usageLst;
     private Boolean m_isEscaped;
     
+    public static VariableInfo createGlobalVariable(TID tid) {
+        // The definition of global variable doesn't have location.
+        return new VariableInfo(tid, null);
+    }
+    
     public static VariableInfo create(TID tid, EntityLocation defLoc) {
         return new VariableInfo(tid, defLoc);
     }
@@ -75,6 +80,24 @@ public class VariableInfo {
         } else {
             m_isEscaped = false;
             return;
+        }
+    }
+    
+    public boolean isOutofScope(EntityLocation curLoc) {
+        if (m_tid.isPara()) {
+            if (curLoc.getLevel() != m_defLoc.getLevel()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (m_tid.isGlobal()) {
+            return false;
+        } else {  // local variable
+            if (curLoc.getBlock() != m_defLoc.getBlock()) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ import jats.utfpl.instruction.TID;
 public class CProcessCallBlock extends CAdvancedBlock {
     public TID m_funlab;  // Don't support function pointer.
     public List<CTemp> m_args;
-    public CTempID m_ret;
+    public CTempID m_ret;  // The holder for the return value of the function call.
     
     public CProcessCallBlock(TID funlab, List<CTemp> args, CTempID ret, int level) {
         super(level);
@@ -36,7 +36,7 @@ public class CProcessCallBlock extends CAdvancedBlock {
     }
 
     @Override
-    int process(int offset) {
+    public int process(int offset) {
         offset = m_ret.processFirstOccurrenceProcCall(offset);
         
         for (CTemp arg: m_args) {

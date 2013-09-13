@@ -1,6 +1,9 @@
-package jats.utfpl.csps;
+package jats.utfpl.patcsps;
 
 import jats.utfpl.ccomp.CCompUtils;
+import jats.utfpl.csps.CSPSPrinter;
+import jats.utfpl.csps.CSPSTransformer;
+import jats.utfpl.csps.ProgramCSPS;
 import jats.utfpl.instruction.InsTransformer;
 import jats.utfpl.instruction.InstructionPrinter;
 import jats.utfpl.instruction.NamingVisitor;
@@ -113,14 +116,26 @@ public class Test_01 {
             // print csps program
             CSPSPrinter cspsPrinter = new CSPSPrinter();
             String outputCSPS = cspsPrinter.print(programCSPS);
-            System.out.println("==CSP# code is ==========================");
+            System.out.println("==CSPS code is ==========================");
             System.out.println(outputCSPS);
-
-            FileWriter fwINS = new FileWriter("test/" + classname
-                    + ".mycsps");
-            BufferedWriter bwINS = new BufferedWriter(fwINS);
-            bwINS.write(outputCSPS);
-            bwINS.close();
+            
+            /* ***************** ****************** */
+            // generating patcsps program
+            PatCspsTransformer patcspsV = new PatCspsTransformer();
+            PModel programPCSPS = patcspsV.trans(programCSPS);
+            
+//            /* ***************** ****************** */
+//            // print patcsps program
+//            PatCspsPrinter patcspsPrinter = new PatCspsPrinter();
+//            String outputPATCSPS = patcspsPrinter.print(programPCSPS);
+//            System.out.println("==CSP# code is ==========================");
+//            System.out.println(outputPATCSPS);
+//
+//            FileWriter fwINS = new FileWriter("test/" + classname
+//                    + ".csps");
+//            BufferedWriter bwINS = new BufferedWriter(fwINS);
+//            bwINS.write(outputPATCSPS);
+//            bwINS.close();
                         
             /* ******** ******** */
 
