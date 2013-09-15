@@ -11,4 +11,8 @@ public class AtomValue implements ValPrim {
         return m_obj;
     }
     
+    public static AtomValue createFromInt(int x) {
+    	return new AtomValue(Integer.toString(x));
+    }
+    
 }

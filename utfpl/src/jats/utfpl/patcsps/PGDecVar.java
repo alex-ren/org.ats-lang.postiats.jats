@@ -1,14 +1,22 @@
 package jats.utfpl.patcsps;
 
-import jats.utfpl.csps.VariableInfo;
+import jats.utfpl.instruction.TID;
 
 public class PGDecVar implements PGDec {
-    public VariableInfo m_vi;
+    public TID m_tid;
     public PExp m_exp;  // initial value
     
-    public PGDecVar(VariableInfo vi) {
-        m_vi = vi;
+    private PGDecVar(TID tid, PExp exp) {
+    	m_tid = tid;
         m_exp = null;
+    }
+    
+    public static PGDecVar create(TID tid) {
+    	return new PGDecVar(tid, null);
+    }
+    
+    public static PGDecVar createInit(TID tid, PExp exp) {
+    	return new PGDecVar(tid, exp);
     }
 
     @Override

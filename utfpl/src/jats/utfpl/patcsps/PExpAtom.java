@@ -9,6 +9,10 @@ public class PExpAtom implements PExp {
         m_v = v;
     }
     
+    public static PExpAtom createFromInt(int x) {
+    	return new PExpAtom(AtomValue.createFromInt(x));
+    }
+    
     @Override
     public Object accept(PNodeVisitor visitor) {
         return visitor.visit(this);

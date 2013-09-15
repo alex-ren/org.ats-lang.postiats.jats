@@ -26,4 +26,6 @@ public interface PNodeVisitor {
     
     public Object visit(PProcEvent node);
     
+    public Object visit(PInclude node);
+    
 }

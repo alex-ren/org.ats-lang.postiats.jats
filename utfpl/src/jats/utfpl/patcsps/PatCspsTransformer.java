@@ -22,7 +22,9 @@ import jats.utfpl.instruction.TID;
 
 public class PatCspsTransformer implements CSPSVisitor {
     public PModel trans(ProgramCSPS prog) {
-        return (PModel)prog.accept(this);
+        PModel model = (PModel)prog.accept(this);
+        model.complete();
+        return null;
     }
     
     
@@ -129,7 +131,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     public Object visit(ProgramCSPS prog) {
         List<PGDecVar> gvlst = new ArrayList<PGDecVar>();
         for (VariableInfo gv: prog.m_globalVars) {
-            PGDecVar pgv = new PGDecVar(gv);
+            PGDecVar pgv = new PGDecVar(gv.getTID());
             gvlst.add(pgv);            
         }
         
