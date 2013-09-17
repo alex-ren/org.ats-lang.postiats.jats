@@ -9,7 +9,7 @@ public class TID implements ValPrim {
     static public TID MAIN = new TID("_main_", Category.other, Type.eUnknown);
     
     enum Category {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, eRetHolder, other};
-    enum Type {eBool, eInt, eVoid, eUnknown};
+    enum Type {eBool, eInt, eVoid, eChannel, eUnknown};
     
     private String m_id;
     private int m_uid;
@@ -101,6 +101,11 @@ public class TID implements ValPrim {
     
     public static TID createRetHolder(String id) {
         TID tid = new TID(id, Category.eRetHolder, Type.eUnknown);
+        return tid;
+    }
+    
+    public static TID createChannel(String id) {
+        TID tid = new TID(id, Category.other, Type.eChannel);
         return tid;
     }
     

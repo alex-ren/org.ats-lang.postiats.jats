@@ -131,7 +131,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     public Object visit(ProgramCSPS prog) {
         List<PGDecVar> gvlst = new ArrayList<PGDecVar>();
         for (VariableInfo gv: prog.m_globalVars) {
-            PGDecVar pgv = new PGDecVar(gv.getTID());
+            PGDecVar pgv = PGDecVar.createInit(gv.getTID(), PExpAtom.createFromInt(0));
             gvlst.add(pgv);            
         }
         
