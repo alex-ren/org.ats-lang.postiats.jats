@@ -1,12 +1,34 @@
 package jats.utfpl.patcsps;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jats.utfpl.instruction.TID;
 
 public class Aux {
-	static final public TID cSysTid = TID.createGloVar("SysTid");
-	static final public TID cSysSch = TID.createChannel("SysSch");
-	static final public TID cSysSchStart = TID.createChannel("SysSchStart");
-	static final public TID cParaTid = TID.createPara("tid");
+	static final public TID cSysTid;
+	static final public TID cSysSch;
+	static final public TID cSysSchStart;
+	static final public TID cParaTid;
+	static final public PExpID cArgTidExp;
+	static final public PChannelSend cThreadHeader;
+	static {
+//		var<PStack> GStack = new PStack();
+//		var SysTid = 0;
+//		channel SysChSch 0;
+//		channel SysChSchStart 0;
+//		main1_s (tid, x) = SysChSchStart!tid -> 
+
+		cSysTid      = TID.createGloVar("SysTid");
+		cSysSch      = TID.createChannel("SysSch");
+		cSysSchStart = TID.createChannel("SysSchStart");
+		cParaTid     = TID.createPara("tid");
+		cArgTidExp   = new PExpID(cParaTid);
+		
+		List<PExp> msgLst = new ArrayList<PExp>();
+    	msgLst.add(cArgTidExp);
+		cThreadHeader= new PChannelSend(cSysSchStart, msgLst);
+	}
 	
 	public static class Address {
 	    static private int m_allocator = 0;

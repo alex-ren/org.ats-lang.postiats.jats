@@ -1,6 +1,7 @@
 package jats.utfpl.patcsps;
 
 
+import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.Aux.Address;
 
 import java.util.ArrayList;
@@ -35,8 +36,20 @@ public class PModel implements PNode {
     	m_sysGVarLst.add(new PGDecChan(Aux.cSysSch, 0));
     	m_sysGVarLst.add(new PGDecChan(Aux.cSysSchStart, 0));
     	
-    	// add tid to process definition and invocation, m_procLst has been updated
-    	Map<PGDecProc, Address> threadFuncMap = this.threadize();
+    	// add tid to process definition and invocation, m_procLst is updated
+    	Map<PGDecProc, Address> threadMap = this.threadize();
+    	
+    	// create all the process wrappers for potential threads
+    	Map<PGDecProc, Address> threadWrapperMap = new HashMap<PGDecProc, Address>();
+    	
+    	for (Map.Entry<PGDecProc, Address> entry: threadMap.entrySet()) {
+    		PGDecProc threadDef = entry.getKey();
+    		PProcChannel threadWrapperBody = new PProcChannel(Aux.cThreadHeader, threadDef.m_body);
+    		TID threadWrapperName = TID.createLibFun(threadDef.m_name.getID() + "_s");
+    		PGDecProc threadWrapperDef = new PGDecProc(threadWrapperName, threadDef.m_paraLst, threadWrapperBody);
+    		threadWrapperMap.put(threadWrapperDef, entry.getValue());
+    	}
+    	// todo put the above into threadize
     	
 //    	// assembly: function address for createThread
 //    	Map<PGDecProc, PAddress> threads = constructThread(threadFuncMap);
@@ -124,7 +137,7 @@ public class PModel implements PNode {
 
         @Override
         public Object visit(PProcCall node) {
-            node.m_paraLst.add(0, new PExpID(Aux.cParaTid));
+            node.m_paraLst.add(0, Aux.cArgTidExp);
             return this;
         }
 
