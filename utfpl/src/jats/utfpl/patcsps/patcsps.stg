@@ -1,2 +1,190 @@
 group patcsps;
 
+pmodel_st(scheduler_body, gvar_lst, proc_lst, thread_lst, main_proc_body) ::= <<
+
+#import "PStack";
+
+#import "MyLib";
+
+// =====================
+
+var\<PStack> GStack = new PStack();
+var SysTid = 0;
+
+channel SysChSch 0;
+channel SysChSchStart 0;
+
+createThread(fn, arg) = SysChSch!fn.arg -> Skip;
+
+Scheduler = SysChSch?fn.arg ->
+  initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
+  <scheduler_body>
+  ;
+
+  
+SchedulerW (tid) = SysChSchStart?tid -> Scheduler;
+
+// =====================
+
+<gvar_lst; separator="\n">
+
+<proc_lst; separator="\n">
+
+<thread_lst; separator="\n">
+
+main_s(tid) = 
+  main_preloge {GStack.allocateStack(tid); <new_frame_st()>; <new_frame_st()>;} -> 
+  <main_proc_body>;
+
+main = main_s(0) ||| Scheduler;
+
+>>
+
+pgdevar_st(id, init) ::= <<
+var <id><if(init)> = <init><endif>;
+>>
+
+pprocbranch_ifcommon_st(cond, if_proc, else_proc) ::= <<
+if (<cond>) {
+  <if_proc>
+}<if(else_proc)> else {
+  <else_proc>
+}<endif>
+>>
+
+pprocbranch_ifa_st(cond, if_proc, else_proc) ::= <<
+if (<cond>) {
+  <if_proc>
+}<if(else_proc)> else {
+  <else_proc>
+}<endif>
+>>
+
+pprocbranch_ifb_st(cond, if_proc, else_proc) ::= <<
+if (<cond>) {
+  <if_proc>
+}<if(else_proc)> else {
+  <else_proc>
+}<endif>
+>>
+  
+pevent_st(stat_lst) ::= <<
+{  <stat_lst; separator="\n">
+}
+>>
+
+pexpfunccall_st(fun_lab, arg_lst) ::= <<
+call(<[fun_lab, arg_lst]; separator=", ">)
+>>
+
+pstatlocalvardec_st(name, val) ::= <<
+var <name> = <val>;
+>>
+
+pstatassignment_st(name, val) ::= <<
+<name> = <val>;
+>>
+
+pprocatom_st() ::= <<
+Skip
+>>
+
+pproccall_st(name, arg_lst) ::= <<
+<name>(<arg_lst; separator=", ">)
+>>
+
+pgdecproc_st(name, para_lst, esc_para_lst, body) ::= <<
+<name>(<para_lst; separator=", ">) =
+  <proc_preloge_st(esc_para_lst)> ->
+  <body>
+  ;
+>>
+
+pprocseq_st(proc_left, proc_right) ::= <<
+<proc_left>;
+<proc_right>
+>>
+
+pexpstackopr_default_t(frame, pos) ::= <<
+GStack.get(tid, <frame>, <pos>)
+>>
+
+pexpstackopr_bool_t(frame, pos) ::= <<
+GStack.getBool(tid, <frame>, <pos>)
+>>
+
+pprocevent_st(evt, proc) ::= <<
+<evt> ->
+<proc>
+>>
+
+pprocchannel_st(ch, proc) ::= <<
+<ch> ->
+<proc>
+>>
+
+pchannelrecv_st(name, ele_lst) ::= <<
+<name>?<ele_lst; separator=".">
+>>
+
+pchannelsend_st(name, msg_lst) ::= <<
+<name>!<msg_lst; separator=".">
+>>
+
+pexpopr_unary_st(exp, opr) ::= <<
+<opr><exp>
+>>
+
+pexpopr_binary_st(exp1, exp2, opr) ::= <<
+<exp1> <opr> <exp2>
+>>
+
+pprocparallel_st(proc_lst) ::= <<
+<proc_lst; separator="\n|||\n">
+>>
+
+pexpstackpush_st(name) ::= <<
+GStack.push(tid, <name>);
+>>
+
+pstatreturn_st(v) ::= <<
+<delete_frame_st()>; GStack.push(tid, <v>);
+>>
+
+pnone_st() ::= <<
+0
+>>
+
+// ================= 
+
+new_frame_st() ::= <<
+GStack.newFrame(tid)
+>>
+
+delete_frame_st() ::= <<
+GStack.deleteFrame(tid)
+>>
+
+proc_preloge_st(paras) ::= <<
+preloge{<new_frame_st()>; <paras:{x| spush(tid, <x>)}; separator=";">}
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

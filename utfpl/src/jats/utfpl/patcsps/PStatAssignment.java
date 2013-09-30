@@ -3,12 +3,16 @@ package jats.utfpl.patcsps;
 import jats.utfpl.instruction.TID;
 
 public class PStatAssignment implements PStat {
-    public TID m_var;
-    public PExp m_exp;
+    public TID m_name;
+    public PExp m_val;
     
-    public PStatAssignment(TID var, PExp exp) {
-        m_var = var;
-        m_exp = exp;
+    // for global variable
+    public PStatAssignment(TID name, PExp val) {
+        if (name.isGlobal() == false) {
+            throw new Error("Unexpected");
+        }
+        m_name = name;
+        m_val = val;
     }
 
     @Override

@@ -2,25 +2,28 @@ group ins;
 
 
 func_call_ins_st(holder, funlab, args) ::= <<
-<!func_call-- !><holder> = <funlab>(<args; separator=", ">)
+func_call-- <holder> = <funlab>(<args; separator=", ">)
 >>
 
-func_call_ins_no_ret_st(funlab, args) ::= <<
-func_call-- _ = <funlab>(<args; separator=", ">)
->>
+// func_call_ins_no_ret_st(funlab, args) ::= <<
+// func_call-- _ = <funlab>(<args; separator=", ">)
+// >>
 
 func_def_ins(name, paralst, body, ret) ::= <<
 fun <name> (<paralst; separator=", ">)
 {
   // ret is <ret>
   <body>
-  return <ret>
 }
 
 >>
 
+return_ins_st(ret) ::= <<
+return <ret>
+>>
 
 cond_ins_st(holder, cond, btrue, bfalse) ::= <<
+// holder is <holder>
 if <cond> then
   <btrue>
 else
@@ -40,6 +43,10 @@ tid_st(id) ::= <<
 
 atom_value_st(v) ::= <<
 <v>
+>>
+
+tuple_value_st(ele_lst) ::= <<
+(<ele_lst; separator=", ">)
 >>
 
 

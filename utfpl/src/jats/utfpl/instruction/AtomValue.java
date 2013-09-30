@@ -7,10 +7,11 @@ public class AtomValue implements ValPrim {
         m_obj = obj;
     }
     
+    @Override
     public String toString() {
         return m_obj;
     }
-    
+
     public static AtomValue createFromInt(int x) {
     	return new AtomValue(Integer.toString(x));
     }

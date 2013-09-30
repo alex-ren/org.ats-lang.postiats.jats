@@ -41,7 +41,7 @@ public class Test_01 {
 
         for (String filename: filenames) {
             System.out.println("==Processing file " + filename + "==========");
-            System.out.println("============================================");
+            System.out.println("");
             ANTLRFileStream fileStream = new ANTLRFileStream(filename);
             
             File file = new File(filename);

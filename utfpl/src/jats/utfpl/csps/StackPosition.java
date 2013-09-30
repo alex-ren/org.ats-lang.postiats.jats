@@ -24,6 +24,7 @@ public class StackPosition {
         return new StackPosition(0, offset);
     }
     
+    // For non-closure, frame is just 0.
     public static StackPosition createUsage(int frame, int offset) {
         return new StackPosition(frame, offset);
     }

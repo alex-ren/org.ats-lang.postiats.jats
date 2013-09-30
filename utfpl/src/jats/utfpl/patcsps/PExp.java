@@ -1,5 +1,5 @@
 package jats.utfpl.patcsps;
 
-public interface PExp extends PNode {
+public interface PExp extends PStat {
 
 }

@@ -88,6 +88,12 @@ public class InstructionPrinter implements InsVisitor {
             ST st = m_stg.getInstanceOf("atom_value_st");
             st.add("v", (AtomValue)vp);
             return st;
+        } else if (vp instanceof TupleValue) {
+            if (vp != TupleValue.cNone) {
+                throw new Error("Not supported");
+            }
+            ST st = m_stg.getInstanceOf("tuple_value_st");
+            return st;
         } else {
             throw new Error("shall not happen");
         }
@@ -110,12 +116,12 @@ public class InstructionPrinter implements InsVisitor {
     public Object visit(FuncCallIns ins) {
         // func_call_ins_st(holder, funlab, args) ::= <<
         ST st = null;
-        if (ins.m_holder.isVoid()) {
-            st = m_stg.getInstanceOf("func_call_ins_no_ret_st");
-        } else {
+//        if (ins.m_holder.isVoid()) {
+//            st = m_stg.getInstanceOf("func_call_ins_no_ret_st");
+//        } else {
             st = m_stg.getInstanceOf("func_call_ins_st");
             st.add("holder", ins.m_holder);
-        }
+//        }
         st.add("funlab", visitValPrim(ins.m_funlab));
         for (ValPrim arg: ins.m_args) {
             st.add("args", visitValPrim(arg));
@@ -149,6 +155,13 @@ public class InstructionPrinter implements InsVisitor {
         
         return st;
         
+    }
+
+    @Override
+    public Object visit(ReturnIns ins) {
+        ST st = m_stg.getInstanceOf("return_ins_st");
+        st.add("ret", ins.m_tid.toString());
+        return st;
     }
 
 //    @Override

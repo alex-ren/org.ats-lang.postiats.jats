@@ -1,0 +1,28 @@
+var g_17;
+
+fact_15(tid, x_16) = preloge{GStack.newFrame(tid); } -> 
+step {
+  var app_19 = call(gt, x_16, 0); GStack.push(tid, app_19);} -> Skip;
+ifa (GStack.getBool(tid, 0, 0)) {
+  step {
+    var app_21 = call(sub, x_16, 1); GStack.push(tid, app_21);} -> Skip;
+  fact_15(tid, GStack.get(tid, 0, 1));
+  step {
+    var ret_18 = call(mul, GStack.get(tid, 0, 2), x_16); 
+    GStack.deleteFrame(tid);GStack.push(tid, ret_18);} -> Skip 
+} else { 
+  step {
+    var ret_18 = 1; 
+    GStack.deleteFrame(tid);GStack.push(tid, ret_18);} -> Skip 
+};
+
+main(tid) = preloge{GStack.newFrame(tid);} -> Skip;
+step {
+  g_17 = 0; } -> Skip;
+fact_15(tid, 3);
+step {
+  g_17 = GStack.get(tid, 0, 0); } -> Skip;
+step {
+  var main_ret_24 = (); 
+  GStack.deleteFrame(tid);GStack.push(tid, main_ret_24);} -> Skip;
+

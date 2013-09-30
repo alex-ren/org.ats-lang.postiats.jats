@@ -1,6 +1,8 @@
 package jats.utfpl.instruction;
 
 
+import jats.utfpl.patcsps.Type;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +25,16 @@ public class InstructionProcessor {
         GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
         List<UtfplInstruction> insLst1 = visitor.addInsForGlobalVar(inputProg.getInsLst());
         
-        List<UtfplInstruction> insLst2 = InsLstProcess(insLst1, subMap, mainFunLab, TID.ANONY);
-        InsLstProcessRetCall(insLst2, mainFunLab);
+        // Here we need to add one more instruction to main's body, which is
+        // main_ret = ().
+        // Test case
+        // val y = if 1 then 2 else 3
+        // val z = 3
+        // Basically, treat main body as a function without parameters.
+        TID mainRet = TID.createRetHolder("main_ret");
+        UtfplInstruction mainEnd = new MoveIns(mainRet, TupleValue.cNone);
+        insLst1.add(mainEnd);
+        List<UtfplInstruction> insLst2 = InsLstProcess(insLst1, subMap, mainFunLab, mainRet);
         return new ProgramIns(inputProg.getGlobalVars(), insLst2);
     }
 	
@@ -33,6 +43,12 @@ public class InstructionProcessor {
             return vp;
         } else if (vp instanceof TID) {
             return TID.subsTID((TID)vp, subMap);
+        } else if (vp instanceof TupleValue) {
+            if (vp != TupleValue.cNone) {
+                throw new Error("Not supported");
+            } else {
+                return vp;
+            }
         } else {
             throw new Error("not supported");
         }
@@ -70,62 +86,75 @@ public class InstructionProcessor {
 			if (ins instanceof MoveIns) {
                 MoveIns aIns = (MoveIns)ins;
                 MoveIns nIns = aIns.createSubs(subMap);
-                nList.add(nIns);   
+                nList.add(nIns);
+                if (nIns.m_holder.isRet()) {
+                    nList.add(new ReturnIns(nIns.m_holder));
+                }
 			} else if (ins instanceof CondIns) {
 				CondIns aIns = (CondIns)ins;
 				
 				TID condRetHolder = TID.subsTID(aIns.m_holder, subMap);
+//				System.out.println("cond holder is " + condRetHolder);
 				ValPrim aCond = subsVP(aIns.m_cond, subMap);
-				
-				List<UtfplInstruction> insLstTrue = InsLstProcess(aIns.m_btrue, subMap, FuncLab, retHolder);
-				List<UtfplInstruction> insLstFalse = InsLstProcess(aIns.m_bfalse, subMap, FuncLab, retHolder);
-				if (iter.hasNext()) {  // has more instructions to deal with
-					if (!aIns.m_holder.isGlobal()) {  // Global variable as the holder, no need to merge.
-                        // Since aIns is not the last instruction, aRetHolder !=
-                        // retHolder.
 
-                        // The instructions afterwards.
-                        int nextInd = iter.nextIndex();
-                        List<UtfplInstruction> restLst = insLst.subList(
-                                nextInd, insLst.size());
+                // copy the list
+                List<UtfplInstruction> insLstTrue = aIns.m_btrue;
+                List<UtfplInstruction> insLstFalse = aIns.m_bfalse;
+                
+                
+				if (iter.hasNext() && // has next instruction, which is not "ReturnIns"
+                        !aIns.m_holder.isGlobal()) { // Global variable as the holder, no need to merge.
+                    // Since aIns is not the last instruction, aRetHolder != retHolder.
 
-                        // The new function is actually a closure with only one
-                        // parameter.
-                        List<TID> newParas = new ArrayList<TID>();
+                    // The instructions afterwards.
+                    int nextInd = iter.nextIndex();
+                    List<UtfplInstruction> restLst = insLst.subList(nextInd,
+                            insLst.size());
 
-                        TID extraPara = TID.createPara(condRetHolder.getID());
-                        newParas.add(extraPara);
-                        // replace the new parameter into the following
-                        // instructions
-                        subMap.put(condRetHolder, extraPara);
+                    // The new function is actually a closure with only one parameter.
+                    List<TID> newParas = new ArrayList<TID>();
 
-                        TID newFuncLab = TID.createUserFun(FuncLab.getID()
-                                + "_if");
+                    TID aPara = TID.createPara(condRetHolder.getID(), false);
+                    newParas.add(aPara);
 
-                        TID newRetHolder = null;
-                        if (null != retHolder && TID.ANONY != retHolder) {
-                            newRetHolder = TID.createRetHolder(FuncLab.getID()
-                                    + "_ret");
-                        } else {
-                            newRetHolder = TID.ANONY;
-                        }
-                        subMap.put(retHolder, newRetHolder);
+                    HashMap<TID, TID> newSubMap = new HashMap<TID, TID>(subMap);
+                    // replace the new parameter into the following
+                    // instructions
+                    newSubMap.put(condRetHolder, aPara); // <===== map 1
 
-                        List<UtfplInstruction> newFuncBody = InsLstProcess(
-                                restLst, subMap, newFuncLab, newRetHolder);
-                        FuncDefIns newFuncDef = new FuncDefIns(newFuncLab,
-                                newParas, newFuncBody, newRetHolder);
+                    TID newFuncLab = TID.createUserFun(FuncLab.getID() + "_if");
 
-                        List<ValPrim> newArgs = new ArrayList<ValPrim>();
-                        newArgs.add(condRetHolder);
-                        FuncCallIns newFuncCall = new FuncCallIns(retHolder,
-                                newFuncLab, newArgs);
-                        nList.add(newFuncDef); // maybe a closure
+                    TID newRetHolder = null;
+                    if (null != retHolder) {
+                        newRetHolder = TID.createRetHolder(FuncLab.getID()
+                                + "_ret");
+                    } else {
+                        throw new Error("check this");
+                    }
+                    newSubMap.put(retHolder, newRetHolder); // <====== map 2
 
-                        insLstTrue.add(newFuncCall);
-                        insLstFalse.add(newFuncCall);
-					}
+                    List<UtfplInstruction> newFuncBody = InsLstProcess(restLst,
+                            newSubMap, newFuncLab, newRetHolder);
+
+                    FuncDefIns newFuncDef = new FuncDefIns(newFuncLab,
+                            newParas, newFuncBody, newRetHolder);
+                    nList.add(newFuncDef); // maybe a closure
+
+                    List<ValPrim> newArgs = new ArrayList<ValPrim>();
+                    newArgs.add(condRetHolder);
+                    FuncCallIns newFuncCall = new FuncCallIns(retHolder,
+                            newFuncLab, newArgs);
+
+                    // copy the list
+                    insLstTrue = new ArrayList<UtfplInstruction>(aIns.m_btrue);
+                    insLstFalse = new ArrayList<UtfplInstruction>(aIns.m_bfalse);
+
+                    insLstTrue.add(newFuncCall);
+                    insLstFalse.add(newFuncCall);
 				}
+				insLstTrue = InsLstProcess(insLstTrue, subMap, FuncLab, retHolder);
+				insLstFalse = InsLstProcess(insLstFalse, subMap, FuncLab, retHolder);
+                
                 CondIns nIns = new CondIns(retHolder, aCond, insLstTrue, insLstFalse);
                 nList.add(nIns);
                 break;  // done, no more instructions
@@ -133,11 +162,16 @@ public class InstructionProcessor {
 			    FuncCallIns aIns = (FuncCallIns)ins;
 			    FuncCallIns nIns = aIns.createSubs(subMap);
 			    nList.add(nIns);
+                if (nIns.m_holder.isRet()) {
+                    nList.add(new ReturnIns(nIns.m_holder));
+                }
 			} else if (ins instanceof FuncDefIns) {
 			    FuncDefIns aIns = (FuncDefIns)ins;
 			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret);
 			    FuncDefIns nIns = new FuncDefIns(aIns.m_name, aIns.m_paralst, newBody, aIns.m_ret);
-			    nList.add(nIns);				
+			    nList.add(nIns);
+			} else if (ins instanceof ReturnIns) {
+			    throw new Error("No ReturnIns at this stage");
 			} else {
 			    throw new Error("Not supported");
 			}
@@ -145,47 +179,49 @@ public class InstructionProcessor {
 		return nList;
 		
 	}
-	
-    /*
-     * Effect analysis should be done before this stage.
-     */
-    static private void InsLstProcessRetCall(
-            List<UtfplInstruction> insLst, TID FuncLab) {
-        ListIterator<UtfplInstruction> iter = insLst.listIterator();
-        while (iter.hasNext()) {
-            UtfplInstruction ins = iter.next();
-            if (ins instanceof MoveIns) {
-                // no-op
-            } else if (ins instanceof CondIns) {
-                CondIns aIns = (CondIns)ins;
-                InsLstProcessRetCall(aIns.m_btrue, FuncLab);
-                InsLstProcessRetCall(aIns.m_bfalse, FuncLab);
-            } else if (ins instanceof FuncCallIns) {
-                FuncCallIns aIns = (FuncCallIns) ins;
-                if (aIns.hasSideEffect()) {
-                    if (aIns.isRet()) {
-                        // Add one more move instruction for the case that last
-                        // instruction
-                        // is a call of function which has side-effect. Such
-                        // function will
-                        // be turned into process in the next stage.
-                        TID tempHolder = TID.createLocalVar(FuncLab.getID()
-                                + "_tret", TID.Type.eUnknown);
-                        TID endHolder = aIns.m_holder;
-                        aIns.m_holder = tempHolder;
-                        MoveIns extraIns = new MoveIns(endHolder, tempHolder);
-                        iter.add(extraIns);
-                    }
-                }
-            } else if (ins instanceof FuncDefIns) {
-                FuncDefIns aIns = (FuncDefIns)ins;
-                InsLstProcessRetCall(aIns.m_body, aIns.m_name);  
-            } else {
-                throw new Error("Not supported");
-            }
-        }
-        return;
-    }
+
+
+// useless now	
+//    /*
+//     * Effect analysis should be done before this stage.
+//     */
+//    static private void InsLstProcessRetCall(
+//            List<UtfplInstruction> insLst, TID FuncLab) {
+//        ListIterator<UtfplInstruction> iter = insLst.listIterator();
+//        while (iter.hasNext()) {
+//            UtfplInstruction ins = iter.next();
+//            if (ins instanceof MoveIns) {
+//                // no-op
+//            } else if (ins instanceof CondIns) {
+//                CondIns aIns = (CondIns)ins;
+//                InsLstProcessRetCall(aIns.m_btrue, FuncLab);
+//                InsLstProcessRetCall(aIns.m_bfalse, FuncLab);
+//            } else if (ins instanceof FuncCallIns) {
+//                FuncCallIns aIns = (FuncCallIns) ins;
+//                if (aIns.hasSideEffect()) {
+////                    if (aIns.isRet()) {
+////                        // Add one more move instruction for the case that last
+////                        // instruction
+////                        // is a call of function which has side-effect. Such
+////                        // function will
+////                        // be turned into process in the next stage.
+////                        TID tempHolder = TID.createLocalVar(FuncLab.getID()
+////                                + "_tret", Type.eUnknown);
+////                        TID endHolder = aIns.m_holder;
+////                        aIns.m_holder = tempHolder;
+////                        MoveIns extraIns = new MoveIns(endHolder, tempHolder);
+////                        iter.add(extraIns);
+////                    }
+//                }
+//            } else if (ins instanceof FuncDefIns) {
+//                FuncDefIns aIns = (FuncDefIns)ins;
+//                InsLstProcessRetCall(aIns.m_body, aIns.m_name);  
+//            } else {
+//                throw new Error("Not supported");
+//            }
+//        }
+//        return;
+//    }
 
     /*
      * Check whether this function has side effect.
@@ -233,7 +269,7 @@ public class InstructionProcessor {
         @Override
         public Object visit(FuncCallIns ins) {
             if (ins.hasSideEffect() && ins.m_holder.isGlobal()) {
-                TID temp = TID.createLocalVar(ins.m_funlab + "_tret", TID.Type.eUnknown);
+                TID temp = TID.createLocalVar(ins.m_funlab + "_tret", Type.eUnknown);
                 FuncCallIns nCall = new FuncCallIns(temp, ins.m_funlab, ins.m_args);
                 MoveIns nMove = new MoveIns(ins.m_holder, temp);
                 m_list.add(nCall);
@@ -260,7 +296,7 @@ public class InstructionProcessor {
             if (ins.m_vp instanceof TID) {
                 TID src = (TID)ins.m_vp;
                 if (src.isGlobal() && ins.m_holder.isGlobal()) {
-                    TID temp = TID.createLocalVar(src.getID() + "_temp_", TID.Type.eUnknown);
+                    TID temp = TID.createLocalVar(src.getID() + "_temp_", Type.eUnknown);
                     MoveIns step1 = new MoveIns(temp, src);
                     MoveIns step2 = new MoveIns(ins.m_holder, temp);
                     m_list.add(step1);
@@ -276,6 +312,12 @@ public class InstructionProcessor {
                 return m_list;
             }
 
+        }
+
+        @Override
+        public Object visit(ReturnIns ins) {
+            m_list.add(ins);
+            return m_list;
         }
         
     }

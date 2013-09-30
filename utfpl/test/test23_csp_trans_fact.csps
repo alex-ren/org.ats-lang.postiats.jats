@@ -1,18 +1,72 @@
-var g_18
+#import "PStack";
 
-fun fact_16 (x_17)
-{
-  // ret is ret_19
-  app_20 = gt(x_17, 0)
-  if app_20 then
-    app_22 = sub(x_17, 1)
-    app_21 = fact_16(app_22)
-    ret_19 = mul(app_21, x_17)
-  else
-    move-- ret_19 = 1
+#import "MyLib";
 
-  return ret_19
-}
+// =====================
 
-move-- g_18 = 0
-g_18 = fact_16(3)
+var<PStack> GStack = new PStack();
+var SysTid = 0;
+
+channel SysChSch 0;
+channel SysChSchStart 0;
+
+createThread(fn, arg) = SysChSch!fn.arg -> Skip;
+
+Scheduler = SysChSch?fn.arg ->
+  initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
+  if (fn == 1) {
+    fact_s(SysTid, arg)
+    |||
+    SchedulerW(SysTid)
+  }
+  ;
+
+
+SchedulerW (tid) = SysChSchStart?tid -> Scheduler;
+
+// =====================
+
+var g_17;
+
+fact_15(tid, x_16) =
+  preloge{GStack.newFrame(tid); } ->
+  {  var app_19 = call(gt, x_16, 0);
+  GStack.push(tid, app_19);
+  } ->
+  if (GStack.getBool(tid, 0, 0)) {
+    {  var app_21 = call(sub, x_16, 1);
+    GStack.push(tid, app_21);
+    } ->
+    fact_15(tid, GStack.get(tid, 0, 1));
+    {  var ret_18 = call(mul, GStack.get(tid, 0, 2), x_16);
+    GStack.deleteFrame(tid); GStack.push(tid, ret_18);
+    } ->
+    Skip
+  } else {
+    {  var ret_18 = 1;
+    GStack.deleteFrame(tid); GStack.push(tid, ret_18);
+    } ->
+    Skip
+  };
+  Skip
+  ;
+
+fact_s(tid, x_16) =
+  preloge{GStack.newFrame(tid); } ->
+  SysChSchStart!tid ->
+  fact_15(tid, x_16)
+  ;
+
+main_s(tid) = 
+  main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
+  {  g_17 = 0;
+  } ->
+  fact_15(tid, 3);
+  {  g_17 = GStack.get(tid, 0, 0);
+  } ->
+  {  var main_ret_24 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_24);
+  } ->
+  Skip;
+
+main = main_s(0) ||| Scheduler;

@@ -7,13 +7,9 @@ public class ValDef implements Dec {
     public ValDef(Exp id, Exp exp) {
         if (id instanceof IdExp) {
             m_id = (IdExp) id;
-            // val _ = xxx
-            if (m_id.m_sid.equals("_")) {
-                m_id = null;
-            }
-            // val () = xxx
-        } else if (id == TupleExp.Void) {
-            m_id = null;
+            
+        } else if (id == TupleExp.Void) { // val () = xxx
+            m_id = new IdExp(null);
         } else {
             throw new Error("not supported");
         }

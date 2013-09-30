@@ -1,20 +1,21 @@
 package jats.utfpl.instruction;
 
+import jats.utfpl.patcsps.Type;
+
 import java.util.Map;
 
 
 public class TID implements ValPrim {
     static private int s_cnt = 0;
-    static public TID ANONY = new TID("()", Category.other, Type.eVoid);
-    static public TID MAIN = new TID("_main_", Category.other, Type.eUnknown);
+    static public TID ANONY = new TID("_", Category.other, Type.eVoid, false);
     
     enum Category {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, eRetHolder, other};
-    enum Type {eBool, eInt, eVoid, eChannel, eUnknown};
     
     private String m_id;
     private int m_uid;
     private Category m_cat;
     private Type m_type;
+    private boolean m_isSys;
     
     public void setType(Type ty) {
         m_type = ty;
@@ -47,65 +48,67 @@ public class TID implements ValPrim {
     public boolean isGlobal() {
         return Category.eGloVar == m_cat;
     }
-    
-    public boolean isVoid() {
-        return this == TID.ANONY;
-    }
-    
+//    
+//    public boolean isVoid() {
+//        return this == TID.ANONY;
+//    }
+//    
     public String getID() {
         return m_id;
     }
     
     public String toString() {
-        if (Category.eLibFun == m_cat) {
+        if (Category.eLibFun == m_cat || m_isSys) {
             return m_id;
         } else {
             return m_id + "_" + m_uid;
         }
     }
     
-    private TID(String id, Category cat, Type ty) {
+    private TID(String id, Category cat, Type ty, boolean isSys) {
         m_id = id;
         
         s_cnt++;
         m_uid = s_cnt;
         m_cat = cat;
         m_type = ty;
+        
+        m_isSys = isSys;
 
     }
     
     public static TID createLocalVar(String id, Type ty) {
-        TID tid = new TID(id, Category.eLocalVar, ty);
+        TID tid = new TID(id, Category.eLocalVar, ty, false);
         return tid;
     }
     
     public static TID createUserFun(String id) {
-        TID tid = new TID(id, Category.eUserFun, Type.eUnknown);
+        TID tid = new TID(id, Category.eUserFun, Type.eUnknown, false);
         return tid;
     }
     
-    public static TID createLibFun(String id) {
-        TID tid = new TID(id, Category.eLibFun, Type.eUnknown);
+    public static TID createLibFun(String id, boolean isSys) {
+        TID tid = new TID(id, Category.eLibFun, Type.eUnknown, isSys);
         return tid;
     }
     
-    public static TID createGloVar(String id) {
-        TID tid = new TID(id, Category.eGloVar, Type.eUnknown);
+    public static TID createGloVar(String id, boolean isSys) {
+        TID tid = new TID(id, Category.eGloVar, Type.eUnknown, isSys);
         return tid;
     }
     
-    public static TID createPara(String id) {
-        TID tid = new TID(id, Category.ePara, Type.eUnknown);
+    public static TID createPara(String id, boolean isSys) {
+        TID tid = new TID(id, Category.ePara, Type.eUnknown, isSys);
         return tid;
     }
     
     public static TID createRetHolder(String id) {
-        TID tid = new TID(id, Category.eRetHolder, Type.eUnknown);
+        TID tid = new TID(id, Category.eRetHolder, Type.eUnknown, false);
         return tid;
     }
     
-    public static TID createChannel(String id) {
-        TID tid = new TID(id, Category.other, Type.eChannel);
+    public static TID createChannel(String id, boolean isSys) {
+        TID tid = new TID(id, Category.other, Type.eChannel, isSys);
         return tid;
     }
     

@@ -7,6 +7,9 @@ import jats.utfpl.instruction.TID;
 
 public class Aux {
 	static final public TID cSysTid;
+	static final public PExpID cSysTidExp;
+	
+	static final public TID cSchedulerWTid;
 	static final public TID cSysSch;
 	static final public TID cSysSchStart;
 	static final public TID cParaTid;
@@ -19,10 +22,14 @@ public class Aux {
 //		channel SysChSchStart 0;
 //		main1_s (tid, x) = SysChSchStart!tid -> 
 
-		cSysTid      = TID.createGloVar("SysTid");
-		cSysSch      = TID.createChannel("SysSch");
-		cSysSchStart = TID.createChannel("SysSchStart");
-		cParaTid     = TID.createPara("tid");
+		cSysTid      = TID.createGloVar("SysTid", true);
+		cSysTidExp = new PExpID(cSysTid);
+		
+		cSchedulerWTid = TID.createLibFun("SchedulerW", true);
+		
+		cSysSch      = TID.createChannel("SysChSch", true);
+		cSysSchStart = TID.createChannel("SysChSchStart", true);
+		cParaTid     = TID.createPara("tid", true);
 		cArgTidExp   = new PExpID(cParaTid);
 		
 		List<PExp> msgLst = new ArrayList<PExp>();
@@ -32,7 +39,7 @@ public class Aux {
 	
 	public static class Address {
 	    static private int m_allocator = 0;
-	    public int m_i;
+	    private int m_i;
 	    
 	    static public Address createPointer() {
 	        m_allocator++;
@@ -41,6 +48,10 @@ public class Aux {
 	    
 	    private Address(int i) {
 	        m_i = i;
+	    }
+	    
+	    public int getValue() {
+	        return m_i;
 	    }
 	}
 

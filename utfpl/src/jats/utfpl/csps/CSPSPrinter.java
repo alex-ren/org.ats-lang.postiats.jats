@@ -1,5 +1,7 @@
 package jats.utfpl.csps;
 
+import jats.utfpl.instruction.TupleValue;
+
 import java.net.URL;
 import java.util.List;
 import java.util.ListIterator;
@@ -15,7 +17,7 @@ public class CSPSPrinter implements CSPSVisitor {
         URL fileURL = this.getClass().getResource("/jats/utfpl/csps/csps.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');    
     }
-    
+
     public String print(ProgramCSPS inputProg) {
         ST st = (ST)inputProg.accept(this);
         
@@ -161,6 +163,7 @@ public class CSPSPrinter implements CSPSVisitor {
     public Object visit(CProcessCallBlock blk) {
         // process_call_block_st(lab, args) ::= <<
         ST st = m_stg.getInstanceOf("process_call_block_st");
+        st.add("holder", blk.m_ret.getTID().toString());
         st.add("lab", blk.m_funlab);
         for (CTemp arg: blk.m_args) {
             st.add("args", arg.accept(this));
@@ -177,9 +180,10 @@ public class CSPSPrinter implements CSPSVisitor {
         
         if (ins.needStack()) {
             st.add("push", true);
-        } else if (ins.isRet()) {
-            st.add("ret", true);
-        }
+        } 
+//        else if (ins.isRet()) {
+//            st.add("ret", true);
+//        }
 
         st.add("dst", ins.m_holder.accept(this));
         st.add("src", ins.m_vp.accept(this));
@@ -195,9 +199,10 @@ public class CSPSPrinter implements CSPSVisitor {
         
         if (ins.needStack()) {
             st.add("push", true);
-        } else if (ins.isRet()) {
-            st.add("ret", true);
-        }
+        } 
+//        else if (ins.isRet()) {
+//            st.add("ret", true);
+//        }
 
         st.add("dst", ins.m_ret.accept(this));
         st.add("lab", ins.m_funlab);
@@ -244,10 +249,25 @@ public class CSPSPrinter implements CSPSVisitor {
 
     @Override
     public Object visit(CTempVal v) {
-        // temp_atom_val_st(v) ::= <<
-        ST st = m_stg.getInstanceOf("temp_atom_val_st");
-        st.add("v", v.m_v);
-        return st;
+        ST st = null;
+        switch (v.m_type)
+        {
+            case atom:
+                // atom_val_st(v) ::= <<
+                st = m_stg.getInstanceOf("atom_val_st");
+                st.add("v", v.getAtomValue());
+                return st;
+            case tuple:
+                st = m_stg.getInstanceOf("tuple_val_st");
+                if (v.getTupleValue() == TupleValue.cNone) {
+                    return st;
+                } else {
+                    throw new Error("Not supported");
+                }
+            default:
+                throw new Error("shall not happen");
+        }
+
     }
 
     @Override
@@ -283,6 +303,13 @@ public class CSPSPrinter implements CSPSVisitor {
         st.add("mainproc", printMain(prog.m_main));
         st.add("mainlab", "main");
         
+        return st;
+    }
+
+    @Override
+    public Object visit(CIReturn node) {
+        ST st = m_stg.getInstanceOf("return_st");
+        st.add("v", node.m_id.accept(this));
         return st;
     }
 

@@ -7,9 +7,9 @@ import java.util.List;
 public class PChannelRecv implements PChannelTransfer {
 
 	public TID m_name;
-	public List<PExp> m_eleLst;
+	public List<TID> m_eleLst;
 	
-	public PChannelRecv(TID name, List<PExp> eleLst) {
+	public PChannelRecv(TID name, List<TID> eleLst) {
 		m_name = name;
 		m_eleLst = eleLst;
 	}
@@ -19,3 +19,5 @@ public class PChannelRecv implements PChannelTransfer {
 		return visitor.visit(this);
 	}
 }
+
+

@@ -89,4 +89,9 @@ public class CSPSEraser implements CSPSVisitor {
         throw new Error("not support");
     }
 
+    @Override
+    public Object visit(CIReturn node) {
+        throw new Error("Should not happen");
+    }
+
 }

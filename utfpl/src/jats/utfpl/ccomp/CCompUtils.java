@@ -14,7 +14,7 @@ public class CCompUtils {
 
     public static void populateAllFunctions(MapScope<TID> scope) {
         for (String func: m_funcs) {
-            scope.addValue(func, TID.createLibFun(func));
+            scope.addValue(func, TID.createLibFun(func, false));
         }
         return;
     }

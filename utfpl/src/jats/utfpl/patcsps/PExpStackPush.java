@@ -2,13 +2,11 @@ package jats.utfpl.patcsps;
 
 import jats.utfpl.instruction.TID;
 
-public class PStatLocalVarDec implements PStat {
+public class PExpStackPush implements PExp {
     public TID m_name;
-    public PExp m_val;
     
-    public PStatLocalVarDec(TID name, PExp val) {
+    public PExpStackPush(TID name) {
         m_name = name;
-        m_val = val;
     }
 
     @Override

@@ -1,0 +1,14 @@
+
+
+val x = let val x = 3 in x end
+
+
+
+fun foo () = let
+  val x = 3
+in
+  if x then if x then 1 else 2 else 4
+end
+
+val y = if 1 then 2 else 3
+val z = 3

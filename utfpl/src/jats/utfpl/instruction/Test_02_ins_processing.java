@@ -12,10 +12,6 @@ import jats.utfpl.utils.MapScope;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -24,11 +20,18 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class Test_02_ins_process {
+public class Test_02_ins_processing {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/test20_csps_trans_.utfpl"
+                "test/test02_fact.utfpl"
+                , "test/test03_var.utfpl"
+                , "test/test04_if.utfpl"
+                , "test/test05_func_def.utfpl"
+                , "test/test06_func_call.utfpl"
+                , "test/c01_single_main.utfpl"                
+                , "test/test20_csps_trans_.utfpl"
+//                "test/test_temp.utfpl"
         
         };
 

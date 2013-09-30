@@ -2,6 +2,7 @@ package jats.utfpl.instruction;
 
 import java.util.List;
 
+import jats.utfpl.patcsps.Type;
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;
@@ -47,16 +48,15 @@ public class NamingVisitor implements TreeVisitor {
 //        System.out.println("FunDef " + node.m_id.m_id);
         TID tid = m_scope.getValue(node.m_id.m_sid);
         if (null == tid) {
+            // Functions should have all been collected.
             throw new Error("This shall not happen.");
         }
         
-        node.m_id.updateTID(tid);  // update function's tid
+        node.m_id.updateForUsage(m_scope);  // update function's tid
         
         m_scope = m_scope.newScope();
         for (IdExp para: node.m_paralst) {
-            tid = TID.createPara(para.m_sid);
-            para.updateTID(tid);
-            this.m_scope.addValue(tid.getID(), tid);
+            para.updateForPara(m_scope);
         }
         node.m_body.accept(this);
         m_scope = m_scope.getParent();
@@ -66,12 +66,7 @@ public class NamingVisitor implements TreeVisitor {
 
     @Override
     public Object visit(IdExp node) {
-        TID tid = m_scope.getValue(node.m_sid);
-        if (null == tid) {
-            // tid = TID.createUnique(node.m_sid);
-            throw new Error("This shall not happen." + " And m_sid is " + node.m_sid);
-        }
-        node.updateTID(tid);
+        node.updateForUsage(m_scope);
         return null;
     }
 
@@ -88,9 +83,7 @@ public class NamingVisitor implements TreeVisitor {
 //       System.out.println("LamExp");
        m_scope = m_scope.newScope();
        for (IdExp para: node.m_paralst) {
-           TID tid = TID.createPara(para.m_sid);
-           para.updateTID(tid);
-           this.m_scope.addValue(tid.getID(), tid);
+           para.updateForPara(m_scope);
        }
        node.m_body.accept(this);
        m_scope = m_scope.getParent();
@@ -135,11 +128,7 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(ValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
-        if (null != node.m_id) {
-            TID tid = TID.createLocalVar(node.m_id.m_sid, TID.Type.eUnknown);
-            node.m_id.updateTID(tid);
-            this.m_scope.addValue(tid.getID(), tid);
-        }
+        node.m_id.updateForLocalDef(m_scope);
         
         node.m_exp.accept(this);
         
@@ -174,9 +163,7 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(VarDef node) {
         // System.out.println("VarDef " + node.m_id.m_id);
-        TID tid = TID.createGloVar(node.m_id.m_sid);
-        node.m_id.updateTID(tid);
-        this.m_scope.addValue(tid.getID(), tid);
+        node.m_id.updateForGlovalVar(m_scope);
 
         if (null != node.m_exp) {
             node.m_exp.accept(this);
@@ -188,11 +175,7 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(VarAssign node) {
         // System.out.println("VarAssign " + node.m_id.m_id);
-        TID tid = m_scope.getValue(node.m_id.m_sid);
-        if (null == tid) {
-            throw new Error("This shall not happen.");
-        }
-        node.m_id.updateTID(tid);
+        node.m_id.updateForUsage(m_scope);
 
         node.m_exp.accept(this);
         return null;

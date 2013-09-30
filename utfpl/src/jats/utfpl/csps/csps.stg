@@ -11,22 +11,22 @@ event_block_st(inslst, evt) ::= <<
 
 cond_block_st(cond, btrue, bfalse) ::= <<
 ifa (<cond>) {
-    <btrue> 
+  <btrue> 
 } else { 
-    <bfalse> 
+  <bfalse> 
 }
 >>
 
-process_call_block_st(lab, args) ::= <<
-<lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
+process_call_block_st(lab, args, holder) ::= <<
+<holder> = <lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
 >>
 
 move_ins_st(dst, src, v, push, ret) ::= <<
-<dst> = <src>; <if(ret)><delete_frame_st()>;<put_to_stack_st(v)>;<elseif(push)><put_to_stack_st(v)>;<endif>
+<dst> = <src>; <if(push)><put_to_stack_st(v)>;<endif>
 >>
 
 fun_call_ins_st(dst, lab, args, v, push, ret) ::= <<
-<dst> = call(<lab><if(args)>, <endif><args; separator=", ">); <if(ret)><delete_frame_st()>;<put_to_stack_st(v)>;<elseif(push)><put_to_stack_st(v)>;<endif>
+<dst> = call(<lab><if(args)>, <endif><args; separator=", ">); <if(push)><put_to_stack_st(v)>;<endif>
 >>
 
 para_def_st(v) ::= <<
@@ -49,12 +49,20 @@ val_use_stack_bool_st(v, loc) ::= <<
 <get_from_stack_bool_st(loc)>
 >>
 
-temp_atom_val_st(v) ::= <<
+atom_val_st(v) ::= <<
 <v>
+>>
+
+tuple_val_st(ele_lst) ::= <<
+(<ele_lst; separator=", ">)
 >>
 
 global_id_st(id) ::= <<
 <id>
+>>
+
+return_st(v) ::= <<
+<delete_frame_st()>;<put_to_stack_st(v)>;
 >>
 
 // ============================
@@ -80,10 +88,6 @@ delete_frame_st() ::= <<
 GStack.deleteFrame(tid)
 >>
 
-add_stack_st() ::= <<
-GStack.addStack()
->>
-
 // ============================
 
 gvar_lst_st(gvarlst) ::= <<
@@ -102,7 +106,6 @@ main_proc_st(mainlab, body) ::= <<
 <mainlab>(tid) = preloge{<new_frame_st()>;} -> Skip;
 <body>;
 
-<mainlab>0() = main_preloge {<add_stack_st()>;} -> <mainlab>(0);
 >>
 
 
@@ -117,16 +120,6 @@ preloge{<new_frame_st()>; <paras:{x| spush(tid, <x>)}; separator=";">}
 
 
 program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
-#import "PStack";
-#import "MyLib";
-
-// =====================
-var\<PStack> GStack = new PStack();
-channel ChSch 0;
-channel ChSchStart 0;
-
-
-// =====================
 <gvar_lst_st(gvarlst)>
 
 <proc_lst_st(proclst)>

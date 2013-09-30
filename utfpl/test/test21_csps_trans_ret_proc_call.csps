@@ -1,17 +1,72 @@
-var gx_52
+#import "PStack";
 
-move-- gx_52 = 3
-fun foo_50 (x_53)
-{
-  // ret is ret_55
-  ret_55 = xyz_51(x_53)
-  return ret_55
-}
+#import "MyLib";
 
-fun xyz_51 (x_54)
-{
-  // ret is ret_56
-  move-- ret_56 = 1
-  return ret_56
-}
+// =====================
 
+var<PStack> GStack = new PStack();
+var SysTid = 0;
+
+channel SysChSch 0;
+channel SysChSchStart 0;
+
+createThread(fn, arg) = SysChSch!fn.arg -> Skip;
+
+Scheduler = SysChSch?fn.arg ->
+  initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
+  if (fn == 2) {
+    xyz_s(SysTid, arg)
+    |||
+    SchedulerW(SysTid)
+  } else {
+    if (fn == 1) {
+      foo_s(SysTid, arg)
+      |||
+      SchedulerW(SysTid)
+    }
+  }
+  ;
+
+
+SchedulerW (tid) = SysChSchStart?tid -> Scheduler;
+
+// =====================
+
+var gx_17;
+
+foo_15(tid, x_18) =
+  preloge{GStack.newFrame(tid); } ->
+  xyz_16(tid, x_18);
+  {  GStack.deleteFrame(tid); GStack.push(tid, GStack.get(tid, 0, 0));
+  } ->
+  Skip
+  ;
+xyz_16(tid, x_19) =
+  preloge{GStack.newFrame(tid); } ->
+  {  var ret_21 = 1;
+  GStack.deleteFrame(tid); GStack.push(tid, ret_21);
+  } ->
+  Skip
+  ;
+
+foo_s(tid, x_18) =
+  preloge{GStack.newFrame(tid); } ->
+  SysChSchStart!tid ->
+  foo_15(tid, x_18)
+  ;
+xyz_s(tid, x_19) =
+  preloge{GStack.newFrame(tid); } ->
+  SysChSchStart!tid ->
+  xyz_16(tid, x_19)
+  ;
+
+main_s(tid) = 
+  main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
+  {  gx_17 = 3;
+  } ->
+  {  var main_ret_23 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_23);
+  } ->
+  Skip;
+
+main = main_s(0) ||| Scheduler;

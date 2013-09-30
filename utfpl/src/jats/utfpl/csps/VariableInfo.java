@@ -68,7 +68,7 @@ public class VariableInfo {
         } else if (m_tid.isGlobal()) {
             m_isEscaped = false;
             return;
-        } else if (m_tid.isLocal()) {
+        } else if (m_tid.isLocal() || m_tid.isRet()) {
             for (EntityLocation loc: m_usageLst) {
                 if (loc.getBlock() != m_defLoc.getBlock()) {
                     m_isEscaped = true;
@@ -78,8 +78,9 @@ public class VariableInfo {
             m_isEscaped = false;
             return;
         } else {
-            m_isEscaped = false;
-            return;
+            throw new Error("check this");
+//            m_isEscaped = false;
+//            return;
         }
     }
     

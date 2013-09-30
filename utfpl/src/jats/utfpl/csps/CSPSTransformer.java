@@ -11,7 +11,9 @@ import jats.utfpl.instruction.FuncCallIns;
 import jats.utfpl.instruction.FuncDefIns;
 import jats.utfpl.instruction.MoveIns;
 import jats.utfpl.instruction.ProgramIns;
+import jats.utfpl.instruction.ReturnIns;
 import jats.utfpl.instruction.TID;
+import jats.utfpl.instruction.TupleValue;
 import jats.utfpl.instruction.UtfplInstruction;
 import jats.utfpl.instruction.ValPrim;
 
@@ -32,6 +34,7 @@ public class CSPSTransformer {
         List<VariableInfo> globalVarInfo = new ArrayList<VariableInfo>();
         for (TID tid: inputProg.getGlobalVars()) {
             VariableInfo vi = VariableInfo.createGlobalVariable(tid);
+            globalVarInfo.add(vi);
             subMap.put(tid, vi);
         }
 
@@ -73,6 +76,8 @@ public class CSPSTransformer {
         } else if (vp instanceof TID) {
             TID tid = (TID)vp;
             return TID2CTempID(tid, map, funLab, grp, level);
+        } else if (vp instanceof TupleValue) {
+            return new CTempVal((TupleValue) vp);
         } else {
             throw new Error("shall not happen");
         }
@@ -204,7 +209,11 @@ public class CSPSTransformer {
                 } else {
                     throw new Error("todo");
                 }
-
+            } else if (ins instanceof ReturnIns) {
+                ReturnIns aIns = (ReturnIns)ins;
+                CTempID ctHolder = TID2CTempID(aIns.m_tid, subMap, funLab, cblock, level);
+                CIReturn nIns = new CIReturn(ctHolder, cblock);
+                cblock.add(nIns);
                 
             } else {
             	throw new Error("no such case");

@@ -3,6 +3,7 @@ package jats.utfpl.instruction;
 import java.util.ArrayList;
 import java.util.List;
 
+import jats.utfpl.patcsps.Type;
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;
@@ -34,19 +35,6 @@ public class InsTransformer implements TreeVisitor {
     
     private List<TID> m_globalVars;
     
-    private TID getTIDIn() {
-        TID ret = m_tidIn;
-        m_tidIn = null;
-        return ret;
-    }
-    
-    private void setTIDIn(TID in) {
-        if (null == m_tidIn) {
-            m_tidIn = in;
-        } else {
-            throw new Error("should not happen");
-        }
-    }
     
     public InsTransformer() {
         m_inslst = new ArrayList<UtfplInstruction>();
@@ -59,6 +47,22 @@ public class InsTransformer implements TreeVisitor {
     public ProgramIns trans(Program node) {
         this.visit(node);
         return new ProgramIns(m_globalVars, m_inslst);
+    }
+
+    
+    
+    private TID getTIDIn() {
+        TID ret = m_tidIn;
+        m_tidIn = null;
+        return ret;
+    }
+    
+    private void setTIDIn(TID in) {
+        if (null == m_tidIn) {
+            m_tidIn = in;
+        } else {
+            throw new Error("should not happen");
+        }
     }
 
     @Override
@@ -76,7 +80,7 @@ public class InsTransformer implements TreeVisitor {
         if (node.m_id != null) {
             setTIDIn(node.m_id.m_tid);
         } else {
-            setTIDIn(TID.ANONY);
+            throw new Error("Check this");
         }
         
         Object ret = node.m_exp.accept(this);  // The move instruction is created here.
@@ -110,7 +114,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(AppExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("app", TID.Type.eUnknown);
+            holder = TID.createLocalVar("app", Type.eUnknown);
             // m_inslst.add(new VarDefIns(holder));
         }
         
@@ -163,14 +167,14 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(IfExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("if", TID.Type.eUnknown);
+            holder = TID.createLocalVar("if", Type.eUnknown);
 //            m_inslst.add(new VarDefIns(holder));
         }
         
         node.m_cond.accept(this);
         ValPrim vpCond = m_vpOut;  //
         if (vpCond instanceof TID) {
-            ((TID)vpCond).setType(TID.Type.eBool);
+            ((TID)vpCond).setType(Type.eBool);
         }
         
         InsTransformer tVisitor = new InsTransformer();
@@ -204,7 +208,7 @@ public class InsTransformer implements TreeVisitor {
         }
         
         InsTransformer bodyVisitor = new InsTransformer();
-        TID ret = TID.createLocalVar("ret", TID.Type.eUnknown);
+        TID ret = TID.createRetHolder("ret");
         bodyVisitor.setTIDIn(ret);
 //        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
@@ -221,7 +225,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(LetExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("let", TID.Type.eUnknown);
+            holder = TID.createLocalVar("let", Type.eUnknown);
 //            m_inslst.add(new VarDefIns(holder));
         }
         
@@ -236,7 +240,20 @@ public class InsTransformer implements TreeVisitor {
 
     @Override
     public Object visit(TupleExp node) {
-        throw new Error("not supported");
+        if (node != TupleExp.Void) {
+            throw new Error("Only support empty tuple currently.");
+        }
+        
+        TID holder = getTIDIn();
+        if (null != holder) {
+            MoveIns ins = new MoveIns(holder, TupleValue.cNone);
+            m_inslst.add(ins);
+            m_vpOut = holder;
+        } else {
+            m_vpOut = TupleValue.cNone;
+        }
+        
+        return m_inslst;
     }
 
     @Override
