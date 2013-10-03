@@ -1,12 +1,10 @@
 package jats.utfpl.patcsps;
 
-import jats.utfpl.instruction.TID;
-
 public class PExpStackPush implements PExp {
-    public TID m_name;
+    public PExpID m_exp;
     
-    public PExpStackPush(TID name) {
-        m_name = name;
+    public PExpStackPush(PExpID exp) {
+        m_exp = exp;
     }
 
     @Override

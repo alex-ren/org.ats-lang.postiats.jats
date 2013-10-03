@@ -1,6 +1,9 @@
 package jats.utfpl.instruction;
 
 
+import jats.utfpl.patcsps.type.PATType;
+import jats.utfpl.patcsps.type.PATTypeFunc;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +29,7 @@ public class FuncCallIns implements UtfplInstruction {
 
     @Override
     public boolean hasSideEffect() {
-        if (m_funlab.isLibFun()) {
-            return false;
-        } else {
-            return true;  // todo check the body of function
-        }
+        return m_funlab.hasEffect();
     }
     
     public FuncCallIns createSubs(Map<TID, TID> subMap) {
@@ -38,5 +37,9 @@ public class FuncCallIns implements UtfplInstruction {
                 TID.subsTID(m_holder, subMap), 
                 m_funlab, 
                 InstructionProcessor.subsVPLst(m_args, subMap));
+    }
+    
+    public PATType getRetType() {
+        return ((PATTypeFunc)m_funlab.getType()).getRetType();
     }
 }

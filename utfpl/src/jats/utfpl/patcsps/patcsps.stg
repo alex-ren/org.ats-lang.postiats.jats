@@ -14,7 +14,7 @@ var SysTid = 0;
 channel SysChSch 0;
 channel SysChSchStart 0;
 
-createThread(fn, arg) = SysChSch!fn.arg -> Skip;
+createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
 
 Scheduler = SysChSch?fn.arg ->
   initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->

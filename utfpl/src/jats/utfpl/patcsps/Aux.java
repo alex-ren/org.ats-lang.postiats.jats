@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.instruction.TID;
+import jats.utfpl.patcsps.type.PATTypeFunc;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 
 public class Aux {
 	static final public TID cSysTid;
@@ -25,7 +27,9 @@ public class Aux {
 		cSysTid      = TID.createGloVar("SysTid", true);
 		cSysTidExp = new PExpID(cSysTid);
 		
-		cSchedulerWTid = TID.createLibFun("SchedulerW", true);
+		cSchedulerWTid = TID.createLibFun(  // This type doesn't matter. We just need a TID.
+		        "SchedulerW", 
+		        new PATTypeFunc(PATTypeSingleton.cVoidType, true));
 		
 		cSysSch      = TID.createChannel("SysChSch", true);
 		cSysSchStart = TID.createChannel("SysChSchStart", true);
@@ -52,6 +56,11 @@ public class Aux {
 	    
 	    public int getValue() {
 	        return m_i;
+	    }
+	    
+	    @Override
+	    public String toString() {
+	        return Integer.toString(m_i);
 	    }
 	}
 

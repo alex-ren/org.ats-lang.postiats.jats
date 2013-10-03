@@ -1,5 +1,7 @@
 package jats.utfpl.csps;
 import jats.utfpl.instruction.TID;
+import jats.utfpl.patcsps.type.PATTypeFunc;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 
 /*
  * If m_tid is global variable or function parameter, 
@@ -25,6 +27,10 @@ public class CTempID implements CTemp {
     public static CTempID createAsUsage(VariableInfo vi, EntityLocation curLoc) {
         CTempID ret = new CTempID(false, vi, curLoc);
         return ret;
+    }
+    
+    public boolean isFunc() {
+        return m_vi.getTID().getType() instanceof PATTypeFunc;
     }
 
     private CTempID(boolean isDef, VariableInfo vi, EntityLocation curLoc) {
@@ -88,10 +94,15 @@ public class CTempID implements CTemp {
      * m_tid won't be global, which is guaranteed by InstructionProcessor.GlobalVarInsProcessor.addInsForGlobalVar
      * This function is called when an object of CTempID is assigned at the first time.
      */
-    public int processFirstOccurrenceProcCall(int offset) {
-        updateEscaped();
-        offset = updateForDef(offset);  // no matter what, we increase 
-                           // the offset because proc would put the return value on the stack. 
+    public int processFirstOccurrenceProcCall(int offset, boolean isVoid) {
+        if (isVoid) {
+            m_vi.getTID().updateType(PATTypeSingleton.cVoidType);  // The order of these two lines cannot be reversed.
+            updateEscaped();
+        } else {
+            updateEscaped();
+            offset = updateForDef(offset);  // no matter what, we increase 
+                               // the offset because proc would put the return value on the stack. 
+        }
         return offset;
     }
     

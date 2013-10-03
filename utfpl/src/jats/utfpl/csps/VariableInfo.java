@@ -1,6 +1,7 @@
 package jats.utfpl.csps;
 
 import jats.utfpl.instruction.TID;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,12 @@ public class VariableInfo {
             }
             m_isEscaped = false;
             return;
+        } else if (m_tid == TID.ANONY){
+            m_isEscaped = false;
+            return;
+        } else if (m_tid.getType() == PATTypeSingleton.cVoidType) {
+            m_isEscaped = false;
+         
         } else {
             throw new Error("check this");
 //            m_isEscaped = false;
@@ -92,6 +99,8 @@ public class VariableInfo {
                 return false;
             }
         } else if (m_tid.isGlobal()) {
+            return false;
+        } else if (m_tid.isFunc()) {
             return false;
         } else {  // local variable
             if (curLoc.getBlock() != m_defLoc.getBlock()) {

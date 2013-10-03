@@ -6,11 +6,11 @@ import jats.utfpl.csps.CSPSTransformer;
 import jats.utfpl.csps.ProgramCSPS;
 import jats.utfpl.instruction.InsTransformer;
 import jats.utfpl.instruction.InstructionPrinter;
-import jats.utfpl.instruction.NamingVisitor;
 import jats.utfpl.instruction.ProgramIns;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.InstructionPrinter.Type;
 import jats.utfpl.instruction.InstructionProcessor;
+import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
@@ -38,7 +38,8 @@ public class Test_01 {
 //                "test/test20_csps_trans_.utfpl"
 //"test/test21_csps_trans_ret_proc_call.utfpl"
 //                , "test/test22_csp_trans_2if.utfpl"
-                "test/test23_csp_trans_fact.utfpl"
+//                "test/test23_csp_trans_fact.utfpl"
+                "test/test30_csp_multithread.utfpl"
                 
         
         };

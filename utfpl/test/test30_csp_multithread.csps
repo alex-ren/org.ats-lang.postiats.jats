@@ -1,0 +1,58 @@
+#import "PStack";
+
+#import "MyLib";
+
+// =====================
+
+var<PStack> GStack = new PStack();
+var SysTid = 0;
+
+channel SysChSch 0;
+channel SysChSchStart 0;
+
+createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
+
+Scheduler = SysChSch?fn.arg ->
+  initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
+  if (fn == 1) {
+    fact_s(SysTid, arg)
+    |||
+    SchedulerW(SysTid)
+  }
+  ;
+
+
+SchedulerW (tid) = SysChSchStart?tid -> Scheduler;
+
+// =====================
+
+var g_17;
+
+fact_16(tid, x_18) =
+  preloge{GStack.newFrame(tid); } ->
+  {  g_17 = x_18;
+  } ->
+  {  var ret_19 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, ret_19);
+  } ->
+  Skip
+  ;
+
+fact_s(tid, x_18) =
+  preloge{GStack.newFrame(tid); } ->
+  SysChSchStart!tid ->
+  fact_16(tid, x_18)
+  ;
+
+main_s(tid) = 
+  main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
+  {  g_17 = 0;
+  } ->
+  createThread(tid, 1, 1);
+  createThread(tid, 1, 2);
+  {  var main_ret_21 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_21);
+  } ->
+  Skip;
+
+main = main_s(0) ||| Scheduler;

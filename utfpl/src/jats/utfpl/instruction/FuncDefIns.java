@@ -1,6 +1,8 @@
 package jats.utfpl.instruction;
 
 
+import jats.utfpl.patcsps.type.PATTypeFunc;
+
 import java.util.List;
 
 public class FuncDefIns implements UtfplInstruction {
@@ -8,7 +10,6 @@ public class FuncDefIns implements UtfplInstruction {
     public List<TID> m_paralst;
     public List<UtfplInstruction> m_body;
     public TID m_ret;
-    private Boolean m_hasSideEffect;  // indicating whether the body of this function has side effect.
     
     
     public FuncDefIns(TID name, List<TID> paralst, List<UtfplInstruction> body, TID ret) {
@@ -16,19 +17,17 @@ public class FuncDefIns implements UtfplInstruction {
         m_paralst = paralst;
         m_body = body;
         m_ret = ret;
-        m_hasSideEffect = null;
     }
     
     public void flagSideEffect() {
-        m_hasSideEffect = true;
+//        System.out.println("ddddddddddddd " + m_name);
+//        System.out.println(m_name.getType());
+        ((PATTypeFunc)m_name.getType()).updateEffect(true);
     }
     
     public boolean hasSideEffect() {
-        // todo
-        // now all functions have side effect.
-        return true;
+        return m_name.hasEffect();
     }
-    
     
     @Override
     public Object accept(InsVisitor visitor) {

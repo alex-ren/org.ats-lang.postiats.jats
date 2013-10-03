@@ -1,8 +1,8 @@
-package jats.utfpl.instruction;
+package jats.utfpl.parser;
 
 import java.util.List;
 
-import jats.utfpl.patcsps.Type;
+import jats.utfpl.instruction.TID;
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;

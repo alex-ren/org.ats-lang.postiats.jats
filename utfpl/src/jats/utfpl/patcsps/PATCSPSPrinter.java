@@ -110,7 +110,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PProcCall node) {
         ST st = m_stg.getInstanceOf("pproccall_st");
-        st.add("name", node.m_name);
+        st.add("name", node.m_name.toString());
         for (PExp arg: node.m_paraLst) {
             st.add("arg_lst", arg.accept(this));
         }
@@ -120,7 +120,14 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PExpID node) {
-        return node.m_tid.toString();
+        Aux.Address addr = node.m_tid.getAddr();
+        
+        if (null != addr) {
+            return addr.toString();
+        } else {
+            return node.m_tid.toString();
+        }
+        
     }
 
     @Override
@@ -264,7 +271,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PExpStackPush node) {
         ST st = m_stg.getInstanceOf("pexpstackpush_st");
-        st.add("name", node.m_name);
+        st.add("name", node.m_exp.accept(this));
         return st;
     }
 

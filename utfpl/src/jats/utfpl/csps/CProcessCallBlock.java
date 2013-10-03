@@ -3,6 +3,8 @@ package jats.utfpl.csps;
 import java.util.List;
 
 import jats.utfpl.instruction.TID;
+import jats.utfpl.patcsps.type.PATTypeFunc;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 
 public class CProcessCallBlock extends CAdvancedBlock {
     public TID m_funlab;  // Don't support function pointer.
@@ -37,11 +39,17 @@ public class CProcessCallBlock extends CAdvancedBlock {
 
     @Override
     public int process(int offset) {
-        offset = m_ret.processFirstOccurrenceProcCall(offset);
+        if (((PATTypeFunc)m_funlab.getType()).getRetType() == PATTypeSingleton.cVoidType) {
+            offset = m_ret.processFirstOccurrenceProcCall(offset, true);
+        } else {
+            offset = m_ret.processFirstOccurrenceProcCall(offset, false);
+        }
         
         for (CTemp arg: m_args) {
             if (arg instanceof CTempID) {
-                ((CTempID)arg).updateForUsage(this.getLevel());  // create a new CTempID
+                if (!((CTempID)arg).isFunc()) {
+                    ((CTempID)arg).updateForUsage(this.getLevel());  // create a new CTempID
+                }
             } else {
             }
         }

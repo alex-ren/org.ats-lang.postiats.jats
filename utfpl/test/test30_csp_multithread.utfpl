@@ -1,0 +1,15 @@
+
+
+var g := 0
+
+
+fun fact (x) = let
+  g := x
+in () end
+
+
+val () = createThread(fact, 1)
+val () = createThread(fact, 2)
+
+
+

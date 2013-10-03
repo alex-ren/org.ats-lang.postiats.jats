@@ -2,6 +2,7 @@ package jats.utfpl.instruction;
 
 import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.instruction.InstructionPrinter.Type;
+import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;

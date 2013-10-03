@@ -23,6 +23,7 @@ fact_16_tret_24 = fact_16(tid, 3);
 step {
   g_18 = GStack.get(tid, 0, 0); } -> Skip;
 step {
+  var __1 = call(createThread, 1, 2); 
   var main_ret_25 = (); 
   GStack.deleteFrame(tid);GStack.push(tid, main_ret_25);} -> Skip;
 

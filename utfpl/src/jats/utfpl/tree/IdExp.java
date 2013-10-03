@@ -1,9 +1,7 @@
 package jats.utfpl.tree;
 
-import java.util.Map;
-
 import jats.utfpl.instruction.TID;
-import jats.utfpl.patcsps.Type;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
 public class IdExp implements Exp {
@@ -19,7 +17,7 @@ public class IdExp implements Exp {
         if (null == m_sid || m_sid.equals("_")) {
             m_tid = TID.ANONY;
         } else {
-            m_tid = TID.createLocalVar(m_sid, Type.eUnknown);
+            m_tid = TID.createLocalVar(m_sid, PATTypeSingleton.cUnknownType);
             m.addValue(m_sid, m_tid);
         }
     }

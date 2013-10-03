@@ -1,7 +1,6 @@
 package jats.utfpl.instruction;
 
-
-import jats.utfpl.patcsps.Type;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,12 @@ public class InstructionProcessor {
         TID mainRet = TID.createRetHolder("main_ret");
         UtfplInstruction mainEnd = new MoveIns(mainRet, TupleValue.cNone);
         insLst1.add(mainEnd);
-        List<UtfplInstruction> insLst2 = InsLstProcess(insLst1, subMap, mainFunLab, mainRet);
+        
+        List<FuncDefIns> allFuncs = new ArrayList<FuncDefIns>();
+        List<UtfplInstruction> insLst2 = InsLstProcess(insLst1, subMap, mainFunLab, mainRet, allFuncs);
+
+        markSideEffectFunLst(allFuncs);
+        
         return new ProgramIns(inputProg.getGlobalVars(), insLst2);
     }
 	
@@ -68,6 +72,9 @@ public class InstructionProcessor {
 	 * Create a new list and the old list is unchanged.
 	 * Substitution is done along the way as well. Another way to put it,
 	 * the true instruction list is based on both "insLst" and "subMap".
+	 * 
+	 * The purpose of this function is to process if-branch -- turn the program
+	 * into a "Static Single Assignment" form.
 	 */
     /*
      * Effect analysis is done after this stage.
@@ -76,7 +83,8 @@ public class InstructionProcessor {
 			List<UtfplInstruction> insLst, 
 			Map<TID, TID> subMap,
 			TID FuncLab,
-			TID retHolder) {
+			TID retHolder,
+			List<FuncDefIns> allFuncs) {
 		
 		List<UtfplInstruction> nList = new ArrayList<UtfplInstruction>();
 		
@@ -134,11 +142,12 @@ public class InstructionProcessor {
                     newSubMap.put(retHolder, newRetHolder); // <====== map 2
 
                     List<UtfplInstruction> newFuncBody = InsLstProcess(restLst,
-                            newSubMap, newFuncLab, newRetHolder);
+                            newSubMap, newFuncLab, newRetHolder, allFuncs);
 
                     FuncDefIns newFuncDef = new FuncDefIns(newFuncLab,
                             newParas, newFuncBody, newRetHolder);
                     nList.add(newFuncDef); // maybe a closure
+                    allFuncs.add(newFuncDef);
 
                     List<ValPrim> newArgs = new ArrayList<ValPrim>();
                     newArgs.add(condRetHolder);
@@ -152,8 +161,8 @@ public class InstructionProcessor {
                     insLstTrue.add(newFuncCall);
                     insLstFalse.add(newFuncCall);
 				}
-				insLstTrue = InsLstProcess(insLstTrue, subMap, FuncLab, retHolder);
-				insLstFalse = InsLstProcess(insLstFalse, subMap, FuncLab, retHolder);
+				insLstTrue = InsLstProcess(insLstTrue, subMap, FuncLab, retHolder, allFuncs);
+				insLstFalse = InsLstProcess(insLstFalse, subMap, FuncLab, retHolder, allFuncs);
                 
                 CondIns nIns = new CondIns(retHolder, aCond, insLstTrue, insLstFalse);
                 nList.add(nIns);
@@ -167,9 +176,10 @@ public class InstructionProcessor {
                 }
 			} else if (ins instanceof FuncDefIns) {
 			    FuncDefIns aIns = (FuncDefIns)ins;
-			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret);
+			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret, allFuncs);
 			    FuncDefIns nIns = new FuncDefIns(aIns.m_name, aIns.m_paralst, newBody, aIns.m_ret);
 			    nList.add(nIns);
+			    allFuncs.add(nIns);
 			} else if (ins instanceof ReturnIns) {
 			    throw new Error("No ReturnIns at this stage");
 			} else {
@@ -180,57 +190,15 @@ public class InstructionProcessor {
 		
 	}
 
-
-// useless now	
-//    /*
-//     * Effect analysis should be done before this stage.
-//     */
-//    static private void InsLstProcessRetCall(
-//            List<UtfplInstruction> insLst, TID FuncLab) {
-//        ListIterator<UtfplInstruction> iter = insLst.listIterator();
-//        while (iter.hasNext()) {
-//            UtfplInstruction ins = iter.next();
-//            if (ins instanceof MoveIns) {
-//                // no-op
-//            } else if (ins instanceof CondIns) {
-//                CondIns aIns = (CondIns)ins;
-//                InsLstProcessRetCall(aIns.m_btrue, FuncLab);
-//                InsLstProcessRetCall(aIns.m_bfalse, FuncLab);
-//            } else if (ins instanceof FuncCallIns) {
-//                FuncCallIns aIns = (FuncCallIns) ins;
-//                if (aIns.hasSideEffect()) {
-////                    if (aIns.isRet()) {
-////                        // Add one more move instruction for the case that last
-////                        // instruction
-////                        // is a call of function which has side-effect. Such
-////                        // function will
-////                        // be turned into process in the next stage.
-////                        TID tempHolder = TID.createLocalVar(FuncLab.getID()
-////                                + "_tret", Type.eUnknown);
-////                        TID endHolder = aIns.m_holder;
-////                        aIns.m_holder = tempHolder;
-////                        MoveIns extraIns = new MoveIns(endHolder, tempHolder);
-////                        iter.add(extraIns);
-////                    }
-//                }
-//            } else if (ins instanceof FuncDefIns) {
-//                FuncDefIns aIns = (FuncDefIns)ins;
-//                InsLstProcessRetCall(aIns.m_body, aIns.m_name);  
-//            } else {
-//                throw new Error("Not supported");
-//            }
-//        }
-//        return;
-//    }
-
-    /*
+    /*//        System.out.println("ddddddddddddd " + m_name);
+//        System.out.println(m_name.getType());
      * Check whether this function has side effect.
      */
     static private Map<FuncDefIns, Boolean> markSideEffectFunLst(List<FuncDefIns> funlst) {
-        // todo
         Map<FuncDefIns, Boolean> fmap = new HashMap<FuncDefIns, Boolean>();
         for (FuncDefIns funDec: funlst) {
             // assume that all user-defined functions have side effect.
+            // todo
             fmap.put(funDec, true);
             funDec.flagSideEffect();
         }
@@ -239,6 +207,10 @@ public class InstructionProcessor {
         
     }
     
+    /*
+     * This class is for turning single instruction related to global variables into
+     * multiple instructions.
+     */
     static class GlobalVarInsProcessor implements InsVisitor {
         List<UtfplInstruction> m_list;
         
@@ -268,8 +240,8 @@ public class InstructionProcessor {
 
         @Override
         public Object visit(FuncCallIns ins) {
-            if (ins.hasSideEffect() && ins.m_holder.isGlobal()) {
-                TID temp = TID.createLocalVar(ins.m_funlab + "_tret", Type.eUnknown);
+            if (/*ins.hasSideEffect() && todo */ins.m_holder.isGlobal()) {
+                TID temp = TID.createLocalVar(ins.m_funlab + "_tret", ins.getRetType());
                 FuncCallIns nCall = new FuncCallIns(temp, ins.m_funlab, ins.m_args);
                 MoveIns nMove = new MoveIns(ins.m_holder, temp);
                 m_list.add(nCall);
@@ -296,7 +268,7 @@ public class InstructionProcessor {
             if (ins.m_vp instanceof TID) {
                 TID src = (TID)ins.m_vp;
                 if (src.isGlobal() && ins.m_holder.isGlobal()) {
-                    TID temp = TID.createLocalVar(src.getID() + "_temp_", Type.eUnknown);
+                    TID temp = TID.createLocalVar(src.getID() + "_temp_", PATTypeSingleton.cUnknownType);
                     MoveIns step1 = new MoveIns(temp, src);
                     MoveIns step2 = new MoveIns(ins.m_holder, temp);
                     m_list.add(step1);

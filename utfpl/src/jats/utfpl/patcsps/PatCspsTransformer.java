@@ -114,7 +114,7 @@ public class PatCspsTransformer implements CSPSVisitor {
         if (ins.m_holder.isDefinition()) {
             ret.add(new PStatLocalVarDec(var, exp));
             if (ins.m_holder.isEscaped()) {
-                ret.add(new PExpStackPush(var));
+                ret.add(new PExpStackPush(new PExpID(var)));
             }
             return ret;
         } else {
@@ -134,7 +134,7 @@ public class PatCspsTransformer implements CSPSVisitor {
         if (ins.m_ret.isDefinition()) {
             ret.add(new PStatLocalVarDec(retName, exp));
             if (ins.m_ret.isEscaped()) {
-                ret.add(new PExpStackPush(retName));
+                ret.add(new PExpStackPush(new PExpID(retName)));
             }
             
             return ret;            
@@ -170,10 +170,6 @@ public class PatCspsTransformer implements CSPSVisitor {
     public PExp visit(CTempID v) {
 
         if (v.isOutofScope()) {
-            if (v.getStackInfo() == null) {
-                System.out.println("v is " + v);
-                throw new Error("eeeeeeeee");
-            }
             return new PExpStackOpr(v.getStackInfo().getFrame(), v.getStackInfo().getOffset(), v.getTID());
         } else {
             return new PExpID(v.getTID());

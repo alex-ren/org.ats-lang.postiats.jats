@@ -3,7 +3,9 @@ package jats.utfpl.instruction;
 import java.util.ArrayList;
 import java.util.List;
 
-import jats.utfpl.patcsps.Type;
+import jats.utfpl.patcsps.type.PATTypeBool;
+import jats.utfpl.patcsps.type.PATTypeFunc;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;
@@ -114,7 +116,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(AppExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("app", Type.eUnknown);
+            holder = TID.createLocalVar("app", PATTypeSingleton.cUnknownType);
             // m_inslst.add(new VarDefIns(holder));
         }
         
@@ -167,14 +169,14 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(IfExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("if", Type.eUnknown);
+            holder = TID.createLocalVar("if", PATTypeSingleton.cUnknownType);
 //            m_inslst.add(new VarDefIns(holder));
         }
         
         node.m_cond.accept(this);
         ValPrim vpCond = m_vpOut;  //
         if (vpCond instanceof TID) {
-            ((TID)vpCond).setType(Type.eBool);
+            ((TID)vpCond).updateType(PATTypeBool.cType);
         }
         
         InsTransformer tVisitor = new InsTransformer();
@@ -200,6 +202,8 @@ public class InsTransformer implements TreeVisitor {
         TID holder = getTIDIn();
         if (null == holder) {
             holder = TID.createUserFun("lam");
+        } else {
+            holder.updateType(new PATTypeFunc());
         }
         
         List<TID> paralst = new ArrayList<TID>();
@@ -210,7 +214,6 @@ public class InsTransformer implements TreeVisitor {
         InsTransformer bodyVisitor = new InsTransformer();
         TID ret = TID.createRetHolder("ret");
         bodyVisitor.setTIDIn(ret);
-//        bodyVisitor.m_inslst.add(new VarDefIns(ret));
         
         @SuppressWarnings("unchecked")
         List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
@@ -225,7 +228,7 @@ public class InsTransformer implements TreeVisitor {
     public Object visit(LetExp node) {
         TID holder = getTIDIn();
         if (null == holder) {
-            holder = TID.createLocalVar("let", Type.eUnknown);
+            holder = TID.createLocalVar("let", PATTypeSingleton.cUnknownType);
 //            m_inslst.add(new VarDefIns(holder));
         }
         
