@@ -7,6 +7,12 @@ var g := 0
 
 g := fact (3)
 
+fun foo () = let
+  g := 1
+in
+  ()
+end
+
 
 
 

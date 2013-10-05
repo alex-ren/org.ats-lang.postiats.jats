@@ -31,7 +31,7 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class Test_01 {
+public class Test_02 {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
@@ -40,7 +40,7 @@ public class Test_01 {
 //                , "test/test22_csp_trans_2if.utfpl"
 //                "test/test23_csp_trans_fact.utfpl"
 //                "test/test30_csp_multithread.utfpl"
-                "test/test23_csp_trans_fact.utfpl"
+                "test/test31_csp_producer_consumer.utfpl"
                 
         
         };
@@ -148,4 +148,19 @@ public class Test_01 {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,0 +1,54 @@
+
+
+var gn := 0
+
+var m := mutex_allocate()
+var c := cond_allocate()
+
+
+fun producer (x) = let
+  val () = mutex_lock (m)
+in
+  if (eq (gn, 1)) then let
+    val () = cond_wait (c, m)
+    gn := sub (gn, 1)
+    val () = cond_signal (c)
+    val () = mutex_unlock (m)
+  in
+    producer (x)
+  end else let
+    gn := sub (gn, 1)
+    val () = cond_signal (c)
+    val () = mutex_unlock (m)
+  in
+    producer (x)
+  end
+end
+
+fun consumer (x) = let
+  val () = mutex_lock (m)
+in
+  if (eq (gn, 0)) then let
+    val () = cond_wait (c, m)
+    gn := add (gn, 1)
+    val () = cond_signal (c)
+    val () = mutex_unlock (m)
+  in
+    consumer (x)
+  end else let
+    gn := add (gn, 1)
+    val () = cond_signal (c)
+    val () = mutex_unlock (m)
+  in
+    consumer (x)
+  end
+end
+
+val () = createThread(producer, 0)
+val () = createThread(consumer, 0)
+
+
+
+
+
+

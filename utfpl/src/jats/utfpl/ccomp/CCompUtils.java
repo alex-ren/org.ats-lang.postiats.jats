@@ -62,6 +62,32 @@ public class CCompUtils {
         func = "createThread";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
+        func = "mutex_allocate";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = "mutex_lock";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = "mutex_unlock";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = "cond_allocate";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = "cond_wait";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = "cond_signal";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
         return;
     }
 }
+
+
+
+
+
+
+
+
