@@ -170,4 +170,14 @@ public class TreePrinter implements TreeVisitor {
         return st;
     }
 
+	@Override
+    public Object visit(FunGroup node) {
+	    ST st = m_stg.getInstanceOf("fun_group_st");
+	    for (FunDef fundef: node.m_funLst) {
+	    	st.add("fun_lst", fundef.accept(this));
+	    }
+	    return st;
+	    
+    }
+
 }

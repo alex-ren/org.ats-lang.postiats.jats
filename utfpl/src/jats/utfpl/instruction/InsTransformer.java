@@ -11,6 +11,7 @@ import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;
 import jats.utfpl.tree.Exp;
 import jats.utfpl.tree.FunDef;
+import jats.utfpl.tree.FunGroup;
 import jats.utfpl.tree.IdExp;
 import jats.utfpl.tree.IfExp;
 import jats.utfpl.tree.LamExp;
@@ -90,6 +91,7 @@ public class InsTransformer implements TreeVisitor {
         return ret;  
     }
 
+    // FunDef must be inside certain FunGroup
     @Override
     public Object visit(FunDef node) {
         TID name = node.m_id.m_tid;
@@ -108,8 +110,7 @@ public class InsTransformer implements TreeVisitor {
         List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
         
         FuncDefIns fn = new FuncDefIns(name, paralst, body, ret);
-        m_inslst.add(fn);
-        return m_inslst;
+        return fn;
     }
 
     @Override
@@ -199,29 +200,30 @@ public class InsTransformer implements TreeVisitor {
 
     @Override
     public Object visit(LamExp node) {
-        TID holder = getTIDIn();
-        if (null == holder) {
-            holder = TID.createUserFun("lam");
-        } else {
-            holder.updateType(new PATTypeFunc());
-        }
-        
-        List<TID> paralst = new ArrayList<TID>();
-        for (IdExp id: node.m_paralst) {
-            paralst.add(id.m_tid);
-        }
-        
-        InsTransformer bodyVisitor = new InsTransformer();
-        TID ret = TID.createRetHolder("ret");
-        bodyVisitor.setTIDIn(ret);
-        
-        @SuppressWarnings("unchecked")
-        List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
-        
-        FuncDefIns ins = new FuncDefIns(holder, paralst, body, ret);
-        m_inslst.add(ins);
-        m_vpOut = holder;        
-        return m_inslst;
+    	throw new Error("lambda is not supported");
+//        TID holder = getTIDIn();
+//        if (null == holder) {
+//            holder = TID.createUserFun("lam");
+//        } else {
+//            holder.updateType(new PATTypeFunc());
+//        }
+//        
+//        List<TID> paralst = new ArrayList<TID>();
+//        for (IdExp id: node.m_paralst) {
+//            paralst.add(id.m_tid);
+//        }
+//        
+//        InsTransformer bodyVisitor = new InsTransformer();
+//        TID ret = TID.createRetHolder("ret");
+//        bodyVisitor.setTIDIn(ret);
+//        
+//        @SuppressWarnings("unchecked")
+//        List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
+//        
+//        FuncDefIns ins = new FuncDefIns(holder, paralst, body, ret);
+//        m_inslst.add(new FuncGroupIns(ins));  // turn lambda into group too
+//        m_vpOut = holder;
+//        return m_inslst;
     }
 
     @Override
@@ -286,6 +288,18 @@ public class InsTransformer implements TreeVisitor {
         Object ret = node.m_exp.accept(this);
         setTIDIn(Holder);
         return ret;
+    }
+
+	@Override
+    public Object visit(FunGroup node) {
+		List<FuncDefIns> insLst = new ArrayList<FuncDefIns>();
+	    for (FunDef fundef: node.m_funLst) {
+	    	insLst.add((FuncDefIns)fundef.accept(this));
+	    }
+	    
+	    FuncGroupIns nIns = new FuncGroupIns(insLst);
+	    m_inslst.add(nIns);
+	    return m_inslst;
     }
 
 }

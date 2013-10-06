@@ -32,7 +32,7 @@ public class Test_02_ins_processing {
                 , "test/test06_func_call.utfpl"
                 , "test/c01_single_main.utfpl"                
                 , "test/test20_csps_trans_.utfpl"
-//                "test/test_temp.utfpl"
+                , "test/test35_mutual_closure.utfpl"
         
         };
 

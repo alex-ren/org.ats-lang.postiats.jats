@@ -29,6 +29,7 @@ public class Test_02_naming {
         String [] filenames = {
                 "test/test01_tuple.utfpl"
                 ,"test/test02_fact.utfpl"
+                , "test/test35_mutual_closure.utfpl"
         
         };
 

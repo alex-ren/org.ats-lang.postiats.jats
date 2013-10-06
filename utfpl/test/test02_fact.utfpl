@@ -4,7 +4,8 @@
 
 
 val x = let
-  val mull = lam (x, y) => mul(1, mul(x, y))
+  // val mull = lam (x, y) => mul(1, mul(x, y))
+  fun mull (x, y) = mul (1, mul (x, y))
   
   fun fact (n) =
     if gte(n, 1) then mull (n, fact (sub(n, 1))) else 1

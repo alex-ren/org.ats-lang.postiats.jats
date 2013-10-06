@@ -96,9 +96,20 @@ decs returns [List<Dec> decs]
 dec returns [Dec node]
     : ^(Val pat=exp v=exp) {node = new ValDef($pat.node, $v.node);}
     | ^(ASSIGN ID exp) {node = new VarAssign(new IdExp($ID.text), $exp.node);}
-    | ^(FUN id_exp paralst exp) {node = new FunDef($id_exp.node, $paralst.paralst, $exp.node);}
+    | fungroup {node = new FunGroup($fungroup.funLst);}
+    ; 
+
+fungroup returns [List<FunDef> funLst]
+@init {
+  funLst = new ArrayList<FunDef>();
+}
+    : ^(FUNGROUP (fundef{funLst.add($fundef.node);})+)
     ;
 
+fundef returns [FunDef node]
+    : ^(FUN id_exp paralst exp) {node = new FunDef($id_exp.node, $paralst.paralst, $exp.node);}
+    ;
+    
 paralst returns [List<IdExp> paralst]
 @init {
   paralst = new ArrayList<IdExp>();

@@ -1,0 +1,20 @@
+
+fun foo () = let
+  val x = 1
+  
+  fun foo1(q) = let
+    val y = sub (x, 1)
+  in
+    foo2(y)
+  end
+  and foo2 (q) = let
+    val y = add (x, 1)
+  in
+    foo1 (y)
+  end
+in
+  ()
+end
+
+    
+  

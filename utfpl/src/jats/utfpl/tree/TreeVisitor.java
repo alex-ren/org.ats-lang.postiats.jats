@@ -5,6 +5,7 @@ public interface TreeVisitor {
     public Object visit(ValDef node);
     public Object visit(VarDef node);
     public Object visit(VarAssign node);
+    public Object visit(FunGroup node);
     public Object visit(FunDef node);
     
     public Object visit(AppExp node);

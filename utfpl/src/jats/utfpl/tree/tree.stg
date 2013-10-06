@@ -18,6 +18,10 @@ fun <fname> (<paralst; separator=", ">) =
   <body>
 >>
 
+fun_group_st(fun_lst) ::= <<
+<fun_lst; separator="\nand ">
+>>
+
 id_exp_st(id) ::= <<
 <id>
 >>

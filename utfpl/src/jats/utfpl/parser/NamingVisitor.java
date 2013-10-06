@@ -8,6 +8,7 @@ import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;
 import jats.utfpl.tree.Exp;
 import jats.utfpl.tree.FunDef;
+import jats.utfpl.tree.FunGroup;
 import jats.utfpl.tree.IdExp;
 import jats.utfpl.tree.IfExp;
 import jats.utfpl.tree.LamExp;
@@ -94,11 +95,7 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(LetExp node) {
 //        System.out.println("LetExp");
         m_scope = m_scope.newScope();
-        
-        // first scan 
-        scanScope(node.m_decs, m_scope);
-        
-        // second scan
+
         for (Dec dec: node.m_decs) {
             dec.accept(this);
         }
@@ -107,22 +104,6 @@ public class NamingVisitor implements TreeVisitor {
         m_scope = m_scope.getParent();
         
         return null;
-    }
-    
-    // Find all the function definitions in the scope.
-    private void scanScope(List<Dec> decs, MapScope<TID> scope) {
-        String name = null;
-        TID tid = null;
-        for (Dec dec: decs) {
-            if (dec instanceof FunDef) {
-                name = ((FunDef)dec).m_id.m_sid;
-                tid = TID.createUserFun(name);
-            } else {
-                // nothing
-            }
-            scope.addValue(name, tid);
-        }
-        
     }
 
     @Override
@@ -138,11 +119,7 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(Program node) {
         // no need to create a new scope
-        
-        // first scan 
-        scanScope(node.m_decs, m_scope);
-        
-        // second scan
+
         for (Dec dec: node.m_decs) {
             dec.accept(this);
         }
@@ -179,6 +156,21 @@ public class NamingVisitor implements TreeVisitor {
 
         node.m_exp.accept(this);
         return null;
+    }
+
+	@Override
+    public Object visit(FunGroup node) {
+		for (FunDef fundef: node.m_funLst) {
+			String name = fundef.m_id.m_sid;
+            TID tid = TID.createUserFun(name);
+            m_scope.addValue(name, tid);
+		}
+		
+		for (FunDef fundef: node.m_funLst) {
+			fundef.accept(this);
+		}
+        
+		return null;
     }
 
 }

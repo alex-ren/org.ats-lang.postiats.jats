@@ -15,6 +15,10 @@ fun <name> (<paralst; separator=", ">)
   // ret is <ret>
   <body>
 }
+>>
+
+func_group_ins_st(insLst) ::= <<
+<insLst; separator="\nand\n">
 
 >>
 

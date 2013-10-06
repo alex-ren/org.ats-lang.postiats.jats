@@ -1,6 +1,8 @@
 package jats.utfpl.instruction;
 
 import jats.utfpl.patcsps.type.PATTypeSingleton;
+import jats.utfpl.tree.FunDef;
+import jats.utfpl.tree.FunGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +40,9 @@ public class InstructionProcessor {
         List<UtfplInstruction> insLst2 = InsLstProcess(insLst1, subMap, mainFunLab, mainRet, allFuncs);
 
         markSideEffectFunLst(allFuncs);
+        
+        ClosureConverter cvt = new ClosureConverter(insLst2);
+        cvt.convert();
         
         return new ProgramIns(inputProg.getGlobalVars(), insLst2);
     }
@@ -175,13 +180,22 @@ public class InstructionProcessor {
 //                    nList.add(new ReturnIns(nIns.m_holder));
 //                }
 			} else if (ins instanceof FuncDefIns) {
-			    FuncDefIns aIns = (FuncDefIns)ins;
-			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret, allFuncs);
-			    FuncDefIns nIns = new FuncDefIns(aIns.m_name, aIns.m_paralst, newBody, aIns.m_ret);
-			    nList.add(nIns);
-			    allFuncs.add(nIns);
-//			} else if (ins instanceof ReturnIns) {
-//			    throw new Error("No ReturnIns at this stage");
+				throw new Error("should not happen");
+//			    FuncDefIns aIns = (FuncDefIns)ins;
+//			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret, allFuncs);
+//			    FuncDefIns nIns = new FuncDefIns(aIns.m_name, aIns.m_paralst, newBody, aIns.m_ret);
+//			    nList.add(nIns);
+//			    allFuncs.add(nIns);
+			} else if (ins instanceof FuncGroupIns) {
+				List<FuncDefIns> fundefLst = new ArrayList<FuncDefIns>();
+				for (FuncDefIns aIns: ((FuncGroupIns) ins).m_funLst) {
+				    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret, allFuncs);
+				    FuncDefIns nIns = new FuncDefIns(aIns.m_name, aIns.m_paralst, newBody, aIns.m_ret);
+				    fundefLst.add(nIns);
+				    allFuncs.add(nIns);
+				}
+				nList.add(new FuncGroupIns(fundefLst));
+			    
 			} else {
 			    throw new Error("Not supported");
 			}
@@ -190,7 +204,7 @@ public class InstructionProcessor {
 		
 	}
 
-    /*//        System.out.println("ddddddddddddd " + m_name);
+    /*
 //        System.out.println(m_name.getType());
      * Check whether this function has side effect.
      */
@@ -256,11 +270,12 @@ public class InstructionProcessor {
 
         @Override
         public Object visit(FuncDefIns ins) {
-            GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
-            List<UtfplInstruction> body = visitor.addInsForGlobalVar(ins.m_body);
-            FuncDefIns nIns = new FuncDefIns(ins.m_name, ins.m_paralst, body, ins.m_ret);
-            m_list.add(nIns);
-            return m_list;
+        	throw new Error("should not happen");
+//            GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
+//            List<UtfplInstruction> body = visitor.addInsForGlobalVar(ins.m_body);
+//            FuncDefIns nIns = new FuncDefIns(ins.m_name, ins.m_paralst, body, ins.m_ret);
+//            m_list.add(nIns);
+//            return m_list;
         }
 
         @Override
@@ -285,12 +300,21 @@ public class InstructionProcessor {
             }
 
         }
-//
-//        @Override
-//        public Object visit(ReturnIns ins) {
-//            m_list.add(ins);
-//            return m_list;
-//        }
+
+		@Override
+        public Object visit(FuncGroupIns ins) {
+			List<FuncDefIns> fundefLst = new ArrayList<FuncDefIns>();
+			
+			for (FuncDefIns fundef: ins.m_funLst) {
+	            GlobalVarInsProcessor visitor = new GlobalVarInsProcessor();
+	            List<UtfplInstruction> body = visitor.addInsForGlobalVar(fundef.m_body);
+	            FuncDefIns nIns = new FuncDefIns(fundef.m_name, fundef.m_paralst, body, fundef.m_ret);
+	            fundefLst.add(nIns);
+			}
+
+            m_list.add(new FuncGroupIns(fundefLst));
+            return m_list;
+        }
         
     }
 }

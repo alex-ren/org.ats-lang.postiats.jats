@@ -16,7 +16,7 @@ fun foo (x) = let
       in
         div (t2, 3)
       end
-  val r = xyz (3)
+  val r = hello (3)
   val q = hello (z, r)
 in
   mojo (q, y, x)

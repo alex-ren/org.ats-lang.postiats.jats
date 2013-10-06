@@ -10,6 +10,7 @@ tokens {
   // VAR; //  = 'var';
   ASSIGN;
   FUN;
+  FUNGROUP;
   PARALST;
   EXPLST;
   DECLST;
@@ -103,15 +104,19 @@ decs
 dec
     : Val pat=exp Assign v=exp -> ^(Val $pat $v)
     | ID ColonAssign exp -> ^(ASSIGN ID exp)
-    | Fun ID LParen paralst RParen Assign exp -> ^(FUN ID paralst exp)
+    | Fun fundef ('and' fundef)* -> ^(FUNGROUP fundef+)
     ;
 
+fundef
+    : ID LParen paralst RParen Assign exp -> ^(FUN ID paralst exp)
+    ;
+    
 paralst
     : (ID (Comma ID)*)? -> ^(PARALST ID*)
     ;
 
 
-// =====================================================
+// ===================================================== 
 
 Semicol   : ';';
 Colon     : ':';

@@ -157,6 +157,16 @@ public class InstructionPrinter implements InsVisitor {
         
     }
 
+	@Override
+    public Object visit(FuncGroupIns ins) {
+	    ST st = m_stg.getInstanceOf("func_group_ins_st");
+	    for (FuncDefIns fundef: ins.m_funLst) {
+	    	st.add("insLst", fundef.accept(this));
+	    }
+	    return st;
+	    
+    }
+
 //    @Override
 //    public Object visit(ReturnIns ins) {
 //        ST st = m_stg.getInstanceOf("return_ins_st");
