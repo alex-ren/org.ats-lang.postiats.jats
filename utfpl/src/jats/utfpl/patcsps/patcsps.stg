@@ -77,7 +77,7 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 <gvar_lst; separator="\n">
 
-<proc_lst; separator="\n">
+<proc_lst; separator="\n\n">
 
 <thread_lst; separator="\n">
 
@@ -210,12 +210,22 @@ new_frame_st() ::= <<
 GStack.newFrame(tid)
 >>
 
+reload_frame_st() ::= <<
+GStack.reloadFrame(tid)
+>>
+
 delete_frame_st() ::= <<
 GStack.deleteFrame(tid)
 >>
 
 proc_preloge_st(paras) ::= <<
-preloge{<new_frame_st()>; <paras:{x| spush(tid, <x>)}; separator=";">}
+preloge{
+  if (isTailCall) {
+    <reload_frame_st()>;
+  } else {
+    <new_frame_st()>;
+  }
+  <paras:{x| spush(tid, <x>)}; separator=";">}
 >>
 
 

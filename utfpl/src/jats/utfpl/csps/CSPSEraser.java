@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+// remove the CIProcessDef
 public class CSPSEraser implements CSPSVisitor {
     private List<CBlock> m_body;
 
@@ -93,5 +94,4 @@ public class CSPSEraser implements CSPSVisitor {
     public Object visit(CIReturn node) {
         throw new Error("Should not happen");
     }
-
 }

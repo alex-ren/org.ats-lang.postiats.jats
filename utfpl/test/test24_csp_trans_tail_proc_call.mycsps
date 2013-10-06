@@ -1,0 +1,20 @@
+
+sum_55(tid, x_56, accu_57) =  
+step {
+  var app_59<escaped> = call(gt, x_56, 0);} -> Skip;
+ifa (app_59 from <GStack(0, 0)>) {
+  step {
+    var app_60<escaped> = call(sub, x_56, 1);
+    var app_61<escaped> = call(add, accu_57, x_56);} -> Skip;
+  ret_58 = sum_55(tid, app_60 from <GStack(0, 1)>, app_61 from <GStack(0, 2)>) 
+} else { 
+  step {
+    var ret_58 = accu_57;
+    return ret_58;} -> Skip 
+};
+
+main(tid) = 
+step {
+  var main_ret_63 = ();
+  return main_ret_63;} -> Skip;
+

@@ -176,7 +176,7 @@ public class CSPSPrinter implements CSPSVisitor {
         ST st = null;
        // move_ins_st(dst, src, v, push, ret) ::= <<
         st = m_stg.getInstanceOf("move_ins_st");
-        st.add("v", ins.m_holder);
+//        st.add("v", ins.m_holder);
         
         if (ins.needStack()) {
             st.add("push", true);
@@ -195,7 +195,7 @@ public class CSPSPrinter implements CSPSVisitor {
         ST st = null;
         // fun_call_ins_st(dst, lab, argsv, push, ret) ::= <<
         st = m_stg.getInstanceOf("fun_call_ins_st");
-        st.add("v", ins.m_ret);
+//        st.add("v", ins.m_ret);
         
         if (ins.needStack()) {
             st.add("push", true);

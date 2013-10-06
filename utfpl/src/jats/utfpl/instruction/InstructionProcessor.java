@@ -95,9 +95,9 @@ public class InstructionProcessor {
                 MoveIns aIns = (MoveIns)ins;
                 MoveIns nIns = aIns.createSubs(subMap);
                 nList.add(nIns);
-                if (nIns.m_holder.isRet()) {
-                    nList.add(new ReturnIns(nIns.m_holder));
-                }
+//                if (nIns.m_holder.isRet()) {
+//                    nList.add(new ReturnIns(nIns.m_holder));
+//                }
 			} else if (ins instanceof CondIns) {
 				CondIns aIns = (CondIns)ins;
 				
@@ -171,17 +171,17 @@ public class InstructionProcessor {
 			    FuncCallIns aIns = (FuncCallIns)ins;
 			    FuncCallIns nIns = aIns.createSubs(subMap);
 			    nList.add(nIns);
-                if (nIns.m_holder.isRet()) {
-                    nList.add(new ReturnIns(nIns.m_holder));
-                }
+//                if (nIns.m_holder.isRet()) {
+//                    nList.add(new ReturnIns(nIns.m_holder));
+//                }
 			} else if (ins instanceof FuncDefIns) {
 			    FuncDefIns aIns = (FuncDefIns)ins;
 			    List<UtfplInstruction> newBody = InsLstProcess(aIns.m_body, subMap, aIns.m_name, aIns.m_ret, allFuncs);
 			    FuncDefIns nIns = new FuncDefIns(aIns.m_name, aIns.m_paralst, newBody, aIns.m_ret);
 			    nList.add(nIns);
 			    allFuncs.add(nIns);
-			} else if (ins instanceof ReturnIns) {
-			    throw new Error("No ReturnIns at this stage");
+//			} else if (ins instanceof ReturnIns) {
+//			    throw new Error("No ReturnIns at this stage");
 			} else {
 			    throw new Error("Not supported");
 			}
@@ -285,12 +285,12 @@ public class InstructionProcessor {
             }
 
         }
-
-        @Override
-        public Object visit(ReturnIns ins) {
-            m_list.add(ins);
-            return m_list;
-        }
+//
+//        @Override
+//        public Object visit(ReturnIns ins) {
+//            m_list.add(ins);
+//            return m_list;
+//        }
         
     }
 }

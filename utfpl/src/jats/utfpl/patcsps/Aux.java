@@ -15,8 +15,14 @@ public class Aux {
 	static final public TID cSysSch;
 	static final public TID cSysSchStart;
 	static final public TID cParaTid;
+	static final public TID cParaIsTailCall;
 	static final public PExpID cArgTidExp;
+	static final public PExpID cArgTailCallExp;
 	static final public PChannelSend cThreadHeader;
+	
+	static final public PExpAtom cTrue;
+	static final public PExpAtom cFalse;
+	
 	static {
 //		var<PStack> GStack = new PStack();
 //		var SysTid = 0;
@@ -34,11 +40,16 @@ public class Aux {
 		cSysSch      = TID.createChannel("SysChSch", true);
 		cSysSchStart = TID.createChannel("SysChSchStart", true);
 		cParaTid     = TID.createPara("tid", true);
+		cParaIsTailCall = TID.createPara("isTailCall", true);
 		cArgTidExp   = new PExpID(cParaTid);
+		cArgTailCallExp = new PExpID(cParaIsTailCall);
 		
 		List<PExp> msgLst = new ArrayList<PExp>();
     	msgLst.add(cArgTidExp);
 		cThreadHeader= new PChannelSend(cSysSchStart, msgLst);
+		
+		cTrue = PExpAtom.createFromBoolean(true);
+		cFalse = PExpAtom.createFromBoolean(false);
 	}
 	
 	public static class Address {

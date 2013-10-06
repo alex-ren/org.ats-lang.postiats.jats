@@ -9,6 +9,6 @@ public interface InsVisitor {
     
     public Object visit(MoveIns ins);
     
-    public Object visit(ReturnIns ins);
+//    public Object visit(ReturnIns ins);
 //    public Object visit(VarDefIns ins);
 }

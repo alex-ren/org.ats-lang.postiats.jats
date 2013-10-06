@@ -1,0 +1,16 @@
+
+foo_85(tid, x_86) =  
+step {
+  var y_88<escaped> = call(add, x_86, 1);} -> Skip;
+ret_90 = qoo_87(tid);
+
+qoo_87(tid) =  
+step {
+  var z_89<escaped> = call(sub, y_88 from <GStack(-1, 0)>, 1);} -> Skip;
+ret_91 = foo_85(tid, z_89 from <GStack(0, 0)>);
+
+main(tid) = 
+step {
+  var main_ret_93 = ();
+  return main_ret_93;} -> Skip;
+

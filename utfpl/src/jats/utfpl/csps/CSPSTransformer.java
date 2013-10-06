@@ -11,7 +11,6 @@ import jats.utfpl.instruction.FuncCallIns;
 import jats.utfpl.instruction.FuncDefIns;
 import jats.utfpl.instruction.MoveIns;
 import jats.utfpl.instruction.ProgramIns;
-import jats.utfpl.instruction.ReturnIns;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.TupleValue;
 import jats.utfpl.instruction.UtfplInstruction;
@@ -144,6 +143,14 @@ public class CSPSTransformer {
                 CTemp ctValue = ValPrim2CTemp(aIns.m_vp, subMap, funLab, cblock, level);
                 CIMove nIns = new CIMove(ctHolder, ctValue, cblock);
                 cblock.add(nIns);
+                
+                // Add return ins
+                if (aIns.m_holder.isRet()) {
+                    CTempID retCTempID = TID2CTempID(aIns.m_holder, subMap, funLab, cblock, level);
+                    CIReturn retIns = new CIReturn(retCTempID, cblock);
+                    cblock.add(retIns);       
+                }
+                
                 if (aIns.hasSideEffect()) {
                     insBlockList.add(cblock);
                     cblock = new CEventBlock(level);
@@ -171,6 +178,13 @@ public class CSPSTransformer {
                     CIFunCall nIns = new CIFunCall(aIns.m_funlab, nLst, ctHolder, cblock);
 
                     cblock.add(nIns);
+                    
+                    // Add return ins
+                    if (aIns.m_holder.isRet()) {
+                        CTempID retCTempID = TID2CTempID(aIns.m_holder, subMap, funLab, cblock, level);
+                        CIReturn retIns = new CIReturn(retCTempID, cblock);
+                        cblock.add(retIns);
+                    }
                 }
             } else if (ins instanceof CondIns) {
                 CondIns aIns = (CondIns)ins;
@@ -209,12 +223,12 @@ public class CSPSTransformer {
                 } else {
                     throw new Error("todo");
                 }
-            } else if (ins instanceof ReturnIns) {
-                ReturnIns aIns = (ReturnIns)ins;
-                CTempID ctHolder = TID2CTempID(aIns.m_tid, subMap, funLab, cblock, level);
-                CIReturn nIns = new CIReturn(ctHolder, cblock);
-                cblock.add(nIns);
-                
+//            } else if (ins instanceof ReturnIns) {
+//                ReturnIns aIns = (ReturnIns)ins;
+//                CTempID ctHolder = TID2CTempID(aIns.m_tid, subMap, funLab, cblock, level);
+//                CIReturn nIns = new CIReturn(ctHolder, cblock);
+//                cblock.add(nIns);
+//                
             } else {
             	throw new Error("no such case");
             	

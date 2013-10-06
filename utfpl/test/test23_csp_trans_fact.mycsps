@@ -1,28 +1,35 @@
-var g_18;
+var g_25;
 
-fact_16(tid, x_17) = preloge{GStack.newFrame(tid); } -> 
+fact_22(tid, x_24) =  
 step {
-  var app_20 = call(gt, x_17, 0); GStack.push(tid, app_20);} -> Skip;
-ifa (GStack.getBool(tid, 0, 0)) {
+  var app_27<escaped> = call(gt, x_24, 0);} -> Skip;
+ifa (app_27 from <GStack(0, 0)>) {
   step {
-    var app_22 = call(sub, x_17, 1); GStack.push(tid, app_22);} -> Skip;
-  app_21 = fact_16(tid, GStack.get(tid, 0, 1));
+    var app_29<escaped> = call(sub, x_24, 1);} -> Skip;
+  app_28 = fact_22(tid, app_29 from <GStack(0, 1)>);
   step {
-    var ret_19 = call(mul, GStack.get(tid, 0, 2), x_17); 
-    GStack.deleteFrame(tid);GStack.push(tid, ret_19);} -> Skip 
+    var ret_26 = call(mul, app_28 from <GStack(0, 2)>, x_24);
+    return ret_26;} -> Skip 
 } else { 
   step {
-    var ret_19 = 1; 
-    GStack.deleteFrame(tid);GStack.push(tid, ret_19);} -> Skip 
+    var ret_26 = 1;
+    return ret_26;} -> Skip 
 };
 
-main(tid) = preloge{GStack.newFrame(tid);} -> Skip;
+foo_23(tid) =  
 step {
-  g_18 = 0; } -> Skip;
-fact_16_tret_24 = fact_16(tid, 3);
+  var g_25 = 1;} -> Skip;
 step {
-  g_18 = GStack.get(tid, 0, 0); } -> Skip;
+  var ret_30 = ();
+  return ret_30;} -> Skip;
+
+main(tid) = 
 step {
-  var main_ret_25 = (); 
-  GStack.deleteFrame(tid);GStack.push(tid, main_ret_25);} -> Skip;
+  var g_25 = 0;} -> Skip;
+fact_22_tret_32 = fact_22(tid, 3);
+step {
+  var g_25 = fact_22_tret_32 from <GStack(0, 0)>;} -> Skip;
+step {
+  var main_ret_33 = ();
+  return main_ret_33;} -> Skip;
 

@@ -18,6 +18,10 @@ public class PExpAtom implements PExp {
     	return new PExpAtom(AtomValue.createFromInt(x));
     }
     
+    public static PExpAtom createFromBoolean(boolean x) {
+        return new PExpAtom(AtomValue.createFromBoolean(x));
+    }
+    
     public static PExpAtom createFromAddress(Address addr) {
         return new PExpAtom(AtomValue.createFromInt(addr.getValue()));
     }

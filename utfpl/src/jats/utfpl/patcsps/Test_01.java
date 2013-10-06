@@ -41,6 +41,7 @@ public class Test_01 {
 //                "test/test23_csp_trans_fact.utfpl"
 //                "test/test30_csp_multithread.utfpl"
                 "test/test23_csp_trans_fact.utfpl"
+                , "test/test25_csp_closure.utfpl"
                 
         
         };

@@ -1,0 +1,16 @@
+
+
+fun foo (x) = let
+  val y = add (x, 1)
+  
+  fun qoo () = let
+    val z = sub (y, 1)
+  in
+    foo (z)
+  end
+in
+  qoo ()
+end
+
+
+  

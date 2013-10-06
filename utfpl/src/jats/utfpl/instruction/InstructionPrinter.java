@@ -157,12 +157,12 @@ public class InstructionPrinter implements InsVisitor {
         
     }
 
-    @Override
-    public Object visit(ReturnIns ins) {
-        ST st = m_stg.getInstanceOf("return_ins_st");
-        st.add("ret", ins.m_tid.toString());
-        return st;
-    }
+//    @Override
+//    public Object visit(ReturnIns ins) {
+//        ST st = m_stg.getInstanceOf("return_ins_st");
+//        st.add("ret", ins.m_tid.toString());
+//        return st;
+//    }
 
 //    @Override
 //    public Object visit(VarDefIns ins) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="jats/utfpl/instruction/VarDefIns.java|jats/utfpl/emitter/csps/CspsVisitor.java|jats/utfpl/emitter/csps/Test.java|jats/utfpl/csps/CspsVisitor.java|jats/utfpl/instruction/Test_00_all_not_working.java|jats/utfpl/instruction/Test_01_ins_lst.java" kind="src" path="src"/>
+	<classpathentry excluding="jats/utfpl/instruction/VarDefIns.java|jats/utfpl/emitter/csps/CspsVisitor.java|jats/utfpl/emitter/csps/Test.java|jats/utfpl/csps/CspsVisitor.java|jats/utfpl/instruction/Test_00_all_not_working.java|jats/utfpl/instruction/Test_01_ins_lst.java|jats/utfpl/instruction/ReturnIns.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="antlr-output"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="antlr-3.5-complete.jar"/>

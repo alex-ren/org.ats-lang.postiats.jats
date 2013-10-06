@@ -21,12 +21,12 @@ process_call_block_st(lab, args, holder) ::= <<
 <holder> = <lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
 >>
 
-move_ins_st(dst, src, v, push, ret) ::= <<
-<dst> = <src>; <if(push)><put_to_stack_st(v)>;<endif>
+move_ins_st(dst, src, push, ret) ::= <<
+var <dst><if(push)>\<escaped><endif> = <src>;
 >>
 
-fun_call_ins_st(dst, lab, args, v, push, ret) ::= <<
-<dst> = call(<lab><if(args)>, <endif><args; separator=", ">); <if(push)><put_to_stack_st(v)>;<endif>
+fun_call_ins_st(dst, lab, args, push, ret) ::= <<
+var <dst><if(push)>\<escaped><endif> = call(<lab><if(args)>, <endif><args; separator=", ">);
 >>
 
 para_def_st(v) ::= <<
@@ -34,7 +34,7 @@ para_def_st(v) ::= <<
 >>
 
 val_def_st(v) ::= <<
-var <v>
+<v>
 >>
 
 val_use_name_st(v) ::= <<
@@ -42,11 +42,11 @@ val_use_name_st(v) ::= <<
 >>
 
 val_use_stack_st(v, loc) ::= <<
-<get_from_stack_st(loc)>
+<v> from \<<get_from_stack_st(loc)>\>
 >>
 
 val_use_stack_bool_st(v, loc) ::= <<
-<get_from_stack_bool_st(loc)>
+<v> from \<<get_from_stack_bool_st(loc)>\>
 >>
 
 atom_val_st(v) ::= <<
@@ -62,30 +62,18 @@ global_id_st(id) ::= <<
 >>
 
 return_st(v) ::= <<
-<delete_frame_st()>;<put_to_stack_st(v)>;
+return <v>;
 >>
 
 // ============================
 // Library functions
 
 get_from_stack_st(loc) ::= <<
-GStack.get(tid, <loc.frame>, <loc.offset>)
+GStack(<loc.frame>, <loc.offset>)
 >>
 
 get_from_stack_bool_st(loc) ::= <<
-GStack.getBool(tid, <loc.frame>, <loc.offset>)
->>
-
-put_to_stack_st(v) ::= <<
-GStack.push(tid, <v>)
->>
-
-new_frame_st() ::= <<
-GStack.newFrame(tid)
->>
-
-delete_frame_st() ::= <<
-GStack.deleteFrame(tid)
+GStack(<loc.frame>, <loc.offset>)
 >>
 
 // ============================
@@ -103,19 +91,19 @@ proc_lst_st(proclst) ::= <<
 >>
 
 main_proc_st(mainlab, body) ::= <<
-<mainlab>(tid) = preloge{<new_frame_st()>;} -> Skip;
+<mainlab>(tid) = 
 <body>;
 
 >>
 
 
 proc_def_st(lab, paras, esc_paras, body) ::= <<
-<lab>(<if(paras)>tid, <paras; separator=", "><else>tid<endif>) = <proc_preloge_st(esc_paras)> -> 
+<lab>(<if(paras)>tid, <paras; separator=", "><else>tid<endif>) = <if(esc_paras)><proc_preloge_st(esc_paras)> -><endif> 
 <body>;
 >>
 
 proc_preloge_st(paras) ::= <<
-preloge{<new_frame_st()>; <paras:{x| spush(tid, <x>)}; separator=";">}
+<paras:{x| spush(tid, <x>)}; separator=";">
 >>
 
 
@@ -128,34 +116,4 @@ program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
 
 >>
 
-
-// ======The following has no use now=========================
-
-// grp_empty_st() ::= <<
-// Skip;
-// >>
-// 
-// grp_lst_evt_st(lst) ::= <<
-// <lst> -> Skip;
-// >>
-// 
-// grp_lst_proc_st(lst) ::= <<
-// <lst>;
-// >>
-// 
-// event_process_st(evt, proc) ::= <<
-// <evt> -> <proc;wrap="\n">
-// >>
-// 
-// event_event_st(evt1, evt2) ::= <<
-// <evt1> -> <evt2;wrap="\n">
-// >>
-// 
-// process_event_st(proc, evt) ::= <<
-// <proc>; <evt;wrap="\n">
-// >>
-// 
-// process_process_st(proc1, proc2) ::= <<
-// <proc1>; <proc2;wrap="\n">
-// >>
 

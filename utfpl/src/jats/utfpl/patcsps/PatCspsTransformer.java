@@ -100,7 +100,12 @@ public class PatCspsTransformer implements CSPSVisitor {
 
     @Override
     public PProcCall visit(CProcessCallBlock blk) {
-        PProcCall ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args));
+        PProcCall ret = null;
+        if (blk.m_ret.isRet()) { // tail call
+            ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args), true);
+        } else {
+            ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args), false);
+        }
         return ret;
     }
 

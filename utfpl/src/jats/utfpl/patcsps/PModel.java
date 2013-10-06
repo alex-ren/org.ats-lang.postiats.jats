@@ -9,7 +9,6 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 public class PModel implements PNode {
@@ -61,10 +60,12 @@ public class PModel implements PNode {
         // Preparation for Scheduler
         //      Scheduler = SysChSch?fn.arg ->
         //      init{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
+        
+        // <scheduler_body> goes as follows
         //      ifa (fn == 0) {
-        //        main1_s (SysTid, arg) ||| SchedulerW (SysTid)
+        //        main1_s (true, SysTid, arg) ||| SchedulerW (SysTid)
         //      } else ifa (fn == 1) {
-        //        fact_15_s (SysTid, arg) ||| SchedulerW (SysTid)
+        //        fact_15_s (true, SysTid, arg) ||| SchedulerW (SysTid)
         //      }
         //      ;
         PProc scheduler = null;
@@ -73,35 +74,61 @@ public class PModel implements PNode {
         
         List<PExp> argLst = new ArrayList<PExp>();
         
-        // e.g. SchedulerW (SysTid)
+        // SchedulerW is defined in patcsps.stg, not here. => SchedulerW (tid) = SysChSchStart?tid -> Scheduler;
+        // Building arguments for SchedulerW
         argLst.add(Aux.cSysTidExp);
-        PProcCall SchedulerW = new PProcCall(Aux.cSchedulerWTid, argLst);
-        
-        // e.g. (SysTid, arg)
+        // => SchedulerW (SysTid)
+        PProcCall SchedulerW = new PProcCall(Aux.cSchedulerWTid, argLst, true);
+       
+        // =================================
+        // arguments for calling ..._s function
+        // (true, SysTid, arg)
         argLst = new ArrayList<PExp>();
+        argLst.add(Aux.cTrue);
         argLst.add(Aux.cSysTidExp);
         argLst.add(arg);
-        
+
         // =================================
         
         Map<TID, Address> m = new HashMap<TID, Address>();
         TIDAdder processor = new TIDAdder();
+        TailProcCallProcessor tailCallProcessor = new TailProcCallProcessor();
         
         m_mainProcBody.accept(processor);
+        m_mainProcBody.accept(tailCallProcessor);
         
+        // add tid, tailcall
+        // build the scheduler
         for (PGDecProc proc: m_procLst) {
             proc.accept(processor);
+            proc.accept(tailCallProcessor);
             // These processes can be used as functions for creating threads.
-            if (proc.m_paraLst.size() == 2) {  // one is tid, another is ...
+            if (proc.m_paraLst.size() == 3) {  // first is "isTailCall", second is "tid", the third is any
+                List<TID> threadParaLst = new ArrayList<TID>();
                 List<PExp> threadArgLst = new ArrayList<PExp>();
-                for (TID threadArg: proc.m_paraLst) {
-                    threadArgLst.add(new PExpID(threadArg));
+                
+                // isTailCall
+                threadParaLst.add(proc.m_paraLst.get(0));
+                // tid
+                threadParaLst.add(proc.m_paraLst.get(1));
+                // Keep the uniqueness of TID for non-system names
+                TID newParaTid = TID.createPara(proc.m_paraLst.get(2).getID(), false);
+                threadParaLst.add(newParaTid);
+                
+                for (TID para: threadParaLst) {
+                    threadArgLst.add(new PExpID(para));
                 }
-                PProcChannel threadBody = new PProcChannel(Aux.cThreadHeader, new PProcCall(proc.m_name, threadArgLst));
+
+                // build =>
+                // SysChSchStart!tid -> producer_22(isTailCall, tid, x_27)
+                PProcChannel threadBody = new PProcChannel(Aux.cThreadHeader, new PProcCall(proc.m_name, threadArgLst, true));
                 TID threadName = TID.createLibFun(
                         proc.m_name.getID() + "_s", 
                         new PATTypeFunc(PATTypeSingleton.cVoidType, true));
-                PGDecProc threadDef = new PGDecProc(threadName, proc.m_paraLst, new ArrayList<TID>() /*no escaped parameter*/, threadBody);
+                
+                // build =>
+                // producer_s(isTailCall, tid, x_27) = SysChSchStart!tid -> producer_22(isTailCall, tid, x_27)
+                PGDecProc threadDef = new PGDecProc(threadName, threadParaLst, new ArrayList<TID>() /*no escaped parameter*/, threadBody);
 
                 Aux.Address addr = Aux.Address.createPointer();
                 proc.m_name.updateAddr(addr);
@@ -111,8 +138,9 @@ public class PModel implements PNode {
                 // e.g. fn == 0
                 PExpID funPtr = new PExpID(proc.m_name);
                 PExpOpr condExp = new PExpOpr(PExpOpr.Type.eq, fn, funPtr);
-                // e.g. main1_s (SysTid, arg) ||| SchedulerW (SysTid)
-                PProc ifProc = new PProcCall(threadName, argLst);
+                // build =>
+                // producer_s(true, SysTid, arg) ||| SchedulerW (SysTid)
+                PProc ifProc = new PProcCall(threadName, argLst, true);
                 ifProc = new PProcParallel(ifProc, SchedulerW);
                 
                 // build the process for scheduler
@@ -265,176 +293,158 @@ public class PModel implements PNode {
             return this;
         }
         
-
     }
     
-//    // Add TID to function parameter and arguments
-//    class FuncPtrConverter implements PNodeVisitor {
-//        Map<TID, Address> m_mapAddr;
-//        
-//        public FuncPtrConverter(Map<TID, Address> mapAddr) {
-//            m_mapAddr = mapAddr;
-//        }
-//
-//        @Override
-//        public Object visit(PGDecVar node) {
-//            node.m_exp.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PProcBranch node) {
-//            node.m_ifProc.accept(this);
-//            node.m_elseProc.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PEvent node) {
-//            for (PStat stat: node.m_statLst) {
-//                stat.accept(this);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PExpFuncCall node) {
-//            ListIterator<PExp> iter = node.m_argLst.listIterator();
-//            while (iter.hasNext()) {
-//                PExp exp = iter.next();
-//                exp.accept(this);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PStatLocalVarDec node) {
-//            node.m_val.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PStatAssignment node) {
-//            node.m_val.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PExpAtom node) {
-//            return this;
-//        }
-//
-//        @Override
-//        public Object visit(PProcAtom node) {
-//            return this;
-//        }
-//
-//        @Override
-//        public Object visit(PProcCall node) {
-//            for (PExp exp: node.m_paraLst) {
-//                exp.accept(this);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PExpID node) {
-//            Aux.Address addr = m_mapAddr.get(node.m_tid);
-//            if (addr != null) {
-//                node.updateAddr(addr);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PModel node) {
-//            node.m_mainProcBody.accept(this);
-//            for (PGDecProc proc: node.m_procLst) {
-//                proc.accept(this);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PGDecProc node) {
-//            node.m_body.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PProcSeq node) {
-//            node.m_procLeft.accept(this);
-//            node.m_procRight.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PExpStackOpr node) {
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PProcEvent node) {
-//            node.m_evt.accept(this);
-//            node.m_proc.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PInclude node) {
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PGDecChan node) {
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PProcChannel node) {
-//            node.m_ch.accept(this);
-//            node.m_proc.accept(this);
-//            return null;
-//        }
-//
-//        @Override
-//        public Object visit(PChannelRecv node) {
-//            throw new Error("not supported");
-//        }
-//
-//        @Override
-//        public Object visit(PChannelSend node) {
-//            throw new Error("not supported");
-//        }
-//
-//        @Override
-//        public Object visit(PExpOpr node) {
-//            throw new Error("not supported");
-//        }
-//
-//        @Override
-//        public Object visit(PProcParallel node) {
-//            throw new Error("not supported");
-//        }
-//
-//        @Override
-//        public Object visit(PExpStackPush node) {
-//            throw new Error("not supported");
-//        }
-//
-//        @Override
-//        public Object visit(PStatReturn node) {
-//            return this;
-//        }
-//
-//        @Override
-//        public Object visit(PExpTuple node) {
-//            return this;
-//        }
-//        
-//
-//    }
-    
+
+    // Add TID to function parameter and arguments
+    class TailProcCallProcessor implements PNodeVisitor {
+        public TailProcCallProcessor() {
+        }
+
+        @Override
+        public Object visit(PGDecVar node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PProcBranch node) {
+            node.m_ifProc.accept(this);
+            node.m_elseProc.accept(this);
+            return this;
+        }
+
+        @Override
+        public Object visit(PEvent node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PExpFuncCall node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PStatLocalVarDec node) {
+            node.m_val.accept(this);
+            return this;
+        }
+
+        @Override
+        public Object visit(PStatAssignment node) {
+            node.m_val.accept(this);
+            return this;
+        }
+
+        @Override
+        public Object visit(PExpAtom node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PProcAtom node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PProcCall node) {
+            if (!node.m_name.isLibFun()) {
+                if (node.isTailCall()) {
+                    node.m_paraLst.add(0, Aux.cTrue);
+                } else {
+                    node.m_paraLst.add(0, Aux.cFalse);
+                }
+            }
+            
+            return this;
+        }
+
+        @Override
+        public Object visit(PExpID node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PModel node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PGDecProc node) {
+            node.m_paraLst.add(0, Aux.cParaIsTailCall);
+            node.m_body.accept(this);
+            return this;
+        }
+
+        @Override
+        public Object visit(PProcSeq node) {
+            node.m_procLeft.accept(this);
+            node.m_procRight.accept(this);
+            return this;
+        }
+
+        @Override
+        public Object visit(PExpStackOpr node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PProcEvent node) {
+            node.m_evt.accept(this);
+            node.m_proc.accept(this);
+            return this;
+        }
+
+        @Override
+        public Object visit(PInclude node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PGDecChan node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PProcChannel node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PChannelRecv node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PChannelSend node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PExpOpr node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PProcParallel node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PExpStackPush node) {
+            throw new Error("not supported");
+        }
+
+        @Override
+        public Object visit(PStatReturn node) {
+            return this;
+        }
+
+        @Override
+        public Object visit(PExpTuple node) {
+            return this;
+        }
+        
+    }
     
     @Override
     public Object accept(PNodeVisitor visitor) {

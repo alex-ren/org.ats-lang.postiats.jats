@@ -16,4 +16,8 @@ public class AtomValue implements ValPrim {
     	return new AtomValue(Integer.toString(x));
     }
     
+    public static AtomValue createFromBoolean(boolean x) {
+        return new AtomValue(Boolean.toString(x));
+    }
+    
 }
