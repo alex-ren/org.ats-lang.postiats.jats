@@ -74,9 +74,9 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var g_25;
+var g_24;
 
-fact_22(isTailCall, tid, x_24) =
+fact_22(isTailCall, tid, x_23) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -84,15 +84,15 @@ fact_22(isTailCall, tid, x_24) =
       GStack.newFrame(tid);
     }
   } ->
-  {  var app_27 = call(gt, x_24, 0);
+  {  var app_27 = call(gt, x_23, 0);
   GStack.push(tid, app_27);
   } ->
   if (GStack.getBool(tid, 0, 0)) {
-    {  var app_29 = call(sub, x_24, 1);
+    {  var app_29 = call(sub, x_23, 1);
     GStack.push(tid, app_29);
     } ->
     fact_22(false, tid, GStack.get(tid, 0, 1));
-    {  var ret_26 = call(mul, GStack.get(tid, 0, 2), x_24);
+    {  var ret_26 = call(mul, GStack.get(tid, 0, 2), x_23);
     GStack.deleteFrame(tid); GStack.push(tid, ret_26);
     } ->
     Skip
@@ -105,7 +105,7 @@ fact_22(isTailCall, tid, x_24) =
   Skip
   ;
 
-foo_23(isTailCall, tid) =
+foo_25(isTailCall, tid) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -113,7 +113,7 @@ foo_23(isTailCall, tid) =
       GStack.newFrame(tid);
     }
   } ->
-  {  g_25 = 1;
+  {  g_24 = 1;
   } ->
   {  var ret_30 = 0;
   GStack.deleteFrame(tid); GStack.push(tid, ret_30);
@@ -135,10 +135,10 @@ fact_s(isTailCall, tid, x_43) =
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  g_25 = 0;
+  {  g_24 = 0;
   } ->
   fact_22(false, tid, 3);
-  {  g_25 = GStack.get(tid, 0, 0);
+  {  g_24 = GStack.get(tid, 0, 0);
   } ->
   {  var main_ret_33 = 0;
   GStack.deleteFrame(tid); GStack.push(tid, main_ret_33);

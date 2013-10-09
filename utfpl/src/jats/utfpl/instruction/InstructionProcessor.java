@@ -1,8 +1,6 @@
 package jats.utfpl.instruction;
 
 import jats.utfpl.patcsps.type.PATTypeSingleton;
-import jats.utfpl.tree.FunDef;
-import jats.utfpl.tree.FunGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,10 +39,10 @@ public class InstructionProcessor {
 
         markSideEffectFunLst(allFuncs);
         
-        ClosureConverter cvt = new ClosureConverter(insLst2);
-        cvt.convert();
+        ClosureConverter cvt = new ClosureConverter();
+        List<UtfplInstruction> insLst3 = cvt.convert(insLst2);
         
-        return new ProgramIns(inputProg.getGlobalVars(), insLst2);
+        return new ProgramIns(inputProg.getGlobalVars(), insLst3);
     }
 	
     static public ValPrim subsVP(ValPrim vp, Map<TID, TID> subMap) {

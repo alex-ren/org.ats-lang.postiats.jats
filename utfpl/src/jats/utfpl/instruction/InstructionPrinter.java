@@ -95,6 +95,7 @@ public class InstructionPrinter implements InsVisitor {
             ST st = m_stg.getInstanceOf("tuple_value_st");
             return st;
         } else {
+            System.out.println("vvvvvvvvvvvvv vp is " + vp);
             throw new Error("shall not happen");
         }
     }

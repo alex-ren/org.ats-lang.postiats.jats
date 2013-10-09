@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.patcsps.type.PATTypeBool;
-import jats.utfpl.patcsps.type.PATTypeFunc;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;

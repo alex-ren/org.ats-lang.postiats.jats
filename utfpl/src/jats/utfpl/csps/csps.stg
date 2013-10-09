@@ -18,7 +18,7 @@ ifa (<cond>) {
 >>
 
 process_call_block_st(lab, args, holder) ::= <<
-<holder> = <lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
+<holder>\<process> = <lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
 >>
 
 move_ins_st(dst, src, push, ret) ::= <<

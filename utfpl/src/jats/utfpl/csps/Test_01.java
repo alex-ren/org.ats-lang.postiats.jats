@@ -32,12 +32,9 @@ public class Test_01 {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-//                "test/test20_csps_trans_.utfpl"
-//                , "test/test21_csps_trans_ret_proc_call.utfpl"
-//                , "test/test22_csp_trans_2if.utfpl"
                 "test/test23_csp_trans_fact.utfpl"
-                , "test/test24_csp_trans_tail_proc_call.utfpl"
-                , "test/test25_csp_closure.utfpl"
+//                , "test/test24_csp_trans_tail_proc_call.utfpl"
+//                , "test/test25_csp_closure.utfpl"
         
         };
 

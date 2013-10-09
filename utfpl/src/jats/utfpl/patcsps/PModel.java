@@ -16,7 +16,7 @@ public class PModel implements PNode {
     public PProc m_mainProcBody;
     public List<PGDecProc> m_procLst;  // all the processes in the program
     
-    public List<PGDecProc> m_threadLst;  // wrapper for those processes which only take one argument
+    public List<PGDecProc> m_threadLst;  // wrapper for those processes (on the outmost level) which only take one argument
     public PProc m_SchedulerBody;
     
 //    private List<PInclude> m_inclLst;

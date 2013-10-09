@@ -7,6 +7,9 @@ public class StackPosition {
     private StackPosition(int frame, int offset) {
         if (frame > 0) {
             throw new Error("useless information");
+        } else if (frame < 0) {
+            throw new Error("shouldn't see closure here");
+            // all closures should have been eliminated by ClosureConverter.
         }
         m_offset = offset;
         m_frame = frame;

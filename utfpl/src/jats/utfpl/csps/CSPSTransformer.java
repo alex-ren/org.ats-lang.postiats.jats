@@ -219,7 +219,7 @@ public class CSPSTransformer {
                     cblock.add(cProc);
                     
                     outProcs.add(cProc);
-                    outProcs.addAll(innerProcs);
+//                    outProcs.addAll(innerProcs);  // We only need the processes on the outmost level.
                 } else {
                     throw new Error("todo");
                 }

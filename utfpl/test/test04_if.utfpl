@@ -1,5 +1,6 @@
+val z = 3
 
-val x = if 1 then if 2 then 3
-                   else 4
+val x = if 1 then if z then 3
+                   else z
          else 5
-val y = 3
+val y = z

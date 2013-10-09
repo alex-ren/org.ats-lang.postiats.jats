@@ -13,7 +13,7 @@ fun foo () = let
     foo1 (y)
   end
 in
-  ()
+  foo1(3)
 end
 
     

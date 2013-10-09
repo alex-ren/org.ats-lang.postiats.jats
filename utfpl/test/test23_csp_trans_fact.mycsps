@@ -1,14 +1,14 @@
-var g_25;
+var g_24;
 
-fact_22(tid, x_24) =  
+fact_22(tid, x_23) =  
 step {
-  var app_27<escaped> = call(gt, x_24, 0);} -> Skip;
+  var app_27<escaped> = call(gt, x_23, 0);} -> Skip;
 ifa (app_27 from <GStack(0, 0)>) {
   step {
-    var app_29<escaped> = call(sub, x_24, 1);} -> Skip;
-  app_28 = fact_22(tid, app_29 from <GStack(0, 1)>);
+    var app_29<escaped> = call(sub, x_23, 1);} -> Skip;
+  app_28<process> = fact_22(tid, app_29 from <GStack(0, 1)>);
   step {
-    var ret_26 = call(mul, app_28 from <GStack(0, 2)>, x_24);
+    var ret_26 = call(mul, app_28 from <GStack(0, 2)>, x_23);
     return ret_26;} -> Skip 
 } else { 
   step {
@@ -16,19 +16,19 @@ ifa (app_27 from <GStack(0, 0)>) {
     return ret_26;} -> Skip 
 };
 
-foo_23(tid) =  
+foo_25(tid) =  
 step {
-  var g_25 = 1;} -> Skip;
+  var g_24 = 1;} -> Skip;
 step {
   var ret_30 = ();
   return ret_30;} -> Skip;
 
 main(tid) = 
 step {
-  var g_25 = 0;} -> Skip;
-fact_22_tret_32 = fact_22(tid, 3);
+  var g_24 = 0;} -> Skip;
+fact_22_tret_32<process> = fact_22(tid, 3);
 step {
-  var g_25 = fact_22_tret_32 from <GStack(0, 0)>;} -> Skip;
+  var g_24 = fact_22_tret_32 from <GStack(0, 0)>;} -> Skip;
 step {
   var main_ret_33 = ();
   return main_ret_33;} -> Skip;

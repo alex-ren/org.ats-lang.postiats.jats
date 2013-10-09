@@ -80,11 +80,11 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var gn_24;
-var m_25;
-var c_26;
+var gn_22;
+var m_23;
+var c_24;
 
-producer_22(isTailCall, tid, x_27) =
+producer_25(isTailCall, tid, x_26) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -92,32 +92,12 @@ producer_22(isTailCall, tid, x_27) =
       GStack.newFrame(tid);
     }
   } ->
-  mutex_lock(tid, m_25);
-  {  var app_30 = call(eq, gn_24, 1);
-  GStack.push(tid, app_30);
-  } ->
-  if (GStack.getBool(tid, 0, 0)) {
-    cond_wait(tid, c_26, m_25);
-    {  var sub_tret_36 = call(sub, gn_24, 1);
-    gn_24 = sub_tret_36;
-    } ->
-    cond_signal(tid, c_26);
-    mutex_unlock(tid, m_25);
-    producer_22(true, tid, x_27);
-    Skip
-  } else {
-    {  var sub_tret_37 = call(sub, gn_24, 1);
-    gn_24 = sub_tret_37;
-    } ->
-    cond_signal(tid, c_26);
-    mutex_unlock(tid, m_25);
-    producer_22(true, tid, x_27);
-    Skip
-  };
+  mutex_lock(tid, m_23);
+  loop_27(true, tid, x_26);
   Skip
   ;
 
-consumer_23(isTailCall, tid, x_28) =
+consumer_28(isTailCall, tid, x_29) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -125,32 +105,12 @@ consumer_23(isTailCall, tid, x_28) =
       GStack.newFrame(tid);
     }
   } ->
-  mutex_lock(tid, m_25);
-  {  var app_32 = call(eq, gn_24, 0);
-  GStack.push(tid, app_32);
-  } ->
-  if (GStack.getBool(tid, 0, 0)) {
-    cond_wait(tid, c_26, m_25);
-    {  var add_tret_38 = call(add, gn_24, 1);
-    gn_24 = add_tret_38;
-    } ->
-    cond_signal(tid, c_26);
-    mutex_unlock(tid, m_25);
-    consumer_23(true, tid, x_28);
-    Skip
-  } else {
-    {  var add_tret_39 = call(add, gn_24, 1);
-    gn_24 = add_tret_39;
-    } ->
-    cond_signal(tid, c_26);
-    mutex_unlock(tid, m_25);
-    consumer_23(true, tid, x_28);
-    Skip
-  };
+  mutex_lock(tid, m_23);
+  loop_30(true, tid, x_29);
   Skip
   ;
 
-producer_s(isTailCall, tid, x_50) =
+producer_s(isTailCall, tid, x_54) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -159,9 +119,9 @@ producer_s(isTailCall, tid, x_50) =
     }
   } ->
   SysChSchStart!tid ->
-  producer_22(isTailCall, tid, x_50)
+  producer_25(isTailCall, tid, x_54)
   ;
-consumer_s(isTailCall, tid, x_52) =
+consumer_s(isTailCall, tid, x_56) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -170,23 +130,23 @@ consumer_s(isTailCall, tid, x_52) =
     }
   } ->
   SysChSchStart!tid ->
-  consumer_23(isTailCall, tid, x_52)
+  consumer_28(isTailCall, tid, x_56)
   ;
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  gn_24 = 0;
+  {  gn_22 = 0;
   } ->
   mutex_allocate(tid);
-  {  m_25 = GStack.get(tid, 0, 0);
+  {  m_23 = GStack.get(tid, 0, 0);
   } ->
   cond_allocate(tid);
-  {  c_26 = GStack.get(tid, 0, 1);
+  {  c_24 = GStack.get(tid, 0, 1);
   } ->
   createThread(tid, 1, 0);
   createThread(tid, 2, 0);
-  {  var main_ret_40 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_40);
+  {  var main_ret_42 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_42);
   } ->
   Skip;
 
