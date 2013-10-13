@@ -41,6 +41,8 @@ public class Test_02 {
 //                "test/test23_csp_trans_fact.utfpl"
 //                "test/test30_csp_multithread.utfpl"
                 "test/test31_csp_producer_consumer.utfpl"
+                , "test/test36.utfpl"
+                , "test/test37.utfpl"
                 
         
         };
@@ -135,7 +137,7 @@ public class Test_02 {
             System.out.println(outputPATCSPS);
 
             FileWriter fwINS = new FileWriter("test/" + classname
-                    + ".csps");
+                    + ".csp");
             BufferedWriter bwINS = new BufferedWriter(fwINS);
             bwINS.write(outputPATCSPS);
             bwINS.close();

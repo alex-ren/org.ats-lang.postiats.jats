@@ -9,12 +9,14 @@ public class CIProcessDef implements CInstruction {
     public List<CTempID> m_paras;
     public List<CBlock> m_body;
     public CBlock m_blk;
+    public int m_level;
     
-    public CIProcessDef(TID name, List<CTempID> paras, List<CBlock> body, CBlock blk) {
+    public CIProcessDef(TID name, List<CTempID> paras, List<CBlock> body, CBlock blk, int level) {
         m_name = name;
         m_paras = paras;
         m_body = body;
         m_blk = blk;
+        m_level = level;
     }
 
     @Override

@@ -14,8 +14,8 @@ createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
 
 Scheduler = SysChSch?fn.arg ->
   initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
-  if (fn == 2) {
-    foo_s(true, SysTid, arg)
+  if (fn == 3) {
+    producer_s_92(false, SysTid, arg)
     |||
     SchedulerW(SysTid)
   }
@@ -74,8 +74,11 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
+var gn_78;
+var m_79;
+var c_80;
 
-foo_94(isTailCall, tid, x_95) =
+producer_81(isTailCall, tid, x_82) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -83,29 +86,11 @@ foo_94(isTailCall, tid, x_95) =
       GStack.newFrame(tid);
     }
   } ->
-  {  var y_96 = call(add, x_95, 1);
-  GStack.push(tid, y_96);
-  } ->
-  qoo_97(true, tid, GStack.get(tid, 0, 0));
-  Skip
+  mutex_lock(tid, m_79);
+  producer_81(true, tid, x_82)
   ;
 
-qoo_97(isTailCall, tid, y_esc_103) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    }
-  } ->
-  {  var z_98 = call(sub, y_esc_103, 1);
-  GStack.push(tid, z_98);
-  } ->
-  foo_94(true, tid, GStack.get(tid, 0, 0));
-  Skip
-  ;
-
-foo_s(isTailCall, tid, x_107) =
+producer_s_92(isTailCall, tid, x_91) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -114,14 +99,29 @@ foo_s(isTailCall, tid, x_107) =
     }
   } ->
   SysChSchStart!tid ->
-  foo_94(isTailCall, tid, x_107)
+  producer_81(isTailCall, tid, x_91)
   ;
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  var main_ret_102 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_102);
+  {  gn_78 = 0;
+  } ->
+  mutex_allocate(tid);
+  {  m_79 = GStack.get(tid, 0, 0);
+  } ->
+  cond_allocate(tid);
+  {  c_80 = GStack.get(tid, 0, 1);
+  } ->
+  {  var main_ret_87 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_87);
   } ->
   Skip;
 
 main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
+
+
+#assert main deadlockfree;
+
+#define Prop1 (gn_22 < 2);
+
+#assert main |= G Prop1;

@@ -1,0 +1,14 @@
+
+
+
+var gn := 0
+
+var m := mutex_allocate()
+var c := cond_allocate()
+
+
+fun producer (x) = let
+  val () = mutex_lock (m)
+in
+  producer (x)
+end

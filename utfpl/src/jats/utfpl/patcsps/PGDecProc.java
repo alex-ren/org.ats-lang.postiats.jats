@@ -11,12 +11,14 @@ public class PGDecProc implements PGDec {
                                     // of m_paraLst. Element in m_escParaLst
                                     // should be put onto stack.
     public PProc m_body;
+    public int m_level;
     
-    public PGDecProc(TID name, List<TID> paraLst, List<TID> escParaLst, PProc body) {
+    public PGDecProc(TID name, List<TID> paraLst, List<TID> escParaLst, PProc body, int level) {
         m_name = name;
         m_paraLst = paraLst;
         m_escParaLst = escParaLst;
         m_body = body;
+        m_level = level;
     }
 
     @Override

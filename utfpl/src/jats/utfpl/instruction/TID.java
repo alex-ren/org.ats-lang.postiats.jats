@@ -120,6 +120,11 @@ public class TID implements ValPrim {
         return tid;
     }
     
+    public static TID createUserFun(String id, PATTypeFunc ty) {
+        TID tid = new TID(id, Category.eUserFun, ty, false);
+        return tid;
+    }
+    
     public static TID createLibFun(String id, PATTypeFunc ty) {
         TID tid = new TID(id, Category.eLibFun, ty, true);
         return tid;

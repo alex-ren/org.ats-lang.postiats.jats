@@ -219,7 +219,7 @@ public class CSPSTransformer {
                     cblock.add(cProc);
                     
                     outProcs.add(cProc);
-//                    outProcs.addAll(innerProcs);  // We only need the processes on the outmost level.
+                    outProcs.addAll(innerProcs);
                 } else {
                     throw new Error("todo");
                 }
@@ -254,7 +254,7 @@ public class CSPSTransformer {
         }
         
         List<CBlock> body = InsLst2CBlockLst(funDef.m_body, subMap, funDef.m_name, outProcs, level);
-        CIProcessDef cProc = new CIProcessDef(funDef.m_name, paras, body, blk);
+        CIProcessDef cProc = new CIProcessDef(funDef.m_name, paras, body, blk, level - 1);
         return cProc;
     }
 }

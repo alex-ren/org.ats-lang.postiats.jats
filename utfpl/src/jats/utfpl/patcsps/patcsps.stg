@@ -87,6 +87,13 @@ main_s(tid) =
 
 main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
 
+
+#assert main deadlockfree;
+
+#define Prop1 (gn_22 \< 2);
+
+#assert main |= G Prop1;
+
 >>
 
 pgdevar_st(id, init) ::= <<

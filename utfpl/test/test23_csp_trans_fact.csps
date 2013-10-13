@@ -74,9 +74,9 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var g_24;
+var g_59;
 
-fact_22(isTailCall, tid, x_23) =
+fact_57(isTailCall, tid, x_58) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -84,28 +84,28 @@ fact_22(isTailCall, tid, x_23) =
       GStack.newFrame(tid);
     }
   } ->
-  {  var app_27 = call(gt, x_23, 0);
-  GStack.push(tid, app_27);
+  {  var app_62 = call(gt, x_58, 0);
+  GStack.push(tid, app_62);
   } ->
   if (GStack.getBool(tid, 0, 0)) {
-    {  var app_29 = call(sub, x_23, 1);
-    GStack.push(tid, app_29);
+    {  var app_64 = call(sub, x_58, 1);
+    GStack.push(tid, app_64);
     } ->
-    fact_22(false, tid, GStack.get(tid, 0, 1));
-    {  var ret_26 = call(mul, GStack.get(tid, 0, 2), x_23);
-    GStack.deleteFrame(tid); GStack.push(tid, ret_26);
+    fact_57(false, tid, GStack.get(tid, 0, 1));
+    {  var ret_61 = call(mul, GStack.get(tid, 0, 2), x_58);
+    GStack.deleteFrame(tid); GStack.push(tid, ret_61);
     } ->
     Skip
   } else {
-    {  var ret_26 = 1;
-    GStack.deleteFrame(tid); GStack.push(tid, ret_26);
+    {  var ret_61 = 1;
+    GStack.deleteFrame(tid); GStack.push(tid, ret_61);
     } ->
     Skip
   };
   Skip
   ;
 
-foo_25(isTailCall, tid) =
+foo_60(isTailCall, tid) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -113,15 +113,15 @@ foo_25(isTailCall, tid) =
       GStack.newFrame(tid);
     }
   } ->
-  {  g_24 = 1;
+  {  g_59 = 1;
   } ->
-  {  var ret_30 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, ret_30);
+  {  var ret_65 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, ret_65);
   } ->
   Skip
   ;
 
-fact_s(isTailCall, tid, x_43) =
+fact_s(isTailCall, tid, x_72) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -130,18 +130,18 @@ fact_s(isTailCall, tid, x_43) =
     }
   } ->
   SysChSchStart!tid ->
-  fact_22(isTailCall, tid, x_43)
+  fact_57(isTailCall, tid, x_72)
   ;
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  g_24 = 0;
+  {  g_59 = 0;
   } ->
-  fact_22(false, tid, 3);
-  {  g_24 = GStack.get(tid, 0, 0);
+  fact_57(false, tid, 3);
+  {  g_59 = GStack.get(tid, 0, 0);
   } ->
-  {  var main_ret_33 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_33);
+  {  var main_ret_68 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_68);
   } ->
   Skip;
 

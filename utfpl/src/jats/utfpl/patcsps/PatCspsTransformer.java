@@ -35,6 +35,16 @@ public class PatCspsTransformer implements CSPSVisitor {
         PProc retProc = PProcAtom.SKIP;
         
         ListIterator<CBlock> iterator = blkLst.listIterator(blkLst.size());
+        // Be careful, extra Skip in the end may be harmful.
+        if (iterator.hasPrevious()) {
+            CBlock cb = iterator.previous();
+            Object evt_proc = cb.accept(this);
+            if (evt_proc instanceof PProc) {
+                retProc = (PProc) evt_proc;
+            } else {
+                retProc = new PProcEvent((PEvent)evt_proc, PProcAtom.SKIP);
+            }
+        }
         for (; iterator.hasPrevious();) {
             final CBlock cb = iterator.previous();
             Object evt_proc = cb.accept(this);
@@ -167,7 +177,7 @@ public class PatCspsTransformer implements CSPSVisitor {
             }
         }
         PProc body = CBlockLst2PProc(proc.m_body);
-        return new PGDecProc(proc.m_name, paraLst, escParaLst, body);
+        return new PGDecProc(proc.m_name, paraLst, escParaLst, body, proc.m_level);
 
     }
 

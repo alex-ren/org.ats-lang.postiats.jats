@@ -84,7 +84,7 @@ public class PModel implements PNode {
         // arguments for calling ..._s function
         // (true, SysTid, arg)
         argLst = new ArrayList<PExp>();
-        argLst.add(Aux.cTrue);
+        argLst.add(Aux.cFalse);  // ..._s function needs a stack.
         argLst.add(Aux.cSysTidExp);
         argLst.add(arg);
 
@@ -103,7 +103,7 @@ public class PModel implements PNode {
             proc.accept(processor);
             proc.accept(tailCallProcessor);
             // These processes can be used as functions for creating threads.
-            if (proc.m_paraLst.size() == 3) {  // first is "isTailCall", second is "tid", the third is any
+            if (0 == proc.m_level && proc.m_paraLst.size() == 3) {  // first is "isTailCall", second is "tid", the third is any
                 List<TID> threadParaLst = new ArrayList<TID>();
                 List<PExp> threadArgLst = new ArrayList<PExp>();
                 
@@ -122,13 +122,13 @@ public class PModel implements PNode {
                 // build =>
                 // SysChSchStart!tid -> producer_22(isTailCall, tid, x_27)
                 PProcChannel threadBody = new PProcChannel(Aux.cThreadHeader, new PProcCall(proc.m_name, threadArgLst, true));
-                TID threadName = TID.createLibFun(
+                TID threadName = TID.createUserFun(
                         proc.m_name.getID() + "_s", 
                         new PATTypeFunc(PATTypeSingleton.cVoidType, true));
                 
                 // build =>
                 // producer_s(isTailCall, tid, x_27) = SysChSchStart!tid -> producer_22(isTailCall, tid, x_27)
-                PGDecProc threadDef = new PGDecProc(threadName, threadParaLst, new ArrayList<TID>() /*no escaped parameter*/, threadBody);
+                PGDecProc threadDef = new PGDecProc(threadName, threadParaLst, new ArrayList<TID>() /*no escaped parameter*/, threadBody, 0);
 
                 Aux.Address addr = Aux.Address.createPointer();
                 proc.m_name.updateAddr(addr);
@@ -140,14 +140,18 @@ public class PModel implements PNode {
                 PExpOpr condExp = new PExpOpr(PExpOpr.Type.eq, fn, funPtr);
                 // build =>
                 // producer_s(true, SysTid, arg) ||| SchedulerW (SysTid)
-                PProc ifProc = new PProcCall(threadName, argLst, true);
+                PProc ifProc = new PProcCall(threadName, argLst, false);
                 ifProc = new PProcParallel(ifProc, SchedulerW);
                 
                 // build the process for scheduler
                 scheduler = new PProcBranch(condExp, ifProc, scheduler, PProcBranch.Type.ifa);
             }
         }
-        m_SchedulerBody = scheduler;
+        if (null == scheduler) {
+            m_SchedulerBody = PProcAtom.SKIP;
+        } else {
+            m_SchedulerBody = scheduler;
+        }
         
         return m;
     }
@@ -348,7 +352,7 @@ public class PModel implements PNode {
         @Override
         public Object visit(PProcCall node) {
             if (!node.m_name.isLibFun()) {
-                if (node.isTailCall()) {
+                if (node.isReuseStack()) {
                     node.m_paraLst.add(0, Aux.cTrue);
                 } else {
                     node.m_paraLst.add(0, Aux.cFalse);
