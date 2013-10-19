@@ -1,6 +1,5 @@
 
 
-var gn := 0
 
 var m := mutex_allocate()
 var c := cond_allocate()
@@ -9,18 +8,21 @@ var c := cond_allocate()
 fun producer (x) = let
   val () = mutex_lock (m)
 
-  fun loop () =
-    if (eq (gn, 1)) then let
+  fun loop () = let
+    val v = ref_get(x, 0)
+  in
+    if (eq (v, 1)) then let
       val () = cond_wait (c, m)
     in
       loop ()
-    end else let 
-      gn := add (gn, 1)
+    end else let
+      val () = ref_set(x, 0, add (v, 1))
       val () = cond_signal (c)
       val () = mutex_unlock (m)
     in
       producer (x)
     end
+  end
 in
   loop ()
 end
@@ -29,27 +31,29 @@ end
 fun consumer (x) = let
   val () = mutex_lock (m)
 
-  fun loop () = 
-    if (eq (gn, 0)) then let
+  fun loop () = let  
+    val v = ref_get(x, 0)
+  in
+    if (eq (v, 0)) then let
       val () = cond_wait (c, m)
     in
       loop ()
     end else let
-      gn := sub (gn, 1)
+      val () = ref_set(x, 0, sub (v, 1))
       val () = cond_signal (c)
       val () = mutex_unlock (m)
     in
       consumer (x)
     end
+  end
 in
   loop ()
 end
 
-val t1 = thread_create(producer, 0)
-val t2 = thread_create(consumer, 0)
 
 
-
-
+val g = ref_allocate(1)
+val t1 = thread_create(producer, g)
+val t2 = thread_create(consumer, g)
 
 

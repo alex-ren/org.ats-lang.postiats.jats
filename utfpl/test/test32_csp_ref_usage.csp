@@ -14,13 +14,13 @@ createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
 
 Scheduler = SysChSch?fn.arg ->
   initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
-  if (fn == 2) {
-    consumer_s_66(false, SysTid, arg)
+  if (fn == 4) {
+    consumer_s_127(false, SysTid, arg)
     |||
     SchedulerW(SysTid)
   } else {
-    if (fn == 1) {
-      producer_s_64(false, SysTid, arg)
+    if (fn == 3) {
+      producer_s_125(false, SysTid, arg)
       |||
       SchedulerW(SysTid)
     }
@@ -80,11 +80,10 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var gn_29;
-var m_30;
-var c_31;
+var m_94;
+var c_95;
 
-producer_32(isTailCall, tid, x_33) =
+producer_96(isTailCall, tid, x_97) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -92,11 +91,11 @@ producer_32(isTailCall, tid, x_33) =
       GStack.newFrame(tid);
     }
   } ->
-  mutex_lock(tid, m_30);
-  loop_34(true, tid, x_33)
+  mutex_lock(tid, m_94);
+  loop_98(true, tid, x_97)
   ;
 
-loop_34(isTailCall, tid, x_esc_52) =
+loop_98(isTailCall, tid, x_esc_119) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -104,23 +103,25 @@ loop_34(isTailCall, tid, x_esc_52) =
       GStack.newFrame(tid);
     }
   } ->
-  {  var app_42 = call(eq, gn_29, 1);
-  GStack.push(tid, app_42);
+  ref_get(tid, x_esc_119, 0);
+  {  var app_109 = call(eq, GStack.get(tid, 0, 0), 1);
+  GStack.push(tid, app_109);
   } ->
-  if (GStack.getBool(tid, 0, 0)) {
-    cond_wait(tid, c_31, m_30);
-    loop_34(true, tid, x_esc_52)
+  if (GStack.getBool(tid, 0, 1)) {
+    cond_wait(tid, c_95, m_94);
+    loop_98(true, tid, x_esc_119)
   } else {
-    {  var add_tret_49 = call(add, gn_29, 1);
-    gn_29 = add_tret_49;
+    {  var app_110 = call(add, GStack.get(tid, 0, 0), 1);
+    GStack.push(tid, app_110);
     } ->
-    cond_signal(tid, c_31);
-    mutex_unlock(tid, m_30);
-    producer_32(true, tid, x_esc_52)
+    ref_set(tid, x_esc_119, 0, GStack.get(tid, 0, 2));
+    cond_signal(tid, c_95);
+    mutex_unlock(tid, m_94);
+    producer_96(true, tid, x_esc_119)
   }
   ;
 
-consumer_35(isTailCall, tid, x_36) =
+consumer_100(isTailCall, tid, x_101) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -128,11 +129,11 @@ consumer_35(isTailCall, tid, x_36) =
       GStack.newFrame(tid);
     }
   } ->
-  mutex_lock(tid, m_30);
-  loop_37(true, tid, x_36)
+  mutex_lock(tid, m_94);
+  loop_102(true, tid, x_101)
   ;
 
-loop_37(isTailCall, tid, x_esc_53) =
+loop_102(isTailCall, tid, x_esc_120) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -140,23 +141,25 @@ loop_37(isTailCall, tid, x_esc_53) =
       GStack.newFrame(tid);
     }
   } ->
-  {  var app_45 = call(eq, gn_29, 0);
-  GStack.push(tid, app_45);
+  ref_get(tid, x_esc_120, 0);
+  {  var app_113 = call(eq, GStack.get(tid, 0, 0), 0);
+  GStack.push(tid, app_113);
   } ->
-  if (GStack.getBool(tid, 0, 0)) {
-    cond_wait(tid, c_31, m_30);
-    loop_37(true, tid, x_esc_53)
+  if (GStack.getBool(tid, 0, 1)) {
+    cond_wait(tid, c_95, m_94);
+    loop_102(true, tid, x_esc_120)
   } else {
-    {  var sub_tret_50 = call(sub, gn_29, 1);
-    gn_29 = sub_tret_50;
+    {  var app_114 = call(sub, GStack.get(tid, 0, 0), 1);
+    GStack.push(tid, app_114);
     } ->
-    cond_signal(tid, c_31);
-    mutex_unlock(tid, m_30);
-    consumer_35(true, tid, x_esc_53)
+    ref_set(tid, x_esc_120, 0, GStack.get(tid, 0, 2));
+    cond_signal(tid, c_95);
+    mutex_unlock(tid, m_94);
+    consumer_100(true, tid, x_esc_120)
   }
   ;
 
-producer_s_64(isTailCall, tid, x_63) =
+producer_s_125(isTailCall, tid, x_124) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -165,9 +168,9 @@ producer_s_64(isTailCall, tid, x_63) =
     }
   } ->
   SysChSchStart!tid ->
-  producer_32(isTailCall, tid, x_63)
+  producer_96(isTailCall, tid, x_124)
   ;
-consumer_s_66(isTailCall, tid, x_65) =
+consumer_s_127(isTailCall, tid, x_126) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
@@ -176,23 +179,22 @@ consumer_s_66(isTailCall, tid, x_65) =
     }
   } ->
   SysChSchStart!tid ->
-  consumer_35(isTailCall, tid, x_65)
+  consumer_100(isTailCall, tid, x_126)
   ;
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  gn_29 = 0;
-  } ->
   mutex_allocate(tid);
-  {  m_30 = GStack.get(tid, 0, 0);
+  {  m_94 = GStack.get(tid, 0, 0);
   } ->
   cond_allocate(tid);
-  {  c_31 = GStack.get(tid, 0, 1);
+  {  c_95 = GStack.get(tid, 0, 1);
   } ->
-  thread_create(tid, 1, 0);
-  thread_create(tid, 2, 0);
-  {  var main_ret_51 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_51);
+  ref_allocate(tid, 1);
+  thread_create(tid, 3, GStack.get(tid, 0, 2));
+  thread_create(tid, 4, GStack.get(tid, 0, 2));
+  {  var main_ret_118 = 0;
+  GStack.deleteFrame(tid); GStack.push(tid, main_ret_118);
   } ->
   Skip;
 

@@ -8,7 +8,9 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
 public class CCompUtils {
-    public static final String createThread = "createThread";
+//    public static final String createThread = "createThread";
+//    public static final String allocateRef = "allocateRef";
+//    public static final String releaseRef = "releaseRef";
 //    private static String [] m_funcs = new String[] {
 //        "add", "sub", "mul", "div"
 //        , "lt", "lte", "gt", "gte", "eq"
@@ -59,11 +61,17 @@ public class CCompUtils {
         func = "createEvt";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
-        func = "createThread";
+        func = "thread_create";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = "thread_join";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         func = "mutex_allocate";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = "mutex_release";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         func = "mutex_lock";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
@@ -74,10 +82,25 @@ public class CCompUtils {
         func = "cond_allocate";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
         
+        func = "cond_release";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
         func = "cond_wait";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         func = "cond_signal";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = "ref_allocate";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = "ref_release";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = "ref_get";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = "ref_set";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         return;

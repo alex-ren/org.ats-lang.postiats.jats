@@ -55,7 +55,7 @@ public class CTempID implements CTemp {
 
     private int updateForDef(int offset) {
         if (!m_isDef) {
-            throw new Error("Should only call on the definition.");
+            throw new Error("Should only call on the definition." + this);
         }
         m_stackPos = StackPosition.createDef(offset);
         m_vi.setStackPos(m_stackPos);  // set the stack position
