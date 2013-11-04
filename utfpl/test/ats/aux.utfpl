@@ -1,0 +1,56 @@
+
+abstype gmem_type  // library type
+typedef gmem = gmem_type
+
+abstype mutex_type
+typedef mutex = mutex_type
+
+extern fun mem_allocate (n: int): gmem
+extern fun mutex_allocate (): mutex
+extern fun mutex_lock (m: mutex): 
+
+
+assume bufitm_type = ()
+assume buff_vtype = gmem
+
+val gbuffer = mem_allocate (1)
+// var gbuffer
+
+val bmutex = mutex_allocate ()
+
+fun buffer_acquire () = let
+  val () = mutex_lock (bmutex)
+in
+  gbuffer
+end
+
+fun buffer_release (buf) = let
+  val () = mutex_unlock (bmutex)
+in
+  ()
+end
+
+fun buffer_isnull (buf) = let
+  val n = array_load (buf, 0)
+in
+  n == 0
+end
+
+fun buffer_isful (buf) = let
+  val n = array_load (buf, 0)
+in
+  n >= 3
+end
+
+fun buffer_remove (buf) = ()
+
+fun consumer_thread () = let
+  val x = consume ()
+in
+  consumer ()
+end
+
+fun producer_thread () = let
+  val 
+
+

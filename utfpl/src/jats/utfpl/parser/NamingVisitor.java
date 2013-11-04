@@ -13,10 +13,12 @@ import jats.utfpl.tree.IdExp;
 import jats.utfpl.tree.IfExp;
 import jats.utfpl.tree.LamExp;
 import jats.utfpl.tree.LetExp;
-import jats.utfpl.tree.Program;
+import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeVisitor;
 import jats.utfpl.tree.TupleExp;
+import jats.utfpl.tree.ValBind;
 import jats.utfpl.tree.ValDef;
+import jats.utfpl.tree.VarArrayDef;
 import jats.utfpl.tree.VarAssign;
 import jats.utfpl.tree.VarDef;
 import jats.utfpl.utils.MapScope;
@@ -109,15 +111,14 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(ValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
-        node.m_id.updateForLocalDef(m_scope);
-        
+        node.m_id.updateForGlobalDef(m_scope);
         node.m_exp.accept(this);
         
         return null;
     }
 
     @Override
-    public Object visit(Program node) {
+    public Object visit(ProgramTree node) {
         // no need to create a new scope
 
         for (Dec dec: node.m_decs) {
@@ -140,7 +141,7 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(VarDef node) {
         // System.out.println("VarDef " + node.m_id.m_id);
-        node.m_id.updateForGlovalVar(m_scope);
+        node.m_id.updateForGlobalVar(m_scope);
 
         if (null != node.m_exp) {
             node.m_exp.accept(this);
@@ -171,6 +172,20 @@ public class NamingVisitor implements TreeVisitor {
 		}
         
 		return null;
+    }
+
+    @Override
+    public Object visit(VarArrayDef node) {
+        node.m_id.updateForGlobalVar(m_scope);
+        
+        return null;
+    }
+
+    @Override
+    public Object visit(ValBind node) {
+        node.m_id.updateForLocalDef(m_scope);
+        node.m_exp.accept(this);
+        return null;
     }
 
 }

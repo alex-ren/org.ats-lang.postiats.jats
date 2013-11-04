@@ -4,9 +4,9 @@ import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.csps.CSPSPrinter;
 import jats.utfpl.csps.CSPSTransformer;
 import jats.utfpl.csps.ProgramCSPS;
-import jats.utfpl.instruction.InsTransformer;
+import jats.utfpl.instruction.InstructionTransformer;
 import jats.utfpl.instruction.InstructionPrinter;
-import jats.utfpl.instruction.ProgramIns;
+import jats.utfpl.instruction.ProgramInstruction;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.InstructionPrinter.Type;
 import jats.utfpl.instruction.InstructionProcessor;
@@ -14,7 +14,7 @@ import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.tree.Program;
+import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreePrinter;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
@@ -71,7 +71,7 @@ public class Test_02 {
             // tree parsing
             Utfpl_tree walker = new Utfpl_tree(nodes);  // create worker
 
-            Program prog = walker.rule();  // worker works
+            ProgramInstruction prog = walker.rule();  // worker works
             
             /* ***************** ****************** */
             // naming construction
@@ -90,8 +90,8 @@ public class Test_02 {
             
             /* ***************** ****************** */
             // generate program of instructions
-            InsTransformer insV = new InsTransformer();  // create worker
-            ProgramIns programIns = insV.trans(prog);  // worker works
+            InstructionTransformer insV = new InstructionTransformer();  // create worker
+            ProgramInstruction programIns = insV.trans(prog);  // worker works
             
             /* ***************** ****************** */
             // print instructions
@@ -103,7 +103,7 @@ public class Test_02 {
             /* ***************** ****************** */
             // generate new program of instructions by processing
             InstructionProcessor insProcessor = new InstructionProcessor();  // create worker
-            ProgramIns programIns2 = insProcessor.process(programIns);  // worker works
+            ProgramInstruction programIns2 = insProcessor.process(programIns);  // worker works
             
             /* ***************** ****************** */
             // print instructions

@@ -83,7 +83,16 @@ gdecs returns [List<Dec> gdecs]
 
 gdec returns [Dec node]
     : ^(Var ID exp?) {node = new VarDef(new IdExp($ID.text), $exp.node);}
-    | dec {node = $dec.node;}
+    | ^(Var ID index) {node = new VarArrayDef(new IdExp($ID.text), $index.size, Type.eInteger);}
+//    | ^(VarObj ID exp?) {node = new VarDef(new IdExp($ID.text), $exp.node, Type.eValue);}  // not necessary
+//    | ^(VarObj ID index) {node = new VarArrayDef(new IdExp($ID.text), $index.size, Type.eValue);}   // I decide not to allow such array of boxed values.
+    | ^(Val pat=exp v=exp) {node = new ValDef($pat.node, $v.node);}
+    | ^(ASSIGN ID exp) {node = new VarAssign(new IdExp($ID.text), $exp.node);}
+    | fungroup {node = new FunGroup($fungroup.funLst);}
+    ;
+    
+index returns [int size]
+    : ^(INDEX INT) {size = Integer.parseInt($INT.text);}
     ;
 
 decs returns [List<Dec> decs]
@@ -94,7 +103,7 @@ decs returns [List<Dec> decs]
     ;
     
 dec returns [Dec node]
-    : ^(Val pat=exp v=exp) {node = new ValDef($pat.node, $v.node);}
+    : ^(Val pat=exp v=exp) {node = new ValBind($pat.node, $v.node);}
     | ^(ASSIGN ID exp) {node = new VarAssign(new IdExp($ID.text), $exp.node);}
     | fungroup {node = new FunGroup($fungroup.funLst);}
     ; 

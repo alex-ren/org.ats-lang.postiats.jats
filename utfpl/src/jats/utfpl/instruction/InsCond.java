@@ -3,13 +3,13 @@ package jats.utfpl.instruction;
 
 import java.util.List;
 
-public class CondIns implements UtfplInstruction {
+public class InsCond implements UtfplInstruction {
     public TID m_holder;
     public ValPrim m_cond;
     public List<UtfplInstruction> m_btrue;
     public List<UtfplInstruction> m_bfalse;
     
-    public CondIns(TID holder, ValPrim cond, List<UtfplInstruction> btrue, List<UtfplInstruction> bfalse) {
+    public InsCond(TID holder, ValPrim cond, List<UtfplInstruction> btrue, List<UtfplInstruction> bfalse) {
         m_holder = holder;
         m_cond = cond;
         m_btrue = btrue;

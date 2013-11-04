@@ -15,12 +15,13 @@ tokens {
   EXPLST;
   DECLST;
   LET;
-  IF; 
+  IF;
   LAM;
   APP;
   PROGRAM;
   TUPLE;
   NULL;  
+  INDEX;
 }
 
 @header {
@@ -94,6 +95,7 @@ gdecs
 
 gdec
     : Var ID (ColonAssign exp)? -> ^(Var ID exp?)
+    | Var ID (LBracket INT RBracket) -> ^(Var ID ^(INDEX INT))
     | dec
     ;
     
@@ -155,6 +157,7 @@ Imply     : '=>';
 Lambda    : 'lam';
 Val       : 'val';
 Var       : 'var';
+VarObj       : 'varobj';
 
 Fun       : 'fun';
 

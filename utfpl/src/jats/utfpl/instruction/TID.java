@@ -14,15 +14,16 @@ public class TID implements ValPrim {
     static private int s_cnt = 0;
     static public TID ANONY = new TID("_", Category.other, PATTypeSingleton.cVoidType, false);
     
-    enum Category {eLibFun, eGloVar, ePara, eUserFun, eLocalVar, eRetHolder, other};
+    enum Category {eLibFun, eGloVar, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, other};
     
+    // members
     private String m_id;
     private int m_uid;
     private Category m_cat;
     private PATType m_type;
     private boolean m_isSys;  // Whether this TID is for system name, which has no use of m_uid.
-    
     private Aux.Address m_addr;
+    // end of members
     
     private TID(String id, Category cat, PATType ty, boolean isSys) {
         m_id = id;
@@ -37,6 +38,10 @@ public class TID implements ValPrim {
 
     }
     
+    public TID dup() {
+        return new TID(m_id, m_cat, m_type, m_isSys);
+    }
+    
     public Aux.Address getAddr() {
         return m_addr;
     }
@@ -48,6 +53,10 @@ public class TID implements ValPrim {
     
     public PATType getType() {
         return m_type;
+    }
+    
+    public PATType getFunReturnType() {
+        return ((PATTypeFunc)m_type).getRetType();
     }
     
     public void updateType(PATType ty) {
@@ -132,6 +141,11 @@ public class TID implements ValPrim {
     
     public static TID createGloVar(String id, boolean isSys) {
         TID tid = new TID(id, Category.eGloVar, PATTypeSingleton.cUnknownType, isSys);
+        return tid;
+    }
+    
+    public static TID createGloValue(String id, boolean isSys) {
+        TID tid = new TID(id, Category.eGloValue, PATTypeSingleton.cUnknownType, isSys);
         return tid;
     }
     

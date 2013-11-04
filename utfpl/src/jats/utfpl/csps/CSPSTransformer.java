@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import jats.utfpl.instruction.AtomValue;
-import jats.utfpl.instruction.CondIns;
+import jats.utfpl.instruction.InsCond;
 import jats.utfpl.instruction.FuncCallIns;
-import jats.utfpl.instruction.FuncDefIns;
+import jats.utfpl.instruction.InsFuncDef;
 import jats.utfpl.instruction.MoveIns;
-import jats.utfpl.instruction.ProgramIns;
+import jats.utfpl.instruction.ProgramInstruction;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.TupleValue;
 import jats.utfpl.instruction.UtfplInstruction;
@@ -24,7 +24,7 @@ public class CSPSTransformer {
      * 2. Decide whether a value is used out of its visible scope.
      * 3. Add the concept of stack location.
      */
-    public ProgramCSPS trans(ProgramIns inputProg) {
+    public ProgramCSPS trans(ProgramInstruction inputProg) {
         // 
         List<CIProcessDef> procLst = new ArrayList<CIProcessDef>();
         Map<TID, VariableInfo> subMap = new HashMap<TID, VariableInfo>();
@@ -186,8 +186,8 @@ public class CSPSTransformer {
                         cblock.add(retIns);
                     }
                 }
-            } else if (ins instanceof CondIns) {
-                CondIns aIns = (CondIns)ins;
+            } else if (ins instanceof InsCond) {
+                InsCond aIns = (InsCond)ins;
                 if (ins.hasSideEffect()) {
                     CCondBlock ccond = new CCondBlock(level);
                     CTemp ctCond = ValPrim2CTemp(aIns.m_cond, subMap, funLab, ccond, level);
@@ -210,8 +210,8 @@ public class CSPSTransformer {
                 } else {
                     throw new Error("todo");
                 }
-            } else if (ins instanceof FuncDefIns) {
-                FuncDefIns aIns = (FuncDefIns)ins;
+            } else if (ins instanceof InsFuncDef) {
+                InsFuncDef aIns = (InsFuncDef)ins;
                 if (ins.hasSideEffect()) {
                     Map<TID, VariableInfo> innerSubMap = new HashMap<TID, VariableInfo>(subMap);
                     List<CIProcessDef> innerProcs = new ArrayList<CIProcessDef>();
@@ -242,7 +242,7 @@ public class CSPSTransformer {
     }
     
     static private CIProcessDef FunDef2CProcess(
-            FuncDefIns funDef
+            InsFuncDef funDef
             , Map<TID, VariableInfo> subMap
             , List<CIProcessDef> outProcs
             , CBlock blk

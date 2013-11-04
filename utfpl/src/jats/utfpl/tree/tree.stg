@@ -45,12 +45,8 @@ in
 end
 >>
 
-val_def_st(id, exp) ::= <<
-val <id> = <exp>
->>
-
-val_def_noname_st(exp) ::= <<
-<exp>
+val_bind_st(id, exp) ::= <<
+<if(id)>val <id> = <endif><exp>
 >>
 
 var_def_st(id, exp) ::= <<
@@ -68,5 +64,16 @@ tuple_exp_st (explst) ::= <<
 tuple_exp_single_st (exp) ::= <<
 (<exp>,)
 >>
+
+var_array_def_st (id, size) ::= <<
+var <id>[<size>]
+>>
+
+val_def_st (id, exp) ::= <<
+val <id> = <exp>
+>>
+
+
+
 
 

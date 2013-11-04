@@ -6,7 +6,7 @@ import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.tree.Program;
+import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreePrinter;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
@@ -25,14 +25,15 @@ public class Test_02_ins_processing {
     
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/test02_fact.utfpl"
-                , "test/test03_var.utfpl"
-                , "test/test04_if.utfpl"
-                , "test/test05_func_def.utfpl"
-                , "test/test06_func_call.utfpl"
-                , "test/c01_single_main.utfpl"                
-                , "test/test20_csps_trans_.utfpl"
-                , "test/test35_mutual_closure.utfpl"
+//                "test/test02_fact.utfpl"
+//                , "test/test03_var.utfpl"
+//                , "test/test04_if.utfpl"
+//                , "test/test05_func_def.utfpl"
+//                , "test/test06_func_call.utfpl"
+//                , "test/c01_single_main.utfpl"                
+//                , "test/test20_csps_trans_.utfpl"
+//                , "test/test35_mutual_closure.utfpl"
+                "test/test09_all.utfpl"
         
         };
 
@@ -60,7 +61,7 @@ public class Test_02_ins_processing {
             // tree parsing
             Utfpl_tree walker = new Utfpl_tree(nodes);  // create worker
 
-            Program prog = walker.rule();  // worker works
+            ProgramTree prog = walker.rule();  // worker works
             
             /* ***************** ****************** */
             // naming construction
@@ -79,8 +80,8 @@ public class Test_02_ins_processing {
             
             /* ***************** ****************** */
             // generate program of instructions
-            InsTransformer insV = new InsTransformer();  // create worker
-            ProgramIns programIns = insV.trans(prog);  // worker works
+            InstructionTransformer insV = new InstructionTransformer();  // create worker
+            ProgramInstruction programIns = insV.trans(prog);  // worker works
             
             /* ***************** ****************** */
             // print instructions
@@ -91,13 +92,12 @@ public class Test_02_ins_processing {
             
             /* ***************** ****************** */
             // generate new program of instructions by processing
-            InstructionProcessor insProcessor = new InstructionProcessor();  // create worker
-            ProgramIns programIns2 = insProcessor.process(programIns);  // worker works
+            ProgramInstruction programIns2 = InstructionClosureConverter.convert(programIns);
             
             /* ***************** ****************** */
             // print instructions
             String outputINS2 = insPrinter.print(programIns2);  // worker works
-            System.out.println("==instructions after processing are ==========================");
+            System.out.println("==instructions after closure conversion are ==========================");
             System.out.println(outputINS2);
             
 //            FileWriter fwINS = new FileWriter("test/" + classname

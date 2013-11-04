@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="jats.utfpl.instruction.FuncDefIns" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/instruction/FuncDefIns.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="jats.utfpl.instruction.InsFuncDef" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/instruction/InsFuncDef.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="953" y="412"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="jats.utfpl.instruction.CondIns" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/instruction/CondIns.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="jats.utfpl.instruction.InsCond" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/instruction/InsCond.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1253" y="111"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

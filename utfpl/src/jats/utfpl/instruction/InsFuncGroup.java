@@ -3,15 +3,15 @@ package jats.utfpl.instruction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FuncGroupIns implements UtfplInstruction {
-	public List<FuncDefIns> m_funLst;
+public class InsFuncGroup implements UtfplInstruction {
+	public List<InsFuncDef> m_funLst;
 
-	public FuncGroupIns(List<FuncDefIns> funLst) {
+	public InsFuncGroup(List<InsFuncDef> funLst) {
 		m_funLst = funLst;
 	}
 	
-	public FuncGroupIns(FuncDefIns fundef) {
-		m_funLst = new ArrayList<FuncDefIns>();
+	public InsFuncGroup(InsFuncDef fundef) {
+		m_funLst = new ArrayList<InsFuncDef>();
 		m_funLst.add(fundef);
 	}
 	

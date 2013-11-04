@@ -70,7 +70,7 @@ public class Test_02_naming {
 //            CCompUtils.populateAllGlobalValueTypes(tyscope);
             
             // collect the definition of all the functions
-            Program prog = walker.rule();
+            ProgramTree prog = walker.rule();
             
             MapScope<TID> libScope = new MapScope<TID>();
             CCompUtils.populateAllFunctions(libScope);

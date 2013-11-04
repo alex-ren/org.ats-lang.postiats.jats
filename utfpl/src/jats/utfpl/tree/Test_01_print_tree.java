@@ -23,8 +23,9 @@ public class Test_01_print_tree {
      */
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/test01_tuple.utfpl"
-                ,"test/test02_fact.utfpl"
+//                "test/test01_tuple.utfpl"
+//                ,"test/test02_fact.utfpl"
+                "test/test09_all.utfpl"
         
         };
 
@@ -65,7 +66,7 @@ public class Test_01_print_tree {
 //            CCompUtils.populateAllGlobalValueTypes(tyscope);
             
             // collect the definition of all the functions
-            Program prog = walker.rule();
+            ProgramTree prog = walker.rule();
 
             TreePrinter tp = new TreePrinter();
             String output = tp.print(prog);

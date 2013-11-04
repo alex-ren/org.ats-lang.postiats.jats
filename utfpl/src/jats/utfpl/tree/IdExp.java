@@ -8,6 +8,7 @@ public class IdExp implements Exp {
     public String m_sid;
     public TID m_tid;
 
+    // id can be null.
     public IdExp(String id) {
         m_sid = id;
         m_tid = null;
@@ -27,7 +28,16 @@ public class IdExp implements Exp {
         m.addValue(m_sid, m_tid);
     }
     
-    public void updateForGlovalVar(MapScope<TID> m) {
+    public void updateForGlobalDef(MapScope<TID> m) {
+        if (null == m_sid /*val () = xxx */|| m_sid.equals("_") /*val _ = xxx */) {
+            m_tid = TID.ANONY;
+        } else {
+            m_tid = TID.createGloValue(m_sid, false);
+            m.addValue(m_sid, m_tid);
+        }
+    }
+    
+    public void updateForGlobalVar(MapScope<TID> m) {
         m_tid = TID.createGloVar(m_sid, false);
         m.addValue(m_sid, m_tid);
 

@@ -7,15 +7,17 @@ import jats.utfpl.patcsps.type.PATTypeFunc;
 import java.util.List;
 import java.util.Map;
 
-public class FuncCallIns implements UtfplInstruction {
+public class InsCall implements UtfplInstruction {
     public TID m_holder;
     public TID m_funlab;
     public List<ValPrim> m_args;
+    public boolean m_isTailCall;
     
-    public FuncCallIns(TID holder, TID funlab, List<ValPrim> args) {
+    public InsCall(TID holder, TID funlab, List<ValPrim> args, boolean isTailCall) {
         m_holder = holder;
         m_funlab = funlab;
         m_args = args;
+        m_isTailCall = isTailCall;
     }
     
     public boolean isRet() {
@@ -32,14 +34,15 @@ public class FuncCallIns implements UtfplInstruction {
         return m_funlab.hasEffect();
     }
     
-    public FuncCallIns createSubs(Map<TID, TID> subMap) {
-        return new FuncCallIns(
+    public InsCall createSubs(Map<TID, TID> subMap) {
+        return new InsCall(
                 TID.subsTID(m_holder, subMap), 
                 m_funlab, 
-                InstructionProcessor.subsVPLst(m_args, subMap));
+                InstructionProgramProcessor.subsVPLst(m_args, subMap), m_isTailCall);
     }
     
     public PATType getRetType() {
         return ((PATTypeFunc)m_funlab.getType()).getRetType();
     }
+
 }

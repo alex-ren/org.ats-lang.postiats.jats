@@ -36,17 +36,38 @@ public class InstructionPrinter implements InsVisitor {
         
     }
 
-    public String print(ProgramIns prog) {
+    public String print(ProgramInstruction prog) {
         // program_st(varlst, inslst) ::= <<
         ST st = m_stg.getInstanceOf("program_st");
         
-        for (TID gv: prog.getGlobalVars()) {
-            st.add("vardeflst", gv);
+        for (GlobalEntity gv: prog.getGlobalEntities()) {
+            st.add("gv_def_lst", gv.accept(this));
         }
         for (UtfplInstruction ins: prog.getInsLst()) {
-            st.add("inslst", ins.accept(this));
+            st.add("ins_lst", ins.accept(this));
         }
+        if (null != prog.getFuncLst()) {
+            for (FunctionInstruction func: prog.getFuncLst()) {
+                st.add("func_lst", printFunction(func));
+            }
+        }
+
         return st.render();
+    }
+    
+    public Object printFunction(FunctionInstruction func) {
+        // func_def_ins(name, paralst, body, ret) ::= <<
+        ST st = m_stg.getInstanceOf("func_def");
+        st.add("name", func.getName());
+        for (TID para: func.getParaLst()) {
+            st.add("paralst", para);
+        }
+        for (TID para: func.getEscParaLst()) {
+            st.add("paralst", para);
+        }
+        st.add("body", visitInsLst(func.getBody()));
+        
+        return st;
     }
     
     private void setPython() {
@@ -101,7 +122,7 @@ public class InstructionPrinter implements InsVisitor {
     }
     
     @Override
-    public Object visit(CondIns ins) {
+    public Object visit(InsCond ins) {
         // cond_ins_st(holder, cond, btrue, bfalse) ::= <<
         ST st = m_stg.getInstanceOf("cond_ins_st");
         st.add("holder", ins.m_holder.toString());
@@ -114,7 +135,7 @@ public class InstructionPrinter implements InsVisitor {
     }
     
     @Override
-    public Object visit(FuncCallIns ins) {
+    public Object visit(InsCall ins) {
         // func_call_ins_st(holder, funlab, args) ::= <<
         ST st = null;
 //        if (ins.m_holder.isVoid()) {
@@ -127,11 +148,12 @@ public class InstructionPrinter implements InsVisitor {
         for (ValPrim arg: ins.m_args) {
             st.add("args", visitValPrim(arg));
         }
+        st.add("is_tail", ins.m_isTailCall);
         return st;        
     }
 
     @Override
-    public Object visit(FuncDefIns ins) {
+    public Object visit(InsFuncDef ins) {
         // func_def_ins(name, paralst, body, ret) ::= <<
         ST st = m_stg.getInstanceOf("func_def_ins");
         st.add("name", ins.m_name);
@@ -142,16 +164,16 @@ public class InstructionPrinter implements InsVisitor {
         st.add("ret", ins.m_ret);
         
         return st;
+//        throw new Error("shall not happen");
     }
     
     @Override
-    public Object visit(MoveIns ins) {
+    public Object visit(InsMove ins) {
         // move_ins_st(holder, vp) ::= <<
         ST st = m_stg.getInstanceOf("move_ins_st");
 
         st.add("holder", ins.m_holder);
 
-        
         st.add("vp", visitValPrim(ins.m_vp));
         
         return st;
@@ -159,32 +181,91 @@ public class InstructionPrinter implements InsVisitor {
     }
 
 	@Override
-    public Object visit(FuncGroupIns ins) {
+    public Object visit(InsFuncGroup ins) {
 	    ST st = m_stg.getInstanceOf("func_group_ins_st");
-	    for (FuncDefIns fundef: ins.m_funLst) {
+	    for (InsFuncDef fundef: ins.m_funLst) {
 	    	st.add("insLst", fundef.accept(this));
 	    }
 	    return st;
-	    
+//	    throw new Error("shall not happen");
     }
 
-//    @Override
-//    public Object visit(ReturnIns ins) {
-//        ST st = m_stg.getInstanceOf("return_ins_st");
-//        st.add("ret", ins.m_tid.toString());
-//        return st;
-//    }
+    @Override
+    public Object visit(GlobalArray ins) {
+        ST st = m_stg.getInstanceOf("global_array_st");
+        st.add("id", ins.m_tid);
+        st.add("size", ins.m_size);
+        return st;
+    }
 
-//    @Override
-//    public Object visit(VarDefIns ins) {
-//        ST st;
-//        if (ins.m_tid.getUsed()) {
-//            st = m_stg.getInstanceOf("var_def_ins_used_st");
-//        } else {
-//            st = m_stg.getInstanceOf("var_def_ins_unused_st");
-//        }
-//        
-//        st.add("holder", ins.m_tid);
-//        return st;
-//    }
+    @Override
+    public Object visit(GlobalValue ins) {
+        ST st = m_stg.getInstanceOf("global_value_st");
+        st.add("id", ins.m_tid);
+        return st;
+    }
+
+    @Override
+    public Object visit(GlobalVariable ins) {
+        ST st = m_stg.getInstanceOf("global_variable_st");
+        st.add("id", ins.m_tid);
+        return st;
+    }
+
+    @Override
+    public Object visit(InsStoreArray ins) {
+        ST st = m_stg.getInstanceOf("store_array_ins_st");
+        st.add("lv", ins.m_localValue);
+        st.add("gv", ins.m_globalVar);
+        st.add("index", ins.m_localIndex);
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(InsStore ins) {
+        ST st = m_stg.getInstanceOf("store_ins_st");
+        st.add("lv", ins.m_localSrc);
+        st.add("gv", ins.m_globalDest);
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(InsRet ins) {
+        ST st = m_stg.getInstanceOf("ret_ins_st");
+        if (!ins.isVoid()) {
+            st.add("v", ins.m_v);
+        }
+        return st;
+    }
+
+    @Override
+    public Object visit(InsLoadArray ins) {
+        ST st = m_stg.getInstanceOf("load_array_ins_st");
+        st.add("gv", ins.m_globalVar);
+        st.add("index", ins.m_localIndex);
+        st.add("lv", ins.m_localHolder);
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(InsAllocMutex ins) {
+        ST st = m_stg.getInstanceOf("allocate_mutex_ins_st");
+        
+        st.add("holder", ins.m_holder);
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(InsLoad ins) {
+        ST st = m_stg.getInstanceOf("load_ins");
+        st.add("gv", ins.m_globalVar);
+        st.add("lv", ins.m_localHolder);
+        
+        return st;
+    }
+
 }

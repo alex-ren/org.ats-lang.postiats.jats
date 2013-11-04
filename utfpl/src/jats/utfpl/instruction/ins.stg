@@ -1,8 +1,8 @@
 group ins;
 
 
-func_call_ins_st(holder, funlab, args) ::= <<
-func_call-- <holder> = <funlab>(<args; separator=", ">)
+func_call_ins_st(holder, funlab, args, is_tail) ::= <<
+InsCall[<is_tail>](<funlab>, (<args; separator=", ">), <holder>)
 >>
 
 // func_call_ins_no_ret_st(funlab, args) ::= <<
@@ -17,13 +17,17 @@ fun <name> (<paralst; separator=", ">)
 }
 >>
 
+func_def(name, paralst, body) ::= <<
+fun <name> (<paralst; separator=", ">)
+{
+  <body>
+}
+>>
+
+
 func_group_ins_st(insLst) ::= <<
 <insLst; separator="\nand\n">
 
->>
-
-return_ins_st(ret) ::= <<
-return <ret>
 >>
 
 cond_ins_st(holder, cond, btrue, bfalse) ::= <<
@@ -37,7 +41,7 @@ else
 
 
 move_ins_st(holder, vp) ::= <<
-move-- <holder> = <vp>
+InsMove(<vp>, <holder>)
 >>
 
 tid_st(id) ::= <<
@@ -53,33 +57,67 @@ tuple_value_st(ele_lst) ::= <<
 (<ele_lst; separator=", ">)
 >>
 
-
 inslst_st(inslst) ::= <<<inslst; separator="\n">
 >>
 
-var_def_st(var) ::= <<
-var <var>
->>
+program_st(gv_def_lst, ins_lst, func_lst) ::= <<
+<gv_def_lst; separator="\n">
 
-var_lst_st(vardeflst)  ::= <<
-<vardeflst:var_def_st(); separator="\n">
->>
+<inslst_st(ins_lst)>
 
-program_st(vardeflst, inslst) ::= <<
-<var_lst_st(vardeflst)>
-
-<inslst_st(inslst)>
+<func_lst; separator="\n\n">
 
 >>
 
-// The following templates are not used now.
 
-var_def_ins_unused_st(holder) ::= <<
 
-var_def_ins_unused_st-- var <holder>
+global_array_st(id, size) ::= <<
+gvar <id>[<size>]
 >>
 
-
-var_def_ins_used_st(holder) ::= <<
-var_def_ins_used_st-- var <holder>
+global_value_st(id) ::= <<
+gval <id>
 >>
+
+global_variable_st(id) ::= <<
+gvar <id>
+>>
+
+store_array_ins_st(lv, gv, index) ::= <<
+store_array(<lv>, <gv>, <index>)
+>> 
+
+store_ins_st(lv, gv) ::= <<
+store(<lv>, <gv>)
+>>
+
+ret_ins_st(v) ::= <<
+return<if(v)> <v><endif>
+>>
+
+load_array_ins_st(gv, index, lv) ::= <<
+load_array(<gv>, <index>, <lv>)
+>> 
+
+allocate_mutex_ins_st(holder) ::= <<
+alloc_mutex(<holder>)
+>>
+
+load_ins(gv, lv) ::= <<
+load(<gv>, <lv>)
+>>
+
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+

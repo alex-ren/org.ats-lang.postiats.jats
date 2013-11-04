@@ -1,15 +1,17 @@
 package jats.utfpl.tree;
 
-public class VarDef implements Dec {
+public class VarArrayDef implements Dec {
+
     public IdExp m_id;
-    public Exp m_exp;
-    // public Type m_ty;
+    public int m_size;
+    public Type m_ty;
     
-    public VarDef(IdExp id, Exp exp) {
+    public VarArrayDef(IdExp id, int size, Type ty) {
         m_id = id;
-        m_exp = exp;
-        // m_ty = ty;
+        m_size = size;
+        m_ty = ty;
     }
+    
     
     @Override
     public Object accept(TreeVisitor visitor) {

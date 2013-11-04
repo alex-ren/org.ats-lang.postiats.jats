@@ -11,5 +11,9 @@ public class TupleValue implements ValPrim {
     public TupleValue() {
         m_eleLst = new ArrayList<ValPrim>();
     }
+    
+    public List<ValPrim> getElementLst() {
+        return m_eleLst;
+    }
 
 }

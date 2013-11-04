@@ -1,5 +1,6 @@
 package jats.utfpl.ccomp;
 
+import jats.utfpl.instruction.InstructionTransformer;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeFunc;
@@ -58,6 +59,15 @@ public class CCompUtils {
         func = "printx";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
         
+        func = InstructionTransformer.cSetAddr;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        func = InstructionTransformer.cSetArray;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        func = InstructionTransformer.cGetArray;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
         func = "createEvt";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
@@ -67,7 +77,7 @@ public class CCompUtils {
         func = "thread_join";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
-        func = "mutex_allocate";
+        func = InstructionTransformer.cAllocMutex;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
         
         func = "mutex_release";

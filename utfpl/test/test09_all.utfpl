@@ -1,0 +1,42 @@
+
+var gv1 := 1
+var gv2
+val g1 = 3
+
+var gv[3]
+
+fun foo1(x) = let
+  gv1 := 2
+  val () = 3
+in
+  ()
+end
+
+fun foo2() = let
+  val x = 4
+in
+  3
+end
+
+fun foo3() = let
+  val () = set_array(3, gv, 2)
+  val x = get_array(gv, 1)
+  val () = foo1(get_array(gv, 1))
+in
+  get_array(gv, 2)
+end
+
+fun foo4() = let
+  val x = if 3 then 2 else get_array(gv, 2)
+  val y = mutex_allocate()
+in
+  if 4 then if 3 then 2 else get_array(gv, x) else 1
+end
+
+
+fun foo5() = let
+  gv1 := if gv1 then 1 else 4
+in
+  ()
+end
+
