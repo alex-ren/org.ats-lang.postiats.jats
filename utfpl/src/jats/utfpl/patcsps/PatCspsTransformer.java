@@ -8,7 +8,7 @@ import jats.utfpl.csps.CBlock;
 import jats.utfpl.csps.CBCond;
 import jats.utfpl.csps.CBEvent;
 import jats.utfpl.csps.CIFunCall;
-import jats.utfpl.csps.CIBind;
+import jats.utfpl.csps.CIMove;
 import jats.utfpl.csps.FunctionCSPS;
 import jats.utfpl.csps.CIReturn;
 import jats.utfpl.csps.CInstruction;
@@ -131,7 +131,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     }
 
     @Override
-    public List<PStat> visit(CIBind ins) {
+    public List<PStat> visit(CIMove ins) {
         TID var = ins.m_holder.getTID();
         PExp exp = (PExp)(ins.m_vp.accept(this));
         

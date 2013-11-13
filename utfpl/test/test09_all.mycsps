@@ -26,7 +26,7 @@ step {
 step {
   var temp_63<escaped> = gv_35[1];
 } -> Skip;
-__1<process> = foo1_36(tid, temp_63 from <GStack(0)>);
+var __1<process> = foo1_36(tid, temp_63 from <GStack(0)>);
 step {
   var ret_62 = gv_35[2];
   return ret_62;
@@ -103,7 +103,7 @@ foo6_46(tid) =
 step {
   var x_47<escaped> = 3;
 } -> Skip;
-ret_67<process> = foo61_48(tid, 3, x_47 from <GStack(0)>);
+var ret_67<process> = foo61_48(tid, 3, x_47 from <GStack(0)>);
 
 foo61_48(tid, y_49, x_esc_72) =
 step {
@@ -117,7 +117,6 @@ step {
   var y_53
   if (x_52) {
     var z_54 = 2;
-    var y_53
     if (z_54) {
       y_53 = call(add, x_52, 1);
     } else {

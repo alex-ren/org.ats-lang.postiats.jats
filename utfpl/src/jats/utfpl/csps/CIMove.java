@@ -1,11 +1,11 @@
 package jats.utfpl.csps;
 
-public class CIBind extends CInstruction {
+public class CIMove extends CInstruction {
     public CTempID m_holder;
     public CTemp m_vp;
 
 
-    public CIBind(CTemp vp, CTempID holder, CBlock blk) {
+    public CIMove(CTemp vp, CTempID holder, CBlock blk) {
         super(blk);
         m_holder = holder;
         m_vp = vp;
@@ -22,7 +22,7 @@ public class CIBind extends CInstruction {
     
     @Override
     public int process(int offset) {
-        offset = m_holder.processFirstOccurrence(offset);
+        offset = m_holder.processStack(offset);
         
         if (m_vp instanceof CTempID) {
             ((CTempID)m_vp).updateForUsage();

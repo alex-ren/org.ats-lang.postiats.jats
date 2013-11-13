@@ -6,9 +6,8 @@ public interface CSPSVisitor {
     public Object visit(CBEvent node);
     public Object visit(CBProc node);
     
-    public Object visit(CIBind node);
+    public Object visit(CIMove node);
     public Object visit(CIVarDef node);
-    public Object visit(CIAssign node);
     public Object visit(CIFunCall node);
     public Object visit(CIReturn node);
     public Object visit(CILoad node);

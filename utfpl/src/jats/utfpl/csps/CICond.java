@@ -27,7 +27,9 @@ public class CICond extends CInstruction {
     public int process(int offset) {
         // This one should be done first so that
         // holder can be recognized as a definition.
-        offset = m_holder.processFirstOccurrence(offset);
+    	if (null != m_holder) {
+            offset = m_holder.processStack(offset);
+    	}
         
         if (m_cond instanceof CTempID) {
             ((CTempID)m_cond).updateForUsage();

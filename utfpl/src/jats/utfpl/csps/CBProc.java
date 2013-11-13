@@ -48,9 +48,9 @@ public class CBProc extends CBlock {
     @Override
     public int process(int offset) {
         if (((PATTypeFunc)m_funlab.getType()).getRetType() == PATTypeSingleton.cVoidType) {
-            offset = m_ret.processFirstOccurrenceProcCall(offset, true);
+            offset = m_ret.processStackProcCall(offset, true);
         } else {
-            offset = m_ret.processFirstOccurrenceProcCall(offset, false);
+            offset = m_ret.processStackProcCall(offset, false);
         }
         
         for (CTemp arg: m_args) {

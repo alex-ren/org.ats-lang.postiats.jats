@@ -123,10 +123,10 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIBind ins) {
+    public Object visit(CIMove ins) {
         ST st = null;
-       // bind_ins_st(dst, src, v, escape, ret) ::= <<
-        st = m_stg.getInstanceOf("bind_ins_st");
+       // move_ins_st(dst, src, v, escape, ret) ::= <<
+        st = m_stg.getInstanceOf("move_ins_st");
 //        st.add("v", ins.m_holder);
         st.add("escape", ins.m_holder.isEscaped());
         st.add("dst", ins.m_holder.accept(this));
@@ -137,10 +137,9 @@ public class CSPSPrinter implements CSPSVisitor {
     @Override
     public Object visit(CIFunCall ins) {
         ST st = null;
-        // fun_call_ins_st(dst, lab, argsv, escape, ret) ::= <<
+        // fun_call_ins_st(dst, lab, args, escape) ::= <<
         st = m_stg.getInstanceOf("fun_call_ins_st");
 //        st.add("v", ins.m_ret);
-        st.add("isdef", ins.m_ret.isDefinition());
         st.add("escape", ins.m_ret.isEscaped());
 //        else if (ins.isRet()) {
 //            st.add("ret", true);
@@ -291,17 +290,8 @@ public class CSPSPrinter implements CSPSVisitor {
     public Object visit(CIVarDef node) {
         // vardef_ins_st(holder) ::= <<
         ST st = m_stg.getInstanceOf("vardef_ins_st");
-        st.add("holder", node.m_id.accept(this));
+        st.add("holder", node.m_id.getTID());
         
-        return st;
-    }
-
-    @Override
-    public Object visit(CIAssign node) {
-        // assign_ins_st(src, dst) ::= <<
-        ST st = m_stg.getInstanceOf("assign_ins_st");
-        st.add("dst", node.m_holder.accept(this));
-        st.add("src", node.m_vp.accept(this));
         return st;
     }
 

@@ -62,7 +62,7 @@ public class CSPSTransformer {
 //                if (para.getTID().toString().equals("x_esc_69")) {
 //                    throw new Error("eeeeeeeeeeeeeeeeeeeeeeeeeeee");
 //                }
-                para.processFirstOccurrence(0);
+                para.processStack(0);
             }
             
             // add the concept of stack
@@ -117,7 +117,13 @@ public class CSPSTransformer {
                 
             } else {
                 CTemp ctCond = ValPrim2CTemp(ins.m_cond, m_subMap, m_funLab, m_cbEvt);
-                CTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+
+                // create a CTempID as definition
+                CTempID ctHolder = null;
+                if (!ins.m_holder.isRet()) {
+                	ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+                }
+                
                 Map<TID, VariableInfo> subMap2 = 
                         new HashMap<TID, VariableInfo>(m_subMap);
                 
@@ -147,19 +153,16 @@ public class CSPSTransformer {
                 m_cbEvt.m_inslst = insLstBackup;
                 m_cblkLst = blkLstBackup;
                 
-                CICond nIns = new CICond(ctHolder, ctCond, trueBranch, falseBranch, m_cbEvt);
-                if (!ins.m_holder.isRet()) {
-                    System.out.println("dddddddddddddddddd holder is " + ins.m_holder + "in " + m_funLab);
+                CICond nIns = new CICond(ctHolder/* may be null*/, ctCond, trueBranch, falseBranch, m_cbEvt);
+                if (!ins.m_holder.isRet() && ctHolder.isDefinition()) {
+//                    System.out.println("dddddddddddddddddd holder is " + ins.m_holder + "in " + m_funLab);
                     CIVarDef defIns = new CIVarDef(ctHolder, m_cbEvt);
                     m_cbEvt.add(defIns);
                 }
-                m_cbEvt.add(nIns);
                 
-                // Add return ins
+                m_cbEvt.add(nIns);
+
                 if (ins.m_holder.isRet()) {
-//                    CTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-//                    CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-//                    m_cbEvt.add(retIns);
                     m_cblkLst.add(m_cbEvt);
                 }
                 return null;
@@ -322,14 +325,8 @@ public class CSPSTransformer {
         public Object visit(InsMove ins) {
             CTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             CTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            if (holder.isDefinition()) {
-                CIBind nIns = new CIBind(v, holder, m_cbEvt);
-                m_cbEvt.add(nIns);
-            } else {
-                // This is for the holder of the "if" instruction.
-                CIAssign nIns = new CIAssign(v, holder, m_cbEvt);
-                m_cbEvt.add(nIns);
-            }
+			CIMove nIns = new CIMove(v, holder, m_cbEvt);
+			m_cbEvt.add(nIns);
 
             return null;
         }

@@ -18,7 +18,7 @@ public class CILoad extends CInstruction {
     
     @Override
     public int process(int offset) {
-        offset = m_localHost.processFirstOccurrence(offset);
+        offset = m_localHost.processStack(offset);
         return offset;
     }
 

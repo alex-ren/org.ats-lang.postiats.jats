@@ -36,7 +36,7 @@ public class CIFunCall extends CInstruction {
 
     @Override
     public int process(int offset) {
-        offset = m_ret.processFirstOccurrence(offset);
+        offset = m_ret.processStack(offset);
 
         for (CTemp arg: m_args) {
             if (arg instanceof CTempID) {

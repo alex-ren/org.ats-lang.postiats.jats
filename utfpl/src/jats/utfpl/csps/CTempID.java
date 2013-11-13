@@ -85,13 +85,16 @@ public class CTempID implements CTemp {
     }
     
     /*
-     * This function is called when an object of CTempID is assigned at the first time.
+     * This function is called when an object of CTempID allocatd at first time.
      */
-    public int processFirstOccurrence(int offset) {
-        updateEscaped();
-        if (isEscaped()) {
-            offset =  updateForDef(offset);
-        }
+    public int processStack(int offset) {
+    	if (m_isDef) {
+            updateEscaped();
+            if (isEscaped()) {
+                offset =  updateForDef(offset);
+            }
+    	}
+
         return offset;
     }
     
@@ -99,7 +102,7 @@ public class CTempID implements CTemp {
      * m_tid won't be global, which is guaranteed by InstructionProcessor.GlobalVarInsProcessor.addInsForGlobalVar
      * This function is called when an object of CTempID is assigned at the first time.
      */
-    public int processFirstOccurrenceProcCall(int offset, boolean isVoid) {
+    public int processStackProcCall(int offset, boolean isVoid) {
         if (isVoid) {
             m_vi.getTID().updateType(PATTypeSingleton.cVoidType);  // The order of these two lines cannot be reversed.
             updateEscaped();

@@ -1,5 +1,8 @@
 package jats.utfpl.csps;
 
+/*
+ * The existence of "CICond" cause the usage of this class.
+ */
 public class CIVarDef extends CInstruction {
     public CTempID m_id;
     
@@ -15,7 +18,7 @@ public class CIVarDef extends CInstruction {
 
     @Override
     public int process(int offset) {
-        offset = m_id.processFirstOccurrence(offset);
+        offset = m_id.processStack(offset);
         return offset;
     }
 

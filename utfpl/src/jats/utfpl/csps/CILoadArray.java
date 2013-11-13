@@ -19,7 +19,7 @@ public class CILoadArray extends CInstruction {
 
     @Override
     public int process(int offset) {
-        offset = m_localHolder.processFirstOccurrence(offset);
+        offset = m_localHolder.processStack(offset);
         
         if (m_localIndex instanceof CTempID) {
             ((CTempID)m_localIndex).updateForUsage();

@@ -24,12 +24,12 @@ process_call_block_st(lab, args, holder) ::= <<
 
 // =====================================
 
-bind_ins_st(src, dst, escape) ::= <<
-var <dst><if(escape)>\<escaped><endif> = <src>;
+move_ins_st(src, dst, escape) ::= <<
+<dst><if(escape)>\<escaped><endif> = <src>;
 >>
 
-fun_call_ins_st(dst, lab, args, escape, ret, isdef) ::= <<
-<if(isdef)>var <endif><dst><if(escape)>\<escaped><endif> = call(<lab><if(args)>, <endif><args; separator=", ">);
+fun_call_ins_st(dst, lab, args, escape) ::= <<
+<dst><if(escape)>\<escaped><endif> = call(<lab><if(args)>, <endif><args; separator=", ">);
 >>
 
 return_ins_st(v) ::= <<
@@ -37,15 +37,15 @@ return <v>;
 >>
 
 load_ins_st(src, dst, escape) ::= <<
-var <dst><if(escape)>\<escaped><endif> = <src>;
+<dst><if(escape)>\<escaped><endif> = <src>;
 >>
 
 load_array_ins_st(src, ind, dst, escape) ::= <<
-var <dst><if(escape)>\<escaped><endif> = <src>[<ind>];
+<dst><if(escape)>\<escaped><endif> = <src>[<ind>];
 >>
 
 mutex_alloc_ins_st(dst, escape) ::= <<
-var <dst><if(escape)>\<escaped><endif> = mutex_alloc();
+<dst><if(escape)>\<escaped><endif> = mutex_alloc();
 >>
 
 store_ins_st(src, dst) ::= <<
@@ -64,21 +64,22 @@ if (<cond>) {
 }
 >>
 
+// =====================================
+
 vardef_ins_st(holder) ::= <<
 var <holder>
 >>
 
-assign_ins_st(src, dst) ::= <<
-<dst> = <src>;
+global_id_st(id) ::= <<
+<id>
 >>
 
-// =====================================
 para_def_st(v) ::= <<
 <v>
 >>
 
 val_def_st(v) ::= <<
-<v>
+var <v>
 >>
 
 val_use_name_st(v) ::= <<
@@ -99,10 +100,6 @@ atom_val_st(v) ::= <<
 
 tuple_val_st(ele_lst) ::= <<
 (<ele_lst; separator=", ">)
->>
-
-global_id_st(id) ::= <<
-<id>
 >>
 
 // ============================
