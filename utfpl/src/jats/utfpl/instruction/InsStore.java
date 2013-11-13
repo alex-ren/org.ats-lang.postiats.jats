@@ -16,7 +16,7 @@ public class InsStore implements UtfplInstruction {
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public Boolean hasSideEffect() {
         return true;
     }
 

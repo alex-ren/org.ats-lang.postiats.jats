@@ -1,56 +1,133 @@
 
-abstype gmem_type  // library type
-typedef gmem = gmem_type
 
-abstype mutex_type
-typedef mutex = mutex_type
+var g_size
+var g_len = 0
 
-extern fun mem_allocate (n: int): gmem
-extern fun mutex_allocate (): mutex
-extern fun mutex_lock (m: mutex): 
+var g_output  // output
+
+var g_mutex = atspat_mutex_alloc ()
+
+var g_cond_pro = atspat_cond_alloc ()
+var g_cond_cos = atspat_cond_alloc ()
 
 
-assume bufitm_type = ()
-assume buff_vtype = gmem
+/* ********** *********** */
 
-val gbuffer = mem_allocate (1)
-// var gbuffer
+fun buffer_isful (buf) = atspat_eq (g_len, N)
+fun buffer_isnil (buf) = atspat_eq (g_len, 0)
 
-val bmutex = mutex_allocate ()
+fun buffer_insert (buf, x) = let
+  val lst = atspat_mem_load (buf, 0)
+  val lst = atspat_list_cons (x, lst)
+  val () = atspat_mem_store (buf, 0, lst)
+  g_len := atspat_add(g_len, 1)
+in () end
 
-fun buffer_acquire () = let
-  val () = mutex_lock (bmutex)
+fun buffer_takeout (buf) = let
+  val lst = atspat_mem_load (buf, 0)
+  val x = atspat_list_head (lst)
+  val lst = atspat_list_tail (lst)
+  val () = atspat_mem_store (buf, 0, lst)
+in x end
+
+fun buffer_cond_wait_isful (buf) = atspat_cond_wait (g_cond_pro, g_mutex)
+fun buffer_cond_wait_isnil (buf) = atspat_cond_wait (g_cond_cos, g_mutex)
+fun buffer_cond_signal_isful (buf) = atspat_cond_signal (g_cond_pro)
+fun buffer_cond_signal_isnil (buf) = atspat_cond_signal (g_cond_cos)
+
+
+fun sbuffer_acquire (sbuf) = let
+  val () = atspat_mutex_lock (g_mutex)
+in sbuf end
+
+fun sbuffer_acquire (sbuf) = let
+  val sbuf = atspat_mutex_unlock (g_mutex)
+in () end
+
+fun sbuffer_make_nil (cap) = let
+  val p = = atspat_mem_alloc (1)
+  g_len := cap
+in p end
+
+/* ********** *********** */
+
+fun thread_producer (x (*buffer, int*)) = let
+  fun loop (sbuf, v) = let
+    val () = sbuffer_insert (sbuf, v)
+  in
+    loop (sbuf, v)
+  end
+
+  val sbuf = atspat_tuple_get_at (x, 0)
+  val v = atspat_tuple_get_get (x, 1)
 in
-  gbuffer
+  loop (sbuf, v)
 end
 
-fun buffer_release (buf) = let
-  val () = mutex_unlock (bmutex)
+fun thread_consumer (sbuf) = let
+  fun loop (sbuf) = let
+    val v = sbuffer_takeout (sbuf)
+    g := v
+  in
+    loop (sbuf)
+  end
+
 in
-  ()
+  loop (sbuf)
 end
 
-fun buffer_isnull (buf) = let
-  val n = array_load (buf, 0)
-in
-  n == 0
-end
+/* ********** *********** */
 
-fun buffer_isful (buf) = let
-  val n = array_load (buf, 0)
-in
-  n >= 3
-end
+val sbuf = sbuffer_make_nil (3)
+val tid1 = atspat_tid_alloc ()
+val tid2 = atspat_tid_alloc ()
+val tid3 = atspat_tid_alloc ()
 
-fun buffer_remove (buf) = ()
+val arg1 = atspat_tuple_create (sbuf, 1)
+val arg2 = atspat_tuple_create (sbuf, 2)
 
-fun consumer_thread () = let
-  val x = consume ()
-in
-  consumer ()
-end
+val () = atspat_run (
+            thread_producer, tid1, arg1, 
+            thread_producer, tid2, arg2, 
+            thread_consumer, tid3, sbuf
+           )
 
-fun producer_thread () = let
-  val 
+val () = atspat_join (tid1)
+val () = atspat_join (tid2)
+val () = atspat_join (tid3)
+
+
+%{$
+
+#assert ...
+
+
+%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

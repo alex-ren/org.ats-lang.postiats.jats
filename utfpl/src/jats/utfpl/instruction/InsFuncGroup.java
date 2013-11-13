@@ -21,7 +21,7 @@ public class InsFuncGroup implements UtfplInstruction {
 	}
 
 	@Override
-	public boolean hasSideEffect() {
+	public Boolean hasSideEffect() {
 		throw new Error("should not be called");
 	}
 

@@ -2,13 +2,10 @@ package jats.utfpl.patcsps;
 
 import jats.utfpl.instruction.TID;
 
-public class PExpStackOpr implements PExp {
-    
-    public int m_pos;
+public class PGDecArray implements PGDec {
     public TID m_tid;
     
-    public PExpStackOpr(int pos, TID tid) {
-        m_pos = pos;
+    public PGDecArray(TID tid) {
         m_tid = tid;
     }
 

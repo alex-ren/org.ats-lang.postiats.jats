@@ -97,8 +97,9 @@ public class InstructionTransformer implements TreeVisitor {
         }
         
         if (node.hasName()) {  // named global value
-            GlobalValue gv = new GlobalValue(node.m_id.m_tid);
-            m_gEntitis.add(gv);
+            // commented out @ 11/06/2013: no global value
+            // GlobalValue gv = new GlobalValue(node.m_id.m_tid);
+            // m_gEntitis.add(gv);
             setTIDIn(node.m_id.m_tid); 
         } else {
             setTIDIn(TID.ANONY);
@@ -257,7 +258,12 @@ public class InstructionTransformer implements TreeVisitor {
                     // don't care the result
                     InsCall app = new InsCall(holder, funlab, args, false);  // impossible to be the tail call
                     m_inslst.add(app);
+                } else if (holder.isLocal()) {
+                    InsCall app = new InsCall(holder, (TID)funlab, args, false);
+                    m_inslst.add(app);
+                    m_vpOut = holder;
                 } else {
+                    System.out.println("holder is " + holder);
                     throw new Error("not supported");
                 }
             }
@@ -363,7 +369,7 @@ public class InstructionTransformer implements TreeVisitor {
         @SuppressWarnings("unchecked")
         List<UtfplInstruction> fInsLst = (List<UtfplInstruction>)node.m_bfalse.accept(fVisitor);  //
         
-        InsCond ins = new InsCond(holder, vpCond, tInsLst, fInsLst);
+        InsCond ins = new InsCond(holder, vpCond, tInsLst, fInsLst, null);
         m_inslst.add(ins);
         m_vpOut = holder;
         

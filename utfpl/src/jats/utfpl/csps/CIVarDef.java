@@ -1,12 +1,11 @@
 package jats.utfpl.csps;
 
-public class CIReturn extends CInstruction {
+public class CIVarDef extends CInstruction {
+    public CTempID m_id;
     
-    public CTemp m_v;
-
-    public CIReturn(CTemp v, CBlock blk) {
+    public CIVarDef(CTempID id, CBlock blk) {
         super(blk);
-        m_v = v;
+        m_id = id;
     }
 
     @Override
@@ -16,11 +15,8 @@ public class CIReturn extends CInstruction {
 
     @Override
     public int process(int offset) {
-        if (m_v instanceof CTempID) {
-            ((CTempID)m_v).updateForUsage();
-        }
+        offset = m_id.processFirstOccurrence(offset);
         return offset;
-        
     }
 
 }

@@ -1,13 +1,13 @@
 package jats.utfpl.instruction;
 
 public interface InsVisitor {
-    
-    public Object visit(GlobalArray ins);
-    
-    public Object visit(GlobalValue ins);
-    
-    public Object visit(GlobalVariable ins);
-    
+//    
+//    public Object visit(GlobalArray ins);
+//    
+//    public Object visit(GlobalValue ins);
+//    
+//    public Object visit(GlobalVariable ins);
+//    
     
     public Object visit(InsCond ins);
     

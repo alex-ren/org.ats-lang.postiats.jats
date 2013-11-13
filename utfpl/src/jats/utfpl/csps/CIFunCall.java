@@ -4,20 +4,20 @@ import jats.utfpl.instruction.TID;
 
 import java.util.List;
 
-public class CIFunCall implements CInstruction {
+public class CIFunCall extends CInstruction {
     public TID m_funlab;  // Don't support function pointer.
     public List<CTemp> m_args;
     public CTempID m_ret;
+    public boolean m_isTail;
+
     
-    private CBlock m_blk;
-    
-    public CIFunCall(TID funlab, List<CTemp> args, CTempID ret, CBlock blk) {
+    public CIFunCall(TID funlab, List<CTemp> args, CTempID ret, boolean isTail, CBlock blk) {
+        super(blk);
         m_funlab = funlab;
         m_args = args;
         m_ret = ret;
-        
-        m_blk = blk;
-        
+        m_isTail = isTail;
+
     }
     
     public boolean isRet() {
@@ -35,17 +35,12 @@ public class CIFunCall implements CInstruction {
     }
 
     @Override
-    public CBlock getBlock() {
-        return m_blk;
-    }
-
-    @Override
     public int process(int offset) {
         offset = m_ret.processFirstOccurrence(offset);
 
         for (CTemp arg: m_args) {
             if (arg instanceof CTempID) {
-                ((CTempID)arg).updateForUsage(m_blk.getLevel());
+                ((CTempID)arg).updateForUsage();
             }
         }
         

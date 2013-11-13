@@ -1,6 +1,8 @@
 package jats.utfpl.csps;
 
 import jats.utfpl.instruction.TupleValue;
+import jats.utfpl.patcsps.type.PATType;
+import jats.utfpl.patcsps.type.PATTypeArray;
 
 import java.net.URL;
 import java.util.List;
@@ -18,8 +20,8 @@ public class CSPSPrinter implements CSPSVisitor {
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');    
     }
 
-    public String print(ProgramCSPS inputProg) {
-        ST st = (ST)inputProg.accept(this);
+    public String printProgram(ProgramCSPS inputProg) {
+        ST st = print(inputProg);
         
         return st.render(80);
     }
@@ -32,6 +34,53 @@ public class CSPSPrinter implements CSPSVisitor {
         return st;        
     }
     
+
+    public ST print(FunctionCSPS proc) {
+        // proc_def_st(lab, paras, body) ::= <<
+        ST st = m_stg.getInstanceOf("proc_def_st");
+        st.add("lab", proc.m_name);
+        
+        for (CTempID para: proc.m_paras) {
+            st.add("paras", para.accept(this));
+        }
+        
+        st.add("body", print(proc.m_body));
+        
+        return st;
+    }
+
+    public ST print(ProgramCSPS prog) {
+        // program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
+        ST st = m_stg.getInstanceOf("program_st");
+        for (VariableInfo gv: prog.m_globalVars) {
+            PATType ty = gv.getTID().getType();
+            if (ty instanceof PATTypeArray) {
+                ST st_gv = m_stg.getInstanceOf("garray_def_st");
+                st_gv.add("gvar", gv.getTID());
+                st_gv.add("sz", ((PATTypeArray)ty).getSize());
+
+                st.add("gvarlst", st_gv);
+                
+            } else {
+                ST st_gv = m_stg.getInstanceOf("gvar_def_st");
+                st_gv.add("gvar", gv.getTID());
+
+                st.add("gvarlst", st_gv);
+            }
+            
+        }
+        
+        for (FunctionCSPS proc: prog.m_procLst) {
+            st.add("proclst", print(proc));
+        }
+        
+        st.add("mainproc", printMain(prog.m_main));
+        st.add("mainlab", "main");
+        
+        return st;
+    }
+
+
     private ST print(List<CBlock> blks) {
         // blk_lst_st(blklst) ::= <<
         ST st = m_stg.getInstanceOf("blk_lst_st");
@@ -40,108 +89,10 @@ public class CSPSPrinter implements CSPSVisitor {
             st.add("blklst", iter.next().accept(this));
         }
         return st;
-        
-//        CBlock.Type preType = null;
-//
-//        Object previous = null;
-//        
-//        ListIterator<CBlock> iter = blks.listIterator();
-//        
-//        if (iter.hasNext()) {
-//            CBlock cb = iter.next();
-//            if (cb instanceof CEventBlock) {
-//                preType = CBlock.Type.evt;
-//                previous = cb.accept(this);
-//                
-//            } else if (cb instanceof CAdvancedBlock) {
-//                preType = CBlock.Type.proc;
-//                previous = cb.accept(this);
-//            } else {
-//                throw new Error("not supported");
-//            }
-//            while (iter.hasNext()) {
-//                cb = iter.next();
-//                if (cb instanceof CEventBlock) {
-//                   
-//                    switch (preType)
-//                    {
-//                    case proc: {
-//                        ST st = m_stg.getInstanceOf("process_event_st");
-//                        st.add("proc", previous);
-//                        st.add("evt", cb.accept(this));
-//                        previous = st;
-//                        break;
-//                    }
-//                    case evt: {
-//                        ST st = m_stg.getInstanceOf("event_event_st");
-//                        st.add("evt1", previous);
-//                        st.add("evt2", cb.accept(this));
-//                        previous = st;
-//                        break;
-//                    }
-//                    default:
-//                        throw new Error("not supported");
-//                    }
-//                    
-//                    preType = CBlock.Type.evt;
-//                    
-//                } else if (cb instanceof CAdvancedBlock) {
-//                    switch (preType)
-//                    {
-//                    case proc: {
-//                        ST st = m_stg.getInstanceOf("process_process_st");
-//                        st.add("proc1", previous);
-//                        st.add("proc2", cb.accept(this));
-//                        previous = st;
-//                        break;
-//                    }
-//                    case evt: {
-//                        ST st = m_stg.getInstanceOf("event_process_st");
-//                        st.add("evt", previous);
-//                        st.add("proc", cb.accept(this));
-//                        previous = st;
-//                        break;
-//                    }
-//                    default:
-//                        throw new Error("not supported");
-//                    }
-//                    
-//                    preType = CBlock.Type.proc;
-//                    
-//                } else {
-//                    throw new Error("not supported");
-//                }
-//            }  // end of [while]         
-//        } else {
-//            previous = null;
-//        }
-//        
-//        ST st = null;
-//        if (null == preType) {
-//            st = m_stg.getInstanceOf("grp_empty_st");
-//        } else {
-//            switch (preType)
-//            {
-//            case proc: {
-//                st = m_stg.getInstanceOf("grp_lst_proc_st");
-//                break;
-//            }
-//            case evt: {
-//                st = m_stg.getInstanceOf("grp_lst_evt_st");
-//                break;
-//            }
-//            default:
-//                throw new Error("not supported");
-//            }
-//            
-//            st.add("lst", previous);
-//        }
-//
-//        return st;
     }
 
     @Override
-    public Object visit(CCondBlock blk) {
+    public Object visit(CBCond blk) {
         ST st = m_stg.getInstanceOf("cond_block_st");
         // cond_block_st(cond, btrue, bfalse) ::= <<
         st.add("cond", blk.m_cond.accept(this));
@@ -151,7 +102,7 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CEventBlock blk) {
+    public Object visit(CBEvent blk) {
         ST st = m_stg.getInstanceOf("event_block_st");
         for (CInstruction ins: blk.m_inslst) {
             st.add("inslst", ins.accept(this));
@@ -160,10 +111,10 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CProcessCallBlock blk) {
+    public Object visit(CBProc blk) {
         // process_call_block_st(lab, args) ::= <<
         ST st = m_stg.getInstanceOf("process_call_block_st");
-        st.add("holder", blk.m_ret.getTID().toString());
+        st.add("holder", blk.m_ret.accept(this));
         st.add("lab", blk.m_funlab);
         for (CTemp arg: blk.m_args) {
             st.add("args", arg.accept(this));
@@ -172,19 +123,12 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIMove ins) {
+    public Object visit(CIBind ins) {
         ST st = null;
-       // move_ins_st(dst, src, v, push, ret) ::= <<
-        st = m_stg.getInstanceOf("move_ins_st");
+       // bind_ins_st(dst, src, v, escape, ret) ::= <<
+        st = m_stg.getInstanceOf("bind_ins_st");
 //        st.add("v", ins.m_holder);
-        
-        if (ins.needStack()) {
-            st.add("push", true);
-        } 
-//        else if (ins.isRet()) {
-//            st.add("ret", true);
-//        }
-
+        st.add("escape", ins.m_holder.isEscaped());
         st.add("dst", ins.m_holder.accept(this));
         st.add("src", ins.m_vp.accept(this));
         return st;
@@ -193,13 +137,11 @@ public class CSPSPrinter implements CSPSVisitor {
     @Override
     public Object visit(CIFunCall ins) {
         ST st = null;
-        // fun_call_ins_st(dst, lab, argsv, push, ret) ::= <<
+        // fun_call_ins_st(dst, lab, argsv, escape, ret) ::= <<
         st = m_stg.getInstanceOf("fun_call_ins_st");
 //        st.add("v", ins.m_ret);
-        
-        if (ins.needStack()) {
-            st.add("push", true);
-        } 
+        st.add("isdef", ins.m_ret.isDefinition());
+        st.add("escape", ins.m_ret.isEscaped());
 //        else if (ins.isRet()) {
 //            st.add("ret", true);
 //        }
@@ -230,7 +172,7 @@ public class CSPSPrinter implements CSPSVisitor {
                 }
 
             } else {  // this is the usage
-                if (!v.isOutofScope()) {
+                if (null == v.getStackInfo()) {
                     st = m_stg.getInstanceOf("val_use_name_st");
                     st.add("v", v);
                 } else {
@@ -271,45 +213,95 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIProcessDef proc) {
-        // proc_def_st(lab, paras, body) ::= <<
-        ST st = m_stg.getInstanceOf("proc_def_st");
-        st.add("lab", proc.m_name);
-        
-        for (CTempID para: proc.m_paras) {
-            st.add("paras", para.accept(this));
-            if (para.isEscaped()) {
-                st.add("esc_paras", para.accept(this));
-            }
-        }
-        
-        st.add("body", print(proc.m_body));
-        
-        return st;
-    }
-
-    @Override
-    public Object visit(ProgramCSPS prog) {
-        // program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
-        ST st = m_stg.getInstanceOf("program_st");
-        for (VariableInfo gv: prog.m_globalVars) {
-            st.add("gvarlst", gv.getTID());
-        }
-        
-        for (CIProcessDef proc: prog.m_procLst) {
-            st.add("proclst", proc.accept(this));
-        }
-        
-        st.add("mainproc", printMain(prog.m_main));
-        st.add("mainlab", "main");
-        
-        return st;
-    }
-
-    @Override
     public Object visit(CIReturn node) {
-        ST st = m_stg.getInstanceOf("return_st");
-        st.add("v", node.m_id.accept(this));
+        ST st = m_stg.getInstanceOf("return_ins_st");
+        st.add("v", node.m_v.accept(this));
+        return st;
+    }
+
+    @Override
+    public Object visit(CILoad node) {
+        ST st = m_stg.getInstanceOf("load_ins_st");
+        st.add("dst", node.m_localHost.accept(this));
+        st.add("src", node.m_globalVar.accept(this));
+        
+        st.add("escape", node.m_localHost.isEscaped());
+        return st;
+    }
+
+    @Override
+    public Object visit(CILoadArray node) {
+        // load_array_ins_st(src, ind, dst, escape) ::= <<
+        ST st = m_stg.getInstanceOf("load_array_ins_st");
+        st.add("dst", node.m_localHolder.accept(this));
+        st.add("src", node.m_globalVar.accept(this));
+        st.add("ind", node.m_localIndex.accept(this));
+        
+        st.add("escape", node.m_localHolder.isEscaped());
+        return st;
+    }
+
+    @Override
+    public Object visit(CIMutexAlloc node) {
+        // mutex_alloc_ins_st(dst, escape) ::= <<
+        ST st = m_stg.getInstanceOf("mutex_alloc_ins_st");
+        st.add("dst", node.m_holder.accept(this));
+        st.add("escape", node.m_holder.isEscaped());
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(CIStore node) {
+        // store_ins_st(src, dst) ::= <<
+        ST st = m_stg.getInstanceOf("store_ins_st");
+        st.add("src", node.m_localSrc.accept(this));
+        st.add("dst", node.m_globalVar.accept(this));
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(CIStoreArray node) {
+        // store_array_ins_st(src, dst, ind) ::= <<
+        ST st = m_stg.getInstanceOf("store_array_ins_st");
+        st.add("src", node.m_localValue.accept(this));
+        st.add("dst", node.m_globalVar.accept(this));
+        st.add("ind", node.m_localIndex.accept(this));
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(CICond node) {
+        // cond_ins_st(holder, cond, tbranch, fbranch) ::= <<
+        ST st = m_stg.getInstanceOf("cond_ins_st");
+        st.add("cond", node.m_cond.accept(this));
+        for (CInstruction ins: node.m_true) {
+            st.add("tbranch", ins.accept(this));
+        }
+        for (CInstruction ins: node.m_false) {
+            st.add("fbranch", ins.accept(this));
+        }
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(CIVarDef node) {
+        // vardef_ins_st(holder) ::= <<
+        ST st = m_stg.getInstanceOf("vardef_ins_st");
+        st.add("holder", node.m_id.accept(this));
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(CIAssign node) {
+        // assign_ins_st(src, dst) ::= <<
+        ST st = m_stg.getInstanceOf("assign_ins_st");
+        st.add("dst", node.m_holder.accept(this));
+        st.add("src", node.m_vp.accept(this));
         return st;
     }
 

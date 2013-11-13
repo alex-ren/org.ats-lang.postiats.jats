@@ -2,10 +2,11 @@ package jats.utfpl.instruction;
 
 
 import jats.utfpl.patcsps.type.PATTypeFunc;
-
-//import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * This instruction will not appear in the instruction list after closure conversion.
+ */
 public class InsFuncDef implements UtfplInstruction {
     public TID m_name;
     public List<TID> m_paralst;
@@ -28,7 +29,7 @@ public class InsFuncDef implements UtfplInstruction {
         ((PATTypeFunc)m_name.getType()).updateEffect(true);
     }
     
-    public boolean hasSideEffect() {
+    public Boolean hasSideEffect() {
         return m_name.hasEffect();
     }
     

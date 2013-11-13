@@ -1,9 +1,9 @@
 package jats.utfpl.instruction;
 
 public class InsLoadArray implements UtfplInstruction {
-    public TID m_localHolder;
     public TID m_globalVar;
     public ValPrim m_localIndex;
+    public TID m_localHolder;
 
     public InsLoadArray(TID globalVar, ValPrim localIndex, TID localHolder) {
         
@@ -18,7 +18,7 @@ public class InsLoadArray implements UtfplInstruction {
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public Boolean hasSideEffect() {
         return true;
     }
 }

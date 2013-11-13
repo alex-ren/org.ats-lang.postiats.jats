@@ -18,7 +18,7 @@ public class InsRet implements UtfplInstruction {
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public Boolean hasSideEffect() {
         return false;
     }
 

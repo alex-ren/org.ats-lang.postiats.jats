@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PModel implements PNode {
-    public List<PGDecVar> m_gvLst;
+    public List<PGDec> m_gvLst;
     public PProc m_mainProcBody;
     public List<PGDecProc> m_procLst;  // all the processes in the program
     
@@ -22,7 +22,7 @@ public class PModel implements PNode {
 //    private List<PInclude> m_inclLst;
 //    private List<PGDec> m_sysGVarLst;
 
-    public PModel(List<PGDecVar> gvLst, PProc mainProcBody, List<PGDecProc> procLst) {
+    public PModel(List<PGDec> gvLst, PProc mainProcBody, List<PGDecProc> procLst) {
         m_gvLst = gvLst;
         m_mainProcBody = mainProcBody;
         m_procLst = procLst;

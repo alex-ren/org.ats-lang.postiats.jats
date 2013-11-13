@@ -40,3 +40,46 @@ in
   ()
 end
 
+fun foo6() = let
+  val x = 3
+  fun foo61(y) = let
+    val z = add (x, y)
+  in
+    z
+  end
+in
+  foo61 (3)
+end
+
+fun foo7() = let
+  val x = 1
+  val y = if x then let val z = 2 in if z then add (x, 1) else add (1, x) end
+               else 3
+  val q1 = 33
+  val q2 = add (q1, y)
+in
+  q2
+end
+
+fun foo8() = let
+in
+  set_array(3, gv, 2)
+end
+
+fun foo9() =
+if 1 then let
+  val x = 1
+in x end
+else 2
+
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+

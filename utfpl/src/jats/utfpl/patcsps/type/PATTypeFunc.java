@@ -32,3 +32,5 @@ public class PATTypeFunc implements PATType {
         m_hasEffect = b;
     }
 }
+
+

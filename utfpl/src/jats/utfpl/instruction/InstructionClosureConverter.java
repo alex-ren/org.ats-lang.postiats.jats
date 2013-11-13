@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// turn closure into normal function by add more parameters
 public class InstructionClosureConverter {
 	static public ProgramInstruction convert(ProgramInstruction iProg) {
 	    
@@ -109,21 +110,6 @@ public class InstructionClosureConverter {
 	        	fundef.accept(this);
 	        }
 	        return null;
-        }
-
-        @Override
-        public Object visit(GlobalArray ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalValue ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalVariable ins) {
-            throw new Error("shall not happen");
         }
 
         @Override
@@ -312,21 +298,6 @@ public class InstructionClosureConverter {
         }
 
         @Override
-        public Object visit(GlobalArray ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalValue ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalVariable ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
         public Object visit(InsCall ins) {
             for (ValPrim arg : ins.m_args) {
                 if (arg instanceof TID) {
@@ -471,7 +442,7 @@ public class InstructionClosureConverter {
             List<UtfplInstruction> rightInsLst = rightPass.process(ins.m_bfalse);
             m_funcLst.addAll(rightPass.getFuncLst());
             
-            InsCond nIns = new InsCond(ins.m_holder, nCond, leftInsLst, rightInsLst);
+            InsCond nIns = new InsCond(ins.m_holder, nCond, leftInsLst, rightInsLst, ins.hasSideEffect());
             m_insLst.add(nIns);
             return m_insLst;
         }
@@ -507,21 +478,6 @@ public class InstructionClosureConverter {
                 fundef.accept(this);
             }
             return m_insLst;
-        }
-
-        @Override
-        public Object visit(GlobalArray ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalValue ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalVariable ins) {
-            throw new Error("shall not happen");
         }
 
         @Override

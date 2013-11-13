@@ -1,20 +1,38 @@
 package jats.utfpl.instruction;
 
+import jats.utfpl.patcsps.type.PATTypeFunc;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-
+// handle "if" branch
 public class InstructionProgramProcessor {
     
     /*
      * The content of process includes the following.
      * Transformation of "if" branch.
+     * Effect analysis.
      */
     static public ProgramInstruction processProgram(ProgramInstruction inputProg) {
-        List<UtfplInstruction> nBody = InsLstProcess(inputProg.getInsLst(), new HashMap<TID, TID>());
+
+        for (FunctionInstruction func: inputProg.getFuncLst()) {
+            // todo
+            // All user-defined functions have effect.
+            ((PATTypeFunc)func.getName().getType()).updateEffect(true);
+        }
+        
+        for (FunctionInstruction func: inputProg.getFuncLst()) {
+            EffectAnalyze(func.getBody());
+        }
+        
+        EffectAnalyze(inputProg.getInsLst());       
+
+        // ============================================
+        
+        List<UtfplInstruction> nBody = InsLstProcess(inputProg.getInsLst(), null);
         List<FunctionInstruction> nFuncLst = new ArrayList<FunctionInstruction>();
         
         for (FunctionInstruction func: inputProg.getFuncLst()) {
@@ -26,8 +44,33 @@ public class InstructionProgramProcessor {
         return nProg;        
     }
     
+    
+    /*
+     * Update the effect of "if" instruction.
+     */
+    static private boolean EffectAnalyze(List<UtfplInstruction> insLst) {
+        boolean ret = false;
+        for (UtfplInstruction ins: insLst) {
+            if (ins instanceof InsCond) {
+                boolean btrue = EffectAnalyze(((InsCond)ins).m_btrue);
+                boolean bfalse = EffectAnalyze(((InsCond)ins).m_bfalse);
+                if (btrue || bfalse) {
+                    ret = true;
+                    ((InsCond)ins).setEffectFlag(true);
+                } else {
+                    ((InsCond)ins).setEffectFlag(false);
+                }
+            } else {
+                if (ins.hasSideEffect()) {
+                    ret = true;
+                }
+            }
+        }
+        return ret;
+    }
+
     static public FunctionInstruction processFunction(FunctionInstruction inputFunc) {
-        List<UtfplInstruction> nBody = InsLstProcess(inputFunc.getBody(), new HashMap<TID, TID>());
+        List<UtfplInstruction> nBody = InsLstProcess(inputFunc.getBody(), null);
         
         FunctionInstruction nFunc = 
                 new FunctionInstruction(
@@ -36,7 +79,9 @@ public class InstructionProgramProcessor {
                         inputFunc.getEscParaLst(),
                         nBody
                         );
+        
         return nFunc;
+
     }
 	
     static public ValPrim subsVP(ValPrim vp, Map<TID, TID> subMap) {
@@ -72,21 +117,6 @@ public class InstructionProgramProcessor {
         }
 
         @Override
-        public Object visit(GlobalArray ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalValue ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
-        public Object visit(GlobalVariable ins) {
-            throw new Error("shall not happen");
-        }
-
-        @Override
         public Object visit(InsCond ins) {
             throw new Error("shall not happen");
         }
@@ -100,7 +130,7 @@ public class InstructionProgramProcessor {
                 m_subMap.put(ins.m_holder, nHolder);
                 List<ValPrim> nArgLst = subsVPLst(ins.m_args, m_subMap);                
                 
-                return new InsCall(nHolder, ins.m_holder, nArgLst, ins.m_isTailCall);
+                return new InsCall(nHolder, ins.m_funlab, nArgLst, ins.m_isTailCall);
             }
         }
 
@@ -206,9 +236,12 @@ public class InstructionProgramProcessor {
      * The purpose of this function is to process if-branch -- turn the merged
      * "if" into branches.
      * 
-     * needSub means two things:
-     *   1. whether we need to generate new TID for dest.
-     *   2. whether we need to substitute for the src.
+     * subMap means two things if it's not null:
+     *   1. we need to generate new TID for dest.
+     *   2. we need to substitute for the src.
+     * 
+     * If it's null, then do thing.
+     * 
      */
     static private List<UtfplInstruction> InsLstProcess(
             List<UtfplInstruction> insLst, 
@@ -224,38 +257,49 @@ public class InstructionProgramProcessor {
                 InsCond cIns = (InsCond)ins;
                 List<UtfplInstruction> restList = insLst.subList(iter.nextIndex(), insLst.size());
                 
-                if (null == subMap) {
-                    List<UtfplInstruction> trueBranchPart1 = InsLstProcess(cIns.m_btrue, null);
-                    List<UtfplInstruction> trueBranchPart2 = InsLstProcess(restList, null);
-                    List<UtfplInstruction> trueBranch = trueBranchPart1;
-                    trueBranch.addAll(trueBranchPart2);
-                    
-                    Map<TID, TID> subMapFalse = new HashMap<TID, TID>();
-                    List<UtfplInstruction> falseBranchPart1 = InsLstProcess(cIns.m_bfalse, subMapFalse);
-                    List<UtfplInstruction> falseBranchPart2 = InsLstProcess(restList, subMapFalse);
-                    List<UtfplInstruction> falseBranch = falseBranchPart1;
-                    falseBranch.addAll(falseBranchPart2);
-                    
-                    InsCond nCondIns = new InsCond(null, cIns.m_cond, trueBranch, falseBranch);
-                    nList.add(nCondIns);
-                    return nList;  // We can return since "if" is the last instruction.
+                if (cIns.hasSideEffect()) {
+                    if (null == subMap) {
+                        List<UtfplInstruction> trueList = new ArrayList<UtfplInstruction>(cIns.m_btrue);
+                        trueList.addAll(restList);
+                        List<UtfplInstruction> trueBranch = InsLstProcess(trueList, null);
+                        
+                        Map<TID, TID> subMapFalse = new HashMap<TID, TID>();
+                        List<UtfplInstruction> falseList = new ArrayList<UtfplInstruction>(cIns.m_bfalse);
+                        falseList.addAll(restList);
+                        List<UtfplInstruction> falseBranch = InsLstProcess(falseList, subMapFalse);
+                        
+                        InsCond nCondIns = new InsCond(null, cIns.m_cond, trueBranch, falseBranch, cIns.hasSideEffect());
+                        nList.add(nCondIns);
+                        return nList;  // We can return since "if" is the last instruction.
+                    } else {
+                        Map<TID, TID> subMapTrue = new HashMap<TID, TID>(subMap);
+                        List<UtfplInstruction> trueList = new ArrayList<UtfplInstruction>(cIns.m_btrue);
+                        trueList.addAll(restList);
+                        List<UtfplInstruction> trueBranch = InsLstProcess(trueList, subMapTrue);
+                        
+                        Map<TID, TID> subMapFalse = new HashMap<TID, TID>(subMap);
+                        List<UtfplInstruction> falseList = new ArrayList<UtfplInstruction>(cIns.m_bfalse);
+                        falseList.addAll(restList);
+                        List<UtfplInstruction> falseBranch = InsLstProcess(falseList, subMapFalse);
+                        
+                        ValPrim nCond = subsVP(cIns.m_cond, subMap);
+                        InsCond nCondIns = new InsCond(null, nCond, trueBranch, falseBranch, cIns.hasSideEffect());
+                        nList.add(nCondIns);
+                        return nList;  // We can return since "if" is the last instruction.
+                    }
                 } else {
-                    Map<TID, TID> subMapTrue = new HashMap<TID, TID>(subMap);
-                    List<UtfplInstruction> trueBranchPart1 = InsLstProcess(cIns.m_btrue, subMapTrue);
-                    List<UtfplInstruction> trueBranchPart2 = InsLstProcess(restList, subMapTrue);
-                    List<UtfplInstruction> trueBranch = trueBranchPart1;
-                    trueBranch.addAll(trueBranchPart2);
-                    
-                    Map<TID, TID> subMapFalse = new HashMap<TID, TID>(subMap);
-                    List<UtfplInstruction> falseBranchPart1 = InsLstProcess(cIns.m_bfalse, subMapFalse);
-                    List<UtfplInstruction> falseBranchPart2 = InsLstProcess(restList, subMapFalse);
-                    List<UtfplInstruction> falseBranch = falseBranchPart1;
-                    falseBranch.addAll(falseBranchPart2);
-                    
-                    ValPrim nCond = subsVP(cIns.m_cond, subMap);
-                    InsCond nCondIns = new InsCond(null, nCond, trueBranch, falseBranch);
-                    nList.add(nCondIns);
-                    return nList;  // We can return since "if" is the last instruction.
+                    if (null == subMap) {
+                        List<UtfplInstruction> trueBranch = InsLstProcess(cIns.m_btrue, null);
+                        List<UtfplInstruction> falseBranch = InsLstProcess(cIns.m_bfalse, null);
+                        InsCond nCondIns = new InsCond(cIns.m_holder, cIns.m_cond, trueBranch, falseBranch, cIns.hasSideEffect());
+                        nList.add(nCondIns);
+                    } else {
+                        Map<TID, TID> subMap2 = new HashMap<TID, TID>(subMap);
+                        List<UtfplInstruction> trueBranch = InsLstProcess(cIns.m_btrue, subMap2);
+                        List<UtfplInstruction> falseBranch = InsLstProcess(cIns.m_bfalse, subMap2);
+                        InsCond nCondIns = new InsCond(cIns.m_holder, cIns.m_cond, trueBranch, falseBranch, cIns.hasSideEffect());
+                        nList.add(nCondIns);
+                    }
                 }
             } else {
                 Object retIns = ins.accept(processor);

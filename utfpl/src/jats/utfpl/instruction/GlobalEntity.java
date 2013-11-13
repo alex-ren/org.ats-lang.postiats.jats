@@ -1,5 +1,7 @@
 package jats.utfpl.instruction;
 
 public interface GlobalEntity {
-    Object accept(InsVisitor visitor);
+//    Object accept(InsVisitor visitor);
+    
+    TID getTID();
 }

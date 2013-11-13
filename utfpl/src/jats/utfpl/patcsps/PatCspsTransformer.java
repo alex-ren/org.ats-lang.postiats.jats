@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.ListIterator;
 
 import jats.utfpl.csps.CBlock;
-import jats.utfpl.csps.CCondBlock;
-import jats.utfpl.csps.CEventBlock;
+import jats.utfpl.csps.CBCond;
+import jats.utfpl.csps.CBEvent;
 import jats.utfpl.csps.CIFunCall;
-import jats.utfpl.csps.CIMove;
-import jats.utfpl.csps.CIProcessDef;
+import jats.utfpl.csps.CIBind;
+import jats.utfpl.csps.FunctionCSPS;
 import jats.utfpl.csps.CIReturn;
 import jats.utfpl.csps.CInstruction;
-import jats.utfpl.csps.CProcessCallBlock;
+import jats.utfpl.csps.CBProc;
 import jats.utfpl.csps.CSPSVisitor;
 import jats.utfpl.csps.CTemp;
 import jats.utfpl.csps.CTempID;
@@ -21,16 +21,49 @@ import jats.utfpl.csps.ProgramCSPS;
 import jats.utfpl.csps.VariableInfo;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.TupleValue;
+import jats.utfpl.patcsps.type.PATType;
+import jats.utfpl.patcsps.type.PATTypeArray;
 
 public class PatCspsTransformer implements CSPSVisitor {
-    public PModel trans(ProgramCSPS prog) {
+    public PModel transProg(ProgramCSPS prog) {
 
-        PModel model = (PModel)prog.accept(this);
+        List<PGDec> gvlst = new ArrayList<PGDec>();
+        for (VariableInfo gv: prog.m_globalVars) {
+            PATType ty = gv.getTID().getType();
+            if (ty instanceof PATTypeArray) {
+                PGDecArray pgarr = new PGDecArray(gv.getTID());
+                gvlst.add(pgarr);
+            } else {
+                PGDecVar pgv = PGDecVar.createInit(gv.getTID(), PExpAtom.createFromInt(0));
+                gvlst.add(pgv);
+            }
+        }
+        
+        PProc mainBody = CBlockLst2PProc(prog.m_main);
+        
+        List<PGDecProc> procLst = new ArrayList<PGDecProc>();
+        for (FunctionCSPS proc: prog.m_procLst) {
+            procLst.add(transFunc(proc));
+        }
+        
+        PModel model = new PModel(gvlst, mainBody, procLst);
         model.complete();
+        
         return model;
+        
     }
     
-    
+    private PGDecProc transFunc(FunctionCSPS func) {
+
+        List<TID> paraLst = new ArrayList<TID>();
+        for (CTempID tid: func.m_paras) {
+            paraLst.add(tid.getTID());
+        }
+        PProc body = CBlockLst2PProc(func.m_body);
+        return new PGDecProc(func.m_name, paraLst, body);
+
+    }
+
     private PProc CBlockLst2PProc(List<CBlock> blkLst) {
         PProc retProc = PProcAtom.SKIP;
         
@@ -57,28 +90,6 @@ public class PatCspsTransformer implements CSPSVisitor {
         
         return retProc;
     }
-    
-//    private PExp processCTemp(CTemp t) {
-//        Method m;
-//        try {
-//            System.out.println("dddddddddd " + t.getClass());
-//            m = t.getClass().getMethod("accept", new Class<?>[]{CSPSVisitor.class});
-//            Object ret = m.invoke(t, new Object[] {this});
-//            return (PExp)ret;
-//        } catch (SecurityException e) {
-//            throw new Error("should not happen");
-//        } catch (NoSuchMethodException e) {
-//            throw new Error("should not happen");
-//        } catch (IllegalArgumentException e) {
-//            throw new Error("should not happen");
-//        } catch (IllegalAccessException e) {
-//            throw new Error("should not happen");
-//        } catch (InvocationTargetException e) {
-//            throw new Error("should not happen");
-//        }
-//        
-//        
-//    }
 
     private List<PExp> CTempList2PExpList(List<CTemp> lst) {
         List<PExp> ret = new ArrayList<PExp>();
@@ -89,7 +100,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     }
 
     @Override
-    public PProcBranch visit(CCondBlock blk) {
+    public PProcBranch visit(CBCond blk) {
         PExp condExp = (PExp)blk.m_cond.accept(this);
         PProc ifProc = CBlockLst2PProc(blk.m_tb);
         PProc elseProc = CBlockLst2PProc(blk.m_fb);
@@ -98,7 +109,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     }
 
     @Override
-    public PEvent visit(CEventBlock blk) {
+    public PEvent visit(CBEvent blk) {
         List<PStat> statLst = new ArrayList<PStat>();
         for (CInstruction ins: blk.m_inslst) {
             @SuppressWarnings("unchecked")
@@ -109,9 +120,9 @@ public class PatCspsTransformer implements CSPSVisitor {
     }
 
     @Override
-    public PProcCall visit(CProcessCallBlock blk) {
+    public PProcCall visit(CBProc blk) {
         PProcCall ret = null;
-        if (blk.m_ret.isRet()) { // tail call
+        if (blk.isTailCall()) { // tail call
             ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args), true);
         } else {
             ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args), false);
@@ -120,7 +131,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     }
 
     @Override
-    public List<PStat> visit(CIMove ins) {
+    public List<PStat> visit(CIBind ins) {
         TID var = ins.m_holder.getTID();
         PExp exp = (PExp)(ins.m_vp.accept(this));
         
@@ -162,30 +173,16 @@ public class PatCspsTransformer implements CSPSVisitor {
     @Override
     public List<PStat> visit(CIReturn node) {
         List<PStat> ret = new ArrayList<PStat>();
-        ret.add(new PStatReturn((PExp)node.m_id.accept(this)));
+        ret.add(new PStatReturn((PExp)node.m_v.accept(this)));
         return ret;
     }
 
-    @Override
-    public Object visit(CIProcessDef proc) {
-        List<TID> paraLst = new ArrayList<TID>();
-        List<TID> escParaLst = new ArrayList<TID>();  // parameters that get escaped
-        for (CTempID tid: proc.m_paras) {
-            paraLst.add(tid.getTID());
-            if (tid.isEscaped()) {
-                escParaLst.add(tid.getTID());
-            }
-        }
-        PProc body = CBlockLst2PProc(proc.m_body);
-        return new PGDecProc(proc.m_name, paraLst, escParaLst, body, proc.m_level);
-
-    }
 
     @Override
     public PExp visit(CTempID v) {
 
         if (v.isOutofScope()) {
-            return new PExpStackOpr(v.getStackInfo().getFrame(), v.getStackInfo().getOffset(), v.getTID());
+            return new PExpStackOpr(v.getStackInfo().getOffset(), v.getTID());
         } else {
             return new PExpID(v.getTID());
         }
@@ -207,26 +204,9 @@ public class PatCspsTransformer implements CSPSVisitor {
             throw new Error("should not happen");
         }
     }
-
-    @Override
-    public Object visit(ProgramCSPS prog) {
-        List<PGDecVar> gvlst = new ArrayList<PGDecVar>();
-        for (VariableInfo gv: prog.m_globalVars) {
-            PGDecVar pgv = PGDecVar.createInit(gv.getTID(), PExpAtom.createFromInt(0));
-            gvlst.add(pgv);
-        }
-        
-        PProc mainBody = CBlockLst2PProc(prog.m_main);
-        
-        List<PGDecProc> procLst = new ArrayList<PGDecProc>();
-        for (CIProcessDef proc: prog.m_procLst) {
-            procLst.add((PGDecProc)proc.accept(this));
-        }
-        
-        return new PModel(gvlst, mainBody, procLst);
-    }
-
 }
+
+
 
 
 

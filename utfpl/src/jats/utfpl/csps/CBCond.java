@@ -4,7 +4,7 @@ package jats.utfpl.csps;
 import java.util.List;
 
 
-public class CCondBlock extends CAdvancedBlock {
+public class CBCond extends CBlock {
     public CTemp m_cond; // condition
     public List<CBlock> m_tb; // true branch
     public List<CBlock> m_fb; // false branch
@@ -12,7 +12,7 @@ public class CCondBlock extends CAdvancedBlock {
 //    private CTempID m_holderTrue;
 //    private CTempID m_holderFalse;
 
-    public CCondBlock(
+    public CBCond(
             CTemp cond
     		, List<CBlock> tb 
     		, List<CBlock> fb
@@ -21,7 +21,6 @@ public class CCondBlock extends CAdvancedBlock {
 //    		, CTempID holderTrue
 //    		, CTempID holderFalse
     		) {
-        super(level);
         m_cond = cond;
         m_tb = tb;
         m_fb = fb;
@@ -31,8 +30,7 @@ public class CCondBlock extends CAdvancedBlock {
         
     }
     
-    public CCondBlock(int level) {
-        super(level);
+    public CBCond() {
         m_cond = null;
         m_tb = null;
         m_fb = null;
@@ -83,7 +81,7 @@ public class CCondBlock extends CAdvancedBlock {
     @Override
     public int process(int offset) {
         if (m_cond instanceof CTempID) {
-            ((CTempID)m_cond).updateForUsage(this.getLevel());
+            ((CTempID)m_cond).updateForUsage();
         }
         int offsetTrue = offset;
         int offsetFalse = offset;

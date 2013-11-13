@@ -100,6 +100,17 @@ public class Test_02_ins_processing {
             System.out.println("==instructions after closure conversion are ==========================");
             System.out.println(outputINS2);
             
+            /* ***************** ****************** */
+            // generate new program of instructions by processing
+            ProgramInstruction programIns3 = InstructionProgramProcessor.processProgram(programIns2);
+            
+            /* ***************** ****************** */
+            // print instructions
+            String outputINS3 = insPrinter.print(programIns3);  // worker works
+            System.out.println("==instructions after if transformation are ==========================");
+            System.out.println(outputINS3);
+            
+            
 //            FileWriter fwINS = new FileWriter("test/" + classname
 //                    + ".ins");
 //            BufferedWriter bwINS = new BufferedWriter(fwINS);

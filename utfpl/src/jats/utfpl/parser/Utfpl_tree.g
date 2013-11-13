@@ -20,8 +20,8 @@ options {
 }
  
 
-rule returns [Program prog]
-    : ^(PROGRAM gdecs) {prog = new Program($gdecs.gdecs);}
+rule returns [ProgramTree prog]
+    : ^(PROGRAM gdecs) {prog = new ProgramTree($gdecs.gdecs);}
     ;
 
 exp returns [Exp node]

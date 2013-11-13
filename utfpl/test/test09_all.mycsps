@@ -1,0 +1,156 @@
+var gv1_32;
+var gv2_33;
+var gv_35[3];
+
+foo1_36(tid, x_37) =
+step {
+  gv1_32 = 2;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+foo2_38(tid) =
+step {
+  var x_39 = 4;
+  return 3;
+} -> Skip;
+
+foo3_40(tid) =
+step {
+  gv_35[2] = 3;
+} -> Skip;
+step {
+  var x_41 = gv_35[1];
+} -> Skip;
+step {
+  var temp_63<escaped> = gv_35[1];
+} -> Skip;
+__1<process> = foo1_36(tid, temp_63 from <GStack(0)>);
+step {
+  var ret_62 = gv_35[2];
+  return ret_62;
+} -> Skip;
+
+foo4_42(tid) =
+ifa (3) {
+  step {
+    var x_43<escaped> = 2;
+    var y_44 = mutex_alloc();
+  } -> Skip;
+  ifa (4) {
+    ifa (3) {
+      step {
+        return 2;
+      } -> Skip 
+    } else { 
+      step {
+        var ret_73 = gv_35[x_43 from <GStack(0)>];
+        return ret_73;
+      } -> Skip 
+    } 
+  } else { 
+    step {
+      return 1;
+    } -> Skip 
+  } 
+} else { 
+  step {
+    var x_74<escaped> = gv_35[2];
+  } -> Skip;
+  step {
+    var y_75 = mutex_alloc();
+  } -> Skip;
+  ifa (4) {
+    ifa (3) {
+      step {
+        return 2;
+      } -> Skip 
+    } else { 
+      step {
+        var ret_76 = gv_35[x_74 from <GStack(0)>];
+        return ret_76;
+      } -> Skip 
+    } 
+  } else { 
+    step {
+      return 1;
+    } -> Skip 
+  } 
+};
+
+foo5_45(tid) =
+step {
+  var temp_66<escaped> = gv1_32;
+} -> Skip;
+ifa (temp_66 from <GStack(, 0)>) {
+  step {
+    gv1_32 = 1;
+  } -> Skip;
+  step {
+    return ();
+  } -> Skip 
+} else { 
+  step {
+    gv1_32 = 4;
+  } -> Skip;
+  step {
+    return ();
+  } -> Skip 
+};
+
+foo6_46(tid) =
+step {
+  var x_47<escaped> = 3;
+} -> Skip;
+ret_67<process> = foo61_48(tid, 3, x_47 from <GStack(0)>);
+
+foo61_48(tid, y_49, x_esc_72) =
+step {
+  var z_50 = call(add, x_esc_72, y_49);
+  return z_50;
+} -> Skip;
+
+foo7_51(tid) =
+step {
+  var x_52 = 1;
+  var y_53
+  if (x_52) {
+    var z_54 = 2;
+    var y_53
+    if (z_54) {
+      y_53 = call(add, x_52, 1);
+    } else {
+      y_53 = call(add, 1, x_52);
+    }
+  } else {
+    y_53 = 3;
+  }
+  var q1_55 = 33;
+  var q2_56 = call(add, q1_55, y_53);
+  return q2_56;
+} -> Skip;
+
+foo8_57(tid) =
+step {
+  gv_35[2] = 3;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+foo9_58(tid) =
+step {
+  if (1) {
+    var x_59 = 1;
+    return x_59;
+  } else {
+    return 2;
+  }
+} -> Skip;
+
+main(tid) = 
+step {
+  gv1_32 = 1;
+} -> Skip;
+

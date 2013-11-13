@@ -1,0 +1,61 @@
+
+
+
+fun buffer_insert2 (buf, x) = let
+  val isful = buffer_isful (buf)
+in
+  if isful then let
+    val () = buffer_cond_wait_isful (buf) 
+  in 
+    buffer_insert2 (buf, x)
+  end // end of [then]
+  else let
+    val isnil = buffer_isnil (buf)
+    val ((*void*)) = buffer_insert (buf, x)
+    val ((*void*)) = if isnil then buffer_cond_signal_isnil (buf)
+  in
+    ()
+  end // end of [else]
+//  
+end // end of [buffer_insert2]
+
+(* ****** ****** *)
+
+fun buffer_takeout2 (buf) = let
+  val isnil = buffer_isnil (buf)
+in
+  if isnil then let
+    val () = buffer_cond_wait_isnil (buf) 
+  in 
+    buffer_takeout2 (buf)
+  end
+  else let
+    val isful = buffer_isful (buf)
+    val x(*a*) = buffer_takeout (buf)
+    val ((*void*)) = if isful then buffer_cond_signal_isful (buf)
+  in
+    x
+  end
+//  
+end // end of [buffer_takeout2]
+
+(* ****** ****** *)
+
+fun sbuffer_insert (sbuf, x) = let
+  val buf = sbuffer_acquire (sbuf)
+  val ((*void*)) = buffer_insert2 (buf, x)
+  val ((*void*)) = sbuffer_release (sbuf, buf)
+in
+  ()
+end
+
+fun sbuffer_takeout (sbuf) = let
+  val buf = sbuffer_acquire (sbuf)
+  val x(*a*) = buffer_takeout2 (buf)
+  val ((*void*)) = sbuffer_release (sbuf, buf)
+in
+  x
+end
+
+
+

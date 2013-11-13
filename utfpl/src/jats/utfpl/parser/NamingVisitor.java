@@ -3,6 +3,8 @@ package jats.utfpl.parser;
 import java.util.List;
 
 import jats.utfpl.instruction.TID;
+import jats.utfpl.patcsps.type.PATTypeArray;
+import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.AppExp;
 import jats.utfpl.tree.AtomExp;
 import jats.utfpl.tree.Dec;
@@ -141,7 +143,7 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(VarDef node) {
         // System.out.println("VarDef " + node.m_id.m_id);
-        node.m_id.updateForGlobalVar(m_scope);
+        node.m_id.updateForGlobalVar(m_scope, PATTypeSingleton.cUnknownType);
 
         if (null != node.m_exp) {
             node.m_exp.accept(this);
@@ -176,7 +178,7 @@ public class NamingVisitor implements TreeVisitor {
 
     @Override
     public Object visit(VarArrayDef node) {
-        node.m_id.updateForGlobalVar(m_scope);
+        node.m_id.updateForGlobalVar(m_scope, new PATTypeArray(node.m_size));
         
         return null;
     }

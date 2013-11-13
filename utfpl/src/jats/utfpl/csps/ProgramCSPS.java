@@ -5,18 +5,13 @@ import java.util.List;
 public class ProgramCSPS {
     public List<VariableInfo> m_globalVars;
     public List<CBlock> m_main;
-    public List<CIProcessDef> m_procLst;
+    public List<FunctionCSPS> m_procLst;
     
     public ProgramCSPS(List<VariableInfo> globalVars
             , List<CBlock> main
-            , List<CIProcessDef> procLst) {
+            , List<FunctionCSPS> procLst) {
         m_globalVars = globalVars;
         m_main = main;
         m_procLst = procLst;
     }
-    
-    public Object accept(CSPSVisitor visitor) {
-        return visitor.visit(this);
-    }
-
 }

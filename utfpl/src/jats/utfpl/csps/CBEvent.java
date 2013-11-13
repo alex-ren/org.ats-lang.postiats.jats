@@ -3,11 +3,10 @@ package jats.utfpl.csps;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CEventBlock extends CBlock {
+public class CBEvent extends CBlock {
     public List<CInstruction> m_inslst;
     
-    public CEventBlock(int level) {
-        super(level);
+    public CBEvent() {
         m_inslst = new ArrayList<CInstruction>();
     }
 

@@ -23,7 +23,7 @@ public class VariableInfo {
         return new VariableInfo(tid, defLoc);
     }
 
-    public VariableInfo(TID tid, EntityLocation defLoc) {
+    private VariableInfo(TID tid, EntityLocation defLoc) {
         m_tid = tid;
         m_defLoc = defLoc;
         m_stackPos = null;
@@ -48,22 +48,16 @@ public class VariableInfo {
     }
     
     public boolean getEscaped() {
+//        System.out.println("========== tid is " + m_tid + " in " + m_defLoc.getFunLab());
         return m_isEscaped;
     }
-    
     
     public void addUsage(EntityLocation loc) {
         m_usageLst.add(loc);
     }
-    
+
     public void updateEscaped() {
         if (m_tid.isPara()) {
-            for (EntityLocation loc: m_usageLst) {
-                if (loc.getLevel() != m_defLoc.getLevel()) {
-                    m_isEscaped = true;
-                    return;
-                }
-            }
             m_isEscaped = false;
             return;
         } else if (m_tid.isGlobal()) {
@@ -93,11 +87,7 @@ public class VariableInfo {
     
     public boolean isOutofScope(EntityLocation curLoc) {
         if (m_tid.isPara()) {
-            if (curLoc.getLevel() != m_defLoc.getLevel()) {
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         } else if (m_tid.isGlobal()) {
             return false;
         } else if (m_tid.isFunc()) {

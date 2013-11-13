@@ -30,7 +30,7 @@ public class Aux {
 //		channel SysChSchStart 0;
 //		main1_s (tid, x) = SysChSchStart!tid -> 
 
-		cSysTid      = TID.createGloVar("SysTid", true);
+		cSysTid      = TID.createGloVar("SysTid", PATTypeSingleton.cUnknownType, true);
 		cSysTidExp = new PExpID(cSysTid);
 		
 		cSchedulerWTid = TID.createLibFun(  // This type doesn't matter. We just need a TID.

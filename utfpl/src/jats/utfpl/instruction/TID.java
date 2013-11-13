@@ -139,8 +139,8 @@ public class TID implements ValPrim {
         return tid;
     }
     
-    public static TID createGloVar(String id, boolean isSys) {
-        TID tid = new TID(id, Category.eGloVar, PATTypeSingleton.cUnknownType, isSys);
+    public static TID createGloVar(String id, PATType ty, boolean isSys) {
+        TID tid = new TID(id, Category.eGloVar, ty, isSys);
         return tid;
     }
     

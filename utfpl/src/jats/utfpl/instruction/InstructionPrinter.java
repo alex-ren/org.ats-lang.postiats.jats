@@ -41,8 +41,23 @@ public class InstructionPrinter implements InsVisitor {
         ST st = m_stg.getInstanceOf("program_st");
         
         for (GlobalEntity gv: prog.getGlobalEntities()) {
-            st.add("gv_def_lst", gv.accept(this));
+            ST stGV = null;
+            if (gv instanceof GlobalArray) {
+                stGV = m_stg.getInstanceOf("global_array_st");
+                stGV.add("id", gv.getTID());
+                stGV.add("size", ((GlobalArray)gv).getSize());
+            } else if (gv instanceof GlobalValue) {
+                stGV = m_stg.getInstanceOf("global_value_st");
+                stGV.add("id", gv.getTID());
+            } else if (gv instanceof GlobalVariable) {
+                stGV = m_stg.getInstanceOf("global_variable_st");
+                stGV.add("id", gv.getTID());
+            } else {
+                throw new Error("not supported");
+            }
+            st.add("gv_def_lst", stGV);
         }
+        
         for (UtfplInstruction ins: prog.getInsLst()) {
             st.add("ins_lst", ins.accept(this));
         }
@@ -125,7 +140,7 @@ public class InstructionPrinter implements InsVisitor {
     public Object visit(InsCond ins) {
         // cond_ins_st(holder, cond, btrue, bfalse) ::= <<
         ST st = m_stg.getInstanceOf("cond_ins_st");
-        st.add("holder", ins.m_holder.toString());
+        st.add("holder", ins.m_holder);
         st.add("cond", visitValPrim(ins.m_cond));
         st.add("btrue", visitInsLst(ins.m_btrue));
         st.add("bfalse", visitInsLst(ins.m_bfalse));
@@ -189,29 +204,7 @@ public class InstructionPrinter implements InsVisitor {
 	    return st;
 //	    throw new Error("shall not happen");
     }
-
-    @Override
-    public Object visit(GlobalArray ins) {
-        ST st = m_stg.getInstanceOf("global_array_st");
-        st.add("id", ins.m_tid);
-        st.add("size", ins.m_size);
-        return st;
-    }
-
-    @Override
-    public Object visit(GlobalValue ins) {
-        ST st = m_stg.getInstanceOf("global_value_st");
-        st.add("id", ins.m_tid);
-        return st;
-    }
-
-    @Override
-    public Object visit(GlobalVariable ins) {
-        ST st = m_stg.getInstanceOf("global_variable_st");
-        st.add("id", ins.m_tid);
-        return st;
-    }
-
+	
     @Override
     public Object visit(InsStoreArray ins) {
         ST st = m_stg.getInstanceOf("store_array_ins_st");

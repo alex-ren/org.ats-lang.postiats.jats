@@ -18,7 +18,7 @@ public class InsLoad implements UtfplInstruction {
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public Boolean hasSideEffect() {
         return true;
     }
 

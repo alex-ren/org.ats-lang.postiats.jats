@@ -4,12 +4,13 @@ import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.csps.CSPSPrinter;
 import jats.utfpl.csps.CSPSTransformer;
 import jats.utfpl.csps.ProgramCSPS;
+import jats.utfpl.instruction.InstructionClosureConverter;
+import jats.utfpl.instruction.InstructionProgramProcessor;
 import jats.utfpl.instruction.InstructionTransformer;
 import jats.utfpl.instruction.InstructionPrinter;
 import jats.utfpl.instruction.ProgramInstruction;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.InstructionPrinter.Type;
-import jats.utfpl.instruction.InstructionProcessor;
 import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
@@ -72,7 +73,7 @@ public class Test_01 {
             // tree parsing
             Utfpl_tree walker = new Utfpl_tree(nodes);  // create worker
 
-            ProgramInstruction prog = walker.rule();  // worker works
+            ProgramTree prog = walker.rule();  // worker works
             
             /* ***************** ****************** */
             // naming construction
@@ -103,19 +104,28 @@ public class Test_01 {
             
             /* ***************** ****************** */
             // generate new program of instructions by processing
-            InstructionProcessor insProcessor = new InstructionProcessor();  // create worker
-            ProgramInstruction programIns2 = insProcessor.process(programIns);  // worker works
+            ProgramInstruction programIns2 = InstructionClosureConverter.convert(programIns);
             
             /* ***************** ****************** */
             // print instructions
             String outputINS2 = insPrinter.print(programIns2);  // worker works
-            System.out.println("==instructions after processing are ==========================");
+            System.out.println("==instructions after closure conversion are ==========================");
             System.out.println(outputINS2);
+            
+            /* ***************** ****************** */
+            // generate new program of instructions by processing
+            ProgramInstruction programIns3 = InstructionProgramProcessor.processProgram(programIns2);
+            
+            /* ***************** ****************** */
+            // print instructions
+            String outputINS3 = insPrinter.print(programIns3);  // worker works
+            System.out.println("==instructions after if transformation are ==========================");
+            System.out.println(outputINS3);
             
             /* ***************** ****************** */
             // generating CSPS program
             CSPSTransformer cspsV = new CSPSTransformer();
-            ProgramCSPS programCSPS = cspsV.trans(programIns2);
+            ProgramCSPS programCSPS = cspsV.trans(programIns3);
             
             /* ***************** ****************** */
             // print csps program

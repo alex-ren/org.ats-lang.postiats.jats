@@ -30,7 +30,7 @@ public class InsCall implements UtfplInstruction {
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public Boolean hasSideEffect() {
         return m_funlab.hasEffect();
     }
     

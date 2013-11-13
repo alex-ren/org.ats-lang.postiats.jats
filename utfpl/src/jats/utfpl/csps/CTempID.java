@@ -11,6 +11,8 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 public class CTempID implements CTemp {
 
     private StackPosition m_stackPos;  // The position of TID in the stack.
+    // If m_stackPos == null, then we don't need to get this CTempID via stack.
+    
     private Boolean m_isDef;  // indicating whether this CTempID is definition or usage.
     private VariableInfo m_vi;
     private EntityLocation m_curLoc;  // The position of the current location of this entity of TID.
@@ -41,16 +43,20 @@ public class CTempID implements CTemp {
     }
     
     // update the CTempID indicating the usage of a value.
-    public void updateForUsage(int level) {
-        if (level != m_curLoc.getLevel()) {
-            throw new Error("Check this");
-        }
-        if (isEscaped()) {
-            // for closure, m_def.m_level - level may be less than 0
-            m_stackPos = StackPosition.createUsage(m_vi.getDefLoc().getLevel() - m_curLoc.getLevel(), m_vi.getStackPos().getOffset());
+    public void updateForUsage() {
+        if (isEscaped()) {  // This CTempID cannot be a parameter since it is escaped.
+            if (m_curLoc != m_vi.getDefLoc()) {
+                m_stackPos = m_vi.getStackPos();
+                if (isOutofScope()) {
+                    
+                } else {
+                    throw new Error("shall not happen");
+                }
+            }
         } else {
             // nothing
         }
+
     }   
 
     private int updateForDef(int offset) {
@@ -61,7 +67,6 @@ public class CTempID implements CTemp {
         m_vi.setStackPos(m_stackPos);  // set the stack position
         return offset + 1;
     }
-    
     
     public boolean isRet() {
         return m_vi.getTID().isRet();

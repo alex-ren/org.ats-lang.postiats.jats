@@ -8,12 +8,20 @@ public class InsCond implements UtfplInstruction {
     public ValPrim m_cond;
     public List<UtfplInstruction> m_btrue;
     public List<UtfplInstruction> m_bfalse;
+    private Boolean m_hasEffect;
     
-    public InsCond(TID holder, ValPrim cond, List<UtfplInstruction> btrue, List<UtfplInstruction> bfalse) {
+    public InsCond(TID holder, ValPrim cond, 
+            List<UtfplInstruction> btrue, List<UtfplInstruction> bfalse, 
+            Boolean hasEffect) {
         m_holder = holder;
         m_cond = cond;
         m_btrue = btrue;
         m_bfalse = bfalse;
+        m_hasEffect = hasEffect;
+    }
+    
+    public void setEffectFlag(boolean flag) {
+        m_hasEffect = flag;
     }
 
     @Override
@@ -22,8 +30,8 @@ public class InsCond implements UtfplInstruction {
     }
 
     @Override
-    public boolean hasSideEffect() {
-        return true;  // todo
+    public Boolean hasSideEffect() {
+        return m_hasEffect;
     }
 
 }

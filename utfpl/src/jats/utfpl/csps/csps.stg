@@ -4,9 +4,10 @@ blk_lst_st(blklst) ::= <<
 <if(blklst)><blklst; separator=";\n"><else>Skip<endif>
 >>
 
-event_block_st(inslst, evt) ::= <<
-<if(evt)><evt><else>step<endif> {
-  <inslst; wrap="\n    ", separator="\n">} -> Skip
+event_block_st(inslst) ::= <<
+step {
+  <inslst; wrap="\n    ", separator="\n">
+} -> Skip
 >>
 
 cond_block_st(cond, btrue, bfalse) ::= <<
@@ -21,14 +22,57 @@ process_call_block_st(lab, args, holder) ::= <<
 <holder>\<process> = <lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
 >>
 
-move_ins_st(dst, src, push, ret) ::= <<
-var <dst><if(push)>\<escaped><endif> = <src>;
+// =====================================
+
+bind_ins_st(src, dst, escape) ::= <<
+var <dst><if(escape)>\<escaped><endif> = <src>;
 >>
 
-fun_call_ins_st(dst, lab, args, push, ret) ::= <<
-var <dst><if(push)>\<escaped><endif> = call(<lab><if(args)>, <endif><args; separator=", ">);
+fun_call_ins_st(dst, lab, args, escape, ret, isdef) ::= <<
+<if(isdef)>var <endif><dst><if(escape)>\<escaped><endif> = call(<lab><if(args)>, <endif><args; separator=", ">);
 >>
 
+return_ins_st(v) ::= <<
+return <v>;
+>>
+
+load_ins_st(src, dst, escape) ::= <<
+var <dst><if(escape)>\<escaped><endif> = <src>;
+>>
+
+load_array_ins_st(src, ind, dst, escape) ::= <<
+var <dst><if(escape)>\<escaped><endif> = <src>[<ind>];
+>>
+
+mutex_alloc_ins_st(dst, escape) ::= <<
+var <dst><if(escape)>\<escaped><endif> = mutex_alloc();
+>>
+
+store_ins_st(src, dst) ::= <<
+<dst> = <src>;
+>>
+
+store_array_ins_st(src, dst, ind) ::= <<
+<dst>[<ind>] = <src>;
+>>
+
+cond_ins_st(cond, tbranch, fbranch) ::= <<
+if (<cond>) {
+  <tbranch; wrap="\n    ", separator="\n">
+} else {
+  <fbranch; wrap="\n    ", separator="\n">
+}
+>>
+
+vardef_ins_st(holder) ::= <<
+var <holder>
+>>
+
+assign_ins_st(src, dst) ::= <<
+<dst> = <src>;
+>>
+
+// =====================================
 para_def_st(v) ::= <<
 <v>
 >>
@@ -61,15 +105,11 @@ global_id_st(id) ::= <<
 <id>
 >>
 
-return_st(v) ::= <<
-return <v>;
->>
-
 // ============================
 // Library functions
 
 get_from_stack_st(loc) ::= <<
-GStack(<loc.frame>, <loc.offset>)
+GStack(<loc.offset>)
 >>
 
 get_from_stack_bool_st(loc) ::= <<
@@ -79,11 +119,15 @@ GStack(<loc.frame>, <loc.offset>)
 // ============================
 
 gvar_lst_st(gvarlst) ::= <<
-<gvarlst:gvar_def_st(); separator="\n">
+<gvarlst; separator="\n">
 >>
 
 gvar_def_st(gvar) ::= <<
 var <gvar>;
+>>
+
+garray_def_st(gvar, sz) ::= <<
+var <gvar>[<sz>];
 >>
 
 proc_lst_st(proclst) ::= <<
@@ -97,8 +141,8 @@ main_proc_st(mainlab, body) ::= <<
 >>
 
 
-proc_def_st(lab, paras, esc_paras, body) ::= <<
-<lab>(<if(paras)>tid, <paras; separator=", "><else>tid<endif>) = <if(esc_paras)><proc_preloge_st(esc_paras)> -><endif> 
+proc_def_st(lab, paras, body) ::= <<
+<lab>(<if(paras)>tid, <paras; separator=", "><else>tid<endif>) =
 <body>;
 >>
 

@@ -25,7 +25,7 @@ public class CSPSEraser implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CCondBlock blk) {
+    public Object visit(CBCond blk) {
         CSPSEraser eraserTrue = new CSPSEraser(blk.m_tb);
         eraserTrue.erase();
         
@@ -35,12 +35,12 @@ public class CSPSEraser implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CEventBlock blk) {
+    public Object visit(CBEvent blk) {
         List<CInstruction> insLst = new ArrayList<CInstruction>();
         for (CInstruction ins: blk.m_inslst) {
-            if (ins instanceof CIProcessDef) {
+            if (ins instanceof FunctionCSPS) {
                 // handle all the inner functions.
-                ((CIProcessDef)ins).accept(this);
+                ((FunctionCSPS)ins).accept(this);
             } else {
                 insLst.add(ins);
             }
@@ -54,7 +54,7 @@ public class CSPSEraser implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CProcessCallBlock blk) {
+    public Object visit(CBProc blk) {
         return blk ;
     }
 
@@ -69,7 +69,7 @@ public class CSPSEraser implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIProcessDef proc) {
+    public Object visit(FunctionCSPS proc) {
         CSPSEraser eraser = new CSPSEraser(proc.m_body);
         eraser.erase();
         return proc;

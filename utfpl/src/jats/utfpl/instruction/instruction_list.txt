@@ -1,0 +1,46 @@
+L: thread local variable
+imm: constant
+LI: L or imm
+G: global variable
+F: function
+
+
+atspat_mem_alloc (x: int): addr                    mem_alloc (LI)
+atspat_mem_release (x: addr): void                 mem_release (LI)
+atspat_mem_load (x: addr, y: int): obj             mem_load (LI, LI, L)
+atspat_mem_store (x: addr, y: int, z: obj): void   mem_store (LI, LI, LI)
+
+var x := y                                         load (G, L)
+x := y                                             store (LI, G)                                        
+
+// only support array of integer
+atspat_load_array (x: global, y: int): int         load_array (G, LI, L)
+atspat_store_array (x:global, y:int, z:int):void   store_array (LI, G, LI)
+
+atspat_tid_alloc (): int                           tid_alloc (L)
+atspat_tid_release (x: int)                        tid_release (LI)
+
+atspat_thread_create (x: func, t: int, z: obj,     thread_create (F, LI, LI, ...)
+                      ...
+                      ): void
+atspat_thread_join (x: int): void                  thread_join (LI)
+
+atspat_mutex_alloc
+atspat_mutex_release
+atspat_mutex_lock
+atspat_mutex_unlock
+
+atspat_cond_alloc
+atspat_cond_release
+atspat_cond_wait
+atspat_cond_signal
+
+atspat_channel_alloc
+atspat_channel_release
+atspat_channel_send
+atspat_channel_recv
+
+
+
+? stack allocation ? (currently not allowed)
+

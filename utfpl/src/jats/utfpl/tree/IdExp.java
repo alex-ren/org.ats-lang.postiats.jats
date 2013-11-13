@@ -1,6 +1,7 @@
 package jats.utfpl.tree;
 
 import jats.utfpl.instruction.TID;
+import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
@@ -37,8 +38,8 @@ public class IdExp implements Exp {
         }
     }
     
-    public void updateForGlobalVar(MapScope<TID> m) {
-        m_tid = TID.createGloVar(m_sid, false);
+    public void updateForGlobalVar(MapScope<TID> m, PATType ty) {
+        m_tid = TID.createGloVar(m_sid, ty, false);
         m.addValue(m_sid, m_tid);
 
     }
