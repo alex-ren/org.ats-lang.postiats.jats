@@ -14,11 +14,6 @@ createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
 
 Scheduler = SysChSch?fn.arg ->
   initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
-  if (fn == 2) {
-    foo_s(true, SysTid, arg)
-    |||
-    SchedulerW(SysTid)
-  }
   ;
 
 
@@ -75,53 +70,42 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 // =====================
 
 
-foo_94(isTailCall, tid, x_95) =
+foo_109(x_110) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
     } else {
       GStack.newFrame(tid);
-    }
+    } ->
+  {  var y_111 = call(add, x_110, 1);
+  GStack.push(tid, y_111);
   } ->
-  {  var y_96 = call(add, x_95, 1);
-  GStack.push(tid, y_96);
-  } ->
-  qoo_97(true, tid, GStack.get(tid, 0, 0));
-  Skip
+  qoo_112(GStack.get(tid, 0, 0))
   ;
 
-qoo_97(isTailCall, tid, y_esc_103) =
+qoo_112(y_esc_116) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
     } else {
       GStack.newFrame(tid);
-    }
+    } ->
+  {  var z_113 = call(sub, y_esc_116, 1);
+  GStack.push(tid, z_113);
   } ->
-  {  var z_98 = call(sub, y_esc_103, 1);
-  GStack.push(tid, z_98);
-  } ->
-  foo_94(true, tid, GStack.get(tid, 0, 0));
-  Skip
+  foo_109(GStack.get(tid, 0, 0))
   ;
 
-foo_s(isTailCall, tid, x_107) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    }
-  } ->
-  SysChSchStart!tid ->
-  foo_94(isTailCall, tid, x_107)
-  ;
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  var main_ret_102 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_102);
-  } ->
   Skip;
 
 main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
+
+
+#assert main deadlockfree;
+
+#define Prop1 (gn_22 < 2);
+
+#assert main |= G Prop1;

@@ -14,11 +14,6 @@ createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
 
 Scheduler = SysChSch?fn.arg ->
   initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
-  if (fn == 1) {
-    fact_s(true, SysTid, arg)
-    |||
-    SchedulerW(SysTid)
-  }
   ;
 
 
@@ -74,75 +69,59 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var g_59;
+var g_70 = 0;
 
-fact_57(isTailCall, tid, x_58) =
+fact_68(x_69) =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
     } else {
       GStack.newFrame(tid);
-    }
-  } ->
-  {  var app_62 = call(gt, x_58, 0);
-  GStack.push(tid, app_62);
+    } ->
+  {  var temp_73 = call(gt, x_69, 0);
+  GStack.push(tid, temp_73);
   } ->
   if (GStack.getBool(tid, 0, 0)) {
-    {  var app_64 = call(sub, x_58, 1);
-    GStack.push(tid, app_64);
+    {  var temp_74 = call(sub, x_69, 1);
+    GStack.push(tid, temp_74);
     } ->
-    fact_57(false, tid, GStack.get(tid, 0, 1));
-    {  var ret_61 = call(mul, GStack.get(tid, 0, 2), x_58);
-    GStack.deleteFrame(tid); GStack.push(tid, ret_61);
-    } ->
-    Skip
+    fact_68(GStack.get(tid, 0, 1))
   } else {
-    {  var ret_61 = 1;
-    GStack.deleteFrame(tid); GStack.push(tid, ret_61);
+    {  GStack.deleteFrame(tid); GStack.push(tid, 1);
     } ->
     Skip
-  };
-  Skip
+  }
   ;
 
-foo_60(isTailCall, tid) =
+foo_71() =
   preloge{
     if (isTailCall) {
       GStack.reloadFrame(tid);
     } else {
       GStack.newFrame(tid);
-    }
+    } ->
+  {  g_70 = 1;
   } ->
-  {  g_59 = 1;
-  } ->
-  {  var ret_65 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, ret_65);
+  {  GStack.deleteFrame(tid); GStack.push(tid, 0);
   } ->
   Skip
   ;
 
-fact_s(isTailCall, tid, x_72) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    }
-  } ->
-  SysChSchStart!tid ->
-  fact_57(isTailCall, tid, x_72)
-  ;
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  g_59 = 0;
+  {  g_70 = 0;
   } ->
-  fact_57(false, tid, 3);
-  {  g_59 = GStack.get(tid, 0, 0);
-  } ->
-  {  var main_ret_68 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_68);
+  fact_68(3);
+  {  g_70 = GStack.get(tid, 0, 0);
   } ->
   Skip;
 
 main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
+
+
+#assert main deadlockfree;
+
+#define Prop1 (gn_22 < 2);
+
+#assert main |= G Prop1;

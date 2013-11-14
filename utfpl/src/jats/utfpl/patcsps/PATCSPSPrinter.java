@@ -323,7 +323,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
         // pinsload_st(src, dst) ::= <<
         ST st = m_stg.getInstanceOf("pinsload_st");
         st.add("src", node.m_globalVar);
-        st.add("dst", node.localHolder);
+        st.add("dst", node.m_localHolder);
         
         return st;
     }
@@ -338,28 +338,39 @@ public class PATCSPSPrinter implements PNodeVisitor {
         st.add("index", node.m_localIndex.accept(this));
         
         return st;
-
     }
 
 
     @Override
     public Object visit(PInsStore node) {
-        // TODO Auto-generated method stub
-        return null;
+        // pinsstore_st(src, dst) ::= <<
+        ST st = m_stg.getInstanceOf("pinsstore_st");
+        st.add("dst", node.m_globalVar);
+        st.add("src", node.m_localSrc.accept(this));
+        
+        return st;
     }
 
 
     @Override
     public Object visit(PInsStoreArray node) {
-        // TODO Auto-generated method stub
-        return null;
+        // pinsstorearray_st(src, dst, index) ::= <<
+    	ST st = m_stg.getInstanceOf("pinsstorearray_st");
+    	st.add("src", node.m_localSrc.accept(this));
+    	st.add("dst", node.m_globalVar);
+    	st.add("index", node.m_localIndex.accept(this));
+    	
+    	return st;
     }
 
 
     @Override
     public Object visit(PInsMutexAlloc node) {
-        // TODO Auto-generated method stub
-        return null;
+        // pinsmutexalloc_st(holder) ::= <<
+    	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
+    	st.add("holder", node.m_holder);
+    	
+    	return st;
     }
 
 

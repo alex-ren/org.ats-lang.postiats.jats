@@ -79,6 +79,7 @@ public class VariableInfo {
             m_isEscaped = false;
          
         } else {
+        	System.out.println("============ tid is " + m_tid);
             throw new Error("check this");
 //            m_isEscaped = false;
 //            return;
