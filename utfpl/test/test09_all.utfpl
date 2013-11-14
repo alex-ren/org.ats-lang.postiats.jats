@@ -37,7 +37,7 @@ end
 fun foo5() = let
   gv1 := if gv1 then 1 else 4
 in
-  ()
+  3
 end
 
 fun foo6() = let
@@ -72,8 +72,16 @@ if 1 then let
 in x end
 else 2
 
-               
-               
+
+fun foo10() = let
+  val x = 1
+  gv2 := 3
+  val y = 2
+  gv2 := x
+in
+  foo5()
+end
+     
                
                
                
