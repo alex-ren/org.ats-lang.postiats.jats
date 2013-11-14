@@ -1,13 +1,13 @@
 package jats.utfpl.csps;
 
 public class CIStoreArray extends CInstruction {
-    public CTemp m_localValue;
+    public CTemp m_localSrc;
     public CTempID m_globalVar;
     public CTemp m_localIndex;
     
-    public CIStoreArray(CTemp localValue, CTempID globalVar, CTemp localIndex, CBlock blk) {
+    public CIStoreArray(CTemp localSrc, CTempID globalVar, CTemp localIndex, CBlock blk) {
         super(blk);
-        m_localValue = localValue;
+        m_localSrc = localSrc;
         m_globalVar = globalVar;
         m_localIndex = localIndex;
     }
@@ -19,8 +19,8 @@ public class CIStoreArray extends CInstruction {
     @Override
     public int process(int offset) {
 
-        if (m_localValue instanceof CTempID) {
-            ((CTempID)m_localValue).updateForUsage();
+        if (m_localSrc instanceof CTempID) {
+            ((CTempID)m_localSrc).updateForUsage();
         }
         
         if (m_localIndex instanceof CTempID) {

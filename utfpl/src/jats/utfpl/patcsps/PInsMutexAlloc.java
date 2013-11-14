@@ -2,13 +2,12 @@ package jats.utfpl.patcsps;
 
 import jats.utfpl.instruction.TID;
 
-public class PGDecArray implements PGDec {
-    public TID m_tid;
-    public int m_sz;
+public class PInsMutexAlloc implements PIns {
     
-    public PGDecArray(TID tid, int sz) {
-        m_tid = tid;
-        m_sz = sz;
+    public TID m_holder;
+    
+    public PInsMutexAlloc(TID holder) {
+        m_holder = holder;
     }
 
     @Override

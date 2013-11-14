@@ -221,10 +221,10 @@ public class CSPSPrinter implements CSPSVisitor {
     @Override
     public Object visit(CILoad node) {
         ST st = m_stg.getInstanceOf("load_ins_st");
-        st.add("dst", node.m_localHost.accept(this));
+        st.add("dst", node.m_localHolder.accept(this));
         st.add("src", node.m_globalVar.accept(this));
         
-        st.add("escape", node.m_localHost.isEscaped());
+        st.add("escape", node.m_localHolder.isEscaped());
         return st;
     }
 
@@ -264,7 +264,7 @@ public class CSPSPrinter implements CSPSVisitor {
     public Object visit(CIStoreArray node) {
         // store_array_ins_st(src, dst, ind) ::= <<
         ST st = m_stg.getInstanceOf("store_array_ins_st");
-        st.add("src", node.m_localValue.accept(this));
+        st.add("src", node.m_localSrc.accept(this));
         st.add("dst", node.m_globalVar.accept(this));
         st.add("ind", node.m_localIndex.accept(this));
         

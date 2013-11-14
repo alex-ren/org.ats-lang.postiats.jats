@@ -50,7 +50,7 @@ public class Test_01 {
 
         for (String filename: filenames) {
             System.out.println("==Processing file " + filename + "==========");
-            System.out.println("============================================");
+            System.out.println("");
             ANTLRFileStream fileStream = new ANTLRFileStream(filename);
             
             File file = new File(filename);
@@ -89,6 +89,7 @@ public class Test_01 {
             
             System.out.println("==program is ==========================");
             System.out.println(output1);
+            
             
             /* ***************** ****************** */
             // generate program of instructions
@@ -130,14 +131,14 @@ public class Test_01 {
             /* ***************** ****************** */
             // print csps program
             CSPSPrinter cspsPrinter = new CSPSPrinter();
-            String outputCSPS = cspsPrinter.print(programCSPS);
+            String outputCSPS = cspsPrinter.printProgram(programCSPS);
             System.out.println("==CSPS code is ==========================");
             System.out.println(outputCSPS);
             
             /* ***************** ****************** */
             // generating patcsps program
             PatCspsTransformer patcspsV = new PatCspsTransformer();
-            PModel programPCSPS = patcspsV.trans(programCSPS);
+            PModel programPCSPS = patcspsV.transProg(programCSPS);
             
             /* ***************** ****************** */
             // print patcsps program

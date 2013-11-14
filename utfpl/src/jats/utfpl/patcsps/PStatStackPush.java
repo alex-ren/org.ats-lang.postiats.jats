@@ -1,9 +1,9 @@
 package jats.utfpl.patcsps;
 
-public class PExpStackPush implements PExp {
+public class PStatStackPush implements PStat {
     public PExpID m_exp;
     
-    public PExpStackPush(PExpID exp) {
+    public PStatStackPush(PExpID exp) {
         m_exp = exp;
     }
 

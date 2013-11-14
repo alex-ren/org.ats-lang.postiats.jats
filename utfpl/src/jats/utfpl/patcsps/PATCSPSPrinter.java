@@ -28,7 +28,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PGDecVar node) {
         // pgdecvar_st
-        ST st = m_stg.getInstanceOf("pgdevar_st");
+        ST st = m_stg.getInstanceOf("pgdecvar_st");
         st.add("id", node.m_tid);
         if (node.m_exp != null) {
             st.add("init", node.m_exp.accept(this));
@@ -135,7 +135,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
         // pmodel_st(scheduler_body, gvar_lst, proc_lst, thread_lst, main_proc_body) ::= <<
         ST st = m_stg.getInstanceOf("pmodel_st");
 
-        for (PGDecVar gv: node.m_gvLst) {
+        for (PGDec gv: node.m_gvLst) {
             st.add("gvar_lst", gv.accept(this));
         }
 
@@ -144,13 +144,13 @@ public class PATCSPSPrinter implements PNodeVisitor {
         for (PGDecProc proc: node.m_procLst) {
             st.add("proc_lst", proc.accept(this));
         }
-        
-        st.add("scheduler_body", node.m_SchedulerBody.accept(this));
-        
-        for (PGDecProc thread: node.m_threadLst) {
-            st.add("thread_lst", thread.accept(this));
-        }
-        
+//        
+//        st.add("scheduler_body", node.m_SchedulerBody.accept(this));
+//        
+//        for (PGDecProc thread: node.m_threadLst) {
+//            st.add("thread_lst", thread.accept(this));
+//        }
+//        
         return st;
     }
 
@@ -160,10 +160,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
         st.add("name", node.m_name.toString());
         for (TID para: node.m_paraLst) {
             st.add("para_lst", para.toString());
-        }
-        
-        for (TID para: node.m_escParaLst) {
-            st.add("esc_para_lst", para.toString());
         }
         
         st.add("body", node.m_body.accept(this));
@@ -180,7 +176,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     }
 
     @Override
-    public Object visit(PExpStackOpr node) {
+    public Object visit(PExpStackGet node) {
         ST st = null;
         if (node.m_tid.isBool()) {
             st = m_stg.getInstanceOf("pexpstackopr_bool_t");
@@ -188,7 +184,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
             st = m_stg.getInstanceOf("pexpstackopr_default_t");
         }
         
-        st.add("frame", node.m_frame);
+        st.add("frame", 0);
         st.add("pos", node.m_pos);
         
         return st;
@@ -269,8 +265,8 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
     @Override
-    public Object visit(PExpStackPush node) {
-        ST st = m_stg.getInstanceOf("pexpstackpush_st");
+    public Object visit(PStatStackPush node) {
+        ST st = m_stg.getInstanceOf("pstatstackpush_st");
         st.add("name", node.m_exp.accept(this));
         return st;
     }
@@ -292,6 +288,78 @@ public class PATCSPSPrinter implements PNodeVisitor {
         ST st = m_stg.getInstanceOf("pnone_st");
         return st;
         
+    }
+
+    @Override
+    public Object visit(PGDecArray node) {
+        // pgdecarray_st(id, sz) ::= <<
+        ST st = m_stg.getInstanceOf("pgdecarray_st");
+        st.add("id", node.m_tid);
+        st.add("sz", node.m_sz);
+        
+        return st;
+    }
+
+
+    @Override
+    public Object visit(PInsCond node) {
+        // pinscond_st(cond, trueb, falseb) ::= <<
+        ST st = m_stg.getInstanceOf("pinscond_st");
+        st.add("cond", node.m_cond.accept(this));
+        for (PStat stat: node.m_true) {
+            st.add("trueb", stat.accept(this));
+        }
+        
+        for (PStat stat: node.m_false) {
+            st.add("falseb", stat.accept(this));
+        }
+        
+        return st;
+    }
+
+
+    @Override
+    public Object visit(PInsLoad node) {
+        // pinsload_st(src, dst) ::= <<
+        ST st = m_stg.getInstanceOf("pinsload_st");
+        st.add("src", node.m_globalVar);
+        st.add("dst", node.localHolder);
+        
+        return st;
+    }
+
+
+    @Override
+    public Object visit(PInsLoadArray node) {
+        // pinsloadarray_st(src, index, dst) ::= <<
+        ST st = m_stg.getInstanceOf("pinsloadarray_st");
+        st.add("src", node.m_globalVar);
+        st.add("dst", node.m_localHolder);
+        st.add("index", node.m_localIndex.accept(this));
+        
+        return st;
+
+    }
+
+
+    @Override
+    public Object visit(PInsStore node) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public Object visit(PInsStoreArray node) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public Object visit(PInsMutexAlloc node) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

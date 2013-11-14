@@ -1,7 +1,7 @@
 package jats.utfpl.csps;
 
 public class CIMutexAlloc extends CInstruction {
-    CTempID m_holder;
+    public CTempID m_holder;
     
     public CIMutexAlloc(CTempID holder, CBlock blk) {
         super(blk);

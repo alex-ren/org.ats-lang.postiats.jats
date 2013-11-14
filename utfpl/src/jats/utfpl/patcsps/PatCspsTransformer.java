@@ -7,8 +7,15 @@ import java.util.ListIterator;
 import jats.utfpl.csps.CBlock;
 import jats.utfpl.csps.CBCond;
 import jats.utfpl.csps.CBEvent;
+import jats.utfpl.csps.CICond;
 import jats.utfpl.csps.CIFunCall;
+import jats.utfpl.csps.CILoad;
+import jats.utfpl.csps.CILoadArray;
 import jats.utfpl.csps.CIMove;
+import jats.utfpl.csps.CIMutexAlloc;
+import jats.utfpl.csps.CIStore;
+import jats.utfpl.csps.CIStoreArray;
+import jats.utfpl.csps.CIVarDef;
 import jats.utfpl.csps.FunctionCSPS;
 import jats.utfpl.csps.CIReturn;
 import jats.utfpl.csps.CInstruction;
@@ -31,7 +38,7 @@ public class PatCspsTransformer implements CSPSVisitor {
         for (VariableInfo gv: prog.m_globalVars) {
             PATType ty = gv.getTID().getType();
             if (ty instanceof PATTypeArray) {
-                PGDecArray pgarr = new PGDecArray(gv.getTID());
+                PGDecArray pgarr = new PGDecArray(gv.getTID(), ((PATTypeArray)ty).getSize());
                 gvlst.add(pgarr);
             } else {
                 PGDecVar pgv = PGDecVar.createInit(gv.getTID(), PExpAtom.createFromInt(0));
@@ -47,7 +54,7 @@ public class PatCspsTransformer implements CSPSVisitor {
         }
         
         PModel model = new PModel(gvlst, mainBody, procLst);
-        model.complete();
+//        model.complete();
         
         return model;
         
@@ -98,6 +105,17 @@ public class PatCspsTransformer implements CSPSVisitor {
         }
         return ret;
     }
+    
+
+    private List<PStat> CInsLst2PStatLst(List<CInstruction> insLst) {
+        List<PStat> statLst = new ArrayList<PStat>();
+        for (CInstruction ins: insLst) {
+            @SuppressWarnings("unchecked")
+            List<PStat> stats = (List<PStat>)ins.accept(this);
+            statLst.addAll(stats);
+        }
+        return statLst;
+    }
 
     @Override
     public PProcBranch visit(CBCond blk) {
@@ -107,15 +125,11 @@ public class PatCspsTransformer implements CSPSVisitor {
         
         return new PProcBranch(condExp, ifProc, elseProc, PProcBranch.Type.ifcommon);
     }
-
+    
     @Override
     public PEvent visit(CBEvent blk) {
-        List<PStat> statLst = new ArrayList<PStat>();
-        for (CInstruction ins: blk.m_inslst) {
-            @SuppressWarnings("unchecked")
-            List<PStat> stats = (List<PStat>)ins.accept(this);
-            statLst.addAll(stats);
-        }
+        List<PStat> statLst =  CInsLst2PStatLst(blk.m_inslst);
+
         return new PEvent(statLst);
     }
 
@@ -140,11 +154,11 @@ public class PatCspsTransformer implements CSPSVisitor {
         if (ins.m_holder.isDefinition()) {
             ret.add(new PStatLocalVarDec(var, exp));
             if (ins.m_holder.isEscaped()) {
-                ret.add(new PExpStackPush(new PExpID(var)));
+                ret.add(new PStatStackPush(new PExpID(var)));
             }
             return ret;
         } else {
-            ret.add(new PStatAssignment(var, exp));
+            ret.add(new PStatAssignment(var, exp));  // The situation is caused by the holder of CICond.
             return ret;
         }
     }
@@ -160,12 +174,12 @@ public class PatCspsTransformer implements CSPSVisitor {
         if (ins.m_ret.isDefinition()) {
             ret.add(new PStatLocalVarDec(retName, exp));
             if (ins.m_ret.isEscaped()) {
-                ret.add(new PExpStackPush(new PExpID(retName)));
+                ret.add(new PStatStackPush(new PExpID(retName)));
             }
             
             return ret;            
         } else {
-            ret.add(new PStatAssignment(ins.m_ret.getTID(), exp));
+            ret.add(new PStatAssignment(ins.m_ret.getTID(), exp));  // The situation is caused by the holder of CICond.
             return ret;
         }
     }
@@ -182,7 +196,7 @@ public class PatCspsTransformer implements CSPSVisitor {
     public PExp visit(CTempID v) {
 
         if (v.isOutofScope()) {
-            return new PExpStackOpr(v.getStackInfo().getOffset(), v.getTID());
+            return new PExpStackGet(v.getStackInfo().getOffset(), v.getTID());
         } else {
             return new PExpID(v.getTID());
         }
@@ -203,6 +217,98 @@ public class PatCspsTransformer implements CSPSVisitor {
         default:
             throw new Error("should not happen");
         }
+    }
+
+    @Override
+    public Object visit(CIVarDef node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        ret.add(new PStatLocalVarDec(node.m_id.getTID(), PExpTuple.cNone));
+        if (node.m_id.isEscaped()) {
+            throw new Error("This should not happen.");
+        }
+        
+        return ret;
+    }
+
+    @Override
+    public Object visit(CILoad node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        
+        TID globalVar = node.m_globalVar.getTID();
+        TID localHolder = node.m_localHolder.getTID();
+        
+        ret.add(new PInsLoad(globalVar, localHolder));
+        if (node.m_localHolder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_localHolder.getTID())));
+        }
+        return ret;
+        
+    }
+
+    @Override
+    public Object visit(CILoadArray node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        
+        TID globalVar = node.m_globalVar.getTID();
+        TID localHolder = node.m_localHolder.getTID();
+        PExp localIndex = (PExp)(node.m_localIndex.accept(this));
+        
+        ret.add(new PInsLoadArray(globalVar, localIndex, localHolder));
+        if (node.m_localHolder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_localHolder.getTID())));
+        }
+        
+        return ret;
+    }
+
+    @Override
+    public Object visit(CIMutexAlloc node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        TID holder = node.m_holder.getTID();
+        
+        ret.add(new PInsMutexAlloc(holder));
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
+        }
+
+        return ret;
+    }
+
+    @Override
+    public Object visit(CIStore node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        TID globalVar = node.m_globalVar.getTID();
+        PExp localSrc = (PExp)node.m_localSrc.accept(this);
+        
+        ret.add(new PInsStore(localSrc, globalVar));
+        
+        return ret;
+    }
+
+    @Override
+    public Object visit(CIStoreArray node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        TID globalVar = node.m_globalVar.getTID();
+        PExp localSrc = (PExp)node.m_localSrc.accept(this);
+        PExp localIndex = (PExp)node.m_localIndex.accept(this);
+        
+        ret.add(new PInsStoreArray(localSrc, globalVar, localIndex));
+        
+        return ret;
+    }
+
+    @Override
+    public Object visit(CICond node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        List<PStat> trueBranch = CInsLst2PStatLst(node.m_true);
+        List<PStat> falseBranch = CInsLst2PStatLst(node.m_false);
+        PExp cond = (PExp)node.m_cond.accept(this);
+        
+        ret.add(new PInsCond(cond, trueBranch, falseBranch));
+        if (node.m_holder.isDefinition() && node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
+        }
+        return ret;
     }
 }
 

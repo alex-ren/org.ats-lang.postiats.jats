@@ -2,12 +2,12 @@ package jats.utfpl.patcsps;
 
 import jats.utfpl.instruction.TID;
 
-public class PExpStackOpr implements PExp {
+public class PExpStackGet implements PExp {
     
     public int m_pos;
     public TID m_tid;
     
-    public PExpStackOpr(int pos, TID tid) {
+    public PExpStackGet(int pos, TID tid) {
         m_pos = pos;
         m_tid = tid;
     }

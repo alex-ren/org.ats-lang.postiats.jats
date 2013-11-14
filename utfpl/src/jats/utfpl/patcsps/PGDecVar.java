@@ -8,7 +8,7 @@ public class PGDecVar implements PGDec {
     
     private PGDecVar(TID tid, PExp exp) {
     	m_tid = tid;
-        m_exp = null;
+        m_exp = exp;
     }
     
     public static PGDecVar create(TID tid) {

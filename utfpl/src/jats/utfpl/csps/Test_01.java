@@ -124,7 +124,7 @@ public class Test_01 {
             // print csps program
             CSPSPrinter cspsPrinter = new CSPSPrinter();
             String outputCSPS = cspsPrinter.printProgram(programCSPS);
-            System.out.println("==CSP# code is ==========================");
+            System.out.println("==CSPS code is ==========================");
             System.out.println(outputCSPS);
 
             FileWriter fwINS = new FileWriter("test/" + classname

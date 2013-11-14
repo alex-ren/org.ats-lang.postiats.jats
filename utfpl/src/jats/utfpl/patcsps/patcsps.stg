@@ -96,8 +96,12 @@ main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
 
 >>
 
-pgdevar_st(id, init) ::= <<
+pgdecvar_st(id, init) ::= <<
 var <id><if(init)> = <init><endif>;
+>>
+
+pgdecarray_st(id, sz) ::= <<
+var <id>[<sz>];
 >>
 
 pprocbranch_ifcommon_st(cond, if_proc, else_proc) ::= <<
@@ -149,9 +153,9 @@ pproccall_st(name, arg_lst) ::= <<
 <name>(<arg_lst; separator=", ">)
 >>
 
-pgdecproc_st(name, para_lst, esc_para_lst, body) ::= <<
+pgdecproc_st(name, para_lst, body) ::= <<
 <name>(<para_lst; separator=", ">) =
-  <proc_preloge_st(esc_para_lst)> ->
+  <proc_preloge_st()> ->
   <body>
   ;
 >>
@@ -199,7 +203,7 @@ pprocparallel_st(proc_lst) ::= <<
 <proc_lst; separator="\n|||\n">
 >>
 
-pexpstackpush_st(name) ::= <<
+pstatstackpush_st(name) ::= <<
 GStack.push(tid, <name>);
 >>
 
@@ -209,6 +213,22 @@ pstatreturn_st(v) ::= <<
 
 pnone_st() ::= <<
 0
+>>
+
+pinscond_st(cond, trueb, falseb) ::= <<
+if (cond) {
+    <trueb; separator="\n">
+} else {
+    <falseb; separator="\n">
+}
+>>
+
+pinsload_st(src, dst) ::= <<
+<dst> = <src>;
+>> 
+
+pinsloadarray_st(src, index, dst) ::= <<
+<dst> = <src>[index];
 >>
 
 // ================= 
@@ -225,16 +245,15 @@ delete_frame_st() ::= <<
 GStack.deleteFrame(tid)
 >>
 
-proc_preloge_st(paras) ::= <<
+proc_preloge_st() ::= <<
 preloge{
   if (isTailCall) {
     <reload_frame_st()>;
   } else {
     <new_frame_st()>;
   }
-  <paras:{x| spush(tid, <x>)}; separator=";">}
 >>
-
+//   <paras:{x| spush(tid, <x>)}; separator=";">}
 
 
 
