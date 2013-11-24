@@ -1,0 +1,316 @@
+#import "PStack";
+
+#import "MyLib";
+
+// =====================
+
+var<PStack> GStack = new PStack();
+var SysTid = 0;
+
+channel SysChSch 0;
+channel SysChSchStart 0;
+
+createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
+
+Scheduler = SysChSch?fn.arg ->
+  initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
+  ;
+
+
+SchedulerW (tid) = SysChSchStart?tid -> Scheduler;
+
+// =====================
+
+var mutex[10];  // 10 mutex
+var mutex_count = 0;
+channel mutex_req 0;
+channel mutex_reply 0;
+
+mutex_allocator = mutex_req?_ -> {mutex_count++} -> mutex_reply!mutex_count -> mutex_allocator;
+mutex_allocate(tid) = mutex_req!1 -> mutex_reply?m -> { GStack.push(tid, m) } -> Skip;
+
+mutex_lock(tid, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
+
+mutex_unlock(tid, m) = munlock{mutex[m] = 0} -> Skip;
+
+// ======================
+
+var cond_holder[10];  // 10 condition
+channel cond_chan[10] 0;
+var cond_count = 0;
+channel cond_req 0;
+channel cond_reply 0;
+
+cond_allocator = cond_req?_ -> {cond_count++} -> cond_reply!cond_count -> cond_allocator;
+cond_allocate(tid) = cond_req!1 -> cond_reply?m -> { GStack.push(tid, m) } -> Skip;
+
+cond_wait(tid, c, m) = atomic{cadd{cond_holder[c]++;} -> mutex_unlock(tid, m); cond_chan[c]?_ -> mutex_lock(tid, m)};
+
+cond_signal(tid, c) = atomic {if (cond_holder[c] > 0) {
+
+          csub{cond_holder[c]--;} ->
+
+          cond_chan[c]!1
+
+          -> Skip
+
+        }};
+
+
+cond_broadcast(tid, c) = atomic{if (cond_holder[c] > 0) {
+
+          signaln(c, cond_holder[c]); csub{cond_holder[c]=0;} -> Skip
+
+        }};
+
+signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
+                else {Skip}
+                ;
+
+// =====================
+
+var gv1_32 = 0;
+var gv2_33 = 0;
+var gv_35[3];
+
+foo1_36(x_37) =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  gv1_32 = 2;
+  } ->
+  {  GStack.deleteFrame(tid); GStack.push(tid, 0);
+  } ->
+  Skip
+  ;
+
+foo2_38() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  var x_39 = 4;
+  GStack.deleteFrame(tid); GStack.push(tid, 3);
+  } ->
+  Skip
+  ;
+
+foo3_40() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  gv_35[index] = src
+  } ->
+  {  x_41 = gv_35[index];
+  } ->
+  {  temp_66 = gv_35[index];
+  GStack.push(tid, temp_66);
+  } ->
+  foo1_36(GStack.get(tid, 0, 0));
+  {  ret_65 = gv_35[index];
+  GStack.deleteFrame(tid); GStack.push(tid, ret_65);
+  } ->
+  Skip
+  ;
+
+foo4_42() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  if (3) {
+    {  var x_43 = 2;
+    GStack.push(tid, x_43);
+    var y_44 = atspat_mutex_alloc();
+    } ->
+    if (4) {
+      if (3) {
+        {  GStack.deleteFrame(tid); GStack.push(tid, 2);
+        } ->
+        Skip
+      } else {
+        {  ret_77 = gv_35[index];
+        GStack.deleteFrame(tid); GStack.push(tid, ret_77);
+        } ->
+        Skip
+      }
+    } else {
+      {  GStack.deleteFrame(tid); GStack.push(tid, 1);
+      } ->
+      Skip
+    }
+  } else {
+    {  x_78 = gv_35[index];
+    GStack.push(tid, x_78);
+    } ->
+    {  var y_79 = atspat_mutex_alloc();
+    } ->
+    if (4) {
+      if (3) {
+        {  GStack.deleteFrame(tid); GStack.push(tid, 2);
+        } ->
+        Skip
+      } else {
+        {  ret_80 = gv_35[index];
+        GStack.deleteFrame(tid); GStack.push(tid, ret_80);
+        } ->
+        Skip
+      }
+    } else {
+      {  GStack.deleteFrame(tid); GStack.push(tid, 1);
+      } ->
+      Skip
+    }
+  }
+  ;
+
+foo5_45() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  var temp_69 = gv1_32;
+  GStack.push(tid, temp_69);
+  } ->
+  if (GStack.getBool(tid, 0, 0)) {
+    {  gv1_32 = 1;
+    } ->
+    {  GStack.deleteFrame(tid); GStack.push(tid, 3);
+    } ->
+    Skip
+  } else {
+    {  gv1_32 = 4;
+    } ->
+    {  GStack.deleteFrame(tid); GStack.push(tid, 3);
+    } ->
+    Skip
+  }
+  ;
+
+foo6_46() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  var x_47 = 3;
+  GStack.push(tid, x_47);
+  } ->
+  foo61_48(3, GStack.get(tid, 0, 0))
+  ;
+
+foo61_48(y_49, x_esc_76) =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  var z_50 = call(add, x_esc_76, y_49);
+  GStack.deleteFrame(tid); GStack.push(tid, z_50);
+  } ->
+  Skip
+  ;
+
+foo7_51() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  var x_52 = 1;
+  var y_53 = 0;
+  if (cond) {
+      var z_54 = 2;
+      if (cond) {
+          y_53 = call(add, x_52, 1);
+      } else {
+          y_53 = call(add, 1, x_52);
+      }
+  } else {
+      y_53 = 3;
+  }
+  var q1_55 = 33;
+  var q2_56 = call(add, q1_55, y_53);
+  GStack.deleteFrame(tid); GStack.push(tid, q2_56);
+  } ->
+  Skip
+  ;
+
+foo8_57() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  gv_35[index] = src
+  } ->
+  {  GStack.deleteFrame(tid); GStack.push(tid, 0);
+  } ->
+  Skip
+  ;
+
+foo9_58() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  if (cond) {
+      var x_59 = 1;
+      GStack.deleteFrame(tid); GStack.push(tid, x_59);
+  } else {
+      GStack.deleteFrame(tid); GStack.push(tid, 2);
+  }
+  } ->
+  Skip
+  ;
+
+foo10_60() =
+  preloge{
+    if (isTailCall) {
+      GStack.reloadFrame(tid);
+    } else {
+      GStack.newFrame(tid);
+    } ->
+  {  var x_61 = 1;
+  GStack.push(tid, x_61);
+  gv2_33 = 3;
+  } ->
+  {  var y_62 = 2;
+  gv2_33 = GStack.get(tid, 0, 0);
+  } ->
+  foo5_45()
+  ;
+
+
+main_s(tid) = 
+  main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
+  {  gv1_32 = 1;
+  } ->
+  Skip;
+
+main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
+
+
+#assert main deadlockfree;
+
+#define Prop1 (gn_22 < 2);
+
+#assert main |= G Prop1;

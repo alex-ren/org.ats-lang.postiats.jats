@@ -224,11 +224,23 @@ if (cond) {
 >>
 
 pinsload_st(src, dst) ::= <<
-<dst> = <src>;
+var <dst> = <src>;
 >> 
 
 pinsloadarray_st(src, index, dst) ::= <<
 <dst> = <src>[index];
+>>
+
+pinsstore_st(src, dst) ::= <<
+<dst> = <src>;
+>>
+
+pinsstorearray_st(src, dst, index) ::= <<
+<dst>[index] = src
+>>
+
+pinsmutexalloc_st(holder) ::= <<
+var <holder> = atspat_mutex_alloc();
 >>
 
 // ================= 

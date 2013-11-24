@@ -50,7 +50,7 @@ public class CTempID implements CTemp {
                 if (isOutofScope()) {
                     
                 } else {
-                    throw new Error("shall not happen");
+                	m_stackPos = null;  // still in the valid scope
                 }
             }
         } else {

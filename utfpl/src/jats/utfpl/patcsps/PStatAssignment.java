@@ -8,9 +8,6 @@ public class PStatAssignment implements PStat {
     
     // for global variable
     public PStatAssignment(TID name, PExp val) {
-        if (name.isGlobal() == false) {
-            throw new Error("Unexpected");
-        }
         m_name = name;
         m_val = val;
     }

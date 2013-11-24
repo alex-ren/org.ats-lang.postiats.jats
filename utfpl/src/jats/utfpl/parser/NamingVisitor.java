@@ -113,7 +113,10 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(ValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
-        node.m_id.updateForGlobalDef(m_scope);
+    	
+    	// Currently we just treat ValDef as a local value.
+        // node.m_id.updateForGlobalDef(m_scope);
+    	node.m_id.updateForLocalDef(m_scope);
         node.m_exp.accept(this);
         
         return null;

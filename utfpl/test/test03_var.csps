@@ -14,7 +14,6 @@ createThread(par, fn, arg) = SysChSch!fn.arg -> Skip;
 
 Scheduler = SysChSch?fn.arg ->
   initSch{SysTid++; var tid = SysTid; GStack.allocateStack(tid);} ->
-  Skip
   ;
 
 
@@ -70,23 +69,30 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var y_23;
-var z_24;
+var y_33 = 0;
+var z_34 = 0;
 
 
 
 main_s(tid) = 
   main_preloge {GStack.allocateStack(tid); GStack.newFrame(tid); GStack.newFrame(tid);} -> 
-  {  var x_22 = 3;
-  GStack.push(tid, x_22);
-  y_23 = x_22;
+  {  var x_32 = 3;
+  GStack.push(tid, x_32);
+  y_33 = x_32;
   } ->
-  {  var add_tret_26 = call(add, GStack.get(tid, 0, 0), y_23);
-  z_24 = add_tret_26;
+  {  var temp_35 = y_33;
+  GStack.push(tid, temp_35);
   } ->
-  {  var main_ret_27 = 0;
-  GStack.deleteFrame(tid); GStack.push(tid, main_ret_27);
+  {  var temp_36 = call(add, GStack.get(tid, 0, 0), GStack.get(tid, 0, 1));
+  z_34 = temp_36;
   } ->
   Skip;
 
 main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
+
+
+#assert main deadlockfree;
+
+#define Prop1 (gn_22 < 2);
+
+#assert main |= G Prop1;

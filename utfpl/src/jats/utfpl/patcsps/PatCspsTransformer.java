@@ -305,7 +305,7 @@ public class PatCspsTransformer implements CSPSVisitor {
         PExp cond = (PExp)node.m_cond.accept(this);
         
         ret.add(new PInsCond(cond, trueBranch, falseBranch));
-        if (node.m_holder.isDefinition() && node.m_holder.isEscaped()) {
+        if (null != node.m_holder && node.m_holder.isDefinition() && node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
         }
         return ret;
