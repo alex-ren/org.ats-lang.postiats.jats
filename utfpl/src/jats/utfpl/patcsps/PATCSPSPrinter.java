@@ -317,13 +317,14 @@ public class PATCSPSPrinter implements PNodeVisitor {
         return st;
     }
 
+    // check here todo
 
     @Override
     public Object visit(PInsLoad node) {
         // pinsload_st(src, dst) ::= <<
         ST st = m_stg.getInstanceOf("pinsload_st");
         st.add("src", node.m_globalVar);
-        st.add("dst", node.localHolder);
+        st.add("dst", node.m_localHolder);
         
         return st;
     }
