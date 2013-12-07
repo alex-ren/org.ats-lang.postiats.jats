@@ -1,0 +1,8 @@
+group utfpl;
+
+d2cst_st(d2cst) ::= <<
+<symbol>_<stamp>
+>>
+
+
+

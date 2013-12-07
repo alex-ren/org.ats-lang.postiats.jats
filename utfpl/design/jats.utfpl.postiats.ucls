@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
-  <interface id="1" language="java" name="jats.utfpl.postiats.Ip2at_node" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/postiats/Ip2at_node.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="1" language="java" name="jats.utfpl.utfpl.Ip2at_node" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/utfpl/Ip2at_node.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="472" y="355"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="2" language="java" name="jats.utfpl.postiats.Cp2at" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/postiats/Cp2at.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="jats.utfpl.utfpl.Cp2at" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/utfpl/Cp2at.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="790" y="358"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="jats.utfpl.postiats.P2Tany" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/postiats/P2Tany.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="jats.utfpl.utfpl.P2Tany" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/utfpl/P2Tany.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="443" y="736"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="jats.utfpl.postiats.P2Tpat" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/postiats/P2Tpat.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="jats.utfpl.utfpl.P2Tpat" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/utfpl/P2Tpat.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="633" y="738"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="jats.utfpl.postiats.P2Tvar" project="utfpl" 
-    file="/utfpl/src/jats/utfpl/postiats/P2Tvar.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="jats.utfpl.utfpl.P2Tvar" project="utfpl" 
+    file="/utfpl/src/jats/utfpl/utfpl/P2Tvar.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="251" y="736"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
