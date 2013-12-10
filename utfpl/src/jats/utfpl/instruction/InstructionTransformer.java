@@ -6,24 +6,24 @@ import java.util.List;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
-import jats.utfpl.tree.AppExp;
-import jats.utfpl.tree.AtomExp;
-import jats.utfpl.tree.Dec;
-import jats.utfpl.tree.Exp;
-import jats.utfpl.tree.FunDef;
-import jats.utfpl.tree.FunGroup;
-import jats.utfpl.tree.IdExp;
-import jats.utfpl.tree.IfExp;
-import jats.utfpl.tree.LamExp;
-import jats.utfpl.tree.LetExp;
+import jats.utfpl.tree.ExpApp;
+import jats.utfpl.tree.ExpAtom;
+import jats.utfpl.tree.IDec;
+import jats.utfpl.tree.IExp;
+import jats.utfpl.tree.DecFunDef;
+import jats.utfpl.tree.DecFunGroup;
+import jats.utfpl.tree.ExpId;
+import jats.utfpl.tree.ExpIf;
+import jats.utfpl.tree.ExpLam;
+import jats.utfpl.tree.ExpLet;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeVisitor;
-import jats.utfpl.tree.TupleExp;
-import jats.utfpl.tree.ValBind;
-import jats.utfpl.tree.ValDef;
-import jats.utfpl.tree.VarArrayDef;
-import jats.utfpl.tree.VarAssign;
-import jats.utfpl.tree.VarDef;
+import jats.utfpl.tree.ExpTuple;
+import jats.utfpl.tree.DecValBind;
+import jats.utfpl.tree.DecValDef;
+import jats.utfpl.tree.DecVarArrayDef;
+import jats.utfpl.tree.DecVarAssign;
+import jats.utfpl.tree.DecVarDef;
 
 /*
  * convention:
@@ -82,14 +82,14 @@ public class InstructionTransformer implements TreeVisitor {
 
     @Override
     public Object visit(ProgramTree node) {
-        for (Dec dec: node.m_decs) {
+        for (IDec dec: node.m_decs) {
             dec.accept(this);
         }
         return m_inslst;
     }
 
     @Override
-    public Object visit(ValDef node) {
+    public Object visit(DecValDef node) {
         TID holder = getTIDIn();  // save
         
         if (node.m_id == null) {
@@ -113,10 +113,10 @@ public class InstructionTransformer implements TreeVisitor {
 
     // FunDef must be inside certain FunGroup
     @Override
-    public Object visit(FunDef node) {
+    public Object visit(DecFunDef node) {
         TID name = node.m_id.m_tid;
         List<TID> paralst = new ArrayList<TID>();
-        for (IdExp id: node.m_paralst) {
+        for (ExpId id: node.m_paralst) {
             paralst.add(id.m_tid);
         }
         
@@ -134,12 +134,12 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(AppExp node) {
+    public Object visit(ExpApp node) {
         TID holder = getTIDIn();
         
         // has to be a function name
-        if (node.m_fun instanceof IdExp) {
-            TID funlab = ((IdExp)node.m_fun).m_tid;
+        if (node.m_fun instanceof ExpId) {
+            TID funlab = ((ExpId)node.m_fun).m_tid;
             PATType retType = funlab.getFunReturnType();
             
             // principle:
@@ -148,14 +148,14 @@ public class InstructionTransformer implements TreeVisitor {
             // it's the last instruction.
             if (funlab.getID().equals(cSetArray)) {
                 // set_array(local, global, index)
-                Exp lv = node.m_explst.get(0);
+                IExp lv = node.m_explst.get(0);
                 lv.accept(this);
                 ValPrim localValue = m_vpOut;
                 
-                Exp gv = node.m_explst.get(1);
-                TID globalVar = ((IdExp)gv).m_tid;
+                IExp gv = node.m_explst.get(1);
+                TID globalVar = ((ExpId)gv).m_tid;
                 
-                Exp ind = node.m_explst.get(2);
+                IExp ind = node.m_explst.get(2);
                 ind.accept(this);
                 ValPrim localIndex = m_vpOut;
                 
@@ -172,10 +172,10 @@ public class InstructionTransformer implements TreeVisitor {
                 }
             } else if (funlab.getID().equals(cGetArray)) {
                 // holder = get_array(global, index)
-                Exp gv = node.m_explst.get(0);
-                TID globalVar = ((IdExp)gv).m_tid;
+                IExp gv = node.m_explst.get(0);
+                TID globalVar = ((ExpId)gv).m_tid;
                 
-                Exp ind = node.m_explst.get(1);
+                IExp ind = node.m_explst.get(1);
                 ind.accept(this);
                 ValPrim localIndex = m_vpOut;
                 
@@ -231,7 +231,7 @@ public class InstructionTransformer implements TreeVisitor {
             } else {  // normal function call
                 List<ValPrim> args = new ArrayList<ValPrim>();
                 // I didn't call getTIDIn() here, which leaves the freedom to exp.accept().
-                for (Exp exp: node.m_explst) {
+                for (IExp exp: node.m_explst) {
                     exp.accept(this);
                     if (null == m_vpOut) {
                         throw new Error("eeeeeeeee");
@@ -275,7 +275,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(AtomExp node) {
+    public Object visit(ExpAtom node) {
         TID holder = getTIDIn();
         
         if (null == holder) {
@@ -298,7 +298,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(IdExp node) {
+    public Object visit(ExpId node) {
         TID holder = getTIDIn();
         
         if (null == holder) {
@@ -346,7 +346,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(IfExp node) {
+    public Object visit(ExpIf node) {
         TID holder = getTIDIn();
         if (null == holder) {
             holder = TID.createLocalVar("if", PATTypeSingleton.cUnknownType);
@@ -378,7 +378,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(LamExp node) {
+    public Object visit(ExpLam node) {
     	throw new Error("lambda is not supported");
 //        TID holder = getTIDIn();
 //        if (null == holder) {
@@ -406,14 +406,14 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(LetExp node) {
+    public Object visit(ExpLet node) {
         TID holder = getTIDIn();
         if (null == holder) {
             holder = TID.createLocalVar("let", PATTypeSingleton.cUnknownType);
 //            m_inslst.add(new VarDefIns(holder));
         }
         
-        for (Dec dec: node.m_decs) {
+        for (IDec dec: node.m_decs) {
             dec.accept(this);
         }
         
@@ -423,8 +423,8 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(TupleExp node) {
-        if (node != TupleExp.Void) {
+    public Object visit(ExpTuple node) {
+        if (node != ExpTuple.Void) {
             throw new Error("Only support empty tuple currently.");
         }
         
@@ -441,7 +441,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarDef node) {
+    public Object visit(DecVarDef node) {
     	// type system guarantees that node.m_id != null
     	TID holder = getTIDIn();
         
@@ -460,7 +460,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarAssign node) {
+    public Object visit(DecVarAssign node) {
         TID Holder = getTIDIn();  // save
         
         setTIDIn(node.m_id.m_tid);
@@ -471,9 +471,9 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
 	@Override
-    public Object visit(FunGroup node) {
+    public Object visit(DecFunGroup node) {
 		List<InsFuncDef> insLst = new ArrayList<InsFuncDef>();
-	    for (FunDef fundef: node.m_funLst) {
+	    for (DecFunDef fundef: node.m_funLst) {
 	    	insLst.add((InsFuncDef)fundef.accept(this));
 	    }
 	    
@@ -483,7 +483,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(ValBind node) {
+    public Object visit(DecValBind node) {
         TID Holder = getTIDIn();  // save
         
         setTIDIn(node.m_id.m_tid);
@@ -494,7 +494,7 @@ public class InstructionTransformer implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarArrayDef node) {
+    public Object visit(DecVarArrayDef node) {
         m_gEntitis.add(new GlobalArray(node.m_id.m_tid, node.m_size));
         return null;
     }

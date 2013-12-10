@@ -1,11 +1,11 @@
 package jats.utfpl.tree;
 
-public class IfExp implements Exp {
-    public Exp m_cond;
-    public Exp m_btrue;
-    public Exp m_bfalse;
+public class ExpIf implements IExp {
+    public IExp m_cond;
+    public IExp m_btrue;
+    public IExp m_bfalse;
     
-    public IfExp(Exp cond, Exp btrue, Exp bfalse) {
+    public ExpIf(IExp cond, IExp btrue, IExp bfalse) {
         m_cond = cond;
         m_btrue = btrue;
         m_bfalse = bfalse;

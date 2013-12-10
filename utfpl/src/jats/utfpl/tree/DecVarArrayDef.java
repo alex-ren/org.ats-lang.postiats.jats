@@ -1,12 +1,12 @@
 package jats.utfpl.tree;
 
-public class VarArrayDef implements Dec {
+public class DecVarArrayDef implements IDec {
 
-    public IdExp m_id;
+    public ExpId m_id;
     public int m_size;
-    public Type m_ty;
+    public EType m_ty;
     
-    public VarArrayDef(IdExp id, int size, Type ty) {
+    public DecVarArrayDef(ExpId id, int size, EType ty) {
         m_id = id;
         m_size = size;
         m_ty = ty;

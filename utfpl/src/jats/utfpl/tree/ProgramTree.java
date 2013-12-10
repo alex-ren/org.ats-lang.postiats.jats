@@ -2,10 +2,10 @@ package jats.utfpl.tree;
 
 import java.util.List;
 
-public class ProgramTree implements UtfplTreeNode {
-    public List<Dec> m_decs;
+public class ProgramTree implements TreeNode {
+    public List<IDec> m_decs;
     
-    public ProgramTree(List<Dec> decs) {
+    public ProgramTree(List<IDec> decs) {
         m_decs = decs;
     }
 

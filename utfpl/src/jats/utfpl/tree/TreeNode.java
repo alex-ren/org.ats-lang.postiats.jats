@@ -1,6 +1,6 @@
 package jats.utfpl.tree;
 
-public interface UtfplTreeNode {
+public interface TreeNode {
     Object accept(TreeVisitor visitor);
 
 }

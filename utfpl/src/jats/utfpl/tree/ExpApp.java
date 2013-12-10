@@ -2,11 +2,11 @@ package jats.utfpl.tree;
 
 import java.util.List;
 
-public class AppExp implements Exp {
-    public Exp m_fun;
-    public List<Exp> m_explst;
+public class ExpApp implements IExp {
+    public IExp m_fun;
+    public List<IExp> m_explst;
     
-    public AppExp(Exp fun, List<Exp> explst) {
+    public ExpApp(IExp fun, List<IExp> explst) {
         m_fun = fun;
         m_explst = explst;
     }

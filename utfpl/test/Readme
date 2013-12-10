@@ -1,0 +1,5 @@
+
+How to generate JSON file from ATS-Postiats source code.
+>> patsopt --jsonize-2 -o xxx_dats.json -d xxx.dats
+
+

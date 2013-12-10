@@ -2,10 +2,10 @@ package jats.utfpl.tree;
 
 import java.util.List;
 
-public class FunGroup implements Dec {
-	public List<FunDef> m_funLst;
+public class DecFunGroup implements IDec {
+	public List<DecFunDef> m_funLst;
 	
-	public FunGroup(List<FunDef> funLst) {
+	public DecFunGroup(List<DecFunDef> funLst) {
 		m_funLst = funLst;
 	}
 

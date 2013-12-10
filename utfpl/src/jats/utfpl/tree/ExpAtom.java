@@ -1,9 +1,9 @@
 package jats.utfpl.tree;
 
-public class AtomExp implements Exp {
+public class ExpAtom implements IExp {
     public String m_text;
     
-    public AtomExp(String text) {
+    public ExpAtom(String text) {
         m_text = text;
     }
     

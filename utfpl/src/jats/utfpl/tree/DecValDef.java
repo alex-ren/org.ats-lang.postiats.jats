@@ -3,16 +3,16 @@ package jats.utfpl.tree;
 import jats.utfpl.instruction.TID;
 
 // initialization of global value
-public class ValDef implements Dec {
-    public IdExp m_id;
-    public Exp m_exp;
+public class DecValDef implements IDec {
+    public ExpId m_id;
+    public IExp m_exp;
 
-    public ValDef(Exp id, Exp exp) {
-        if (id instanceof IdExp) {
-            m_id = (IdExp) id;
+    public DecValDef(IExp id, IExp exp) {
+        if (id instanceof ExpId) {
+            m_id = (ExpId) id;
             
-        } else if (id == TupleExp.Void) { // val () = xxx
-            m_id = new IdExp(null);
+        } else if (id == ExpTuple.Void) { // val () = xxx
+            m_id = new ExpId(null);
         } else {
             throw new Error("not supported");
         }

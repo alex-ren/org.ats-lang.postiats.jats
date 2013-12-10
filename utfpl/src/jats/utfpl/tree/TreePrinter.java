@@ -29,29 +29,29 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(AppExp node) {
+    public Object visit(ExpApp node) {
         ST st = m_stg.getInstanceOf("app_exp_st");
         st.add("fun", node.m_fun.accept(this));
-        for (Exp exp: node.m_explst) {
+        for (IExp exp: node.m_explst) {
            st.add("args", exp.accept(this));
         }
         return st;        
     }
 
     @Override
-    public Object visit(AtomExp node) {
+    public Object visit(ExpAtom node) {
         ST st = m_stg.getInstanceOf("atom_exp_st");
         st.add("v", node.m_text);
         return st;        
     }
 
     @Override
-    public Object visit(FunDef node) {
+    public Object visit(DecFunDef node) {
         // fun_def_st(fname, paralst, body) ::= <<
         ST st = m_stg.getInstanceOf("fun_def_st");
         st.add("fname", node.m_id.accept(this));
         
-        for (IdExp id: node.m_paralst) {
+        for (ExpId id: node.m_paralst) {
             st.add("paralst", id.accept(this));
         }
         
@@ -60,7 +60,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(IdExp node) {
+    public Object visit(ExpId node) {
         // id_exp_st(id) ::= <<
         ST st = m_stg.getInstanceOf("id_exp_st");
         if (node.m_tid == null) {
@@ -74,7 +74,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(IfExp node) {
+    public Object visit(ExpIf node) {
         // if_exp_st(cond, btrue, bfalse) ::= <<
         ST st = m_stg.getInstanceOf("if_exp_st");
         st.add("cond", node.m_cond.accept(this));
@@ -84,10 +84,10 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(LamExp node) {
+    public Object visit(ExpLam node) {
         // lam_exp_st(paralst, body) ::= <<
         ST st = m_stg.getInstanceOf("lam_exp_st");
-        for (IdExp id: node.m_paralst) {
+        for (ExpId id: node.m_paralst) {
             st.add("paralst", id.accept(this));
         }
         st.add("body", node.m_body.accept(this));
@@ -96,10 +96,10 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(LetExp node) {
+    public Object visit(ExpLet node) {
         // let_exp_st(decs, exp) ::= <<
         ST st = m_stg.getInstanceOf("let_exp_st");
-        for (Dec dec: node.m_decs) {
+        for (IDec dec: node.m_decs) {
             st.add("decs", dec.accept(this));
         }
         st.add("exp", node.m_exp.accept(this));
@@ -108,7 +108,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(ValDef node) {
+    public Object visit(DecValDef node) {
         ST st = m_stg.getInstanceOf("val_def_st");
         st.add("id", node.m_id.accept(this));
         st.add("exp", node.m_exp.accept(this));
@@ -119,23 +119,23 @@ public class TreePrinter implements TreeVisitor {
     public Object visit(ProgramTree node) {
         // program_st(decs) ::= << 
         ST st = m_stg.getInstanceOf("program_st");
-        for (Dec dec: node.m_decs) {
+        for (IDec dec: node.m_decs) {
             st.add("decs", dec.accept(this));
         }
         return st;
     }
 
     @Override
-    public Object visit(TupleExp node) {
+    public Object visit(ExpTuple node) {
         ST st = null;
         if (node.isSingle()) {
             st = m_stg.getInstanceOf("tuple_exp_single_st");
             st.add("exp", node.m_components.get(0).accept(this));
         } else {
             st = m_stg.getInstanceOf("tuple_exp_st");
-            if (node != TupleExp.Void) {
+            if (node != ExpTuple.Void) {
                 List<Object> explst = new ArrayList<Object>();
-                for (Exp exp : node.m_components) {
+                for (IExp exp : node.m_components) {
                     explst.add(exp.accept(this));
                 }
                 st.add("explst", explst);
@@ -145,7 +145,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarDef node) {
+    public Object visit(DecVarDef node) {
         ST st = m_stg.getInstanceOf("var_def_st");
         st.add("id", node.m_id.accept(this));
         if (null != node.m_exp) {
@@ -156,7 +156,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarAssign node) {
+    public Object visit(DecVarAssign node) {
         ST st = m_stg.getInstanceOf("var_assign_st");
         st.add("id", node.m_id.accept(this));
         st.add("exp", node.m_exp.accept(this));
@@ -164,9 +164,9 @@ public class TreePrinter implements TreeVisitor {
     }
 
 	@Override
-    public Object visit(FunGroup node) {
+    public Object visit(DecFunGroup node) {
 	    ST st = m_stg.getInstanceOf("fun_group_st");
-	    for (FunDef fundef: node.m_funLst) {
+	    for (DecFunDef fundef: node.m_funLst) {
 	    	st.add("fun_lst", fundef.accept(this));
 	    }
 	    return st;
@@ -174,7 +174,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarArrayDef node) {
+    public Object visit(DecVarArrayDef node) {
         ST st = m_stg.getInstanceOf("var_array_def_st");
         st.add("id", node.m_id.accept(this));
         st.add("size", node.m_size);
@@ -182,7 +182,7 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(ValBind node) {
+    public Object visit(DecValBind node) {
         // val_bind_st(id, exp) ::= <<
         ST st = m_stg.getInstanceOf("val_bind_st");
         if (node.m_id != null) {

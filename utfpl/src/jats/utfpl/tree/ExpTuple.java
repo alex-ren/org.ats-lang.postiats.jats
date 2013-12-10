@@ -3,12 +3,12 @@ package jats.utfpl.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TupleExp implements Exp {
-    static public TupleExp Void = new TupleExp();  // empty tuple
+public class ExpTuple implements IExp {
+    static public ExpTuple Void = new ExpTuple();  // empty tuple
     
-    public List<Exp> m_components;
+    public List<IExp> m_components;
     
-    private TupleExp() {
+    private ExpTuple() {
         m_components = null;
     }
     
@@ -20,8 +20,8 @@ public class TupleExp implements Exp {
         }
     }
     
-    public TupleExp(Exp e, List<Exp> es) {
-        m_components = new ArrayList<Exp>();
+    public ExpTuple(IExp e, List<IExp> es) {
+        m_components = new ArrayList<IExp>();
         m_components.add(e);
         m_components.addAll(es);
     }

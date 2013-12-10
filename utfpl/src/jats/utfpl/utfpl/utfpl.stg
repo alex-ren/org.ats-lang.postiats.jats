@@ -1,8 +1,160 @@
 group utfpl;
 
+
+// handle Cd2cst
 d2cst_st(d2cst) ::= <<
-<symbol>_<stamp>
+<symbol_st(d2cst.symbol)>_<stamp_st(d2cst.stamp)>
 >>
+
+// handle Cstamp
+stamp_st(stamp) ::= <<
+<stamp.data>
+>>
+
+// handle Csymbol
+symbol_st(symbol) ::= <<
+<symbol.data>
+>>
+
+utfpl_prog_st(d2ecs) ::= <<
+<d2ecs; separator="\n">
+>>
+
+D2Cfundecs_st(knd, f2ds) ::= <<
+<knd> <f2ds; separator="\nand ">
+>>
+
+funkind_st(knd) ::= <<
+<knd>
+>>
+
+f2undec_st(loc, var, def) ::= <<
+<d2var_st(var)> = <def>
+>>
+
+// handle Cd2var
+d2var_st(d2var) ::= <<
+<symbol_st(d2var.symbol)>_<stamp_st(d2var.stamp)>
+>>
+
+d2exp_st(d2exp_node) ::= <<
+<d2exp_node>
+>>
+
+D2Eapplst_st(fun, args) ::= <<
+<fun> (<args; separator=", ">)
+>>
+   
+D2EXPARGdyn_st(d2exps) ::= <<
+<d2exps;separator=", ">
+>>
+
+D2Ecst_st(cst) ::= <<
+D2Ecst\<<d2cst_st(cst)>\>
+>>
+
+D2Eexp_st(exp) ::= <<
+<exp>
+>>
+
+D2Ef0loat_st(flt) ::=<<
+<flt>
+>>
+
+D2Ei0nt_st(int) ::=<<
+<int>
+>>
+
+D2Eifopt_st(testa, thena, elsea) ::= <<
+if (<testa>) then
+  <thena>
+else
+  <elsea>
+>>
+
+D2Elam_st(p2ts, exp) ::= <<
+lam (<p2ts; separator=", ">) = 
+  <exp>
+>>
+
+p2at_st(node) ::= <<
+<node>
+>>
+
+P2Tany_st() ::= <<
+_
+>>
+
+P2Tpat_st(pat) ::= <<
+pat\<<pat>\>
+>>
+
+P2Tvar_st(var) ::= <<
+<d2var_st(var)>
+>>
+
+D2Es0tring_st(str) ::= <<
+<str>
+>>
+
+// handle Cd2sym
+d2sym_st (d2sym) ::= <<
+<symbol_st(d2sym.symbol)>
+>>
+
+D2Esym_st(d2sym) ::= <<
+D2Esym\<<d2sym_st(d2sym)>\>
+>>
+
+D2Evar_st(var) ::= <<
+<d2var_st(var)>
+>>
+    
+D2Cvaldecs_st(knd, v2ds) ::= <<
+<knd> <v2ds; separator="\nand ">
+>>
+
+valkind_st(knd) ::= <<
+<knd>
+>>
+
+v2aldec_st(pat, def) ::= <<
+<pat> = <def>
+>>
+
+D2Cimpdec_st(i2mpdec) ::= <<
+<i2mpdec>
+>>
+
+i2mpdec_st(cst, def) ::= <<
+implement <d2cst_st(cst)> = <def>
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,6 +3,10 @@ package jats.utfpl.utfpl;
 public class Cstamp {
     public int m_id;
     
+    public int getData() {
+        return m_id;
+    }
+    
     public Cstamp(int id) {
         m_id = id;
     }

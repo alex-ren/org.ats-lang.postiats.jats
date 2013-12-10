@@ -1,12 +1,14 @@
 package jats.utfpl.tree;
 
-public class VarAssign implements Dec {
-    public IdExp m_id;
-    public Exp m_exp;
+public class DecVarDef implements IDec {
+    public ExpId m_id;
+    public IExp m_exp;
+    // public Type m_ty;
     
-    public VarAssign(IdExp id, Exp exp) {
+    public DecVarDef(ExpId id, IExp exp) {
         m_id = id;
         m_exp = exp;
+        // m_ty = ty;
     }
     
     @Override

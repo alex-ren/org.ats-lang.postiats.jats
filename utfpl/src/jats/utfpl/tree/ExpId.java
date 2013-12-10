@@ -5,12 +5,12 @@ import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
-public class IdExp implements Exp {
+public class ExpId implements IExp {
     public String m_sid;
     public TID m_tid;
 
     // id can be null.
-    public IdExp(String id) {
+    public ExpId(String id) {
         m_sid = id;
         m_tid = null;
     }

@@ -1,26 +1,40 @@
 package jats.utfpl.utfpl;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class Test {
-    
-    static interface Too {
-        public <T> T get();
-    }
-    
-    static class Foo implements Too {
-        public <T> T get() {
-            return (T)"str";
-        }
-    }
-    
 
     /**
      * @param args
+     * @throws IOException 
      */
-    public static void main(String[] args) {
-        Foo foo = new Foo();
-        Integer x = foo.get();
-        x = x - 1;
+    public static void main(String[] args) throws IOException {
+        String[] filenames = { 
+                "test/json/test01_dats.json"
 
+        };
+
+        for (String filename: filenames) {
+            System.out.println("==Processing file " + filename + "==========");
+            File file = new File(filename);
+            FileReader fReader = new FileReader(file);
+
+            UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
+            UtfplProgram uProg = utfplParser.trans(fReader);
+            
+            System.out.println("======= Generating Utfpl from JSON stream is finished ========== ");
+            
+            UtfplPrinter uPrinter = new UtfplPrinter();
+            String output = uPrinter.print(uProg);
+            
+            System.out.println(output);
+            
+            System.out.println("======= Printing Utfpl is finished ========== ");
+            
+
+        }
     }
 
 }

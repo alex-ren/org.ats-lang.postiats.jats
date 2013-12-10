@@ -5,24 +5,24 @@ import java.util.List;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATTypeArray;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
-import jats.utfpl.tree.AppExp;
-import jats.utfpl.tree.AtomExp;
-import jats.utfpl.tree.Dec;
-import jats.utfpl.tree.Exp;
-import jats.utfpl.tree.FunDef;
-import jats.utfpl.tree.FunGroup;
-import jats.utfpl.tree.IdExp;
-import jats.utfpl.tree.IfExp;
-import jats.utfpl.tree.LamExp;
-import jats.utfpl.tree.LetExp;
+import jats.utfpl.tree.ExpApp;
+import jats.utfpl.tree.ExpAtom;
+import jats.utfpl.tree.IDec;
+import jats.utfpl.tree.IExp;
+import jats.utfpl.tree.DecFunDef;
+import jats.utfpl.tree.DecFunGroup;
+import jats.utfpl.tree.ExpId;
+import jats.utfpl.tree.ExpIf;
+import jats.utfpl.tree.ExpLam;
+import jats.utfpl.tree.ExpLet;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeVisitor;
-import jats.utfpl.tree.TupleExp;
-import jats.utfpl.tree.ValBind;
-import jats.utfpl.tree.ValDef;
-import jats.utfpl.tree.VarArrayDef;
-import jats.utfpl.tree.VarAssign;
-import jats.utfpl.tree.VarDef;
+import jats.utfpl.tree.ExpTuple;
+import jats.utfpl.tree.DecValBind;
+import jats.utfpl.tree.DecValDef;
+import jats.utfpl.tree.DecVarArrayDef;
+import jats.utfpl.tree.DecVarAssign;
+import jats.utfpl.tree.DecVarDef;
 import jats.utfpl.utils.MapScope;
 
 public class NamingVisitor implements TreeVisitor {
@@ -35,21 +35,21 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(AppExp node) {
+    public Object visit(ExpApp node) {
         node.m_fun.accept(this);
-        for (Exp exp: node.m_explst) {
+        for (IExp exp: node.m_explst) {
             exp.accept(this);
         }
         return null;
     }
 
     @Override
-    public Object visit(AtomExp node) {
+    public Object visit(ExpAtom node) {
         return null;
     }
 
     @Override
-    public Object visit(FunDef node) {
+    public Object visit(DecFunDef node) {
 //        System.out.println("FunDef " + node.m_id.m_id);
         TID tid = m_scope.getValue(node.m_id.m_sid);
         if (null == tid) {
@@ -60,7 +60,7 @@ public class NamingVisitor implements TreeVisitor {
         node.m_id.updateForUsage(m_scope);  // update function's tid
         
         m_scope = m_scope.newScope();
-        for (IdExp para: node.m_paralst) {
+        for (ExpId para: node.m_paralst) {
             para.updateForPara(m_scope);
         }
         node.m_body.accept(this);
@@ -70,13 +70,13 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(IdExp node) {
+    public Object visit(ExpId node) {
         node.updateForUsage(m_scope);
         return null;
     }
 
     @Override
-    public Object visit(IfExp node) {
+    public Object visit(ExpIf node) {
         node.m_cond.accept(this);
         node.m_btrue.accept(this);
         node.m_bfalse.accept(this);
@@ -84,10 +84,10 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(LamExp node) {
+    public Object visit(ExpLam node) {
 //       System.out.println("LamExp");
        m_scope = m_scope.newScope();
-       for (IdExp para: node.m_paralst) {
+       for (ExpId para: node.m_paralst) {
            para.updateForPara(m_scope);
        }
        node.m_body.accept(this);
@@ -96,11 +96,11 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(LetExp node) {
+    public Object visit(ExpLet node) {
 //        System.out.println("LetExp");
         m_scope = m_scope.newScope();
 
-        for (Dec dec: node.m_decs) {
+        for (IDec dec: node.m_decs) {
             dec.accept(this);
         }
 
@@ -111,7 +111,7 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(ValDef node) {
+    public Object visit(DecValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
     	
     	// Currently we just treat ValDef as a local value.
@@ -126,7 +126,7 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(ProgramTree node) {
         // no need to create a new scope
 
-        for (Dec dec: node.m_decs) {
+        for (IDec dec: node.m_decs) {
             dec.accept(this);
         }
         
@@ -134,9 +134,9 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(TupleExp node) {
-        if (node != TupleExp.Void) {
-            for (Exp exp : node.m_components) {
+    public Object visit(ExpTuple node) {
+        if (node != ExpTuple.Void) {
+            for (IExp exp : node.m_components) {
                 exp.accept(this);
             }
         }
@@ -144,7 +144,7 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarDef node) {
+    public Object visit(DecVarDef node) {
         // System.out.println("VarDef " + node.m_id.m_id);
         node.m_id.updateForGlobalVar(m_scope, PATTypeSingleton.cUnknownType);
 
@@ -156,7 +156,7 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarAssign node) {
+    public Object visit(DecVarAssign node) {
         // System.out.println("VarAssign " + node.m_id.m_id);
         node.m_id.updateForUsage(m_scope);
 
@@ -165,14 +165,14 @@ public class NamingVisitor implements TreeVisitor {
     }
 
 	@Override
-    public Object visit(FunGroup node) {
-		for (FunDef fundef: node.m_funLst) {
+    public Object visit(DecFunGroup node) {
+		for (DecFunDef fundef: node.m_funLst) {
 			String name = fundef.m_id.m_sid;
             TID tid = TID.createUserFun(name);
             m_scope.addValue(name, tid);
 		}
 		
-		for (FunDef fundef: node.m_funLst) {
+		for (DecFunDef fundef: node.m_funLst) {
 			fundef.accept(this);
 		}
         
@@ -180,14 +180,14 @@ public class NamingVisitor implements TreeVisitor {
     }
 
     @Override
-    public Object visit(VarArrayDef node) {
+    public Object visit(DecVarArrayDef node) {
         node.m_id.updateForGlobalVar(m_scope, new PATTypeArray(node.m_size));
         
         return null;
     }
 
     @Override
-    public Object visit(ValBind node) {
+    public Object visit(DecValBind node) {
         node.m_id.updateForLocalDef(m_scope);
         node.m_exp.accept(this);
         return null;

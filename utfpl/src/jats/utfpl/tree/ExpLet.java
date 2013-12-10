@@ -2,11 +2,11 @@ package jats.utfpl.tree;
 
 import java.util.List;
 
-public class LetExp implements Exp {
-    public List<Dec> m_decs;
-    public Exp m_exp;
+public class ExpLet implements IExp {
+    public List<IDec> m_decs;
+    public IExp m_exp;
     
-    public LetExp(List<Dec> decs, Exp exp) {
+    public ExpLet(List<IDec> decs, IExp exp) {
         m_decs = decs;
         m_exp = exp;
     }

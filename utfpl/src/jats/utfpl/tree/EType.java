@@ -1,5 +1,5 @@
 package jats.utfpl.tree;
 
-public enum Type {
+public enum EType {
     eInteger, eValue
 }
