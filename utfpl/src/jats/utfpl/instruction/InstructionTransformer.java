@@ -40,11 +40,11 @@ import jats.utfpl.tree.DecVarDef;
  */
 
 public class InstructionTransformer implements TreeVisitor {
-    public static final String cSetArray = "set_array";
-    public static final String cGetArray = "get_array";
-    public static final String cSetAddr = "set_addr";
+    public static final String cSetArray = "sys_set_array";
+    public static final String cGetArray = "sys_get_array";
+    public static final String cSetAddr = "sys_set_addr";
     
-    public static final String cAllocMutex = "mutex_allocate";
+    public static final String cAllocMutex = "sys_allocate_mutex";
     
     private List<UtfplInstruction> m_inslst;
     private TID m_tidIn;  // holder designated by caller

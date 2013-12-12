@@ -1,7 +1,7 @@
 group patcsps;
 
 pmodel_st(scheduler_body, gvar_lst, proc_lst, thread_lst, main_proc_body) ::= <<
-
+<!
 #import "PStack";
 
 #import "MyLib";
@@ -74,11 +74,12 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
                 ;
 
 // =====================
-
+!>
 <gvar_lst; separator="\n">
 
 <proc_lst; separator="\n\n">
 
+<!
 <thread_lst; separator="\n">
 
 main_s(tid) = 
@@ -93,6 +94,7 @@ main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
 #define Prop1 (gn_22 \< 2);
 
 #assert main |= G Prop1;
+!>
 
 >>
 

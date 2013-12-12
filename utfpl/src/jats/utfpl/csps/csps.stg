@@ -19,7 +19,7 @@ ifa (<cond>) {
 >>
 
 process_call_block_st(lab, args, holder) ::= <<
-<holder>\<process> = <lab>(<if(args)>tid, <args; separator=", "><else>tid<endif>)
+<holder>\<process> = <lab>(<args; separator=", ">)
 >>
 
 // =====================================
@@ -74,8 +74,8 @@ global_id_st(id) ::= <<
 <id>
 >>
 
-para_def_st(v) ::= <<
-<v>
+para_def_st(v, escape) ::= <<
+<v><if(escape)>\<escaped><endif>
 >>
 
 val_def_st(v) ::= <<
@@ -132,19 +132,15 @@ proc_lst_st(proclst) ::= <<
 >>
 
 main_proc_st(mainlab, body) ::= <<
-<mainlab>(tid) = 
+<mainlab>() = 
 <body>;
 
 >>
 
 
 proc_def_st(lab, paras, body) ::= <<
-<lab>(<if(paras)>tid, <paras; separator=", "><else>tid<endif>) =
+<lab>(<paras; separator=", ">) =
 <body>;
->>
-
-proc_preloge_st(paras) ::= <<
-<paras:{x| spush(tid, <x>)}; separator=";">
 >>
 
 

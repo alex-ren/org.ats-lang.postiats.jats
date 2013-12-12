@@ -2,6 +2,7 @@ package jats.utfpl.csps;
 
 /*
  * The existence of "CICond" cause the usage of this class.
+ * This instruction only appears inside a CBEvent.
  */
 public class CIVarDef extends CInstruction {
     public CTempID m_id;

@@ -24,6 +24,29 @@ public class PATCSPSPrinter implements PNodeVisitor {
         return st.render(80);
     }
 
+    @Override
+    public Object visit(PModel node) {
+        // pmodel_st(scheduler_body, gvar_lst, proc_lst, thread_lst, main_proc_body) ::= <<
+        ST st = m_stg.getInstanceOf("pmodel_st");
+
+        for (PGDec gv: node.m_gvLst) {
+            st.add("gvar_lst", gv.accept(this));
+        }
+
+        st.add("main_proc_body", node.m_mainProcBody.accept(this));
+        
+        for (PGDecProc proc: node.m_procLst) {
+            st.add("proc_lst", proc.accept(this));
+        }
+//        
+//        st.add("scheduler_body", node.m_SchedulerBody.accept(this));
+//        
+//        for (PGDecProc thread: node.m_threadLst) {
+//            st.add("thread_lst", thread.accept(this));
+//        }
+//        
+        return st;
+    }
 
     @Override
     public Object visit(PGDecVar node) {
@@ -128,30 +151,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
             return node.m_tid.toString();
         }
         
-    }
-
-    @Override
-    public Object visit(PModel node) {
-        // pmodel_st(scheduler_body, gvar_lst, proc_lst, thread_lst, main_proc_body) ::= <<
-        ST st = m_stg.getInstanceOf("pmodel_st");
-
-        for (PGDec gv: node.m_gvLst) {
-            st.add("gvar_lst", gv.accept(this));
-        }
-
-        st.add("main_proc_body", node.m_mainProcBody.accept(this));
-        
-        for (PGDecProc proc: node.m_procLst) {
-            st.add("proc_lst", proc.accept(this));
-        }
-//        
-//        st.add("scheduler_body", node.m_SchedulerBody.accept(this));
-//        
-//        for (PGDecProc thread: node.m_threadLst) {
-//            st.add("thread_lst", thread.accept(this));
-//        }
-//        
-        return st;
     }
 
     @Override

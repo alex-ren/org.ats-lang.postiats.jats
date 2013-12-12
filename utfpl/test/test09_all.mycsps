@@ -2,7 +2,7 @@ var gv1_32;
 var gv2_33;
 var gv_35[3];
 
-foo1_36(tid, x_37) =
+foo1_36(x_37) =
 step {
   gv1_32 = 2;
 } -> Skip;
@@ -10,13 +10,13 @@ step {
   return ();
 } -> Skip;
 
-foo2_38(tid) =
+foo2_38() =
 step {
   var x_39 = 4;
   return 3;
 } -> Skip;
 
-foo3_40(tid) =
+foo3_40() =
 step {
   gv_35[2] = 3;
 } -> Skip;
@@ -24,15 +24,15 @@ step {
   var x_41 = gv_35[1];
 } -> Skip;
 step {
-  var temp_66<escaped> = gv_35[1];
+  var temp_69<escaped> = gv_35[1];
 } -> Skip;
-var __1<process> = foo1_36(tid, temp_66 from <GStack(0)>);
+var __1<process> = foo1_36(temp_69 from <GStack(0)>);
 step {
-  var ret_65 = gv_35[2];
-  return ret_65;
+  var ret_68 = gv_35[2];
+  return ret_68;
 } -> Skip;
 
-foo4_42(tid) =
+foo4_42() =
 ifa (3) {
   step {
     var x_43<escaped> = 2;
@@ -45,8 +45,8 @@ ifa (3) {
       } -> Skip 
     } else { 
       step {
-        var ret_77 = gv_35[x_43 from <GStack(0)>];
-        return ret_77;
+        var ret_81 = gv_35[x_43 from <GStack(0)>];
+        return ret_81;
       } -> Skip 
     } 
   } else { 
@@ -56,10 +56,10 @@ ifa (3) {
   } 
 } else { 
   step {
-    var x_78<escaped> = gv_35[2];
+    var x_82<escaped> = gv_35[2];
   } -> Skip;
   step {
-    var y_79 = mutex_alloc();
+    var y_83 = mutex_alloc();
   } -> Skip;
   ifa (4) {
     ifa (3) {
@@ -68,8 +68,8 @@ ifa (3) {
       } -> Skip 
     } else { 
       step {
-        var ret_80 = gv_35[x_78 from <GStack(0)>];
-        return ret_80;
+        var ret_84 = gv_35[x_82 from <GStack(0)>];
+        return ret_84;
       } -> Skip 
     } 
   } else { 
@@ -79,11 +79,11 @@ ifa (3) {
   } 
 };
 
-foo5_45(tid) =
+foo5_45() =
 step {
-  var temp_69<escaped> = gv1_32;
+  var temp_72<escaped> = gv1_32;
 } -> Skip;
-ifa (temp_69 from <GStack(, 0)>) {
+ifa (temp_72 from <GStack(, 0)>) {
   step {
     gv1_32 = 1;
   } -> Skip;
@@ -99,19 +99,19 @@ ifa (temp_69 from <GStack(, 0)>) {
   } -> Skip 
 };
 
-foo6_46(tid) =
+foo6_46() =
 step {
   var x_47<escaped> = 3;
 } -> Skip;
-var ret_70<process> = foo61_48(tid, 3, x_47 from <GStack(0)>);
+var ret_73<process> = foo61_48(3, x_47 from <GStack(0)>);
 
-foo61_48(tid, y_49, x_esc_76) =
+foo61_48(y_49<escaped>, x_esc_80<escaped>) =
 step {
-  var z_50 = call(add, x_esc_76, y_49);
+  var z_50 = call(add, x_esc_80 from <GStack(1)>, y_49 from <GStack(0)>);
   return z_50;
 } -> Skip;
 
-foo7_51(tid) =
+foo7_51() =
 step {
   var x_52 = 1;
   var y_53
@@ -130,7 +130,7 @@ step {
   return q2_56;
 } -> Skip;
 
-foo8_57(tid) =
+foo8_57() =
 step {
   gv_35[2] = 3;
 } -> Skip;
@@ -138,7 +138,7 @@ step {
   return ();
 } -> Skip;
 
-foo9_58(tid) =
+foo9_58() =
 step {
   if (1) {
     var x_59 = 1;
@@ -148,18 +148,23 @@ step {
   }
 } -> Skip;
 
-foo10_60(tid) =
+foo10_60(z_61) =
 step {
-  var x_61<escaped> = 1;
+  var x_62<escaped> = 1;
   gv2_33 = 3;
 } -> Skip;
 step {
-  var y_62 = 2;
-  gv2_33 = x_61 from <GStack(0)>;
+  var y_63 = 2;
+  gv2_33 = x_62 from <GStack(0)>;
 } -> Skip;
-var ret_75<process> = foo5_45(tid);
+var ret_78<process> = foo5_45();
 
-main(tid) = 
+foo11_64(x_65<escaped>) =
+step {
+  return x_65 from <GStack(0)>;
+} -> Skip;
+
+main() = 
 step {
   gv1_32 = 1;
 } -> Skip;

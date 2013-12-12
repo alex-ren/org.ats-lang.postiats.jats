@@ -57,15 +57,12 @@ public class VariableInfo {
     }
 
     public void updateEscaped() {
-        if (m_tid.isPara()) {
+        if (m_tid.isGlobal()) {
             m_isEscaped = false;
             return;
-        } else if (m_tid.isGlobal()) {
-            m_isEscaped = false;
-            return;
-        } else if (m_tid.isLocal() || m_tid.isRet()) {
+        } else if (m_tid.isPara() || m_tid.isLocal() || m_tid.isRet()) {
             for (EntityLocation loc: m_usageLst) {
-                if (loc.getBlock() != m_defLoc.getBlock()) {
+                if (!loc.equals(m_defLoc)) {
                     m_isEscaped = true;
                     return;
                 }
@@ -76,8 +73,8 @@ public class VariableInfo {
             m_isEscaped = false;
             return;
         } else if (m_tid.getType() == PATTypeSingleton.cVoidType) {
-            m_isEscaped = false;
-         
+//            m_isEscaped = false;
+            throw new Error("should not happen");
         } else {
         	System.out.println("============ tid is " + m_tid);
             throw new Error("check this");
@@ -87,18 +84,15 @@ public class VariableInfo {
     }
     
     public boolean isOutofScope(EntityLocation curLoc) {
-        if (m_tid.isPara()) {
+        if (m_defLoc.equals(curLoc)) {
             return false;
-        } else if (m_tid.isGlobal()) {
+        }
+        if (m_tid.isGlobal()) {
             return false;
         } else if (m_tid.isFunc()) {
             return false;
-        } else {  // local variable
-            if (curLoc.getBlock() != m_defLoc.getBlock()) {
-                return true;
-            } else {
-                return false;
-            }
+        } else { // do nothing
+            return true;
         }
     }
 }

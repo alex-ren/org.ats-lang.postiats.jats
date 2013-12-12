@@ -9,5 +9,9 @@ public abstract class CBlock {
     // variable can be used out of the current scope,
     // and for supporting such scenario using stack.
     public abstract int process(int offset);
-
+    
+    @Override
+    public boolean equals(Object o) {
+        throw new Error("not supported");
+    }
 }

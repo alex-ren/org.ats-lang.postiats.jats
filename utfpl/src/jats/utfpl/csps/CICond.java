@@ -3,7 +3,8 @@ package jats.utfpl.csps;
 import java.util.List;
 
 public class CICond extends CInstruction {
-    public CTempID m_holder;
+    public CTempID m_holder;  // This can be null, which means that those two branches
+                              // are ended by some "return" instructions.
     public CTemp m_cond;
     public List<CInstruction> m_true;
     public List<CInstruction> m_false;

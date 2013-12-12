@@ -88,7 +88,7 @@ public class InstructionPrinter implements InsVisitor {
     private void setPython() {
         URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/python_code.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
-        throw new Error("todo");
+        throw new Error("not supported");
 
     }
     
@@ -101,7 +101,7 @@ public class InstructionPrinter implements InsVisitor {
     private void setJS() {
         URL fileURL = this.getClass().getResource("/jats/utfpl/instruction/js_code.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
-        throw new Error("todo");
+        throw new Error("not supported");
 
     }
     

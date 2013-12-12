@@ -1,6 +1,5 @@
 package jats.utfpl.parser;
 
-import java.util.List;
 
 import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATTypeArray;
@@ -28,10 +27,9 @@ import jats.utfpl.utils.MapScope;
 public class NamingVisitor implements TreeVisitor {
     private MapScope<TID> m_scope;
 
+    // libScope should have been populated by library functions.
     public NamingVisitor(MapScope<TID> libScope) {
         m_scope = libScope;
-        // We could populate the name of the library functions here.
-//        m_scope.addValue("mul", TID.createUnique("mul"));
     }
 
     @Override

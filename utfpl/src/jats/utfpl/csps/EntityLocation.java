@@ -15,9 +15,7 @@ public class EntityLocation {
         return new EntityLocation(funLab, grp);
     }
     
-    // Though, CBlock contains the information of level,
-    // for parameter and global value, the grp is actually null.
-    // Therefore, we need the information of level.
+    // For parameter and global value, the grp is actually null.
     private EntityLocation(TID funLab, CBlock grp) {
         m_funLab = funLab;
         m_grp = grp;
@@ -33,6 +31,17 @@ public class EntityLocation {
     
     @Override
     public boolean equals(Object o) {
-        throw new Error("not supported");
+        if (this == o) {
+            return true;
+        } else if (!(o instanceof EntityLocation)) {
+            return false;
+        } else {
+            EntityLocation obj = (EntityLocation)o;
+            if (m_funLab == obj.m_funLab && m_grp == obj.m_grp) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

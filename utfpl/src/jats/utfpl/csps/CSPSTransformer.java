@@ -50,11 +50,12 @@ public class CSPSTransformer {
         TID mainLab = TID.createUserFun("main");
         List<CBlock> body = InsLst2CBlockLst2(inputProg.getInsLst(), subMap, mainLab);
         // add the concept of stack
-        processBlockLstForStack(body);
+        processBlockLstForStack(0, body);
 
         // == handle other functions
         List<FunctionCSPS> procLst = new ArrayList<FunctionCSPS>();
         for (FunctionInstruction func : inputProg.getFuncLst()) {
+            int pos = 0;
             FunctionCSPS funcCSP = FunDef2CProcess(func, subMap);
             for (CTempID para: funcCSP.m_paras) {
                 
@@ -62,11 +63,11 @@ public class CSPSTransformer {
 //                if (para.getTID().toString().equals("x_esc_69")) {
 //                    throw new Error("eeeeeeeeeeeeeeeeeeeeeeeeeeee");
 //                }
-                para.processStack(0);
+                pos = para.processStack(pos);
             }
             
             // add the concept of stack
-            processBlockLstForStack(funcCSP.m_body);
+            processBlockLstForStack(pos, funcCSP.m_body);
             procLst.add(funcCSP);
         }
 
@@ -127,7 +128,8 @@ public class CSPSTransformer {
                 Map<TID, VariableInfo> subMap2 = 
                         new HashMap<TID, VariableInfo>(m_subMap);
                 
-                // This is a hack.
+                // This is a hack. Though the InsCond would be turned into a CICond,
+                // we need to update its content (TID -> CTempID).
                 // save the environment
                 Map<TID, VariableInfo> subMapBackup = m_subMap;
                 m_subMap = subMap2;
@@ -157,7 +159,7 @@ public class CSPSTransformer {
                 if (!ins.m_holder.isRet() && ctHolder.isDefinition()) {
 //                    System.out.println("dddddddddddddddddd holder is " + ins.m_holder + "in " + m_funLab);
                     CIVarDef defIns = new CIVarDef(ctHolder, m_cbEvt);
-                    m_cbEvt.add(defIns);
+                    m_cbEvt.add(defIns);  // add an extra instruction to hold the value caused by the "if"
                 }
                 
                 m_cbEvt.add(nIns);
@@ -349,8 +351,7 @@ public class CSPSTransformer {
      * 2. Add the concept of stack location according to the analysis result of 1.
      *    After this, there would be no identical CTempID at all.
      */
-    static private void processBlockLstForStack(List<CBlock> blkLst) {
-        int offset = 0;
+    static private void processBlockLstForStack(int offset, List<CBlock> blkLst) {
         for (CBlock blk: blkLst) {
             offset = blk.process(offset);            
         }

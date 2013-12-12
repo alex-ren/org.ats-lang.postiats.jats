@@ -163,8 +163,10 @@ public class CSPSPrinter implements CSPSVisitor {
         } else {  // not global variable
             if (v.isDefinition()) {
                 if (v.isPara()) {
+                    // para_def_st(v, escape) ::= <<
                     st = m_stg.getInstanceOf("para_def_st");
                     st.add("v", v);
+                    st.add("escape", v.isEscaped());
                 } else {
                     st = m_stg.getInstanceOf("val_def_st");
                     st.add("v", v);

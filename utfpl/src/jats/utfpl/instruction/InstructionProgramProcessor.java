@@ -109,6 +109,8 @@ public class InstructionProgramProcessor {
         return newVpLst;
     }
     
+    // This visitor is for changing the TID. It is used to support
+    // the conversion of "if".
     static class InstructionProcessor implements InsVisitor {
         private Map<TID, TID> m_subMap;
         

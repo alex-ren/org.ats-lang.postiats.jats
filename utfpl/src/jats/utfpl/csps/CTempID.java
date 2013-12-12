@@ -14,6 +14,8 @@ public class CTempID implements CTemp {
     // If m_stackPos == null, then we don't need to get this CTempID via stack.
     
     private Boolean m_isDef;  // indicating whether this CTempID is definition or usage.
+    // parameter is also a definition.
+    
     private VariableInfo m_vi;
     private EntityLocation m_curLoc;  // The position of the current location of this entity of TID.
     
@@ -44,14 +46,11 @@ public class CTempID implements CTemp {
     
     // update the CTempID indicating the usage of a value.
     public void updateForUsage() {
-        if (isEscaped()) {  // This CTempID cannot be a parameter since it is escaped.
-            if (m_curLoc != m_vi.getDefLoc()) {
+        if (isEscaped()) {  // This CTempID can be a parameter.
+            if (isOutofScope()) {
                 m_stackPos = m_vi.getStackPos();
-                if (isOutofScope()) {
-                    
-                } else {
-                	m_stackPos = null;  // still in the valid scope
-                }
+            } else {
+                m_stackPos = null; // still in the valid scope
             }
         } else {
             // nothing
@@ -85,7 +84,7 @@ public class CTempID implements CTemp {
     }
     
     /*
-     * This function is called when an object of CTempID allocatd at first time.
+     * This function is called when an object of CTempID allocated at first time.
      */
     public int processStack(int offset) {
     	if (m_isDef) {

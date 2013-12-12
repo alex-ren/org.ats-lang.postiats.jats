@@ -8,7 +8,7 @@ public class CIFunCall extends CInstruction {
     public TID m_funlab;  // Don't support function pointer.
     public List<CTemp> m_args;
     public CTempID m_ret;
-    public boolean m_isTail;
+    public boolean m_isTail;  // useless currently
 
     
     public CIFunCall(TID funlab, List<CTemp> args, CTempID ret, boolean isTail, CBlock blk) {

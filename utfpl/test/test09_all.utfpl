@@ -19,18 +19,18 @@ in
 end
 
 fun foo3() = let
-  val () = set_array(3, gv, 2)
-  val x = get_array(gv, 1)
-  val () = foo1(get_array(gv, 1))
+  val () = sys_set_array(3, gv, 2)
+  val x = sys_get_array(gv, 1)
+  val () = foo1(sys_get_array(gv, 1))
 in
-  get_array(gv, 2)
+  sys_get_array(gv, 2)
 end
 
 fun foo4() = let
-  val x = if 3 then 2 else get_array(gv, 2)
-  val y = mutex_allocate()
+  val x = if 3 then 2 else sys_get_array(gv, 2)
+  val y = sys_allocate_mutex()
 in
-  if 4 then if 3 then 2 else get_array(gv, x) else 1
+  if 4 then if 3 then 2 else sys_get_array(gv, x) else 1
 end
 
 
@@ -63,7 +63,7 @@ end
 
 fun foo8() = let
 in
-  set_array(3, gv, 2)
+  sys_set_array(3, gv, 2)
 end
 
 fun foo9() =
@@ -73,7 +73,7 @@ in x end
 else 2
 
 
-fun foo10() = let
+fun foo10(z) = let
   val x = 1
   gv2 := 3
   val y = 2
@@ -81,7 +81,9 @@ fun foo10() = let
 in
   foo5()
 end
-     
+
+fun foo11 (x) = x
+
                
                
                
