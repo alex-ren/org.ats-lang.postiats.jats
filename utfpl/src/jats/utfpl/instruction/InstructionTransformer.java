@@ -424,7 +424,7 @@ public class InstructionTransformer implements TreeVisitor {
 
     @Override
     public Object visit(ExpTuple node) {
-        if (node != ExpTuple.Void) {
+        if (!node.isVoid()) {
             throw new Error("Only support empty tuple currently.");
         }
         

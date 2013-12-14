@@ -133,7 +133,7 @@ public class TreePrinter implements TreeVisitor {
             st.add("exp", node.m_components.get(0).accept(this));
         } else {
             st = m_stg.getInstanceOf("tuple_exp_st");
-            if (node != ExpTuple.Void) {
+            if (!node.isVoid()) {
                 List<Object> explst = new ArrayList<Object>();
                 for (IExp exp : node.m_components) {
                     explst.add(exp.accept(this));

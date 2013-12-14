@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.utfpl.Cd2ecl;
+import jats.utfpl.utfpl.Cd2exp;
 import jats.utfpl.utfpl.Cd2var;
 import jats.utfpl.utfpl.Cp2at;
 import jats.utfpl.utfpl.Csymbol;
@@ -63,7 +64,12 @@ public class TreeFromUtfpl {
 		return new DecValDef(id, def);
     }
 
-	private ExpId transCp2at(Cp2at uNode) {
+	private IExp transCd2exp(Cd2exp uNode) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private ExpId transCp2at(Cp2at uNode) {
 		Ip2at_node uPat = uNode.p2at_node;
 		if (uPat instanceof P2Tany) {
 			return transP2Tany((P2Tany)uPat);

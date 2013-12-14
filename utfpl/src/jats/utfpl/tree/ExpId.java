@@ -5,12 +5,13 @@ import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
-public class ExpId implements IExp {
+public class ExpId extends IExp {
     public String m_sid;
     public TID m_tid;
 
     // id can be null.
-    public ExpId(String id) {
+    public ExpId(Location loc, String id) {
+        super(loc);
         m_sid = id;
         m_tid = null;
     }

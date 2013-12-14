@@ -29,6 +29,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Ei0nt.class, new D2Ei0ntDeserializer());
         gsonBuilder.registerTypeAdapter(D2Eifopt.class, new D2EifoptDeserializer());
         gsonBuilder.registerTypeAdapter(D2Elam.class, new D2ElamDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Elet.class, new D2EletDeserializer());
         gsonBuilder.registerTypeAdapter(D2Es0tring.class, new D2Es0tringDeserializer());
         gsonBuilder.registerTypeAdapter(D2Esym.class, new D2EsymDeserializer());
         gsonBuilder.registerTypeAdapter(D2Evar.class, new D2EvarDeserializer());

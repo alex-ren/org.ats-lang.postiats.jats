@@ -147,6 +147,8 @@ public class UtfplPrinter {
             return null;
         } else if (node instanceof D2Elam) {
             return printD2Elam((D2Elam)node);
+        } else if (node instanceof D2Elet) {
+            return printD2Elet((D2Elet)node);
         } else if (node instanceof D2Es0tring) {
             return printD2Es0tring((D2Es0tring)node);
         } else if (node instanceof D2Esym) {
@@ -156,6 +158,17 @@ public class UtfplPrinter {
         } else {
             throw new Error("not supported");
         }
+    }
+
+    private ST printD2Elet(D2Elet node) {
+        // D2Elet_st(d2cs, d2e_body) ::= <<
+        ST st = m_stg.getInstanceOf("D2Elet_st");
+        for (Cd2ecl d2ecl: node.m_d2cs) {
+            st.add("d2cs", printCd2ecl(d2ecl));
+        }
+        st.add("d2e_body", printCd2exp(node.m_d2e_body));
+        
+        return st;
     }
 
     private ST printD2Evar(D2Evar node) {

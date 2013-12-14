@@ -1,9 +1,10 @@
 package jats.utfpl.tree;
 
-public class ExpAtom implements IExp {
+public class ExpAtom extends IExp {
     public String m_text;
     
-    public ExpAtom(String text) {
+    public ExpAtom(Location loc, String text) {
+        super(loc);
         m_text = text;
     }
     

@@ -3,13 +3,18 @@ package jats.utfpl.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpTuple implements IExp {
-    static public ExpTuple Void = new ExpTuple();  // empty tuple
+public class ExpTuple extends IExp {
+    // static public ExpTuple Void = new ExpTuple(null);  // empty tuple
     
     public List<IExp> m_components;
     
-    private ExpTuple() {
+    private ExpTuple(Location loc) {
+        super(loc);
         m_components = null;
+    }
+    
+    public boolean isVoid() {
+        return m_components == null || m_components.size() == 0;
     }
     
     public boolean isSingle() {
@@ -20,7 +25,8 @@ public class ExpTuple implements IExp {
         }
     }
     
-    public ExpTuple(IExp e, List<IExp> es) {
+    public ExpTuple(Location loc, IExp e, List<IExp> es) {
+        super(loc);
         m_components = new ArrayList<IExp>();
         m_components.add(e);
         m_components.addAll(es);

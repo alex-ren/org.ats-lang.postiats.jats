@@ -1,5 +1,9 @@
 package jats.utfpl.tree;
 
-public interface IExp extends TreeNode {
+public abstract class IExp extends TreeNode {
+
+    protected IExp(Location loc) {
+        super(loc);
+    }
 
 }

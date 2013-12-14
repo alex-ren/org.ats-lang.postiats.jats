@@ -130,6 +130,15 @@ i2mpdec_st(cst, def) ::= <<
 implement <d2cst_st(cst)> = <def>
 >>
 
+D2Elet_st(d2cs, d2e_body) ::= <<
+let
+  <d2cs; separator="\n">
+in
+  <d2e_body>
+end
+>>
+
+
 
 
 

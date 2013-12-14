@@ -127,11 +127,11 @@ public class Test_01 {
             System.out.println("==CSPS code is ==========================");
             System.out.println(outputCSPS);
 
-            FileWriter fwINS = new FileWriter("test/" + classname
+            FileWriter fwCSP = new FileWriter("test/" + classname
                     + ".mycsps");
-            BufferedWriter bwINS = new BufferedWriter(fwINS);
-            bwINS.write(outputCSPS);
-            bwINS.close();
+            BufferedWriter bwCSP = new BufferedWriter(fwCSP);
+            bwCSP.write(outputCSPS);
+            bwCSP.close();
                         
             /* ******** ******** */
 

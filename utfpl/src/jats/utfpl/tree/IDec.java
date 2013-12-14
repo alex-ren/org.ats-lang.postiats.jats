@@ -1,5 +1,9 @@
 package jats.utfpl.tree;
 
-public interface IDec extends TreeNode {
+public abstract class IDec extends TreeNode {
+
+    protected IDec(Location loc) {
+        super(loc);
+    }
 
 }

@@ -33,11 +33,19 @@ tokens {
 }
 
 @lexer::members {
-String m_str;
-
-public String getEscaped() {
-    return m_str;
+	String m_str;
+	
+	public String getEscaped() {
+	    return m_str;
+	}
 }
+
+@parser::members {
+  private CommonToken token(String text, int type, int line) {
+    CommonToken t = new CommonToken(type, text);
+    t.setLine(line);
+    return t;
+  }
 }
 
 rule: program EOF

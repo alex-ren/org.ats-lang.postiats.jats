@@ -2,10 +2,11 @@ package jats.utfpl.tree;
 
 import java.util.List;
 
-public class ProgramTree implements TreeNode {
+public class ProgramTree extends TreeNode {
     public List<IDec> m_decs;
     
-    public ProgramTree(List<IDec> decs) {
+    public ProgramTree(Location loc, List<IDec> decs) {
+        super(loc);
         m_decs = decs;
     }
 

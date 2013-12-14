@@ -1,16 +1,16 @@
 package jats.utfpl.tree;
 
-public class DecValBind implements IDec {
+public class DecValBind extends IDec {
     
     public ExpId m_id;
     public IExp m_exp;
 
-    public DecValBind(IExp id, IExp exp) {
+    public DecValBind(Location loc, IExp id, IExp exp) {
+        super(loc);
         if (id instanceof ExpId) {
             m_id = (ExpId) id;
-            
-        } else if (id == ExpTuple.Void) { // val () = xxx
-            m_id = new ExpId(null);
+        } else if (id instanceof ExpTuple && ((ExpTuple)id).isVoid()) { // val () = xxx
+            m_id = new ExpId(id.getLoc(), null);
         } else {
             throw new Error("not supported");
         }

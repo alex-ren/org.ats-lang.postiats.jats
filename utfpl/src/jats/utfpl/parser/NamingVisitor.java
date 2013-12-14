@@ -133,7 +133,7 @@ public class NamingVisitor implements TreeVisitor {
 
     @Override
     public Object visit(ExpTuple node) {
-        if (node != ExpTuple.Void) {
+        if (!node.isVoid()) {
             for (IExp exp : node.m_components) {
                 exp.accept(this);
             }

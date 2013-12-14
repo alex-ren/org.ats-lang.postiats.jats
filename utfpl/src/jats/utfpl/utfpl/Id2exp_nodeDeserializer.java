@@ -31,7 +31,9 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
             return context.deserialize(je2, D2Es0tring.class);
         } else if (name.equals("D2Esym")) {
             return context.deserialize(je2, D2Esym.class);
-        } else if (name.equals("D2Eapplst")) {
+        } else if (name.equals("D2Elet")) {
+            return context.deserialize(je2, D2Elet.class);
+        }else if (name.equals("D2Eapplst")) {
             return context.deserialize(je2, D2Eapplst.class);
         } else if (name.equals("D2Eifhead")) {
             return context.deserialize(je2, D2Eifopt.class);
