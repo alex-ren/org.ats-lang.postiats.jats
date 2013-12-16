@@ -7,7 +7,7 @@ public class InsCond implements UtfplInstruction {
     public TID m_holder;
     public ValPrim m_cond;
     public List<UtfplInstruction> m_btrue;
-    public List<UtfplInstruction> m_bfalse;
+    public List<UtfplInstruction> m_bfalse;  // cannot be null, but can be empty list
     private Boolean m_hasEffect;
     
     public InsCond(TID holder, ValPrim cond, 

@@ -1,12 +1,8 @@
 package jats.utfpl.tree;
 
-import jats.utfpl.ccomp.CCompUtils;
-import jats.utfpl.instruction.TID;
-import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.utils.MapScope;
 
 import java.io.IOException;
 
@@ -18,7 +14,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 
-public class Test_02_naming {
+public class Test_01_print_tree_MUTFPL {
 
     /**
      * @param args
@@ -27,9 +23,9 @@ public class Test_02_naming {
      */
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-                "test/test01_tuple.utfpl"
-                ,"test/test02_fact.utfpl"
-                , "test/test35_mutual_closure.utfpl"
+//                "test/test01_tuple.utfpl"
+//                ,"test/test02_fact.utfpl"
+                "test/test09_all.utfpl"
         
         };
 
@@ -71,12 +67,7 @@ public class Test_02_naming {
             
             // collect the definition of all the functions
             ProgramTree prog = walker.rule();
-            
-            MapScope<TID> libScope = new MapScope<TID>();
-            CCompUtils.populateAllFunctions(libScope);
-            NamingVisitor nameV = new NamingVisitor(libScope);
-            prog.accept(nameV);
-            
+
             TreePrinter tp = new TreePrinter();
             String output = tp.print(prog);
             

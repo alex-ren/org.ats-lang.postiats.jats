@@ -3,7 +3,7 @@ package jats.utfpl.tree;
 public class ExpIf extends IExp {
     public IExp m_cond;
     public IExp m_btrue;
-    public IExp m_bfalse;
+    public IExp m_bfalse;  // maybe null
     
     public ExpIf(Location loc, IExp cond, IExp btrue, IExp bfalse) {
         super(loc);

@@ -79,7 +79,10 @@ public class TreePrinter implements TreeVisitor {
         ST st = m_stg.getInstanceOf("if_exp_st");
         st.add("cond", node.m_cond.accept(this));
         st.add("btrue", node.m_btrue.accept(this));
-        st.add("bfalse", node.m_bfalse.accept(this));
+        if (null != node.m_bfalse) {
+        	st.add("bfalse", node.m_bfalse.accept(this));
+        }
+        
         return st;
     }
 

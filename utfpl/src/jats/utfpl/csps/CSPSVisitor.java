@@ -16,6 +16,8 @@ public interface CSPSVisitor {
     public Object visit(CIStore node);
     public Object visit(CIStoreArray node);
     public Object visit(CICond node);
+    public Object visit(CIProcCallPrelogue node);
+    public Object visit(CIProcCallEpilog node);
     
     public Object visit(CTempID node);
     public Object visit(CTempVal node);

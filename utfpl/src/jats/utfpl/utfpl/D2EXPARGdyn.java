@@ -3,7 +3,7 @@ package jats.utfpl.utfpl;
 import java.util.List;
 
 public class D2EXPARGdyn implements Id2exparg {
-    public int m_i;
+    public int m_i;  // What's this?
     public Cloc_t m_loc;
     public List<Cd2exp> m_d2expLst;  // Why do we need a list here?
     

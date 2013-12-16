@@ -5,12 +5,12 @@ fun fact_47 = lam (x_48) =
     1
 val fact10_49 = fact_47 (10)
 and fact12_50 = fact_47 (12)
-implement acker_2422 = lam (pat<m_51>, pat<n_52>) = 
+implement acker_2437 = lam (pat<m_51>, pat<n_52>) = 
   if (D2Esym<>> (m_51, 0)) then
     if (D2Esym<>> (n_52, 0)) then
-      D2Ecst<acker_2422> (D2Esym<-> (m_51, 1), D2Ecst<acker_2422> (m_51, D2Esym<-> (n_52, 1)))
+      D2Ecst<acker_2437> (D2Esym<-> (m_51, 1), D2Ecst<acker_2437> (m_51, D2Esym<-> (n_52, 1)))
     else
-      D2Ecst<acker_2422> (D2Esym<-> (m_51, 1), 1)
+      D2Ecst<acker_2437> (D2Esym<-> (m_51, 1), 1)
   else
     D2Esym<+> (n_52, 1)
 fun isevn_53 = lam (n_55) = 
@@ -24,3 +24,9 @@ and isodd_54 = lam (n_56) =
   else
     D2Ecst<false_bool_1>
 fun foo_57 = lam (n_58) = 
+  let
+    val x_59 = 3
+    val y_60 = D2Esym<+> (x_59, 3)
+  in
+    y_60
+  end

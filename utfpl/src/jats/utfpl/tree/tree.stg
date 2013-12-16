@@ -29,8 +29,10 @@ id_exp_st(id) ::= <<
 if_exp_st(cond, btrue, bfalse) ::= <<
 if <cond> then
   <btrue>
+<if(bfalse)>
 else
   <bfalse>
+<endif>
 >>
 
 lam_exp_st(paralst, body) ::= <<

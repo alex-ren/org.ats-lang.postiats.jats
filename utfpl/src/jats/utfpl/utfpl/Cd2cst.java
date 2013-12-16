@@ -1,6 +1,7 @@
 package jats.utfpl.utfpl;
 
 public class Cd2cst {
+	// What is constant? True, False?
     public Cstamp m_stamp;
     public Csymbol m_symbol;
     

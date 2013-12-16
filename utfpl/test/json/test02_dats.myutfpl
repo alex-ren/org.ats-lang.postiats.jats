@@ -3,4 +3,5 @@ fun foo_47 = lam () =
     val x_48 = 3
     val y_49 = D2Esym<+> (x_48, 3)
   in
+    ()
   end

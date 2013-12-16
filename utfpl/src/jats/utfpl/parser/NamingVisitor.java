@@ -77,7 +77,10 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(ExpIf node) {
         node.m_cond.accept(this);
         node.m_btrue.accept(this);
-        node.m_bfalse.accept(this);
+        if (null != node.m_bfalse) {
+        	node.m_bfalse.accept(this);
+        }
+        
         return null;
     }
 

@@ -345,6 +345,8 @@ public class InstructionTransformer implements TreeVisitor {
         return m_inslst;
     }
 
+
+    @SuppressWarnings("unchecked")
     @Override
     public Object visit(ExpIf node) {
         TID holder = getTIDIn();
@@ -361,14 +363,19 @@ public class InstructionTransformer implements TreeVisitor {
         
         InstructionTransformer tVisitor = new InstructionTransformer();
         tVisitor.setTIDIn(holder);
-        @SuppressWarnings("unchecked")
+
         List<UtfplInstruction> tInsLst = (List<UtfplInstruction>)node.m_btrue.accept(tVisitor);  //
         
         InstructionTransformer fVisitor = new InstructionTransformer();
         fVisitor.setTIDIn(holder);
-        @SuppressWarnings("unchecked")
-        List<UtfplInstruction> fInsLst = (List<UtfplInstruction>)node.m_bfalse.accept(fVisitor);  //
-        
+
+        List<UtfplInstruction> fInsLst = null;
+        if (null != node.m_bfalse) {
+        	fInsLst = (List<UtfplInstruction>)node.m_bfalse.accept(fVisitor);  //
+        } else {
+        	fInsLst = new ArrayList<UtfplInstruction>();
+        }
+
         InsCond ins = new InsCond(holder, vpCond, tInsLst, fInsLst, null);
         m_inslst.add(ins);
         m_vpOut = holder;
@@ -434,7 +441,7 @@ public class InstructionTransformer implements TreeVisitor {
             m_inslst.add(ret);
             m_vpOut = holder;
         } else {
-            throw new Error("not supported");
+            throw new Error("empty tuple as right value is not supported");
         }
         
         return m_inslst;

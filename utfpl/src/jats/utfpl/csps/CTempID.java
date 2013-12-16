@@ -97,19 +97,22 @@ public class CTempID implements CTemp {
         return offset;
     }
     
-    /*
-     * m_tid won't be global, which is guaranteed by InstructionProcessor.GlobalVarInsProcessor.addInsForGlobalVar
-     * This function is called when an object of CTempID is assigned at the first time.
-     */
     public int processStackProcCall(int offset, boolean isVoid) {
+    	// caller will not get the return value onto its own stack.
+    	if (m_vi.getTID() == TID.ANONY) {
+    		updateEscaped();
+    		return offset;
+    	}
+    	
         if (isVoid) {
             m_vi.getTID().updateType(PATTypeSingleton.cVoidType);  // The order of these two lines cannot be reversed.
-            updateEscaped();
-        } else {
-            updateEscaped();
-            offset = updateForDef(offset);  // no matter what, we increase 
-                               // the offset because proc would put the return value on the stack. 
         }
+        
+		updateEscaped();
+        if (isEscaped()) {
+            offset =  updateForDef(offset);
+        }
+
         return offset;
     }
     

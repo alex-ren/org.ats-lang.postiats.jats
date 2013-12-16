@@ -394,6 +394,12 @@ public class CSPSTransformer {
     static private CTempID TID2CTempID(TID tid, Map<TID, VariableInfo> map, TID funLab, CBlock grp) {
         EntityLocation loc = EntityLocation.create(funLab, grp);
         CTempID ret = null;
+        if (tid == TID.ANONY) {
+        	VariableInfo vi = VariableInfo.create(tid, loc);
+        	// Do not put into map.
+            ret = CTempID.createAsDef(vi, loc);
+            return ret;
+        }
         
         VariableInfo vi = map.get(tid);
         if (null == vi) {

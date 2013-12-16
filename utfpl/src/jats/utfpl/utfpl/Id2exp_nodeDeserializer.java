@@ -69,7 +69,10 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
             
             D2Eexp ret = new D2Eexp(d2e);
             return ret;
+        } else if (name.equals("D2Eempty")) {
+        	return D2Eempty.cInstance;
         } else {
+        	System.err.println(name + " is translated into D2Eignored.");
             return D2Eignored.cInstance;
         }
         

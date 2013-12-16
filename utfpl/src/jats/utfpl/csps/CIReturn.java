@@ -19,7 +19,9 @@ public class CIReturn extends CInstruction {
         if (m_v instanceof CTempID) {
             ((CTempID)m_v).updateForUsage();
         }
-        return offset;
+
+        // The return value would be put onto the stack.
+        return offset + 1;
         
     }
 

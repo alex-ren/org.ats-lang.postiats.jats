@@ -135,6 +135,8 @@ public class UtfplPrinter {
             return printD2Eapplst((D2Eapplst)node);
         } else if (node instanceof D2Ecst) {
             return printD2Ecst((D2Ecst)node);
+        } else if (node instanceof D2Eempty) {
+        	return printD2Eempty();
         } else if (node instanceof D2Eexp) {
             return printD2Eexp((D2Eexp)node);
         } else if (node instanceof D2Ef0loat) {
@@ -160,7 +162,13 @@ public class UtfplPrinter {
         }
     }
 
-    private ST printD2Elet(D2Elet node) {
+    private ST printD2Eempty() {
+    	// D2Eempty_st() ::= <<
+	    ST st = m_stg.getInstanceOf("D2Eempty_st");
+	    return st;
+    }
+
+	private ST printD2Elet(D2Elet node) {
         // D2Elet_st(d2cs, d2e_body) ::= <<
         ST st = m_stg.getInstanceOf("D2Elet_st");
         for (Cd2ecl d2ecl: node.m_d2cs) {
@@ -289,7 +297,7 @@ public class UtfplPrinter {
         ST st = m_stg.getInstanceOf("D2Eapplst_st");
         st.add("fun", printCd2exp(node.m_d2e_fun));
         if (node.m_d2as_arg.size() > 1) {
-            System.err.println("D2Eapplst has list of arguments");
+            System.err.println("D2Eapplst has more than one list of arguments");
         }
         for (Id2exparg arg: node.m_d2as_arg) {
             st.add("args", printId2exparg(arg));

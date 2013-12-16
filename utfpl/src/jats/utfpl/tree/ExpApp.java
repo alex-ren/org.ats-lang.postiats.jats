@@ -8,6 +8,9 @@ public class ExpApp extends IExp {
     
     public ExpApp(Location loc, IExp fun, List<IExp> explst) {
         super(loc);
+        if (!(fun instanceof ExpId)) {
+        	throw new Error("Function has to be a name.");
+        }
         m_fun = fun;
         m_explst = explst;
     }

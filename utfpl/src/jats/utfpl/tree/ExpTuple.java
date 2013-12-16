@@ -8,6 +8,10 @@ public class ExpTuple extends IExp {
     
     public List<IExp> m_components;
     
+    static public ExpTuple makeVoid(Location loc) {
+    	return new ExpTuple(loc);
+    }
+    
     private ExpTuple(Location loc) {
         super(loc);
         m_components = null;
