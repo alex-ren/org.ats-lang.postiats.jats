@@ -18,8 +18,16 @@ ifa (<cond>) {
 }
 >>
 
-process_call_block_st(lab, args, holder) ::= <<
-<holder>\<process> = <lab>(<args; separator=", ">)
+process_call_block_st(lab) ::= <<
+\<process call> = <lab>
+>>
+
+process_call_ins_prelogue_st(args, tail) ::= <<
+<if(tail)>tail_<else>normal_<endif>call with (<args; separator=", ">)
+>>
+
+process_call_ins_epilogue_st(lab, holder) ::= <<
+get <holder> from <lab>
 >>
 
 // =====================================

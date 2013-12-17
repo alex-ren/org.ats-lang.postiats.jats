@@ -36,7 +36,7 @@ public class CTempID implements CTemp {
     public boolean isFunc() {
         return m_vi.getTID().getType() instanceof PATTypeFunc;
     }
-
+    
     private CTempID(boolean isDef, VariableInfo vi, EntityLocation curLoc) {
         m_stackPos = null;
         m_isDef = isDef;
@@ -97,18 +97,28 @@ public class CTempID implements CTemp {
         return offset;
     }
     
+    /*
+     * If the caller specify "_" as the holder, then caller
+     * won't get the return value onto it own stack.
+     * 
+     * If this is tail call, then caller won't lay its hands on
+     * the return value at all.
+     */
     public int processStackProcCall(int offset, boolean isVoid) {
+        if (isVoid) {
+            m_vi.getTID().updateType(PATTypeSingleton.cVoidType);
+        }
+        
+        // caller doesn't care about the return value at all.
     	// caller will not get the return value onto its own stack.
     	if (m_vi.getTID() == TID.ANONY) {
-    		updateEscaped();
+    		updateEscaped();  // isEscaped would be false
     		return offset;
     	}
     	
-        if (isVoid) {
-            m_vi.getTID().updateType(PATTypeSingleton.cVoidType);  // The order of these two lines cannot be reversed.
-        }
-        
-		updateEscaped();
+    	updateEscaped();
+
+    	// If isRet() is true, then isEscaped must be false.
         if (isEscaped()) {
             offset =  updateForDef(offset);
         }

@@ -1,0 +1,98 @@
+
+fact_32(x_33<escaped>) =
+step {
+  var temp_48<escaped> = call(gt, x_33 from <GStack(0)>, 0);
+} -> Skip;
+ifa (temp_48 from <GStack(, 1)>) {
+  step {
+    var temp_49 = call(sub, x_33 from <GStack(0)>, 1);
+    normal_call with (temp_49)
+  } -> Skip;
+  <process call> = fact_32 
+} else { 
+  step {
+    return 1;
+  } -> Skip 
+};
+
+acker_36(m_37<escaped>, n_38<escaped>) =
+step {
+  var temp_52<escaped> = call(gt, m_37 from <GStack(0)>, 0);
+} -> Skip;
+ifa (temp_52 from <GStack(, 2)>) {
+  step {
+    var temp_53<escaped> = call(gt, n_38 from <GStack(1)>, 0);
+  } -> Skip;
+  ifa (temp_53 from <GStack(, 3)>) {
+    step {
+      var temp_54<escaped> = call(sub, m_37 from <GStack(0)>, 1);
+      var temp_55 = call(sub, n_38 from <GStack(1)>, 1);
+      normal_call with (m_37 from <GStack(0)>, temp_55)
+    } -> Skip;
+    <process call> = acker_36;
+    step {
+      get temp_56 from acker_36
+      tail_call with (temp_54 from <GStack(4)>, temp_56 from <GStack(5)>)
+    } -> Skip;
+    <process call> = acker_36 
+  } else { 
+    step {
+      var temp_65 = call(sub, m_37 from <GStack(0)>, 1);
+      tail_call with (temp_65, 1)
+    } -> Skip;
+    <process call> = acker_36 
+  } 
+} else { 
+  Skip 
+};
+
+isevn_39(n_41<escaped>) =
+step {
+  var temp_59<escaped> = call(gt, n_41 from <GStack(0)>, 0);
+} -> Skip;
+ifa (temp_59 from <GStack(, 1)>) {
+  step {
+    var temp_60 = call(sub, n_41 from <GStack(0)>, 1);
+    tail_call with (temp_60)
+  } -> Skip;
+  <process call> = isodd_40 
+} else { 
+  step {
+    return true;
+  } -> Skip 
+};
+
+isodd_40(n_42<escaped>) =
+step {
+  var temp_62<escaped> = call(gt, n_42 from <GStack(0)>, 0);
+} -> Skip;
+ifa (temp_62 from <GStack(, 1)>) {
+  step {
+    var temp_63 = call(sub, n_42 from <GStack(0)>, 1);
+    tail_call with (temp_63)
+  } -> Skip;
+  <process call> = isevn_39 
+} else { 
+  step {
+    return false;
+  } -> Skip 
+};
+
+foo_43(n_44) =
+step {
+  var x_45 = 3;
+  var y_46 = call(add, x_45, 3);
+  return y_46;
+} -> Skip;
+
+main() = 
+step {
+  normal_call with (10)
+} -> Skip;
+<process call> = fact_32;
+step {
+  get fact10_34 from main_68
+  normal_call with (12)
+} -> Skip;
+<process call> = fact_32;
+

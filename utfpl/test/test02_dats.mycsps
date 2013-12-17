@@ -1,0 +1,11 @@
+
+foo_99() =
+step {
+  var x_100 = 3;
+  var y_101 = call(add, x_100, 3);
+  return ();
+} -> Skip;
+
+main() = 
+Skip;
+

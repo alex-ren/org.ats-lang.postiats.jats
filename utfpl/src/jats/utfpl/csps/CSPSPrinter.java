@@ -112,15 +112,34 @@ public class CSPSPrinter implements CSPSVisitor {
 
     @Override
     public Object visit(CBProc blk) {
-        // process_call_block_st(lab, args) ::= <<
+        // process_call_block_st(lab) ::= <<
         ST st = m_stg.getInstanceOf("process_call_block_st");
-        st.add("holder", blk.m_ret.accept(this));
         st.add("lab", blk.m_funlab);
-        for (CTemp arg: blk.m_args) {
-            st.add("args", arg.accept(this));
-        }
         return st;
     }
+    
+
+    @Override
+    public Object visit(CIProcCallPrelogue node) {
+        // process_call_ins_prelogue_st(args, tail) ::= <<
+        ST st = m_stg.getInstanceOf("process_call_ins_prelogue_st");
+        for (CTemp arg: node.m_args) {
+            st.add("args", arg.accept(this));
+        }
+        st.add("tail", node.m_isTail);
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(CIProcCallEpilog node) {
+        // process_call_ins_epilogue_st(lab, holder) ::= <<
+        ST st = m_stg.getInstanceOf("process_call_ins_epilogue_st");
+        st.add("lab", node.m_funlab);
+        st.add("holder", node.m_ret);
+        return st;
+    }
+
 
     @Override
     public Object visit(CIMove ins) {

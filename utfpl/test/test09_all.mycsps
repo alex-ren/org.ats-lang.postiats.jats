@@ -26,7 +26,10 @@ step {
 step {
   var temp_69<escaped> = gv_35[1];
 } -> Skip;
-var __1<process> = foo1_36(temp_69 from <GStack(0)>);
+step {
+  normal_call with (temp_69 from <GStack(0)>)
+} -> Skip;
+<process call> = foo1_36;
 step {
   var ret_68 = gv_35[2];
   return ret_68;
@@ -101,9 +104,10 @@ ifa (temp_72 from <GStack(, 0)>) {
 
 foo6_46() =
 step {
-  var x_47<escaped> = 3;
+  var x_47 = 3;
+  tail_call with (3, x_47)
 } -> Skip;
-var ret_73<process> = foo61_48(3, x_47 from <GStack(0)>);
+<process call> = foo61_48;
 
 foo61_48(y_49<escaped>, x_esc_80<escaped>) =
 step {
@@ -157,7 +161,10 @@ step {
   var y_63 = 2;
   gv2_33 = x_62 from <GStack(0)>;
 } -> Skip;
-var ret_78<process> = foo5_45();
+step {
+  tail_call with ()
+} -> Skip;
+<process call> = foo5_45;
 
 foo11_64(x_65<escaped>) =
 step {

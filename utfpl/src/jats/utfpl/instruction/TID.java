@@ -38,6 +38,10 @@ public class TID implements ValPrim {
 
     }
     
+    public boolean isAnony() {
+        return ANONY == this;
+    }
+    
     public TID dup() {
         return new TID(m_id, m_cat, m_type, m_isSys);
     }

@@ -2,85 +2,76 @@ package jats.utfpl.csps;
 
 import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.instruction.InstructionClosureConverter;
+import jats.utfpl.instruction.InstructionPrinter;
 import jats.utfpl.instruction.InstructionProgramProcessor;
 import jats.utfpl.instruction.InstructionTransformer;
-import jats.utfpl.instruction.InstructionPrinter;
 import jats.utfpl.instruction.ProgramInstruction;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.InstructionPrinter.Type;
 import jats.utfpl.parser.NamingVisitor;
-import jats.utfpl.parser.UtfplLexer;
-import jats.utfpl.parser.UtfplParser;
-import jats.utfpl.parser.Utfpl_tree;
 import jats.utfpl.tree.ProgramTree;
+import jats.utfpl.tree.TreeFromUtfpl;
 import jats.utfpl.tree.TreePrinter;
+import jats.utfpl.utfpl.UtfplPrinter;
+import jats.utfpl.utfpl.UtfplProgram;
+import jats.utfpl.utfpl.UtfplProgramParserJson;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.antlr.runtime.ANTLRFileStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.TokenStream;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class Test_01 {
-    
+public class test02_UTFPL {
     public static void main(String[] args) throws IOException, RecognitionException {
         String [] filenames = {
-//                "test/test23_csp_trans_fact.utfpl"
-//                , "test/test24_csp_trans_tail_proc_call.utfpl"
-//                , "test/test25_csp_closure.utfpl"
-                "test/test09_all.utfpl"
-        
+                "test/json/test01_dats.json"
+                , "test/json/test02_dats.json"
+    
         };
-
+    
         for (String filename: filenames) {
             System.out.println("==Processing file " + filename + "==========");
-            System.out.println("");
-            ANTLRFileStream fileStream = new ANTLRFileStream(filename);
-            
             File file = new File(filename);
             String classname = FilenameUtils.removeExtension(file.getName());
+            FileReader fReader = new FileReader(file);
+    
+            UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
+            UtfplProgram uProg = utfplParser.trans(fReader);
             
-            /* ******** ******** */
-            // lexing
-            UtfplLexer lexer = new UtfplLexer(fileStream);
-            TokenStream tokenStream = new CommonTokenStream(lexer);
-            // System.out.println(tokenStream.toString());
+            System.out.println("======= Generating Utfpl from JSON stream is finished ========== ");
             
-            /* ******** ******** */
-            // parsing
-            UtfplParser parser = new UtfplParser(tokenStream);  // create worker
-            UtfplParser.rule_return parser_ret = parser.rule();  // worker works
-            CommonTree tree = (CommonTree)parser_ret.getTree();
-            CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+            UtfplPrinter uPrinter = new UtfplPrinter();
+            String output = uPrinter.print(uProg);
             
-            /* ******** ******** */
-            // tree parsing
-            Utfpl_tree walker = new Utfpl_tree(nodes);  // create worker
-
-            ProgramTree prog = walker.rule();  // worker works
+            System.out.println(output);
             
-            /* ***************** ****************** */
-            // naming construction
+            FileWriter fwUTFPL = new FileWriter("test/json/" + classname
+                    + ".myutfpl");
+            BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
+            bwUTFPL.write(output);
+            bwUTFPL.close();
+            
+            System.out.println("======= Printing Utfpl is finished ========== ");
+            
+            TreeFromUtfpl treeGen = new TreeFromUtfpl();
+            
+            ProgramTree prog = treeGen.trans(uProg);
+            
             MapScope<TID> libScope = new MapScope<TID>();
             CCompUtils.populateAllFunctions(libScope);
             NamingVisitor nameV = new NamingVisitor(libScope);
             prog.accept(nameV);
             
-            /* ***************** ****************** */
-            // print tree
-            TreePrinter tp = new TreePrinter();  // create worker
-            String output1 = tp.print(prog);  // worker works
+            TreePrinter tp = new TreePrinter();
+            output = tp.print(prog);
             
             System.out.println("==program is ==========================");
-            System.out.println(output1);
+            System.out.println(output);
             
             
             /* ***************** ****************** */
@@ -126,7 +117,7 @@ public class Test_01 {
             String outputCSPS = cspsPrinter.printProgram(programCSPS);
             System.out.println("==CSPS code is ==========================");
             System.out.println(outputCSPS);
-
+    
             FileWriter fwCSP = new FileWriter("test/" + classname
                     + ".mycsps");
             BufferedWriter bwCSP = new BufferedWriter(fwCSP);
@@ -134,10 +125,9 @@ public class Test_01 {
             bwCSP.close();
                         
             /* ******** ******** */
-
+    
             
             System.out.println("\n" + "==" + filename + " is O.K. " + "\n==============================================================================\n");
         }
-
     }
 }

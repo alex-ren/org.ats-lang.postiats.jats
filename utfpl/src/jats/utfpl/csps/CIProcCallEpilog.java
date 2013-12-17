@@ -7,6 +7,8 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 public class CIProcCallEpilog extends CInstruction {
 	public TID m_funlab;  // Don't support function pointer.
     public CTempID m_ret;  // The holder for the return value of the function call.
+                           // m_ret.Anony() == false or
+                           // m_ret.isRet() == false
     
     public CIProcCallEpilog(CBlock blk, TID funlab, CTempID ret) {
     	super(blk);

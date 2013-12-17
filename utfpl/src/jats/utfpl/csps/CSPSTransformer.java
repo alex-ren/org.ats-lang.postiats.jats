@@ -174,17 +174,22 @@ public class CSPSTransformer {
         @Override
         public Object visit(InsCall ins) {
             if (ins.hasSideEffect()) {
+                List<CTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
+                CIProcCallPrelogue cCallPre = new CIProcCallPrelogue(m_cbEvt, nLst, ins.m_isTailCall);
+                m_cbEvt.add(cCallPre);
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new CBEvent();
+                
                 CBProc cprocess = new CBProc(ins.m_funlab, ins.m_isTailCall);
-
-                List<CTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, cprocess);
-                CTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, cprocess);
-                cprocess.reset(nLst, ctHolder);
-
-                if (0 != m_cbEvt.size()) {
-                    m_cblkLst.add(m_cbEvt);
-                    m_cbEvt = new CBEvent();
-                }
                 m_cblkLst.add(cprocess);
+                
+                // No epilogue at all.
+                if (!(ins.m_holder.isAnony() || ins.m_holder.isRet())) {
+                    CTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, cprocess);
+                    CIProcCallEpilog cCallEpi = new CIProcCallEpilog(m_cbEvt, m_funLab, ctHolder);
+                    m_cbEvt.add(cCallEpi);
+                }
+
                 return null;
 
             } else {
