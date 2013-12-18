@@ -13,6 +13,8 @@ import jats.utfpl.csps.CILoad;
 import jats.utfpl.csps.CILoadArray;
 import jats.utfpl.csps.CIMove;
 import jats.utfpl.csps.CIMutexAlloc;
+import jats.utfpl.csps.CIProcCallEpilog;
+import jats.utfpl.csps.CIProcCallPrelogue;
 import jats.utfpl.csps.CIStore;
 import jats.utfpl.csps.CIStoreArray;
 import jats.utfpl.csps.CIVarDef;
@@ -135,13 +137,7 @@ public class PatCspsTransformer implements CSPSVisitor {
 
     @Override
     public PProcCall visit(CBProc blk) {
-        PProcCall ret = null;
-        if (blk.isTailCall()) { // tail call
-            ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args), true);
-        } else {
-            ret = new PProcCall(blk.m_funlab, CTempList2PExpList(blk.m_args), false);
-        }
-        return ret;
+        return new PProcCall(blk.m_funlab, blk.m_isTail);
     }
 
     @Override
@@ -308,6 +304,27 @@ public class PatCspsTransformer implements CSPSVisitor {
         if (null != node.m_holder && node.m_holder.isDefinition() && node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
         }
+        return ret;
+    }
+
+    @Override
+    public Object visit(CIProcCallPrelogue node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        
+        List<PExp> args = CTempList2PExpList(node.m_args);
+        ret.add(new PStatProcCallPrelogue(args, node.m_isTail));
+        
+        return ret;
+    }
+
+    @Override
+    public Object visit(CIProcCallEpilog node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        
+        TID funlab = node.m_funlab;
+        TID retHolder = node.m_ret.getTID();
+        ret.add(new PStatProcCallEpilogue(funlab, retHolder));
+        
         return ret;
     }
 }

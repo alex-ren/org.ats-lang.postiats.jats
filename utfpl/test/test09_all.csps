@@ -1,102 +1,83 @@
 var gv1_32 = 0;
 var gv2_33 = 0;
+var g1_34 = 0;
 var gv_35[3];
 
-foo1_36(x_37) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
+foo1_36() =
   {  gv1_32 = 2;
   } ->
-  {  GStack.deleteFrame(tid); GStack.push(tid, 0);
+  {  GStack.push(__sys_tid, 0);
   } ->
   Skip
   ;
 
 foo2_38() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  var x_39 = 4;
-  GStack.deleteFrame(tid); GStack.push(tid, 3);
+  GStack.push(__sys_tid, 3);
   } ->
   Skip
   ;
 
 foo3_40() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  gv_35[index] = src
   } ->
   {  x_41 = gv_35[index];
   } ->
   {  temp_69 = gv_35[index];
-  GStack.push(tid, temp_69);
+  GStack.push(__sys_tid, temp_69);
   } ->
-  foo1_36(GStack.get(tid, 0, 0));
+  {  __sys_frame = sys_stack.frame_allocate();
+  __sys_frame.push(sys_stack.get(__sys_tid, 0, 0));
+  sys_stack.addFrame(__sys_tid, __sys_frame);
+  } ->
+  foo1_36();
   {  ret_68 = gv_35[index];
-  GStack.deleteFrame(tid); GStack.push(tid, ret_68);
+  GStack.push(__sys_tid, ret_68);
   } ->
   Skip
   ;
 
 foo4_42() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   if (3) {
     {  var x_43 = 2;
-    GStack.push(tid, x_43);
+    GStack.push(__sys_tid, x_43);
     var y_44 = atspat_mutex_alloc();
     } ->
     if (4) {
       if (3) {
-        {  GStack.deleteFrame(tid); GStack.push(tid, 2);
+        {  GStack.push(__sys_tid, 2);
         } ->
         Skip
       } else {
         {  ret_81 = gv_35[index];
-        GStack.deleteFrame(tid); GStack.push(tid, ret_81);
+        GStack.push(__sys_tid, ret_81);
         } ->
         Skip
       }
     } else {
-      {  GStack.deleteFrame(tid); GStack.push(tid, 1);
+      {  GStack.push(__sys_tid, 1);
       } ->
       Skip
     }
   } else {
     {  x_82 = gv_35[index];
-    GStack.push(tid, x_82);
+    GStack.push(__sys_tid, x_82);
     } ->
     {  var y_83 = atspat_mutex_alloc();
     } ->
     if (4) {
       if (3) {
-        {  GStack.deleteFrame(tid); GStack.push(tid, 2);
+        {  GStack.push(__sys_tid, 2);
         } ->
         Skip
       } else {
         {  ret_84 = gv_35[index];
-        GStack.deleteFrame(tid); GStack.push(tid, ret_84);
+        GStack.push(__sys_tid, ret_84);
         } ->
         Skip
       }
     } else {
-      {  GStack.deleteFrame(tid); GStack.push(tid, 1);
+      {  GStack.push(__sys_tid, 1);
       } ->
       Skip
     }
@@ -104,63 +85,43 @@ foo4_42() =
   ;
 
 foo5_45() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  var temp_72 = gv1_32;
-  GStack.push(tid, temp_72);
+  GStack.push(__sys_tid, temp_72);
   } ->
-  if (GStack.getBool(tid, 0, 0)) {
+  if (sys_stack.getBool(__sys_tid, 0, 0)) {
     {  gv1_32 = 1;
     } ->
-    {  GStack.deleteFrame(tid); GStack.push(tid, 3);
+    {  GStack.push(__sys_tid, 3);
     } ->
     Skip
   } else {
     {  gv1_32 = 4;
     } ->
-    {  GStack.deleteFrame(tid); GStack.push(tid, 3);
+    {  GStack.push(__sys_tid, 3);
     } ->
     Skip
   }
   ;
 
 foo6_46() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  var x_47 = 3;
-  GStack.push(tid, x_47);
+  __sys_frame = sys_stack.frame_allocate();
+  __sys_frame.push(3);
+  __sys_frame.push(x_47);
+  sys_stack.reloadFrame(__sys_tid, __sys_frame);
+
   } ->
-  foo61_48(3, GStack.get(tid, 0, 0))
+  foo61_48()
   ;
 
-foo61_48(y_49, x_esc_80) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
-  {  var z_50 = call(add, GStack.get(tid, 0, 1), GStack.get(tid, 0, 0));
-  GStack.deleteFrame(tid); GStack.push(tid, z_50);
+foo61_48() =
+  {  var z_50 = call(add, sys_stack.get(__sys_tid, 0, 1), sys_stack.get(__sys_tid, 0, 0));
+  GStack.push(__sys_tid, z_50);
   } ->
   Skip
   ;
 
 foo7_51() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  var x_52 = 1;
   var y_53 = 0;
   if (cond) {
@@ -175,67 +136,47 @@ foo7_51() =
   }
   var q1_55 = 33;
   var q2_56 = call(add, q1_55, y_53);
-  GStack.deleteFrame(tid); GStack.push(tid, q2_56);
+  GStack.push(__sys_tid, q2_56);
   } ->
   Skip
   ;
 
 foo8_57() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  gv_35[index] = src
   } ->
-  {  GStack.deleteFrame(tid); GStack.push(tid, 0);
+  {  GStack.push(__sys_tid, 0);
   } ->
   Skip
   ;
 
 foo9_58() =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
   {  if (cond) {
       var x_59 = 1;
-      GStack.deleteFrame(tid); GStack.push(tid, x_59);
+      GStack.push(__sys_tid, x_59);
   } else {
-      GStack.deleteFrame(tid); GStack.push(tid, 2);
+      GStack.push(__sys_tid, 2);
   }
   } ->
   Skip
   ;
 
-foo10_60(z_61) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
+foo10_60() =
   {  var x_62 = 1;
-  GStack.push(tid, x_62);
+  GStack.push(__sys_tid, x_62);
   gv2_33 = 3;
   } ->
   {  var y_63 = 2;
-  gv2_33 = GStack.get(tid, 0, 0);
+  gv2_33 = sys_stack.get(__sys_tid, 0, 0);
+  } ->
+  {  __sys_frame = sys_stack.frame_allocate();
+  sys_stack.reloadFrame(__sys_tid, __sys_frame);
+
   } ->
   foo5_45()
   ;
 
-foo11_64(x_65) =
-  preloge{
-    if (isTailCall) {
-      GStack.reloadFrame(tid);
-    } else {
-      GStack.newFrame(tid);
-    } ->
-  {  GStack.deleteFrame(tid); GStack.push(tid, GStack.get(tid, 0, 0));
+foo11_64() =
+  {  GStack.push(__sys_tid, sys_stack.get(__sys_tid, 0, 0));
   } ->
   Skip
   ;

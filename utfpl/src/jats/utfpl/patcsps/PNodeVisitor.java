@@ -27,6 +27,8 @@ public interface PNodeVisitor {
     public Object visit(PStatLocalVarDec node);
     public Object visit(PStatAssignment node);
     public Object visit(PStatReturn node);
+    public Object visit(PStatProcCallPrelogue node);
+    public Object visit(PStatProcCallEpilogue node);
     
     public Object visit(PExpID node);
     public Object visit(PExpFuncCall node);

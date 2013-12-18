@@ -134,9 +134,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PProcCall node) {
         ST st = m_stg.getInstanceOf("pproccall_st");
         st.add("name", node.m_name.toString());
-        for (PExp arg: node.m_paraLst) {
-            st.add("arg_lst", arg.accept(this));
-        }
         return st;
         
     }
@@ -157,9 +154,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PGDecProc node) {
         ST st = m_stg.getInstanceOf("pgdecproc_st");
         st.add("name", node.m_name.toString());
-        for (TID para: node.m_paraLst) {
-            st.add("para_lst", para.toString());
-        }
+//        for (TID para: node.m_paraLst) {
+//            st.add("para_lst", para.toString());
+//        }
         
         st.add("body", node.m_body.accept(this));
         return st;
@@ -371,6 +368,26 @@ public class PATCSPSPrinter implements PNodeVisitor {
     	st.add("holder", node.m_holder);
     	
     	return st;
+    }
+
+
+    @Override
+    public Object visit(PStatProcCallPrelogue node) {
+        // pstatproccallprelogue_st(args, is_tail_call) ::= <<
+        ST st = m_stg.getInstanceOf("pstatproccallprelogue_st");
+        for (PExp exp: node.m_args) {
+            st.add("args", exp.accept(this));
+        }
+        st.add("is_tail_call", node.m_isTailCall);
+        
+        return st;
+    }
+
+
+    @Override
+    public Object visit(PStatProcCallEpilogue node) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

@@ -97,9 +97,8 @@ public class InstructionTransformer implements TreeVisitor {
         }
         
         if (node.hasName()) {  // named global value
-            // commented out @ 11/06/2013: no global value
-            // GlobalValue gv = new GlobalValue(node.m_id.m_tid);
-            // m_gEntitis.add(gv);
+             GlobalValue gv = new GlobalValue(node.m_id.m_tid);
+             m_gEntitis.add(gv);
             setTIDIn(node.m_id.m_tid); 
         } else {
             setTIDIn(TID.ANONY);

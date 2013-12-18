@@ -151,13 +151,13 @@ pprocatom_st() ::= <<
 Skip
 >>
 
-pproccall_st(name, arg_lst) ::= <<
-<name>(<arg_lst; separator=", ">)
+pproccall_st(name) ::= <<
+<name>()
 >>
 
 pgdecproc_st(name, para_lst, body) ::= <<
-<name>(<para_lst; separator=", ">) =
-  <proc_preloge_st()> ->
+<name>() =
+<!  <proc_preloge_st()> ->  !>
   <body>
   ;
 >>
@@ -168,11 +168,11 @@ pprocseq_st(proc_left, proc_right) ::= <<
 >>
 
 pexpstackopr_default_t(frame, pos) ::= <<
-GStack.get(tid, <frame>, <pos>)
+<sys_gstack()>.get(<sys_tid()>, <frame>, <pos>)
 >>
 
 pexpstackopr_bool_t(frame, pos) ::= <<
-GStack.getBool(tid, <frame>, <pos>)
+<sys_gstack()>.getBool(<sys_tid()>, <frame>, <pos>)
 >>
 
 pprocevent_st(evt, proc) ::= <<
@@ -206,11 +206,11 @@ pprocparallel_st(proc_lst) ::= <<
 >>
 
 pstatstackpush_st(name) ::= <<
-GStack.push(tid, <name>);
+GStack.push(<sys_tid()>, <name>);
 >>
 
 pstatreturn_st(v) ::= <<
-<delete_frame_st()>; GStack.push(tid, <v>);
+<!<delete_frame_st()>; !>GStack.push(<sys_tid()>, <v>);
 >>
 
 pnone_st() ::= <<
@@ -248,30 +248,43 @@ var <holder> = atspat_mutex_alloc();
 // ================= 
 
 new_frame_st() ::= <<
-GStack.newFrame(tid)
+GStack.newFrame(<sys_tid()>)
 >>
 
 reload_frame_st() ::= <<
-GStack.reloadFrame(tid)
+GStack.reloadFrame(<sys_tid()>)
 >>
 
 delete_frame_st() ::= <<
-GStack.deleteFrame(tid)
+GStack.deleteFrame(<sys_tid()>)
 >>
 
-proc_preloge_st() ::= <<
-preloge{
-  if (isTailCall) {
-    <reload_frame_st()>;
-  } else {
-    <new_frame_st()>;
-  }
+// proc_preloge_st() ::= <<
+// preloge{
+//   if (isTailCall) {
+//     <reload_frame_st()>;
+//   } else {
+//     <new_frame_st()>;
+//   }
+// >>
+//   <paras:{x| spush(<sys_tid()>, <x>)}; separator=";">}
+
+pstatproccallprelogue_st(args, is_tail_call) ::= <<
+<sys_frame_local()> = <sys_gstack()>.frame_allocate();
+<args:{arg|<sys_frame_local()>.push(<arg>);}; separator="\n">
+<if(is_tail_call)><sys_gstack()>.reloadFrame(<sys_tid()>, <sys_frame_local()>);
+<else><sys_gstack()>.addFrame(<sys_tid()>, <sys_frame_local()>);<endif>
 >>
-//   <paras:{x| spush(tid, <x>)}; separator=";">}
 
+pstatproccallepilogue_st(ret) ::= <<
+<ret> = <sys_gstack()>.processRet();
+>>
 
+sys_frame_local() ::= <<__sys_frame>>
 
+sys_gstack() ::= <<sys_stack>>
 
+sys_tid() ::= <<__sys_tid>>
 
 
 
