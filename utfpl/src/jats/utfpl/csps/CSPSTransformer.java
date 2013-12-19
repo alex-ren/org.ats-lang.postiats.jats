@@ -8,6 +8,8 @@ import java.util.Map;
 import jats.utfpl.instruction.AtomValue;
 import jats.utfpl.instruction.FunctionInstruction;
 import jats.utfpl.instruction.GlobalEntity;
+import jats.utfpl.instruction.GlobalValue;
+import jats.utfpl.instruction.GlobalVariable;
 import jats.utfpl.instruction.InsAllocMutex;
 import jats.utfpl.instruction.InsCall;
 import jats.utfpl.instruction.InsCond;
@@ -43,7 +45,10 @@ public class CSPSTransformer {
             TID tid = gEnt.getTID();
             VariableInfo vi = VariableInfo.createGlobalVariable(tid);
             globalVarInfo.add(vi);
-            subMap.put(tid, vi);
+            if (!(gEnt instanceof GlobalValue)) {
+                subMap.put(tid, vi);  // global value is defined when initialized.
+            }
+
         }
 
         // ==== handle main
@@ -90,6 +95,12 @@ public class CSPSTransformer {
         
         public List<CBlock> getCBlockLst() {
             return m_cblkLst;
+        }
+        
+        public void finalize() {
+            if (0 != m_cbEvt.size()) {
+                m_cblkLst.add(m_cbEvt);
+            }
         }
 
         @Override
@@ -347,6 +358,7 @@ public class CSPSTransformer {
             ins.accept(cvt);
         }
         
+        cvt.finalize();
         return cvt.getCBlockLst();
     }
     
@@ -409,7 +421,7 @@ public class CSPSTransformer {
         VariableInfo vi = map.get(tid);
         if (null == vi) {
             if (tid.isGlobal()) {
-                throw new Error("Wong usage. Only for parameter and local variable");
+                throw new Error("Wong usage. Only for global value, parameter, and local variable");
             }
             vi = VariableInfo.create(tid, loc);
             map.put(tid, vi);  // This is important.

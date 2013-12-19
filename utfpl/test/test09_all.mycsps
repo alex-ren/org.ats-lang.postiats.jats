@@ -1,5 +1,6 @@
 var gv1_32;
 var gv2_33;
+var g1_34;
 var gv_35[3];
 
 foo1_36(x_37) =
@@ -9,8 +10,15 @@ step {
 step {
   return ();
 } -> Skip;
+step {
+  return ();
+} -> Skip;
 
 foo2_38() =
+step {
+  var x_39 = 4;
+  return 3;
+} -> Skip;
 step {
   var x_39 = 4;
   return 3;
@@ -45,6 +53,9 @@ ifa (3) {
     ifa (3) {
       step {
         return 2;
+      } -> Skip;
+      step {
+        return 2;
       } -> Skip 
     } else { 
       step {
@@ -53,6 +64,9 @@ ifa (3) {
       } -> Skip 
     } 
   } else { 
+    step {
+      return 1;
+    } -> Skip;
     step {
       return 1;
     } -> Skip 
@@ -68,6 +82,9 @@ ifa (3) {
     ifa (3) {
       step {
         return 2;
+      } -> Skip;
+      step {
+        return 2;
       } -> Skip 
     } else { 
       step {
@@ -76,6 +93,9 @@ ifa (3) {
       } -> Skip 
     } 
   } else { 
+    step {
+      return 1;
+    } -> Skip;
     step {
       return 1;
     } -> Skip 
@@ -92,10 +112,16 @@ ifa (temp_72 from <GStack(, 0)>) {
   } -> Skip;
   step {
     return 3;
+  } -> Skip;
+  step {
+    return 3;
   } -> Skip 
 } else { 
   step {
     gv1_32 = 4;
+  } -> Skip;
+  step {
+    return 3;
   } -> Skip;
   step {
     return 3;
@@ -114,8 +140,29 @@ step {
   var z_50 = call(add, x_esc_80 from <GStack(1)>, y_49 from <GStack(0)>);
   return z_50;
 } -> Skip;
+step {
+  var z_50 = call(add, x_esc_80 from <GStack(1)>, y_49 from <GStack(0)>);
+  return z_50;
+} -> Skip;
 
 foo7_51() =
+step {
+  var x_52 = 1;
+  var y_53
+  if (x_52) {
+    var z_54 = 2;
+    if (z_54) {
+      y_53 = call(add, x_52, 1);
+    } else {
+      y_53 = call(add, 1, x_52);
+    }
+  } else {
+    y_53 = 3;
+  }
+  var q1_55 = 33;
+  var q2_56 = call(add, q1_55, y_53);
+  return q2_56;
+} -> Skip;
 step {
   var x_52 = 1;
   var y_53
@@ -141,8 +188,19 @@ step {
 step {
   return ();
 } -> Skip;
+step {
+  return ();
+} -> Skip;
 
 foo9_58() =
+step {
+  if (1) {
+    var x_59 = 1;
+    return x_59;
+  } else {
+    return 2;
+  }
+} -> Skip;
 step {
   if (1) {
     var x_59 = 1;
@@ -170,9 +228,16 @@ foo11_64(x_65<escaped>) =
 step {
   return x_65 from <GStack(0)>;
 } -> Skip;
+step {
+  return x_65 from <GStack(0)>;
+} -> Skip;
 
 main() = 
 step {
   gv1_32 = 1;
+} -> Skip;
+step {
+  g1_34 = 3;
+  gv1_32 = 2;
 } -> Skip;
 

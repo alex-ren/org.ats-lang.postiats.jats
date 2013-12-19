@@ -8,10 +8,15 @@ foo1_36() =
   } ->
   {  GStack.push(__sys_tid, 0);
   } ->
+  {  GStack.push(__sys_tid, 0);
+  } ->
   Skip
   ;
 
 foo2_38() =
+  {  var x_39 = 4;
+  GStack.push(__sys_tid, 3);
+  } ->
   {  var x_39 = 4;
   GStack.push(__sys_tid, 3);
   } ->
@@ -47,6 +52,8 @@ foo4_42() =
       if (3) {
         {  GStack.push(__sys_tid, 2);
         } ->
+        {  GStack.push(__sys_tid, 2);
+        } ->
         Skip
       } else {
         {  ret_81 = gv_35[index];
@@ -55,6 +62,8 @@ foo4_42() =
         Skip
       }
     } else {
+      {  GStack.push(__sys_tid, 1);
+      } ->
       {  GStack.push(__sys_tid, 1);
       } ->
       Skip
@@ -69,6 +78,8 @@ foo4_42() =
       if (3) {
         {  GStack.push(__sys_tid, 2);
         } ->
+        {  GStack.push(__sys_tid, 2);
+        } ->
         Skip
       } else {
         {  ret_84 = gv_35[index];
@@ -77,6 +88,8 @@ foo4_42() =
         Skip
       }
     } else {
+      {  GStack.push(__sys_tid, 1);
+      } ->
       {  GStack.push(__sys_tid, 1);
       } ->
       Skip
@@ -93,9 +106,13 @@ foo5_45() =
     } ->
     {  GStack.push(__sys_tid, 3);
     } ->
+    {  GStack.push(__sys_tid, 3);
+    } ->
     Skip
   } else {
     {  gv1_32 = 4;
+    } ->
+    {  GStack.push(__sys_tid, 3);
     } ->
     {  GStack.push(__sys_tid, 3);
     } ->
@@ -118,10 +135,29 @@ foo61_48() =
   {  var z_50 = call(add, sys_stack.get(__sys_tid, 0, 1), sys_stack.get(__sys_tid, 0, 0));
   GStack.push(__sys_tid, z_50);
   } ->
+  {  var z_50 = call(add, sys_stack.get(__sys_tid, 0, 1), sys_stack.get(__sys_tid, 0, 0));
+  GStack.push(__sys_tid, z_50);
+  } ->
   Skip
   ;
 
 foo7_51() =
+  {  var x_52 = 1;
+  var y_53 = 0;
+  if (cond) {
+      var z_54 = 2;
+      if (cond) {
+          y_53 = call(add, x_52, 1);
+      } else {
+          y_53 = call(add, 1, x_52);
+      }
+  } else {
+      y_53 = 3;
+  }
+  var q1_55 = 33;
+  var q2_56 = call(add, q1_55, y_53);
+  GStack.push(__sys_tid, q2_56);
+  } ->
   {  var x_52 = 1;
   var y_53 = 0;
   if (cond) {
@@ -146,10 +182,19 @@ foo8_57() =
   } ->
   {  GStack.push(__sys_tid, 0);
   } ->
+  {  GStack.push(__sys_tid, 0);
+  } ->
   Skip
   ;
 
 foo9_58() =
+  {  if (cond) {
+      var x_59 = 1;
+      GStack.push(__sys_tid, x_59);
+  } else {
+      GStack.push(__sys_tid, 2);
+  }
+  } ->
   {  if (cond) {
       var x_59 = 1;
       GStack.push(__sys_tid, x_59);
@@ -178,6 +223,17 @@ foo10_60() =
 foo11_64() =
   {  GStack.push(__sys_tid, sys_stack.get(__sys_tid, 0, 0));
   } ->
+  {  GStack.push(__sys_tid, sys_stack.get(__sys_tid, 0, 0));
+  } ->
   Skip
   ;
+
+main_s(tid) = 
+  {sys_stack.newFrame(tid);} -> 
+  {  gv1_32 = 1;
+  } ->
+  {  var g1_34 = 3;
+  gv1_32 = 2;
+  } ->
+  Skip;
 

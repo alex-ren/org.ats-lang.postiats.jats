@@ -95,6 +95,10 @@ public class TID implements ValPrim {
         return Category.eGloVar == m_cat;
     }
     
+    public boolean isGlobalValue() {
+        return Category.eGloValue == m_cat;
+    }
+    
     public boolean isFunc() {
         return m_type instanceof PATTypeFunc;
     }

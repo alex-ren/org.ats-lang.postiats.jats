@@ -2,8 +2,9 @@
 var gv1 := 1
 var gv2
 val g1 = 3
-
 var gv[3]
+
+gv1 := 2
 
 fun foo1(x) = let
   gv1 := 2

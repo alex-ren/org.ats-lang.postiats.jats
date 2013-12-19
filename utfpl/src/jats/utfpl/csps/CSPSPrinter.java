@@ -147,6 +147,7 @@ public class CSPSPrinter implements CSPSVisitor {
        // move_ins_st(dst, src, v, escape, ret) ::= <<
         st = m_stg.getInstanceOf("move_ins_st");
 //        st.add("v", ins.m_holder);
+
         st.add("escape", ins.m_holder.isEscaped());
         st.add("dst", ins.m_holder.accept(this));
         st.add("src", ins.m_vp.accept(this));
@@ -176,10 +177,10 @@ public class CSPSPrinter implements CSPSVisitor {
     @Override
     public Object visit(CTempID v) {
         ST st = null;
-        if (v.getTID().isGlobal()) {
+        if (v.getTID().isGlobal() || v.getTID().isGlobalValue()) {  // global variable / value
             st = m_stg.getInstanceOf("global_id_st");
             st.add("id", v);
-        } else {  // not global variable
+        } else {  // not global
             if (v.isDefinition()) {
                 if (v.isPara()) {
                     // para_def_st(v, escape) ::= <<

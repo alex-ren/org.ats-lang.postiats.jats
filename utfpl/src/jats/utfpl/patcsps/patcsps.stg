@@ -81,11 +81,12 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 <!
 <thread_lst; separator="\n">
-
+!>
 main_s(tid) = 
-  main_preloge {GStack.allocateStack(tid); <new_frame_st()>; <new_frame_st()>;} -> 
+  {<sys_gstack()>.newFrame(tid);} -> 
   <main_proc_body>;
 
+<!
 main = main_s(0) ||| Scheduler ||| mutex_allocator ||| cond_allocator;
 
 

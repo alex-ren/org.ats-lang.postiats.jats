@@ -48,7 +48,7 @@ public class VariableInfo {
     }
     
     public boolean getEscaped() {
-//        System.out.println("========== tid is " + m_tid + " in " + m_defLoc.getFunLab());
+        // System.out.println("========== tid is " + m_tid); //  + " in " + m_defLoc.getFunLab());
         return m_isEscaped;
     }
     
@@ -57,7 +57,7 @@ public class VariableInfo {
     }
 
     public void updateEscaped() {
-        if (m_tid.isGlobal()) {
+        if (m_tid.isGlobal() || m_tid.isGlobalValue()) {
             m_isEscaped = false;
             return;
         } else if (m_tid.isPara() || m_tid.isLocal() || m_tid.isRet()) {

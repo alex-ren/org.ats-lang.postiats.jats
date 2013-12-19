@@ -114,15 +114,22 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(DecValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
-    	
-    	// Currently we just treat ValDef as a local value.
-        // node.m_id.updateForGlobalDef(m_scope);
-    	node.m_id.updateForLocalDef(m_scope);
+
+        node.m_id.updateForGlobalDef(m_scope);
         node.m_exp.accept(this);
         
         return null;
     }
 
+
+    @Override
+    public Object visit(DecValBind node) {
+        node.m_id.updateForLocalDef(m_scope);
+        node.m_exp.accept(this);
+        return null;
+    }
+
+    
     @Override
     public Object visit(ProgramTree node) {
         // no need to create a new scope
@@ -184,13 +191,6 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(DecVarArrayDef node) {
         node.m_id.updateForGlobalVar(m_scope, new PATTypeArray(node.m_size));
         
-        return null;
-    }
-
-    @Override
-    public Object visit(DecValBind node) {
-        node.m_id.updateForLocalDef(m_scope);
-        node.m_exp.accept(this);
         return null;
     }
 
