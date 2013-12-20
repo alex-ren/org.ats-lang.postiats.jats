@@ -1,0 +1,13 @@
+var gval1_34;
+var gvar2_35;
+
+
+main() = 
+step {
+  gval1_34 = 3;
+  gvar2_35 = 2;
+} -> Skip;
+step {
+  gvar2_35 = 1;
+} -> Skip;
+

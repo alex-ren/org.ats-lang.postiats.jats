@@ -1,16 +1,14 @@
-package jats.utfpl.instruction;
+package jats.utfpl.tree;
 
 import jats.utfpl.ccomp.CCompUtils;
-import jats.utfpl.instruction.InstructionPrinter.Type;
+
+import jats.utfpl.instruction.TID;
 import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.tree.ProgramTree;
-import jats.utfpl.tree.TreeFromUtfpl;
-import jats.utfpl.tree.TreePrinter;
-import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplPrinter;
+import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplProgramParserJson;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
@@ -30,20 +28,21 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class Test_02_ins_processing {
-    
+
+public class Test_01 {
+
+    /**
+     * @param args
+     * @throws IOException 
+     * @throws RecognitionException 
+     * @throws InterruptedException 
+     */
     public static void main(String[] args) throws IOException, RecognitionException, InterruptedException {
         String [] paths = {
-//                "test/test02_fact.utfpl"
-//                , "test/test03_var.utfpl"
-//                , "test/test04_if.utfpl"
-//                , "test/test05_func_def.utfpl"
-//                , "test/test06_func_call.utfpl"
-//                , "test/c01_single_main.utfpl"                
-//                , "test/test20_csps_trans_.utfpl"
-//                , "test/test35_mutual_closure.utfpl"
-                "test/test09_all.utfpl"
-        
+        		"test/test09_all.utfpl"
+//                , "test/json/test01.dats"
+//                , "test/json/test02.dats"
+
         };
 
         for (String strPath: paths) {
@@ -130,49 +129,10 @@ public class Test_02_ins_processing {
             
             System.out.println("==program is ==========================");
             System.out.println(output1);
-            
-            // ================== ====================== ====================
-            
-            /* ***************** ****************** */
-            // generate program of instructions
-            InstructionTransformer insV = new InstructionTransformer();  // create worker
-            ProgramInstruction programIns = insV.trans(prog);  // worker works
-            
-            /* ***************** ****************** */
-            // print instructions
-            InstructionPrinter insPrinter = new InstructionPrinter(Type.INS);  // create worker
-            String outputINS = insPrinter.print(programIns);  // worker works
-            System.out.println("==instructions are ==========================");
-            System.out.println(outputINS);
-            
-            // ================== ====================== ====================
-            
-            /* ***************** ****************** */
-            // generate new program of instructions by processing
-            ProgramInstruction programIns2 = InstructionClosureConverter.convert(programIns);
-            
-            /* ***************** ****************** */
-            // print instructions
-            String outputINS2 = insPrinter.print(programIns2);  // worker works
-            System.out.println("==instructions after closure conversion are ==========================");
-            System.out.println(outputINS2);
-            
-            // ================== ====================== ==================== 
-            
-            /* ***************** ****************** */
-            // generate new program of instructions by processing
-            ProgramInstruction programIns3 = InstructionProgramProcessor.processProgram(programIns2);
-            
-            /* ***************** ****************** */
-            // print instructions
-            String outputINS3 = insPrinter.print(programIns3);  // worker works
-            System.out.println("==instructions after if transformation are ==========================");
-            System.out.println(outputINS3);
-                        
-            //  ================== ====================== ====================
 
             System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
         }
 
     }
+
 }

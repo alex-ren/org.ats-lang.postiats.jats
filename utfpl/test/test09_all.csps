@@ -48,7 +48,7 @@ foo4_42() =
     GStack.push(__sys_tid, x_43);
     var y_44 = atspat_mutex_alloc();
     } ->
-    if (4) {
+    if (3) {
       if (3) {
         {  GStack.push(__sys_tid, 2);
         } ->
@@ -74,7 +74,7 @@ foo4_42() =
     } ->
     {  var y_83 = atspat_mutex_alloc();
     } ->
-    if (4) {
+    if (3) {
       if (3) {
         {  GStack.push(__sys_tid, 2);
         } ->

@@ -47,14 +47,14 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(P2Tpat.class, new P2TpatDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tvar.class, new P2TvarDeserializer());
         
-        gsonBuilder.registerTypeAdapter(UtfplProgram.class, new UtfplProgramDeserializer());
+        gsonBuilder.registerTypeAdapter(ProgramUtfpl.class, new UtfplProgramDeserializer());
         
         m_gson = gsonBuilder.create();
     }
     
-    public UtfplProgram trans(Reader iReader) {
+    public ProgramUtfpl trans(Reader iReader) {
         JsonReader reader = new JsonReader(iReader);
-        UtfplProgram prog = m_gson.fromJson(reader, UtfplProgram.class);
+        ProgramUtfpl prog = m_gson.fromJson(reader, ProgramUtfpl.class);
         return prog;
     }
 }

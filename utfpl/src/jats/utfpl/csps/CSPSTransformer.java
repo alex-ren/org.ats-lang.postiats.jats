@@ -9,7 +9,6 @@ import jats.utfpl.instruction.AtomValue;
 import jats.utfpl.instruction.FunctionInstruction;
 import jats.utfpl.instruction.GlobalEntity;
 import jats.utfpl.instruction.GlobalValue;
-import jats.utfpl.instruction.GlobalVariable;
 import jats.utfpl.instruction.InsAllocMutex;
 import jats.utfpl.instruction.InsCall;
 import jats.utfpl.instruction.InsCond;

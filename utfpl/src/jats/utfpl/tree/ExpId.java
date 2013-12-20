@@ -1,5 +1,6 @@
 package jats.utfpl.tree;
 
+import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
@@ -52,7 +53,21 @@ public class ExpId extends IExp {
         }
     }
 
+    
+//  public boolean isSysGvalCreate() {
+//  	return m_sid.equals(CCompUtils.cSysGvalCreate);
+//  }
+  
+  public boolean isSysGvarCreate() {
+  	return m_sid.equals(CCompUtils.cSysGvarCreate);
+  }
+  
+  public boolean isSysGvarUpdate() {
+  	return m_sid.equals(CCompUtils.cSysGvarUpdate);
+  }
 
+  
+  
     @Override
     public Object accept(TreeVisitor visitor) {
         return visitor.visit(this);

@@ -93,6 +93,10 @@ P2Tvar_st(var) ::= <<
 <d2var_st(var)>
 >>
 
+P2Tignored_st() ::= <<
+()
+>>
+
 D2Es0tring_st(str) ::= <<
 <str>
 >>

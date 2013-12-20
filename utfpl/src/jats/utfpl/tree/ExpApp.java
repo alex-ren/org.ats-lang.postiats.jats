@@ -1,5 +1,7 @@
 package jats.utfpl.tree;
 
+import jats.utfpl.instruction.TID;
+
 import java.util.List;
 
 public class ExpApp extends IExp {
@@ -18,5 +20,13 @@ public class ExpApp extends IExp {
     @Override
     public Object accept(TreeVisitor visitor) {
         return visitor.visit(this);
+    }
+    
+    public ExpId getFunName() {
+    	if (m_fun instanceof ExpId) {
+    		return (ExpId)m_fun;
+    	} else {
+    		throw new Error("function name is not ExpId");
+    	}
     }
 }

@@ -1,0 +1,3 @@
+val gval1_47 = 3
+val gvar2_48 = D2Ecst<sys_gvar_create_2437> (2)
+val () = D2Ecst<sys_gvar_update_2438> (gvar2_48, 1)

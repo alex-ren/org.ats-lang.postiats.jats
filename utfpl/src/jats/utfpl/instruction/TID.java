@@ -1,5 +1,6 @@
 package jats.utfpl.instruction;
 
+import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.patcsps.Aux;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeBool;
@@ -181,5 +182,4 @@ public class TID implements ValPrim {
         }
     }
 
-    
 }

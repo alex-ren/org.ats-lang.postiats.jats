@@ -1,0 +1,13 @@
+var gval1_34 = 0;
+var gvar2_35 = 0;
+
+
+main_s(tid) = 
+  {sys_stack.newFrame(tid);} -> 
+  {  var gval1_34 = 3;
+  gvar2_35 = 2;
+  } ->
+  {  gvar2_35 = 1;
+  } ->
+  Skip;
+

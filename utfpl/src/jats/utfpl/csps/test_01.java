@@ -1,6 +1,12 @@
-package jats.utfpl.instruction;
+package jats.utfpl.csps;
 
 import jats.utfpl.ccomp.CCompUtils;
+import jats.utfpl.instruction.InstructionClosureConverter;
+import jats.utfpl.instruction.InstructionPrinter;
+import jats.utfpl.instruction.InstructionProgramProcessor;
+import jats.utfpl.instruction.InstructionTransformer;
+import jats.utfpl.instruction.ProgramInstruction;
+import jats.utfpl.instruction.TID;
 import jats.utfpl.instruction.InstructionPrinter.Type;
 import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
@@ -9,8 +15,8 @@ import jats.utfpl.parser.Utfpl_tree;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeFromUtfpl;
 import jats.utfpl.tree.TreePrinter;
-import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplPrinter;
+import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplProgramParserJson;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
@@ -30,20 +36,13 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-public class Test_02_ins_processing {
-    
+public class test_01 {
     public static void main(String[] args) throws IOException, RecognitionException, InterruptedException {
         String [] paths = {
-//                "test/test02_fact.utfpl"
-//                , "test/test03_var.utfpl"
-//                , "test/test04_if.utfpl"
-//                , "test/test05_func_def.utfpl"
-//                , "test/test06_func_call.utfpl"
-//                , "test/c01_single_main.utfpl"                
-//                , "test/test20_csps_trans_.utfpl"
-//                , "test/test35_mutual_closure.utfpl"
-                "test/test09_all.utfpl"
-        
+        		"test/test09_all.utfpl"
+                , "test/json/test01.dats"
+                , "test/json/test02.dats"
+    
         };
 
         for (String strPath: paths) {
@@ -168,11 +167,32 @@ public class Test_02_ins_processing {
             String outputINS3 = insPrinter.print(programIns3);  // worker works
             System.out.println("==instructions after if transformation are ==========================");
             System.out.println(outputINS3);
-                        
+            
+            // ================== ====================== ====================
+            
+            /* ***************** ****************** */
+            // generating CSPS program
+            CSPSTransformer cspsV = new CSPSTransformer();
+            ProgramCSPS programCSPS = cspsV.trans(programIns3);
+            
+            /* ***************** ****************** */
+            // print csps program
+            CSPSPrinter cspsPrinter = new CSPSPrinter();
+            String outputCSPS = cspsPrinter.printProgram(programCSPS);
+            System.out.println("==My CSPS code is ==========================");
+            System.out.println(outputCSPS);
+
+            File pathCSPS = FilenameUtils.changeExt(path, FilenameUtils.cCSPS);
+            FileWriter fwCSPS = new FileWriter(pathCSPS);
+            BufferedWriter bwCSPS = new BufferedWriter(fwCSPS);
+            bwCSPS.write(outputCSPS);
+            bwCSPS.close();
+            
             //  ================== ====================== ====================
+
 
             System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
         }
-
+           
     }
 }

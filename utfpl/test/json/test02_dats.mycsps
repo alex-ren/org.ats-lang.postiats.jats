@@ -1,0 +1,16 @@
+
+foo_183() =
+step {
+  var x_184 = 3;
+  var y_185 = call(add, x_184, 3);
+  return ();
+} -> Skip;
+step {
+  var x_184 = 3;
+  var y_185 = call(add, x_184, 3);
+  return ();
+} -> Skip;
+
+main() = 
+Skip;
+

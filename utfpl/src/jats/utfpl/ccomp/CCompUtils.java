@@ -9,6 +9,10 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
 public class CCompUtils {
+//	public static final String cSysGvalCreate = "sys_gval_create";
+	public static final String cSysGvarCreate = "sys_gvar_create";
+	public static final String cSysGvarUpdate = "sys_gvar_update";
+	
 //    public static final String createThread = "createThread";
 //    public static final String allocateRef = "allocateRef";
 //    public static final String releaseRef = "releaseRef";
@@ -82,6 +86,19 @@ public class CCompUtils {
         
         func = "printx";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
+        
+        /* ************ **************** */
+//        
+//        func = cSysGvalCreate;
+//        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        func = cSysGvarCreate;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        func = cSysGvarUpdate;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        /* ************ **************** */
         
         func = InstructionTransformer.cSetAddr;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));

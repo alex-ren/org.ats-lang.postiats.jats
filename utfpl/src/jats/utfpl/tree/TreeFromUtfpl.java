@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.ccomp.CCompUtils;
+import jats.utfpl.instruction.TID;
 import jats.utfpl.utfpl.Cd2cst;
 import jats.utfpl.utfpl.Cd2ecl;
 import jats.utfpl.utfpl.Cd2exp;
@@ -38,13 +39,14 @@ import jats.utfpl.utfpl.Id2exp_node;
 import jats.utfpl.utfpl.Id2exparg;
 import jats.utfpl.utfpl.Ip2at_node;
 import jats.utfpl.utfpl.P2Tany;
+import jats.utfpl.utfpl.P2Tignored;
 import jats.utfpl.utfpl.P2Tpat;
 import jats.utfpl.utfpl.P2Tvar;
-import jats.utfpl.utfpl.UtfplProgram;
+import jats.utfpl.utfpl.ProgramUtfpl;
 
 public class TreeFromUtfpl {
 	
-	public ProgramTree trans(UtfplProgram uProg) {
+	public ProgramTree trans(ProgramUtfpl uProg) {
 		List<IDec> decs = new ArrayList<IDec>();
 		for (Cd2ecl uD2ecl: uProg.m_d2ecs) {
 			List<IDec> decLst = transGlobalCd2ecl(uD2ecl);
@@ -109,12 +111,29 @@ public class TreeFromUtfpl {
 		
     }
 
-	private DecValDef transGlobalCv2aldec(Cv2aldec uNode) {
+	private IDec transGlobalCv2aldec(Cv2aldec uNode) {
+		Location loc = new Location(uNode.v2aldec_loc);
+		
 		ExpId id = transCp2at(uNode.v2aldec_pat);
 		IExp def = transCd2exp(uNode.v2aldec_def);
-		
-		Location loc = new Location(uNode.v2aldec_loc);
-		return new DecValDef(loc, id, def);
+		if (def instanceof ExpApp) {
+			ExpApp app = (ExpApp)def;
+			ExpId funName = app.getFunName();
+			if (funName.isSysGvarCreate()) {
+				DecVarDef dec = new DecVarDef(loc, id, app.m_explst.get(0));
+				return dec;
+			} else if (funName.isSysGvarUpdate()) {
+				ExpId realId = (ExpId) app.m_explst.get(0);
+				DecVarAssign dec = new DecVarAssign(loc, realId, app.m_explst.get(1));
+				return dec;
+			} else {
+				return new DecValDef(loc, id, def);
+			}
+			
+		} else {
+			return new DecValDef(loc, id, def);
+		}
+
     }
 
 	private IExp transCd2exp(Cd2exp uNode) {
@@ -322,12 +341,27 @@ public class TreeFromUtfpl {
 
     }
 
-	private DecValBind transLocalCv2aldec(Cv2aldec uNode) {
+	private IDec transLocalCv2aldec(Cv2aldec uNode) {
+		Location loc = new Location(uNode.v2aldec_loc);
+		
 		ExpId id = transCp2at(uNode.v2aldec_pat);
 		IExp def = transCd2exp(uNode.v2aldec_def);
-		
-		Location loc = new Location(uNode.v2aldec_loc);
-		return new DecValBind(loc, id, def);
+		if (def instanceof ExpApp) {
+			ExpApp app = (ExpApp)def;
+			ExpId funName = app.getFunName();
+			if (funName.isSysGvarCreate()) {
+				throw new Error("Cannot define global variable locally.");
+			} else if (funName.isSysGvarUpdate()) {
+				ExpId realId = (ExpId) app.m_explst.get(0);
+				DecVarAssign dec = new DecVarAssign(loc, realId, app.m_explst.get(1));
+				return dec;
+			} else {
+				return new DecValBind(loc, id, def);
+			}
+			
+		} else {
+			return new DecValBind(loc, id, def);
+		}
     }
 	
 	private ExpAtom transD2Es0tring(Location loc, D2Es0tring uNode) {
@@ -359,9 +393,15 @@ public class TreeFromUtfpl {
 			return transP2Tpat(loc, (P2Tpat)uPat);
 		} else if (uPat instanceof P2Tvar) {
 			return transP2Tvar(loc, (P2Tvar)uPat);
+		} else if (uPat instanceof P2Tignored) {
+			return transP2Tignored(loc, (P2Tignored)uPat);
 		} else {
 			throw new Error(uNode + " is not supported");
 		}
+    }
+
+	private ExpId transP2Tignored(Location loc, P2Tignored uPat) {
+	    return new ExpId(loc, null);
     }
 
 	private ExpId transP2Tvar(Location loc, P2Tvar uNode) {

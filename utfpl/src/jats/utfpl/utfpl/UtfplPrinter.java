@@ -16,12 +16,12 @@ public class UtfplPrinter {
 
     }
     
-    public String print(UtfplProgram uProg) {
+    public String print(ProgramUtfpl uProg) {
         ST st = printUtfplProgram(uProg);
         return st.render();
     }
     
-    private ST printUtfplProgram(UtfplProgram uProg) {
+    private ST printUtfplProgram(ProgramUtfpl uProg) {
         // utfpl_prog_st(d2ecs) ::= <<
         ST st = m_stg.getInstanceOf("utfpl_prog_st");
         for (Cd2ecl d2ec: uProg.m_d2ecs) {
@@ -225,12 +225,20 @@ public class UtfplPrinter {
             return printP2Tpat((P2Tpat)node);
         } else if (node instanceof P2Tvar) {
             return printP2Tvar((P2Tvar)node);
+        } else if (node instanceof P2Tignored) {
+        	return printP2Tignored((P2Tignored)node);
         } else {
             throw new Error("not supported");
         }
     }
 
-    private ST printP2Tvar(P2Tvar node) {
+    private ST printP2Tignored(P2Tignored node) {
+	    // P2Tignored_st() ::= <<
+	    ST st = m_stg.getInstanceOf("P2Tignored_st");
+	    return st; 
+    }
+
+	private ST printP2Tvar(P2Tvar node) {
         // P2Tvar_st(var) ::= <<
         ST st = m_stg.getInstanceOf("P2Tvar_st");
         st.add("var", node.m_var);

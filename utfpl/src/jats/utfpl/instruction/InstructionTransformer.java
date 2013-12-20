@@ -257,7 +257,7 @@ public class InstructionTransformer implements TreeVisitor {
                     // don't care the result
                     InsCall app = new InsCall(holder, funlab, args, false);  // impossible to be the tail call
                     m_inslst.add(app);
-                } else if (holder.isLocal()) {
+                } else if (holder.isLocal() || holder.isGlobalValue()) {
                     InsCall app = new InsCall(holder, (TID)funlab, args, false);
                     m_inslst.add(app);
                     m_vpOut = holder;
