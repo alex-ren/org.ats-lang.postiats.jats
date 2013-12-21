@@ -1,0 +1,31 @@
+
+foo_34() =
+  {  var temp_37 = call(gt, 1, 2);
+  if (temp_37) {
+      sys_gstack.frame_push(sys_tid, 3);
+  } else {
+      sys_gstack.frame_push(sys_tid, 4);
+  }
+  } ->
+  Skip
+  ;
+
+foo2_35() =
+  {  var temp_39 = call(gt, 1, 2);
+  if (temp_39) {
+      var temp_40 = call(gt, 3, 4);
+      if (temp_40) {
+          sys_gstack.frame_push(sys_tid, 5);
+      } else {
+          sys_gstack.frame_push(sys_tid, 6);
+      }
+  } else {
+      sys_gstack.frame_push(sys_tid, 4);
+  }
+  } ->
+  Skip
+  ;
+
+main_s(tid) = 
+  Skip;
+

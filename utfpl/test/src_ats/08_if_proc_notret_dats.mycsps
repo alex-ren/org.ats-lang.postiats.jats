@@ -1,0 +1,59 @@
+
+xx_34() =
+step {
+  return 3;
+} -> Skip;
+
+foo_35() =
+step {
+  var temp_41<escaped> = call(gt, 1, 2);
+} -> Skip;
+ifa (temp_41 from <GStack(, 0)>) {
+  step {
+    nontail_call with ()
+  } -> Skip;
+  <process call> = xx_34;
+  step {
+    rewind frame of xx_34 to get x_36
+    return x_36;
+  } -> Skip 
+} else { 
+  step {
+    var x_45 = 4;
+    return x_45;
+  } -> Skip 
+};
+
+foo1_37() =
+step {
+  var temp_43<escaped> = call(gt, 1, 2);
+} -> Skip;
+ifa (temp_43 from <GStack(, 0)>) {
+  step {
+    var temp_44<escaped> = call(gt, 3, 4);
+  } -> Skip;
+  ifa (temp_44 from <GStack(, 1)>) {
+    step {
+      var x_38 = 5;
+      return x_38;
+    } -> Skip 
+  } else { 
+    step {
+      nontail_call with ()
+    } -> Skip;
+    <process call> = xx_34;
+    step {
+      rewind frame of xx_34 to get x_46
+      return x_46;
+    } -> Skip 
+  } 
+} else { 
+  step {
+    var x_47 = 4;
+    return x_47;
+  } -> Skip 
+};
+
+main() = 
+Skip;
+

@@ -1,0 +1,15 @@
+var gv_34 = 0;
+
+foo_35() =
+  {  gv_34 = sys_gstack.frame_get(sys_tid, 0, 0);
+  } ->
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+main_s(tid) = 
+  {  gv_34 = 1;
+  } ->
+  Skip;
+

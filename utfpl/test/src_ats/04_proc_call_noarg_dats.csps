@@ -1,0 +1,31 @@
+
+foo1_143() =
+  {  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+foo2_144() =
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+foo_145() =
+  {  __temp_list_args = sys_list_manager.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_143();
+  {  x_146 = sys_gstack.retopr_frame(sys_tid);
+  __temp_list_args = sys_list_manager.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo2_144();
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+main_s(tid) = 
+  Skip;
+

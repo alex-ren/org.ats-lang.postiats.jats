@@ -1,0 +1,17 @@
+
+
+var gv := 1
+
+fun foo (x) = let
+  gv := x
+in 
+  ()
+end
+
+
+val args = sys_list_nil ()
+val args = sys_list_cons (3, args) 
+
+val () = sys_thread_create (1 /*thread id*/, args)
+
+val () = sys_gvar_update (gv, 3)

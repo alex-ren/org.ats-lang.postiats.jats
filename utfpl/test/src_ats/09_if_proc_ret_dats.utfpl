@@ -1,0 +1,21 @@
+fun xx_47 = lam () = 
+  3
+fun foo_48 = lam () = 
+  let
+  in
+    if (D2Esym<>> (1, 2)) then
+      xx_47 ()
+    else
+      4
+  end
+fun foo2_49 = lam () = 
+  let
+  in
+    if (D2Esym<>> (1, 2)) then
+      if (D2Esym<>> (3, 4)) then
+        5
+      else
+        xx_47 ()
+    else
+      4
+  end

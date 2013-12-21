@@ -1,0 +1,28 @@
+
+foo1_143() =
+step {
+  return 3;
+} -> Skip;
+
+foo2_144() =
+step {
+  return ();
+} -> Skip;
+
+foo_145() =
+step {
+  nontail_call with ()
+} -> Skip;
+<process call> = foo1_143;
+step {
+  rewind frame of foo1_143 to get x_146
+  nontail_call with ()
+} -> Skip;
+<process call> = foo2_144;
+step {
+  return ();
+} -> Skip;
+
+main() = 
+Skip;
+

@@ -23,11 +23,11 @@ process_call_block_st(lab) ::= <<
 >>
 
 process_call_ins_prelogue_st(args, tail) ::= <<
-<if(tail)>tail_<else>normal_<endif>call with (<args; separator=", ">)
+<if(tail)>tail_<else>nontail_<endif>call with (<args; separator=", ">)
 >>
 
-process_call_ins_epilogue_st(lab, holder) ::= <<
-get <holder> from <lab>
+process_call_ins_epilogue_st(lab, holder, escape) ::= <<
+rewind frame of <lab> to get <holder><if(escape)>\<escaped><endif>
 >>
 
 // =====================================
@@ -82,9 +82,6 @@ global_id_st(id) ::= <<
 <id>
 >>
 
-para_def_st(v, escape) ::= <<
-<v><if(escape)>\<escaped><endif>
->>
 
 val_def_st(v) ::= <<
 var <v>
@@ -151,6 +148,9 @@ proc_def_st(lab, paras, body) ::= <<
 <body>;
 >>
 
+para_def_st(para, escape, loc) ::= <<
+<para><if(escape)>\<escaped><endif>@\<<get_from_stack_st(loc)>\>
+>>
 
 program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
 <gvar_lst_st(gvarlst)>

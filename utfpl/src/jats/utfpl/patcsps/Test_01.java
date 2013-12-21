@@ -43,8 +43,17 @@ public class Test_01 {
     
     public static void main(String[] args) throws IOException, RecognitionException, InterruptedException {
         String [] paths = {
-        		"test/ats_src/01_global_variable.dats"
-                
+//        		"test/ats_src/01_global_variable.dats"
+//        		, "test/ats_src/02_global_value.dats"
+//        		, "test/ats_src/03_global_variable_update.dats"
+//        		, "test/ats_src/04_proc_call_noarg.dats"
+//        		, "test/ats_src/05_proc_call_args.dats"
+//        		"test/ats_src/06_if_ins_notret.dats"
+//        		"test/ats_src/07_if_ins_ret.dats"
+//        		"test/ats_src/08_if_proc_notret.dats"
+//        		"test/ats_src/09_if_proc_ret.dats"
+//        		"test/src_utfpl/21_global_value_rep.mutfpl"
+        		"test/src_utfpl/10_thread_create.mutfpl"
         
         };
 

@@ -233,7 +233,7 @@ public class InstructionTransformer implements TreeVisitor {
                 for (IExp exp: node.m_explst) {
                     exp.accept(this);
                     if (null == m_vpOut) {
-                        throw new Error("eeeeeeeee");
+                        throw new Error("check this");
                     }
                     args.add(m_vpOut);
                 }

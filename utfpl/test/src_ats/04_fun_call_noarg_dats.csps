@@ -1,0 +1,31 @@
+
+foo1_143() =
+  {  GStack.push(__sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+foo2_144() =
+  {  GStack.push(__sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+foo_145() =
+  {  __sys_frame = sys_stack.frame_allocate();
+  sys_stack.addFrame(__sys_tid, __sys_frame);
+  } ->
+  foo1_143();
+  {  __sys_frame = sys_stack.frame_allocate();
+  sys_stack.addFrame(__sys_tid, __sys_frame);
+  } ->
+  foo2_144();
+  {  GStack.push(__sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+main_s(tid) = 
+  {sys_stack.newFrame(tid);} -> 
+  Skip;
+

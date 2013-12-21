@@ -1,0 +1,11 @@
+val gvar1_47 = D2Ecst<sys_gvar_create_2437> (2)
+val gvar2_48 = D2Ecst<sys_gvar_create_2437> (gvar1_47)
+val () = D2Ecst<sys_gvar_update_2438> (gvar2_48, 3)
+fun foo_49 = lam () = 
+  let
+    val () = D2Ecst<sys_gvar_update_2438> (gvar2_48, 1)
+  in
+    ()
+  end
+fun kk_50 = lam () = 
+  ()

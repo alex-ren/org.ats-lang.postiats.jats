@@ -13,7 +13,10 @@ public class CCompUtils {
 	public static final String cSysGvarCreate = "sys_gvar_create";
 	public static final String cSysGvarUpdate = "sys_gvar_update";
 	
-//    public static final String createThread = "createThread";
+	public static final String cSysListNil = "sys_list_nil";
+	public static final String cSysListCons = "sys_list_cons";
+	
+    public static final String cSysThreadCreate = "sys_thread_create";
 //    public static final String allocateRef = "allocateRef";
 //    public static final String releaseRef = "releaseRef";
 //    private static String [] m_funcs = new String[] {
@@ -51,6 +54,8 @@ public class CCompUtils {
     public static void populateAllFunctions(MapScope<TID> scope) {
         String func = null;
         
+        /* ********* *********** ************* ************** */
+        
         func = "add";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, false)));
         
@@ -87,8 +92,8 @@ public class CCompUtils {
         func = "printx";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
         
-        /* ************ **************** */
-//        
+        /* ********* *********** ************* ************** */
+
 //        func = cSysGvalCreate;
 //        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
@@ -98,7 +103,8 @@ public class CCompUtils {
         func = cSysGvarUpdate;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
-        /* ************ **************** */
+        
+        /* ********* *********** ************* ************** */
         
         func = InstructionTransformer.cSetAddr;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
@@ -153,6 +159,23 @@ public class CCompUtils {
         
         func = "ref_set";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        /* ********* *********** ************* ************** */
+        
+        func = cSysListNil;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
+        
+        func = cSysListCons;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
+        
+        /* ********* *********** ************* ************** */
+        
+        func = cSysThreadCreate;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        /* ********* *********** ************* ************** */
+        
+        /* ********* *********** ************* ************** */
         
         return;
     }

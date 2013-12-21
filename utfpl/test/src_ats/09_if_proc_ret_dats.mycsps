@@ -1,0 +1,48 @@
+
+xx_34() =
+step {
+  return 3;
+} -> Skip;
+
+foo_35() =
+step {
+  var temp_39<escaped> = call(gt, 1, 2);
+} -> Skip;
+ifa (temp_39 from <GStack(, 0)>) {
+  step {
+    tail_call with ()
+  } -> Skip;
+  <process call> = xx_34 
+} else { 
+  step {
+    return 4;
+  } -> Skip 
+};
+
+foo2_36() =
+step {
+  var temp_41<escaped> = call(gt, 1, 2);
+} -> Skip;
+ifa (temp_41 from <GStack(, 0)>) {
+  step {
+    var temp_42<escaped> = call(gt, 3, 4);
+  } -> Skip;
+  ifa (temp_42 from <GStack(, 1)>) {
+    step {
+      return 5;
+    } -> Skip 
+  } else { 
+    step {
+      tail_call with ()
+    } -> Skip;
+    <process call> = xx_34 
+  } 
+} else { 
+  step {
+    return 4;
+  } -> Skip 
+};
+
+main() = 
+Skip;
+

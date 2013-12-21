@@ -1,0 +1,51 @@
+
+xx_34() =
+  {  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+foo_35() =
+  {  var temp_39 = call(gt, 1, 2);
+  sys_gstack.frame_push(sys_tid, temp_39);
+  } ->
+  if (sys_gstack.frame_get_bool(sys_tid, 0, 0)) {
+    {  __temp_list_args = sys_list_manager.list_nil ();
+    sys_gstack.reload_frame(sys_tid, __temp_list_args);
+    } ->
+    xx_34()
+  } else {
+    {  sys_gstack.frame_push(sys_tid, 4);
+    } ->
+    Skip
+  }
+  ;
+
+foo2_36() =
+  {  var temp_41 = call(gt, 1, 2);
+  sys_gstack.frame_push(sys_tid, temp_41);
+  } ->
+  if (sys_gstack.frame_get_bool(sys_tid, 0, 0)) {
+    {  var temp_42 = call(gt, 3, 4);
+    sys_gstack.frame_push(sys_tid, temp_42);
+    } ->
+    if (sys_gstack.frame_get_bool(sys_tid, 0, 1)) {
+      {  sys_gstack.frame_push(sys_tid, 5);
+      } ->
+      Skip
+    } else {
+      {  __temp_list_args = sys_list_manager.list_nil ();
+      sys_gstack.reload_frame(sys_tid, __temp_list_args);
+      } ->
+      xx_34()
+    }
+  } else {
+    {  sys_gstack.frame_push(sys_tid, 4);
+    } ->
+    Skip
+  }
+  ;
+
+main_s(tid) = 
+  Skip;
+

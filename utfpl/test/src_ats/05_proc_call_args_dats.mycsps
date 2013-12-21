@@ -1,0 +1,33 @@
+
+foo1_183(x_184<escaped>@<GStack(0)>, y_185@<GStack(1)>) =
+step {
+  return x_184 from <GStack(0)>;
+} -> Skip;
+
+foo2_186(x_187@<GStack(0)>) =
+step {
+  return ();
+} -> Skip;
+
+foo_188(z_189@<GStack(0)>) =
+step {
+  nontail_call with (1, 2)
+} -> Skip;
+<process call> = foo1_183;
+step {
+  rewind frame of foo1_183 to get x_190<escaped>
+  nontail_call with (x_190)
+} -> Skip;
+<process call> = foo2_186;
+step {
+  nontail_call with (x_190 from <GStack(1)>)
+} -> Skip;
+<process call> = foo2_186;
+step {
+  tail_call with (4, 5)
+} -> Skip;
+<process call> = foo1_183;
+
+main() = 
+Skip;
+

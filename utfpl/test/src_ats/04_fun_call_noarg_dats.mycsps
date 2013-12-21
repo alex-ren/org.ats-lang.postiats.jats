@@ -1,0 +1,28 @@
+
+foo1_143() =
+step {
+  return 3;
+} -> Skip;
+
+foo2_144() =
+step {
+  return ();
+} -> Skip;
+
+foo_145() =
+step {
+  normal_call with ()
+} -> Skip;
+<process call> = foo1_143;
+step {
+  get x_146 from foo_145
+  normal_call with ()
+} -> Skip;
+<process call> = foo2_144;
+step {
+  return ();
+} -> Skip;
+
+main() = 
+Skip;
+

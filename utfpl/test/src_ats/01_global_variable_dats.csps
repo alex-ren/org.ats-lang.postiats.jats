@@ -1,0 +1,8 @@
+var gvar2_34 = 0;
+
+
+main_s(tid) = 
+  {  gvar2_34 = 2;
+  } ->
+  Skip;
+

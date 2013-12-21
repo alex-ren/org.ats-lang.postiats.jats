@@ -322,8 +322,12 @@ public class PatCspsTransformer implements CSPSVisitor {
         List<PStat> ret = new ArrayList<PStat>();
         
         TID funlab = node.m_funlab;
-        TID retHolder = node.m_ret.getTID();
+        TID retHolder = node.m_holder.getTID();
         ret.add(new PStatProcCallEpilogue(funlab, retHolder));
+        
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
+        }
         
         return ret;
     }

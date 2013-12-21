@@ -1,0 +1,14 @@
+var x_34;
+var x_36;
+
+foo_35(x_esc_38<escaped>@<GStack(0)>) =
+step {
+  return x_esc_38 from <GStack(0)>;
+} -> Skip;
+
+main() = 
+step {
+  x_34 = 1;
+  x_36 = 2;
+} -> Skip;
+

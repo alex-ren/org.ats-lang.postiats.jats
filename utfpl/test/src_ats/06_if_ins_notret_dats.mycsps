@@ -1,0 +1,33 @@
+
+foo_34() =
+step {
+  var temp_39 = call(gt, 1, 2);
+  var x_35
+  if (temp_39) {
+    x_35 = 3;
+  } else {
+    x_35 = 4;
+  }
+  return x_35;
+} -> Skip;
+
+foo1_36() =
+step {
+  var temp_41 = call(gt, 1, 2);
+  var x_37
+  if (temp_41) {
+    var temp_42 = call(gt, 3, 4);
+    if (temp_42) {
+      x_37 = 5;
+    } else {
+      x_37 = 6;
+    }
+  } else {
+    x_37 = 4;
+  }
+  return x_37;
+} -> Skip;
+
+main() = 
+Skip;
+

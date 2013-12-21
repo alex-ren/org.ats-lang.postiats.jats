@@ -386,8 +386,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PStatProcCallEpilogue node) {
-        // TODO Auto-generated method stub
-        return null;
+        // pstatproccallepilogue_st(ret) ::= <<
+    	ST st = m_stg.getInstanceOf("pstatproccallepilogue_st");
+    	st.add("ret", node.m_ret);
+    	return st;
     }
 
 

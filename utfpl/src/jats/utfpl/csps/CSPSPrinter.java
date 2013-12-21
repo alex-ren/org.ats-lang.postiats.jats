@@ -133,10 +133,11 @@ public class CSPSPrinter implements CSPSVisitor {
 
     @Override
     public Object visit(CIProcCallEpilog node) {
-        // process_call_ins_epilogue_st(lab, holder) ::= <<
+        // process_call_ins_epilogue_st(lab, holder, escape) ::= <<
         ST st = m_stg.getInstanceOf("process_call_ins_epilogue_st");
         st.add("lab", node.m_funlab);
-        st.add("holder", node.m_ret);
+        st.add("holder", node.m_holder);
+        st.add("escape", node.m_holder.isEscaped());
         return st;
     }
 
@@ -183,10 +184,12 @@ public class CSPSPrinter implements CSPSVisitor {
         } else {  // not global
             if (v.isDefinition()) {
                 if (v.isPara()) {
-                    // para_def_st(v, escape) ::= <<
+                    // para_def_st(para, escape, loc) ::= <<
                     st = m_stg.getInstanceOf("para_def_st");
-                    st.add("v", v);
-                    st.add("escape", v.isEscaped());
+                	st.add("para", v);
+                	st.add("loc", v.getStackInfo());
+                	st.add("escape", v.isEscaped());
+                    
                 } else {
                     st = m_stg.getInstanceOf("val_def_st");
                     st.add("v", v);

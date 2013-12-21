@@ -1,0 +1,8 @@
+var gvar2_34;
+
+
+main() = 
+step {
+  gvar2_34 = 2;
+} -> Skip;
+

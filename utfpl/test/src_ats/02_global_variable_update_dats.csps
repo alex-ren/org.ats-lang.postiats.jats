@@ -1,0 +1,6 @@
+
+
+main_s(tid) = 
+  {sys_stack.newFrame(tid);} -> 
+  Skip;
+

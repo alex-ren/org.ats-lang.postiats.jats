@@ -87,7 +87,7 @@ public class VariableInfo {
         if (m_defLoc.equals(curLoc)) {
             return false;
         }
-        if (m_tid.isGlobal()) {
+        if (m_tid.isGlobal() || m_tid.isGlobalValue()) {
             return false;
         } else if (m_tid.isFunc()) {
             return false;

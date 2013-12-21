@@ -1,0 +1,29 @@
+var gvar1_103 = 0;
+var gvar2_104 = 0;
+
+foo_105() =
+  {  gvar2_104 = 1;
+  } ->
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+kk_106() =
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+main_s(tid) = 
+  {  gvar1_103 = 2;
+  } ->
+  {  var temp_107 = gvar1_103;
+  sys_gstack.frame_push(sys_tid, temp_107);
+  } ->
+  {  gvar2_104 = sys_gstack.frame_get(sys_tid, 0, 0);
+  } ->
+  {  gvar2_104 = 3;
+  } ->
+  Skip;
+

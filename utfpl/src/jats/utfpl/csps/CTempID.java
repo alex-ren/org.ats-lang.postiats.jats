@@ -83,6 +83,24 @@ public class CTempID implements CTemp {
         return m_vi.getTID().isPara();
     }
     
+    public int processStackPrelogue(int offset) {
+        if (m_vi.getTID().isPara()) {
+        	if (m_isDef) {
+                updateEscaped();
+//                if (isEscaped()) { 
+                  // It's possible that isEscaped() is false, 
+                  // but parameter is already put onto stack by the caller.
+                    offset =  updateForDef(offset);
+                    return offset;
+//                }
+        	} else {
+        		throw new Error("parameter is also definition");
+        	}
+        } else {
+        	throw new Error("has to be parameter");
+        }
+    }
+    
     /*
      * This function is called when an object of CTempID allocated at first time.
      */
@@ -104,7 +122,7 @@ public class CTempID implements CTemp {
      * If this is tail call, then caller won't lay its hands on
      * the return value at all.
      */
-    public int processStackProcCall(int offset, boolean isVoid) {
+    public int processStackProcCallEpilogue(int offset, boolean isVoid) {
         if (isVoid) {
             m_vi.getTID().updateType(PATTypeSingleton.cVoidType);
         }

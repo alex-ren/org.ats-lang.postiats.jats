@@ -1,0 +1,10 @@
+var gval1_68 = 0;
+var gval2_69 = 0;
+
+
+main_s(tid) = 
+  {  var gval1_68 = 3;
+  var gval2_69 = gval1_68;
+  } ->
+  Skip;
+

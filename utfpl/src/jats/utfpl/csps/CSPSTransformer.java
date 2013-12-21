@@ -62,12 +62,7 @@ public class CSPSTransformer {
             int pos = 0;
             FunctionCSPS funcCSP = FunDef2CProcess(func, subMap);
             for (CTempID para: funcCSP.m_paras) {
-                
-//                System.out.println("++++++++++++++ " + para.getTID());
-//                if (para.getTID().toString().equals("x_esc_69")) {
-//                    throw new Error("eeeeeeeeeeeeeeeeeeeeeeeeeeee");
-//                }
-                pos = para.processStack(pos);
+                pos = para.processStackPrelogue(pos);
             }
             
             // add the concept of stack
@@ -148,17 +143,35 @@ public class CSPSTransformer {
                 
                 m_cblkLst = new ArrayList<CBlock>();
                 m_cbEvt.m_inslst = new ArrayList<CInstruction>();
+
                 for (UtfplInstruction bins: ins.m_btrue) {
                     bins.accept(this);
                 }
                 List<CInstruction> trueBranch = m_cbEvt.m_inslst;
                 
+                // If the holder of the InsCond is of ret, then the last instruction of
+                // the branch would be InsRet. This will trigger m_cbEvt to
+                // included in m_cblkLst.
+                if (trueBranch.size() < 1) {
+                	CBEvent cbEvt = (CBEvent)m_cblkLst.get(0);
+                	trueBranch = cbEvt.m_inslst;
+                }
+                
                 m_cblkLst = new ArrayList<CBlock>();
                 m_cbEvt.m_inslst = new ArrayList<CInstruction>();
+
                 for (UtfplInstruction bins: ins.m_bfalse) {
                     bins.accept(this);
                 }
                 List<CInstruction> falseBranch = m_cbEvt.m_inslst;
+                
+                // If the holder of the InsCond is of ret, then the last instruction of
+                // the branch would be InsRet. This will trigger m_cbEvt to
+                // included in m_cblkLst.
+                if (falseBranch.size() < 1) {
+                	CBEvent cbEvt = (CBEvent)m_cblkLst.get(0);
+                	falseBranch = cbEvt.m_inslst;
+                }
                 
                 // recover the environment
                 m_subMap = subMapBackup;
@@ -176,6 +189,7 @@ public class CSPSTransformer {
 
                 if (ins.m_holder.isRet()) {
                     m_cblkLst.add(m_cbEvt);
+                    m_cbEvt = new CBEvent();
                 }
                 return null;
             }
@@ -195,10 +209,10 @@ public class CSPSTransformer {
                 
                 // No epilogue at all.
                 if (!(ins.m_holder.isAnony() || ins.m_holder.isRet())) {
-                    CTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, cprocess);
-                    CIProcCallEpilog cCallEpi = new CIProcCallEpilog(m_cbEvt, m_funLab, ctHolder);
+                    CTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+                    CIProcCallEpilog cCallEpi = new CIProcCallEpilog(m_cbEvt, ins.m_funlab, ctHolder);
                     m_cbEvt.add(cCallEpi);
-                }
+                } 
 
                 return null;
 
@@ -214,6 +228,8 @@ public class CSPSTransformer {
                     CTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                     CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
                     m_cbEvt.add(retIns);
+                    m_cblkLst.add(m_cbEvt);
+                    m_cbEvt = new CBEvent();
                 }
                 return null;
             }
@@ -288,9 +304,8 @@ public class CSPSTransformer {
             CIReturn nIns = new CIReturn(v, m_cbEvt);
             m_cbEvt.add(nIns);
             m_cblkLst.add(m_cbEvt);
-//            m_cbEvt = null;  // keep m_cbEvt unchanged
-                               // This is for the hack used in processing
-                               // InsCond without effect
+            m_cbEvt = new CBEvent();
+
             return null;
         }
 

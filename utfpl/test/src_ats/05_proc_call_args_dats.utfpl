@@ -1,0 +1,12 @@
+fun foo1_47 = lam (x_48, y_49) = 
+  x_48
+fun foo2_50 = lam (x_51) = 
+  ()
+fun foo_52 = lam (z_53) = 
+  let
+    val x_54 = foo1_47 (1, 2)
+    val _ = foo2_50 (x_54)
+    val () = foo2_50 (x_54)
+  in
+    foo1_47 (4, 5)
+  end

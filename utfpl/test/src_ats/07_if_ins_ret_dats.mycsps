@@ -1,0 +1,29 @@
+
+foo_34() =
+step {
+  var temp_37 = call(gt, 1, 2);
+  if (temp_37) {
+    return 3;
+  } else {
+    return 4;
+  }
+} -> Skip;
+
+foo2_35() =
+step {
+  var temp_39 = call(gt, 1, 2);
+  if (temp_39) {
+    var temp_40 = call(gt, 3, 4);
+    if (temp_40) {
+      return 5;
+    } else {
+      return 6;
+    }
+  } else {
+    return 4;
+  }
+} -> Skip;
+
+main() = 
+Skip;
+

@@ -1,0 +1,30 @@
+var gvar1_103;
+var gvar2_104;
+
+foo_105() =
+step {
+  gvar2_104 = 1;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+kk_106() =
+step {
+  return ();
+} -> Skip;
+
+main() = 
+step {
+  gvar1_103 = 2;
+} -> Skip;
+step {
+  var temp_107<escaped> = gvar1_103;
+} -> Skip;
+step {
+  gvar2_104 = temp_107 from <GStack(0)>;
+} -> Skip;
+step {
+  gvar2_104 = 3;
+} -> Skip;
+

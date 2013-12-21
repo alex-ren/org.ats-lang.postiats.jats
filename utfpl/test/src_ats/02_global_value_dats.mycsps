@@ -1,0 +1,10 @@
+var gval1_68;
+var gval2_69;
+
+
+main() = 
+step {
+  gval1_68 = 3;
+  gval2_69 = gval1_68;
+} -> Skip;
+

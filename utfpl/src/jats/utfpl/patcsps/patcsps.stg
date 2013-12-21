@@ -83,7 +83,6 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 <thread_lst; separator="\n">
 !>
 main_s(tid) = 
-  {<sys_gstack()>.newFrame(tid);} -> 
   <main_proc_body>;
 
 <!
@@ -169,11 +168,11 @@ pprocseq_st(proc_left, proc_right) ::= <<
 >>
 
 pexpstackopr_default_t(frame, pos) ::= <<
-<sys_gstack()>.get(<sys_tid()>, <frame>, <pos>)
+<sys_gstack()>.frame_get(<sys_tid()>, <frame>, <pos>)
 >>
 
 pexpstackopr_bool_t(frame, pos) ::= <<
-<sys_gstack()>.getBool(<sys_tid()>, <frame>, <pos>)
+<sys_gstack()>.frame_get_bool(<sys_tid()>, <frame>, <pos>)
 >>
 
 pprocevent_st(evt, proc) ::= <<
@@ -207,11 +206,11 @@ pprocparallel_st(proc_lst) ::= <<
 >>
 
 pstatstackpush_st(name) ::= <<
-GStack.push(<sys_tid()>, <name>);
+<sys_gstack()>.frame_push(<sys_tid()>, <name>);
 >>
 
 pstatreturn_st(v) ::= <<
-<!<delete_frame_st()>; !>GStack.push(<sys_tid()>, <v>);
+<sys_gstack()>.frame_push(<sys_tid()>, <v>);
 >>
 
 pnone_st() ::= <<
@@ -219,7 +218,7 @@ pnone_st() ::= <<
 >>
 
 pinscond_st(cond, trueb, falseb) ::= <<
-if (cond) {
+if (<cond>) {
     <trueb; separator="\n">
 } else {
     <falseb; separator="\n">
@@ -249,11 +248,11 @@ var <holder> = atspat_mutex_alloc();
 // ================= 
 
 new_frame_st() ::= <<
-GStack.newFrame(<sys_tid()>)
+<sys_gstack()>.add_frame(<sys_tid()>)
 >>
 
 reload_frame_st() ::= <<
-GStack.reloadFrame(<sys_tid()>)
+<sys_gstack()>.reload_frame(<sys_tid()>)
 >>
 
 delete_frame_st() ::= <<
@@ -271,22 +270,22 @@ GStack.deleteFrame(<sys_tid()>)
 //   <paras:{x| spush(<sys_tid()>, <x>)}; separator=";">}
 
 pstatproccallprelogue_st(args, is_tail_call) ::= <<
-<sys_frame_local()> = <sys_gstack()>.frame_allocate();
-<args:{arg|<sys_frame_local()>.push(<arg>);}; separator="\n">
-<if(is_tail_call)><sys_gstack()>.reloadFrame(<sys_tid()>, <sys_frame_local()>);
-<else><sys_gstack()>.addFrame(<sys_tid()>, <sys_frame_local()>);<endif>
+<local_temp_list()> = <sys_list_manager()>.list_nil ();
+<args:{arg|<sys_list_manager()>.list_cons (<arg>, <local_temp_list()>);}; separator="\n">
+<if(is_tail_call)><sys_gstack()>.reload_frame(<sys_tid()>, <local_temp_list()>);<else><sys_gstack()>.add_frame(<sys_tid()>, <local_temp_list()>);<endif>
 >>
 
 pstatproccallepilogue_st(ret) ::= <<
-<ret> = <sys_gstack()>.processRet();
+<ret> = <sys_gstack()>.retopr_frame(<sys_tid()>);
 >>
 
-sys_frame_local() ::= <<__sys_frame>>
+local_temp_list() ::= <<__temp_list_args>>
 
-sys_gstack() ::= <<sys_stack>>
+sys_gstack() ::= <<sys_gstack>>
 
-sys_tid() ::= <<__sys_tid>>
+sys_tid() ::= <<sys_tid>>
 
+sys_list_manager() ::= <<sys_list_manager>>
 
 
 

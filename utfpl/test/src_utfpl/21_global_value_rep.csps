@@ -1,0 +1,15 @@
+var x_34 = 0;
+var x_36 = 0;
+
+foo_35() =
+  {  sys_gstack.frame_push(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+  } ->
+  Skip
+  ;
+
+main_s(tid) = 
+  {  var x_34 = 1;
+  var x_36 = 2;
+  } ->
+  Skip;
+

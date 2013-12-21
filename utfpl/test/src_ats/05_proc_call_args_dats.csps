@@ -1,0 +1,43 @@
+
+foo1_183() =
+  {  sys_gstack.frame_push(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+  } ->
+  Skip
+  ;
+
+foo2_186() =
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+foo_188() =
+  {  __temp_list_args = sys_list_manager.list_nil ();
+  sys_list_manager.list_cons (1, __temp_list_args);
+  sys_list_manager.list_cons (2, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_183();
+  {  x_190 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, x_190);
+  __temp_list_args = sys_list_manager.list_nil ();
+  sys_list_manager.list_cons (x_190, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo2_186();
+  {  __temp_list_args = sys_list_manager.list_nil ();
+  sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 1), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo2_186();
+  {  __temp_list_args = sys_list_manager.list_nil ();
+  sys_list_manager.list_cons (4, __temp_list_args);
+  sys_list_manager.list_cons (5, __temp_list_args);
+  sys_gstack.reload_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_183()
+  ;
+
+main_s(tid) = 
+  Skip;
+

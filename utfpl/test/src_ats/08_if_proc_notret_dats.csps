@@ -1,0 +1,62 @@
+
+xx_34() =
+  {  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+foo_35() =
+  {  var temp_41 = call(gt, 1, 2);
+  sys_gstack.frame_push(sys_tid, temp_41);
+  } ->
+  if (sys_gstack.frame_get_bool(sys_tid, 0, 0)) {
+    {  __temp_list_args = sys_list_manager.list_nil ();
+    sys_gstack.add_frame(sys_tid, __temp_list_args);
+    } ->
+    xx_34();
+    {  x_36 = sys_gstack.retopr_frame(sys_tid);
+    sys_gstack.frame_push(sys_tid, x_36);
+    } ->
+    Skip
+  } else {
+    {  var x_45 = 4;
+    sys_gstack.frame_push(sys_tid, x_45);
+    } ->
+    Skip
+  }
+  ;
+
+foo1_37() =
+  {  var temp_43 = call(gt, 1, 2);
+  sys_gstack.frame_push(sys_tid, temp_43);
+  } ->
+  if (sys_gstack.frame_get_bool(sys_tid, 0, 0)) {
+    {  var temp_44 = call(gt, 3, 4);
+    sys_gstack.frame_push(sys_tid, temp_44);
+    } ->
+    if (sys_gstack.frame_get_bool(sys_tid, 0, 1)) {
+      {  var x_38 = 5;
+      sys_gstack.frame_push(sys_tid, x_38);
+      } ->
+      Skip
+    } else {
+      {  __temp_list_args = sys_list_manager.list_nil ();
+      sys_gstack.add_frame(sys_tid, __temp_list_args);
+      } ->
+      xx_34();
+      {  x_46 = sys_gstack.retopr_frame(sys_tid);
+      sys_gstack.frame_push(sys_tid, x_46);
+      } ->
+      Skip
+    }
+  } else {
+    {  var x_47 = 4;
+    sys_gstack.frame_push(sys_tid, x_47);
+    } ->
+    Skip
+  }
+  ;
+
+main_s(tid) = 
+  Skip;
+

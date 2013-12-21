@@ -1,0 +1,11 @@
+fun foo1_47 = lam () = 
+  3
+fun foo2_48 = lam () = 
+  ()
+fun foo_49 = lam () = 
+  let
+    val x_50 = foo1_47 ()
+    val _ = foo2_48 ()
+  in
+    ()
+  end
