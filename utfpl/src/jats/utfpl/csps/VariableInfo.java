@@ -74,7 +74,7 @@ public class VariableInfo {
             return;
         } else if (m_tid.getType() == PATTypeSingleton.cVoidType) {
 //            m_isEscaped = false;
-            throw new Error("should not happen");
+            throw new Error("should not happen: tid is " + m_tid);
         } else {
         	System.out.println("============ tid is " + m_tid);
             throw new Error("check this");

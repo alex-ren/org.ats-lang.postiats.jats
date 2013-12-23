@@ -387,7 +387,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PStatProcCallEpilogue node) {
         // pstatproccallepilogue_st(ret) ::= <<
     	ST st = m_stg.getInstanceOf("pstatproccallepilogue_st");
-    	st.add("ret", node.m_ret);
+    	if (!node.m_ret.isAnony()) {
+    		st.add("ret", node.m_ret);
+    	}
+    	
     	return st;
     }
 
@@ -407,9 +410,14 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsMutexAlloc node) {
-        // pinsmutexalloc_st(holder) ::= <<
+        // pinsmutexalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
     	st.add("holder", node.m_holder);
+    	if (node.m_holder.isGlobal() || node.m_holder.isGlobalValue()) {
+    		st.add("is_global", true);
+    	} else {
+    		st.add("is_global", false);
+    	}
     	
     	return st;
     }
@@ -426,9 +434,14 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsCondAlloc node) {
-        // pinscondalloc_st(holder) ::= <<
+        // pinscondalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinscondalloc_st");
     	st.add("holder", node.m_holder);
+    	if (node.m_holder.isGlobal() || node.m_holder.isGlobalValue()) {
+    		st.add("is_global", true);
+    	} else {
+    		st.add("is_global", false);
+    	}
     	
     	return st;
     }

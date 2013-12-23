@@ -56,7 +56,10 @@ public class Test_01 {
 //        		"test/src_utfpl/10_thread_create.mutfpl"
 //        		"test/src_ats/10_thread_create.dats"
 //        		"test/src_ats/11_mutex_operation.dats"
-        		"test/src_ats/12_cond_operation.dats"
+//        		"test/src_ats/12_cond_operation.dats"
+//        		"test/src_ats/13_sync_operation.dats"
+        		"test/src_utfpl/50_producer_consumer.mutfpl"
+        		
         
         };
 

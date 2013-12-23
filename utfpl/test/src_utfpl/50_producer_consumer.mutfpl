@@ -1,0 +1,53 @@
+
+
+var gn := 0
+
+var m := sys_mutex_allocate()
+var c := sys_cond_allocate()
+
+
+fun producer (x) = let
+  val () = sys_mutex_lock (m)
+
+  fun loop () =
+    if (eq (gn, 1)) then let
+      val () = sys_cond_wait (c, m)
+    in
+      loop ()
+    end else let 
+      gn := add (gn, 1)
+      val () = sys_cond_signal (c)
+      val () = sys_mutex_unlock (m)
+    in
+      producer (x)
+    end
+in
+  loop ()
+end
+
+
+fun consumer (x) = let
+  val () = sys_mutex_lock (m)
+
+  fun loop () = 
+    if (eq (gn, 0)) then let
+      val () = sys_cond_wait (c, m)
+    in
+      loop ()
+    end else let
+      gn := sub (gn, 1)
+      val () = sys_cond_signal (c)
+      val () = sys_mutex_unlock (m)
+    in
+      consumer (x)
+    end
+in
+  loop ()
+end
+
+val args = sys_list_nil ()
+val args = sys_list_cons (0, args) 
+val () = sys_thread_create(1, producer, args)
+val () = sys_thread_create(2, consumer, args)
+
+

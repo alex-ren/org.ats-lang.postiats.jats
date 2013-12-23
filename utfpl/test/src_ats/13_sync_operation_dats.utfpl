@@ -1,0 +1,27 @@
+val gv_47 = D2Ecst<sys_gvar_create_2437> (1)
+val gm_48 = D2Ecst<sys_mutex_allocate_2441> ()
+val gc_49 = D2Ecst<sys_cond_allocate_2445> ()
+fun foo_50 = lam (pat<x_51>) = 
+  let
+    val () = D2Ecst<sys_mutex_lock_2443> (gm_48)
+    val () = D2Ecst<sys_gvar_update_2438> (gv_47, x_51)
+    val () = D2Ecst<sys_mutex_unlock_2444> (gm_48)
+  in
+    ()
+  end
+fun foo_cond_52 = lam () = 
+  let
+    val () = D2Ecst<sys_cond_wait_2447> (gc_49, gm_48)
+    val () = D2Ecst<sys_cond_signal_2448> (gc_49)
+    val () = D2Ecst<sys_cond_broadcast_2449> (gc_49)
+    val () = D2Ecst<sys_cond_release_2446> (gc_49)
+  in
+    ()
+  end
+fun xxf_53 = lam () = 
+  3
+val ret_54 = xxf_53 ()
+val () = D2Ecst<sys_mutex_lock_2443> (gm_48)
+val () = D2Ecst<sys_thread_create_2440> (1, foo_50, 3)
+val () = D2Ecst<sys_mutex_unlock_2444> (gm_48)
+val () = D2Ecst<sys_gvar_update_2438> (gv_47, 2)

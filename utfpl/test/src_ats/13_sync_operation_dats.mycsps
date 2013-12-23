@@ -1,0 +1,85 @@
+var gv_39;
+var gm_40;
+var gc_41;
+var ret_46;
+
+foo_42(x_43<escaped>@<GStack(0)>, gm_esc_52<escaped>@<GStack(1)>) =
+step {
+  nontail_call with (gm_esc_52 from <GStack(1)>)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get __1
+  gv_39 = x_43 from <GStack(0)>;
+} -> Skip;
+step {
+  nontail_call with (gm_esc_52 from <GStack(1)>)
+} -> Skip;
+<process call> = sys_mutex_unlock;
+step {
+  rewind frame of sys_mutex_unlock to get __1
+  return ();
+} -> Skip;
+
+foo_cond_44(gc_esc_53<escaped>@<GStack(0)>, gm_esc_54<escaped>@<GStack(1)>) =
+step {
+  nontail_call with (gc_esc_53 from <GStack(0)>, gm_esc_54 from <GStack(1)>)
+} -> Skip;
+<process call> = sys_cond_wait;
+step {
+  rewind frame of sys_cond_wait to get __1
+  nontail_call with (gc_esc_53 from <GStack(0)>)
+} -> Skip;
+<process call> = sys_cond_signal;
+step {
+  rewind frame of sys_cond_signal to get __1
+  nontail_call with (gc_esc_53 from <GStack(0)>)
+} -> Skip;
+<process call> = sys_cond_broadcast;
+step {
+  rewind frame of sys_cond_broadcast to get __1
+  cond_release(gc_esc_53 from <GStack(0)>)
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+xxf_45() =
+step {
+  return 3;
+} -> Skip;
+
+main() = 
+step {
+  gv_39 = 1;
+} -> Skip;
+step {
+  gm_40 = mutex_alloc();
+} -> Skip;
+step {
+  gc_41 = cond_alloc();
+} -> Skip;
+step {
+  nontail_call with ()
+} -> Skip;
+<process call> = xxf_45;
+step {
+  rewind frame of xxf_45 to get ret_46
+  nontail_call with (gm_40)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get __1
+  var temp_50 = call(sys_list_nil);
+  var temp_51<escaped> = call(sys_list_cons, 3, temp_50);
+} -> Skip;
+<thread_create> (1, foo_42, temp_51 from <GStack(0)>);
+step {
+  nontail_call with (gm_40)
+} -> Skip;
+<process call> = sys_mutex_unlock;
+step {
+  rewind frame of sys_mutex_unlock to get __1
+  gv_39 = 2;
+} -> Skip;
+

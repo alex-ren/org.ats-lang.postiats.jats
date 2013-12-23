@@ -212,7 +212,7 @@ public class CSPSTransformer {
                 m_cblkLst.add(cprocess);
                 
                 // No epilogue at all.
-                if (!(ins.m_holder.isAnony() || ins.m_holder.isRet())) {
+                if (!ins.m_holder.isRet()) {
                     CTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                     CIProcCallEpilog cCallEpi = new CIProcCallEpilog(m_cbEvt, ins.m_funlab, ctHolder);
                     m_cbEvt.add(cCallEpi);

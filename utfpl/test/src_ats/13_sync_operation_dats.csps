@@ -1,0 +1,214 @@
+// ===============================
+
+
+#import "PStack";
+
+#import "MyLib";
+
+// =====================
+
+var<PStack> sys_gstack = new PStack();
+var<Allocator> sys_tid_allocator = new Allocator();  // todo: improve
+
+var sys_thread_num = 1;
+
+channel sys_ch_sch 0;
+
+var sch_sys_tid;
+var sch_fn;
+var sch_args;
+
+sch_thread_starter(sys_tid, fn, args) =
+  thread_init{sys_gstack.add_frame(sys_tid, args);} ->
+  if (fn == 2) {
+    foo_42(sys_tid); proc_thread_finalize(sys_tid)
+    |||
+    Scheduler()
+  }
+  else {Skip}
+;
+
+Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args -> 
+                      {sys_thread_num++;
+                       sch_sys_tid = sys_tid;
+                       sch_fn = fn;
+                       sch_args = args;
+                      } -> Skip
+                      };
+  sch_thread_starter(sch_sys_tid, sch_fn, sch_args)
+  )
+  []
+  ifa (sys_thread_num == 0) {Skip}
+  ;
+
+proc_thread_finalize(sys_tid) = 
+  thread_finalize{
+    sys_gstack.delete_frame(sys_tid); 
+    sys_thread_num--;
+    sys_tid_allocator.release(sys_tid);
+  } -> Skip;
+
+sys_thread_create (tid, fn, args) = sys_ch_sch!tid.fn.args -> Skip;
+
+// =====================
+
+var mutex[10];  // 10 mutex
+
+var<Allocator> sys_mutex_manager = new Allocator();
+
+sys_mutex_lock(sys_tid) = sys_mutex_lock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
+
+sys_mutex_unlock(sys_tid) = sys_mutex_unlock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+sys_mutex_unlock_impl(sys_tid, m) = sys_munlock{mutex[m] = 0} -> Skip;
+// ======================
+
+var cond_holder[10];  // 10 condition
+
+var<Allocator> sys_cond_manager = new Allocator();
+
+channel cond_chan[10] 0;
+var cond_count = 0;
+
+sys_cond_wait(sys_tid) = sys_cond_wait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+sys_cond_wait_impl(sys_tid, c, m) = atomic{cadd{cond_holder[c]++;} -> 
+                                    sys_mutex_unlock_impl(sys_tid, m); 
+                                    cond_chan[c]?_ -> sys_mutex_lock_impl(sys_tid, m)};
+
+sys_cond_signal(sys_tid) = sys_cond_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
+
+          csub{cond_holder[c]--;} ->
+
+          cond_chan[c]!1
+
+          -> Skip
+
+        }};
+
+
+sys_cond_broadcast(sys_tid) = sys_cond_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {
+
+          sys_signaln(c, cond_holder[c]); csub{cond_holder[c]=0;} -> Skip
+
+        }};
+
+sys_signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> sys_signaln(c, n-1)}
+                else {Skip}
+                ;
+
+// ===============================
+var<LinkedList> sys_list_manager = new LinkedList();
+
+#define sys_list_nil  sys_list_manager.list_nil ();
+#define sys_list_cons(x, xs) sys_list_manager.list_cons (x, xs);
+
+// =====================
+
+var gv_39 = 0;
+var gm_40 = 0;
+var gc_41 = 0;
+var ret_46 = 0;
+
+foo_42(sys_tid) =
+  {  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 1), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_mutex_lock(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  gv_39 = sys_gstack.frame_get(sys_tid, 0, 0);
+  } ->
+  {  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 1), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_mutex_unlock(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+foo_cond_44(sys_tid) =
+  {  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
+  __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 1), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_cond_wait(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_cond_signal(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_cond_broadcast(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  sys_cond_manager.release(sys_gstack.frame_get(sys_tid, 0, 0));
+  } ->
+  {  sys_gstack.frame_push(sys_tid, 0);
+  } ->
+  Skip
+  ;
+
+xxf_45(sys_tid) =
+  {  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+// =====================
+
+main_s(sys_tid) = 
+  main_init{var __temp_list_args = sys_list_manager.list_nil ();
+            sys_gstack.add_frame(0, __temp_list_args); 
+            } ->
+  {  gv_39 = 1;
+  } ->
+  {  gm_40 = sys_mutex_manager.allocate();
+  } ->
+  {  gc_41 = sys_cond_manager.allocate();
+  } ->
+  {  var __temp_list_args = sys_list_manager.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  xxf_45(sys_tid);
+  {  ret_46 = sys_gstack.retopr_frame(sys_tid);
+  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (gm_40, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_mutex_lock(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  var temp_50 = sys_list_nil;
+  var temp_51 = call(sys_list_cons, 3, temp_50);
+  sys_gstack.frame_push(sys_tid, temp_51);
+  } ->
+  sys_thread_create(1, 2, sys_gstack.frame_get(sys_tid, 0, 0));
+  {  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (gm_40, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  sys_mutex_unlock(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  gv_39 = 2;
+  } ->
+  Skip; 
+  proc_thread_finalize(sys_tid);
+
+main = main_s(0) ||| Scheduler;
+// ||| mutex_allocator ||| cond_allocator;
+
+

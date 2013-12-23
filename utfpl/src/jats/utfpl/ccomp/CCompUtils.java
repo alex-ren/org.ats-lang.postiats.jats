@@ -16,6 +16,8 @@ public class CCompUtils {
 	// MUTFPL layer
 	public static final String cSysListNil = "sys_list_nil";
 	public static final String cSysListCons = "sys_list_cons";
+	public static final String cSysListHead = "sys_list_get_header";
+	public static final String cSysListTail = "sys_list_get_tail";
 	
 	public static final String cSysTidAllocate = "sys_tid_allocate";
 	// public static final String cSysTidRelease = "sys_tid_release";
@@ -183,6 +185,12 @@ public class CCompUtils {
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
         
         func = cSysListCons;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
+        
+        func = cSysListHead;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
+        
+        func = cSysListTail;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
         
         /* ********* *********** ************* ************** */
