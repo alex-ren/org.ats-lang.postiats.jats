@@ -1,10 +1,10 @@
 package jats.utfpl.instruction;
 
 
-public class InsAllocMutex implements UtfplInstruction {
+public class InsMutexAlloc implements UtfplInstruction {
     public TID m_holder;
     
-    public InsAllocMutex(TID holder) {
+    public InsMutexAlloc(TID holder) {
         m_holder = holder;
     }
 

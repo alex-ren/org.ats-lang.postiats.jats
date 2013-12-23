@@ -266,16 +266,6 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     @Override
-    public Object visit(CIMutexAlloc node) {
-        // mutex_alloc_ins_st(dst, escape) ::= <<
-        ST st = m_stg.getInstanceOf("mutex_alloc_ins_st");
-        st.add("dst", node.m_holder.accept(this));
-        st.add("escape", node.m_holder.isEscaped());
-        
-        return st;
-    }
-
-    @Override
     public Object visit(CIStore node) {
         // store_ins_st(src, dst) ::= <<
         ST st = m_stg.getInstanceOf("store_ins_st");
@@ -316,6 +306,54 @@ public class CSPSPrinter implements CSPSVisitor {
         // vardef_ins_st(holder) ::= <<
         ST st = m_stg.getInstanceOf("vardef_ins_st");
         st.add("holder", node.m_id.getTID());
+        
+        return st;
+    }
+
+	@Override
+    public Object visit(CBThreadCreate node) {
+		// thread_create_block_st(tid, funlab, args) ::= <<
+		ST st = m_stg.getInstanceOf("thread_create_block_st");
+		st.add("tid", node.m_tid.accept(this));
+		st.add("funlab", node.m_funlab);
+		st.add("args", node.m_args.accept(this));
+		return st;
+    }
+
+    @Override
+    public Object visit(CIMutexAlloc node) {
+        // mutex_alloc_ins_st(dst, escape) ::= <<
+        ST st = m_stg.getInstanceOf("mutex_alloc_ins_st");
+        st.add("dst", node.m_holder.accept(this));
+        st.add("escape", node.m_holder.isEscaped());
+        
+        return st;
+    }
+
+	@Override
+    public Object visit(CIMutexRelease node) {
+        // mutex_release_ins_st(mutex) ::= <<
+        ST st = m_stg.getInstanceOf("mutex_release_ins_st");
+        st.add("mutex", node.m_mutex.accept(this));
+        
+        return st;
+    }
+	
+    @Override
+    public Object visit(CICondAlloc node) {
+        // cond_alloc_ins_st(dst, escape) ::= <<
+        ST st = m_stg.getInstanceOf("cond_alloc_ins_st");
+        st.add("dst", node.m_holder.accept(this));
+        st.add("escape", node.m_holder.isEscaped());
+        
+        return st;
+    }
+
+	@Override
+    public Object visit(CICondRelease node) {
+        // cond_release_ins_st(cond) ::= <<
+        ST st = m_stg.getInstanceOf("cond_release_ins_st");
+        st.add("cond", node.m_cond.accept(this));
         
         return st;
     }

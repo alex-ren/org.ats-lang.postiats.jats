@@ -1,0 +1,10 @@
+fun foo_47 = lam (x_48) = 
+  let
+    val y_49 = x_48
+  in
+    y_49
+  end
+val gm_50 = D2Ecst<sys_mutex_allocate_2441> ()
+val () = D2Ecst<sys_mutex_lock_2443> (gm_50)
+val () = D2Ecst<sys_mutex_unlock_2444> (gm_50)
+val () = D2Ecst<sys_mutex_release_2442> (gm_50)

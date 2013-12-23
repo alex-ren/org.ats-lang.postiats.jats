@@ -1,0 +1,24 @@
+var gm_39;
+
+foo_36(x_37<escaped>@<GStack(0)>) =
+step {
+  var y_38 = x_37 from <GStack(0)>;
+  return y_38;
+} -> Skip;
+
+main() = 
+step {
+  gm_39 = mutex_alloc();
+} -> Skip;
+step {
+  nontail_call with (gm_39)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  nontail_call with (gm_39)
+} -> Skip;
+<process call> = sys_mutex_unlock;
+step {
+  mutex_release(gm_39)
+} -> Skip;
+

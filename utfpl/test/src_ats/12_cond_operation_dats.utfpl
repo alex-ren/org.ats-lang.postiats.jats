@@ -1,0 +1,6 @@
+val gm_47 = D2Ecst<sys_mutex_allocate_2441> ()
+val gc_48 = D2Ecst<sys_cond_allocate_2445> ()
+val () = D2Ecst<sys_cond_wait_2447> (gc_48, gm_47)
+val () = D2Ecst<sys_cond_signal_2448> (gc_48)
+val () = D2Ecst<sys_cond_broadcast_2449> (gc_48)
+val () = D2Ecst<sys_cond_release_2446> (gc_48)

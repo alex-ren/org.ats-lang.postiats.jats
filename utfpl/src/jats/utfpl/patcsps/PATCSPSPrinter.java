@@ -3,6 +3,7 @@ package jats.utfpl.patcsps;
 import jats.utfpl.instruction.TID;
 
 import java.net.URL;
+import java.util.Iterator;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -26,7 +27,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PModel node) {
-        // pmodel_st(scheduler_body, gvar_lst, proc_lst, thread_lst, main_proc_body) ::= <<
+        // pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body) ::= <<
         ST st = m_stg.getInstanceOf("pmodel_st");
 
         for (PGDec gv: node.m_gvLst) {
@@ -38,13 +39,21 @@ public class PATCSPSPrinter implements PNodeVisitor {
         for (PGDecProc proc: node.m_procLst) {
             st.add("proc_lst", proc.accept(this));
         }
-//        
-//        st.add("scheduler_body", node.m_SchedulerBody.accept(this));
-//        
-//        for (PGDecProc thread: node.m_threadLst) {
-//            st.add("thread_lst", thread.accept(this));
-//        }
-//        
+        
+        // scheduler_body_st(proc1, proc_lst) ::= <<
+        ST stSch = m_stg.getInstanceOf("scheduler_body_st");
+        
+        Iterator<PGDecProc> iter = node.m_threadLst.iterator();
+        if (iter.hasNext()) {
+            stSch.add("proc1", iter.next().m_name);
+            
+            while (iter.hasNext()) {
+            	stSch.add("proc_lst", iter.next().m_name);
+            }
+        }
+        
+        st.add("scheduler_body", stSch);
+        
         return st;
     }
 
@@ -362,16 +371,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
     @Override
-    public Object visit(PInsMutexAlloc node) {
-        // pinsmutexalloc_st(holder) ::= <<
-    	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
-    	st.add("holder", node.m_holder);
-    	
-    	return st;
-    }
-
-
-    @Override
     public Object visit(PStatProcCallPrelogue node) {
         // pstatproccallprelogue_st(args, is_tail_call) ::= <<
         ST st = m_stg.getInstanceOf("pstatproccallprelogue_st");
@@ -392,6 +391,56 @@ public class PATCSPSPrinter implements PNodeVisitor {
     	return st;
     }
 
+
+	@Override
+    public Object visit(PProcThreadCreate node) {
+	    // pprocthreadcreate_st(tid, funaddr, args) ::= <<
+		ST st = m_stg.getInstanceOf("pprocthreadcreate_st");
+		st.add("tid", node.m_tid.accept(this));
+		st.add("funaddr", node.m_funlab.getAddr());
+		st.add("args", node.m_args.accept(this));
+		
+		return st;
+    }
+
+
+
+    @Override
+    public Object visit(PInsMutexAlloc node) {
+        // pinsmutexalloc_st(holder) ::= <<
+    	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
+    	st.add("holder", node.m_holder);
+    	
+    	return st;
+    }
+
+	@Override
+    public Object visit(PInsMutexRelease node) {
+        // pinsmutexrelease_st(mutex) ::= <<
+    	ST st = m_stg.getInstanceOf("pinsmutexrelease_st");
+    	st.add("mutex", node.m_mutex.accept(this));
+    	
+    	return st;
+    }
+
+
+    @Override
+    public Object visit(PInsCondAlloc node) {
+        // pinscondalloc_st(holder) ::= <<
+    	ST st = m_stg.getInstanceOf("pinscondalloc_st");
+    	st.add("holder", node.m_holder);
+    	
+    	return st;
+    }
+
+	@Override
+    public Object visit(PInsCondRelease node) {
+        // pinscondrelease_st(cond) ::= <<
+    	ST st = m_stg.getInstanceOf("pinscondrelease_st");
+    	st.add("cond", node.m_cond.accept(this));
+    	
+    	return st;
+    }
 
 }
 

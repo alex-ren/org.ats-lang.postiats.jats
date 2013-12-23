@@ -243,14 +243,6 @@ public class InstructionPrinter implements InsVisitor {
         return st;
     }
 
-    @Override
-    public Object visit(InsAllocMutex ins) {
-        ST st = m_stg.getInstanceOf("allocate_mutex_ins_st");
-        
-        st.add("holder", ins.m_holder);
-        
-        return st;
-    }
 
     @Override
     public Object visit(InsLoad ins) {
@@ -261,4 +253,52 @@ public class InstructionPrinter implements InsVisitor {
         return st;
     }
 
+	@Override
+    public Object visit(InsThreadCreate ins) { 
+	    ST st = m_stg.getInstanceOf("create_thread_ins_st");
+	    st.add("tid", ins.m_tid);
+	    st.add("funlab", ins.m_funlab);
+	    st.add("args", ins.m_args);
+	    
+	    return st;
+    }
+
+
+    @Override
+    public Object visit(InsMutexAlloc ins) {
+        ST st = m_stg.getInstanceOf("mutex_allocate_ins_st");
+        
+        st.add("holder", ins.m_holder);
+        
+        return st;
+    }
+    
+	@Override
+    public Object visit(InsMutexRelease ins) {
+        ST st = m_stg.getInstanceOf("mutex_release_ins_st");
+        st.add("mutex", ins.m_mutex);
+        
+        return st;
+    }
+
+    @Override
+    public Object visit(InsCondAlloc ins) {
+        ST st = m_stg.getInstanceOf("cond_allocate_ins_st");
+        
+        st.add("holder", ins.m_holder);
+        
+        return st;
+    }
+    
+	@Override
+    public Object visit(InsCondRelease ins) {
+        ST st = m_stg.getInstanceOf("cond_release_ins_st");
+        st.add("cond", ins.m_cond);
+        
+        return st;
+    }
+
+
 }
+
+

@@ -9,7 +9,9 @@ import jats.utfpl.instruction.AtomValue;
 import jats.utfpl.instruction.FunctionInstruction;
 import jats.utfpl.instruction.GlobalEntity;
 import jats.utfpl.instruction.GlobalValue;
-import jats.utfpl.instruction.InsAllocMutex;
+import jats.utfpl.instruction.InsCondAlloc;
+import jats.utfpl.instruction.InsCondRelease;
+import jats.utfpl.instruction.InsMutexAlloc;
 import jats.utfpl.instruction.InsCall;
 import jats.utfpl.instruction.InsCond;
 import jats.utfpl.instruction.InsFuncDef;
@@ -17,9 +19,11 @@ import jats.utfpl.instruction.InsFuncGroup;
 import jats.utfpl.instruction.InsLoad;
 import jats.utfpl.instruction.InsLoadArray;
 import jats.utfpl.instruction.InsMove;
+import jats.utfpl.instruction.InsMutexRelease;
 import jats.utfpl.instruction.InsRet;
 import jats.utfpl.instruction.InsStore;
 import jats.utfpl.instruction.InsStoreArray;
+import jats.utfpl.instruction.InsThreadCreate;
 import jats.utfpl.instruction.InsVisitor;
 import jats.utfpl.instruction.ProgramInstruction;
 import jats.utfpl.instruction.TID;
@@ -333,8 +337,36 @@ public class CSPSTransformer {
             
         }
 
+
         @Override
-        public Object visit(InsAllocMutex ins) {
+        public Object visit(InsMove ins) {
+            CTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+            CTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+			CIMove nIns = new CIMove(v, holder, m_cbEvt);
+			m_cbEvt.add(nIns);
+
+            return null;
+        }
+
+		@Override
+        public Object visit(InsThreadCreate ins) {
+			CBThreadCreate nBlk = new CBThreadCreate(ins.m_funlab);
+			
+	        CTemp tid = ValPrim2CTemp(ins.m_tid, m_subMap, m_funLab, nBlk);
+	        CTemp args = ValPrim2CTemp(ins.m_args, m_subMap, m_funLab, nBlk);
+	        
+	        nBlk.setContent(tid, args);
+	        
+            if (0 != m_cbEvt.size()) {
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new CBEvent();
+            }
+            m_cblkLst.add(nBlk);
+            return null;
+        }
+
+        @Override
+        public Object visit(InsMutexAlloc ins) {
             CTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
             CIMutexAlloc nIns = new CIMutexAlloc(holder, m_cbEvt);
@@ -352,17 +384,47 @@ public class CSPSTransformer {
             
             return null;
         }
-
-        @Override
-        public Object visit(InsMove ins) {
-            CTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
-            CTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-			CIMove nIns = new CIMove(v, holder, m_cbEvt);
-			m_cbEvt.add(nIns);
-
+        
+		@Override
+        public Object visit(InsMutexRelease ins) {
+			CTemp mutex = ValPrim2CTemp(ins.m_mutex, m_subMap, m_funLab, m_cbEvt);
+			CIMutexRelease nIns = new CIMutexRelease(m_cbEvt, mutex);
+            m_cbEvt.add(nIns);
+            m_cblkLst.add(m_cbEvt);
+            m_cbEvt = new CBEvent();
             return null;
         }
+		
 
+        @Override
+        public Object visit(InsCondAlloc ins) {
+            CTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            
+            CICondAlloc nIns = new CICondAlloc(holder, m_cbEvt);
+            m_cbEvt.add(nIns);
+            
+            // Add return ins
+            if (ins.m_holder.isRet()) {
+                CTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+                m_cbEvt.add(retIns);
+            }
+            
+            m_cblkLst.add(m_cbEvt);
+            m_cbEvt = new CBEvent();
+            
+            return null;
+        }
+        
+		@Override
+        public Object visit(InsCondRelease ins) {
+			CTemp cond = ValPrim2CTemp(ins.m_cond, m_subMap, m_funLab, m_cbEvt);
+			CICondRelease nIns = new CICondRelease(m_cbEvt, cond);
+            m_cbEvt.add(nIns);
+            m_cblkLst.add(m_cbEvt);
+            m_cbEvt = new CBEvent();
+            return null;
+        }
     }
 
     static private List<CBlock> InsLst2CBlockLst2(List<UtfplInstruction> insLst, Map<TID, VariableInfo> subMap, TID funLab)

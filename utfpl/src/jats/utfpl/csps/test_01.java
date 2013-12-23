@@ -39,9 +39,10 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 public class test_01 {
     public static void main(String[] args) throws IOException, RecognitionException, InterruptedException {
         String [] paths = {
-        		"test/test09_all.utfpl"
-                , "test/json/test01.dats"
-                , "test/json/test02.dats"
+//        		"test/test09_all.utfpl"
+//                , "test/json/test01.dats"
+//                , "test/json/test02.dats"
+        		"test/src_utfpl/10_thread_create.mutfpl"
     
         };
 

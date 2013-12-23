@@ -1,6 +1,5 @@
 package jats.utfpl.ccomp;
 
-import jats.utfpl.instruction.InstructionTransformer;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeFunc;
@@ -9,23 +8,36 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.utils.MapScope;
 
 public class CCompUtils {
+	// ATS layer
 //	public static final String cSysGvalCreate = "sys_gval_create";
 	public static final String cSysGvarCreate = "sys_gvar_create";
 	public static final String cSysGvarUpdate = "sys_gvar_update";
 	
+	// MUTFPL layer
 	public static final String cSysListNil = "sys_list_nil";
 	public static final String cSysListCons = "sys_list_cons";
 	
+	public static final String cSysTidAllocate = "sys_tid_allocate";
+	// public static final String cSysTidRelease = "sys_tid_release";
+	
     public static final String cSysThreadCreate = "sys_thread_create";
-//    public static final String allocateRef = "allocateRef";
-//    public static final String releaseRef = "releaseRef";
-//    private static String [] m_funcs = new String[] {
-//        "add", "sub", "mul", "div"
-//        , "lt", "lte", "gt", "gte", "eq"
-//        , "hello", "mojo", "printx"
-//        , "createEvt"
-//        , createThread
-//        };
+    
+    public static final String cSysArraySet = "sys_array_set";
+    public static final String cSysArrayGet = "sys_array_get";
+    
+    public static final String cSysAddrSet = "sys_addr_set";
+    
+    public static final String cSysMutexAlloc = "sys_mutex_allocate";
+    public static final String cSysMutexRelease = "sys_mutex_release";
+    public static final String cSysMutexLock = "sys_mutex_lock";
+    public static final String cSysMutexUnlock = "sys_mutex_unlock";
+    
+    public static final String cSysCondAlloc = "sys_cond_allocate";
+    public static final String cSysCondRelease = "sys_cond_release";
+    public static final String cSysCondWait = "sys_cond_wait";
+    public static final String cSysCondSignal = "sys_cond_signal";
+    public static final String cSysCondBroadcast = "sys_cond_broadcast";
+
 	
 	public static String sym2name(String sym) {
 		if (sym.equals("+")) {
@@ -106,47 +118,52 @@ public class CCompUtils {
         
         /* ********* *********** ************* ************** */
         
-        func = InstructionTransformer.cSetAddr;
+        func = cSysAddrSet;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
-        func = InstructionTransformer.cSetArray;
+        func = cSysArraySet;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
-        func = InstructionTransformer.cGetArray;
+        func = cSysArrayGet;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        /* ********* *********** ************* ************** */
         
         func = "createEvt";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+
+        /* ********* *********** ************* ************** */
         
-        func = "thread_create";
+        func = cSysMutexAlloc;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
         
-        func = "thread_join";
+        func = cSysMutexRelease;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
-        func = InstructionTransformer.cAllocMutex;
+        func = cSysMutexLock;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = cSysMutexUnlock;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        /* ********* *********** ************* ************** */
+        
+        func = cSysCondAlloc;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
         
-        func = "mutex_release";
+        func = cSysCondRelease;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
-        func = "mutex_lock";
+        func = cSysCondWait;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
-        func = "mutex_unlock";
+        func = cSysCondSignal;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
-        func = "cond_allocate";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
-        
-        func = "cond_release";
+        func = cSysCondBroadcast;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
-        func = "cond_wait";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
-        
-        func = "cond_signal";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        /* ********* *********** ************* ************** */
         
         func = "ref_allocate";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
@@ -171,6 +188,9 @@ public class CCompUtils {
         /* ********* *********** ************* ************** */
         
         func = cSysThreadCreate;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+
+        func = "thread_join";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         /* ********* *********** ************* ************** */

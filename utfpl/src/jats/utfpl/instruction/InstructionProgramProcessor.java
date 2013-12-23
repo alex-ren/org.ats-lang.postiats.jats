@@ -194,17 +194,6 @@ public class InstructionProgramProcessor {
             }
         }
 
-        @Override
-        public Object visit(InsAllocMutex ins) {
-            if (null == m_subMap) {
-                return ins;
-            } else {
-                TID nHolder = ins.m_holder.dup();
-                m_subMap.put(ins.m_holder, nHolder);
-                
-                return new InsAllocMutex(nHolder);
-            }
-        }
 
         @Override
         public Object visit(InsMove ins) {
@@ -229,6 +218,67 @@ public class InstructionProgramProcessor {
                 m_subMap.put(ins.m_localHolder, nLocalHolder);
                 
                 return new InsLoad(ins.m_globalVar, nLocalHolder);
+            }
+        }
+
+		@Override
+        public Object visit(InsThreadCreate ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+    	        ValPrim nTid = subsVP(ins.m_tid, m_subMap);
+    	        ValPrim nArgs = subsVP(ins.m_args, m_subMap);
+    	        InsThreadCreate nIns = new InsThreadCreate(nTid, ins.m_funlab, nArgs);
+    	        
+    	        return nIns;
+            }
+        }
+
+        @Override
+        public Object visit(InsMutexAlloc ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+                TID nHolder = ins.m_holder.dup();
+                m_subMap.put(ins.m_holder, nHolder);
+                
+                return new InsMutexAlloc(nHolder);
+            }
+        }
+        
+		@Override
+        public Object visit(InsMutexRelease ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+    	        ValPrim nMutex = subsVP(ins.m_mutex, m_subMap);
+    	        InsMutexRelease nIns = new InsMutexRelease(nMutex);
+    	        
+    	        return nIns;
+            }
+        }
+		
+        @Override
+        public Object visit(InsCondAlloc ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+                TID nHolder = ins.m_holder.dup();
+                m_subMap.put(ins.m_holder, nHolder);
+                
+                return new InsCondAlloc(nHolder);
+            }
+        }
+        
+		@Override
+        public Object visit(InsCondRelease ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+    	        ValPrim nCond = subsVP(ins.m_cond, m_subMap);
+    	        InsCondRelease nIns = new InsCondRelease(nCond);
+    	        
+    	        return nIns;
             }
         }
     }

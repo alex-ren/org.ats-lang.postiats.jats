@@ -53,7 +53,10 @@ public class Test_01 {
 //        		"test/ats_src/08_if_proc_notret.dats"
 //        		"test/ats_src/09_if_proc_ret.dats"
 //        		"test/src_utfpl/21_global_value_rep.mutfpl"
-        		"test/src_utfpl/10_thread_create.mutfpl"
+//        		"test/src_utfpl/10_thread_create.mutfpl"
+//        		"test/src_ats/10_thread_create.dats"
+//        		"test/src_ats/11_mutex_operation.dats"
+        		"test/src_ats/12_cond_operation.dats"
         
         };
 

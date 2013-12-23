@@ -1,0 +1,23 @@
+var gv_36;
+
+foo_37(x_38<escaped>@<GStack(0)>) =
+step {
+  gv_36 = x_38 from <GStack(0)>;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+main() = 
+step {
+  gv_36 = 1;
+} -> Skip;
+step {
+  var temp_40 = call(sys_list_nil);
+  var temp_41<escaped> = call(sys_list_cons, 2, temp_40);
+} -> Skip;
+<thread_create> (1, foo_37, temp_41 from <GStack(0)>);
+step {
+  gv_36 = 3;
+} -> Skip;
+

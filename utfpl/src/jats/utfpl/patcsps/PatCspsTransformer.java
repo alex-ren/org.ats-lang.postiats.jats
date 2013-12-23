@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import jats.utfpl.csps.CBThreadCreate;
 import jats.utfpl.csps.CBlock;
 import jats.utfpl.csps.CBCond;
 import jats.utfpl.csps.CBEvent;
 import jats.utfpl.csps.CICond;
+import jats.utfpl.csps.CICondAlloc;
+import jats.utfpl.csps.CICondRelease;
 import jats.utfpl.csps.CIFunCall;
 import jats.utfpl.csps.CILoad;
 import jats.utfpl.csps.CILoadArray;
 import jats.utfpl.csps.CIMove;
 import jats.utfpl.csps.CIMutexAlloc;
+import jats.utfpl.csps.CIMutexRelease;
 import jats.utfpl.csps.CIProcCallEpilog;
 import jats.utfpl.csps.CIProcCallPrelogue;
 import jats.utfpl.csps.CIStore;
@@ -257,18 +261,6 @@ public class PatCspsTransformer implements CSPSVisitor {
         return ret;
     }
 
-    @Override
-    public Object visit(CIMutexAlloc node) {
-        List<PStat> ret = new ArrayList<PStat>();
-        TID holder = node.m_holder.getTID();
-        
-        ret.add(new PInsMutexAlloc(holder));
-        if (node.m_holder.isEscaped()) {
-            ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
-        }
-
-        return ret;
-    }
 
     @Override
     public Object visit(CIStore node) {
@@ -331,6 +323,64 @@ public class PatCspsTransformer implements CSPSVisitor {
         
         return ret;
     }
+
+	@Override
+    public Object visit(CBThreadCreate node) {
+		PExp tid = (PExp)node.m_tid.accept(this);
+		PExp args = (PExp)node.m_args.accept(this);
+		PProcThreadCreate proc = new PProcThreadCreate(tid, node.m_funlab, args);
+		
+		return proc;
+    }
+
+    @Override
+    public Object visit(CIMutexAlloc node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        TID holder = node.m_holder.getTID();
+        
+        ret.add(new PInsMutexAlloc(holder));
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
+        }
+
+        return ret;
+    }
+	@Override
+    public Object visit(CIMutexRelease node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        
+	    PExp mutex = (PExp)node.m_mutex.accept(this);
+	    
+	    PInsMutexRelease nIns = new PInsMutexRelease(mutex);
+	    ret.add(nIns);
+	    return ret;
+    }
+	
+
+    @Override
+    public Object visit(CICondAlloc node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        TID holder = node.m_holder.getTID();
+        
+        ret.add(new PInsCondAlloc(holder));
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getTID())));
+        }
+
+        return ret;
+    }
+    
+	@Override
+    public Object visit(CICondRelease node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        
+	    PExp cond = (PExp)node.m_cond.accept(this);
+	    
+	    PInsCondRelease nIns = new PInsCondRelease(cond);
+	    ret.add(nIns);
+	    return ret;
+    }
+	
 }
 
 

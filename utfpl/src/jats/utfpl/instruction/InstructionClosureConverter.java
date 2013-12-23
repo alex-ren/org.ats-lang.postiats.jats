@@ -180,12 +180,6 @@ public class InstructionClosureConverter {
         }
 
         @Override
-        public Object visit(InsAllocMutex ins) {
-            m_inScopeNames.add(ins.m_holder);
-            return null;
-        }
-
-        @Override
         public Object visit(InsMove ins) {
             if (ins.m_vp instanceof TID) {
                 TID name = (TID)(ins.m_vp);
@@ -203,6 +197,51 @@ public class InstructionClosureConverter {
         public Object visit(InsLoad ins) {
             m_inScopeNames.add(ins.m_localHolder);
             return null;
+        }
+
+		@Override
+        public Object visit(InsThreadCreate ins) {
+            if (ins.m_tid instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_tid)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_tid);
+            }
+            
+            if (ins.m_args instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_args)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_args);
+            }
+            
+            return null;
+        }
+
+        @Override
+        public Object visit(InsMutexAlloc ins) {
+            m_inScopeNames.add(ins.m_holder);
+            return null;
+        }
+
+		@Override
+        public Object visit(InsMutexRelease ins) {
+            if (ins.m_mutex instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_mutex)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_mutex);
+            }
+	        return null;
+        }
+		
+        @Override
+        public Object visit(InsCondAlloc ins) {
+            m_inScopeNames.add(ins.m_holder);
+            return null;
+        }
+
+		@Override
+        public Object visit(InsCondRelease ins) {
+            if (ins.m_cond instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_cond)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_cond);
+            }
+	        return null;
         }
 	}
 
@@ -371,12 +410,6 @@ public class InstructionClosureConverter {
         }
 
         @Override
-        public Object visit(InsAllocMutex ins) {
-            m_inScopeNames.add(ins.m_holder);
-            return null;
-        }
-
-        @Override
         public Object visit(InsMove ins) {
             if (ins.m_vp instanceof TID) {
                 TID name = (TID) (ins.m_vp);
@@ -392,6 +425,51 @@ public class InstructionClosureConverter {
         public Object visit(InsLoad ins) {
             m_inScopeNames.add(ins.m_localHolder);
             return null;
+        }
+
+		@Override
+        public Object visit(InsThreadCreate ins) {
+            if (ins.m_tid instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_tid)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_tid);
+            }
+            
+            if (ins.m_args instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_args)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_args);
+            }
+            
+            return null;
+        }
+
+        @Override
+        public Object visit(InsMutexAlloc ins) {
+            m_inScopeNames.add(ins.m_holder);
+            return null;
+        }
+
+		@Override
+        public Object visit(InsMutexRelease ins) {
+            if (ins.m_mutex instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_mutex)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_mutex);
+            }
+	        return null;
+        }
+		
+        @Override
+        public Object visit(InsCondAlloc ins) {
+            m_inScopeNames.add(ins.m_holder);
+            return null;
+        }
+
+		@Override
+        public Object visit(InsCondRelease ins) {
+            if (ins.m_cond instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_cond)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_cond);
+            }
+	        return null;
         }
 	}
 	
@@ -542,12 +620,6 @@ public class InstructionClosureConverter {
         }
 
         @Override
-        public Object visit(InsAllocMutex ins) {
-            m_insLst.add(ins);
-            return m_insLst;
-        }
-
-        @Override
         public Object visit(InsMove ins) {
             ValPrim nSrc = InstructionProgramProcessor.subsVP(ins.m_vp, m_map);
             
@@ -561,6 +633,44 @@ public class InstructionClosureConverter {
         public Object visit(InsLoad ins) {
             m_insLst.add(ins);
             return m_insLst;
+        }
+
+		@Override
+        public Object visit(InsThreadCreate ins) {
+	        ValPrim nTid = InstructionProgramProcessor.subsVP(ins.m_tid, m_map);
+	        ValPrim nArgs = InstructionProgramProcessor.subsVP(ins.m_args, m_map);
+	        InsThreadCreate nIns = new InsThreadCreate(nTid, ins.m_funlab, nArgs);
+	        
+	        m_insLst.add(nIns);
+	        return m_insLst;
+        }
+
+        @Override
+        public Object visit(InsMutexAlloc ins) {
+            m_insLst.add(ins);
+            return m_insLst;
+        }
+
+		@Override
+        public Object visit(InsMutexRelease ins) {
+			ValPrim nMutex = InstructionProgramProcessor.subsVP(ins.m_mutex, m_map);
+			InsMutexRelease nIns = new InsMutexRelease(nMutex);
+	        m_insLst.add(nIns);
+	        return m_insLst;
+        }
+		
+        @Override
+        public Object visit(InsCondAlloc ins) {
+            m_insLst.add(ins);
+            return m_insLst;
+        }
+
+		@Override
+        public Object visit(InsCondRelease ins) {
+			ValPrim nCond = InstructionProgramProcessor.subsVP(ins.m_cond, m_map);
+			InsCondRelease nIns = new InsCondRelease(nCond);
+	        m_insLst.add(nIns);
+	        return m_insLst;
         }
 	    
 	}

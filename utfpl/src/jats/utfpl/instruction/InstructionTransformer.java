@@ -3,6 +3,7 @@ package jats.utfpl.instruction;
 import java.util.ArrayList;
 import java.util.List;
 
+import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
@@ -40,11 +41,6 @@ import jats.utfpl.tree.DecVarDef;
  */
 
 public class InstructionTransformer implements TreeVisitor {
-    public static final String cSetArray = "sys_set_array";
-    public static final String cGetArray = "sys_get_array";
-    public static final String cSetAddr = "sys_set_addr";
-    
-    public static final String cAllocMutex = "sys_allocate_mutex";
     
     private List<UtfplInstruction> m_inslst;
     private TID m_tidIn;  // holder designated by caller
@@ -142,11 +138,10 @@ public class InstructionTransformer implements TreeVisitor {
             PATType retType = funlab.getFunReturnType();
             
             // principle:
-            // Do not add extra Return instruction in the end of the instruction list.
-            // The last instruction should convey information enough to know that
-            // it's the last instruction.
-            if (funlab.getID().equals(cSetArray)) {
-                // set_array(local, global, index)
+            // Add extra Return instruction in the end of the instruction list if
+            // the last instruction doesn't contain information of holder.
+            if (funlab.getID().equals(CCompUtils.cSysArraySet)) {
+                // sys_array_set (local, global, index)
                 IExp lv = node.m_explst.get(0);
                 lv.accept(this);
                 ValPrim localValue = m_vpOut;
@@ -169,8 +164,8 @@ public class InstructionTransformer implements TreeVisitor {
                 } else {
                     throw new Error("wrong " + holder);
                 }
-            } else if (funlab.getID().equals(cGetArray)) {
-                // holder = get_array(global, index)
+            } else if (funlab.getID().equals(CCompUtils.cSysArrayGet)) {
+                // holder = sys_array_get(global, index)
                 IExp gv = node.m_explst.get(0);
                 TID globalVar = ((ExpId)gv).m_tid;
                 
@@ -200,31 +195,115 @@ public class InstructionTransformer implements TreeVisitor {
                     m_inslst.add(loadArr);
                     m_vpOut = holder;
                 }
-            } else if (funlab.getID().equals(cAllocMutex)) {
-                // holder = alloc_mutex()
+            } else if (funlab.getID().equals(CCompUtils.cSysMutexAlloc)) {
+                // holder = sys_mutex_allocate ()
                 if (null == holder) {
                     TID localHolder = TID.createLocalVar("temp", retType);
-                    InsAllocMutex alloc = new InsAllocMutex(localHolder);
+                    InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
                     m_inslst.add(alloc);
                     m_vpOut = localHolder;  // need to return the name
                 }
                 if (holder.isGlobal()) {
                     // holder must be a valid name.
                     TID localHolder = TID.createLocalVar("temp", retType);
-                    InsAllocMutex alloc = new InsAllocMutex(localHolder);
+                    InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
                     m_inslst.add(alloc);
                     InsStore store = new InsStore(localHolder, holder);
                     m_inslst.add(store);
                 } else if (holder.isRet()) {
-                    InsAllocMutex alloc = new InsAllocMutex(holder);
+                    InsMutexAlloc alloc = new InsMutexAlloc(holder);
                     m_inslst.add(alloc);
                 } else if (TID.ANONY == holder) {
                     throw new Error("should not write in this way");                    
                 } else {
-                    InsAllocMutex alloc = new InsAllocMutex(holder);
+                    InsMutexAlloc alloc = new InsMutexAlloc(holder);
                     m_inslst.add(alloc);
                     m_vpOut = holder;
                 }
+            } else if (funlab.getID().equals(CCompUtils.cSysThreadCreate)) {
+                // val () = sys_thread_create (tid, funlab, args)
+                IExp eTid = node.m_explst.get(0);
+                eTid.accept(this);
+                ValPrim vpTid = m_vpOut;
+                
+                IExp eFunLab = node.m_explst.get(1);
+                TID funLab = ((ExpId)eFunLab).m_tid;
+                
+                IExp eArgs = node.m_explst.get(2);
+                eArgs.accept(this);
+                ValPrim args = m_vpOut;
+                
+                // This is sys_thread_create. There is no return value.
+                InsThreadCreate createThread = new InsThreadCreate(vpTid, funLab, args);
+                m_inslst.add(createThread);
+                if (holder.isRet()) {
+                    InsRet ret = new InsRet(TupleValue.cNone);
+                    m_inslst.add(ret);
+                } else if (holder == TID.ANONY) {
+                    // do nothing
+                } else {
+                    throw new Error("wrong " + holder);
+                }
+            } else if (funlab.getID().equals(CCompUtils.cSysMutexRelease)) {
+                // sys_mutex_release (m)
+                IExp mv = node.m_explst.get(0);
+                mv.accept(this);
+                ValPrim mutex = m_vpOut;
+
+                // This is release. There is no return value.
+                InsMutexRelease mutexRelease = new InsMutexRelease(mutex);
+                m_inslst.add(mutexRelease);
+                if (holder.isRet()) {
+                    InsRet ret = new InsRet(TupleValue.cNone);
+                    m_inslst.add(ret);
+                } else if (holder == TID.ANONY) {
+                    // do nothing
+                } else {
+                    throw new Error("wrong " + holder);
+                }
+            } else if (funlab.getID().equals(CCompUtils.cSysCondAlloc)) {
+                // holder = sys_cond_allocate ()
+                if (null == holder) {
+                    TID localHolder = TID.createLocalVar("temp", retType);
+                    InsCondAlloc alloc = new InsCondAlloc(localHolder);
+                    m_inslst.add(alloc);
+                    m_vpOut = localHolder;  // need to return the name
+                }
+                if (holder.isGlobal()) {
+                    // holder must be a valid name.
+                    TID localHolder = TID.createLocalVar("temp", retType);
+                    InsCondAlloc alloc = new InsCondAlloc(localHolder);
+                    m_inslst.add(alloc);
+                    InsStore store = new InsStore(localHolder, holder);
+                    m_inslst.add(store);
+                } else if (holder.isRet()) {
+                	InsCondAlloc alloc = new InsCondAlloc(holder);
+                    m_inslst.add(alloc);
+                } else if (TID.ANONY == holder) {
+                    throw new Error("should not write in this way");                    
+                } else {
+                	InsCondAlloc alloc = new InsCondAlloc(holder);
+                    m_inslst.add(alloc);
+                    m_vpOut = holder;
+                }
+            } else if (funlab.getID().equals(CCompUtils.cSysCondRelease)) {
+                // sys_cond_release (m)
+                IExp mv = node.m_explst.get(0);
+                mv.accept(this);
+                ValPrim cond = m_vpOut;
+
+                // This is release. There is no return value.
+                InsCondRelease condRelease = new InsCondRelease(cond);
+                m_inslst.add(condRelease);
+                if (holder.isRet()) {
+                    InsRet ret = new InsRet(TupleValue.cNone);
+                    m_inslst.add(ret);
+                } else if (holder == TID.ANONY) {
+                    // do nothing
+                } else {
+                    throw new Error("wrong " + holder);
+                }
+                
 //            } else if (other instructions) {
 //                xxx
             } else {  // normal function call

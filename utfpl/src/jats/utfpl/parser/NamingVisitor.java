@@ -115,8 +115,9 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(DecValDef node) {
 //        System.out.println("ValDef " + node.m_id.m_id);
 
+    	node.m_exp.accept(this);
         node.m_id.updateForGlobalDef(m_scope);
-        node.m_exp.accept(this);
+        
         
         return null;
     }
@@ -124,8 +125,9 @@ public class NamingVisitor implements TreeVisitor {
 
     @Override
     public Object visit(DecValBind node) {
+    	node.m_exp.accept(this);
         node.m_id.updateForLocalDef(m_scope);
-        node.m_exp.accept(this);
+        
         return null;
     }
 
@@ -154,11 +156,13 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(DecVarDef node) {
         // System.out.println("VarDef " + node.m_id.m_id);
-        node.m_id.updateForGlobalVar(m_scope, PATTypeSingleton.cUnknownType);
 
         if (null != node.m_exp) {
             node.m_exp.accept(this);
         }
+        
+        node.m_id.updateForGlobalVar(m_scope, PATTypeSingleton.cUnknownType);
+
         
         return null;
     }

@@ -12,7 +12,13 @@ public interface CSPSVisitor {
     public Object visit(CIReturn node);
     public Object visit(CILoad node);
     public Object visit(CILoadArray node);
+    
     public Object visit(CIMutexAlloc node);
+    public Object visit(CIMutexRelease node);
+    
+    public Object visit(CICondAlloc node);
+    public Object visit(CICondRelease node);
+    
     public Object visit(CIStore node);
     public Object visit(CIStoreArray node);
     public Object visit(CICond node);
@@ -22,6 +28,7 @@ public interface CSPSVisitor {
     public Object visit(CTempID node);
     public Object visit(CTempVal node);
     
+    public Object visit(CBThreadCreate node);
 }
 
 

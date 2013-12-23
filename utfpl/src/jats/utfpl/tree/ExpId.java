@@ -66,7 +66,9 @@ public class ExpId extends IExp {
   	return m_sid.equals(CCompUtils.cSysGvarUpdate);
   }
 
-  
+  public boolean isSysThreadCreate() {
+	  return m_sid.equals(CCompUtils.cSysThreadCreate);
+  }
   
     @Override
     public Object accept(TreeVisitor visitor) {

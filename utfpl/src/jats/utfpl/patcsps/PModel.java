@@ -1,5 +1,6 @@
 package jats.utfpl.patcsps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -7,10 +8,9 @@ public class PModel implements PNode {
     public List<PGDec> m_gvLst;
     public PProc m_mainProcBody;
     public List<PGDecProc> m_procLst;  // all the processes in the program
+    public List<PGDecProc> m_threadLst;  // those processes being used in creating thread
     
-//    public List<PGDecProc> m_threadLst;  // wrapper for those processes (on the outmost level) which only take one argument
 //    public PProc m_SchedulerBody;
-    
 //    private List<PInclude> m_inclLst;
 //    private List<PGDec> m_sysGVarLst;
 
@@ -19,7 +19,12 @@ public class PModel implements PNode {
         m_mainProcBody = mainProcBody;
         m_procLst = procLst;
         
-//        m_threadLst = new ArrayList<PGDecProc>();
+        m_threadLst = new ArrayList<PGDecProc>();
+        for (PGDecProc proc: procLst) {
+        	if (proc.m_name.hasAddress()) {
+        		m_threadLst.add(proc);
+        	}
+        }
 //        m_SchedulerBody = null;
         
 //        m_inclLst = new ArrayList<PInclude>();

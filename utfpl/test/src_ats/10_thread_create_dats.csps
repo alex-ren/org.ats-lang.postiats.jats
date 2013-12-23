@@ -21,17 +21,13 @@ channel sys_ch_sch 0;
 
 Scheduler() = atomic{sys_ch_sch?sys_tid.fn.args -> {sys_thread_num++;} -> Skip} ->
   thread_init{sys_gstack.add_frame(sys_tid, args);} ->
-    if (fn == 5) {
-      foo_38(sys_tid); thread_finalize(sys_tid)
-      |||
-      Scheduler()
-    }
-    else if (fn == 6) {
-      foo1_40(sys_tid); thread_finalize(sys_tid)
+    if (fn == 2) {
+      foo_37(sys_tid); thread_finalize(sys_tid)
       |||
       Scheduler()
     }
     else Skip
+
 
   ||
 
@@ -50,9 +46,8 @@ sys_thread_create (tid, fn, args) = sys_ch_sch!tid.fn.args -> Skip;
 // =====================
 
 var mutex[10];  // 10 mutex
-var mutex_count = 0;
-channel mutex_req 0;
-channel mutex_reply 0;
+
+var<MutexManager> sys_mutex_manager = new MutexManager();
 
 // mutex_allocator = mutex_req?_ -> {mutex_count++} -> mutex_reply!mutex_count -> mutex_allocator;
 // mutex_allocate(tid) = mutex_req!1 -> mutex_reply?m -> { GStack.push(tid, m) } -> Skip;
@@ -97,24 +92,11 @@ signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> signaln(c, n-1)}
 
 // =====================
 
-var gv_37 = 0;
-var args0_43 = 0;
-var args1_44 = 0;
+var gv_36 = 0;
 
-foo_38() =
-  {  gv_37 = sys_gstack.frame_get(sys_tid, 0, 0);
+foo_37() =
+  {  gv_36 = sys_gstack.frame_get(sys_tid, 0, 0);
   } ->
-  {  sys_gstack.frame_push(sys_tid, 0);
-  } ->
-  Skip
-  ;
-
-foo1_40() =
-  {  var args_41 = call(sys_list_nil);
-  var args_42 = call(sys_list_cons, 55, args_41);
-  sys_gstack.frame_push(sys_tid, args_42);
-  } ->
-  sys_thread_create(2, 5, sys_gstack.frame_get(sys_tid, 0, 0));
   {  sys_gstack.frame_push(sys_tid, 0);
   } ->
   Skip
@@ -126,19 +108,16 @@ main_s(sys_tid) =
   main_init{__temp_list_args = sys_list_manager.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             sys_thread_num++} ->
-  {  gv_37 = 1;
+  {  gv_36 = 1;
   } ->
-  {  var args0_43 = call(sys_list_nil);
-  var args1_44 = call(sys_list_cons, 3, args0_43);
+  {  var temp_40 = call(sys_list_nil);
+  var temp_41 = call(sys_list_cons, 2, temp_40);
+  sys_gstack.frame_push(sys_tid, temp_41);
   } ->
-  sys_thread_create(1, 5, args1_44);
-  sys_thread_create(3, 6, args0_43);
-  {  gv_37 = 3;
+  sys_thread_create(1, 2, sys_gstack.frame_get(sys_tid, 0, 0));
+  {  gv_36 = 3;
   } ->
-  {  __temp_list_args = sys_list_manager.list_nil ();
-  sys_gstack.add_frame(sys_tid, __temp_list_args);
-  } ->
-  foo1_40(); 
+  Skip; 
   thread_finalize(sys_tid);
 
 main = main_s(0) ||| Scheduler;

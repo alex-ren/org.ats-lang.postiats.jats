@@ -1,0 +1,27 @@
+var gm_37;
+var gc_38;
+
+
+main() = 
+step {
+  gm_37 = mutex_alloc();
+} -> Skip;
+step {
+  gc_38 = cond_alloc();
+} -> Skip;
+step {
+  nontail_call with (gc_38, gm_37)
+} -> Skip;
+<process call> = sys_cond_wait;
+step {
+  nontail_call with (gc_38)
+} -> Skip;
+<process call> = sys_cond_signal;
+step {
+  nontail_call with (gc_38)
+} -> Skip;
+<process call> = sys_cond_broadcast;
+step {
+  cond_release(gc_38)
+} -> Skip;
+

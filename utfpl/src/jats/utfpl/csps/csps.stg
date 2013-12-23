@@ -22,6 +22,10 @@ process_call_block_st(lab) ::= <<
 \<process call> = <lab>
 >>
 
+thread_create_block_st(tid, funlab, args) ::= <<
+\<thread_create> (<tid>, <funlab>, <args>)
+>>
+
 process_call_ins_prelogue_st(args, tail) ::= <<
 <if(tail)>tail_<else>nontail_<endif>call with (<args; separator=", ">)
 >>
@@ -54,6 +58,18 @@ load_array_ins_st(src, ind, dst, escape) ::= <<
 
 mutex_alloc_ins_st(dst, escape) ::= <<
 <dst><if(escape)>\<escaped><endif> = mutex_alloc();
+>>
+
+mutex_release_ins_st(mutex) ::= <<
+mutex_release(<mutex>)
+>>
+
+cond_alloc_ins_st(dst, escape) ::= <<
+<dst><if(escape)>\<escaped><endif> = cond_alloc();
+>>
+
+cond_release_ins_st(cond) ::= <<
+cond_release(<cond>)
 >>
 
 store_ins_st(src, dst) ::= <<

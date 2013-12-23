@@ -15,6 +15,25 @@ fun sys_tid_allocate (): tid
 
 fun sys_thread_create (tid: tid, arg: int): void
 
+(* ************* ************** *)
 
+abstype mutex_t
+typedef mutex = mutex_t
+
+fun sys_mutex_allocate (): mutex
+fun sys_mutex_release (m: mutex): void
+fun sys_mutex_lock (m: mutex): void
+fun sys_mutex_unlock (m: mutex): void
+
+(* ************* ************** *)
+
+abstype cond_t
+typedef cond = cond_t
+
+fun sys_cond_allocate (): cond
+fun sys_cond_release (c: cond): void
+fun sys_cond_wait (c: cond, m: mutex): void
+fun sys_cond_signal (c: cond): void
+fun sys_cond_broadcast (c: cond): void
 
 

@@ -25,10 +25,18 @@ public interface InsVisitor {
     
     public Object visit(InsLoadArray ins);
     
-    public Object visit(InsAllocMutex ins);
+    public Object visit(InsMutexAlloc ins);
+    
+    public Object visit(InsMutexRelease ins);
+    
+    public Object visit(InsCondAlloc ins);
+    
+    public Object visit(InsCondRelease ins);
     
     public Object visit(InsMove ins);
     
     public Object visit(InsLoad ins);
+    
+    public Object visit(InsThreadCreate ins);
 
 }

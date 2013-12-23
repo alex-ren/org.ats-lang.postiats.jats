@@ -42,7 +42,8 @@ public class Test_02_ins_processing {
 //                , "test/c01_single_main.utfpl"                
 //                , "test/test20_csps_trans_.utfpl"
 //                , "test/test35_mutual_closure.utfpl"
-                "test/test09_all.utfpl"
+//                "test/test09_all.utfpl"
+        		"test/src_utfpl/10_thread_create.mutfpl"
         
         };
 

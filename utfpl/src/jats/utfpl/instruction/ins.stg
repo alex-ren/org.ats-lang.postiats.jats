@@ -41,7 +41,7 @@ else
 
 
 move_ins_st(holder, vp) ::= <<
-InsMove(<vp>, <holder>)
+move_ins(<vp>, <holder>)
 >>
 
 tid_st(id) ::= <<
@@ -84,30 +84,48 @@ gvar <id>
 >>
 
 store_array_ins_st(lv, gv, index) ::= <<
-store_array(<lv>, <gv>, <index>)
+store_array_ins(<lv>, <gv>, <index>)
 >> 
 
 store_ins_st(lv, gv) ::= <<
-store(<lv>, <gv>)
+store_ins(<lv>, <gv>)
 >>
 
 ret_ins_st(v) ::= <<
-return<if(v)> <v><endif>
+return_ins<if(v)> <v><endif>
 >>
 
 load_array_ins_st(gv, index, lv) ::= <<
-load_array(<gv>, <index>, <lv>)
+load_array_ins(<gv>, <index>, <lv>)
 >> 
 
-allocate_mutex_ins_st(holder) ::= <<
-alloc_mutex(<holder>)
->>
-
 load_ins(gv, lv) ::= <<
-load(<gv>, <lv>)
+load_ins(<gv>, <lv>)
 >>
 
-        
+create_thread_ins_st(tid, funlab, args) ::= <<
+create_thread_ins(<tid>, <funlab>, <args>)
+>>
+
+
+mutex_allocate_ins_st(holder) ::= <<
+alloc_mutex_ins(<holder>)
+>>
+
+mutex_release_ins_st(mutex) ::= <<
+release_mutex_ins(<mutex>)
+>>
+
+
+cond_allocate_ins_st(holder) ::= <<
+alloc_cond_ins(<holder>)
+>>
+
+cond_release_ins_st(cond) ::= <<
+release_cond_ins(<cond>)
+>>
+
+
         
         
         

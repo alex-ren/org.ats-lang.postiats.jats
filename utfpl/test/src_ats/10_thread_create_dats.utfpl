@@ -1,0 +1,9 @@
+val gv_47 = D2Ecst<sys_gvar_create_2437> (1)
+fun foo_48 = lam (pat<x_49>) = 
+  let
+    val () = D2Ecst<sys_gvar_update_2438> (gv_47, x_49)
+  in
+    ()
+  end
+val () = D2Ecst<sys_thread_create_2440> (1, foo_48, 2)
+val () = D2Ecst<sys_gvar_update_2438> (gv_47, 3)

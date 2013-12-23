@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.ccomp.CCompUtils;
-import jats.utfpl.instruction.TID;
 import jats.utfpl.utfpl.Cd2cst;
 import jats.utfpl.utfpl.Cd2ecl;
 import jats.utfpl.utfpl.Cd2exp;
@@ -183,9 +182,39 @@ public class TreeFromUtfpl {
         
         IExp fun = transCd2exp(uNode.m_d2e_fun);
         
-        ExpApp ret = new ExpApp(loc, fun, argsLst);
-        return ret;
-        
+        if (fun instanceof ExpId) {
+        	if (((ExpId)fun).isSysThreadCreate()) {
+        		// val () = sys_thread_create (1 (*thread id*), funid, arg)
+        		ExpId funListNil = new ExpId(loc, CCompUtils.cSysListNil);
+        		ExpId funListCons = new ExpId(loc, CCompUtils.cSysListCons);
+        		ExpId funThreadCreate = new ExpId(loc, CCompUtils.cSysThreadCreate);
+        		
+        		List<IExp> args = new ArrayList<IExp>();
+        		ExpApp appListNil = new ExpApp(loc, funListNil, args);
+        		
+        		args = new ArrayList<IExp>();
+        		// (arg, sys_list_nil ())
+        		args.add(argsLst.get(2));
+        		args.add(appListNil);
+        		ExpApp appListCons = new ExpApp(loc, funListCons, args);
+        		
+        		args = new ArrayList<IExp>();
+        		// val () = sys_thread_create (1 (*thread id*), funid, args)
+        		args.add(argsLst.get(0));
+        		args.add(argsLst.get(1));
+        		args.add(appListCons);
+        		ExpApp appThreadCreate = new ExpApp(loc, funThreadCreate, args);
+        		
+        		return appThreadCreate;
+        		
+        	}
+        	else {
+                ExpApp ret = new ExpApp(loc, fun, argsLst);
+                return ret;
+        	}
+        } else {
+        	throw new Error("function as first class value is not supported");
+        }
     }
 
 	private List<IExp> transId2exparg(Id2exparg uNode) {

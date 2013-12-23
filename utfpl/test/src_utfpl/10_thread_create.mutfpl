@@ -8,10 +8,23 @@ in
   ()
 end
 
+fun foo1 () = let
+  val args = sys_list_nil ()
+  val args = sys_list_cons (55, args) 
+  val () = sys_thread_create (2 /*thread id*/, foo, args)
+in
+  ()
+end
 
-val args = sys_list_nil ()
-val args = sys_list_cons (3, args) 
 
-val () = sys_thread_create (1 /*thread id*/, args)
+val args0 = sys_list_nil ()
+val args1 = sys_list_cons (3, args0) 
 
-val () = sys_gvar_update (gv, 3)
+val () = sys_thread_create (1 /*thread id*/, foo, args1)
+
+val () = sys_thread_create (3 /*thread id*/, foo1, args0)
+
+gv := 3
+
+val () = foo1 ()
+

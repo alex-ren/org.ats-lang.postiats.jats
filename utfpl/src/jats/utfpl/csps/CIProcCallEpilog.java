@@ -24,10 +24,10 @@ public class CIProcCallEpilog extends CInstruction {
     @Override
     public int process(int offset) {
         if (((PATTypeFunc)m_funlab.getType()).getRetType() == PATTypeSingleton.cVoidType) {
-        	System.out.println("type of " + m_funlab + " is void.");
+//        	System.out.println("type of " + m_funlab + " is void.");
             offset = m_holder.processStackProcCallEpilogue(offset, true);
         } else {
-        	System.out.println("type of " + m_funlab + " is " + ((PATTypeFunc)m_funlab.getType()).getRetType());
+//        	System.out.println("type of " + m_funlab + " is " + ((PATTypeFunc)m_funlab.getType()).getRetType());
             offset = m_holder.processStackProcCallEpilogue(offset, false);
         }
         return offset;        
