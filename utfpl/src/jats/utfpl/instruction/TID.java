@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class TID implements ValPrim {
     static private int s_cnt = 0;
-    static public TID ANONY = new TID("_", Category.other, PATTypeSingleton.cVoidType, false);
+    static public TID ANONY = new TID("__anony", Category.other, PATTypeSingleton.cVoidType, false);
     
     enum Category {eLibFun, eGloVar, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, other};
     
@@ -47,7 +47,11 @@ public class TID implements ValPrim {
     }
     
     public TID dup() {
-        return new TID(m_id, m_cat, m_type, m_isSys);
+    	if (this == ANONY) {
+    		return this;
+    	} else {
+            return new TID(m_id, m_cat, m_type, m_isSys);
+    	}
     }
     
     public Aux.Address getAddr() {

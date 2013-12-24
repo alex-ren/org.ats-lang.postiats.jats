@@ -1,0 +1,31 @@
+
+foo_39() =
+step {
+  var m_40 = mutex_alloc();
+} -> Skip;
+step {
+  var temp_42<escaped> = call(gt, 3, 1);
+} -> Skip;
+ifa (temp_42 from <GStack(, 0)>) {
+  step {
+    nontail_call with ()
+  } -> Skip;
+  <process call> = sys_mutex_lock;
+  step {
+    rewind frame of sys_mutex_lock to get __anony_1
+    return ();
+  } -> Skip 
+} else { 
+  step {
+    nontail_call with ()
+  } -> Skip;
+  <process call> = sys_mutex_lock;
+  step {
+    rewind frame of sys_mutex_lock to get __anony_1
+    return ();
+  } -> Skip 
+};
+
+main() = 
+Skip;
+

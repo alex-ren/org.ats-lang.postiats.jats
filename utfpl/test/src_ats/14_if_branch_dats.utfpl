@@ -1,0 +1,17 @@
+fun foo_47 = lam () = 
+  let
+    val m_48 = D2Ecst<sys_mutex_allocate_2441> ()
+  in
+    if (D2Esym<>> (3, 1)) then
+      let
+        val () = D2Ecst<sys_mutex_lock_2443> ()
+      in
+        ()
+      end
+    else
+      let
+        val () = D2Ecst<sys_mutex_lock_2443> ()
+      in
+        ()
+      end
+  end

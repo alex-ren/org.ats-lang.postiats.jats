@@ -1,0 +1,163 @@
+var gn_39;
+var m_40;
+var c_41;
+var args_48;
+var args_49;
+
+producer_42(x_43<escaped>@<GStack(0)>) =
+step {
+  var temp_53<escaped> = m_40;
+} -> Skip;
+step {
+  nontail_call with (temp_53 from <GStack(1)>)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get __anony_1
+  tail_call with (x_43 from <GStack(0)>)
+} -> Skip;
+<process call> = loop_44;
+
+loop_44(x_esc_74<escaped>@<GStack(0)>) =
+step {
+  var temp_55<escaped> = gn_39;
+} -> Skip;
+step {
+  var temp_56<escaped> = call(eq, temp_55 from <GStack(1)>, 1);
+} -> Skip;
+ifa (temp_56 from <GStack(, 2)>) {
+  step {
+    var temp_57<escaped> = c_41;
+  } -> Skip;
+  step {
+    var temp_58<escaped> = m_40;
+  } -> Skip;
+  step {
+    nontail_call with (temp_57 from <GStack(3)>, temp_58 from <GStack(4)>)
+  } -> Skip;
+  <process call> = sys_cond_wait;
+  step {
+    rewind frame of sys_cond_wait to get __anony_1
+    tail_call with (x_esc_74 from <GStack(0)>)
+  } -> Skip;
+  <process call> = loop_44 
+} else { 
+  step {
+    var temp_76<escaped> = gn_39;
+  } -> Skip;
+  step {
+    var temp_77 = call(add, temp_76 from <GStack(3)>, 1);
+    gn_39 = temp_77;
+  } -> Skip;
+  step {
+    var temp_78<escaped> = c_41;
+  } -> Skip;
+  step {
+    nontail_call with (temp_78 from <GStack(4)>)
+  } -> Skip;
+  <process call> = sys_cond_signal;
+  step {
+    rewind frame of sys_cond_signal to get __anony_1
+    var temp_79<escaped> = m_40;
+  } -> Skip;
+  step {
+    nontail_call with (temp_79 from <GStack(5)>)
+  } -> Skip;
+  <process call> = sys_mutex_unlock;
+  step {
+    rewind frame of sys_mutex_unlock to get __anony_1
+    tail_call with (x_esc_74 from <GStack(0)>)
+  } -> Skip;
+  <process call> = producer_42 
+};
+
+consumer_45(x_46<escaped>@<GStack(0)>) =
+step {
+  var temp_64<escaped> = m_40;
+} -> Skip;
+step {
+  nontail_call with (temp_64 from <GStack(1)>)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get __anony_1
+  tail_call with (x_46 from <GStack(0)>)
+} -> Skip;
+<process call> = loop_47;
+
+loop_47(x_esc_75<escaped>@<GStack(0)>) =
+step {
+  var temp_66<escaped> = gn_39;
+} -> Skip;
+step {
+  var temp_67<escaped> = call(eq, temp_66 from <GStack(1)>, 0);
+} -> Skip;
+ifa (temp_67 from <GStack(, 2)>) {
+  step {
+    var temp_68<escaped> = c_41;
+  } -> Skip;
+  step {
+    var temp_69<escaped> = m_40;
+  } -> Skip;
+  step {
+    nontail_call with (temp_68 from <GStack(3)>, temp_69 from <GStack(4)>)
+  } -> Skip;
+  <process call> = sys_cond_wait;
+  step {
+    rewind frame of sys_cond_wait to get __anony_1
+    tail_call with (x_esc_75 from <GStack(0)>)
+  } -> Skip;
+  <process call> = loop_47 
+} else { 
+  step {
+    var temp_81<escaped> = gn_39;
+  } -> Skip;
+  step {
+    var temp_82 = call(sub, temp_81 from <GStack(3)>, 1);
+    gn_39 = temp_82;
+  } -> Skip;
+  step {
+    var temp_83<escaped> = c_41;
+  } -> Skip;
+  step {
+    nontail_call with (temp_83 from <GStack(4)>)
+  } -> Skip;
+  <process call> = sys_cond_signal;
+  step {
+    rewind frame of sys_cond_signal to get __anony_1
+    var temp_84<escaped> = m_40;
+  } -> Skip;
+  step {
+    nontail_call with (temp_84 from <GStack(5)>)
+  } -> Skip;
+  <process call> = sys_mutex_unlock;
+  step {
+    rewind frame of sys_mutex_unlock to get __anony_1
+    tail_call with (x_esc_75 from <GStack(0)>)
+  } -> Skip;
+  <process call> = consumer_45 
+};
+
+main() = 
+step {
+  gn_39 = 0;
+} -> Skip;
+step {
+  var temp_50<escaped> = mutex_alloc();
+} -> Skip;
+step {
+  m_40 = temp_50 from <GStack(0)>;
+} -> Skip;
+step {
+  var temp_51<escaped> = cond_alloc();
+} -> Skip;
+step {
+  c_41 = temp_51 from <GStack(1)>;
+} -> Skip;
+step {
+  args_48 = call(sys_list_nil);
+  args_49 = call(sys_list_cons, 0, args_48);
+} -> Skip;
+<thread_create> (1, producer_42, args_49);
+<thread_create> (2, consumer_45, args_49);
+
