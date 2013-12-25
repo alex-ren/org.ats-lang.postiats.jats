@@ -20,7 +20,7 @@ public class CTempID implements CTemp {
     private EntityLocation m_curLoc;  // The position of the current location of this entity of TID.
     
     public static CTempID createAsDef(VariableInfo vi, EntityLocation curLoc) {
-        if (vi.getTID().isGlobal()) {
+        if (vi.getTID().isGlobalVariable()) {
             throw new Error("Wrong usage. Only parameter and local varaible.");
         }
         

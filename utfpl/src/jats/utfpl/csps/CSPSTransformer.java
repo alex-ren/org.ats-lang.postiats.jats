@@ -496,7 +496,7 @@ public class CSPSTransformer {
         
         VariableInfo vi = map.get(tid);
         if (null == vi) {
-            if (tid.isGlobal()) {
+            if (tid.isGlobalVariable()) {
                 throw new Error("Wong usage. Only for global value, parameter, and local variable");
             }
             vi = VariableInfo.create(tid, loc);

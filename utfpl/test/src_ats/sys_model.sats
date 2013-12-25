@@ -5,6 +5,7 @@ typedef gvar = global_variable_t
 
 fun sys_gvar_create (x: int): gvar  // can only be called outside function
 fun sys_gvar_update (gv: gvar, x: int): void
+fun {a:t@ype} sys_gvar_get (gv: gvar): a
 
 (* ************* ************** *)
 
@@ -35,5 +36,30 @@ fun sys_cond_release (c: cond): void
 fun sys_cond_wait (c: cond, m: mutex): void
 fun sys_cond_signal (c: cond): void
 fun sys_cond_broadcast (c: cond): void
+
+(* ************* ************** *)
+
+abstype sys_list_t
+typedef sys_list = sys_list_t
+
+fun sys_list_nil (): sys_list
+fun sys_list_cons (x: int, xs: sys_list): sys_list
+fun sys_list_get_header (xs: sys_list): int
+fun sys_list_get_tail (xs: sys_list): sys_list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

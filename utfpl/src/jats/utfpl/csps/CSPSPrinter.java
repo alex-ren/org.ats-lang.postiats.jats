@@ -178,7 +178,7 @@ public class CSPSPrinter implements CSPSVisitor {
     @Override
     public Object visit(CTempID v) {
         ST st = null;
-        if (v.getTID().isGlobal() || v.getTID().isGlobalValue()) {  // global variable / value
+        if (v.getTID().isGlobal()) {  // global variable / value
             st = m_stg.getInstanceOf("global_id_st");
             st.add("id", v);
         } else {  // not global

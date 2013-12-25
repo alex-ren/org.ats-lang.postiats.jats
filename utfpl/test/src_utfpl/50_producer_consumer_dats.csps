@@ -106,8 +106,6 @@ var<LinkedList> sys_list_manager = new LinkedList();
 
 // =====================
 
-var gvar2_40 = 0;
-var x_41 = 0;
 
 
 // =====================
@@ -116,13 +114,6 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_list_manager.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  gvar2_40 = 2;
-  } ->
-  {  var temp_42 = gvar2_40;
-  sys_gstack.frame_push(sys_tid, temp_42);
-  } ->
-  {  var x_41 = call(add, 3, sys_gstack.frame_get(sys_tid, 0, 0));
-  } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 

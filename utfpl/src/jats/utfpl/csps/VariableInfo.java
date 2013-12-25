@@ -57,7 +57,7 @@ public class VariableInfo {
     }
 
     public void updateEscaped() {
-        if (m_tid.isGlobal() || m_tid.isGlobalValue()) {
+        if (m_tid.isGlobal()) {
             m_isEscaped = false;
             return;
         } else if (m_tid.isPara() || m_tid.isLocal() || m_tid.isRet()) {
@@ -87,7 +87,7 @@ public class VariableInfo {
         if (m_defLoc.equals(curLoc)) {
             return false;
         }
-        if (m_tid.isGlobal() || m_tid.isGlobalValue()) {
+        if (m_tid.isGlobal()) {
             return false;
         } else if (m_tid.isFunc()) {
             return false;

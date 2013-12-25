@@ -178,7 +178,7 @@ public class InstructionTransformer implements TreeVisitor {
                     InsLoadArray loadArr = new InsLoadArray(globalVar, localIndex, localHolder);
                     m_inslst.add(loadArr);
                     m_vpOut = localHolder;  // need to return the name
-                } else if (holder.isGlobal()) {
+                } else if (holder.isGlobalVariable()) {
                     // holder must be a valid name.
                     TID localHolder = TID.createLocalVar("temp", retType);
                     InsLoadArray loadArr = new InsLoadArray(globalVar, localIndex, localHolder);
@@ -203,7 +203,7 @@ public class InstructionTransformer implements TreeVisitor {
                     m_inslst.add(alloc);
                     m_vpOut = localHolder;  // need to return the name
                 }
-                if (holder.isGlobal()) {
+                if (holder.isGlobalVariable()) {
                     // holder must be a valid name.
                     TID localHolder = TID.createLocalVar("temp", retType);
                     InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
@@ -269,7 +269,7 @@ public class InstructionTransformer implements TreeVisitor {
                     m_inslst.add(alloc);
                     m_vpOut = localHolder;  // need to return the name
                 }
-                if (holder.isGlobal()) {
+                if (holder.isGlobalVariable()) {
                     // holder must be a valid name.
                     TID localHolder = TID.createLocalVar("temp", retType);
                     InsCondAlloc alloc = new InsCondAlloc(localHolder);
@@ -322,7 +322,7 @@ public class InstructionTransformer implements TreeVisitor {
                     InsCall app = new InsCall(localHolder, (TID)funlab, args, false);
                     m_inslst.add(app);
                     m_vpOut = localHolder;
-                } else if (holder.isGlobal()) {
+                } else if (holder.isGlobalVariable()) {
                     // holder must be a valid name.
                     TID localHolder = TID.createLocalVar("temp", retType);
                     InsCall app = new InsCall(localHolder, (TID)funlab, args, false);
@@ -359,7 +359,7 @@ public class InstructionTransformer implements TreeVisitor {
         if (null == holder) {
             m_vpOut = new AtomValue(node.m_text);
         } else if (TID.ANONY == holder) {
-        } else if (holder.isGlobal()) {
+        } else if (holder.isGlobalVariable()) {
             InsStore store = new InsStore(new AtomValue(node.m_text), holder);
             m_inslst.add(store);
         } else if (holder.isRet()) {
@@ -380,7 +380,7 @@ public class InstructionTransformer implements TreeVisitor {
         TID holder = getTIDIn();
         
         if (null == holder) {
-            if (node.m_tid.isGlobal()) {
+            if (node.m_tid.isGlobalVariable()) {
                 TID localHolder = TID.createLocalVar("temp", node.m_tid.getType());
                 InsLoad load = new InsLoad(node.m_tid, localHolder);
                 m_inslst.add(load);
@@ -388,8 +388,8 @@ public class InstructionTransformer implements TreeVisitor {
             } else {
                 m_vpOut = node.m_tid;
             }
-        } else if (holder.isGlobal()) {
-            if (node.m_tid.isGlobal()) {
+        } else if (holder.isGlobalVariable()) {
+            if (node.m_tid.isGlobalVariable()) {
                 TID localHolder = TID.createLocalVar("temp", node.m_tid.getType());
                 InsLoad load = new InsLoad(node.m_tid, localHolder);
                 m_inslst.add(load);
@@ -400,7 +400,7 @@ public class InstructionTransformer implements TreeVisitor {
                 m_inslst.add(store);
             }
         } else if (holder.isRet()) {
-            if (node.m_tid.isGlobal()) {
+            if (node.m_tid.isGlobalVariable()) {
                 TID localHolder = TID.createLocalVar("temp", node.m_tid.getType());
                 InsLoad load = new InsLoad(node.m_tid, localHolder);
                 m_inslst.add(load);
@@ -411,7 +411,7 @@ public class InstructionTransformer implements TreeVisitor {
                 m_inslst.add(ret);
             }
         } else {
-            if (node.m_tid.isGlobal()) {
+            if (node.m_tid.isGlobalVariable()) {
                 InsLoad load = new InsLoad(node.m_tid, holder);
                 m_inslst.add(load);
             } else {

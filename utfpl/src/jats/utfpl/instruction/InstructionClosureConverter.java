@@ -13,6 +13,10 @@ public class InstructionClosureConverter {
 	    
 	    // pass 1
 	    Set<TID> inScopeNames = new HashSet<TID>();
+	    for (GlobalEntity ge: iProg.getGlobalEntities()) {
+	    	inScopeNames.add(ge.getTID());
+	    }
+	    
 	    Set<TID> escNames = new HashSet<TID>();
 	    Map<TID, Set<TID>> funMap = new HashMap<TID, Set<TID>>();
 	    Pass1 pa1 = new Pass1(inScopeNames, escNames, funMap);
@@ -27,6 +31,9 @@ public class InstructionClosureConverter {
 
 	    // pass 2
         inScopeNames = new HashSet<TID>();
+	    for (GlobalEntity ge: iProg.getGlobalEntities()) {
+	    	inScopeNames.add(ge.getTID());
+	    }
         escNames = new HashSet<TID>();
         Pass2 pa2 = new Pass2(inScopeNames, escNames, funMap);
         pa2.process(iProg.getInsLst());
@@ -126,7 +133,9 @@ public class InstructionClosureConverter {
             
             if (!ins.m_holder.isGlobal()) {
 //              System.out.println("pass1 ====== " + ins.m_holder);
-                m_inScopeNames.add(ins.m_holder);  // new name          
+                 m_inScopeNames.add(ins.m_holder);  // new name
+            } else {
+            	throw new Error("shall not happen");
             }
             
             // The escaped value of the function is handled in next pass.
@@ -216,7 +225,7 @@ public class InstructionClosureConverter {
 
         @Override
         public Object visit(InsMutexAlloc ins) {
-            m_inScopeNames.add(ins.m_holder);
+        	m_inScopeNames.add(ins.m_holder);  // new name      
             return null;
         }
 
@@ -231,7 +240,7 @@ public class InstructionClosureConverter {
 		
         @Override
         public Object visit(InsCondAlloc ins) {
-            m_inScopeNames.add(ins.m_holder);
+        	m_inScopeNames.add(ins.m_holder);  // new name      
             return null;
         }
 
@@ -444,7 +453,7 @@ public class InstructionClosureConverter {
 
         @Override
         public Object visit(InsMutexAlloc ins) {
-            m_inScopeNames.add(ins.m_holder);
+            m_inScopeNames.add(ins.m_holder);  // new name          
             return null;
         }
 
@@ -459,7 +468,7 @@ public class InstructionClosureConverter {
 		
         @Override
         public Object visit(InsCondAlloc ins) {
-            m_inScopeNames.add(ins.m_holder);
+        	m_inScopeNames.add(ins.m_holder);  // new name      
             return null;
         }
 

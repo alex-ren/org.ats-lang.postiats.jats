@@ -12,6 +12,7 @@ public class CCompUtils {
 //	public static final String cSysGvalCreate = "sys_gval_create";
 	public static final String cSysGvarCreate = "sys_gvar_create";
 	public static final String cSysGvarUpdate = "sys_gvar_update";
+	public static final String cSysGvarGet = "sys_gvar_get";
 	
 	// MUTFPL layer
 	public static final String cSysListNil = "sys_list_nil";
@@ -117,6 +118,8 @@ public class CCompUtils {
         func = cSysGvarUpdate;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
+        func = cSysGvarGet;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
         
         /* ********* *********** ************* ************** */
         

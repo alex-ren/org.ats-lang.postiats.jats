@@ -100,6 +100,10 @@ public class TID implements ValPrim {
     }
     
     public boolean isGlobal() {
+        return Category.eGloVar == m_cat || Category.eGloValue == m_cat;
+    }
+    
+    public boolean isGlobalVariable() {
         return Category.eGloVar == m_cat;
     }
     

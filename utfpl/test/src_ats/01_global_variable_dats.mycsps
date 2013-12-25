@@ -1,8 +1,15 @@
-var gvar2_34;
+var gvar2_40;
+var x_41;
 
 
 main() = 
 step {
-  gvar2_34 = 2;
+  gvar2_40 = 2;
+} -> Skip;
+step {
+  var temp_42<escaped> = gvar2_40;
+} -> Skip;
+step {
+  x_41 = call(add, 3, temp_42 from <GStack(0)>);
 } -> Skip;
 

@@ -139,6 +139,13 @@ public class TreeFromUtfpl {
         Id2exp_node uExpNode = uNode.d2exp_node;
         Location loc = new Location(uNode.d2exp_loc);
         if (uExpNode instanceof D2Eapplst) {
+        	D2Eapplst d2App = (D2Eapplst)uExpNode;
+        	IExp fun = transCd2exp(d2App.m_d2e_fun);
+        	if (fun instanceof ExpId) {
+            	if (((ExpId)fun).isSysGvarGet()) {
+            		return transId2exparg(d2App.m_d2as_arg.get(0)).get(0);
+            	}
+        	}
         	return transD2Eapplst(loc, (D2Eapplst)uExpNode);
         } else if (uExpNode instanceof D2Ecst) {
         	return transD2Ecst(loc, (D2Ecst)uExpNode);

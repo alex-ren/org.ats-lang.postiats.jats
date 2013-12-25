@@ -413,7 +413,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
         // pinsmutexalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
     	st.add("holder", node.m_holder);
-    	if (node.m_holder.isGlobal() || node.m_holder.isGlobalValue()) {
+    	if (node.m_holder.isGlobal()) {
     		st.add("is_global", true);
     	} else {
     		st.add("is_global", false);
@@ -437,7 +437,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
         // pinscondalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinscondalloc_st");
     	st.add("holder", node.m_holder);
-    	if (node.m_holder.isGlobal() || node.m_holder.isGlobalValue()) {
+    	if (node.m_holder.isGlobal()) {
     		st.add("is_global", true);
     	} else {
     		st.add("is_global", false);

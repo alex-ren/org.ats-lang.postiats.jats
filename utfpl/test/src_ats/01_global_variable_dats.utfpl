@@ -1,1 +1,2 @@
 val gvar2_47 = D2Ecst<sys_gvar_create_2437> (2)
+val x_48 = D2Esym<+> (3, D2Ecst<sys_gvar_get_2439> (gvar2_47))
