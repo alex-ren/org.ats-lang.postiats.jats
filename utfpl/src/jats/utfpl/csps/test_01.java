@@ -149,7 +149,8 @@ public class test_01 {
             
             /* ***************** ****************** */
             // generate new program of instructions by processing
-            ProgramInstruction programIns2 = InstructionClosureConverter.convert(programIns);
+            InstructionClosureConverter insClosureConverter = new InstructionClosureConverter(programIns);
+            ProgramInstruction programIns2 = insClosureConverter.convert();
             
             /* ***************** ****************** */
             // print instructions

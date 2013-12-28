@@ -1,21 +1,21 @@
-val gn_47 = D2Ecst<sys_gvar_create_2437> (0)
-val m_48 = D2Ecst<sys_mutex_allocate_2442> ()
-val c_49 = D2Ecst<sys_cond_allocate_2446> ()
+val gn_47 = D2Ecst<sys_gvar_create_2435> (0)
+val m_48 = D2Ecst<sys_mutex_allocate_2440> ()
+val c_49 = D2Ecst<sys_cond_allocate_2444> ()
 fun producer_50 = lam (pat<x_51>) = 
   let
-    val () = D2Ecst<sys_mutex_lock_2444> (m_48)
+    val () = D2Ecst<sys_mutex_lock_2442> (m_48)
     fun loop_52 = lam () = 
-      if (D2Esym<=> (D2Ecst<sys_gvar_get_2439> (gn_47), 1)) then
+      if (D2Esym<=> (D2Ecst<sys_gvar_get_2437> (gn_47), 1)) then
         let
-          val () = D2Ecst<sys_cond_wait_2448> (c_49, m_48)
+          val () = D2Ecst<sys_cond_wait_2446> (c_49, m_48)
         in
           loop_52 ()
         end
       else
         let
-          val () = D2Ecst<sys_gvar_update_2438> (gn_47, D2Esym<+> (D2Ecst<sys_gvar_get_2439> (gn_47), 1))
-          val () = D2Ecst<sys_cond_signal_2449> (c_49)
-          val () = D2Ecst<sys_mutex_unlock_2445> (m_48)
+          val () = D2Ecst<sys_gvar_update_2436> (gn_47, D2Esym<+> (D2Ecst<sys_gvar_get_2437> (gn_47), 1))
+          val () = D2Ecst<sys_cond_signal_2447> (c_49)
+          val () = D2Ecst<sys_mutex_unlock_2443> (m_48)
         in
           producer_50 (x_51)
         end
@@ -24,24 +24,24 @@ fun producer_50 = lam (pat<x_51>) =
   end
 fun consumer_53 = lam (pat<x_54>) = 
   let
-    val () = D2Ecst<sys_mutex_lock_2444> (m_48)
+    val () = D2Ecst<sys_mutex_lock_2442> (m_48)
     fun loop_55 = lam () = 
-      if (D2Esym<=> (D2Ecst<sys_gvar_get_2439> (gn_47), 0)) then
+      if (D2Esym<=> (D2Ecst<sys_gvar_get_2437> (gn_47), 0)) then
         let
-          val () = D2Ecst<sys_cond_wait_2448> (c_49, m_48)
+          val () = D2Ecst<sys_cond_wait_2446> (c_49, m_48)
         in
           loop_55 ()
         end
       else
         let
-          val () = D2Ecst<sys_gvar_update_2438> (gn_47, D2Esym<-> (D2Ecst<sys_gvar_get_2439> (gn_47), 1))
-          val () = D2Ecst<sys_cond_signal_2449> (c_49)
-          val () = D2Ecst<sys_mutex_unlock_2445> (m_48)
+          val () = D2Ecst<sys_gvar_update_2436> (gn_47, D2Esym<-> (D2Ecst<sys_gvar_get_2437> (gn_47), 1))
+          val () = D2Ecst<sys_cond_signal_2447> (c_49)
+          val () = D2Ecst<sys_mutex_unlock_2443> (m_48)
         in
           consumer_53 (x_54)
         end
   in
     loop_55 ()
   end
-val () = D2Ecst<sys_thread_create_2441> (1, producer_50, 0)
-val () = D2Ecst<sys_thread_create_2441> (2, consumer_53, 0)
+val () = D2Ecst<sys_thread_create_2439> (1, producer_50, 0)
+val () = D2Ecst<sys_thread_create_2439> (2, consumer_53, 0)

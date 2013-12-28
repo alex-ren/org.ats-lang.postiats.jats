@@ -7,6 +7,10 @@ fun sys_gvar_create (x: int): gvar  // can only be called outside function
 fun sys_gvar_update (gv: gvar, x: int): void
 fun {a:t@ype} sys_gvar_get (gv: gvar): a
 
+// fun {a:t@ype} sys_gvar_create (name: string, x: a): void  // can only be called outside function
+// fun {a:t@ype} sys_gvar_update (name: string, x: a): void
+// fun {a:t@ype} sys_gvar_get (name: string): a
+
 (* ************* ************** *)
 
 abstype thread_id_t
@@ -46,6 +50,7 @@ fun sys_list_nil (): sys_list
 fun sys_list_cons (x: int, xs: sys_list): sys_list
 fun sys_list_get_header (xs: sys_list): int
 fun sys_list_get_tail (xs: sys_list): sys_list
+fun sys_list_is_nil (xs: sys_list): bool
 
 
 

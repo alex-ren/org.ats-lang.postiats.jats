@@ -1,0 +1,35 @@
+var gn_40;
+var m_41;
+var c_42;
+
+foo_43() =
+step {
+  nontail_call with ()
+} -> Skip;
+<process call> = loop_44;
+step {
+  rewind frame of loop_44 to get __anony_1
+  return ();
+} -> Skip;
+
+loop_44() =
+step {
+  nontail_call with (m_41)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get __anony_1
+  return ();
+} -> Skip;
+
+main() = 
+step {
+  gn_40 = 0;
+} -> Skip;
+step {
+  m_41 = mutex_alloc();
+} -> Skip;
+step {
+  c_42 = cond_alloc();
+} -> Skip;
+

@@ -114,9 +114,11 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PStatLocalVarDec node) {
+        // pstatlocalvardec_st(name, val, is_global) ::= <<
         ST st = m_stg.getInstanceOf("pstatlocalvardec_st");
         st.add("name", node.m_name);
         st.add("val", node.m_val.accept(this));
+        st.add("is_global", node.m_name.isGlobalValue());
         return st;
     }
 
@@ -385,10 +387,11 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PStatProcCallEpilogue node) {
-        // pstatproccallepilogue_st(ret) ::= <<
+        // pstatproccallepilogue_st(ret, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pstatproccallepilogue_st");
     	if (!node.m_ret.isAnony()) {
     		st.add("ret", node.m_ret);
+    		st.add("is_global", node.m_ret.isGlobal());
     	}
     	
     	return st;

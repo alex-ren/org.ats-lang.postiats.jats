@@ -6,7 +6,7 @@ import java.util.List;
 public class ProgramInstruction {
 
     private List<GlobalEntity> m_gEntities;  // including both global variable and value
-    private List<UtfplInstruction> m_insLst;
+    private List<UtfplInstruction> m_insLst;  // including the main and the definitions of other functions.
     private List<FunctionInstruction> m_funcLst;
     
     public List<UtfplInstruction> getInsLst() {

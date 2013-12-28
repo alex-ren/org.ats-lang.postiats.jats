@@ -1,0 +1,22 @@
+fun length_47 = lam (xs_48, accu_49) = 
+  if (D2Ecst<sys_list_is_nil_2453> (xs_48)) then
+    accu_49
+  else
+    let
+      val xs_50 = D2Ecst<sys_list_get_tail_2452> (xs_48)
+    in
+      length_47 (xs_50, D2Esym<+> (accu_49, 1))
+    end
+val gn_51 = D2Ecst<sys_gvar_create_2435> (0)
+val gn1_52 = D2Ecst<sys_gvar_create_2435> (0)
+fun foo_53 = lam () = 
+  let
+    val xs_54 = D2Ecst<sys_list_nil_2449> ()
+    val xs_55 = D2Ecst<sys_list_cons_2450> (1, xs_54)
+    val tempx_56 = length_47 (xs_55, 0)
+    val () = D2Ecst<sys_gvar_update_2436> (gn_51, tempx_56)
+    val () = D2Ecst<sys_gvar_update_2436> (gn1_52, tempx_56)
+  in
+    ()
+  end
+val () = foo_53 ()

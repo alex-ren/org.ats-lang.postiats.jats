@@ -9,45 +9,50 @@ import java.util.Set;
 
 // turn closure into normal function by add more parameters
 public class InstructionClosureConverter {
-	static public ProgramInstruction convert(ProgramInstruction iProg) {
+    
+    private ProgramInstruction m_iProg;
+//    private Set<TID> m_baseScope;
+    
+    public InstructionClosureConverter(ProgramInstruction iProg) {
+        m_iProg = iProg;
+    }
+    
+    // The return value shall not
+    private Set<TID> createBaseScope() {
+        Set<TID> baseScope = new HashSet<TID>();
+        for (GlobalEntity ge: m_iProg.getGlobalEntities()) {
+//            System.out.println("tid is " + ge.getTID());
+            baseScope.add(ge.getTID());
+        }
+        
+        return baseScope;
+    }
+
+	public ProgramInstruction convert() {
 	    
 	    // pass 1
-	    Set<TID> inScopeNames = new HashSet<TID>();
-	    for (GlobalEntity ge: iProg.getGlobalEntities()) {
-	    	inScopeNames.add(ge.getTID());
-	    }
-	    
+	    Set<TID> inScopeNames = createBaseScope();	    
 	    Set<TID> escNames = new HashSet<TID>();
 	    Map<TID, Set<TID>> funMap = new HashMap<TID, Set<TID>>();
-	    Pass1 pa1 = new Pass1(inScopeNames, escNames, funMap);
-	    pa1.process(iProg.getInsLst());
-	    
-        // for (Map.Entry<TID, Set<TID>> entry: funMap.entrySet()) {
-        // System.out.println("==== " + entry.getKey());
-        // for (TID ele: entry.getValue()) {
-        // System.out.println("====== " + ele);
-        // }
-        // }
+	    Pass1 pa1 = new Pass1(inScopeNames, escNames, funMap);  // fill the funMap
+	    pa1.process(m_iProg.getInsLst());
 
 	    // pass 2
-        inScopeNames = new HashSet<TID>();
-	    for (GlobalEntity ge: iProg.getGlobalEntities()) {
-	    	inScopeNames.add(ge.getTID());
-	    }
+        inScopeNames = createBaseScope();
         escNames = new HashSet<TID>();
-        Pass2 pa2 = new Pass2(inScopeNames, escNames, funMap);
-        pa2.process(iProg.getInsLst());
+        Pass2 pa2 = new Pass2(inScopeNames, escNames, funMap);  // modify the funMap
+        pa2.process(m_iProg.getInsLst());
 
         // pass 3
         Pass3 pa3 = new Pass3(funMap, new HashMap<TID, TID>());
-        List<UtfplInstruction> nInsLst = pa3.process(iProg.getInsLst());
+        List<UtfplInstruction> nInsLst = pa3.process(m_iProg.getInsLst());
         List<FunctionInstruction> nFuncLst = pa3.getFuncLst();
         
-        return new ProgramInstruction(iProg.getGlobalEntities(), nInsLst, nFuncLst);
+        return new ProgramInstruction(m_iProg.getGlobalEntities(), nInsLst, nFuncLst);
 	}
 
 	// escaped value caused by invocation of closure is not taken into consideration.
-	static class Pass1 implements InsVisitor {
+	class Pass1 implements InsVisitor {
 		protected Set<TID> m_inScopeNames;  // Names collected in the current scope so far
 		protected Set<TID> m_escNames;  // out-of-scope names used, new names
 		protected Map<TID, Set<TID>> m_funMap;  // function name, escaped names
@@ -86,7 +91,7 @@ public class InstructionClosureConverter {
 
 		@Override
 		public Object visit(InsFuncDef ins) {
-			Set<TID> inScopeNames = new HashSet<TID>();
+			Set<TID> inScopeNames = createBaseScope();
 			Set<TID> escNames = new HashSet<TID>();
 			
 			for (TID para: ins.m_paralst) {
@@ -131,11 +136,11 @@ public class InstructionClosureConverter {
                 }
             }
             
-            if (!ins.m_holder.isGlobal()) {
+            if (!ins.m_holder.isGlobalVariable()) {
 //              System.out.println("pass1 ====== " + ins.m_holder);
                  m_inScopeNames.add(ins.m_holder);  // new name
             } else {
-            	throw new Error("shall not happen");
+            	throw new Error("shall not happen and holder is " + ins.m_holder);
             }
             
             // The escaped value of the function is handled in next pass.
@@ -256,7 +261,7 @@ public class InstructionClosureConverter {
 
 	// Pass2 is similar to Pass1 except that escaped value caused 
 	// by invocation of closure is now taken into consideration.
-	static class Pass2 implements InsVisitor {
+	class Pass2 implements InsVisitor {
 		
 	    protected Set<TID> m_inScopeNames;  // Names collected in the current scope so far
 	    protected Set<TID> m_escNames;  // out-of-scope names used, new names
@@ -300,7 +305,7 @@ public class InstructionClosureConverter {
 		// similar to Pass1
         @Override
         public Object visit(InsFuncDef ins) {
-            Set<TID> inScopeNames = new HashSet<TID>();
+            Set<TID> inScopeNames = createBaseScope();
             Set<TID> escNames = new HashSet<TID>();
 
             for (TID para : ins.m_paralst) {
@@ -485,7 +490,7 @@ public class InstructionClosureConverter {
 	// handle function definition and invocation
 	// add parameters and arguments
 	static class Pass3 implements InsVisitor {
-	    final private Map<TID, TID> m_map;  // the map won't be changed
+	    final private Map<TID, TID> m_map;  // the map won't be changed once initialized
 	    final private Map<TID, Set<TID>> m_escNames;  // function name to escaped name
 	                                                  // the map won't be changed
 	    

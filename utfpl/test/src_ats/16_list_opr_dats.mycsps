@@ -1,0 +1,53 @@
+var gn_45;
+var gn1_46;
+
+length_41(xs_42<escaped>@<GStack(0)>, accu_43<escaped>@<GStack(1)>) =
+step {
+  var temp_52<escaped> = call(sys_list_is_nil, xs_42 from <GStack(0)>);
+} -> Skip;
+ifa (temp_52 from <GStack(, 2)>) {
+  step {
+    return accu_43 from <GStack(1)>;
+  } -> Skip 
+} else { 
+  step {
+    var xs_55 = call(sys_list_get_tail, xs_42 from <GStack(0)>);
+    var temp_56 = call(add, accu_43 from <GStack(1)>, 1);
+    tail_call with (xs_55, temp_56)
+  } -> Skip;
+  <process call> = length_41 
+};
+
+foo_47() =
+step {
+  var xs_48 = call(sys_list_nil);
+  var xs_49 = call(sys_list_cons, 1, xs_48);
+  nontail_call with (xs_49, 0)
+} -> Skip;
+<process call> = length_41;
+step {
+  rewind frame of length_41 to get tempx_50<escaped>
+  gn_45 = tempx_50;
+} -> Skip;
+step {
+  gn1_46 = tempx_50 from <GStack(0)>;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+main() = 
+step {
+  gn_45 = 0;
+} -> Skip;
+step {
+  gn1_46 = 0;
+} -> Skip;
+step {
+  nontail_call with ()
+} -> Skip;
+<process call> = foo_47;
+step {
+  rewind frame of foo_47 to get __anony_1
+} -> Skip;
+

@@ -1,0 +1,15 @@
+val gn_47 = D2Ecst<sys_gvar_create_2435> (0)
+val m_48 = D2Ecst<sys_mutex_allocate_2440> ()
+val c_49 = D2Ecst<sys_cond_allocate_2444> ()
+fun foo_50 = lam () = 
+  let
+    fun loop_51 = lam () = 
+      let
+        val () = D2Ecst<sys_mutex_lock_2442> (m_48)
+      in
+        ()
+      end
+    val () = loop_51 ()
+  in
+    ()
+  end

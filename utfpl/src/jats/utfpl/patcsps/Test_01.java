@@ -61,6 +61,8 @@ public class Test_01 {
 //        		"test/src_utfpl/50_producer_consumer.mutfpl"
         		"test/src_ats/50_producer_consumer.dats"
 //        		"test/src_ats/14_if_branch.dats"
+//                "test/src_ats/15_closure_global_value.dats"
+//                "test/src_ats/16_list_opr.dats"
         		
         
         };
@@ -168,7 +170,8 @@ public class Test_01 {
             
             /* ***************** ****************** */
             // generate new program of instructions by processing
-            ProgramInstruction programIns2 = InstructionClosureConverter.convert(programIns);
+            InstructionClosureConverter insClosureConverter = new InstructionClosureConverter(programIns);
+            ProgramInstruction programIns2 = insClosureConverter.convert();
             
             /* ***************** ****************** */
             // print instructions
