@@ -1,7 +1,6 @@
 package jats.utfpl.utfpl;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -9,18 +8,20 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class UtfplProgramDeserializer implements JsonDeserializer<ProgramUtfpl> {
+public class D2CextcodeDeserializer  implements JsonDeserializer<D2Cextcode> {
 
     @Override
-    public ProgramUtfpl deserialize(JsonElement json, Type typeOfT,
+    public D2Cextcode deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
         JsonArray jarr = json.getAsJsonArray();
+        if (jarr.size() != 3) {
+        	throw new Error("type not match");
+        }
         
-        List<Cd2ecl> d2ecs = JsonUtilities.deserializeList(jarr, Cd2ecl.class, context);
-        ProgramUtfpl prog = new ProgramUtfpl(d2ecs);
+        JsonElement je1 = jarr.get(2);
+        String extCode = je1.getAsString();
         
-        return prog;
+        D2Cextcode ret = new D2Cextcode(extCode);
+        return ret;
     }
-
-
 }

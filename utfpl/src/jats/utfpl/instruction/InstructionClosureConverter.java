@@ -557,6 +557,7 @@ public class InstructionClosureConverter {
             // function instruction is removed from the instruction list
             
             FunctionInstruction nFunc = new FunctionInstruction(ins.m_name, ins.m_paralst, escParaLst, newBody);
+            // InsFuncDef is removed from the instruction list
             m_funcLst.add(nFunc);
             m_funcLst.addAll(pass.getFuncLst());
 
@@ -565,7 +566,7 @@ public class InstructionClosureConverter {
 
         @Override
         public Object visit(InsFuncGroup ins) {
-            // FuncGroupIns is removed from the instruction list
+            // InsFuncGroup is removed from the instruction list
             for (InsFuncDef fundef: ins.m_funLst) {
                 fundef.accept(this);
             }

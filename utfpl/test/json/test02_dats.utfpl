@@ -1,7 +1,10 @@
-fun foo_47 = lam () = 
+%{
+aaa
+%}
+fun foo_62 = lam () = 
   let
-    val x_48 = 3
-    val y_49 = D2Esym<+> (x_48, 3)
+    val x_63 = 3
+    val y_64 = D2Esym<+> (x_63, 3)
   in
     ()
   end

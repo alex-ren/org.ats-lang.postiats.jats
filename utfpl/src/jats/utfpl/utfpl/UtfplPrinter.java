@@ -43,6 +43,8 @@ public class UtfplPrinter {
             return printD2Cvaldecs((D2Cvaldecs)node);
         } else if (node instanceof D2Cimpdec) {
             return printD2Cimpdec((D2Cimpdec)node);
+        } else if (node instanceof D2Cextcode) {
+        	return printD2Cextcode((D2Cextcode)node);     
         } else if (node instanceof D2Cignored) {
             return null;
         } else {
@@ -50,7 +52,14 @@ public class UtfplPrinter {
         }
     }
     
-    private ST printD2Cimpdec(D2Cimpdec node) {
+    private ST printD2Cextcode(D2Cextcode node) {
+	    // D2Cextcode_st(extcode) ::= <<
+    	ST st = m_stg.getInstanceOf("D2Cextcode_st");
+    	st.add("extcode", node.m_code);
+    	return st;
+    }
+
+	private ST printD2Cimpdec(D2Cimpdec node) {
         // D2Cimpdec_st(i2mpdec) ::= <<
         ST st = m_stg.getInstanceOf("D2Cimpdec_st");
         st.add("i2mpdec", printCi2mpdec(node.m_i2mpdec));

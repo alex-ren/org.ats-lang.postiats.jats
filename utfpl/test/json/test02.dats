@@ -1,4 +1,8 @@
 
+%{$
+aaa
+%}
+
 
 fun foo (): void = let
   val x = 3

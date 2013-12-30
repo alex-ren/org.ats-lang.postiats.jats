@@ -20,6 +20,10 @@ utfpl_prog_st(d2ecs) ::= <<
 <d2ecs; separator="\n">
 >>
 
+D2Cextcode_st(extcode) ::= <<
+%{<extcode>%}
+>>
+
 D2Cfundecs_st(knd, f2ds) ::= <<
 <knd> <f2ds; separator="\nand ">
 >>

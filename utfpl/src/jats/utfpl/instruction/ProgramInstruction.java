@@ -7,6 +7,8 @@ public class ProgramInstruction {
 
     private List<GlobalEntity> m_gEntities;  // including both global variable and value
     private List<UtfplInstruction> m_insLst;  // including the main and the definitions of other functions.
+                         // but after Pass3 in InstructionClosureConverter, function definitions are removed
+                         // from the body of other function definition.
     private List<FunctionInstruction> m_funcLst;
     
     public List<UtfplInstruction> getInsLst() {

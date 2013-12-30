@@ -105,6 +105,7 @@ gdec
     : Var ID (ColonAssign exp)? -> ^(Var ID exp?)
     | Var ID (LBracket INT RBracket) -> ^(Var ID ^(INDEX INT))
     | dec
+    | '%{$' xx '%}'
     ;
     
 decs
