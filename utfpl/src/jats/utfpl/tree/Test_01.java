@@ -39,9 +39,7 @@ public class Test_01 {
      */
     public static void main(String[] args) throws IOException, RecognitionException, InterruptedException {
         String [] paths = {
-        		"test/test09_all.utfpl"
-//                , "test/json/test01.dats"
-//                , "test/json/test02.dats"
+                "test/src_mutfpl/17_extcode.mutfpl"
 
         };
 

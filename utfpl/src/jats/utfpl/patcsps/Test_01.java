@@ -59,10 +59,14 @@ public class Test_01 {
 //        		"test/src_ats/12_cond_operation.dats"
 //        		"test/src_ats/13_sync_operation.dats"
 //        		"test/src_utfpl/50_producer_consumer.mutfpl"
-        		"test/src_ats/50_producer_consumer.dats"
+//        		"test/src_ats/50_producer_consumer.dats"
 //        		"test/src_ats/14_if_branch.dats"
 //                "test/src_ats/15_closure_global_value.dats"
 //                "test/src_ats/16_list_opr.dats"
+//                "test/src_mutfpl/17_extcode.mutfpl"
+//                "test/src_ats/17_extcode.dats"
+                "test/src_ats/51_4_slots.dats"
+//                "test/src_ats/18_global_array_opr.dats"
         		
         
         };

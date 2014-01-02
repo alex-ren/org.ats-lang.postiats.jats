@@ -1,0 +1,8 @@
+val garr_62 = D2Ecst<sys_garr_create_2450> (3)
+fun foo_63 = lam () = 
+  let
+    val () = D2Ecst<sys_garr_update_2451> (garr_62, 1, 99)
+    val x_64 = D2Ecst<sys_garr_get_2452> (garr_62, 1)
+  in
+    ()
+  end

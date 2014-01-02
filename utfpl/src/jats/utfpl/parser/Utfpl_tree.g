@@ -95,8 +95,14 @@ gdec returns [IDec node]
     | ^(Val pat=exp v=exp) {node = new DecValDef(null, $pat.node, $v.node);}
     | ^(ASSIGN ID exp) {node = new DecVarAssign(null, new ExpId(null, $ID.text), $exp.node);}
     | fungroup {node = new DecFunGroup(null, $fungroup.funLst);}
+    | extcode {node = new DecExtCode(null, $extcode.content);}
     ;
-    
+
+extcode returns [String content]
+@init { final StringBuilder buf = new StringBuilder(); }
+    : ^(ExtBeg (ExtCode { buf.append($ExtCode.text);})*)  {content = buf.toString();}
+    ;
+
 index returns [int size]
     : ^(INDEX INT) {size = Integer.parseInt($INT.text);}
     ;
@@ -122,7 +128,7 @@ fungroup returns [List<DecFunDef> funLst]
     ;
 
 fundef returns [DecFunDef node]
-    : ^(FUN id_exp paralst exp) {node = new DecFunDef(null, $id_exp.node, $paralst.paralst, $exp.node);}
+    : ^(FUN name=id_exp (real=id_exp)? paralst exp) {node = new DecFunDef(null, $name.node, $real.node, $paralst.paralst, $exp.node);}
     ;
     
 paralst returns [List<ExpId> paralst]

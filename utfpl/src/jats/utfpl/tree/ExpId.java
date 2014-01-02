@@ -27,7 +27,7 @@ public class ExpId extends IExp {
     }
 
     public void updateForPara(MapScope<TID> m) {
-        m_tid = TID.createPara(m_sid, false);
+        m_tid = TID.createPara(m_sid, null);
         m.addValue(m_sid, m_tid);
     }
     
@@ -35,13 +35,14 @@ public class ExpId extends IExp {
         if (null == m_sid /*val () = xxx */|| m_sid.equals("_") /*val _ = xxx */) {
             m_tid = TID.ANONY;
         } else {
-            m_tid = TID.createGloValue(m_sid, false);
+            m_tid = TID.createGloValue(m_sid);
             m.addValue(m_sid, m_tid);
         }
     }
     
     public void updateForGlobalVar(MapScope<TID> m, PATType ty) {
-        m_tid = TID.createGloVar(m_sid, ty, false);
+//        System.out.println("======== updateForGlobalVar, name is " + m_sid);
+        m_tid = TID.createGloVar(m_sid, ty);
         m.addValue(m_sid, m_tid);
 
     }
@@ -68,8 +69,23 @@ public class ExpId extends IExp {
 	public boolean isSysGvarGet() {
 		return m_sid.equals(CCompUtils.cSysGvarGet);
 	}
+	
+	/* ************ ************** */
+	
+    public boolean isSysGarrCreate() {
+        return m_sid.equals(CCompUtils.cSysGarrCreate);
+    }
 
+    public boolean isSysGarrUpdate() {
+        return m_sid.equals(CCompUtils.cSysGarrUpdate);
+    }
+    
+    public boolean isSysGarrGet() {
+        return m_sid.equals(CCompUtils.cSysGarrGet);
+    }
 
+    /* ************ ************** */
+    
 	public boolean isSysThreadCreate() {
 		return m_sid.equals(CCompUtils.cSysThreadCreate);
 	}

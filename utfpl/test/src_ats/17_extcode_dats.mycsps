@@ -1,0 +1,21 @@
+var x;
+
+foo_42() =
+step {
+  return 3;
+} -> Skip;
+
+main() = 
+step {
+  x = 3;
+} -> Skip;
+
+
+%{$
+
+#assert main deadlockfree;
+
+#define Prop1 (n_40 < 2);
+
+#assert main |= G Prop1;
+%}

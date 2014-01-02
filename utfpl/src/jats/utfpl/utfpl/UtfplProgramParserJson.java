@@ -44,6 +44,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(Id2exparg.class, new Id2expargDeserializer());
         gsonBuilder.registerTypeAdapter(Ip2at_node.class, new Ip2at_nodeDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tany.class, new P2TanyDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tempty.class, new P2TemptyDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tignored.class, new P2TignoredDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tpat.class, new P2TpatDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tvar.class, new P2TvarDeserializer());

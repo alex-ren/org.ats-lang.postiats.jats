@@ -14,6 +14,10 @@ public class CCompUtils {
 	public static final String cSysGvarUpdate = "sys_gvar_update";
 	public static final String cSysGvarGet = "sys_gvar_get";
 	
+    public static final String cSysGarrCreate = "sys_garr_create";
+    public static final String cSysGarrUpdate = "sys_garr_update";
+    public static final String cSysGarrGet = "sys_garr_get";
+	
 	// MUTFPL layer
 	public static final String cSysListNil = "sys_list_nil";
 	public static final String cSysListCons = "sys_list_cons";
@@ -25,9 +29,6 @@ public class CCompUtils {
 	// public static final String cSysTidRelease = "sys_tid_release";
 	
     public static final String cSysThreadCreate = "sys_thread_create";
-    
-    public static final String cSysArraySet = "sys_array_set";
-    public static final String cSysArrayGet = "sys_array_get";
     
     public static final String cSysAddrSet = "sys_addr_set";
     
@@ -62,6 +63,8 @@ public class CCompUtils {
 			return "lte";
 		} else if (sym.equals("=")) {
 			return "eq";
+        } else if (sym.equals("~")) {
+            return "neg";			
 		} else {
 			throw new Error("sym " + sym + " is not supported.");
 		}
@@ -99,6 +102,9 @@ public class CCompUtils {
         func = "eq";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeBool.cType, false)));
         
+        func = "neg";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeBool.cType, false)));
+        
         func = "hello";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(false)));
         
@@ -124,14 +130,19 @@ public class CCompUtils {
         
         /* ********* *********** ************* ************** */
         
+        func = cSysGarrCreate;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        func = cSysGarrUpdate;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        func = cSysGarrGet;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        /* ********* *********** ************* ************** */
+        
         func = cSysAddrSet;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
-        
-        func = cSysArraySet;
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
-        
-        func = cSysArrayGet;
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
         
         /* ********* *********** ************* ************** */
         

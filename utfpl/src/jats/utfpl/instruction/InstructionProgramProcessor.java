@@ -39,7 +39,8 @@ public class InstructionProgramProcessor {
             nFuncLst.add(processFunction(func));
         }
         
-        ProgramInstruction nProg = new ProgramInstruction(inputProg.getGlobalEntities(), nBody, nFuncLst);
+        ProgramInstruction nProg = new ProgramInstruction(
+                inputProg.getGlobalEntities(), nBody, nFuncLst, inputProg.getExtCodeLst());
         
         return nProg;        
     }

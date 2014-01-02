@@ -37,7 +37,7 @@ public class InstructionPrinter implements InsVisitor {
     }
 
     public String print(ProgramInstruction prog) {
-        // program_st(varlst, inslst) ::= <<
+        // program_st(gv_def_lst, ins_lst, func_lst, ext_code_lst) ::= <<
         ST st = m_stg.getInstanceOf("program_st");
         
         for (GlobalEntity gv: prog.getGlobalEntities()) {
@@ -56,6 +56,10 @@ public class InstructionPrinter implements InsVisitor {
                 throw new Error("not supported");
             }
             st.add("gv_def_lst", stGV);
+        }
+        
+        for (GlobalExtCode extCode: prog.getExtCodeLst()) {
+            st.add("ext_code_lst", extCode.m_content);
         }
         
         for (UtfplInstruction ins: prog.getInsLst()) {

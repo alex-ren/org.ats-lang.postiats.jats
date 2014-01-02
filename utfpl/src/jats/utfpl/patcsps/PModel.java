@@ -1,11 +1,14 @@
 package jats.utfpl.patcsps;
 
+import jats.utfpl.instruction.GlobalExtCode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class PModel implements PNode {
     public List<PGDec> m_gvLst;
+    public List<GlobalExtCode> m_extCodeLst;
     public PProc m_mainProcBody;
     public List<PGDecProc> m_procLst;  // all the processes in the program
     public List<PGDecProc> m_threadLst;  // those processes being used in creating thread
@@ -14,10 +17,12 @@ public class PModel implements PNode {
 //    private List<PInclude> m_inclLst;
 //    private List<PGDec> m_sysGVarLst;
 
-    public PModel(List<PGDec> gvLst, PProc mainProcBody, List<PGDecProc> procLst) {
+    public PModel(List<PGDec> gvLst, PProc mainProcBody, 
+            List<PGDecProc> procLst, List<GlobalExtCode> extCodeLst) {
         m_gvLst = gvLst;
         m_mainProcBody = mainProcBody;
         m_procLst = procLst;
+        m_extCodeLst = extCodeLst;
         
         m_threadLst = new ArrayList<PGDecProc>();
         for (PGDecProc proc: procLst) {

@@ -1,6 +1,6 @@
 group patcsps;
 
-pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body) ::= <<
+pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= <<
 
 // ===============================
 
@@ -126,13 +126,8 @@ main_s(<sys_tid()>) =
 main = main_s(0) ||| Scheduler;
 
 
+<ext_code_lst; separator="\n\n">
 
-
-// #assert main deadlockfree;
-
-// #define Prop1 (n_40 \< 2);
-
-// #assert main |= G Prop1;
 
 >>
 
@@ -241,6 +236,10 @@ pexpstackopr_bool_t(frame, pos) ::= <<
 <sys_gstack()>.frame_get_bool(<sys_tid()>, <frame>, <pos>)
 >>
 
+pexpstackopr_int_t(frame, pos) ::= <<
+<sys_gstack()>.frame_get_int(<sys_tid()>, <frame>, <pos>)
+>>
+
 pprocevent_st(evt, proc) ::= <<
 <evt> ->
 <proc>
@@ -295,8 +294,8 @@ pinsload_st(src, dst) ::= <<
 var <dst> = <src>;
 >> 
 
-pinsloadarray_st(src, index, dst) ::= <<
-<dst> = <src>[index];
+pinsloadarray_st(src, index, dst, is_global) ::= <<
+<if(is_global)><else>var <endif><dst> = <src>[<index>];
 >>
 
 pinsstore_st(src, dst) ::= <<
@@ -304,7 +303,7 @@ pinsstore_st(src, dst) ::= <<
 >>
 
 pinsstorearray_st(src, dst, index) ::= <<
-<dst>[index] = src
+<dst>[<index>] = <src>
 >>
 
 pinsmutexalloc_st(holder, is_global) ::= <<

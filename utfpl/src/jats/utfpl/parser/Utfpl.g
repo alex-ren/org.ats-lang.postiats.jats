@@ -33,11 +33,14 @@ tokens {
 }
 
 @lexer::members {
-	String m_str;
+
+	private boolean mmode = false;
 	
-	public String getEscaped() {
-	    return m_str;
-	}
+	String m_str;
+  
+  public String getEscaped() {
+      return m_str;
+  }
 }
 
 @parser::members {
@@ -105,7 +108,11 @@ gdec
     : Var ID (ColonAssign exp)? -> ^(Var ID exp?)
     | Var ID (LBracket INT RBracket) -> ^(Var ID ^(INDEX INT))
     | dec
-    | '%{$' xx '%}'
+    | extcode
+    ;
+
+extcode
+    : ExtBeg ExtCode* ExtEnd -> ^(ExtBeg ExtCode*)
     ;
     
 decs
@@ -119,7 +126,7 @@ dec
     ;
 
 fundef
-    : ID LParen paralst RParen Assign exp -> ^(FUN ID paralst exp)
+    : name=ID (Colon real=ID)? LParen paralst RParen Assign exp -> ^(FUN $name $real? paralst exp)
     ;
     
 paralst
@@ -156,7 +163,10 @@ RParen    : ')';
 Assign    : '=';  
 ColonAssign: ':=';  
 Comma     : ',';  
-QMark     : '?';  
+QMark     : '?';
+
+ExtBeg      : '%{$' {mmode = true;};
+ExtEnd      : '%}' {mmode = false;};
 
 Let       : 'let';
 In        : 'in';
@@ -244,6 +254,10 @@ UNICODE_ESC
     :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
     ;
 
+ExtCode
+    : {mmode}?=> (~'%')+ | '%' (~('}'|'%'))?
+    ;
+    
 // =====================================================
 
 COMMENT

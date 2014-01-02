@@ -1,0 +1,17 @@
+var garr[3];
+
+foo_44() =
+step {
+  garr[1] = 99;
+} -> Skip;
+step {
+  var x_45 = garr[1];
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+main() = 
+Skip;
+
+

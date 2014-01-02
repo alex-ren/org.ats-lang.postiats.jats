@@ -1,0 +1,114 @@
+var L;
+var R;
+var slot[2];
+var data[4];
+var content;
+
+writer_48(x_49@<GStack(0)>) =
+step {
+  var temp_61<escaped> = R;
+} -> Skip;
+step {
+  var wp_50<escaped> = call(sub, 1, temp_61 from <GStack(1)>);
+  var temp_62<escaped> = slot[wp_50];
+} -> Skip;
+step {
+  var wi_51<escaped> = call(sub, 1, temp_62 from <GStack(3)>);
+  var temp_63 = call(mul, 2, wp_50 from <GStack(2)>);
+  var temp_64 = call(add, temp_63, wi_51);
+  var temp_65 = call(neg, 1);
+  data[temp_64] = temp_65;
+} -> Skip;
+step {
+  var temp_66 = call(mul, 2, wp_50 from <GStack(2)>);
+  var temp_67 = call(add, temp_66, wi_51 from <GStack(4)>);
+  data[temp_67] = 1;
+} -> Skip;
+step {
+  slot[wp_50 from <GStack(2)>] = wi_51 from <GStack(4)>;
+} -> Skip;
+step {
+  L = wp_50 from <GStack(2)>;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+reader_52() =
+step {
+  var rp_53<escaped> = L;
+} -> Skip;
+step {
+  R = rp_53 from <GStack(0)>;
+} -> Skip;
+step {
+  var ri_54<escaped> = slot[rp_53 from <GStack(0)>];
+} -> Skip;
+step {
+  var temp_69 = call(mul, 2, rp_53 from <GStack(0)>);
+  var temp_70 = call(add, temp_69, ri_54 from <GStack(1)>);
+  var x_55<escaped> = data[temp_70];
+} -> Skip;
+step {
+  return x_55 from <GStack(2)>;
+} -> Skip;
+
+loop_write_56(arg_57<escaped>@<GStack(0)>) =
+step {
+  nontail_call with (1)
+} -> Skip;
+<process call> = writer_48;
+step {
+  rewind frame of writer_48 to get _
+  tail_call with (arg_57 from <GStack(0)>)
+} -> Skip;
+<process call> = loop_write_56;
+
+loop_read_58(arg_59<escaped>@<GStack(0)>) =
+step {
+  nontail_call with ()
+} -> Skip;
+<process call> = reader_52;
+step {
+  rewind frame of reader_52 to get temp_73
+  content = temp_73;
+} -> Skip;
+step {
+  tail_call with (arg_59 from <GStack(0)>)
+} -> Skip;
+<process call> = loop_read_58;
+
+main() = 
+step {
+  L = 0;
+} -> Skip;
+step {
+  R = 0;
+} -> Skip;
+step {
+  content = 0;
+} -> Skip;
+step {
+  var temp_74 = call(sys_list_nil);
+  var temp_75<escaped> = call(sys_list_cons, 0, temp_74);
+} -> Skip;
+<thread_create> (1, loop_write_56, temp_75 from <GStack(0)>);
+step {
+  var temp_76 = call(sys_list_nil);
+  var temp_77<escaped> = call(sys_list_cons, 0, temp_76);
+} -> Skip;
+<thread_create> (2, loop_read_58, temp_77 from <GStack(1)>);
+
+
+%{$
+#assert main deadlockfree;
+
+#define Prop1 (content == 1);
+#define Prop2 (content != 1);
+#define Prop3 (content != -1);
+
+#assert main |= (G Prop2) || (F G Prop1);
+#assert main |= G Prop3;
+#assert main |= F G Prop1;
+
+%}

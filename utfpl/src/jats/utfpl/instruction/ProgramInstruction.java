@@ -11,6 +11,8 @@ public class ProgramInstruction {
                          // from the body of other function definition.
     private List<FunctionInstruction> m_funcLst;
     
+    private List<GlobalExtCode> m_extCodeLst;
+    
     public List<UtfplInstruction> getInsLst() {
         return m_insLst;
     }
@@ -23,10 +25,20 @@ public class ProgramInstruction {
         return m_funcLst;
     }
     
-    public ProgramInstruction(List<GlobalEntity> gEntities, List<UtfplInstruction> insLst, List<FunctionInstruction> funcLst) {
+    public List<GlobalExtCode> getExtCodeLst() {
+        return m_extCodeLst;
+    }
+    
+    
+    
+    public ProgramInstruction(List<GlobalEntity> gEntities, 
+            List<UtfplInstruction> insLst, 
+            List<FunctionInstruction> funcLst,
+            List<GlobalExtCode> extCodeLst) {
         m_gEntities = gEntities;
         m_insLst = insLst;
         m_funcLst = funcLst;
+        m_extCodeLst = extCodeLst;
     }
     
     public void setFunctions(List<FunctionInstruction> funcLst) {

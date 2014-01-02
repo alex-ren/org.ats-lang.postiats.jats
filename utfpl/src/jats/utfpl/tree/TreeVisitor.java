@@ -9,6 +9,7 @@ public interface TreeVisitor {
     public Object visit(DecVarAssign node);
     public Object visit(DecFunGroup node);
     public Object visit(DecFunDef node);
+    public Object visit(DecExtCode node);
     
     public Object visit(ExpApp node);
     public Object visit(ExpAtom node);

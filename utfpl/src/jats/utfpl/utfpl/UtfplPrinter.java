@@ -236,9 +236,17 @@ public class UtfplPrinter {
             return printP2Tvar((P2Tvar)node);
         } else if (node instanceof P2Tignored) {
         	return printP2Tignored((P2Tignored)node);
+        } else if (node instanceof P2Tempty) {
+            return printP2Tempty((P2Tempty)node);
         } else {
             throw new Error("not supported");
         }
+    }
+
+    private ST printP2Tempty(P2Tempty node) {
+        // P2Tempty_st() ::= <<
+        ST st = m_stg.getInstanceOf("P2Tempty_st");
+        return st; 
     }
 
     private ST printP2Tignored(P2Tignored node) {

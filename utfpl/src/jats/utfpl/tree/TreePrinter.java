@@ -195,6 +195,14 @@ public class TreePrinter implements TreeVisitor {
         return st;
     }
 
+    @Override
+    public Object visit(DecExtCode node) {
+        // ext_code_st (content) ::= <<
+        ST st = m_stg.getInstanceOf("ext_code_st");
+        st.add("content", node.m_content);
+        return st;
+    }
+
 }
 
 

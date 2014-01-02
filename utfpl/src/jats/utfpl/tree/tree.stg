@@ -75,6 +75,11 @@ val_def_st (id, exp) ::= <<
 val <id> = <exp>
 >>
 
+ext_code_st (content) ::= <<
+%{$<content>%}
+>>
+
+
 
 
 

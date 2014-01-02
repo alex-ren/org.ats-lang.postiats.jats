@@ -1,5 +1,6 @@
 package jats.utfpl.patcsps;
 
+import jats.utfpl.instruction.GlobalExtCode;
 import jats.utfpl.instruction.TID;
 
 import java.net.URL;
@@ -27,7 +28,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PModel node) {
-        // pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body) ::= <<
+        // pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= <<
         ST st = m_stg.getInstanceOf("pmodel_st");
 
         for (PGDec gv: node.m_gvLst) {
@@ -38,6 +39,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
         for (PGDecProc proc: node.m_procLst) {
             st.add("proc_lst", proc.accept(this));
+        }
+        
+        for (GlobalExtCode extCode: node.m_extCodeLst) {
+            st.add("ext_code_lst", extCode.m_content);
         }
         
         // scheduler_body_st(proc1, proc_lst) ::= <<
@@ -187,7 +192,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
         ST st = null;
         if (node.m_tid.isBool()) {
             st = m_stg.getInstanceOf("pexpstackopr_bool_t");
-        } else {
+        } else if (node.m_tid.isInt()) {
+            st = m_stg.getInstanceOf("pexpstackopr_int_t");
+        }  else {
             st = m_stg.getInstanceOf("pexpstackopr_default_t");
         }
         
@@ -339,11 +346,17 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsLoadArray node) {
-        // pinsloadarray_st(src, index, dst) ::= <<
+        // pinsloadarray_st(src, index, dst, is_global) ::= <<
         ST st = m_stg.getInstanceOf("pinsloadarray_st");
         st.add("src", node.m_globalVar);
         st.add("dst", node.m_localHolder);
         st.add("index", node.m_localIndex.accept(this));
+        
+        if (node.m_localHolder.isGlobal()) {  // assign to a global value
+            st.add("is_global", true);
+        } else {
+            st.add("is_global", false);
+        }
         
         return st;
     }

@@ -1,0 +1,11 @@
+val x_62 = 3
+fun foo_63 = lam () = 
+  3
+%{
+
+#assert main deadlockfree;
+
+#define Prop1 (n_40 < 2);
+
+#assert main |= G Prop1;
+%}

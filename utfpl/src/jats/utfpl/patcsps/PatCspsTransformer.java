@@ -59,7 +59,7 @@ public class PatCspsTransformer implements CSPSVisitor {
             procLst.add(transFunc(proc));
         }
         
-        PModel model = new PModel(gvlst, mainBody, procLst);
+        PModel model = new PModel(gvlst, mainBody, procLst, prog.m_extCodeLst);
 //        model.complete();
         
         return model;

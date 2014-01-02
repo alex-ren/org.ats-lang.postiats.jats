@@ -5,6 +5,7 @@ import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeChannel;
 import jats.utfpl.patcsps.type.PATTypeFunc;
+import jats.utfpl.patcsps.type.PATTypeInt;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 
 import java.util.Map;
@@ -12,20 +13,21 @@ import java.util.Map;
 
 public class TID implements ValPrim {
     static private int s_cnt = 0;
-    static public TID ANONY = new TID("__anony", Category.other, PATTypeSingleton.cVoidType, false);
+    static public TID ANONY = new TID("__anony", Category.other, PATTypeSingleton.cVoidType, "_");
     
     enum Category {eLibFun, eGloVar, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, other};
     
     // members
     private String m_id;
-    private int m_uid;
+    private Integer m_uid;
     private Category m_cat;
     private PATType m_type;
-    private boolean m_isSys;  // Whether this TID is for system name, which has no use of m_uid.
+//    private boolean m_isSys;  // Whether this TID is for system name, which has no use of m_uid.
+    public String m_trueName;  // name given by user
     private Aux.Address m_addr;
     // end of members
     
-    private TID(String id, Category cat, PATType ty, boolean isSys) {
+    private TID(String id, Category cat, PATType ty, String trueName) {
         m_id = id;
         
         s_cnt++;
@@ -33,7 +35,7 @@ public class TID implements ValPrim {
         m_cat = cat;
         m_type = ty;
         
-        m_isSys = isSys;
+        m_trueName = trueName;
         m_addr = null;
 
     }
@@ -50,7 +52,7 @@ public class TID implements ValPrim {
     	if (this == ANONY) {
     		return this;
     	} else {
-            return new TID(m_id, m_cat, m_type, m_isSys);
+            return new TID(m_id, m_cat, m_type, m_trueName);
     	}
     }
     
@@ -77,6 +79,10 @@ public class TID implements ValPrim {
     
     public boolean isBool() {
         return m_type instanceof PATTypeBool;
+    }
+    
+    public boolean isInt() {
+        return m_type instanceof PATTypeInt;
     }
     
     public boolean equals(String name) {
@@ -132,20 +138,20 @@ public class TID implements ValPrim {
     }
     
     public String toString() {
-        if (m_isSys) {
-            return m_id;
+        if (null != m_trueName) {
+            return m_trueName;
         } else {
             return m_id + "_" + m_uid;
         }
     }
     
     public static TID createLocalVar(String id, PATType ty) {
-        TID tid = new TID(id, Category.eLocalVar, ty, false);
+        TID tid = new TID(id, Category.eLocalVar, ty, null);
         return tid;
     }
     
-    public static TID createUserFun(String id) {
-        TID tid = new TID(id, Category.eUserFun, new PATTypeFunc(), false);
+    public static TID createUserFun(String id, String trueName) {
+        TID tid = new TID(id, Category.eUserFun, new PATTypeFunc(), trueName);
         return tid;
     }
     
@@ -155,32 +161,32 @@ public class TID implements ValPrim {
 //    }
     
     public static TID createLibFun(String id, PATTypeFunc ty) {
-        TID tid = new TID(id, Category.eLibFun, ty, true);
+        TID tid = new TID(id, Category.eLibFun, ty, id);
         return tid;
     }
     
-    public static TID createGloVar(String id, PATType ty, boolean isSys) {
-        TID tid = new TID(id, Category.eGloVar, ty, isSys);
+    public static TID createGloVar(String id, PATType ty) {
+        TID tid = new TID(id, Category.eGloVar, ty, id);
         return tid;
     }
     
-    public static TID createGloValue(String id, boolean isSys) {
-        TID tid = new TID(id, Category.eGloValue, PATTypeSingleton.cUnknownType, isSys);
+    public static TID createGloValue(String id) {
+        TID tid = new TID(id, Category.eGloValue, PATTypeSingleton.cUnknownType, id);
         return tid;
     }
     
-    public static TID createPara(String id, boolean isSys) {
-        TID tid = new TID(id, Category.ePara, PATTypeSingleton.cUnknownType, isSys);
+    public static TID createPara(String id, String trueName) {
+        TID tid = new TID(id, Category.ePara, PATTypeSingleton.cUnknownType, trueName);
         return tid;
     }
     
     public static TID createRetHolder(String id) {
-        TID tid = new TID(id, Category.eRetHolder, PATTypeSingleton.cUnknownType, false);
+        TID tid = new TID(id, Category.eRetHolder, PATTypeSingleton.cUnknownType, null);
         return tid;
     }
     
-    public static TID createChannel(String id, boolean isSys) {
-        TID tid = new TID(id, Category.other, new PATTypeChannel(), isSys);
+    public static TID createChannel(String id, String trueName) {
+        TID tid = new TID(id, Category.other, new PATTypeChannel(), trueName);
         return tid;
     }
     

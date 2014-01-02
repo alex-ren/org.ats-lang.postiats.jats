@@ -1,0 +1,51 @@
+val L_62 = D2Ecst<sys_gvar_create_2447> (0)
+val R_63 = D2Ecst<sys_gvar_create_2447> (0)
+val slot_64 = D2Ecst<sys_garr_create_2450> (2, 0)
+val data_65 = D2Ecst<sys_garr_create_2450> (4, 0)
+val content_66 = D2Ecst<sys_gvar_create_2447> (0)
+fun writer_67 = lam (pat<x_68>) = 
+  let
+    val wp_69 = D2Esym<-> (1, D2Ecst<sys_gvar_get_2449> (R_63))
+    val wi_70 = D2Esym<-> (1, D2Ecst<sys_garr_get_2452> (slot_64, wp_69))
+    val () = D2Ecst<sys_garr_update_2451> (data_65, D2Esym<+> (D2Esym<*> (2, wp_69), wi_70), D2Esym<~> (1))
+    val () = D2Ecst<sys_garr_update_2451> (data_65, D2Esym<+> (D2Esym<*> (2, wp_69), wi_70), 1)
+    val () = D2Ecst<sys_garr_update_2451> (slot_64, wp_69, wi_70)
+    val () = D2Ecst<sys_gvar_update_2448> (L_62, wp_69)
+  in
+    ()
+  end
+fun reader_71 = lam () = 
+  let
+    val rp_72 = D2Ecst<sys_gvar_get_2449> (L_62)
+    val () = D2Ecst<sys_gvar_update_2448> (R_63, rp_72)
+    val ri_73 = D2Ecst<sys_garr_get_2452> (slot_64, rp_72)
+    val x_74 = D2Ecst<sys_garr_get_2452> (data_65, D2Esym<+> (D2Esym<*> (2, rp_72), ri_73))
+  in
+    x_74
+  end
+fun loop_write_75 = lam (pat<arg_76>) = 
+  let
+    val () = writer_67 (1)
+  in
+    loop_write_75 (arg_76)
+  end
+fun loop_read_77 = lam (pat<arg_78>) = 
+  let
+    val () = D2Ecst<sys_gvar_update_2448> (content_66, reader_71 ())
+  in
+    loop_read_77 (arg_78)
+  end
+val () = D2Ecst<sys_thread_create_2454> (1, loop_write_75, 0)
+val () = D2Ecst<sys_thread_create_2454> (2, loop_read_77, 0)
+%{
+#assert main deadlockfree;
+
+#define Prop1 (content == 1);
+#define Prop2 (content != 1);
+#define Prop3 (content != -1);
+
+#assert main |= (G Prop2) || (F G Prop1);
+#assert main |= G Prop3;
+#assert main |= F G Prop1;
+
+%}

@@ -1,7 +1,6 @@
 // ===============================
 
 
-#import "PStack";
 
 #import "MyLib";
 
@@ -103,10 +102,19 @@ var<LinkedList> sys_list_manager = new LinkedList();
 
 #define sys_list_nil  sys_list_manager.list_nil ();
 #define sys_list_cons(x, xs) sys_list_manager.list_cons (x, xs);
+#define sys_list_get_header(xs) sys_list_manager.list_get_header (xs);
+#define sys_list_get_tail(xs) sys_list_manager.list_get_tail (xs);
+#define sys_list_is_nil(xs) sys_list_manager.list_is_nil (xs);
 
 // =====================
 
+var x = 0;
 
+foo(sys_tid) =
+  {  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
 
 // =====================
 
@@ -114,10 +122,20 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_list_manager.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
+  {  x = 3;
+  } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 
 main = main_s(0) ||| Scheduler;
-// ||| mutex_allocator ||| cond_allocator;
+
+
+
+
+#assert main deadlockfree;
+
+#define Prop1 (n_40 < 2);
+
+#assert main |= G Prop1;
 
 

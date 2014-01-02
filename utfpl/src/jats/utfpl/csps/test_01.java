@@ -42,7 +42,8 @@ public class test_01 {
 //        		"test/test09_all.utfpl"
 //                , "test/json/test01.dats"
 //                , "test/json/test02.dats"
-        		"test/src_utfpl/10_thread_create.mutfpl"
+//        		"test/src_utfpl/10_thread_create.mutfpl"
+                "test/src_mutfpl/17_extcode.mutfpl"
     
         };
 

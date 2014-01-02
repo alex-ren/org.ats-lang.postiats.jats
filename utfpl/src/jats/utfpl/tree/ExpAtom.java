@@ -15,6 +15,10 @@ public class ExpAtom extends IExp {
         m_text = text;
     }
     
+    int toInt() {
+        return Integer.parseInt(m_text);
+    }
+    
     static public ExpAtom makeInt(Location loc, String text) {
     	return new ExpAtom(loc, TreeTypeInt.cType, text);
     }

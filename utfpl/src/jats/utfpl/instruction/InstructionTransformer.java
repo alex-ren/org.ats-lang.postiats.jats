@@ -7,6 +7,7 @@ import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
+import jats.utfpl.tree.DecExtCode;
 import jats.utfpl.tree.ExpApp;
 import jats.utfpl.tree.ExpAtom;
 import jats.utfpl.tree.IDec;
@@ -47,6 +48,7 @@ public class InstructionTransformer implements TreeVisitor {
     private ValPrim m_vpOut;  // entity returned by the callee, may be a holder
     
     private List<GlobalEntity> m_gEntitis;
+    private List<GlobalExtCode> m_extCodeLst;
     
     
     public InstructionTransformer() {
@@ -54,12 +56,13 @@ public class InstructionTransformer implements TreeVisitor {
         m_tidIn = null;
         m_vpOut = null;
         m_gEntitis = new ArrayList<GlobalEntity>();
+        m_extCodeLst = new ArrayList<GlobalExtCode>();
     }
     
     // The function cannot be called multiple times.
     public ProgramInstruction trans(ProgramTree node) {
         this.visit(node);
-        return new ProgramInstruction(m_gEntitis, m_inslst, null);
+        return new ProgramInstruction(m_gEntitis, m_inslst, null, m_extCodeLst);
     }
 
     private TID getTIDIn() {
@@ -140,18 +143,19 @@ public class InstructionTransformer implements TreeVisitor {
             // principle:
             // Add extra Return instruction in the end of the instruction list if
             // the last instruction doesn't contain information of holder.
-            if (funlab.getID().equals(CCompUtils.cSysArraySet)) {
-                // sys_array_set (local, global, index)
-                IExp lv = node.m_explst.get(0);
-                lv.accept(this);
-                ValPrim localValue = m_vpOut;
-                
-                IExp gv = node.m_explst.get(1);
+            if (funlab.getID().equals(CCompUtils.cSysGarrUpdate)) {
+                // val () = sys_garr_update (garr, index, value (local))
+
+                IExp gv = node.m_explst.get(0);
                 TID globalVar = ((ExpId)gv).m_tid;
                 
-                IExp ind = node.m_explst.get(2);
+                IExp ind = node.m_explst.get(1);
                 ind.accept(this);
                 ValPrim localIndex = m_vpOut;
+                
+                IExp lv = node.m_explst.get(2);
+                lv.accept(this);
+                ValPrim localValue = m_vpOut;
                 
                 // This is store. There is no return value.
                 InsStoreArray storeArr = new InsStoreArray(localValue, globalVar, localIndex);
@@ -164,7 +168,7 @@ public class InstructionTransformer implements TreeVisitor {
                 } else {
                     throw new Error("wrong " + holder);
                 }
-            } else if (funlab.getID().equals(CCompUtils.cSysArrayGet)) {
+            } else if (funlab.getID().equals(CCompUtils.cSysGarrGet)) {
                 // holder = sys_array_get(global, index)
                 IExp gv = node.m_explst.get(0);
                 TID globalVar = ((ExpId)gv).m_tid;
@@ -581,6 +585,12 @@ public class InstructionTransformer implements TreeVisitor {
     @Override
     public Object visit(DecVarArrayDef node) {
         m_gEntitis.add(new GlobalArray(node.m_id.m_tid, node.m_size));
+        return null;
+    }
+
+    @Override
+    public Object visit(DecExtCode node) {
+        m_extCodeLst.add(new GlobalExtCode(node.m_content));
         return null;
     }
 

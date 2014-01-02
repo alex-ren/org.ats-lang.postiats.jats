@@ -43,7 +43,8 @@ public class Test_02_ins_processing {
 //                , "test/test20_csps_trans_.utfpl"
 //                , "test/test35_mutual_closure.utfpl"
 //                "test/test09_all.utfpl"
-        		"test/src_utfpl/10_thread_create.mutfpl"
+//        		"test/src_mutfpl/10_thread_create.mutfpl"
+                "test/src_mutfpl/17_extcode.mutfpl"
         
         };
 

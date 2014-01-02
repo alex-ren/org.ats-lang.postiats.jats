@@ -48,7 +48,8 @@ public class InstructionClosureConverter {
         List<UtfplInstruction> nInsLst = pa3.process(m_iProg.getInsLst());
         List<FunctionInstruction> nFuncLst = pa3.getFuncLst();
         
-        return new ProgramInstruction(m_iProg.getGlobalEntities(), nInsLst, nFuncLst);
+        return new ProgramInstruction(
+                m_iProg.getGlobalEntities(), nInsLst, nFuncLst, m_iProg.getExtCodeLst());
 	}
 
 	// escaped value caused by invocation of closure is not taken into consideration.
@@ -546,7 +547,7 @@ public class InstructionClosureConverter {
             
             Map<TID, TID> map = new HashMap<TID, TID>();
             for (TID escName: escNameSet) {
-                TID newPara = TID.createPara(escName.getID() + "_esc", false);
+                TID newPara = TID.createPara(escName.getID() + "_esc", null);
                 escParaLst.add(newPara);
                 map.put(escName, newPara);
             }

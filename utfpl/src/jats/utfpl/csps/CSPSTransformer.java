@@ -55,7 +55,7 @@ public class CSPSTransformer {
         }
 
         // ==== handle main
-        TID mainLab = TID.createUserFun("main");
+        TID mainLab = TID.createUserFun("main", null);
         List<CBlock> body = InsLst2CBlockLst2(inputProg.getInsLst(), subMap, mainLab);
         // add the concept of stack
         processBlockLstForStack(0, body);
@@ -74,7 +74,7 @@ public class CSPSTransformer {
             procLst.add(funcCSP);
         }
 
-        ProgramCSPS outputProg = new ProgramCSPS(globalVarInfo, body, procLst);
+        ProgramCSPS outputProg = new ProgramCSPS(globalVarInfo, body, procLst, inputProg.getExtCodeLst());
         return outputProg;
     }
     

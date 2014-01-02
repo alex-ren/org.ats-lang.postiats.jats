@@ -14,6 +14,7 @@ import jats.utfpl.utfpl.Ci2mpdec;
 import jats.utfpl.utfpl.Cp2at;
 import jats.utfpl.utfpl.Csymbol;
 import jats.utfpl.utfpl.Cv2aldec;
+import jats.utfpl.utfpl.D2Cextcode;
 import jats.utfpl.utfpl.D2Cfundecs;
 import jats.utfpl.utfpl.D2Cignored;
 import jats.utfpl.utfpl.D2Cimpdec;
@@ -38,6 +39,7 @@ import jats.utfpl.utfpl.Id2exp_node;
 import jats.utfpl.utfpl.Id2exparg;
 import jats.utfpl.utfpl.Ip2at_node;
 import jats.utfpl.utfpl.P2Tany;
+import jats.utfpl.utfpl.P2Tempty;
 import jats.utfpl.utfpl.P2Tignored;
 import jats.utfpl.utfpl.P2Tpat;
 import jats.utfpl.utfpl.P2Tvar;
@@ -70,6 +72,9 @@ public class TreeFromUtfpl {
 	    } else if (uDecNode instanceof D2Cimpdec) {
 	    	decs.add(transD2Cimpdec(loc, (D2Cimpdec)uDecNode));
 	    	return decs;
+	    } else if (uDecNode instanceof D2Cextcode) {
+	        decs.add(transD2Cextcode(loc, (D2Cextcode)uDecNode));
+	        return decs;
 	    } else if (uDecNode instanceof D2Cignored) {
 	    	System.err.println("D2Cignored is encounter.");
 	    	return decs;
@@ -78,7 +83,11 @@ public class TreeFromUtfpl {
 	    }
     }
 
-	private DecFunGroup transD2Cimpdec(Location loc, D2Cimpdec uNode) {
+	private DecExtCode transD2Cextcode(Location loc, D2Cextcode uNode) {
+        return new DecExtCode(loc, uNode.m_code);
+    }
+
+    private DecFunGroup transD2Cimpdec(Location loc, D2Cimpdec uNode) {
 	    List<DecFunDef> funLst = new ArrayList<DecFunDef>();
 	    DecFunDef funDef = transCi2mpdec(uNode.m_i2mpdec);
 	    funLst.add(funDef);
@@ -93,7 +102,7 @@ public class TreeFromUtfpl {
 	    IExp lam = transCd2exp(uNode.i2mpdec_def);
 	    if (lam instanceof ExpLam) {
 	    	ExpLam lambda = (ExpLam)lam;
-	    	DecFunDef ret = new DecFunDef(loc, id, lambda.m_paralst, lambda.m_body);
+	    	DecFunDef ret = new DecFunDef(loc, id, null, lambda.m_paralst, lambda.m_body);
 	    	return ret;
 	    } else {
 	    	throw new Error("Should be a lambda.");
@@ -113,15 +122,20 @@ public class TreeFromUtfpl {
 	private IDec transGlobalCv2aldec(Cv2aldec uNode) {
 		Location loc = new Location(uNode.v2aldec_loc);
 		
-		ExpId id = transCp2at(uNode.v2aldec_pat);
+		IExp id = transCp2at(uNode.v2aldec_pat);
 		IExp def = transCd2exp(uNode.v2aldec_def);
 		if (def instanceof ExpApp) {
 			ExpApp app = (ExpApp)def;
 			ExpId funName = app.getFunName();
 			if (funName.isSysGvarCreate()) {
-				DecVarDef dec = new DecVarDef(loc, id, app.m_explst.get(0));
+				DecVarDef dec = new DecVarDef(loc, (ExpId)id, app.m_explst.get(0));
 				return dec;
-			} else if (funName.isSysGvarUpdate()) {
+			} else if (funName.isSysGarrCreate()) {
+			    ExpAtom szExp = (ExpAtom)app.m_explst.get(0);
+			    int sz = szExp.toInt();
+			    DecVarArrayDef dec = new DecVarArrayDef(loc, (ExpId)id, sz, EType.eInteger);
+                return dec;
+            } else if (funName.isSysGvarUpdate()) {
 				ExpId realId = (ExpId) app.m_explst.get(0);
 				DecVarAssign dec = new DecVarAssign(loc, realId, app.m_explst.get(1));
 				return dec;
@@ -293,7 +307,7 @@ public class TreeFromUtfpl {
 	private ExpLam transD2Elam(Location loc, D2Elam uNode) {
         List<ExpId> paraLst = new ArrayList<ExpId>();
         for (Cp2at pat: uNode.m_p2ts) {
-        	paraLst.add(transCp2at(pat));
+        	paraLst.add((ExpId)transCp2at(pat));
         }
         IExp body = transCd2exp(uNode.m_d2exp);
         
@@ -359,7 +373,7 @@ public class TreeFromUtfpl {
 	    IExp lam = transCd2exp(uNode.f2undec_def);
 	    if (lam instanceof ExpLam) {
 	    	ExpLam lambda = (ExpLam)lam;
-	    	DecFunDef ret = new DecFunDef(loc, id, lambda.m_paralst, lambda.m_body);
+	    	DecFunDef ret = new DecFunDef(loc, id, null, lambda.m_paralst, lambda.m_body);
 	    	return ret;
 	    } else {
 	    	throw new Error("Should be a lambda.");
@@ -380,12 +394,12 @@ public class TreeFromUtfpl {
 	private IDec transLocalCv2aldec(Cv2aldec uNode) {
 		Location loc = new Location(uNode.v2aldec_loc);
 		
-		ExpId id = transCp2at(uNode.v2aldec_pat);
+		IExp id = transCp2at(uNode.v2aldec_pat);
 		IExp def = transCd2exp(uNode.v2aldec_def);
 		if (def instanceof ExpApp) {
 			ExpApp app = (ExpApp)def;
 			ExpId funName = app.getFunName();
-			if (funName.isSysGvarCreate()) {
+			if (funName.isSysGvarCreate() || funName.isSysGarrCreate()) {
 				throw new Error("Cannot define global variable locally.");
 			} else if (funName.isSysGvarUpdate()) {
 				ExpId realId = (ExpId) app.m_explst.get(0);
@@ -420,7 +434,7 @@ public class TreeFromUtfpl {
 	    return new ExpId(loc, transCd2var(uNode.m_d2var));
     }
 
-	private ExpId transCp2at(Cp2at uNode) {
+	private IExp transCp2at(Cp2at uNode) {
 		Ip2at_node uPat = uNode.p2at_node;
 		Location loc = new Location(uNode.p2at_loc);
 		if (uPat instanceof P2Tany) {
@@ -431,9 +445,15 @@ public class TreeFromUtfpl {
 			return transP2Tvar(loc, (P2Tvar)uPat);
 		} else if (uPat instanceof P2Tignored) {
 			return transP2Tignored(loc, (P2Tignored)uPat);
+        } else if (uPat instanceof P2Tempty) {
+            return transP2Tempty(loc, (P2Tempty)uPat);			
 		} else {
 			throw new Error(uNode + " is not supported");
 		}
+    }
+	
+    private ExpTuple transP2Tempty(Location loc, P2Tempty uNode) {
+        return ExpTuple.makeVoid(loc);
     }
 
 	private ExpId transP2Tignored(Location loc, P2Tignored uPat) {
@@ -452,7 +472,7 @@ public class TreeFromUtfpl {
 	    return uNode.m_str;
     }
 
-	private ExpId transP2Tpat(Location loc, P2Tpat uNode) {
+	private IExp transP2Tpat(Location loc, P2Tpat uNode) {
 		// loc is not used at all.
 	    return transCp2at(uNode.m_p2at);
     }

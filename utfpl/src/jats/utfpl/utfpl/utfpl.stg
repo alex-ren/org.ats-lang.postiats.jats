@@ -89,6 +89,10 @@ P2Tany_st() ::= <<
 _
 >>
 
+P2Tempty_st() ::= <<
+()
+>>
+
 P2Tpat_st(pat) ::= <<
 pat\<<pat>\>
 >>

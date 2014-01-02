@@ -4,6 +4,7 @@ package jats.utfpl.parser;
 import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATTypeArray;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
+import jats.utfpl.tree.DecExtCode;
 import jats.utfpl.tree.ExpApp;
 import jats.utfpl.tree.ExpAtom;
 import jats.utfpl.tree.IDec;
@@ -180,7 +181,8 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(DecFunGroup node) {
 		for (DecFunDef fundef: node.m_funLst) {
 			String name = fundef.m_id.m_sid;
-            TID tid = TID.createUserFun(name);
+			String trueName = null != fundef.m_trueName? fundef.m_trueName.m_sid: null;
+            TID tid = TID.createUserFun(name, trueName);
             m_scope.addValue(name, tid);
 		}
 		
@@ -195,6 +197,11 @@ public class NamingVisitor implements TreeVisitor {
     public Object visit(DecVarArrayDef node) {
         node.m_id.updateForGlobalVar(m_scope, new PATTypeArray(node.m_size));
         
+        return null;
+    }
+
+    @Override
+    public Object visit(DecExtCode node) {
         return null;
     }
 

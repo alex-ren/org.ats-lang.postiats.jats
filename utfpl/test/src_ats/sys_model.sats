@@ -3,13 +3,21 @@
 abstype global_variable_t
 typedef gvar = global_variable_t
 
-fun sys_gvar_create (x: int): gvar  // can only be called outside function
-fun sys_gvar_update (gv: gvar, x: int): void
+fun {a:t@ype} sys_gvar_create (x: a): gvar  // can only be called outside function
+fun {a:t@ype} sys_gvar_update (gv: gvar, x: a): void
 fun {a:t@ype} sys_gvar_get (gv: gvar): a
 
 // fun {a:t@ype} sys_gvar_create (name: string, x: a): void  // can only be called outside function
 // fun {a:t@ype} sys_gvar_update (name: string, x: a): void
 // fun {a:t@ype} sys_gvar_get (name: string): a
+
+abstype global_array_t
+typedef garr = global_array_t
+
+fun sys_garr_create (len: int, x: int): garr  // can only be called outside function
+fun sys_garr_update (gv: garr, pos: int, x: int): void
+fun {a:t@ype} sys_garr_get (gv: garr, pos: int): a
+
 
 (* ************* ************** *)
 

@@ -60,15 +60,20 @@ tuple_value_st(ele_lst) ::= <<
 inslst_st(inslst) ::= <<<inslst; separator="\n">
 >>
 
-program_st(gv_def_lst, ins_lst, func_lst) ::= <<
+program_st(gv_def_lst, ins_lst, func_lst, ext_code_lst) ::= <<
 <gv_def_lst; separator="\n">
 
 <inslst_st(ins_lst)>
 
 <func_lst; separator="\n\n">
 
+<ext_code_lst:{x|<ext_code_st(x)>}; separator="\n\n">
+
 >>
 
+ext_code_st(content) ::= <<
+%{$<content>%}
+>>
 
 
 global_array_st(id, size) ::= <<

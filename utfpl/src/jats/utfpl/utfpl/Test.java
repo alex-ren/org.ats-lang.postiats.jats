@@ -24,8 +24,8 @@ public class Test {
      */
     public static void main(String[] args) throws IOException, InterruptedException, RecognitionException {
         String[] paths = { 
-                "test/json/test01.dats"
-                , "test/json/test02.dats"
+                "test/ats2utfpl/test01.dats"
+                , "test/ats2utfpl/test02.dats"
 
         };
 

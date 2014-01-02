@@ -168,13 +168,19 @@ para_def_st(para, escape, loc) ::= <<
 <para><if(escape)>\<escaped><endif>@\<<get_from_stack_st(loc)>\>
 >>
 
-program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
+program_st(gvarlst, proclst, mainproc, mainlab, extcodelst) ::= <<
 <gvar_lst_st(gvarlst)>
 
 <proc_lst_st(proclst)>
 
 <mainproc>
 
+<extcodelst:{x|<ext_code_st(x)>}; separator="\n\n">
+
+>>
+
+ext_code_st(content) ::= <<
+%{$<content>%}
 >>
 
 

@@ -1,5 +1,6 @@
 package jats.utfpl.csps;
 
+import jats.utfpl.instruction.GlobalExtCode;
 import jats.utfpl.instruction.TupleValue;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeArray;
@@ -50,7 +51,7 @@ public class CSPSPrinter implements CSPSVisitor {
     }
 
     public ST print(ProgramCSPS prog) {
-        // program_st(gvarlst, proclst, mainproc, mainlab) ::= <<
+        // program_st(gvarlst, proclst, mainproc, mainlab, extcodelst) ::= <<
         ST st = m_stg.getInstanceOf("program_st");
         for (VariableInfo gv: prog.m_globalVars) {
             PATType ty = gv.getTID().getType();
@@ -68,6 +69,10 @@ public class CSPSPrinter implements CSPSVisitor {
                 st.add("gvarlst", st_gv);
             }
             
+        }
+        
+        for (GlobalExtCode extCode: prog.m_extCodeLst) {
+            st.add("extcodelst", extCode.m_content);
         }
         
         for (FunctionCSPS proc: prog.m_procLst) {
