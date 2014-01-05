@@ -14,9 +14,10 @@ fun sys_gvar_get {a:type} (gv: gvar): a
 abstype global_array_t
 typedef garr = global_array_t
 
-fun sys_garr_create {a:type} (len: int, x: a): garr  // can only be called outside function
-fun sys_garr_update {a:type} (gv: garr, pos: int, x: a): void
-fun sys_garr_get {a:type} (gv: garr, pos: int): a
+// only support array of integer
+fun sys_garr_create (len: int, x: int): garr  // can only be called outside function
+fun sys_garr_update (gv: garr, pos: int, x: int): void
+fun sys_garr_get (gv: garr, pos: int): int
 
 
 (* ************* ************** *)
