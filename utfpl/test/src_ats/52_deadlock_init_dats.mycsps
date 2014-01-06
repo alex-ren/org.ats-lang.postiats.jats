@@ -1,0 +1,153 @@
+var garr[2];
+var mutex1;
+var cond1;
+var mutex2;
+var cond2;
+
+wait_for_event_48(m_49<escaped>@<GStack(0)>, c_50<escaped>@<GStack(1)>, index_51<escaped>@<GStack(2)>, rcount_52<escaped>@<GStack(3)>) =
+step {
+  nontail_call with (m_49 from <GStack(0)>)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get _
+  var count_53<escaped> = garr[index_51 from <GStack(2)>];
+} -> Skip;
+step {
+  var temp_74<escaped> = call(eq, rcount_52 from <GStack(3)>, count_53 from <GStack(4)>);
+} -> Skip;
+ifa (temp_74 from <GStack(, 5)>) {
+  step {
+    nontail_call with (c_50 from <GStack(1)>, m_49 from <GStack(0)>)
+  } -> Skip;
+  <process call> = sys_cond_wait;
+  step {
+    rewind frame of sys_cond_wait to get _
+    tail_call with (m_49 from <GStack(0)>)
+  } -> Skip;
+  <process call> = sys_mutex_unlock 
+} else { 
+  step {
+    tail_call with (m_49 from <GStack(0)>)
+  } -> Skip;
+  <process call> = sys_mutex_unlock 
+};
+
+signal_event_54(m_55<escaped>@<GStack(0)>, c_56<escaped>@<GStack(1)>, index_57<escaped>@<GStack(2)>) =
+step {
+  nontail_call with (m_55 from <GStack(0)>)
+} -> Skip;
+<process call> = sys_mutex_lock;
+step {
+  rewind frame of sys_mutex_lock to get _
+  var count_58<escaped> = garr[index_57 from <GStack(2)>];
+} -> Skip;
+step {
+  var count_59 = call(add, count_58 from <GStack(3)>, 1);
+  var temp_76 = call(gte, count_59, 3);
+  var count_60
+  if (temp_76) {
+    count_60 = 0;
+  } else {
+    count_60 = count_59;
+  }
+  garr[index_57 from <GStack(2)>] = count_60;
+} -> Skip;
+step {
+  nontail_call with (c_56 from <GStack(1)>)
+} -> Skip;
+<process call> = sys_cond_signal;
+step {
+  rewind frame of sys_cond_signal to get _
+  tail_call with (m_55 from <GStack(0)>)
+} -> Skip;
+<process call> = sys_mutex_unlock;
+
+task1_loop_61(count_62<escaped>@<GStack(0)>) =
+step {
+  nontail_call with (mutex1, cond1, 0, count_62 from <GStack(0)>)
+} -> Skip;
+<process call> = wait_for_event_48;
+step {
+  rewind frame of wait_for_event_48 to get _
+  var count_63<escaped> = garr[0];
+} -> Skip;
+step {
+  nontail_call with (mutex2, cond2, 1)
+} -> Skip;
+<process call> = signal_event_54;
+step {
+  rewind frame of signal_event_54 to get _
+  tail_call with (count_63 from <GStack(1)>)
+} -> Skip;
+<process call> = task1_loop_61;
+
+task2_loop_64(count_65<escaped>@<GStack(0)>) =
+step {
+  nontail_call with (mutex1, cond1, 0)
+} -> Skip;
+<process call> = signal_event_54;
+step {
+  rewind frame of signal_event_54 to get _
+  nontail_call with (mutex2, cond2, 1, count_65 from <GStack(0)>)
+} -> Skip;
+<process call> = wait_for_event_48;
+step {
+  rewind frame of wait_for_event_48 to get _
+  var count_66<escaped> = garr[1];
+} -> Skip;
+step {
+  tail_call with (count_66 from <GStack(1)>)
+} -> Skip;
+<process call> = task2_loop_64;
+
+task1_67(arg_68@<GStack(0)>) =
+step {
+  var count_69 = 0;
+  tail_call with (count_69)
+} -> Skip;
+<process call> = task1_loop_61;
+
+task2_70(arg_71@<GStack(0)>) =
+step {
+  var count_72 = 0;
+  tail_call with (count_72)
+} -> Skip;
+<process call> = task2_loop_64;
+
+main() = 
+step {
+  garr[0] = 0;
+} -> Skip;
+step {
+  garr[1] = 0;
+} -> Skip;
+step {
+  mutex1 = mutex_alloc();
+} -> Skip;
+step {
+  cond1 = cond_alloc();
+} -> Skip;
+step {
+  mutex2 = mutex_alloc();
+} -> Skip;
+step {
+  cond2 = cond_alloc();
+} -> Skip;
+step {
+  var temp_81 = call(sys_list_nil);
+  var temp_82<escaped> = call(sys_list_cons, 0, temp_81);
+} -> Skip;
+<thread_create> (1, task1_67, temp_82 from <GStack(0)>);
+step {
+  var temp_83 = call(sys_list_nil);
+  var temp_84<escaped> = call(sys_list_cons, 0, temp_83);
+} -> Skip;
+<thread_create> (2, task2_70, temp_84 from <GStack(1)>);
+
+
+%{$
+
+#assert main deadlockfree;   
+    
+%}

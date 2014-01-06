@@ -1,0 +1,70 @@
+val garr_62 = D2Ecst<sys_garr_create_2450> (2)
+val () = D2Ecst<sys_garr_update_2451> (garr_62, 0, 0)
+val () = D2Ecst<sys_garr_update_2451> (garr_62, 1, 0)
+val mutex1_63 = D2Ecst<sys_mutex_allocate_2455> ()
+val cond1_64 = D2Ecst<sys_cond_allocate_2459> ()
+val mutex2_65 = D2Ecst<sys_mutex_allocate_2455> ()
+val cond2_66 = D2Ecst<sys_cond_allocate_2459> ()
+fun wait_for_event_67 = lam (m_68, c_69, index_70, rcount_71) = 
+  let
+    val () = D2Ecst<sys_mutex_lock_2457> (m_68)
+    val count_72 = D2Ecst<sys_garr_get_2452> (garr_62, index_70)
+  in
+    if (D2Esym<=> (rcount_71, count_72)) then
+      let
+        val () = D2Ecst<sys_cond_wait_2461> (c_69, m_68)
+      in
+        D2Ecst<sys_mutex_unlock_2458> (m_68)
+      end
+    else
+      D2Ecst<sys_mutex_unlock_2458> (m_68)
+  end
+fun signal_event_73 = lam (m_74, c_75, index_76) = 
+  let
+    val () = D2Ecst<sys_mutex_lock_2457> (m_74)
+    val count_77 = D2Ecst<sys_garr_get_2452> (garr_62, index_76)
+    val count_78 = D2Esym<+> (count_77, 1)
+    val count_79 = if (D2Esym<>=> (count_78, 3)) then
+      0
+    else
+      count_78
+    val () = D2Ecst<sys_garr_update_2451> (garr_62, index_76, count_79)
+    val () = D2Ecst<sys_cond_signal_2462> (c_75)
+  in
+    D2Ecst<sys_mutex_unlock_2458> (m_74)
+  end
+fun task1_loop_80 = lam (count_81) = 
+  let
+    val () = wait_for_event_67 (mutex1_63, cond1_64, 0, count_81)
+    val count_82 = D2Ecst<sys_garr_get_2452> (garr_62, 0)
+    val () = signal_event_73 (mutex2_65, cond2_66, 1)
+  in
+    task1_loop_80 (count_82)
+  end
+fun task2_loop_83 = lam (count_84) = 
+  let
+    val () = signal_event_73 (mutex1_63, cond1_64, 0)
+    val () = wait_for_event_67 (mutex2_65, cond2_66, 1, count_84)
+    val count_85 = D2Ecst<sys_garr_get_2452> (garr_62, 1)
+  in
+    task2_loop_83 (count_85)
+  end
+fun task1_86 = lam (arg_87) = 
+  let
+    val count_88 = 0
+  in
+    task1_loop_80 (count_88)
+  end
+fun task2_89 = lam (arg_90) = 
+  let
+    val count_91 = 0
+  in
+    task2_loop_83 (count_91)
+  end
+val () = D2Ecst<sys_thread_create_2454> (1, task1_86, 0)
+val () = D2Ecst<sys_thread_create_2454> (2, task2_89, 0)
+%{
+
+#assert main deadlockfree;   
+    
+%}
