@@ -18,12 +18,20 @@ fun writer (x: int): void = let
 in
 end
 
-fun reader (): int = let
+fun is_init {x:int}(x: int x): bool x <> ~2 = if (x = ~2) then false else true
+fun is_consist {x:int}(x: int): bool x <> ~1 = if (x = ~1) then false else true
+
+fun reader (): [x: int | x <> ~1; x <> ~2] int x = let
   val rp = sys_gvar_get (L)
   val () = sys_gvar_update (R, rp)
   val ri = sys_garr_get (slot, rp)
-  val x = sys_garr_get (data, 2 * rp + ri)
-  val () = sys_gvar_update (content, x)
+  val [x: int] x = sys_garr_get (data, 2 * rp + ri)
+  
+  val init = is_init (x)
+  mcval () = mcassert (init = true)
+  
+  val consist = is_consist (x)
+  mcval () = mcassert (consist = true)
 in
   x
 end

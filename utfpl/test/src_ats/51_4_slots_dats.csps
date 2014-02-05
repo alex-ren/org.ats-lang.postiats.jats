@@ -125,24 +125,24 @@ var data[4];
 var content = 0;
 
 writer_48(sys_tid) =
-  {  var temp_61 = R;
-  sys_gstack.frame_push(sys_tid, temp_61);
+  {  var temp_62 = R;
+  sys_gstack.frame_push(sys_tid, temp_62);
   } ->
   {  var wp_50 = call(sub, 1, sys_gstack.frame_get(sys_tid, 0, 1));
   sys_gstack.frame_push(sys_tid, wp_50);
-  var temp_62 = slot[wp_50];
-  sys_gstack.frame_push(sys_tid, temp_62);
+  var temp_63 = slot[wp_50];
+  sys_gstack.frame_push(sys_tid, temp_63);
   } ->
   {  var wi_51 = call(sub, 1, sys_gstack.frame_get(sys_tid, 0, 3));
   sys_gstack.frame_push(sys_tid, wi_51);
-  var temp_63 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 2));
-  var temp_64 = call(add, temp_63, wi_51);
-  var temp_65 = call(neg, 1);
-  data[temp_64] = temp_65
+  var temp_64 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 2));
+  var temp_65 = call(add, temp_64, wi_51);
+  var temp_66 = call(neg, 1);
+  data[temp_65] = temp_66
   } ->
-  {  var temp_66 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 2));
-  var temp_67 = call(add, temp_66, sys_gstack.frame_get_int(sys_tid, 0, 4));
-  data[temp_67] = 1
+  {  var temp_67 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 2));
+  var temp_68 = call(add, temp_67, sys_gstack.frame_get_int(sys_tid, 0, 4));
+  data[temp_68] = 1
   } ->
   {  slot[sys_gstack.frame_get_int(sys_tid, 0, 2)] = sys_gstack.frame_get_int(sys_tid, 0, 4)
   } ->
@@ -162,10 +162,12 @@ reader_52(sys_tid) =
   {  var ri_54 = slot[sys_gstack.frame_get_int(sys_tid, 0, 0)];
   sys_gstack.frame_push(sys_tid, ri_54);
   } ->
-  {  var temp_69 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 0));
-  var temp_70 = call(add, temp_69, sys_gstack.frame_get(sys_tid, 0, 1));
-  var x_55 = data[temp_70];
+  {  var temp_70 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 0));
+  var temp_71 = call(add, temp_70, sys_gstack.frame_get(sys_tid, 0, 1));
+  var x_55 = data[temp_71];
   sys_gstack.frame_push(sys_tid, x_55);
+  } ->
+  {  content = sys_gstack.frame_get(sys_tid, 0, 2);
   } ->
   {  sys_gstack.frame_push(sys_tid, sys_gstack.frame_get(sys_tid, 0, 2));
   } ->
@@ -191,10 +193,8 @@ loop_read_58(sys_tid) =
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   reader_52(sys_tid);
-  {  var temp_73 = sys_gstack.retopr_frame(sys_tid);
-  content = temp_73;
-  } ->
-  {  var __temp_list_args = sys_list_manager.list_nil ();
+  {  var x_60 = sys_gstack.retopr_frame(sys_tid);
+  var __temp_list_args = sys_list_manager.list_nil ();
   __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.reload_frame(sys_tid, __temp_list_args);
   } ->
@@ -213,14 +213,32 @@ main_s(sys_tid) =
   } ->
   {  content = 0;
   } ->
-  {  var temp_74 = sys_list_nil;
-  var temp_75 = call(sys_list_cons, 0, temp_74);
-  sys_gstack.frame_push(sys_tid, temp_75);
+  {  var temp_74 = call(neg, 2);
+  data[0] = temp_74
+  } ->
+  {  var temp_75 = call(neg, 2);
+  data[1] = temp_75
+  } ->
+  {  var temp_76 = call(neg, 2);
+  data[2] = temp_76
+  } ->
+  {  var temp_77 = call(neg, 2);
+  data[3] = temp_77
+  } ->
+  {  var __temp_list_args = sys_list_manager.list_nil ();
+  __temp_list_args = sys_list_manager.list_cons (0, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  writer_48(sys_tid);
+  {  sys_gstack.retopr_frame(sys_tid);
+  var temp_78 = sys_list_nil;
+  var temp_79 = call(sys_list_cons, 0, temp_78);
+  sys_gstack.frame_push(sys_tid, temp_79);
   } ->
   sys_thread_create(1, 3, sys_gstack.frame_get(sys_tid, 0, 0));
-  {  var temp_76 = sys_list_nil;
-  var temp_77 = call(sys_list_cons, 0, temp_76);
-  sys_gstack.frame_push(sys_tid, temp_77);
+  {  var temp_80 = sys_list_nil;
+  var temp_81 = call(sys_list_cons, 0, temp_80);
+  sys_gstack.frame_push(sys_tid, temp_81);
   } ->
   sys_thread_create(2, 4, sys_gstack.frame_get(sys_tid, 0, 1)); 
   proc_thread_finalize(sys_tid);
@@ -234,10 +252,13 @@ main = main_s(0) ||| Scheduler;
 #define Prop1 (content == 1);
 #define Prop2 (content != 1);
 #define Prop3 (content != -1);
+#define Prop4 (content != -2);
 
 #assert main |= (G Prop2) || (F G Prop1);
 #assert main |= G Prop3;
 #assert main |= F G Prop1;
+
+#assert main |= G Prop4;
 
 
 
