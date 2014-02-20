@@ -48,22 +48,38 @@ abstype msg_t
 extern fun select (mask: List0 int): (int, msg_t)
 
 // Will this fail? Assume not.
-// t: int: tag of the message
+// t: int: tag of the msg
 symintr send_via_pid
 extern fun send_via_pid_arg0 {p:int} {a:type} (to: pid_t, port: int p): void
 extern fun send_via_pid_arg1 {p:int} {a:type} (to: pid_t, port: int p, msg: a): void
 overload send_via_pid with send_via_pid_arg0
 overload send_via_pid with send_via_pid_arg1
 
+datatype req_to_server_t =
+| logon of (pid_t, string)
+| logoff of (pid_t)
+| msg_to of (pid_t (*from*), string (*to*), string (*msg*))
+
+datatype reply_t =
+| stop
+| logged_on
+| logged_off
+| receiver_not_found
+| sent
+
+datatype req_to_client_t =
+| logoff
+| msg_to of (string (*to*), string (*msg*))
 
 (* ************* ************** *)
 
-// 0: logon; client to server
-// 1: logoff; client to server
-// 2: message_to; client to server
+// To server
+// 0: (req: req_to_server_t)
 
-// 3: messenger, stop; server to client
-// 4: messenger logged_on; server to client
+// To client
+// 0: reply_from_messenger: (rep: reply_t, err: Option string)
+// 1: req_from_user: (req: req_to_client_t)
+// 2: info_from_messenger (from: string, msg: string)
 
 // 
 
@@ -72,9 +88,9 @@ typedef users_t = user_db_t
 
 extern fun server_logon (from: pid_t, name: string, udb: users_t): users_t
 extern fun server_logoff (from: pid_t, udb: users_t): users_t
-extern fun server_transfer (from: pid_t, to: string, message: string, udb: users_t): void
+extern fun server_transfer (from: pid_t, to: string, msg: string, udb: users_t): void
 extern fun server_transfer_do (from: pid_t, name: string, 
-                               to: string, message: string, udb: users_t): void
+                               to: string, msg: string, udb: users_t): void
 
 // extern fun{x:t0p} list_deletefirst$pred (x): bool
 // extern fun{x:t0p} list_deletefirst {n:int} (xs: list (INV(x), n)): (bool, listLte (x, n))
@@ -82,29 +98,24 @@ extern fun server_transfer_do (from: pid_t, name: string,
 (* ************* ************** *)
 
 fun server (udb: users_t): void = let
-  val mask = 0 :: 1 :: 2 :: nil
-  val (port, msg) = select (mask)
+  val mask = nil
+  val (port, info) = select (mask)
+  extern castfn to_req (info: msg_t): req_to_server_t
+  val req = to_req (info)
 in
-  // logon
-  case- port of
-  | _ when port = 0 => let
-    extern castfn to_logon (msg: msg_t): (pid_t, string)
-    val (from, name) = to_logon (msg)
+  case+ req of
+  | logon (from, name) => let
     val udb' = server_logon (from, name, udb)
   in
     server (udb')
   end
-  | _ when port = 1 => let
-    extern castfn to_logoff (msg: msg_t): pid_t
-    val from = to_logoff (msg)
+  | logoff (from) => let
     val udb' = server_logoff (from, udb)
   in
     server (udb')
   end
-  | _ when port = 2 => let
-    extern castfn to_message_to (msg: msg_t): (pid_t (*from*), string, string (*to*))
-    val (from, message, to) = to_message_to (msg)
-    val () = server_transfer(from, to, message, udb)
+  | msg_to (from, to, msg) => let
+    val () = server_transfer(from, to, msg, udb)
   in
     server (udb)
   end
@@ -138,12 +149,12 @@ in
   udb'
 end
 
-implement server_transfer (from, to, message, udb) = let
+implement server_transfer (from, to, msg, udb) = let
   val opt = user_db_find_by_id (udb, from)
 in
   case+ opt of
   | Some (name) =>
-    server_transfer_do (from, name, to, message, udb)
+    server_transfer_do (from, name, to, msg, udb)
   | None () => let
     val () = send_via_pid (from, 3, "you_are_not_logged_on")
   in
@@ -151,8 +162,21 @@ in
   end
 end
  
-extern fun server_transfer_do (from: pid_t, name: string, 
-                               to: string, message: string, udb: users_t): void
+implement server_transfer_do (from, name, to, msg, udb) = let
+  val opt_id = user_db_find_by_name (udb, to)
+in
+  case+ opt_id of
+  | Some (pid) => let
+    val () = send_via_pid (pid, 2, '(name, msg))
+    val () = send_via_pid (from, 0, '(sent (), None()))
+  in end
+  | None () => send_via_pid (from, 0, '(receiver_not_found (), None ()))
+end
+
+
+fun start_client (name: string): bool = let
+  fun client_proc (
+  
 
 
   
