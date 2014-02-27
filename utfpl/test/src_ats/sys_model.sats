@@ -3,9 +3,9 @@
 abstype global_variable_t
 typedef gvar = global_variable_t
 
-fun sys_gvar_create {a:type} (x: a): gvar  // can only be called outside function
-fun sys_gvar_update {a:type} (gv: gvar, x: a): void
-fun sys_gvar_get {a:type} (gv: gvar): a
+fun sys_gvar_create {a:t@ype} (x: a): gvar  // can only be called outside function
+fun sys_gvar_update {a:t@ype} (gv: gvar, x: a): void
+fun sys_gvar_get {a:t@ype} (gv: gvar): a
 
 // fun {a:t@ype} sys_gvar_create (name: string, x: a): void  // can only be called outside function
 // fun {a:t@ype} sys_gvar_update (name: string, x: a): void
@@ -16,18 +16,18 @@ typedef garr = global_array_t
 
 // only support array of integer
 fun sys_garr_create (len: int, x: int): garr  // can only be called outside function
-fun sys_garr_update (gv: garr, pos: int, x: int): void
-fun sys_garr_get (gv: garr, pos: int): int
+fun sys_garr_update {x: int} (gv: garr, pos: int, x: int x): void
+fun sys_garr_get (gv: garr, pos: int): [x:int] int x
 
 
 (* ************* ************** *)
 
-abstype thread_id_t
+abst@ype thread_id_t
 typedef tid = thread_id_t
 
 fun sys_tid_allocate (): tid
-typedef thread_fun_t (a: type) = (a -> void)
-fun sys_thread_create {a:type} (tid: tid, tfun: thread_fun_t a, arg: a): void
+typedef thread_fun_t (a: t@ype) = (a -> void)
+fun sys_thread_create {a:t@ype} (tid: tid, tfun: thread_fun_t a, arg: a): void
 
 (* ************* ************** *)
 
