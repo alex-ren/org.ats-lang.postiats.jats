@@ -38,6 +38,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 		} else if (name.equals("D2Ec0har")) {
 			throw new Error("todo");
 		} else if (name.equals("D2Elist")) {
+		    // should add support for list containing two elements, one for proof, one for concrete
 			throw new Error("todo");
 		} else if (name.equals("D2Etup")) {
 			throw new Error("todo");
@@ -63,7 +64,11 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 			return context.deserialize(je2, D2Eifopt.class);
 		} else if (name.equals("D2Elam_dyn")) {
 			return context.deserialize(je2, D2Elam.class);
-		} else if (name.equals("D2Eann_seff")) {
+		} else if (name.equals("D2Elam_sta")) {
+		    return context.deserialize(je2, D2ElamSta.class);
+        } else if (name.equals("D2Elam_met")) {
+            return context.deserialize(je2, D2ElamMet.class);		    
+        } else if (name.equals("D2Eann_seff")) {
 			JsonArray jarr = je2.getAsJsonArray();
 			if (jarr.size() < 2) {
 				throw new Error("type not match");
@@ -96,7 +101,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 		} else if (name.equals("D2Eempty")) {
 			return D2Eempty.cInstance;
 		} else {
-			System.err.println(name + " is translated into D2Eignored.");
+			System.err.println(name + " is translated into D2Eignored in Id2exp_nodeDeserializer.java @99.");
 			return D2Eignored.cInstance;
 		}
 

@@ -24,8 +24,9 @@ public class Test {
      */
     public static void main(String[] args) throws IOException, InterruptedException, RecognitionException {
         String[] paths = { 
-                "test/ats2utfpl/test01.dats"
-                , "test/ats2utfpl/test02.dats"
+//                "test/ats2utfpl/test01.dats"
+//                , "test/ats2utfpl/test02.dats"
+                "test/src_ats/51_2_4_slots.dats"
 
         };
 
@@ -54,7 +55,15 @@ public class Test {
                     UtfplPrinter uPrinter = new UtfplPrinter();
                     String outputUTFPL = uPrinter.print(uProg);
                     
-                    System.out.println("==utfpl's ast code is ==========================");
+                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
+                    
+                    System.out.println(outputUTFPL);
+                    
+                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+                    uProg = processor.removeProof(uProg);
+                    outputUTFPL = uPrinter.print(uProg);
+                    
+                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
                     
                     System.out.println(outputUTFPL);
                     

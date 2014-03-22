@@ -38,7 +38,7 @@ public class Ip2at_nodeDeserializer implements JsonDeserializer<Ip2at_node> {
         } else if (name.equals("P2Tempty")) {
             return context.deserialize(je2, P2Tempty.class);
         } else if (name.equals("P2Trec")) {
-        	throw new Error("todo");
+            return context.deserialize(je2, P2Trec.class);
         } else {
             return context.deserialize(je2, P2Tignored.class);
         }

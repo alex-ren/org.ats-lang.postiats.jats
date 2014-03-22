@@ -10,6 +10,7 @@ import jats.utfpl.parser.Utfpl_tree;
 import jats.utfpl.utfpl.UtfplPrinter;
 import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplProgramParserJson;
+import jats.utfpl.utfpl.UtfplProgramProcessor;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 
@@ -39,7 +40,10 @@ public class Test_01 {
      */
     public static void main(String[] args) throws IOException, RecognitionException, InterruptedException {
         String [] paths = {
-                "test/src_mutfpl/17_extcode.mutfpl"
+//                "test/src_mutfpl/17_extcode.mutfpl"
+//                "test/src_ats/demo_mc_dyn.dats"
+//                "test/src_ats/51_2_4_slots.dats"
+                "test/test_temp.utfpl"
 
         };
 
@@ -68,7 +72,15 @@ public class Test_01 {
                     UtfplPrinter uPrinter = new UtfplPrinter();
                     String outputUTFPL = uPrinter.print(uProg);
                     
-                    System.out.println("==utfpl's ast code is ==========================");
+                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
+                    
+                    System.out.println(outputUTFPL);
+                    
+                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+                    uProg = processor.removeProof(uProg);
+                    outputUTFPL = uPrinter.print(uProg);
+                    
+                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
                     
                     System.out.println(outputUTFPL);
                     

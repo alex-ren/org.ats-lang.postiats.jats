@@ -38,5 +38,7 @@ public interface InsVisitor {
     public Object visit(InsLoad ins);
     
     public Object visit(InsThreadCreate ins);
+    
+    public Object visit(InsMCAssert ins);
 
 }

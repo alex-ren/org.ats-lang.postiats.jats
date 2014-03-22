@@ -19,6 +19,8 @@ public class EvalkindDeserializer implements JsonDeserializer<Evalkind> {
             return Evalkind.VK_val_pos;
         } else if (knd.equals("VK_val_neg")) {
             return Evalkind.VK_val_neg;
+        } else if (knd.equals("VK_prval")) {
+            return Evalkind.VK_prval;
         } else {
             return Evalkind.VK_ignored;
         }

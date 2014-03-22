@@ -46,20 +46,6 @@ public class TreePrinter implements TreeVisitor {
     }
 
     @Override
-    public Object visit(DecFunDef node) {
-        // fun_def_st(fname, paralst, body) ::= <<
-        ST st = m_stg.getInstanceOf("fun_def_st");
-        st.add("fname", node.m_id.accept(this));
-        
-        for (ExpId id: node.m_paralst) {
-            st.add("paralst", id.accept(this));
-        }
-        
-        st.add("body", node.m_body.accept(this));
-        return st;
-    }
-
-    @Override
     public Object visit(ExpId node) {
         // id_exp_st(id) ::= <<
         ST st = m_stg.getInstanceOf("id_exp_st");
@@ -200,6 +186,47 @@ public class TreePrinter implements TreeVisitor {
         // ext_code_st (content) ::= <<
         ST st = m_stg.getInstanceOf("ext_code_st");
         st.add("content", node.m_content);
+        return st;
+    }
+
+
+    @Override
+    public Object visit(DecFunDef node) {
+        // fun_def_st(fname, paralst, body) ::= <<
+        ST st = m_stg.getInstanceOf("fun_def_st");
+        st.add("fname", node.m_id.accept(this));
+        
+        for (ExpId id: node.m_paralst) {
+            st.add("paralst", id.accept(this));
+        }
+        
+        st.add("body", node.m_body.accept(this));
+        return st;
+    }
+    
+    @Override
+    public Object visit(DecFunDec node) {
+        // fun_dec_st(fname, paralst) ::= <<
+        ST st = m_stg.getInstanceOf("fun_dec_st");
+        st.add("fname", node.m_id.accept(this));
+        
+        for (ExpId id: node.m_paralst) {
+            st.add("paralst", id.accept(this));
+        }
+        return st;
+    }
+    
+    @Override
+    public Object visit(DecFunImpl node) {
+        // fun_impl_st(fname, paralst, body) ::= <<
+        ST st = m_stg.getInstanceOf("fun_impl_st");
+        st.add("fname", node.m_id.accept(this));
+        
+        for (ExpId id: node.m_paralst) {
+            st.add("paralst", id.accept(this));
+        }
+        
+        st.add("body", node.m_body.accept(this));
         return st;
     }
 

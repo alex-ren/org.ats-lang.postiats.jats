@@ -1,6 +1,9 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.tree.IExp;
+
 import java.net.URL;
+import java.util.List;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -47,9 +50,36 @@ public class UtfplPrinter {
         	return printD2Cextcode((D2Cextcode)node);     
         } else if (node instanceof D2Cignored) {
             return null;
+        } else if (node instanceof D2Cdcstdecs) {
+            return printD2Cdcstdecs((D2Cdcstdecs)node);
         } else {
             throw new Error("not supported");
         }
+    }
+    
+    private ST printD2Cdcstdecs(D2Cdcstdecs node) {
+        // D2Cdcstdecs_st(knd, dcsts) ::= <<
+        ST st = m_stg.getInstanceOf("D2Cdcstdecs_st");
+        st.add("knd", printEdcstkind(node.m_knd));
+        for (Cd2cst cst: node.m_d2cst) {
+            st.add("dcsts", printCd2cst(cst));
+        }
+        
+        return st;
+    }
+
+    private Object printCd2cst(Cd2cst cst) {
+        // d2cst_st(d2cst) ::= <<
+        ST st = m_stg.getInstanceOf("d2cst_st");
+        st.add("d2cst", cst);
+        return st;
+    }
+
+    private ST printEdcstkind(Edcstkind node) {
+        // dcstkind_st(knd) ::= <<
+        ST st = m_stg.getInstanceOf("dcstkind_st");
+        st.add("knd", node.toString());
+        return st;
     }
     
     private ST printD2Cextcode(D2Cextcode node) {
@@ -155,9 +185,13 @@ public class UtfplPrinter {
         } else if (node instanceof D2Eifopt) {
             return printD2Eifopt((D2Eifopt)node);
         } else if (node instanceof D2Eignored) {
-            return null;
+            return printD2Eignored((D2Eignored)node);
         } else if (node instanceof D2Elam) {
             return printD2Elam((D2Elam)node);
+        } else if (node instanceof D2ElamSta) {
+            return printD2ElamSta((D2ElamSta)node);   
+        } else if (node instanceof D2ElamMet) {
+            return printD2ElamMet((D2ElamMet)node);              
         } else if (node instanceof D2Elet) {
             return printD2Elet((D2Elet)node);
         } else if (node instanceof D2Es0tring) {
@@ -169,6 +203,26 @@ public class UtfplPrinter {
         } else {
             throw new Error("not supported");
         }
+    }
+
+    private ST printD2ElamMet(D2ElamMet node) {
+        // D2ElamMet_st(d2exp) ::= <<
+        ST st = m_stg.getInstanceOf("D2ElamMet_st");
+        st.add("d2exp", printCd2exp(node.m_d2exp));
+        return st;
+    }
+
+    private ST printD2ElamSta(D2ElamSta node) {
+        // D2ElamSta_st(d2exp) ::= <<
+        ST st = m_stg.getInstanceOf("D2ElamSta_st");
+        st.add("d2exp", printCd2exp(node.m_d2exp));
+        return st;
+    }
+
+    private ST printD2Eignored(D2Eignored node) {
+        // D2Eignored_st() ::= <<
+        ST st = m_stg.getInstanceOf("D2Eignored_st");
+        return st;
     }
 
     private ST printD2Eempty() {
@@ -238,9 +292,44 @@ public class UtfplPrinter {
         	return printP2Tignored((P2Tignored)node);
         } else if (node instanceof P2Tempty) {
             return printP2Tempty((P2Tempty)node);
+        } else if (node instanceof P2Trec) {
+            return printP2Trec((P2Trec)node);
         } else {
             throw new Error("not supported");
         }
+    }
+    
+    private ST printP2Trec(P2Trec node) {
+        // P2Trec_st(labpats) ::= <<
+        ST st = m_stg.getInstanceOf("P2Trec_st");
+        for (Ilabp2at labpat: node.m_labpats) {
+            st.add("labpats", printIlabp2at(labpat));
+        }
+        return st;
+        
+    }
+
+    private ST printIlabp2at(Ilabp2at node) {
+        if (node instanceof LABP2ATnorm) {
+            return printLABP2ATnorm((LABP2ATnorm)node);
+        } else if (node instanceof LABP2ATomit) {
+            return printLABP2ATomit((LABP2ATomit)node);
+        } else {
+            throw new Error("not supported");
+        }
+    }
+
+    private ST printLABP2ATnorm(LABP2ATnorm node) {
+        // LABP2ATnorm_st(lab, pat) ::= <<
+        ST st = m_stg.getInstanceOf("LABP2ATnorm_st");
+        st.add("pat", printCp2at(node.m_pat));
+        return st;
+    }
+
+    private ST printLABP2ATomit(LABP2ATomit node) {
+        // LABP2ATomit_st() ::= <<
+        ST st = m_stg.getInstanceOf("LABP2ATomit_st");
+        return st;
     }
 
     private ST printP2Tempty(P2Tempty node) {
@@ -321,12 +410,18 @@ public class UtfplPrinter {
         // D2Eapplst_st(fun, args) ::= <<
         ST st = m_stg.getInstanceOf("D2Eapplst_st");
         st.add("fun", printCd2exp(node.m_d2e_fun));
+        
+        Id2exparg exparg = null;
         if (node.m_d2as_arg.size() > 1) {
-            System.err.println("D2Eapplst has more than one list of arguments");
+//            System.err.println("D2Eapplst has " + node.m_d2as_arg.size() +  " lists of arguments");
+            exparg = node.m_d2as_arg.get(1);
+        } else {
+            exparg = node.m_d2as_arg.get(0);
         }
-        for (Id2exparg arg: node.m_d2as_arg) {
-            st.add("args", printId2exparg(arg));
-        }
+            
+        // for (Id2exparg arg: node.m_d2as_arg) {
+            st.add("args", printId2exparg(exparg));
+        // }
         return st;
     }
 

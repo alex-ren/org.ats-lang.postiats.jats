@@ -8,7 +8,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class D2CextcodeDeserializer  implements JsonDeserializer<D2Cextcode> {
+public class D2CextcodeDeserializer implements JsonDeserializer<D2Cextcode> {
 
     @Override
     public D2Cextcode deserialize(JsonElement json, Type typeOfT,

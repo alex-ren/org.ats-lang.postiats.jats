@@ -1,0 +1,82 @@
+DCKval mwp_2524
+DCKval mwi_2525
+DCKval min_write_2526
+DCKval mw_init_2527
+val L_62 = D2Ecst<sys_gvar_create_2498> (0)
+val R_63 = D2Ecst<sys_gvar_create_2498> (0)
+val slot_64 = D2Ecst<sys_garr_create_2501> (2, 0)
+val data_65 = D2Ecst<sys_garr_create_2501> (4, 0)
+DCKfun data_create_2528
+DCKfun write_2529
+implement write_2529 = lam (P2Tpat<p_66>, P2Tpat<i_67>, P2Tpat<x_68>) = 
+  ()
+DCKfun read_2530
+fun writer_69 = lam (P2Tpat<x_70>) = 
+  let
+    val wp_71 = D2Esym<-> (1, D2Ecst<sys_gvar_get_2500> (R_63))
+    val wi_72 = D2Esym<-> (1, D2Ecst<sys_garr_get_2503> (slot_64, wp_71))
+    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<mwp_2524>, wp_71)
+    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<mwi_2525>, wi_72)
+    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<min_write_2526>, 1)
+    val () = D2Ecst<sys_garr_update_2502> (data_65, D2Esym<+> (D2Esym<*> (2, wp_71), wi_72), D2Esym<~> (1))
+    val () = D2Ecst<sys_garr_update_2502> (data_65, D2Esym<+> (D2Esym<*> (2, wp_71), wi_72), 1)
+    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<min_write_2526>, 0)
+    val () = D2Ecst<write_2529> (wp_71, wi_72, x_70)
+    val () = D2Ecst<sys_garr_update_2502> (slot_64, wp_71, wi_72)
+    val () = D2Ecst<sys_gvar_update_2499> (L_62, wp_71)
+    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<mw_init_2527>, 1)
+  in
+    ()
+  end
+fun comp3_73 = lamMet. lamSta. lam (P2Tpat<x_74>, P2Tpat<y_75>, P2Tpat<z_76>) = 
+  if (x_74) then
+    if (y_75) then
+      if (z_76) then
+        D2Ecst<true_bool_0>
+      else
+        D2Ecst<false_bool_1>
+    else
+      D2Ecst<false_bool_1>
+  else
+    D2Ecst<false_bool_1>
+DCKprfun is_initialized_2531
+fun reader_77 = lam () = 
+  let
+    val rp_79 = D2Ecst<sys_gvar_get_2500> (L_62)
+    val () = D2Ecst<sys_gvar_update_2499> (R_63, rp_79)
+    val ri_80 = D2Ecst<sys_garr_get_2503> (slot_64, rp_79)
+    prval wp_82 = D2Ecst<mc_get_int_2521> (D2Ecst<mwp_2524>)
+    prval wi_84 = D2Ecst<mc_get_int_2521> (D2Ecst<mwi_2525>)
+    prval in_write_86 = D2Ecst<mc_get_int_2521> (D2Ecst<min_write_2526>)
+    prval () = D2Ecst<mc_assert_2522> (D2Ecst<negation_2523> (comp3_73 (D2Esym<=> (in_write_86, 1), D2Esym<=> (wp_82, rp_79), D2Esym<=> (wi_84, ri_80))))
+    val x_87 = D2Ecst<read_2530> (rp_79, ri_80)
+  in
+    x_87
+  end
+fun loop_write_88 = lam (P2Tpat<arg_89>) = 
+  let
+    val () = writer_69 (D2Ecst<data_create_2528> ())
+  in
+    loop_write_88 (arg_89)
+  end
+fun loop_read_90 = lam (P2Tpat<arg_91>) = 
+  let
+    prval w_init_93 = D2Ecst<mc_get_int_2521> (D2Ecst<mw_init_2527>)
+    prval () = D2Ecst<mc_assert_2522> (D2Esym<>> (w_init_93, 0))
+    val x_95 = reader_77 ()
+  in
+    loop_read_90 (arg_91)
+  end
+implement data_create_2528 = lam () = 
+  1
+implement read_2530 = lamSta. lamSta. lamSta. lam (P2Tpat<p_99>, P2Tpat<i_100>) = 
+  D2Ecst<data_create_2528> ()
+val () = writer_69 (D2Ecst<data_create_2528> ())
+val () = D2Ecst<sys_thread_create_2505> (1, loop_write_88, 0)
+val () = D2Ecst<sys_thread_create_2505> (2, loop_read_90, 0)
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

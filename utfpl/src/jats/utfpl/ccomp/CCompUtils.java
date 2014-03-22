@@ -17,6 +17,10 @@ public class CCompUtils {
     public static final String cSysGarrCreate = "sys_garr_create";
     public static final String cSysGarrUpdate = "sys_garr_update";
     public static final String cSysGarrGet = "sys_garr_get";
+    
+    public static final String cSysMCSetInt = "mc_set_int";
+    public static final String cSysMCGetInt = "mc_get_int";
+    public static final String cSysMCAssert = "mc_assert";
 	
 	// MUTFPL layer
 	public static final String cSysListNil = "sys_list_nil";
@@ -103,6 +107,9 @@ public class CCompUtils {
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeBool.cType, false)));
         
         func = "neg";
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, false)));
+        
+        func = "negation";
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeBool.cType, false)));
         
         func = "hello";
@@ -138,6 +145,18 @@ public class CCompUtils {
         
         func = cSysGarrGet;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(true)));
+        
+        /* ********* *********** ************* ************** */
+
+        func = cSysMCSetInt;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+        
+        func = cSysMCGetInt;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+        
+        func = cSysMCAssert;
+        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeBool.cType, true)));
+        
         
         /* ********* *********** ************* ************** */
         
@@ -181,19 +200,19 @@ public class CCompUtils {
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         /* ********* *********** ************* ************** */
-        
-        func = "ref_allocate";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
-        
-        func = "ref_release";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
-        
-        func = "ref_get";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
-        
-        func = "ref_set";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
-        
+//        
+//        func = "ref_allocate";
+//        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+//        
+//        func = "ref_release";
+//        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+//        
+//        func = "ref_get";
+//        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeInt.cType, true)));
+//        
+//        func = "ref_set";
+//        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+//        
         /* ********* *********** ************* ************** */
         
         func = cSysListNil;
@@ -216,8 +235,8 @@ public class CCompUtils {
         func = cSysThreadCreate;
         scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
 
-        func = "thread_join";
-        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
+//        func = "thread_join";
+//        scope.addValue(func, TID.createLibFun(func, new PATTypeFunc(PATTypeSingleton.cVoidType, true)));
         
         /* ********* *********** ************* ************** */
         

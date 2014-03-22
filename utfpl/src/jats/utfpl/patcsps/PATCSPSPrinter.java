@@ -471,6 +471,16 @@ public class PATCSPSPrinter implements PNodeVisitor {
     	return st;
     }
 
+
+    @Override
+    public Object visit(PInsMCAssert node) {
+        // pinsmcassert_st(pred) ::= <<
+        ST st = m_stg.getInstanceOf("pinsmcassert_st");
+        st.add("pred", node.m_localSrc.accept(this));
+        
+        return st;
+    }
+
 }
 
 

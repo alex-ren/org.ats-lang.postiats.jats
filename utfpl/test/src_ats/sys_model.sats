@@ -61,6 +61,26 @@ fun sys_list_get_header {a:type} (xs: sys_list): a
 fun sys_list_get_tail (xs: sys_list): sys_list
 fun sys_list_is_nil (xs: sys_list): bool
 
+(* ************* ************** *)
+
+sortdef sid = int // id for state variable of model checking
+
+absprop int_value_of (sid, int)
+
+abst@ype mc_gv_t (sid)
+
+prfun mc_set_int {id: sid} (id: (mc_gv_t id), x: int): void
+
+prfun mc_get_int {id: sid} (id: mc_gv_t id): [x: int] (int_value_of (id, x) | int x)
+
+prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
+
+(* ************* ************** *)
+
+fun negation {x: bool} (x: bool x):<fun> bool (~x)
+
+(* ************* ************** *)
+
 
 
 

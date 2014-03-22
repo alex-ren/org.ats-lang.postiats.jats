@@ -10,6 +10,8 @@ tokens {
   // VAR; //  = 'var';
   ASSIGN;
   FUN;
+  FUNDEC;
+  FUNIMPL;
   FUNGROUP;
   PARALST;
   EXPLST;
@@ -123,6 +125,16 @@ dec
     : Val pat=exp Assign v=exp -> ^(Val $pat $v)
     | ID ColonAssign exp -> ^(ASSIGN ID exp)
     | Fun fundef ('and' fundef)* -> ^(FUNGROUP fundef+)
+    | Extern Fun fundec -> fundec
+    | Impl funimpl -> funimpl
+    ;
+
+fundec
+    : name=ID (Colon real=ID)? LParen paralst RParen -> ^(FUNDEC $name $real? paralst)
+    ; 
+
+funimpl 
+    : name=ID (Colon real=ID)? LParen paralst RParen Assign exp -> ^(FUNIMPL $name $real? paralst exp)
     ;
 
 fundef
@@ -179,6 +191,9 @@ Var       : 'var';
 VarObj       : 'varobj';
 
 Fun       : 'fun';
+
+Extern    : 'extern';
+Impl      : 'implement';
 
 If        : 'if';
 Then      : 'then';

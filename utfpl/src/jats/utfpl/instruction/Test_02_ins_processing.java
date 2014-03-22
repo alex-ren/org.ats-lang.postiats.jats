@@ -12,6 +12,7 @@ import jats.utfpl.tree.TreePrinter;
 import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplPrinter;
 import jats.utfpl.utfpl.UtfplProgramParserJson;
+import jats.utfpl.utfpl.UtfplProgramProcessor;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 
@@ -44,7 +45,8 @@ public class Test_02_ins_processing {
 //                , "test/test35_mutual_closure.utfpl"
 //                "test/test09_all.utfpl"
 //        		"test/src_mutfpl/10_thread_create.mutfpl"
-                "test/src_mutfpl/17_extcode.mutfpl"
+//                "test/src_mutfpl/17_extcode.mutfpl"
+                "test/src_ats/demo_mc_dyn.dats"
         
         };
 
@@ -73,7 +75,15 @@ public class Test_02_ins_processing {
                     UtfplPrinter uPrinter = new UtfplPrinter();
                     String outputUTFPL = uPrinter.print(uProg);
                     
-                    System.out.println("==utfpl's ast code is ==========================");
+                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
+                    
+                    System.out.println(outputUTFPL);
+                    
+                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+                    uProg = processor.removeProof(uProg);
+                    outputUTFPL = uPrinter.print(uProg);
+                    
+                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
                     
                     System.out.println(outputUTFPL);
                     

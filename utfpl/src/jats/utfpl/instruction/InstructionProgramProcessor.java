@@ -282,6 +282,17 @@ public class InstructionProgramProcessor {
     	        return nIns;
             }
         }
+
+        @Override
+        public Object visit(InsMCAssert ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+                ValPrim nLocalSrc = subsVP(ins.m_localSrc, m_subMap);
+                
+                return new InsMCAssert(nLocalSrc);
+            }
+        }
     }
     
     /*

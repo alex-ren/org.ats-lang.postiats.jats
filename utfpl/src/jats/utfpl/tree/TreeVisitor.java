@@ -18,6 +18,8 @@ public interface TreeVisitor {
     public Object visit(ExpLam node);
     public Object visit(ExpLet node);
     public Object visit(ExpTuple node);
+    public Object visit(DecFunDec decFunDec);
+    public Object visit(DecFunImpl decFunImpl);
 
 
 }

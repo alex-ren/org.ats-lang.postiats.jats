@@ -29,6 +29,7 @@ public interface CSPSVisitor {
     public Object visit(CTempVal node);
     
     public Object visit(CBThreadCreate node);
+    public Object visit(CIMCAssert cimcAssert);
 }
 
 

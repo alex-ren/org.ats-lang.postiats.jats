@@ -2,7 +2,7 @@ package jats.utfpl.tree;
 
 public class DecVarDef extends IDec {
     public ExpId m_id;
-    public IExp m_exp;  // initial value
+    public IExp m_exp;  // initial value  // can be null
     // public Type m_ty;
     
     public DecVarDef(Location loc, ExpId id, IExp exp) {

@@ -24,6 +24,14 @@ D2Cextcode_st(extcode) ::= <<
 %{<extcode>%}
 >>
 
+D2Cdcstdecs_st(knd, dcsts) ::= <<
+<knd> <dcsts; separator="\nand ">
+>>
+
+dcstkind_st(knd) ::= <<
+<knd>
+>>
+
 D2Cfundecs_st(knd, f2ds) ::= <<
 <knd> <f2ds; separator="\nand ">
 >>
@@ -76,13 +84,33 @@ else
   <elsea>
 >>
 
+D2ElamSta_st(d2exp) ::= <<
+lamSta. <d2exp>
+>>
+
+D2ElamMet_st(d2exp) ::= <<
+lamMet. <d2exp>
+>>
+
 D2Elam_st(p2ts, exp) ::= <<
 lam (<p2ts; separator=", ">) = 
   <exp>
 >>
 
+LABP2ATomit_st() ::= <<
+LABP2ATomit
+>>
+
+LABP2ATnorm_st(lab, pat) ::= <<
+LABP2ATnorm(<pat>)
+>>
+
 p2at_st(node) ::= <<
 <node>
+>>
+
+P2Trec_st(labpats) ::= <<
+P2Trec\<<labpats; separator=", ">\>
 >>
 
 P2Tany_st() ::= <<
@@ -94,7 +122,7 @@ P2Tempty_st() ::= <<
 >>
 
 P2Tpat_st(pat) ::= <<
-pat\<<pat>\>
+P2Tpat\<<pat>\>
 >>
 
 P2Tvar_st(var) ::= <<
@@ -112,6 +140,10 @@ D2Es0tring_st(str) ::= <<
 // handle Cd2sym
 d2sym_st (d2sym) ::= <<
 <symbol_st(d2sym.symbol)>
+>>
+
+D2Eignored_st() ::= <<
+D2Eignored
 >>
 
 D2Esym_st(d2sym) ::= <<
@@ -153,6 +185,8 @@ end
 D2Eempty_st() ::= <<
 ()
 >>
+
+
 
 
 

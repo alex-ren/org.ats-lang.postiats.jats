@@ -11,6 +11,7 @@ import jats.utfpl.instruction.GlobalEntity;
 import jats.utfpl.instruction.GlobalValue;
 import jats.utfpl.instruction.InsCondAlloc;
 import jats.utfpl.instruction.InsCondRelease;
+import jats.utfpl.instruction.InsMCAssert;
 import jats.utfpl.instruction.InsMutexAlloc;
 import jats.utfpl.instruction.InsCall;
 import jats.utfpl.instruction.InsCond;
@@ -424,6 +425,18 @@ public class CSPSTransformer {
             m_cblkLst.add(m_cbEvt);
             m_cbEvt = new CBEvent();
             return null;
+        }
+
+        @Override
+        public Object visit(InsMCAssert ins) {
+            CTemp localSrc = ValPrim2CTemp(ins.m_localSrc, m_subMap, m_funLab, m_cbEvt);
+            
+            CIMCAssert nIns = new CIMCAssert(localSrc, m_cbEvt);
+            m_cbEvt.add(nIns);
+            m_cblkLst.add(m_cbEvt);
+            m_cbEvt = new CBEvent();
+            
+            return null; 
         }
     }
 

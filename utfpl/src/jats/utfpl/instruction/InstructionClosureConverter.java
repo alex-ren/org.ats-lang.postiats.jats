@@ -258,6 +258,16 @@ public class InstructionClosureConverter {
             }
 	        return null;
         }
+
+        @Override
+        public Object visit(InsMCAssert ins) {
+            if (ins.m_localSrc instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_localSrc)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_localSrc);
+            }
+            
+            return null;
+        }
 	}
 
 	// Pass2 is similar to Pass1 except that escaped value caused 
@@ -365,6 +375,9 @@ public class InstructionClosureConverter {
 
             if (!ins.m_funlab.isLibFun()) {  // Not library function
                 Set<TID> escNames = m_funMap.get(ins.m_funlab);
+                if (null == escNames) {
+                    throw new Error("Function " + ins.m_funlab.getID() + " is not defined.");
+                }
                 for (TID escName: escNames) {
                     if (!m_inScopeNames.contains(escName)) {
                         m_escNames.add(escName);
@@ -485,6 +498,16 @@ public class InstructionClosureConverter {
                 m_escNames.add((TID)ins.m_cond);
             }
 	        return null;
+        }
+
+        @Override
+        public Object visit(InsMCAssert ins) {
+            if (ins.m_localSrc instanceof TID && 
+                    !m_inScopeNames.contains(ins.m_localSrc)) {  // name is not in the scope
+                m_escNames.add((TID)ins.m_localSrc);
+            }
+            
+            return null;
         }
 	}
 	
@@ -687,6 +710,15 @@ public class InstructionClosureConverter {
 			InsCondRelease nIns = new InsCondRelease(nCond);
 	        m_insLst.add(nIns);
 	        return m_insLst;
+        }
+
+        @Override
+        public Object visit(InsMCAssert ins) {
+            ValPrim nLocalSrc = InstructionProgramProcessor.subsVP(ins.m_localSrc, m_map);
+            InsMCAssert nIns = new InsMCAssert(nLocalSrc);
+            m_insLst.add(nIns);
+            
+            return m_insLst;
         }
 	    
 	}

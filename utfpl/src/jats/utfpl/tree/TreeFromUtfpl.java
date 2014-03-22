@@ -14,6 +14,7 @@ import jats.utfpl.utfpl.Ci2mpdec;
 import jats.utfpl.utfpl.Cp2at;
 import jats.utfpl.utfpl.Csymbol;
 import jats.utfpl.utfpl.Cv2aldec;
+import jats.utfpl.utfpl.D2Cdcstdecs;
 import jats.utfpl.utfpl.D2Cextcode;
 import jats.utfpl.utfpl.D2Cfundecs;
 import jats.utfpl.utfpl.D2Cignored;
@@ -30,10 +31,13 @@ import jats.utfpl.utfpl.D2Ei0nt;
 import jats.utfpl.utfpl.D2Eifopt;
 import jats.utfpl.utfpl.D2Eignored;
 import jats.utfpl.utfpl.D2Elam;
+import jats.utfpl.utfpl.D2ElamMet;
+import jats.utfpl.utfpl.D2ElamSta;
 import jats.utfpl.utfpl.D2Elet;
 import jats.utfpl.utfpl.D2Es0tring;
 import jats.utfpl.utfpl.D2Esym;
 import jats.utfpl.utfpl.D2Evar;
+import jats.utfpl.utfpl.Edcstkind;
 import jats.utfpl.utfpl.Id2ecl_node;
 import jats.utfpl.utfpl.Id2exp_node;
 import jats.utfpl.utfpl.Id2exparg;
@@ -42,6 +46,7 @@ import jats.utfpl.utfpl.P2Tany;
 import jats.utfpl.utfpl.P2Tempty;
 import jats.utfpl.utfpl.P2Tignored;
 import jats.utfpl.utfpl.P2Tpat;
+import jats.utfpl.utfpl.P2Trec;
 import jats.utfpl.utfpl.P2Tvar;
 import jats.utfpl.utfpl.ProgramUtfpl;
 
@@ -75,6 +80,8 @@ public class TreeFromUtfpl {
 	    } else if (uDecNode instanceof D2Cextcode) {
 	        decs.add(transD2Cextcode(loc, (D2Cextcode)uDecNode));
 	        return decs;
+	    } else if (uDecNode instanceof D2Cdcstdecs) {
+	        return transGlobalD2Cdcstdecs(loc, (D2Cdcstdecs)uDecNode);
 	    } else if (uDecNode instanceof D2Cignored) {
 	    	System.err.println("D2Cignored is encounter.");
 	    	return decs;
@@ -83,31 +90,59 @@ public class TreeFromUtfpl {
 	    }
     }
 
-	private DecExtCode transD2Cextcode(Location loc, D2Cextcode uNode) {
+	private List<IDec> transGlobalD2Cdcstdecs(Location loc, D2Cdcstdecs decs) {
+        List<IDec> cstdecs = new ArrayList<IDec>();
+        if (decs.m_knd == Edcstkind.DCK_prfun) {
+            // do nothing
+        } else if (decs.m_knd == Edcstkind.DCK_val) {
+            for (Cd2cst cstdec: decs.m_d2cst) {
+                cstdecs.add(transGlobalCstValDec(loc, cstdec));
+            }
+        } else if (decs.m_knd == Edcstkind.DCK_fun) {
+            for (Cd2cst cstdec: decs.m_d2cst) {
+                cstdecs.add(transGlobalCstFunDec(loc, cstdec));
+            }
+        } else {
+            throw new Error("kind " + decs.m_knd + " is not supported");
+        }
+
+        return cstdecs;
+    }
+
+    private DecVarDef transGlobalCstValDec(Location loc, Cd2cst cstdec) {
+        ExpId id = new ExpId(loc, transCd2cst(cstdec));
+        DecVarDef dec = new DecVarDef(loc, id, null);
+        return dec;
+    }
+
+    private DecFunDec transGlobalCstFunDec(Location loc, Cd2cst cstdec) {
+        ExpId id = new ExpId(loc, transCd2cst(cstdec));
+        DecFunDec dec = new DecFunDec(loc, id, null, new ArrayList<ExpId>());
+        return dec;
+    }
+
+    private DecExtCode transD2Cextcode(Location loc, D2Cextcode uNode) {
         return new DecExtCode(loc, uNode.m_code);
     }
 
-    private DecFunGroup transD2Cimpdec(Location loc, D2Cimpdec uNode) {
-	    List<DecFunDef> funLst = new ArrayList<DecFunDef>();
-	    DecFunDef funDef = transCi2mpdec(uNode.m_i2mpdec);
-	    funLst.add(funDef);
-	    DecFunGroup ret = new DecFunGroup(loc, funLst);
-	    return ret;
+    private DecFunImpl transD2Cimpdec(Location loc, D2Cimpdec uNode) {
+	    DecFunImpl funDef = transCi2mpdec(uNode.m_i2mpdec);
+	    return funDef;
     }
 
-	private DecFunDef transCi2mpdec(Ci2mpdec uNode) {
+	private DecFunImpl transCi2mpdec(Ci2mpdec uNode) {
 	    Location loc = new Location(uNode.i2mpdec_loc);
 	    ExpId id = new ExpId(loc, transCd2cst(uNode.i2mpdec_cst));
 	    
 	    IExp lam = transCd2exp(uNode.i2mpdec_def);
 	    if (lam instanceof ExpLam) {
 	    	ExpLam lambda = (ExpLam)lam;
-	    	DecFunDef ret = new DecFunDef(loc, id, null, lambda.m_paralst, lambda.m_body);
+	    	DecFunImpl ret = new DecFunImpl(loc, id, null, lambda.m_paralst, lambda.m_body);
 	    	return ret;
 	    } else {
 	    	throw new Error("Should be a lambda.");
 	    }
-    }
+    } 
 
 	private List<IDec> transGlobalD2Cvaldecs(D2Cvaldecs uNode) {
 		List<IDec> vdecs = new ArrayList<IDec>();
@@ -157,7 +192,7 @@ public class TreeFromUtfpl {
         	IExp fun = transCd2exp(d2App.m_d2e_fun);
         	if (fun instanceof ExpId) {
             	if (((ExpId)fun).isSysGvarGet()) {
-            		return transId2exparg(d2App.m_d2as_arg.get(0)).get(0);
+            		return transId2exparg(d2App.m_d2as_arg.get(d2App.m_d2as_arg.size() - 1)).get(0);
             	}
         	}
         	return transD2Eapplst(loc, (D2Eapplst)uExpNode);
@@ -177,6 +212,10 @@ public class TreeFromUtfpl {
         	throw new Error("D2Eignored is not supported");
         } else if (uExpNode instanceof D2Elam) {
         	return transD2Elam(loc, (D2Elam)uExpNode);
+        } else if (uExpNode instanceof D2ElamSta) {
+            return transCd2exp(((D2ElamSta)uExpNode).m_d2exp);
+        } else if (uExpNode instanceof D2ElamMet) {
+            return transCd2exp(((D2ElamMet)uExpNode).m_d2exp);            
         } else if (uExpNode instanceof D2Elet) {
         	return transD2Elet(loc, (D2Elet)uExpNode);
         } else if (uExpNode instanceof D2Es0tring) {
@@ -193,13 +232,18 @@ public class TreeFromUtfpl {
     private ExpApp transD2Eapplst(Location loc, D2Eapplst uNode) {
 
         List<IExp> argsLst = new ArrayList<IExp>();
+        Id2exparg exparg = null;
         if (uNode.m_d2as_arg.size() > 1) {
-            System.err.println("D2Eapplst has more than one list of arguments");
+//            System.err.println("D2Eapplst has " + uNode.m_d2as_arg.size() +  "lists of arguments");
+            exparg = uNode.m_d2as_arg.get(1);
+        } else {
+            exparg = uNode.m_d2as_arg.get(0);
         }
-        for (Id2exparg exparg: uNode.m_d2as_arg) {
-        	List<IExp> args = transId2exparg(exparg);
-        	argsLst.addAll(args);
-        }
+        
+//        for (Id2exparg exparg: uNode.m_d2as_arg) {
+        	List<IExp> tempargs = transId2exparg(exparg);
+        	argsLst.addAll(tempargs);
+//        }
         
         IExp fun = transCd2exp(uNode.m_d2e_fun);
         
@@ -446,12 +490,14 @@ public class TreeFromUtfpl {
 		} else if (uPat instanceof P2Tignored) {
 			return transP2Tignored(loc, (P2Tignored)uPat);
         } else if (uPat instanceof P2Tempty) {
-            return transP2Tempty(loc, (P2Tempty)uPat);			
+            return transP2Tempty(loc, (P2Tempty)uPat);		
+        } else if (uPat instanceof P2Trec) {
+            throw new Error("P2Trec is not supported");
 		} else {
 			throw new Error(uNode + " is not supported");
 		}
     }
-	
+
     private ExpTuple transP2Tempty(Location loc, P2Tempty uNode) {
         return ExpTuple.makeVoid(loc);
     }
@@ -473,7 +519,8 @@ public class TreeFromUtfpl {
     }
 
 	private IExp transP2Tpat(Location loc, P2Tpat uNode) {
-		// loc is not used at all.
+		// We use the loc information which is more related to the object of our focus,
+	    // instead of the loc information of the encapsulation.
 	    return transCp2at(uNode.m_p2at);
     }
 

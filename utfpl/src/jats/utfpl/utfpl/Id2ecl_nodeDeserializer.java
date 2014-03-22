@@ -37,6 +37,8 @@ public class Id2ecl_nodeDeserializer implements JsonDeserializer<Id2ecl_node> {
             return context.deserialize(je2, D2Cvaldecs.class);
         } else if (name.equals("D2Clocal")) {
             throw new Error("not supported");
+        } else if (name.equals("D2Cdcstdecs")) {
+            return context.deserialize(je2, D2Cdcstdecs.class);
         } else if (name.equals("D2Cextcode")) {
         	return context.deserialize(je2, D2Cextcode.class);
         } else {

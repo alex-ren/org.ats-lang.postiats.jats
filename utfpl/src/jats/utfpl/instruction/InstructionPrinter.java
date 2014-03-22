@@ -302,6 +302,15 @@ public class InstructionPrinter implements InsVisitor {
         return st;
     }
 
+    @Override
+    public Object visit(InsMCAssert ins) {
+        // mcassert_ins_st(lv) ::= <<
+        ST st = m_stg.getInstanceOf("mcassert_ins_st");
+        st.add("lv", ins.m_localSrc);
+        
+        return st;
+    }
+
 
 }
 

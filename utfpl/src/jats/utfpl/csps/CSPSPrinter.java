@@ -363,4 +363,13 @@ public class CSPSPrinter implements CSPSVisitor {
         return st;
     }
 
+    @Override
+    public Object visit(CIMCAssert node) {
+        // mcassert_ins_st(pred) ::= <<
+        ST st = m_stg.getInstanceOf("mcassert_ins_st");
+        st.add("pred", node.m_localSrc.accept(this));
+        
+        return st;
+    }
+
 }

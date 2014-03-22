@@ -51,6 +51,8 @@ public interface PNodeVisitor {
     
     public Object visit(PInsCondAlloc node);
     public Object visit(PInsCondRelease node);
+
+    public Object visit(PInsMCAssert node);
     
 
     

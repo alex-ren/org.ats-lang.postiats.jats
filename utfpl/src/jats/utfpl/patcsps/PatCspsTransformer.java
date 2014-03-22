@@ -14,6 +14,7 @@ import jats.utfpl.csps.CICondRelease;
 import jats.utfpl.csps.CIFunCall;
 import jats.utfpl.csps.CILoad;
 import jats.utfpl.csps.CILoadArray;
+import jats.utfpl.csps.CIMCAssert;
 import jats.utfpl.csps.CIMove;
 import jats.utfpl.csps.CIMutexAlloc;
 import jats.utfpl.csps.CIMutexRelease;
@@ -379,6 +380,16 @@ public class PatCspsTransformer implements CSPSVisitor {
 	    PInsCondRelease nIns = new PInsCondRelease(cond);
 	    ret.add(nIns);
 	    return ret;
+    }
+
+    @Override
+    public Object visit(CIMCAssert node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        PExp localSrc = (PExp)node.m_localSrc.accept(this);
+        
+        ret.add(new PInsMCAssert(localSrc));
+        
+        return ret;
     }
 	
 }

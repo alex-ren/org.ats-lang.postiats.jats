@@ -130,7 +130,9 @@ cond_release_ins_st(cond) ::= <<
 release_cond_ins(<cond>)
 >>
 
-
+mcassert_ins_st(lv) ::= <<
+mcassert_ins(<lv>)
+>>
         
         
         

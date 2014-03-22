@@ -18,6 +18,15 @@ fun <fname> (<paralst; separator=", ">) =
   <body>
 >>
 
+fun_dec_st(fname, paralst) ::= <<
+extern fun <fname> (<paralst; separator=", ">)
+>>
+
+fun_impl_st(fname, paralst, body) ::= <<
+implement <fname> (<paralst; separator=", ">) =
+  <body>
+>>
+
 fun_group_st(fun_lst) ::= <<
 <fun_lst; separator="\nand ">
 >>

@@ -8,6 +8,8 @@ import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeBool;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.DecExtCode;
+import jats.utfpl.tree.DecFunDec;
+import jats.utfpl.tree.DecFunImpl;
 import jats.utfpl.tree.ExpApp;
 import jats.utfpl.tree.ExpAtom;
 import jats.utfpl.tree.IDec;
@@ -107,28 +109,6 @@ public class InstructionTransformer implements TreeVisitor {
         
         setTIDIn(holder); 
         return ret;  
-    }
-
-    // FunDef must be inside certain FunGroup
-    @Override
-    public Object visit(DecFunDef node) {
-        TID name = node.m_id.m_tid;
-        List<TID> paralst = new ArrayList<TID>();
-        for (ExpId id: node.m_paralst) {
-            paralst.add(id.m_tid);
-        }
-        
-        // create new transformer
-        InstructionTransformer bodyVisitor = new InstructionTransformer();
-        TID ret = TID.createRetHolder("ret");
-        bodyVisitor.setTIDIn(ret);
-//        bodyVisitor.m_inslst.add(new VarDefIns(ret));
-        
-        @SuppressWarnings("unchecked")
-        List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
-        
-        InsFuncDef fn = new InsFuncDef(name, paralst, body, ret);
-        return fn;
     }
 
     @Override
@@ -307,7 +287,75 @@ public class InstructionTransformer implements TreeVisitor {
                 } else {
                     throw new Error("wrong " + holder);
                 }
+            } else if (funlab.getID().equals(CCompUtils.cSysMCSetInt)) {
+                // prval () = mc_set_int (g1, local)
+
+                IExp gv = node.m_explst.get(0);
+                TID globalVar = ((ExpId)gv).m_tid;
+
+                IExp lv = node.m_explst.get(1);
+                lv.accept(this);
+                ValPrim localValue = m_vpOut;
                 
+                // This is store. There is no return value.
+                InsStore mcSetInt = new InsStore(localValue, globalVar);
+                m_inslst.add(mcSetInt);
+                if (holder.isRet()) {
+//                    InsRet ret = new InsRet(TupleValue.cNone);
+//                    m_inslst.add(ret);
+                    throw new Error("wrong " + holder);
+                } else if (holder == TID.ANONY) {
+                    // do nothing
+                } else {
+                    throw new Error("wrong " + holder);
+                }
+            } else if (funlab.getID().equals(CCompUtils.cSysMCGetInt)) {
+                // prval (pf | mc_x) = mc_get_int (g1)
+                if (null == holder) {
+//                    TID localHolder = TID.createLocalVar("temp", retType);
+//                    InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
+//                    m_inslst.add(alloc);
+//                    m_vpOut = localHolder;  // need to return the name
+                    throw new Error("check this");
+                }
+                if (holder.isGlobalVariable()) {
+//                    // holder must be a valid name.
+//                    TID localHolder = TID.createLocalVar("temp", retType);
+//                    InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
+//                    m_inslst.add(alloc);
+//                    InsStore store = new InsStore(localHolder, holder);
+//                    m_inslst.add(store);
+                    throw new Error("check this");
+                } else if (holder.isRet()) {
+                    InsMutexAlloc alloc = new InsMutexAlloc(holder);
+                    m_inslst.add(alloc);
+                } else if (TID.ANONY == holder) {
+                    throw new Error("should not write in this way");                    
+                } else {
+                    IExp gv = node.m_explst.get(0);
+                    TID globalVar = ((ExpId)gv).m_tid;
+                    InsLoad insLoad = new InsLoad(globalVar, holder);
+                    m_inslst.add(insLoad);
+                    m_vpOut = holder;
+                }     
+            } else if (funlab.getID().equals(CCompUtils.cSysMCAssert)) {
+                //   prval () = mc_assert (xx > 6)
+                IExp lv = node.m_explst.get(0);
+                lv.accept(this);
+                ValPrim localValue = m_vpOut;
+                
+                // This is store. There is no return value.
+                InsMCAssert mcAssert = new InsMCAssert(localValue);
+                m_inslst.add(mcAssert);
+                if (holder.isRet()) {
+//                    InsRet ret = new InsRet(TupleValue.cNone);
+//                    m_inslst.add(ret);
+                    throw new Error("wrong " + holder);
+                } else if (holder == TID.ANONY) {
+                    // do nothing
+                } else {
+                    throw new Error("wrong " + holder);
+                }
 //            } else if (other instructions) {
 //                xxx
             } else {  // normal function call
@@ -570,6 +618,29 @@ public class InstructionTransformer implements TreeVisitor {
 	    m_inslst.add(nIns);
 	    return m_inslst;
     }
+	
+
+    // FunDef must be inside certain FunGroup
+    @Override
+    public Object visit(DecFunDef node) {
+        TID name = node.m_id.m_tid;
+        List<TID> paralst = new ArrayList<TID>();
+        for (ExpId id: node.m_paralst) {
+            paralst.add(id.m_tid);
+        }
+        
+        // create new transformer
+        InstructionTransformer bodyVisitor = new InstructionTransformer();
+        TID ret = TID.createRetHolder("ret");
+        bodyVisitor.setTIDIn(ret);
+//        bodyVisitor.m_inslst.add(new VarDefIns(ret));
+        
+        @SuppressWarnings("unchecked")
+        List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
+        
+        InsFuncDef fn = new InsFuncDef(name, paralst, body, ret);
+        return fn;
+    }
 
     @Override
     public Object visit(DecValBind node) {
@@ -592,6 +663,47 @@ public class InstructionTransformer implements TreeVisitor {
     public Object visit(DecExtCode node) {
         m_extCodeLst.add(new GlobalExtCode(node.m_content));
         return null;
+    }
+
+    @Override
+    public Object visit(DecFunDec decFunDec) {
+        // do nothing
+        return null;
+    }
+
+    @Override
+    public Object visit(DecFunImpl node) {
+        
+        // Create a InsFuncGroup with only one function inside it.
+        // This implies that the function shall not be a closure. Otherwise, it would
+        // cause trouble to closure removal by lifting escaped values onto arguments.
+        
+        List<InsFuncDef> insLst = new ArrayList<InsFuncDef>();
+
+        TID name = node.m_id.m_tid;
+        List<TID> paralst = new ArrayList<TID>();
+        for (ExpId id: node.m_paralst) {
+            paralst.add(id.m_tid);
+        }
+        
+        // create new transformer
+        InstructionTransformer bodyVisitor = new InstructionTransformer();
+        TID ret = TID.createRetHolder("ret");
+        bodyVisitor.setTIDIn(ret);
+//        bodyVisitor.m_inslst.add(new VarDefIns(ret));
+        
+        @SuppressWarnings("unchecked")
+        List<UtfplInstruction> body = (List<UtfplInstruction>)node.m_body.accept(bodyVisitor);
+        
+        InsFuncDef fn = new InsFuncDef(name, paralst, body, ret);
+        
+        insLst.add(fn);
+        
+        InsFuncGroup nIns = new InsFuncGroup(insLst);
+        m_inslst.add(nIns);
+        return m_inslst;
+        
+
     }
 
 

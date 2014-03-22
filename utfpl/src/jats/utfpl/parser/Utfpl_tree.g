@@ -95,6 +95,8 @@ gdec returns [IDec node]
     | ^(Val pat=exp v=exp) {node = new DecValDef(null, $pat.node, $v.node);}
     | ^(ASSIGN ID exp) {node = new DecVarAssign(null, new ExpId(null, $ID.text), $exp.node);}
     | fungroup {node = new DecFunGroup(null, $fungroup.funLst);}
+    | fundec {node = $fundec.node;}
+    | funimpl {node = $funimpl.node;}
     | extcode {node = new DecExtCode(null, $extcode.content);}
     ;
 
@@ -118,6 +120,8 @@ dec returns [IDec node]
     : ^(Val pat=exp v=exp) {node = new DecValBind(null, $pat.node, $v.node);}
     | ^(ASSIGN ID exp) {node = new DecVarAssign(null, new ExpId(null, $ID.text), $exp.node);}
     | fungroup {node = new DecFunGroup(null, $fungroup.funLst);}
+    | fundec {node = $fundec.node;}
+    | funimpl {node = $funimpl.node;}    
     ; 
 
 fungroup returns [List<DecFunDef> funLst]
@@ -131,6 +135,14 @@ fundef returns [DecFunDef node]
     : ^(FUN name=id_exp (real=id_exp)? paralst exp) {node = new DecFunDef(null, $name.node, $real.node, $paralst.paralst, $exp.node);}
     ;
     
+fundec returns [DecFunDec node]
+    : ^(FUNDEC name=id_exp (real=id_exp)? paralst) {node = new DecFunDec(null, $name.node, $real.node, $paralst.paralst);}
+    ;
+
+funimpl returns [DecFunImpl node]
+    : ^(FUNIMPL name=id_exp (real=id_exp)? paralst exp) {node = new DecFunImpl(null, $name.node, $real.node, $paralst.paralst, $exp.node);}
+    ;
+
 paralst returns [List<ExpId> paralst]
 @init {
   paralst = new ArrayList<ExpId>();

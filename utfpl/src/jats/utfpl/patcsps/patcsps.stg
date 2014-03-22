@@ -108,6 +108,10 @@ var\<LinkedList> sys_list_manager = new LinkedList();
 #define sys_list_get_tail(xs) sys_list_manager.list_get_tail (xs);
 #define sys_list_is_nil(xs) sys_list_manager.list_is_nil (xs);
 
+// ===============================
+// global variable for assertion
+var <sys_assert_var()> = 0;
+
 // =====================
 
 <gvar_lst; separator="\n">
@@ -124,6 +128,8 @@ main_s(<sys_tid()>) =
   proc_thread_finalize(<sys_tid()>);
 
 main = main_s(0) ||| Scheduler;
+
+#define sys_assertion <sys_assert_var()> == 0;
 
 
 <ext_code_lst; separator="\n\n">
@@ -318,6 +324,10 @@ pinscondalloc_st(holder, is_global) ::= <<
 <if(is_global)><else>var <endif><holder> = <sys_cond_manager()>.allocate();
 >>
 
+pinsmcassert_st(pred) ::= <<
+<sys_assert_var()> = <pred>;
+>>
+
 pinscondrelease_st(cond) ::= <<
 <sys_cond_manager()>.release(<cond>);
 >>
@@ -328,6 +338,10 @@ sys_mutex_manager
 
 sys_cond_manager() ::= <<
 sys_cond_manager
+>>
+
+sys_assert_var() ::= <<
+sys_assert_var
 >>
 
 pprocthreadcreate_st(tid, funaddr, args) ::= <<

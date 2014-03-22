@@ -5,6 +5,8 @@ import jats.utfpl.instruction.TID;
 import jats.utfpl.patcsps.type.PATTypeArray;
 import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.DecExtCode;
+import jats.utfpl.tree.DecFunDec;
+import jats.utfpl.tree.DecFunImpl;
 import jats.utfpl.tree.ExpApp;
 import jats.utfpl.tree.ExpAtom;
 import jats.utfpl.tree.IDec;
@@ -47,26 +49,6 @@ public class NamingVisitor implements TreeVisitor {
         return null;
     }
 
-    @Override
-    public Object visit(DecFunDef node) {
-//        System.out.println("FunDef " + node.m_id.m_id);
-        TID tid = m_scope.getValue(node.m_id.m_sid);
-        if (null == tid) {
-            // Functions should have all been collected.
-            throw new Error("This shall not happen.");
-        }
-        
-        node.m_id.updateForUsage(m_scope);  // update function's tid
-        
-        m_scope = m_scope.newScope();
-        for (ExpId para: node.m_paralst) {
-            para.updateForPara(m_scope);
-        }
-        node.m_body.accept(this);
-        m_scope = m_scope.getParent();
-        
-        return null;
-    }
 
     @Override
     public Object visit(ExpId node) {
@@ -193,6 +175,28 @@ public class NamingVisitor implements TreeVisitor {
 		return null;
     }
 
+
+    @Override
+    public Object visit(DecFunDef node) {
+//        System.out.println("FunDef " + node.m_id.m_id);
+        TID tid = m_scope.getValue(node.m_id.m_sid);
+        if (null == tid) {
+            // Functions should have all been collected.
+            throw new Error("This shall not happen.");
+        }
+        
+        node.m_id.updateForUsage(m_scope);  // update function's tid
+        
+        m_scope = m_scope.newScope();
+        for (ExpId para: node.m_paralst) {
+            para.updateForPara(m_scope);
+        }
+        node.m_body.accept(this);
+        m_scope = m_scope.getParent();
+        
+        return null;
+    }
+    
     @Override
     public Object visit(DecVarArrayDef node) {
         node.m_id.updateForGlobalVar(m_scope, new PATTypeArray(node.m_size));
@@ -203,6 +207,36 @@ public class NamingVisitor implements TreeVisitor {
     @Override
     public Object visit(DecExtCode node) {
         return null;
+    }
+
+    @Override
+    public Object visit(DecFunDec node) {
+        String name = node.m_id.m_sid;
+        String trueName = null != node.m_trueName? node.m_trueName.m_sid: null;
+        TID tid = TID.createUserFun(name, trueName);
+        m_scope.addValue(name, tid);
+        node.m_id.updateForUsage(m_scope);  // update function's tid
+        return null;
+    }
+
+    @Override
+    public Object visit(DecFunImpl node) {
+      TID tid = m_scope.getValue(node.m_id.m_sid);
+      if (null == tid) {
+          // Function should have been declared.
+          throw new Error("This shall not happen.");
+      }
+      
+      node.m_id.updateForUsage(m_scope);  // update function's tid
+      
+      m_scope = m_scope.newScope();
+      for (ExpId para: node.m_paralst) {
+          para.updateForPara(m_scope);
+      }
+      node.m_body.accept(this);
+      m_scope = m_scope.getParent();
+      
+      return null;
     }
 
 }

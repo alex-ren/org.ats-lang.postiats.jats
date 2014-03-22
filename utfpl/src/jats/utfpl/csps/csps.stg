@@ -88,6 +88,10 @@ if (<cond>) {
 }
 >>
 
+mcassert_ins_st(pred) ::= <<
+mc_assert(<pred>);
+>>
+
 // =====================================
 
 vardef_ins_st(holder) ::= <<

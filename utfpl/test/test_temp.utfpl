@@ -12,3 +12,18 @@ end
 
 val y = if 1 then 2 else 3
 val z = 3
+
+extern fun f2 ()
+
+fun f1 () = let
+  val x = add (f2 (), 1)
+in
+  x
+end
+
+implement f2 () = let
+  val x = add (f1 (), 1)
+in
+  x
+end
+

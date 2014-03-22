@@ -1,0 +1,43 @@
+var g1;
+var g2;
+
+read_43(q_44@<GStack(0)>, z_45@<GStack(1)>) =
+step {
+  return 999;
+} -> Skip;
+
+boo_46() =
+step {
+  var x_47<escaped> = 3;
+  g1 = x_47;
+} -> Skip;
+step {
+  g2 = x_47 from <GStack(0)>;
+} -> Skip;
+step {
+  var y_48 = 3;
+  return ();
+} -> Skip;
+
+foo_49() =
+step {
+  var mc_x_50<escaped> = g1;
+} -> Skip;
+step {
+  var xx_51 = call(add, mc_x_50 from <GStack(0)>, 3);
+  var temp_55 = call(gt, xx_51, 6);
+  mc_assert(temp_55);
+} -> Skip;
+step {
+  nontail_call with (1, 2)
+} -> Skip;
+<process call> = read_43;
+step {
+  rewind frame of read_43 to get _
+  return ();
+} -> Skip;
+
+main() = 
+Skip;
+
+
