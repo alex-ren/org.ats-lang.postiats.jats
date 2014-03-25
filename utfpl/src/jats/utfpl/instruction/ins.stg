@@ -104,8 +104,16 @@ load_array_ins_st(gv, index, lv) ::= <<
 load_array_ins(<gv>, <index>, <lv>)
 >> 
 
-load_ins(gv, lv) ::= <<
+load_ins_st(gv, lv) ::= <<
 load_ins(<gv>, <lv>)
+>>
+
+mc_get_int_st(gvs, lvs) ::= <<
+mc_get_int_ins(<gvs; separator=", "> : <lvs; separator=", ">)
+>>
+
+mc_set_int_st(lvs, gvs) ::= <<
+mc_set_int_ins(<lvs; separator=", "> : <gvs; separator=", ">)
 >>
 
 create_thread_ins_st(tid, funlab, args) ::= <<

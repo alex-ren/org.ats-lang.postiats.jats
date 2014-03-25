@@ -1,6 +1,7 @@
 package jats.utfpl.instruction;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jats.utfpl.ccomp.CCompUtils;
@@ -10,6 +11,7 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.DecExtCode;
 import jats.utfpl.tree.DecFunDec;
 import jats.utfpl.tree.DecFunImpl;
+import jats.utfpl.tree.DecMCGet;
 import jats.utfpl.tree.ExpApp;
 import jats.utfpl.tree.ExpAtom;
 import jats.utfpl.tree.IDec;
@@ -20,6 +22,11 @@ import jats.utfpl.tree.ExpId;
 import jats.utfpl.tree.ExpIf;
 import jats.utfpl.tree.ExpLam;
 import jats.utfpl.tree.ExpLet;
+import jats.utfpl.tree.PatAny;
+import jats.utfpl.tree.PatEmpty;
+import jats.utfpl.tree.PatIgnore;
+import jats.utfpl.tree.PatRecord;
+import jats.utfpl.tree.PatVar;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeVisitor;
 import jats.utfpl.tree.ExpTuple;
@@ -288,56 +295,34 @@ public class InstructionTransformer implements TreeVisitor {
                     throw new Error("wrong " + holder);
                 }
             } else if (funlab.getID().equals(CCompUtils.cSysMCSetInt)) {
-                // prval () = mc_set_int (g1, local)
-
-                IExp gv = node.m_explst.get(0);
-                TID globalVar = ((ExpId)gv).m_tid;
-
-                IExp lv = node.m_explst.get(1);
-                lv.accept(this);
-                ValPrim localValue = m_vpOut;
+                // prval () = mc_set_int (g1, local1, g2, local2)
+                List<TID> globalVars = new ArrayList<TID>();
+                List<ValPrim> localValues = new ArrayList<ValPrim>();
+                
+                Iterator<IExp> iter = node.m_explst.iterator();
+                while (iter.hasNext()) {
+                    IExp gv = iter.next();
+                    TID globalVar = ((ExpId)gv).m_tid;
+                    globalVars.add(globalVar);
+                    
+                    IExp lv = iter.next();
+                    lv.accept(this);
+                    ValPrim localValue = m_vpOut;
+                    localValues.add(localValue);
+                }
                 
                 // This is store. There is no return value.
-                InsStore mcSetInt = new InsStore(localValue, globalVar);
+                InsMCSet mcSetInt = new InsMCSet(localValues, globalVars);
                 m_inslst.add(mcSetInt);
                 if (holder.isRet()) {
 //                    InsRet ret = new InsRet(TupleValue.cNone);
 //                    m_inslst.add(ret);
-                    throw new Error("wrong " + holder);
+                    throw new Error("wrong style of write code: use prval () = mc_set_int instead." + holder);
                 } else if (holder == TID.ANONY) {
                     // do nothing
                 } else {
                     throw new Error("wrong " + holder);
                 }
-            } else if (funlab.getID().equals(CCompUtils.cSysMCGetInt)) {
-                // prval (pf | mc_x) = mc_get_int (g1)
-                if (null == holder) {
-//                    TID localHolder = TID.createLocalVar("temp", retType);
-//                    InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
-//                    m_inslst.add(alloc);
-//                    m_vpOut = localHolder;  // need to return the name
-                    throw new Error("check this");
-                }
-                if (holder.isGlobalVariable()) {
-//                    // holder must be a valid name.
-//                    TID localHolder = TID.createLocalVar("temp", retType);
-//                    InsMutexAlloc alloc = new InsMutexAlloc(localHolder);
-//                    m_inslst.add(alloc);
-//                    InsStore store = new InsStore(localHolder, holder);
-//                    m_inslst.add(store);
-                    throw new Error("check this");
-                } else if (holder.isRet()) {
-                    InsMutexAlloc alloc = new InsMutexAlloc(holder);
-                    m_inslst.add(alloc);
-                } else if (TID.ANONY == holder) {
-                    throw new Error("should not write in this way");                    
-                } else {
-                    IExp gv = node.m_explst.get(0);
-                    TID globalVar = ((ExpId)gv).m_tid;
-                    InsLoad insLoad = new InsLoad(globalVar, holder);
-                    m_inslst.add(insLoad);
-                    m_vpOut = holder;
-                }     
             } else if (funlab.getID().equals(CCompUtils.cSysMCAssert)) {
                 //   prval () = mc_assert (xx > 6)
                 IExp lv = node.m_explst.get(0);
@@ -702,8 +687,58 @@ public class InstructionTransformer implements TreeVisitor {
         InsFuncGroup nIns = new InsFuncGroup(insLst);
         m_inslst.add(nIns);
         return m_inslst;
-        
+         
 
+    }
+
+    @Override
+    public Object visit(DecMCGet node) {
+
+        List<TID> localHolders = new ArrayList<TID>();
+        for (ExpId val: node.m_vals) {
+            if (!val.m_tid.isLocal()) {
+                throw new Error("Impossible to not be local.");
+            }
+            localHolders.add(val.m_tid);
+        }
+        
+        List<TID> globalVars = new ArrayList<TID>();
+        for (ExpId id: node.m_ids) {
+            if (!id.m_tid.isGlobalVariable()) {
+                throw new Error("Impossible to not be global variable.");
+            }
+            globalVars.add(id.m_tid);
+        }
+        
+        InsMCGet ins = new InsMCGet(localHolders, globalVars);
+        m_inslst.add(ins);
+        return m_inslst;
+        
+    }
+
+    @Override
+    public Object visit(PatRecord patRecord) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatAny patAny) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatEmpty patEmpty) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatIgnore patIgnore) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatVar patVar) {
+        throw new Error("should not happen");
     }
 
 

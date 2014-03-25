@@ -118,7 +118,7 @@ var<LinkedList> sys_list_manager = new LinkedList();
 
 // ===============================
 // global variable for assertion
-var sys_assert_var = 0;
+var sys_assert_var = true;
 
 // =====================
 
@@ -149,21 +149,8 @@ writer_56(sys_tid) =
   {  var wi_59 = call(sub, 1, sys_gstack.frame_get(sys_tid, 0, 3));
   sys_gstack.frame_push(sys_tid, wi_59);
   mwp = sys_gstack.frame_get_int(sys_tid, 0, 2);
-  } ->
-  {  mwi = sys_gstack.frame_get_int(sys_tid, 0, 4);
-  } ->
-  {  min_write = 1;
-  } ->
-  {  var temp_83 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 2));
-  var temp_84 = call(add, temp_83, sys_gstack.frame_get_int(sys_tid, 0, 4));
-  var temp_85 = call(neg, 1);
-  data[temp_84] = temp_85
-  } ->
-  {  var temp_86 = call(mul, 2, sys_gstack.frame_get_int(sys_tid, 0, 2));
-  var temp_87 = call(add, temp_86, sys_gstack.frame_get_int(sys_tid, 0, 4));
-  data[temp_87] = 1
-  } ->
-  {  min_write = 0;
+  mwi = wi_59;
+  min_write = 1;
   } ->
   {  var __temp_list_args = sys_list_manager.list_nil ();
   __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get_int(sys_tid, 0, 2), __temp_list_args);
@@ -173,7 +160,9 @@ writer_56(sys_tid) =
   } ->
   write_51(sys_tid);
   {  sys_gstack.retopr_frame(sys_tid);
-  slot[sys_gstack.frame_get_int(sys_tid, 0, 2)] = sys_gstack.frame_get_int(sys_tid, 0, 4)
+  min_write = 0;
+  } ->
+  {  slot[sys_gstack.frame_get_int(sys_tid, 0, 2)] = sys_gstack.frame_get_int(sys_tid, 0, 4)
   } ->
   {  L = sys_gstack.frame_get_int(sys_tid, 0, 2);
   } ->
@@ -213,26 +202,24 @@ reader_64(sys_tid) =
   } ->
   {  var wp_67 = mwp;
   sys_gstack.frame_push(sys_tid, wp_67);
-  } ->
-  {  var wi_68 = mwi;
+  var wi_68 = mwi;
   sys_gstack.frame_push(sys_tid, wi_68);
-  } ->
-  {  var in_write_69 = min_write;
+  var in_write_69 = min_write;
   sys_gstack.frame_push(sys_tid, in_write_69);
   } ->
-  {  var temp_90 = call(eq, sys_gstack.frame_get(sys_tid, 0, 4), 1);
-  var temp_91 = call(eq, sys_gstack.frame_get(sys_tid, 0, 2), sys_gstack.frame_get_int(sys_tid, 0, 0));
-  var temp_92 = call(eq, sys_gstack.frame_get(sys_tid, 0, 3), sys_gstack.frame_get(sys_tid, 0, 1));
+  {  var temp_85 = call(eq, sys_gstack.frame_get(sys_tid, 0, 4), 1);
+  var temp_86 = call(eq, sys_gstack.frame_get(sys_tid, 0, 2), sys_gstack.frame_get_int(sys_tid, 0, 0));
+  var temp_87 = call(eq, sys_gstack.frame_get(sys_tid, 0, 3), sys_gstack.frame_get(sys_tid, 0, 1));
   var __temp_list_args = sys_list_manager.list_nil ();
-  __temp_list_args = sys_list_manager.list_cons (temp_90, __temp_list_args);
-  __temp_list_args = sys_list_manager.list_cons (temp_91, __temp_list_args);
-  __temp_list_args = sys_list_manager.list_cons (temp_92, __temp_list_args);
+  __temp_list_args = sys_list_manager.list_cons (temp_85, __temp_list_args);
+  __temp_list_args = sys_list_manager.list_cons (temp_86, __temp_list_args);
+  __temp_list_args = sys_list_manager.list_cons (temp_87, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   comp3_60(sys_tid);
-  {  var temp_93 = sys_gstack.retopr_frame(sys_tid);
-  var temp_94 = call(negation, temp_93);
-  sys_assert_var = temp_94;
+  {  var temp_88 = sys_gstack.retopr_frame(sys_tid);
+  var temp_89 = call(negation, temp_88);
+  sys_assert_var = temp_89;
   } ->
   {  var __temp_list_args = sys_list_manager.list_nil ();
   __temp_list_args = sys_list_manager.list_cons (sys_gstack.frame_get_int(sys_tid, 0, 0), __temp_list_args);
@@ -251,9 +238,9 @@ loop_write_71(sys_tid) =
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   data_create_50(sys_tid);
-  {  var temp_96 = sys_gstack.retopr_frame(sys_tid);
+  {  var temp_91 = sys_gstack.retopr_frame(sys_tid);
   var __temp_list_args = sys_list_manager.list_nil ();
-  __temp_list_args = sys_list_manager.list_cons (temp_96, __temp_list_args);
+  __temp_list_args = sys_list_manager.list_cons (temp_91, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   writer_56(sys_tid);
@@ -269,8 +256,8 @@ loop_read_73(sys_tid) =
   {  var w_init_75 = mw_init;
   sys_gstack.frame_push(sys_tid, w_init_75);
   } ->
-  {  var temp_98 = call(gt, sys_gstack.frame_get(sys_tid, 0, 1), 0);
-  sys_assert_var = temp_98;
+  {  var temp_93 = call(gt, sys_gstack.frame_get(sys_tid, 0, 1), 0);
+  sys_assert_var = temp_93;
   } ->
   {  var __temp_list_args = sys_list_manager.list_nil ();
   sys_gstack.add_frame(sys_tid, __temp_list_args);
@@ -311,28 +298,28 @@ main_s(sys_tid) =
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   data_create_50(sys_tid);
-  {  var temp_101 = sys_gstack.retopr_frame(sys_tid);
+  {  var temp_96 = sys_gstack.retopr_frame(sys_tid);
   var __temp_list_args = sys_list_manager.list_nil ();
-  __temp_list_args = sys_list_manager.list_cons (temp_101, __temp_list_args);
+  __temp_list_args = sys_list_manager.list_cons (temp_96, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   writer_56(sys_tid);
   {  sys_gstack.retopr_frame(sys_tid);
-  var temp_102 = sys_list_nil;
-  var temp_103 = call(sys_list_cons, 0, temp_102);
-  sys_gstack.frame_push(sys_tid, temp_103);
+  var temp_97 = sys_list_nil;
+  var temp_98 = call(sys_list_cons, 0, temp_97);
+  sys_gstack.frame_push(sys_tid, temp_98);
   } ->
   sys_thread_create(1, 3, sys_gstack.frame_get(sys_tid, 0, 0));
-  {  var temp_104 = sys_list_nil;
-  var temp_105 = call(sys_list_cons, 0, temp_104);
-  sys_gstack.frame_push(sys_tid, temp_105);
+  {  var temp_99 = sys_list_nil;
+  var temp_100 = call(sys_list_cons, 0, temp_99);
+  sys_gstack.frame_push(sys_tid, temp_100);
   } ->
   sys_thread_create(2, 4, sys_gstack.frame_get(sys_tid, 0, 1)); 
   proc_thread_finalize(sys_tid);
 
 main = main_s(0) ||| Scheduler;
 
-#define sys_assertion sys_assert_var == 0;
+#define sys_assertion sys_assert_var == true;
 
 
 

@@ -20,6 +20,12 @@ public interface TreeVisitor {
     public Object visit(ExpTuple node);
     public Object visit(DecFunDec decFunDec);
     public Object visit(DecFunImpl decFunImpl);
+    public Object visit(DecMCGet decMCGet);
+    public Object visit(PatRecord patRecord);
+    public Object visit(PatAny patAny);
+    public Object visit(PatEmpty patEmpty);
+    public Object visit(PatIgnore patIgnore);
+    public Object visit(PatVar patVar);
 
 
 }

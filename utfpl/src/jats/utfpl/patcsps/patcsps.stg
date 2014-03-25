@@ -110,7 +110,7 @@ var\<LinkedList> sys_list_manager = new LinkedList();
 
 // ===============================
 // global variable for assertion
-var <sys_assert_var()> = 0;
+var <sys_assert_var()> = true;
 
 // =====================
 
@@ -129,7 +129,7 @@ main_s(<sys_tid()>) =
 
 main = main_s(0) ||| Scheduler;
 
-#define sys_assertion <sys_assert_var()> == 0;
+#define sys_assertion <sys_assert_var()> == true;
 
 
 <ext_code_lst; separator="\n\n">

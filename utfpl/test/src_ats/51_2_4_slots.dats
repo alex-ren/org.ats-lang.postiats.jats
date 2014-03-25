@@ -39,16 +39,12 @@ fun writer (x: data): void = let
   val wp = 1 - sys_gvar_get{int} (R)
   val wi = 1 - sys_garr_get (slot, wp)
 
-  prval () = mc_set_int (mwp, wp)
-  prval () = mc_set_int (mwi, wi)
-  prval () = mc_set_int (min_write, 1)
+  prval () = mc_set_int (mwp, wp, mwi, wi, min_write, 1)
 
-  val () = sys_garr_update (data, 2 * wp + wi, ~1)  // not important
-  val () = sys_garr_update (data, 2 * wp + wi, 1)  // not important
-
-  prval () = mc_set_int (min_write, 0)
-  
+  // val () = sys_garr_update (data, 2 * wp + wi, ~1)  // not important
+  // val () = sys_garr_update (data, 2 * wp + wi, 1)  // not important
   val () = write (wp, wi, x)
+  prval () = mc_set_int (min_write, 0)
   
   val () = sys_garr_update (slot, wp, wi)
   val () = sys_gvar_update (L, wp)
@@ -59,10 +55,10 @@ end
 
 fun comp3 .<>. {x,y,z:bool} (x: bool x, y: bool y, z: bool z):<fun> bool (x && y && z) =
 //  x * y * z
-if x then 
-  if y then 
-    if z then true 
-    else false 
+if x then
+  if y then
+    if z then true
+    else false
   else false
 else false
 
@@ -78,9 +74,8 @@ fun reader (pf: initialized |): data = let
   val () = sys_gvar_update (R, rp)
   val ri = sys_garr_get (slot, rp)
 
-  prval (pfwp | wp) = mc_get_int (mwp)
-  prval (pfwi | wi) = mc_get_int (mwi)
-  prval (pf_in | in_write) = mc_get_int (min_write)
+  prval (pfwp, pfwi, pf_in | wp, wi, in_write) = 
+    mc_get_int (mwp, mwi, min_write)
 
   prval () = mc_assert(negation(comp3(in_write = 1, wp = rp, wi = ri)))
   
@@ -126,7 +121,16 @@ val () = sys_thread_create (2 (*thread id*), loop_read, 0 (*arg*))
 
 %}
     
-
+// datasort sidlist =
+// | nil ()
+// | cons (sid, sidlist)
+// 
+// datatype mc_gv_lst (xs: sidlst) =
+// | nil ()
+// | {x:sid}{xs:sidlst} cons (cons (x, xs)) of (mc_gv_t (x), mc_gv_lst (xs))
+// 
+// prfun mc_get_int_list {ids: sidlst} (ids: mc_gv_lst ids): [xs: ilist]
+//   (int_list_value_of (ids, xs) | list x)
 
 
 

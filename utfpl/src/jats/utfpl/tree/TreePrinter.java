@@ -230,6 +230,45 @@ public class TreePrinter implements TreeVisitor {
         return st;
     }
 
+    @Override
+    public Object visit(DecMCGet node) {
+        // mc_get_int_st (vals, ids) ::= <<
+        ST st = m_stg.getInstanceOf("mc_get_int_st");
+        for (ExpId val: node.m_vals) {
+            st.add("vals", val.accept(this));
+        }
+        
+        for (ExpId id: node.m_ids) {
+            st.add("ids", id.accept(this));
+        }
+        return st;
+    }
+
+    @Override
+    public Object visit(PatRecord patRecord) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatAny patAny) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatEmpty patEmpty) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatIgnore patIgnore) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatVar patVar) {
+        throw new Error("should not happen");
+    }
+
 }
 
 

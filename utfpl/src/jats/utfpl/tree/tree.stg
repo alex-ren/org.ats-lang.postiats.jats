@@ -88,6 +88,9 @@ ext_code_st (content) ::= <<
 %{$<content>%}
 >>
 
+mc_get_int_st (vals, ids) ::= <<
+val (<vals; separator=", ">) = mc_get_int(<ids; separator=", ">)
+>>
 
 
 

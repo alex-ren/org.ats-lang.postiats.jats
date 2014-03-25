@@ -84,13 +84,16 @@ public class ExpId extends IExp {
         return m_sid.equals(CCompUtils.cSysGarrGet);
     }
 
-    /* ************ ************** */
-    
+    public boolean isSysMCGetInt() {
+        return m_sid.equals(CCompUtils.cSysMCGetInt);
+    }
+
 	public boolean isSysThreadCreate() {
 		return m_sid.equals(CCompUtils.cSysThreadCreate);
 	}
 
-
+    /* ************ ************** */
+    
 	@Override
 	public Object accept(TreeVisitor visitor) {
 		return visitor.visit(this);

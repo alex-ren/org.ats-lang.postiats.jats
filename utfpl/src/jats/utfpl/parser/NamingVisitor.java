@@ -7,6 +7,7 @@ import jats.utfpl.patcsps.type.PATTypeSingleton;
 import jats.utfpl.tree.DecExtCode;
 import jats.utfpl.tree.DecFunDec;
 import jats.utfpl.tree.DecFunImpl;
+import jats.utfpl.tree.DecMCGet;
 import jats.utfpl.tree.ExpApp;
 import jats.utfpl.tree.ExpAtom;
 import jats.utfpl.tree.IDec;
@@ -17,6 +18,11 @@ import jats.utfpl.tree.ExpId;
 import jats.utfpl.tree.ExpIf;
 import jats.utfpl.tree.ExpLam;
 import jats.utfpl.tree.ExpLet;
+import jats.utfpl.tree.PatAny;
+import jats.utfpl.tree.PatEmpty;
+import jats.utfpl.tree.PatIgnore;
+import jats.utfpl.tree.PatRecord;
+import jats.utfpl.tree.PatVar;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeVisitor;
 import jats.utfpl.tree.ExpTuple;
@@ -237,6 +243,42 @@ public class NamingVisitor implements TreeVisitor {
       m_scope = m_scope.getParent();
       
       return null;
+    }
+
+    @Override
+    public Object visit(DecMCGet node) {
+        for (ExpId val: node.m_vals) {
+            val.updateForLocalDef(m_scope);
+        }
+        for (ExpId id: node.m_ids) {
+            id.accept(this);            
+        }
+        return null;
+    }
+
+    @Override
+    public Object visit(PatRecord patRecord) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatAny patAny) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatEmpty patEmpty) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatIgnore patIgnore) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public Object visit(PatVar patVar) {
+        throw new Error("should not happen");
     }
 
 }

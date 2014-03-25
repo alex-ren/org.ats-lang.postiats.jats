@@ -46,7 +46,8 @@ public class Test_02_ins_processing {
 //                "test/test09_all.utfpl"
 //        		"test/src_mutfpl/10_thread_create.mutfpl"
 //                "test/src_mutfpl/17_extcode.mutfpl"
-                "test/src_ats/demo_mc_dyn.dats"
+//                "test/src_ats/demo_mc_dyn.dats"
+                "test/src_ats/51_2_4_slots.dats"
         
         };
 

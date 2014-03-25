@@ -69,11 +69,84 @@ absprop int_value_of (sid, int)
 
 abst@ype mc_gv_t (sid)
 
-prfun mc_set_int {id: sid} (id: (mc_gv_t id), x: int): void
+symintr mc_set_int
+prfun mc_set_int1 {id: sid} (id: (mc_gv_t id), x: int): void
+prfun mc_set_int2 {id1,id2: sid} (
+            id1: (mc_gv_t id1), x1: int, 
+            id2: (mc_gv_t id2), x2: int
+            ): void
+prfun mc_set_int3 {id1,id2,id3: sid} (
+            id1: (mc_gv_t id1), x1: int, 
+            id2: (mc_gv_t id2), x2: int,
+            id3: (mc_gv_t id3), x3: int
+            ): void
+prfun mc_set_int4 {id1,id2,id3,id4: sid} (
+            id1: (mc_gv_t id1), x1: int, 
+            id2: (mc_gv_t id2), x2: int,
+            id3: (mc_gv_t id3), x3: int,
+            id4: (mc_gv_t id4), x4: int
+            ): void
 
-prfun mc_get_int {id: sid} (id: mc_gv_t id): [x: int] (int_value_of (id, x) | int x)
+overload mc_set_int with mc_set_int1
+overload mc_set_int with mc_set_int2
+overload mc_set_int with mc_set_int3
+overload mc_set_int with mc_set_int4
+
+symintr mc_get_int
+prfun mc_get_int1 {id1: sid} (
+            id1: mc_gv_t id1
+            ): [x1: int] (
+            int_value_of (id1, x1) 
+            | int x1)
+
+prfun mc_get_int2 {id1,id2: sid} (
+            id1: mc_gv_t id1,
+            id2: mc_gv_t id2
+            ): [x1,x2: int] (
+            int_value_of (id1, x1),
+            int_value_of (id2, x2) 
+            | 
+            int x1, 
+            int x2
+            )
+
+prfun mc_get_int3 {id1,id2,id3: sid} (
+            id1: mc_gv_t id1,
+            id2: mc_gv_t id2,
+            id3: mc_gv_t id3
+            ): [x1,x2,x3: int] (
+            int_value_of (id1, x1), 
+            int_value_of (id2, x2), 
+            int_value_of (id3, x3) 
+            | 
+            int x1, 
+            int x2,
+            int x3
+            )
+
+prfun mc_get_int4 {id1,id2,id3,id4: sid} (
+            id1: mc_gv_t id1,
+            id2: mc_gv_t id2,
+            id3: mc_gv_t id3,
+            id4: mc_gv_t id4
+            ): [x1,x2,x3,x4: int] (
+            int_value_of (id1, x1),
+            int_value_of (id2, x2),
+            int_value_of (id3, x3),
+            int_value_of (id4, x4)
+            | 
+            int x1, 
+            int x2,
+            int x3,
+            int x4
+            )
+overload mc_get_int with mc_get_int1
+overload mc_get_int with mc_get_int2
+overload mc_get_int with mc_get_int3
+overload mc_get_int with mc_get_int4
 
 prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
+
 
 (* ************* ************** *)
 

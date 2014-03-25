@@ -68,7 +68,11 @@ public class CCompUtils {
 		} else if (sym.equals("=")) {
 			return "eq";
         } else if (sym.equals("~")) {
-            return "neg";			
+            return "neg";
+        } else if (sym.equals(CCompUtils.cSysMCGetInt)) {
+            return CCompUtils.cSysMCGetInt;
+        } else if (sym.equals(CCompUtils.cSysMCSetInt)) {
+            return CCompUtils.cSysMCSetInt;
 		} else {
 			throw new Error("sym " + sym + " is not supported.");
 		}

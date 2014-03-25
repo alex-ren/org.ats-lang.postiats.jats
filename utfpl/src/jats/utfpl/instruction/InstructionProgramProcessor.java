@@ -293,6 +293,37 @@ public class InstructionProgramProcessor {
                 return new InsMCAssert(nLocalSrc);
             }
         }
+
+        @Override
+        public Object visit(InsMCGet ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+                List<TID> localHolders = new ArrayList<TID>();
+                for (TID localHolder: ins.m_localHolders) {
+                    TID nLocalHolder = localHolder.dup();
+                    m_subMap.put(localHolder, nLocalHolder);
+                    
+                    localHolders.add(localHolder);
+                }
+                return new InsMCGet(localHolders, ins.m_globalVars);
+            }
+        }
+
+        @Override
+        public Object visit(InsMCSet ins) {
+            if (null == m_subMap) {
+                return ins;
+            } else {
+                List<ValPrim> localValues = new ArrayList<ValPrim>();
+                for (ValPrim localSrc: ins.m_localValues) {
+                    ValPrim nLocalSrc = subsVP(localSrc, m_subMap);
+                    localValues.add(nLocalSrc);
+                }
+
+                return new InsMCSet(localValues, ins.m_globalVars);
+            }
+        }
     }
     
     /*

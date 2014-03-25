@@ -250,7 +250,8 @@ public class InstructionPrinter implements InsVisitor {
 
     @Override
     public Object visit(InsLoad ins) {
-        ST st = m_stg.getInstanceOf("load_ins");
+        // load_ins_st(gv, lv) ::= <<
+        ST st = m_stg.getInstanceOf("load_ins_st");
         st.add("gv", ins.m_globalVar);
         st.add("lv", ins.m_localHolder);
         
@@ -308,6 +309,32 @@ public class InstructionPrinter implements InsVisitor {
         ST st = m_stg.getInstanceOf("mcassert_ins_st");
         st.add("lv", ins.m_localSrc);
         
+        return st;
+    }
+
+    @Override
+    public Object visit(InsMCGet ins) {
+        // mc_get_int_st(gvs, lvs) ::= <<
+        ST st = m_stg.getInstanceOf("mc_get_int_st");
+        for (TID gv: ins.m_globalVars) {
+            st.add("gvs", gv);
+        }
+        for (TID lv: ins.m_localHolders) {
+            st.add("lvs", lv);
+        }
+        return st;
+    }
+
+    @Override
+    public Object visit(InsMCSet ins) {
+        // mc_set_int_st(lvs, gvs) ::= <<
+        ST st = m_stg.getInstanceOf("mc_set_int_st");
+        for (TID gv: ins.m_globalVars) {
+            st.add("gvs", gv);
+        }
+        for (ValPrim lv: ins.m_localValues) {
+            st.add("lvs", lv);
+        }
         return st;
     }
 

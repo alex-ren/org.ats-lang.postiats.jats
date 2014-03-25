@@ -268,6 +268,26 @@ public class InstructionClosureConverter {
             
             return null;
         }
+
+        @Override
+        public Object visit(InsMCGet ins) {
+            for (TID localHolder: ins.m_localHolders) {
+                m_inScopeNames.add(localHolder);
+            }
+
+            return null;
+        }
+
+        @Override
+        public Object visit(InsMCSet ins) {
+            for (ValPrim localSrc: ins.m_localValues) {
+                if (localSrc instanceof TID && 
+                        !m_inScopeNames.contains(localSrc)) {  // name is not in the scope
+                    m_escNames.add((TID)localSrc);
+                }
+            }
+            return null;            
+        }
 	}
 
 	// Pass2 is similar to Pass1 except that escaped value caused 
@@ -509,6 +529,26 @@ public class InstructionClosureConverter {
             
             return null;
         }
+
+        @Override
+        public Object visit(InsMCGet ins) {
+            for (TID localHolder: ins.m_localHolders) {
+                m_inScopeNames.add(localHolder);
+            }
+
+            return null;
+        }
+
+        @Override
+        public Object visit(InsMCSet ins) {
+            for (ValPrim localSrc: ins.m_localValues) {
+                if (localSrc instanceof TID && 
+                        !m_inScopeNames.contains(localSrc)) {  // name is not in the scope
+                    m_escNames.add((TID)localSrc);
+                }
+            }
+            return null;            
+        }
 	}
 	
 	// handle function definition and invocation
@@ -716,6 +756,26 @@ public class InstructionClosureConverter {
         public Object visit(InsMCAssert ins) {
             ValPrim nLocalSrc = InstructionProgramProcessor.subsVP(ins.m_localSrc, m_map);
             InsMCAssert nIns = new InsMCAssert(nLocalSrc);
+            m_insLst.add(nIns);
+            
+            return m_insLst;
+        }
+
+        @Override
+        public Object visit(InsMCGet ins) {
+            m_insLst.add(ins);
+            return m_insLst;
+        }
+
+        @Override
+        public Object visit(InsMCSet ins) {
+            List<ValPrim> nLocalValues = new ArrayList<ValPrim>();
+            for (ValPrim localSrc: ins.m_localValues) {
+                ValPrim nLocalSrc = InstructionProgramProcessor.subsVP(localSrc, m_map);
+                nLocalValues.add(nLocalSrc);
+            }
+
+            InsMCSet nIns = new InsMCSet(nLocalValues, ins.m_globalVars);
             m_insLst.add(nIns);
             
             return m_insLst;

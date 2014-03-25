@@ -2,6 +2,7 @@ package jats.utfpl.csps;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import jats.utfpl.instruction.GlobalValue;
 import jats.utfpl.instruction.InsCondAlloc;
 import jats.utfpl.instruction.InsCondRelease;
 import jats.utfpl.instruction.InsMCAssert;
+import jats.utfpl.instruction.InsMCGet;
+import jats.utfpl.instruction.InsMCSet;
 import jats.utfpl.instruction.InsMutexAlloc;
 import jats.utfpl.instruction.InsCall;
 import jats.utfpl.instruction.InsCond;
@@ -433,6 +436,50 @@ public class CSPSTransformer {
             
             CIMCAssert nIns = new CIMCAssert(localSrc, m_cbEvt);
             m_cbEvt.add(nIns);
+            m_cblkLst.add(m_cbEvt);
+            m_cbEvt = new CBEvent();
+            
+            return null; 
+        }
+
+        @Override
+        public Object visit(InsMCGet ins) {
+            Iterator<TID> iter_gv = ins.m_globalVars.iterator();
+            Iterator<TID> iter_lv = ins.m_localHolders.iterator();
+            
+            while (iter_gv.hasNext()) {
+                TID templv = iter_lv.next();
+                CTempID globalVar = TID2CTempID(iter_gv.next(), m_subMap, m_funLab, m_cbEvt);
+                CTempID localHolder = TID2CTempID(templv, m_subMap, m_funLab, m_cbEvt);
+                
+                CILoad nIns = new CILoad(globalVar, localHolder, m_cbEvt);
+                m_cbEvt.add(nIns);
+                
+                // Add return ins
+                if (templv.isRet()) {
+                    throw new Error("This should not happen.");
+                }
+            }
+
+            m_cblkLst.add(m_cbEvt);
+            m_cbEvt = new CBEvent();
+            
+            return null; 
+        }
+
+        @Override
+        public Object visit(InsMCSet ins) {
+            Iterator<ValPrim> iter_lv = ins.m_localValues.iterator();
+            Iterator<TID> iter_gv = ins.m_globalVars.iterator();
+            
+            while (iter_gv.hasNext()) {
+                CTemp localSrc = ValPrim2CTemp(iter_lv.next(), m_subMap, m_funLab, m_cbEvt);
+                CTempID globalDest = TID2CTempID(iter_gv.next(), m_subMap, m_funLab, m_cbEvt);
+                
+                CIStore nIns = new CIStore(localSrc, globalDest, m_cbEvt);
+                m_cbEvt.add(nIns);
+            }
+
             m_cblkLst.add(m_cbEvt);
             m_cbEvt = new CBEvent();
             

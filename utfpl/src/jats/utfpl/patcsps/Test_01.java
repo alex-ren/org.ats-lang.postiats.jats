@@ -70,11 +70,9 @@ public class Test_01 {
 //                "test/src_ats/18_global_array_opr.dats"
 //                "test/src_ats/52_deadlock_init.dats"
 //                "test/src_ats/53_demo_mc_dyn.dats"
-//                "test/src_ats/51_2_4_slots.dats"
 //                "test/test_temp.utfpl"
                 "test/src_ats/51_2_4_slots.dats"
-        		
-        
+
         };
 
         for (String strPath: paths) {

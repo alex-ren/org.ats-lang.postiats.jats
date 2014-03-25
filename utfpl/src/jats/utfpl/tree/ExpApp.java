@@ -1,7 +1,5 @@
 package jats.utfpl.tree;
 
-import jats.utfpl.instruction.TID;
-
 import java.util.List;
 
 public class ExpApp extends IExp {

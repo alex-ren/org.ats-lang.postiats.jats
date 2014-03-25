@@ -41,4 +41,8 @@ public interface InsVisitor {
     
     public Object visit(InsMCAssert ins);
 
+    public Object visit(InsMCGet insMCGet);
+
+    public Object visit(InsMCSet insMCSet);
+
 }
