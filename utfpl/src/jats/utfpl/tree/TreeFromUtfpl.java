@@ -91,7 +91,7 @@ public class TreeFromUtfpl {
 	    } else if (uDecNode instanceof D2Cdcstdecs) {
 	        return transGlobalD2Cdcstdecs(loc, (D2Cdcstdecs)uDecNode);
 	    } else if (uDecNode instanceof D2Cignored) {
-	    	System.err.println("D2Cignored is encounter.");
+//	    	System.err.println("D2Cignored is encounter.");
 	    	return decs;
 	    } else {
 	    	throw new Error(uNode + " is not supported.");
@@ -400,7 +400,7 @@ public class TreeFromUtfpl {
 	    	decs.add(transD2Cimpdec(loc, (D2Cimpdec)uDecNode));
 	    	return decs;
 	    } else if (uDecNode instanceof D2Cignored) {
-	    	System.err.println("D2Cignored is encounter.");
+//	    	System.err.println("D2Cignored is encounter.");
 	    	return decs;
 	    } else {
 	    	throw new Error(uNode + " is not supported.");

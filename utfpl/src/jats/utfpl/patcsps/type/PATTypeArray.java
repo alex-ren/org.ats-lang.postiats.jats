@@ -2,7 +2,7 @@ package jats.utfpl.patcsps.type;
 
 public class PATTypeArray implements PATType {
     
-    private PATType m_eleTy;
+//    private PATType m_eleTy;
     private int m_size;
     
     public PATTypeArray(PATType eleTy, int sz) {
