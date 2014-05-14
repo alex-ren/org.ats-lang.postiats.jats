@@ -51,9 +51,57 @@ extern fun select (mask: List0 int): (int, msg_t)
 // t: int: tag of the msg
 symintr send_via_pid
 extern fun send_via_pid_arg0 {p:int} {a:type} (to: pid_t, port: int p): void
-extern fun send_via_pid_arg1 {p:int} {a:type} (to: pid_t, port: int p, msg: a): void
+extern fun send_via_pid_arg1 {p:int} {a:viewtype} (to: pid_t, port: int p, msg: a): void
 overload send_via_pid with send_via_pid_arg0
 overload send_via_pid with send_via_pid_arg1
+
+(* ************ ************* *)
+
+
+abst@ype typeidof (a:t@ype) = int
+typedef typeid = [a: t@ype] (typeidof a)
+extern fun typeid_create {a:t@ype} (): typeidof (a)
+ 
+
+absview selected (a:t@ype)
+
+symintr tselect
+extern fun tselect_list (mask: List0 typeid): [a:t@ype] (selected a | typeidof a)
+
+extern fun tselect2 {a,b:t@ype} (x: typeidof a, y: typeidof b): 
+  [a:t@ype] (selected a | typeidof a)
+
+overload tselect with tselect_list
+overload tselect with tselect2
+ 
+dataprop ty_eq (a:t@ype, b:t@ype) = 
+| {a:t@ype} eq (a, a)
+ 
+dataprop optionprop (a:prop, b: bool) =
+| optionprop_nil (a, false) of ()
+| optionprop_some (a, true) of a
+
+extern fun {ta,tb:t@ype} typeid_eq (
+  x: typeidof (ta), y: typeidof (tb)): 
+  [b:bool] (optionprop (ty_eq (ta, tb), b) | bool b)
+
+symintr tsend_pid
+extern fun tsend_pid1 {p:int} {a:t@ype} (to: pid_t, x: typeidof (a), a): void
+overload tsend_pid with tsend_pid1
+
+symintr trecv
+
+extern fun trecv0 {a:t@ype} (pf: selected a): a
+extern fun trecv1 {a:t@ype} (x: typeidof a): a
+extern fun trecv2 {a,b,c:t@ype} 
+  (x: typeidof a, fx: a -> c, y: typeidof b, fy: b -> c): c
+
+overload trecv with trecv0
+overload trecv with trecv1
+overload trecv with trecv2
+
+
+(* ************* ************** *)
 
 datatype req_to_server_t =
 | logon of (pid_t, string)
@@ -71,6 +119,11 @@ datatype req_to_client_t =
 | logoff
 | msg_to of (string (*to*), string (*msg*))
 
+extern val int_id: typeidof (int)
+extern val intp_id: typeidof ('(int))
+extern val req_to_server_t_id: typeidof (req_to_server_t)
+extern val response_type_id: typeidof ('(int, string))
+ 
 (* ************* ************** *)
 
 // To server
@@ -98,10 +151,7 @@ extern fun server_transfer_do (from: pid_t, name: string,
 (* ************* ************** *)
 
 fun server (udb: users_t): void = let
-  val mask = nil
-  val (port, info) = select (mask)
-  extern castfn to_req (info: msg_t): req_to_server_t
-  val req = to_req (info)
+  val req = trecv (req_to_server_t_id)
 in
   case+ req of
   | logon (from, name) => let
@@ -131,12 +181,12 @@ implement server_logon (from, name, udb) = let
   val opt = user_db_find_by_name (udb, name)
 in
   if option_is_some (opt) then let
-    val () = send_via_pid (from, 3, "user_exists_at_other_node")
+    val () = tsend_pid (from, response_type_id, '(3, "user_exists_at_other_node"))
   in
     udb
   end
   else let
-    val () = send_via_pid (from, 4)
+    val () = tsend_pid (from, int_id, 4)
     val udb' = user_db_add_user (udb, from, name)
   in
     udb'
@@ -174,13 +224,13 @@ in
 end
 
 
+////
 fun start_client (name: string): bool = let
   fun client_proc (
   
 
 
   
-
 
 
 

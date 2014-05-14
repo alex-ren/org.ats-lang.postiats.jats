@@ -45,7 +45,8 @@ public class test_01 {
 //                , "test/json/test02.dats"
 //        		"test/src_utfpl/10_thread_create.mutfpl"
 //                "test/src_mutfpl/17_extcode.mutfpl"
-                "test/src_ats/demo_mc_dyn.dats"
+//                "test/src_ats/demo_mc_dyn.dats"
+                "test/src_ats/54_peterson.dats"
     
         };
 

@@ -6,12 +6,12 @@ public class PATTypeArray implements PATType {
     private int m_size;
     
     public PATTypeArray(PATType eleTy, int sz) {
-        m_eleTy = eleTy;
+//        m_eleTy = eleTy;
         m_size = sz;
     }
     
     public PATTypeArray(int sz) {
-        m_eleTy = PATTypeSingleton.cUnknownType;
+//        m_eleTy = PATTypeSingleton.cUnknownType;
         m_size = sz;
     }
     

@@ -5,11 +5,10 @@ import java.util.List;
 public class D2Eapplst implements Id2exp_node {
     public Cd2exp m_d2e_fun;
     
-    // Since D2EXPARGdyn, which implements Id2exparg, contains a list inside,
-    // m_d2as_arg is actually a list of only one element.
-    // m_d2as_arg may be 2. E.g. val xx = foof {int}{int} (0, 1)
-    // Not clear about the inner mechanism. Seems to be
-    // one list for static argument, one list for dynamic argument.
+    // m_d2as_arg can have multiple elements. E.g. val xx = foof {int}{int} (pf1 | 0, 1)(pf2 | 33.3)
+    // m_d2e_fun is foof
+    // m_d2as_arg has 4 elements, D2EXPARGsta, D2EXPARGsta, D2EXPARGdyn, D2EXPARGdyn
+    // Read the code $PATSHOME/MEDIUM/UTFPL0/evaluating/eval_d2exp.dats: aux_d2exp_applst
     public List<Id2exparg> m_d2as_arg;
     
     public D2Eapplst(Cd2exp d2e_fun, List<Id2exparg> d2as_arg) {

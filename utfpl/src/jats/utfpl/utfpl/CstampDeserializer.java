@@ -7,7 +7,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class CstampDeserializer  implements JsonDeserializer<Cstamp>{
+public class CstampDeserializer implements JsonDeserializer<Cstamp>{
 
     @Override
     public Cstamp deserialize(JsonElement json, Type typeOfT,

@@ -31,7 +31,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Ef0loat.class, new D2Ef0loatDeserializer());
         gsonBuilder.registerTypeAdapter(D2Ei0nt.class, new D2Ei0ntDeserializer());
         gsonBuilder.registerTypeAdapter(D2Eifopt.class, new D2EifoptDeserializer());
-        gsonBuilder.registerTypeAdapter(D2Elam.class, new D2ElamDeserializer());
+        gsonBuilder.registerTypeAdapter(D2ElamDyn.class, new D2ElamDynDeserializer());
         gsonBuilder.registerTypeAdapter(D2ElamSta.class, new D2ElamStaDeserializer());
         gsonBuilder.registerTypeAdapter(D2ElamMet.class, new D2ElamMetDeserializer());
         gsonBuilder.registerTypeAdapter(D2Elet.class, new D2EletDeserializer());
@@ -40,6 +40,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Evar.class, new D2EvarDeserializer());
         gsonBuilder.registerTypeAdapter(D2EXPARGdyn.class, new D2EXPARGdynDeserializer());
         gsonBuilder.registerTypeAdapter(D2EXPARGsta.class, new D2EXPARGstaDeserializer());
+        gsonBuilder.registerTypeAdapter(D2EannType.class, new D2EannTypeDeserializer());
         
         gsonBuilder.registerTypeAdapter(Efunkind.class, new EfunkindDeserializer());
         gsonBuilder.registerTypeAdapter(Evalkind.class, new EvalkindDeserializer());

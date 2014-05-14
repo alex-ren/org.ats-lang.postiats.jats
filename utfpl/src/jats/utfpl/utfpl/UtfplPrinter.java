@@ -183,8 +183,8 @@ public class UtfplPrinter {
             return printD2Eifopt((D2Eifopt)node);
         } else if (node instanceof D2Eignored) {
             return printD2Eignored((D2Eignored)node);
-        } else if (node instanceof D2Elam) {
-            return printD2Elam((D2Elam)node);
+        } else if (node instanceof D2ElamDyn) {
+            return printD2Elam((D2ElamDyn)node);
         } else if (node instanceof D2ElamSta) {
             return printD2ElamSta((D2ElamSta)node);   
         } else if (node instanceof D2ElamMet) {
@@ -261,7 +261,7 @@ public class UtfplPrinter {
         return st;
     }
 
-    private ST printD2Elam(D2Elam node) {
+    private ST printD2Elam(D2ElamDyn node) {
         // D2Elam_st(p2ts, exp) ::= <<
         ST st = m_stg.getInstanceOf("D2Elam_st");
         for (Cp2at pat: node.m_p2ts) {

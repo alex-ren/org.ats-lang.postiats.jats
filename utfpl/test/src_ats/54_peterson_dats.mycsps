@@ -1,0 +1,99 @@
+var csa;
+var csb;
+var victim;
+var flag[2];
+var critical[2];
+
+lock_47(id_48<escaped>@<GStack(0)>) =
+step {
+  var i_49<escaped> = id_48 from <GStack(0)>;
+  var j_50<escaped> = call(sub, 1, id_48 from <GStack(0)>);
+  flag[i_49] = 1;
+} -> Skip;
+step {
+  victim = i_49 from <GStack(1)>;
+} -> Skip;
+step {
+  tail_call with (id_48 from <GStack(0)>, j_50 from <GStack(2)>, i_49 from <GStack(1)>)
+} -> Skip;
+<process call> = loop_51;
+
+loop_51(id_esc_68<escaped>@<GStack(0)>, j_esc_69<escaped>@<GStack(1)>, i_esc_70<escaped>@<GStack(2)>) =
+step {
+  var temp_58<escaped> = flag[j_esc_69 from <GStack(1)>];
+} -> Skip;
+step {
+  var temp_59<escaped> = call(eq, temp_58 from <GStack(3)>, 1);
+} -> Skip;
+ifa (temp_59 from <GStack(, 4)>) {
+  step {
+    var temp_60<escaped> = victim;
+  } -> Skip;
+  step {
+    var temp_61<escaped> = call(eq, temp_60 from <GStack(5)>, i_esc_70 from <GStack(2)>);
+  } -> Skip;
+  ifa (temp_61 from <GStack(, 6)>) {
+    step {
+      tail_call with (id_esc_68 from <GStack(0)>, j_esc_69 from <GStack(1)>, i_esc_70 from <GStack(2)>)
+    } -> Skip;
+    <process call> = loop_51 
+  } else { 
+    step {
+      critical[id_esc_68 from <GStack(0)>] = 1;
+    } -> Skip;
+    step {
+      return ();
+    } -> Skip 
+  } 
+} else { 
+  step {
+    critical[id_esc_68 from <GStack(0)>] = 1;
+  } -> Skip;
+  step {
+    return ();
+  } -> Skip 
+};
+
+unlock_52(id_53<escaped>@<GStack(0)>) =
+step {
+  critical[id_53 from <GStack(0)>] = 0;
+} -> Skip;
+step {
+  flag[id_53 from <GStack(0)>] = 0;
+} -> Skip;
+step {
+  return ();
+} -> Skip;
+
+agent_54(id_55<escaped>@<GStack(0)>) =
+step {
+  nontail_call with (id_55 from <GStack(0)>)
+} -> Skip;
+<process call> = lock_47;
+step {
+  rewind frame of lock_47 to get _
+  nontail_call with (id_55 from <GStack(0)>)
+} -> Skip;
+<process call> = unlock_52;
+step {
+  rewind frame of unlock_52 to get _
+  tail_call with (id_55 from <GStack(0)>)
+} -> Skip;
+<process call> = agent_54;
+
+main() = 
+step {
+  victim = 0;
+} -> Skip;
+step {
+  var temp_64 = call(sys_list_nil);
+  var temp_65<escaped> = call(sys_list_cons, 0, temp_64);
+} -> Skip;
+<thread_create> (1, agent_54, temp_65 from <GStack(0)>);
+step {
+  var temp_66 = call(sys_list_nil);
+  var temp_67<escaped> = call(sys_list_cons, 1, temp_66);
+} -> Skip;
+<thread_create> (2, agent_54, temp_67 from <GStack(1)>);
+
+

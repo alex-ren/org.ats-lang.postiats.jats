@@ -30,7 +30,7 @@ import jats.utfpl.utfpl.D2Ef0loat;
 import jats.utfpl.utfpl.D2Ei0nt;
 import jats.utfpl.utfpl.D2Eifopt;
 import jats.utfpl.utfpl.D2Eignored;
-import jats.utfpl.utfpl.D2Elam;
+import jats.utfpl.utfpl.D2ElamDyn;
 import jats.utfpl.utfpl.D2ElamMet;
 import jats.utfpl.tree.IExp;
 
@@ -220,8 +220,8 @@ public class TreeFromUtfpl {
         	return transD2Eifopt(loc, (D2Eifopt)uExpNode);
         } else if (uExpNode instanceof D2Eignored) {
         	throw new Error("D2Eignored is not supported");
-        } else if (uExpNode instanceof D2Elam) {
-        	return transD2Elam(loc, (D2Elam)uExpNode);
+        } else if (uExpNode instanceof D2ElamDyn) {
+        	return transD2Elam(loc, (D2ElamDyn)uExpNode);
         } else if (uExpNode instanceof D2ElamSta) {
             return transCd2exp(((D2ElamSta)uExpNode).m_d2exp);
         } else if (uExpNode instanceof D2ElamMet) {
@@ -358,7 +358,7 @@ public class TreeFromUtfpl {
         return ret;
     }
 
-	private ExpLam transD2Elam(Location loc, D2Elam uNode) {
+	private ExpLam transD2Elam(Location loc, D2ElamDyn uNode) {
         List<ExpId> paraLst = new ArrayList<ExpId>();
         for (Cp2at pat: uNode.m_p2ts) {
         	paraLst.add((ExpId)IPat2IExp(transCp2at(pat)));

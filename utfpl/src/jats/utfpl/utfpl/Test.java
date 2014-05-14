@@ -1,6 +1,7 @@
 package jats.utfpl.utfpl;
 
 import jats.utfpl.utils.FilenameUtils;
+import jats.utfpl.utils.Log;
 
 
 import java.io.BufferedReader;
@@ -12,9 +13,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.antlr.runtime.RecognitionException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Test {
+
 
     /**
      * @param args
@@ -26,7 +30,9 @@ public class Test {
         String[] paths = { 
 //                "test/ats2utfpl/test01.dats"
 //                , "test/ats2utfpl/test02.dats"
-                "test/src_ats/51_2_4_slots.dats"
+//                "test/src_ats/51_2_4_slots.dats"
+//                "test/src_ats/54_peterson.dats"
+                "test/ats2utfpl/test03_tycheck.dats"
 
         };
 
@@ -41,7 +47,7 @@ public class Test {
             if (FilenameUtils.isATS(path)) {
             	path = FilenameUtils.toJson(path);
             	
-            	String cmd = "patsopt -o " + path.getPath() + " --jsonize-2 -d " + strPath;
+            	String cmd = "patsopt -o " + path.getPath() + " --jsonize-2 -d " + strPath + " 2>&1";
             	System.out.println("cmd is " + cmd);
             	Process child = Runtime.getRuntime().exec(cmd);
             	int returnCode = child.waitFor();
@@ -49,40 +55,40 @@ public class Test {
             	if (0 == returnCode) {
                     FileReader fReader = new FileReader(path);
 
-                    UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
-                    ProgramUtfpl uProg = utfplParser.trans(fReader);
-
-                    UtfplPrinter uPrinter = new UtfplPrinter();
-                    String outputUTFPL = uPrinter.print(uProg);
-                    
-                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
-                    
-                    System.out.println(outputUTFPL);
-                    
-                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
-                    uProg = processor.removeProof(uProg);
-                    outputUTFPL = uPrinter.print(uProg);
-                    
-                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
-                    
-                    System.out.println(outputUTFPL);
-                    
-                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
-                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
-                    bwUTFPL.write(outputUTFPL);
-                    bwUTFPL.close();
+//                    UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
+//                    ProgramUtfpl uProg = utfplParser.trans(fReader);
+//
+//                    UtfplPrinter uPrinter = new UtfplPrinter();
+//                    String outputUTFPL = uPrinter.print(uProg);
+//                    
+//                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
+//                    
+//                    System.out.println(outputUTFPL);
+//                    
+//                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+//                    uProg = processor.removeProof(uProg);
+//                    outputUTFPL = uPrinter.print(uProg);
+//                    
+//                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
+//                    
+//                    System.out.println(outputUTFPL);
+//                    
+//                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
+//                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
+//                    bwUTFPL.write(outputUTFPL);
+//                    bwUTFPL.close();
             	} else {
-            		String line;
-            		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-            		while ((line = reader.readLine()) != null) {
-            			System.err.println(line);
-            		}
+//            		String line;
+//            		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
+//            		while ((line = reader.readLine()) != null) {
+//            			System.err.println(line);
+//            		}
             		return;            		
             	}
 
             }
 
-            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
+//            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
         }
 
     }

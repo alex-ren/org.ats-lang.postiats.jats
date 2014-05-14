@@ -42,8 +42,9 @@ public class Test_01 {
         String [] paths = {
 //                "test/src_mutfpl/17_extcode.mutfpl"
 //                "test/src_ats/demo_mc_dyn.dats"
-                "test/src_ats/51_2_4_slots.dats"
+//                "test/src_ats/51_2_4_slots.dats"
 //                "test/test_temp.utfpl"
+                "test/src_ats/54_peterson.dats"
 
         };
 

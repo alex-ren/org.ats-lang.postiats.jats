@@ -63,7 +63,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 		} else if (name.equals("D2Eifhead")) {
 			return context.deserialize(je2, D2Eifopt.class);
 		} else if (name.equals("D2Elam_dyn")) {
-			return context.deserialize(je2, D2Elam.class);
+			return context.deserialize(je2, D2ElamDyn.class);
 		} else if (name.equals("D2Elam_sta")) {
 		    return context.deserialize(je2, D2ElamSta.class);
         } else if (name.equals("D2Elam_met")) {
@@ -79,15 +79,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 			D2Eexp ret = new D2Eexp(d2e);
 			return ret;
 		} else if (name.equals("D2Eann_type")) {
-			JsonArray jarr = je2.getAsJsonArray();
-			if (jarr.size() < 2) {
-				throw new Error("type not match");
-			}
-			JsonElement jele = jarr.get(0);
-			Cd2exp d2e = context.deserialize(jele, Cd2exp.class);
-
-			D2Eexp ret = new D2Eexp(d2e);
-			return ret;
+		    return context.deserialize(je2, D2EannType.class);
 		} else if (name.equals("D2Eann_funclo")) {
 			JsonArray jarr = je2.getAsJsonArray();
 			if (jarr.size() < 2) {
@@ -101,7 +93,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 		} else if (name.equals("D2Eempty")) {
 			return D2Eempty.cInstance;
 		} else {
-			System.err.println(name + " is translated into D2Eignored in Id2exp_nodeDeserializer.java @99.");
+			System.err.println(name + " is translated into D2Eignored in Id2exp_nodeDeserializer.java @line 104.");
 			return D2Eignored.cInstance;
 		}
 

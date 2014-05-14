@@ -1,0 +1,49 @@
+DCKval csa_2552
+DCKval csb_2553
+val victim_62 = D2Ecst<sys_gvar_create_2520> (0)
+val flag_63 = D2Ecst<sys_garr_create_2523> (2, 0)
+val critical_64 = D2Ecst<sys_garr_create_2523> (2, 0)
+fun lock_65 = lam (P2Tpat<id_66>) = 
+  let
+    val i_67 = id_66
+    val j_68 = D2Esym<-> (1, id_66)
+    val () = D2Ecst<sys_garr_update_2524> (flag_63, i_67, 1)
+    val () = D2Ecst<sys_gvar_update_2521> (victim_62, i_67)
+    fun loop_69 = lam () = 
+      if (D2Esym<=> (D2Ecst<sys_garr_get_2525> (flag_63, j_68), 1)) then
+        let
+        in
+          if (D2Esym<=> (D2Ecst<sys_gvar_get_2522> (victim_62), i_67)) then
+            loop_69 ()
+          else
+            D2Ecst<sys_garr_update_2524> (critical_64, id_66, 1)
+        end
+      else
+        D2Ecst<sys_garr_update_2524> (critical_64, id_66, 1)
+  in
+    loop_69 ()
+  end
+fun unlock_70 = lam (P2Tpat<id_71>) = 
+  let
+    val () = D2Ecst<sys_garr_update_2524> (critical_64, id_71, 0)
+    val () = D2Ecst<sys_garr_update_2524> (flag_63, id_71, 0)
+  in
+    ()
+  end
+fun agent_72 = lam (P2Tpat<id_73>) = 
+  let
+    val () = lock_65 (id_73)
+    val () = unlock_70 (id_73)
+  in
+    agent_72 (id_73)
+  end
+val () = D2Ecst<sys_thread_create_2527> (1, agent_72, 0)
+val () = D2Ecst<sys_thread_create_2527> (2, agent_72, 1)
+%{
+#assert main deadlockfree;
+
+#define 
+
+#assert main |= G sys_assertion;
+
+%}

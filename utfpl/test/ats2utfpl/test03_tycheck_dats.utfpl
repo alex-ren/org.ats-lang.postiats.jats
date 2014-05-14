@@ -1,0 +1,6 @@
+fun qq_62 = lam (P2Tpat<x_63>) = 
+  3
+DCKfun foo_2524
+DCKval vv_2525
+implement foo_2524 = lamSta. lamSta. lam (P2Tpat<x_64>, P2Tpat<y_65>) = 
+  3

@@ -202,8 +202,8 @@ public class UtfplProgramProcessor {
             d2exp_node = removeProof((D2Eexp)d2exp_node);
         } else if (d2exp_node instanceof D2Eifopt) {
             d2exp_node = removeProof((D2Eifopt)d2exp_node);
-        } else if (d2exp_node instanceof D2Elam) {
-            d2exp_node = removeProof((D2Elam)d2exp_node);
+        } else if (d2exp_node instanceof D2ElamDyn) {
+            d2exp_node = removeProof((D2ElamDyn)d2exp_node);
         } else if (d2exp_node instanceof D2ElamSta) {
             d2exp_node = removeProof((D2ElamSta)d2exp_node);
         } else if (d2exp_node instanceof D2ElamMet) {
@@ -260,7 +260,7 @@ public class UtfplProgramProcessor {
         return new D2ElamSta(removeProof(d2exp_node.m_d2exp));
     }
 
-    private D2Elam removeProof(D2Elam d2exp_node) {
+    private D2ElamDyn removeProof(D2ElamDyn d2exp_node) {
 
         int start = d2exp_node.m_npf;
         if (start < 0) {
@@ -280,7 +280,7 @@ public class UtfplProgramProcessor {
         }
         
         Cd2exp new_d2exp = removeProof(d2exp_node.m_d2exp);
-        D2Elam ret = new D2Elam(paraLst, new_d2exp, 0/*remove proof parameter*/);
+        D2ElamDyn ret = new D2ElamDyn(paraLst, new_d2exp, 0/*remove proof parameter*/, d2exp_node.m_lin);
         return ret;
     }
 

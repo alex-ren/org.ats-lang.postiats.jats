@@ -9,5 +9,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/utfpl/google-gson-2.2.4/gson-2.2.4-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="apache-log4j-2.0/apache-log4j-2.0-rc1-bin/log4j-api-2.0-rc1.jar"/>
+	<classpathentry kind="lib" path="apache-log4j-2.0/apache-log4j-2.0-rc1-bin/log4j-core-2.0-rc1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

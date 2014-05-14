@@ -3,6 +3,7 @@ package jats.utfpl.utfpl;
 import java.util.List;
 
 public class D2EXPARGdyn implements Id2exparg {
+    // Example: (pf1, pf2 | arg1, arg2, arg3)
     public int m_i;  // The number of proof arguments if not zero.
     public Cloc_t m_loc;
     public List<Cd2exp> m_d2expLst;  // List of arguments.

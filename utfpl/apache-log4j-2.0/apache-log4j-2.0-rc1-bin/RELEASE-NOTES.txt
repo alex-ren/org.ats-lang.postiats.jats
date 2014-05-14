@@ -1,0 +1,125 @@
+
+              Apache Log4j 2.0-rc1 RELEASE NOTES
+
+The Apache Log4j 2 team is pleased to announce the Log4j 2.0-rc1 release!
+
+Apache log4j is a well known framework for logging application behavior. Log4j 2 is an upgrade to
+Log4j that provides significant improvements over its predecessor, Log4j 1.x, and provides
+many of the improvements available in Logback while fixing some inherent problems in Logback's
+architecture.
+
+This is the eleventh release of Log4j 2 and is being made available to encourage use and feedback from the community.
+
+Bug fixes and enhancements
+
+This release contains several changes that break binary and backwards compatibility with previous versions. Please read
+the release notes correctly so that you can adjust your usage of Log4j 2, if necessary.
+
+Changes in this version include:
+
+New features:
+o LOG4J2-530:  (JMX) JMX Client GUI should dynamically update when LoggerContext MBeans are registered/unregistered in MBean
+        server. 
+o LOG4J2-479:  ThreadContext now uses plain ThreadLocal by default, unless system property
+        isThreadContextMapInheritable has value "true". Thanks to MK. 
+o LOG4J2-481:  Add Stream interface to Loggers. Thanks to Matt Sicker. 
+o LOG4J2-482:  Documentation fix: The attribute of Route to refer to an appender is "ref" not "AppenderRef". Thanks to Hongdi Ren. 
+o LOG4J2-467:  Added option to toggle Thread name caching in AsyncLogger. Thanks to Anthony Baldocchi. 
+o LOG4J2-423:  Added MBeans for instrumenting AsyncAppenders and AsyncLogger RingBuffers,
+        exposing queue size, remaining capacity and other attributes. 
+o LOG4J2-420:  Create a lookup for resource bundle substitution. 
+o LOG4J2-415:  Format log event time as UNIX time (seconds or milliseconds). 
+o LOG4J2-401:  Configure FileAppender buffer size. 
+o LOG4J2-402:  Configure RandomAccessFileAppender buffer size. 
+
+Fixed Bugs:
+o LOG4J2-500:  (JMX - ObjectNames changed!) Unloading one web application unloads JMX MBeans for all web applications. 
+o LOG4J2-531:  Fixed bugs where rolled log files were overwritten by RollingFile appender with 
+        composite time and size based policies. Thanks to Geoff Ballinger. 
+o LOG4J2-475:  Changed the MongoDBConnection to add a MongoDB encoding hook instead of a decoding hook. Thanks to Matt Sicker. 
+o LOG4J2-489:  Fixed the JPAAppender's overuse of transactions by connecting (borrowing from pool) on new write internal or on
+        flush. 
+o LOG4J2-457:  Fixed failure of JDBC and JPA appender to properly release database connections by connecting (borrowing from
+        pool) on new write internal or on flush. 
+o LOG4J2-442:  Fixed problem with JDBC and JPA appender connectivity in WebSphere by connecting (borrowing from pool) on new
+        write internal or on flush. 
+o LOG4J2-438:  Ensured the JDBCAppender commits transactions after a single write or a flush of multiple writes. 
+o LOG4J2-407:  Fixed inability to recover from lost database connection in database appenders by connecting (borrowing from
+        pool) on new write internal or on flush. 
+o LOG4J2-511:  Stop AsyncLoggerConfig Disruptor thread(s), then AsyncAppender thread(s) first
+        before stopping other appenders. Thanks to James Pretorius. 
+o LOG4J2-392:  Stop AsyncLoggerConfig Disruptor thread(s), then AsyncAppender thread(s) first
+        before stopping other appenders. Thanks to ilynaf, Andre Bogus. 
+o LOG4J2-345:  (OSGi) logging.log4j-1.2-api doesn't export the log4j API 1.2. Dependent bundles can not be resolved. Thanks to Roland Weiglhofer, Matt Sicker. 
+o LOG4J2-523:  LocalizedMessage serialization is broken. 
+o LOG4J2-385:  Fixed issues with time-based file rollover (monthly, weekly, hourly and every minute). Thanks to Ace Funk, Porfirio Partida. 
+o LOG4J2-452:  Added a ServletContext attribute that, when set to "true", disables Log4j's auto-initialization in
+        Servlet 3.0+ web applications. 
+o LOG4J2-512:  Exposed Log4j web support interface and methods and the LoggerContext through ServletContext attributes
+        so that threads not affected by filters (such as asynchronous threads) can utilize the LoggerContext. Also
+        updated the Log4j filter so that it supports async. Thanks to Chandra Sekhar Kakarla, Matt Sicker. 
+o LOG4J2-409:  Created a utility to properly escape backslashes before creating URIs, and changed URI creation to use the
+        utility instead of instantiating URI directly. Thanks to Frank Steinmann, Thomas Neidhart. 
+o LOG4J2-344:  Changed the Servlet 3.0 auto-initializer to add the filter by class to get around a WebLogic bug. Thanks to Keir Lawson, Tomasz Wladzinski. 
+o LOG4J2-359:  Changed the Servlet 3.0 auto-initializer so that it does nothing in a Servlet 2.5 or older application. This
+        ensures behavioral consistency across containers. This includes additional fixes to abort initialization if a
+        duplicate filter already exists and to check the actual Servlet EFFECTIVE version. Thanks to Abhinav Shah. 
+o LOG4J2-517:  Switch in log4j-1.2-api Category.getEffectiveLevel has no cases for FATAL, OFF. 
+o LOG4J2-406:  (JMX) Unregister all log4j JMX MBeans when the LoggerContext is stopped
+        to allow web application classes to be GC-ed on undeploy. Thanks to Kerrigan Joseph. 
+o LOG4J2-405:  Configuration was being processed twice at startup. 
+o LOG4J2-398:  Configure properties and setup Interpolator before processing rest of configuration. 
+o LOG4J2-470:  hostName property was not being set until after the first configuration element. 
+o LOG4J2-464:  Support arrays as sub-elements of a JSON configuration. 
+o LOG4J2-492:  (JMX) Fixed MalformedObjectNameException if context name contains '=' or newline characters. Thanks to Shaddy Baddah, Herlani Junior. 
+o LOG4J2-377:  (OSGi) Fix NPE during shutdown. Thanks to Roland Weiglhofer, Matt Sicker. 
+o LOG4J2-463:  Fixed documentation for MyApp example application in the Automatic Configuration section Thanks to Michael Diamond, Matt Sicker. 
+o LOG4J2-408:  Fixed error in documentation code example in manual/eventlogging.html Thanks to Dongqing Hu, Matt Sicker. 
+o LOG4J2-451:  Fixed typo in documentation: system property should be log4j2.loggerContextFactory Thanks to Vinay Pothnis, Matt Sicker. 
+o LOG4J2-443:  Fixed issue where log4j2 LoggerContext did not show up in JMX GUI or JConsole. Thanks to Colin Froggatt, Tudor Har. 
+o LOG4J2-485:  Fixed issue where toString methods that perform logging could deadlock AsyncAppender. 
+o LOG4J2-445:  ResolverUtil cannot find packages in file URLs which include the '+' character. Thanks to Anthony Baldocchi. 
+o LOG4J2-430:  Use the formatted Message in RFC5424Layout for non-StructuredDataMessages. Thanks to David Gstir. 
+o LOG4J2-459:  Set external context when constructing the LoggerContext. 
+o LOG4J2-466:  Cannot load log4j2 config file if path contains plus '+' characters. Thanks to Jan Tepke. 
+o LOG4J2-462:  Fix LogEvent to never return null Level, fixes LevelPatternConverter.format may throw NPE. Thanks to Daisuke Baba. 
+o LOG4J2-465:  Fix LogEvent to never return null Level, fixes ThresholdFilter throws NPE. Thanks to Daisuke Baba. 
+o LOG4J2-471:  Fixed issue where toString methods that perform logging could deadlock AsyncLogger. Thanks to Anthony Baldocchi. 
+o LOG4J2-478:  The message and ndc fields are not JavaScript escaped in JSONLayout. Thanks to Michael Friedmann.. 
+o LOG4J2-455:  RingBufferLogEvent should return Message timestamp for TimestampMessage messages. Thanks to Robin Zhang Tao. 
+o LOG4J2-477:  NPE in ClassLoaderContextSelector. Thanks to Tal Liron. 
+o LOG4J2-454:  TimeBasedTriggeringPolicy should use event time millis. Thanks to Robin Zhang Tao. 
+o LOG4J2-472:  BaseConfiguration class does not properly implement Configuration interface. Thanks to Tal Liron. 
+o LOG4J2-447:  XMLLayout does not include marker name. Thanks to Jeff Hudren, Mark Paluch, Scott Deboy. 
+o LOG4J2-323:  Resolved memory leak by releasing reference to ThreadLocal when
+        AsyncLogger is stopped. 
+o LOG4J2-425:  Resolved memory leak by populating AsyncLoggerConfigHelper ring buffer
+        via EventTranslatorTwoArg, eliminating the need for a ThreadLocal. 
+o LOG4J2-417:  Fix Event Level / LoggerConfig Level table at the architecture documentation page. 
+o LOG4J2-404:  @EnterpriseNumber" was missing in the ID of structured data when RFC5424Layout is used Thanks to Kamal Bahadur. 
+o LOG4J2-379:  Fixed issue that prevented Log4J from working in Google App Engine. 
+
+Changes:
+o Renamed the org.apache.logging.log4j.core.appender.db.nosql.mongo package to
+        org.apache.logging.log4j.core.appender.db.nosql.mongodb. 
+o Renamed the org.apache.logging.log4j.core.appender.db.nosql.couch package to
+        org.apache.logging.log4j.core.appender.db.nosql.couchdb. 
+o LOG4J2-507:  Space Level numbers by 100 instead of 1. 
+o LOG4J2-41:  Add support for custom logging levels. Thanks to Nick Williams. 
+o LOG4J2-490:  Update EasyMock to version 3.2. Thanks to Matt Sicker. 
+o LOG4J2-453:  Update Flume Appender to use Flume 1.4.0. 
+o LOG4J2-528:  Rename package org.apache.logging.log4j.core.appender.rolling.helper to org.apache.logging.log4j.core.appender.rolling.action. 
+o LOG4J2-532:  Resource leak in Flume appender when it cannot create a BerkeleyDB db. 
+
+
+Apache Log4j 2.0-rc1 requires a minimum of Java 6 to build and run. Basic compatibility with
+Log4j 1.x is provided through the log4j-1.2-api component, however it does not implement some of the
+very implementation specific classes and methods. The package names and Maven groupId have been changed to
+org.apache.logging.log4j to avoid any conflicts with log4j 1.x.
+
+For complete information on Apache Log4j 2, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Log4j 2 website:
+
+http://logging.apache.org/log4j/2.x/
+
+

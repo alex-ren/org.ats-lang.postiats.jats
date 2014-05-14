@@ -2,6 +2,7 @@ package jats.utfpl.utfpl;
 
 import java.util.List;
 
+// function declaration, value declaration
 public class D2Cdcstdecs implements Id2ecl_node {
     public Edcstkind m_knd;
     public List<Cd2cst> m_d2cst;
