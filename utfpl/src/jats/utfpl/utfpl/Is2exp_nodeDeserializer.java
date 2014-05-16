@@ -1,10 +1,13 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.utils.Log;
+
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -32,17 +35,21 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         if (name.equals("S2Eint")) {
             return context.deserialize(je2, S2Eint.class);
         } else if (name.equals("S2Eintinf")) {
-            return context.deserialize(je2, S2Eintinf.class);
+            Log.log4j.error("S2Eintinf not supported");
+            throw new Error("S2Eintinf not supported");
         } else if (name.equals("S2Ecst")) {
             return context.deserialize(je2, S2Ecst.class);
         } else if (name.equals("S2Eextype")) {
-            return context.deserialize(je2, S2Eextype.class);
+            Log.log4j.error("S2Eextype not supported");
+            throw new Error("S2Eextype not supported");
         } else if (name.equals("S2Eextkind")) {
             return context.deserialize(je2, S2Eextkind.class);
         } else if (name.equals("S2Evar")) {
-            return context.deserialize(je2, S2Evar.class);
+            Log.log4j.error("S2Evar not supported");
+            throw new Error("S2Evar not supported");
         } else if (name.equals("S2EVar")) {
-            return context.deserialize(je2, S2EVar.class);
+            Log.log4j.error("S2EVar not supported");
+            throw new Error("S2EVar not supported");
         } else if (name.equals("S2Esizeof")) {
             return context.deserialize(je2, S2Esizeof.class);
         } else if (name.equals("S2Eeqeq")) {
@@ -52,7 +59,16 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         } else if (name.equals("S2Efun")) {
             return context.deserialize(je2, S2Efun.class);
         } else if (name.equals("S2Emetdec")) {
-            return context.deserialize(je2, S2Emetdec.class);
+            // pats_staexp2_jsonize.dats Line 296
+            Log.log4j.info("S2Emetdec is turned into S2Eignored");
+            return S2Eignored.cInstance;
+        } else if (name.equals("S2Eexi")) {
+            Log.log4j.info("quantifier removed from S2Eexi");
+            JsonArray jarr = je2.getAsJsonArray();
+            JsonElement jbody = jarr.get(2);
+            return context.deserialize(jbody, Is2exp_node.class);
+        } else if (name.equals("S2Euni")) {
+            return context.deserialize(je2, S2Euni.class);
         } else if (name.equals("S2Einvar")) {
             return context.deserialize(je2, S2Einvar.class);
         } else if (name.equals("S2Eerr")) {
@@ -60,7 +76,8 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         } else if (name.equals("S2Eignored")) {
             return context.deserialize(je2, S2Eignored.class);
         } else {
-            
+            Log.log4j.error(name + " unexpected");
+            throw new Error(name + " unexpected");
         }
 
     }
