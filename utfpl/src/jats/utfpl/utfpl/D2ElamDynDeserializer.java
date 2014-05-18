@@ -34,7 +34,7 @@ public class D2ElamDynDeserializer implements JsonDeserializer<D2ElamDyn> {
         JsonElement je2 = jarr.get(3);
         Cd2exp d2e_body = context.deserialize(je2, Cd2exp.class);
         
-        D2ElamDyn ret = new D2ElamDyn(p2ts, d2e_body, npf, lin);
+        D2ElamDyn ret = new D2ElamDyn(lin, npf, p2ts, d2e_body);
         return ret;
     }
     

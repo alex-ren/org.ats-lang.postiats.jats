@@ -8,4 +8,8 @@ extern val vv:int
 
 implement foo {x}{y}(x, y) = 3
 
+extern fun ddd1 {a:type} (xs: a): int
+
+fun list_add {a:type} (xs: a): int = 3
+
 

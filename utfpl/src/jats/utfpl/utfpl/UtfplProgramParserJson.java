@@ -18,6 +18,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(Cloc_t.class, new Cloc_tDeserializer());
         gsonBuilder.registerTypeAdapter(Cstamp.class, new CstampDeserializer());
         gsonBuilder.registerTypeAdapter(Csymbol.class, new CsymbolDeserializer());
+        gsonBuilder.registerTypeAdapter(Cs2var.class, new Cs2varDeserializer());
         
         gsonBuilder.registerTypeAdapter(D2Cfundecs.class, new D2CfundecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cignored.class, new D2CignoredDeserializer());
@@ -54,6 +55,23 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(Ip2at_node.class, new Ip2at_nodeDeserializer());
         gsonBuilder.registerTypeAdapter(Ilabp2at.class, new Ilabp2atDeserializer());
         gsonBuilder.registerTypeAdapter(Ilabel.class, new IlabelDeserializer());
+        gsonBuilder.registerTypeAdapter(Is2exp_node.class, new Is2exp_nodeDeserializer());
+        
+        
+        
+        gsonBuilder.registerTypeAdapter(S2Eapp.class, new S2EappDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eeqeq.class, new S2EeqeqDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eerr.class, new S2EerrDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eextkind.class, new S2EextkindDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Efun.class, new S2EfunDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eignored.class, new S2EignoredDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eint.class, new S2EintDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Esizeof.class, new S2EsizeofDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Euni.class, new S2EuniDeserializer());
+        
+        
+        
+        
         
         gsonBuilder.registerTypeAdapter(P2Tany.class, new P2TanyDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tempty.class, new P2TemptyDeserializer());

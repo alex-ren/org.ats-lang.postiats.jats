@@ -70,8 +70,10 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         } else if (name.equals("S2Euni")) {
             return context.deserialize(je2, S2Euni.class);
         } else if (name.equals("S2Einvar")) {
-            return context.deserialize(je2, S2Einvar.class);
+            Log.log4j.error("check the usage of S2Einvar");
+            throw new Error("check the usage of S2Einvar");
         } else if (name.equals("S2Eerr")) {
+            Log.log4j.error("check the usage of S2Einvar");
             return context.deserialize(je2, S2Eerr.class);
         } else if (name.equals("S2Eignored")) {
             return context.deserialize(je2, S2Eignored.class);

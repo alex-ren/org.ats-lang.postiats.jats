@@ -7,13 +7,11 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class P2TanyDeserializer implements JsonDeserializer<P2Tany> {
+public class S2EerrDeserializer implements JsonDeserializer<S2Eerr> {
 
     @Override
-    public P2Tany deserialize(JsonElement json, Type typeOfT,
+    public S2Eerr deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
-        json.getAsJsonArray();
-        return P2Tany.cInstance;
+        return S2Eerr.cInstance;
     }
-
 }

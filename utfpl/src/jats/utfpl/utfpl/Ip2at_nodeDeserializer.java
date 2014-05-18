@@ -59,7 +59,7 @@ public class Ip2at_nodeDeserializer implements JsonDeserializer<Ip2at_node> {
         } else if (name.equals("P2Tvbox")) {
             throw new Error("P2Tvbox is not supported");
         } else if (name.equals("P2Tann")) {
-            return context.deserialize(je2, P2Tpat.class);
+            return context.deserialize(je2, P2Tann.class);
         } else if (name.equals("P2Terrpat")) {
             throw new Error("P2Terrpat is not supported");
         } else if (name.equals("P2Tignored")) {
