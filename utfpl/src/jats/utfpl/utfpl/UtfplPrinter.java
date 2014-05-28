@@ -1,5 +1,53 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.utfpl.dynexp.Cd2cst;
+import jats.utfpl.utfpl.dynexp.Cd2ecl;
+import jats.utfpl.utfpl.dynexp.Cd2exp;
+import jats.utfpl.utfpl.dynexp.Cf2undec;
+import jats.utfpl.utfpl.dynexp.Ci2mpdec;
+import jats.utfpl.utfpl.dynexp.Cp2at;
+import jats.utfpl.utfpl.dynexp.Cv2aldec;
+import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
+import jats.utfpl.utfpl.dynexp.D2Cextcode;
+import jats.utfpl.utfpl.dynexp.D2Cfundecs;
+import jats.utfpl.utfpl.dynexp.D2Cignored;
+import jats.utfpl.utfpl.dynexp.D2Cimpdec;
+import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
+import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
+import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
+import jats.utfpl.utfpl.dynexp.D2Eapplst;
+import jats.utfpl.utfpl.dynexp.D2Ecst;
+import jats.utfpl.utfpl.dynexp.D2Eempty;
+import jats.utfpl.utfpl.dynexp.D2Eexp;
+import jats.utfpl.utfpl.dynexp.D2Ef0loat;
+import jats.utfpl.utfpl.dynexp.D2Ei0nt;
+import jats.utfpl.utfpl.dynexp.D2Eifopt;
+import jats.utfpl.utfpl.dynexp.D2Eignored;
+import jats.utfpl.utfpl.dynexp.D2ElamDyn;
+import jats.utfpl.utfpl.dynexp.D2ElamMet;
+import jats.utfpl.utfpl.dynexp.D2ElamSta;
+import jats.utfpl.utfpl.dynexp.D2Elet;
+import jats.utfpl.utfpl.dynexp.D2Es0tring;
+import jats.utfpl.utfpl.dynexp.D2Esym;
+import jats.utfpl.utfpl.dynexp.D2Evar;
+import jats.utfpl.utfpl.dynexp.Edcstkind;
+import jats.utfpl.utfpl.dynexp.Efunkind;
+import jats.utfpl.utfpl.dynexp.Evalkind;
+import jats.utfpl.utfpl.dynexp.Id2ecl_node;
+import jats.utfpl.utfpl.dynexp.Id2exp_node;
+import jats.utfpl.utfpl.dynexp.Id2exparg;
+import jats.utfpl.utfpl.dynexp.Ilabp2at;
+import jats.utfpl.utfpl.dynexp.Ip2at_node;
+import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
+import jats.utfpl.utfpl.dynexp.LABP2ATomit;
+import jats.utfpl.utfpl.dynexp.P2Tany;
+import jats.utfpl.utfpl.dynexp.P2Tempty;
+import jats.utfpl.utfpl.dynexp.P2Tignored;
+import jats.utfpl.utfpl.dynexp.P2Tpat;
+import jats.utfpl.utfpl.dynexp.P2Trec;
+import jats.utfpl.utfpl.dynexp.P2Tvar;
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
+
 import java.net.URL;
 
 import org.stringtemplate.v4.ST;
@@ -57,7 +105,7 @@ public class UtfplPrinter {
     private ST printD2Cdcstdecs(D2Cdcstdecs node) {
         // D2Cdcstdecs_st(knd, dcsts) ::= <<
         ST st = m_stg.getInstanceOf("D2Cdcstdecs_st");
-        st.add("knd", printEdcstkind(node.m_knd));
+        st.add("knd", printEdcstkind(node.m_dck));
         for (Cd2cst cst: node.m_d2cst) {
             st.add("dcsts", printCd2cst(cst));
         }

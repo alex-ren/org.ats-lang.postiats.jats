@@ -9,10 +9,10 @@ import jats.utfpl.parser.Utfpl_tree;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeFromUtfpl;
 import jats.utfpl.tree.TreePrinter;
-import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplPrinter;
 import jats.utfpl.utfpl.UtfplProgramParserJson;
 import jats.utfpl.utfpl.UtfplProgramProcessor;
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 

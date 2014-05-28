@@ -1,5 +1,52 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.utfpl.dynexp.Cd2ecl;
+import jats.utfpl.utfpl.dynexp.Cd2exp;
+import jats.utfpl.utfpl.dynexp.Cf2undec;
+import jats.utfpl.utfpl.dynexp.Ci2mpdec;
+import jats.utfpl.utfpl.dynexp.Cp2at;
+import jats.utfpl.utfpl.dynexp.Cv2aldec;
+import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
+import jats.utfpl.utfpl.dynexp.D2Cextcode;
+import jats.utfpl.utfpl.dynexp.D2Cfundecs;
+import jats.utfpl.utfpl.dynexp.D2Cignored;
+import jats.utfpl.utfpl.dynexp.D2Cimpdec;
+import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
+import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
+import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
+import jats.utfpl.utfpl.dynexp.D2Eapplst;
+import jats.utfpl.utfpl.dynexp.D2Ecst;
+import jats.utfpl.utfpl.dynexp.D2Eempty;
+import jats.utfpl.utfpl.dynexp.D2Eexp;
+import jats.utfpl.utfpl.dynexp.D2Ef0loat;
+import jats.utfpl.utfpl.dynexp.D2Ei0nt;
+import jats.utfpl.utfpl.dynexp.D2Eifopt;
+import jats.utfpl.utfpl.dynexp.D2Eignored;
+import jats.utfpl.utfpl.dynexp.D2ElamDyn;
+import jats.utfpl.utfpl.dynexp.D2ElamMet;
+import jats.utfpl.utfpl.dynexp.D2ElamSta;
+import jats.utfpl.utfpl.dynexp.D2Elet;
+import jats.utfpl.utfpl.dynexp.D2Es0tring;
+import jats.utfpl.utfpl.dynexp.D2Esym;
+import jats.utfpl.utfpl.dynexp.D2Evar;
+import jats.utfpl.utfpl.dynexp.Id2ecl_node;
+import jats.utfpl.utfpl.dynexp.Id2exp_node;
+import jats.utfpl.utfpl.dynexp.Id2exparg;
+import jats.utfpl.utfpl.dynexp.Ilabel;
+import jats.utfpl.utfpl.dynexp.Ilabp2at;
+import jats.utfpl.utfpl.dynexp.Ip2at_node;
+import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
+import jats.utfpl.utfpl.dynexp.LABP2ATomit;
+import jats.utfpl.utfpl.dynexp.LABint;
+import jats.utfpl.utfpl.dynexp.LABsym;
+import jats.utfpl.utfpl.dynexp.P2Tany;
+import jats.utfpl.utfpl.dynexp.P2Tempty;
+import jats.utfpl.utfpl.dynexp.P2Tignored;
+import jats.utfpl.utfpl.dynexp.P2Tpat;
+import jats.utfpl.utfpl.dynexp.P2Trec;
+import jats.utfpl.utfpl.dynexp.P2Tvar;
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -257,7 +304,7 @@ public class UtfplProgramProcessor {
     }
 
     private D2ElamSta removeProof(D2ElamSta d2exp_node) {
-        return new D2ElamSta(removeProof(d2exp_node.m_d2exp));
+        return new D2ElamSta(d2exp_node.m_s2vs, d2exp_node.m_s2ps, removeProof(d2exp_node.m_d2exp));
     }
 
     private D2ElamDyn removeProof(D2ElamDyn d2exp_node) {
@@ -280,7 +327,7 @@ public class UtfplProgramProcessor {
         }
         
         Cd2exp new_d2exp = removeProof(d2exp_node.m_d2exp);
-        D2ElamDyn ret = new D2ElamDyn(paraLst, new_d2exp, 0/*remove proof parameter*/, d2exp_node.m_lin);
+        D2ElamDyn ret = new D2ElamDyn(0/*remove proof parameter*/, d2exp_node.m_lin, paraLst, new_d2exp);
         return ret;
     }
 

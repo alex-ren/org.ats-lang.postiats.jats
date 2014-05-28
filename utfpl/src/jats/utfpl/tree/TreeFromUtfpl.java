@@ -4,59 +4,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jats.utfpl.ccomp.CCompUtils;
-import jats.utfpl.utfpl.Cd2cst;
-import jats.utfpl.utfpl.Cd2ecl;
-import jats.utfpl.utfpl.Cd2exp;
-import jats.utfpl.utfpl.Cd2sym;
-import jats.utfpl.utfpl.Cd2var;
-import jats.utfpl.utfpl.Cf2undec;
-import jats.utfpl.utfpl.Ci2mpdec;
-import jats.utfpl.utfpl.Cp2at;
 import jats.utfpl.utfpl.Csymbol;
-import jats.utfpl.utfpl.Cv2aldec;
-import jats.utfpl.utfpl.D2Cdcstdecs;
-import jats.utfpl.utfpl.D2Cextcode;
-import jats.utfpl.utfpl.D2Cfundecs;
-import jats.utfpl.utfpl.D2Cignored;
-import jats.utfpl.utfpl.D2Cimpdec;
-import jats.utfpl.utfpl.D2Cvaldecs;
-import jats.utfpl.utfpl.D2EXPARGdyn;
-import jats.utfpl.utfpl.D2EXPARGsta;
-import jats.utfpl.utfpl.D2Eapplst;
-import jats.utfpl.utfpl.D2Ecst;
-import jats.utfpl.utfpl.D2Eempty;
-import jats.utfpl.utfpl.D2Eexp;
-import jats.utfpl.utfpl.D2Ef0loat;
-import jats.utfpl.utfpl.D2Ei0nt;
-import jats.utfpl.utfpl.D2Eifopt;
-import jats.utfpl.utfpl.D2Eignored;
-import jats.utfpl.utfpl.D2ElamDyn;
-import jats.utfpl.utfpl.D2ElamMet;
 import jats.utfpl.tree.IExp;
 
-import jats.utfpl.utfpl.D2ElamSta;
-import jats.utfpl.utfpl.D2Elet;
-import jats.utfpl.utfpl.D2Es0tring;
-import jats.utfpl.utfpl.D2Esym;
-import jats.utfpl.utfpl.D2Evar;
-import jats.utfpl.utfpl.Edcstkind;
-import jats.utfpl.utfpl.Id2ecl_node;
-import jats.utfpl.utfpl.Id2exp_node;
-import jats.utfpl.utfpl.Id2exparg;
-import jats.utfpl.utfpl.Ilabel;
-import jats.utfpl.utfpl.Ilabp2at;
-import jats.utfpl.utfpl.Ip2at_node;
-import jats.utfpl.utfpl.LABP2ATnorm;
-import jats.utfpl.utfpl.LABP2ATomit;
-import jats.utfpl.utfpl.LABint;
-import jats.utfpl.utfpl.LABsym;
-import jats.utfpl.utfpl.P2Tany;
-import jats.utfpl.utfpl.P2Tempty;
-import jats.utfpl.utfpl.P2Tignored;
-import jats.utfpl.utfpl.P2Tpat;
-import jats.utfpl.utfpl.P2Trec;
-import jats.utfpl.utfpl.P2Tvar;
-import jats.utfpl.utfpl.ProgramUtfpl;
+import jats.utfpl.utfpl.dynexp.Cd2cst;
+import jats.utfpl.utfpl.dynexp.Cd2ecl;
+import jats.utfpl.utfpl.dynexp.Cd2exp;
+import jats.utfpl.utfpl.dynexp.Cd2sym;
+import jats.utfpl.utfpl.dynexp.Cd2var;
+import jats.utfpl.utfpl.dynexp.Cf2undec;
+import jats.utfpl.utfpl.dynexp.Ci2mpdec;
+import jats.utfpl.utfpl.dynexp.Cp2at;
+import jats.utfpl.utfpl.dynexp.Cv2aldec;
+import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
+import jats.utfpl.utfpl.dynexp.D2Cextcode;
+import jats.utfpl.utfpl.dynexp.D2Cfundecs;
+import jats.utfpl.utfpl.dynexp.D2Cignored;
+import jats.utfpl.utfpl.dynexp.D2Cimpdec;
+import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
+import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
+import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
+import jats.utfpl.utfpl.dynexp.D2Eapplst;
+import jats.utfpl.utfpl.dynexp.D2Ecst;
+import jats.utfpl.utfpl.dynexp.D2Eempty;
+import jats.utfpl.utfpl.dynexp.D2Eexp;
+import jats.utfpl.utfpl.dynexp.D2Ef0loat;
+import jats.utfpl.utfpl.dynexp.D2Ei0nt;
+import jats.utfpl.utfpl.dynexp.D2Eifopt;
+import jats.utfpl.utfpl.dynexp.D2Eignored;
+import jats.utfpl.utfpl.dynexp.D2ElamDyn;
+import jats.utfpl.utfpl.dynexp.D2ElamMet;
+import jats.utfpl.utfpl.dynexp.D2ElamSta;
+import jats.utfpl.utfpl.dynexp.D2Elet;
+import jats.utfpl.utfpl.dynexp.D2Es0tring;
+import jats.utfpl.utfpl.dynexp.D2Esym;
+import jats.utfpl.utfpl.dynexp.D2Evar;
+import jats.utfpl.utfpl.dynexp.Edcstkind;
+import jats.utfpl.utfpl.dynexp.Id2ecl_node;
+import jats.utfpl.utfpl.dynexp.Id2exp_node;
+import jats.utfpl.utfpl.dynexp.Id2exparg;
+import jats.utfpl.utfpl.dynexp.Ilabel;
+import jats.utfpl.utfpl.dynexp.Ilabp2at;
+import jats.utfpl.utfpl.dynexp.Ip2at_node;
+import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
+import jats.utfpl.utfpl.dynexp.LABP2ATomit;
+import jats.utfpl.utfpl.dynexp.LABint;
+import jats.utfpl.utfpl.dynexp.LABsym;
+import jats.utfpl.utfpl.dynexp.P2Tany;
+import jats.utfpl.utfpl.dynexp.P2Tempty;
+import jats.utfpl.utfpl.dynexp.P2Tignored;
+import jats.utfpl.utfpl.dynexp.P2Tpat;
+import jats.utfpl.utfpl.dynexp.P2Trec;
+import jats.utfpl.utfpl.dynexp.P2Tvar;
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 
 public class TreeFromUtfpl {
 	
@@ -100,13 +100,13 @@ public class TreeFromUtfpl {
 
 	private List<IDec> transGlobalD2Cdcstdecs(Location loc, D2Cdcstdecs decs) {
         List<IDec> cstdecs = new ArrayList<IDec>();
-        if (decs.m_knd == Edcstkind.DCK_prfun) {
+        if (decs.m_dck == Edcstkind.DCK_prfun) {
             // do nothing
-        } else if (decs.m_knd == Edcstkind.DCK_val) {
+        } else if (decs.m_dck == Edcstkind.DCK_val) {
             for (Cd2cst cstdec: decs.m_d2cst) {
                 cstdecs.add(transGlobalCstValDec(loc, cstdec));
             }
-        } else if (decs.m_knd == Edcstkind.DCK_fun) {
+        } else if (decs.m_dck == Edcstkind.DCK_fun) {
             for (Cd2cst cstdec: decs.m_d2cst) {
                 cstdecs.add(transGlobalCstFunDec(loc, cstdec));
             }

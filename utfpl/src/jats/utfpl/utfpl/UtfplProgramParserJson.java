@@ -1,5 +1,118 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.utfpl.dynexp.Cd2cst;
+import jats.utfpl.utfpl.dynexp.Cd2cstDeserializer;
+import jats.utfpl.utfpl.dynexp.Cd2var;
+import jats.utfpl.utfpl.dynexp.Cd2varDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
+import jats.utfpl.utfpl.dynexp.D2CdcstdecsDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cextcode;
+import jats.utfpl.utfpl.dynexp.D2CextcodeDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cfundecs;
+import jats.utfpl.utfpl.dynexp.D2CfundecsDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cignored;
+import jats.utfpl.utfpl.dynexp.D2CignoredDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cimpdec;
+import jats.utfpl.utfpl.dynexp.D2CimpdecDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cstacsts;
+import jats.utfpl.utfpl.dynexp.D2CstacstsDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
+import jats.utfpl.utfpl.dynexp.D2CvaldecsDeserializer;
+import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
+import jats.utfpl.utfpl.dynexp.D2EXPARGdynDeserializer;
+import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
+import jats.utfpl.utfpl.dynexp.D2EXPARGstaDeserializer;
+import jats.utfpl.utfpl.dynexp.D2EannFunclo;
+import jats.utfpl.utfpl.dynexp.D2EannFuncloDeserializer;
+import jats.utfpl.utfpl.dynexp.D2EannSeff;
+import jats.utfpl.utfpl.dynexp.D2EannSeffDeserializer;
+import jats.utfpl.utfpl.dynexp.D2EannType;
+import jats.utfpl.utfpl.dynexp.D2EannTypeDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Eapplst;
+import jats.utfpl.utfpl.dynexp.D2EapplstDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Ecst;
+import jats.utfpl.utfpl.dynexp.D2EcstDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Ef0loat;
+import jats.utfpl.utfpl.dynexp.D2Ef0loatDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Ei0nt;
+import jats.utfpl.utfpl.dynexp.D2Ei0ntDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Eifopt;
+import jats.utfpl.utfpl.dynexp.D2EifoptDeserializer;
+import jats.utfpl.utfpl.dynexp.D2ElamDyn;
+import jats.utfpl.utfpl.dynexp.D2ElamDynDeserializer;
+import jats.utfpl.utfpl.dynexp.D2ElamMet;
+import jats.utfpl.utfpl.dynexp.D2ElamMetDeserializer;
+import jats.utfpl.utfpl.dynexp.D2ElamSta;
+import jats.utfpl.utfpl.dynexp.D2ElamStaDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Elet;
+import jats.utfpl.utfpl.dynexp.D2EletDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Es0tring;
+import jats.utfpl.utfpl.dynexp.D2Es0tringDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Esym;
+import jats.utfpl.utfpl.dynexp.D2EsymDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Evar;
+import jats.utfpl.utfpl.dynexp.D2EvarDeserializer;
+import jats.utfpl.utfpl.dynexp.Edcstkind;
+import jats.utfpl.utfpl.dynexp.EdcstkindDeserializer;
+import jats.utfpl.utfpl.dynexp.Efunkind;
+import jats.utfpl.utfpl.dynexp.EfunkindDeserializer;
+import jats.utfpl.utfpl.dynexp.Evalkind;
+import jats.utfpl.utfpl.dynexp.EvalkindDeserializer;
+import jats.utfpl.utfpl.dynexp.Id2ecl_node;
+import jats.utfpl.utfpl.dynexp.Id2ecl_nodeDeserializer;
+import jats.utfpl.utfpl.dynexp.Id2exp_node;
+import jats.utfpl.utfpl.dynexp.Id2exp_nodeDeserializer;
+import jats.utfpl.utfpl.dynexp.Id2exparg;
+import jats.utfpl.utfpl.dynexp.Id2expargDeserializer;
+import jats.utfpl.utfpl.dynexp.Ilabel;
+import jats.utfpl.utfpl.dynexp.IlabelDeserializer;
+import jats.utfpl.utfpl.dynexp.Ilabp2at;
+import jats.utfpl.utfpl.dynexp.Ilabp2atDeserializer;
+import jats.utfpl.utfpl.dynexp.Ip2at_node;
+import jats.utfpl.utfpl.dynexp.Ip2at_nodeDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tann;
+import jats.utfpl.utfpl.dynexp.P2TannDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tany;
+import jats.utfpl.utfpl.dynexp.P2TanyDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tempty;
+import jats.utfpl.utfpl.dynexp.P2TemptyDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tignored;
+import jats.utfpl.utfpl.dynexp.P2TignoredDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tpat;
+import jats.utfpl.utfpl.dynexp.P2TpatDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Trec;
+import jats.utfpl.utfpl.dynexp.P2TrecDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tvar;
+import jats.utfpl.utfpl.dynexp.P2TvarDeserializer;
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.utfpl.dynexp.ProgramUtfplDeserializer;
+import jats.utfpl.utfpl.staexp.Cs2cst;
+import jats.utfpl.utfpl.staexp.Cs2cstDeserializer;
+import jats.utfpl.utfpl.staexp.Cs2var;
+import jats.utfpl.utfpl.staexp.Cs2varDeserializer;
+import jats.utfpl.utfpl.staexp.Ifunclo;
+import jats.utfpl.utfpl.staexp.IfuncloDeserializer;
+import jats.utfpl.utfpl.staexp.Is2exp_node;
+import jats.utfpl.utfpl.staexp.Is2exp_nodeDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eapp;
+import jats.utfpl.utfpl.staexp.S2EappDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eeqeq;
+import jats.utfpl.utfpl.staexp.S2EeqeqDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eerr;
+import jats.utfpl.utfpl.staexp.S2EerrDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eextkind;
+import jats.utfpl.utfpl.staexp.S2EextkindDeserializer;
+import jats.utfpl.utfpl.staexp.S2Efun;
+import jats.utfpl.utfpl.staexp.S2EfunDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eignored;
+import jats.utfpl.utfpl.staexp.S2EignoredDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eint;
+import jats.utfpl.utfpl.staexp.S2EintDeserializer;
+import jats.utfpl.utfpl.staexp.S2Esizeof;
+import jats.utfpl.utfpl.staexp.S2EsizeofDeserializer;
+import jats.utfpl.utfpl.staexp.S2Euni;
+import jats.utfpl.utfpl.staexp.S2EuniDeserializer;
+
 import java.io.Reader;
 
 import com.google.gson.Gson;
@@ -13,11 +126,14 @@ public class UtfplProgramParserJson {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         
-        gsonBuilder.registerTypeAdapter(Cd2cst.class, new Cd2cstDeserializer());
-        gsonBuilder.registerTypeAdapter(Cd2var.class, new Cd2varDeserializer());
         gsonBuilder.registerTypeAdapter(Cloc_t.class, new Cloc_tDeserializer());
         gsonBuilder.registerTypeAdapter(Cstamp.class, new CstampDeserializer());
         gsonBuilder.registerTypeAdapter(Csymbol.class, new CsymbolDeserializer());
+        
+        gsonBuilder.registerTypeAdapter(Cd2cst.class, new Cd2cstDeserializer());
+        gsonBuilder.registerTypeAdapter(Cd2var.class, new Cd2varDeserializer());
+        
+        gsonBuilder.registerTypeAdapter(Cs2cst.class, new Cs2cstDeserializer());
         gsonBuilder.registerTypeAdapter(Cs2var.class, new Cs2varDeserializer());
         
         gsonBuilder.registerTypeAdapter(D2Cfundecs.class, new D2CfundecsDeserializer());
@@ -26,6 +142,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Cextcode.class, new D2CextcodeDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cvaldecs.class, new D2CvaldecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cdcstdecs.class, new D2CdcstdecsDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Cstacsts.class, new D2CstacstsDeserializer());
         
         gsonBuilder.registerTypeAdapter(D2Eapplst.class, new D2EapplstDeserializer());
         gsonBuilder.registerTypeAdapter(D2Ecst.class, new D2EcstDeserializer());
@@ -42,6 +159,8 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2EXPARGdyn.class, new D2EXPARGdynDeserializer());
         gsonBuilder.registerTypeAdapter(D2EXPARGsta.class, new D2EXPARGstaDeserializer());
         gsonBuilder.registerTypeAdapter(D2EannType.class, new D2EannTypeDeserializer());
+        gsonBuilder.registerTypeAdapter(D2EannSeff.class, new D2EannSeffDeserializer());
+        gsonBuilder.registerTypeAdapter(D2EannFunclo.class, new D2EannFuncloDeserializer());
         
         gsonBuilder.registerTypeAdapter(Efunkind.class, new EfunkindDeserializer());
         gsonBuilder.registerTypeAdapter(Evalkind.class, new EvalkindDeserializer());
@@ -56,6 +175,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(Ilabp2at.class, new Ilabp2atDeserializer());
         gsonBuilder.registerTypeAdapter(Ilabel.class, new IlabelDeserializer());
         gsonBuilder.registerTypeAdapter(Is2exp_node.class, new Is2exp_nodeDeserializer());
+        gsonBuilder.registerTypeAdapter(Ifunclo.class, new IfuncloDeserializer());
         
         
         
@@ -79,6 +199,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(P2Tpat.class, new P2TpatDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tvar.class, new P2TvarDeserializer());
         gsonBuilder.registerTypeAdapter(P2Trec.class, new P2TrecDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tann.class, new P2TannDeserializer());
         
 
         

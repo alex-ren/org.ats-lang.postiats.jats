@@ -17,9 +17,9 @@ import jats.utfpl.patcsps.PModel;
 import jats.utfpl.patcsps.PatCspsTransformer;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeFromUtfpl;
-import jats.utfpl.utfpl.ProgramUtfpl;
 import jats.utfpl.utfpl.UtfplProgramParserJson;
 import jats.utfpl.utfpl.UtfplProgramProcessor;
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 
