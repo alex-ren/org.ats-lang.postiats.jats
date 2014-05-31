@@ -92,7 +92,7 @@ D2ElamMet_st(d2exp) ::= <<
 lamMet. <d2exp>
 >>
 
-D2Elam_st(p2ts, exp) ::= <<
+D2ElamDyn_st(p2ts, exp) ::= <<
 lam (<p2ts; separator=", ">) = 
   <exp>
 >>
@@ -107,6 +107,10 @@ LABP2ATnorm(<pat>)
 
 p2at_st(node) ::= <<
 <node>
+>>
+
+P2Tann_st(pat, srt) ::= <<
+P2Tann\<<pat>:<srt>\>
 >>
 
 P2Trec_st(labpats) ::= <<

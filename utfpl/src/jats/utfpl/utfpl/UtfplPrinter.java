@@ -15,6 +15,9 @@ import jats.utfpl.utfpl.dynexp.D2Cimpdec;
 import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
 import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
+import jats.utfpl.utfpl.dynexp.D2EannFunclo;
+import jats.utfpl.utfpl.dynexp.D2EannSeff;
+import jats.utfpl.utfpl.dynexp.D2EannType;
 import jats.utfpl.utfpl.dynexp.D2Eapplst;
 import jats.utfpl.utfpl.dynexp.D2Ecst;
 import jats.utfpl.utfpl.dynexp.D2Eempty;
@@ -40,6 +43,7 @@ import jats.utfpl.utfpl.dynexp.Ilabp2at;
 import jats.utfpl.utfpl.dynexp.Ip2at_node;
 import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
 import jats.utfpl.utfpl.dynexp.LABP2ATomit;
+import jats.utfpl.utfpl.dynexp.P2Tann;
 import jats.utfpl.utfpl.dynexp.P2Tany;
 import jats.utfpl.utfpl.dynexp.P2Tempty;
 import jats.utfpl.utfpl.dynexp.P2Tignored;
@@ -215,7 +219,13 @@ public class UtfplPrinter {
     }
     
     private ST printId2exp_node(Id2exp_node node) {
-        if (node instanceof D2Eapplst) {
+        if (node instanceof D2EannFunclo) {
+            return printD2EannFunclo((D2EannFunclo)node);  
+        } else if (node instanceof D2EannSeff) {
+            return printD2EannSeff((D2EannSeff)node);
+        } else if (node instanceof D2EannType) {
+            return printD2EannType((D2EannType)node);              
+        } else if (node instanceof D2Eapplst) {
             return printD2Eapplst((D2Eapplst)node);
         } else if (node instanceof D2Ecst) {
             return printD2Ecst((D2Ecst)node);
@@ -231,12 +241,12 @@ public class UtfplPrinter {
             return printD2Eifopt((D2Eifopt)node);
         } else if (node instanceof D2Eignored) {
             return printD2Eignored((D2Eignored)node);
+        } else if (node instanceof D2ElamMet) {
+            return printD2ElamMet((D2ElamMet)node);  
         } else if (node instanceof D2ElamDyn) {
-            return printD2Elam((D2ElamDyn)node);
+            return printD2ElamDyn((D2ElamDyn)node);
         } else if (node instanceof D2ElamSta) {
             return printD2ElamSta((D2ElamSta)node);   
-        } else if (node instanceof D2ElamMet) {
-            return printD2ElamMet((D2ElamMet)node);              
         } else if (node instanceof D2Elet) {
             return printD2Elet((D2Elet)node);
         } else if (node instanceof D2Es0tring) {
@@ -309,9 +319,9 @@ public class UtfplPrinter {
         return st;
     }
 
-    private ST printD2Elam(D2ElamDyn node) {
-        // D2Elam_st(p2ts, exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2Elam_st");
+    private ST printD2ElamDyn(D2ElamDyn node) {
+        // D2ElamDyn_st(p2ts, exp) ::= <<
+        ST st = m_stg.getInstanceOf("D2ElamDyn_st");
         for (Cp2at pat: node.m_p2ts) {
             st.add("p2ts", printCp2at(pat));
         }
@@ -339,12 +349,23 @@ public class UtfplPrinter {
             return printP2Tempty((P2Tempty)node);
         } else if (node instanceof P2Trec) {
             return printP2Trec((P2Trec)node);
+        } else if (node instanceof P2Tann) {
+            return printP2Tann((P2Tann)node); 
         } else {
             throw new Error("not supported");
         }
     }
     
-    private ST printP2Trec(P2Trec node) {
+    private ST printP2Tann(P2Tann node) {
+	    // P2Tann_st(pat, srt) ::= <<
+        ST st = m_stg.getInstanceOf("P2Tann_st");
+        st.add("pat", printCp2at(node.m_p2t));
+        st.add("srt", "_");
+
+        return st;
+    }
+
+	private ST printP2Trec(P2Trec node) {
         // P2Trec_st(labpats) ::= <<
         ST st = m_stg.getInstanceOf("P2Trec_st");
         for (Ilabp2at labpat: node.m_labpats) {
@@ -483,9 +504,6 @@ public class UtfplPrinter {
     private ST printD2EXPARGdyn(D2EXPARGdyn node) {
         // D2EXPARGdyn_st(d2exps) ::= <<
         ST st = m_stg.getInstanceOf("D2EXPARGdyn_st");
-//        if (node.m_d2expLst.size() > 1) {
-//            throw new Error("why do we need a list here?");
-//        }
         for (Cd2exp d2exp: node.m_d2expLst) {
             st.add("d2exps", printCd2exp(d2exp));
         }
