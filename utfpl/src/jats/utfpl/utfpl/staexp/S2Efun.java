@@ -7,10 +7,10 @@ import java.util.List;
 
 public class S2Efun implements Is2exp_node {
     public int m_npf;
-    public List<Is2exp_node> m_arg;
-    public Is2exp_node m_res;
+    public List<Cs2exp> m_arg;
+    public Cs2exp m_res;
     
-    public S2Efun(int npf, List<Is2exp_node> arg, Is2exp_node res) {
+    public S2Efun(int npf, List<Cs2exp> arg, Cs2exp res) {
         m_npf = npf;
         m_arg = arg;
         m_res = res;

@@ -11,10 +11,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class S2EuniDeserializer implements JsonDeserializer<S2Euni> {
+public class S2EexiDeserializer implements JsonDeserializer<S2Eexi> {
 
     @Override
-    public S2Euni deserialize(JsonElement json, Type typeOfT,
+    public S2Eexi deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
         JsonArray jarr = json.getAsJsonArray();
         
@@ -22,7 +22,7 @@ public class S2EuniDeserializer implements JsonDeserializer<S2Euni> {
         List<Cs2exp> s2ps = JsonUtilities.deserializeList(jarr.get(1), Cs2exp.class, context);
         Cs2exp s2e_body = context.deserialize(jarr.get(2), Cs2exp.class);
                 
-        return new S2Euni(s2vs, s2ps, s2e_body);
+        return new S2Eexi(s2vs, s2ps, s2e_body);
     }
 
 }

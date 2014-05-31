@@ -94,12 +94,18 @@ import jats.utfpl.utfpl.staexp.Ifunclo;
 import jats.utfpl.utfpl.staexp.IfuncloDeserializer;
 import jats.utfpl.utfpl.staexp.Is2exp_node;
 import jats.utfpl.utfpl.staexp.Is2exp_nodeDeserializer;
+import jats.utfpl.utfpl.staexp.Is2rt;
+import jats.utfpl.utfpl.staexp.Is2rtDeserializer;
 import jats.utfpl.utfpl.staexp.S2Eapp;
 import jats.utfpl.utfpl.staexp.S2EappDeserializer;
+import jats.utfpl.utfpl.staexp.S2Ecst;
+import jats.utfpl.utfpl.staexp.S2EcstDeserializer;
 import jats.utfpl.utfpl.staexp.S2Eeqeq;
 import jats.utfpl.utfpl.staexp.S2EeqeqDeserializer;
 import jats.utfpl.utfpl.staexp.S2Eerr;
 import jats.utfpl.utfpl.staexp.S2EerrDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eexi;
+import jats.utfpl.utfpl.staexp.S2EexiDeserializer;
 import jats.utfpl.utfpl.staexp.S2Eextkind;
 import jats.utfpl.utfpl.staexp.S2EextkindDeserializer;
 import jats.utfpl.utfpl.staexp.S2Efun;
@@ -176,10 +182,12 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(Ilabel.class, new IlabelDeserializer());
         gsonBuilder.registerTypeAdapter(Is2exp_node.class, new Is2exp_nodeDeserializer());
         gsonBuilder.registerTypeAdapter(Ifunclo.class, new IfuncloDeserializer());
+        gsonBuilder.registerTypeAdapter(Is2rt.class, new Is2rtDeserializer());
         
         
         
         gsonBuilder.registerTypeAdapter(S2Eapp.class, new S2EappDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Ecst.class, new S2EcstDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eeqeq.class, new S2EeqeqDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eerr.class, new S2EerrDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eextkind.class, new S2EextkindDeserializer());
@@ -187,6 +195,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(S2Eignored.class, new S2EignoredDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eint.class, new S2EintDeserializer());
         gsonBuilder.registerTypeAdapter(S2Esizeof.class, new S2EsizeofDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eexi.class, new S2EexiDeserializer());
         gsonBuilder.registerTypeAdapter(S2Euni.class, new S2EuniDeserializer());
         
         

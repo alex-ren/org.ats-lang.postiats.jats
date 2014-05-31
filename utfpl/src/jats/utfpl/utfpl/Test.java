@@ -1,5 +1,6 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.Log;
 
@@ -55,34 +56,34 @@ public class Test {
             	if (0 == returnCode) {
                     FileReader fReader = new FileReader(path);
 
-//                    UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
-//                    ProgramUtfpl uProg = utfplParser.trans(fReader);
-//
-//                    UtfplPrinter uPrinter = new UtfplPrinter();
-//                    String outputUTFPL = uPrinter.print(uProg);
-//                    
-//                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
-//                    
-//                    System.out.println(outputUTFPL);
-//                    
-//                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
-//                    uProg = processor.removeProof(uProg);
-//                    outputUTFPL = uPrinter.print(uProg);
-//                    
-//                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
-//                    
-//                    System.out.println(outputUTFPL);
-//                    
-//                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
-//                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
-//                    bwUTFPL.write(outputUTFPL);
-//                    bwUTFPL.close();
+                    UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
+                    ProgramUtfpl uProg = utfplParser.trans(fReader);
+
+                    UtfplPrinter uPrinter = new UtfplPrinter();
+                    String outputUTFPL = uPrinter.print(uProg);
+                    
+                    System.out.println("==utfpl's ast code (layer 01) is ==========================");
+                    
+                    System.out.println(outputUTFPL);
+                    
+                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+                    uProg = processor.removeProof(uProg);
+                    outputUTFPL = uPrinter.print(uProg);
+                    
+                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
+                    
+                    System.out.println(outputUTFPL);
+                    
+                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
+                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
+                    bwUTFPL.write(outputUTFPL);
+                    bwUTFPL.close();
             	} else {
-//            		String line;
-//            		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
-//            		while ((line = reader.readLine()) != null) {
-//            			System.err.println(line);
-//            		}
+            		String line;
+            		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
+            		while ((line = reader.readLine()) != null) {
+            			System.err.println(line);
+            		}
             		return;            		
             	}
 

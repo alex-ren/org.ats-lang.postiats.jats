@@ -19,12 +19,12 @@ public class S2EappDeserializer implements JsonDeserializer<S2Eapp> {
         JsonArray jarr = json.getAsJsonArray();
         
         JsonElement je0 = jarr.get(0);
-        Is2exp_node s2e1 = context.deserialize(je0, Is2exp_node.class);
+        Cs2exp s2e1 = context.deserialize(je0, Cs2exp.class);
         
         JsonElement je1 = jarr.get(1);
         JsonArray jarglst = je1.getAsJsonArray();
         
-        List<Is2exp_node> s2es2 = JsonUtilities.deserializeList(jarglst, Is2exp_node.class, context);
+        List<Cs2exp> s2es2 = JsonUtilities.deserializeList(jarglst, Cs2exp.class, context);
         S2Eapp s2eapp = new S2Eapp(s2e1, s2es2);
         
         return s2eapp;

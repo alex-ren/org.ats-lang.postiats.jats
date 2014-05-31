@@ -22,10 +22,10 @@ public class S2EfunDeserializer implements JsonDeserializer<S2Efun> {
         int npf = je0.getAsInt();
         
         JsonElement je1 = jarr.get(1);
-        List<Is2exp_node> arg = JsonUtilities.deserializeList(je1, Is2exp_node.class, context);
+        List<Cs2exp> arg = JsonUtilities.deserializeList(je1, Cs2exp.class, context);
         
         JsonElement je2 = jarr.get(2);
-        Is2exp_node res = context.deserialize(je2, Is2exp_node.class);
+        Cs2exp res = context.deserialize(je2, Cs2exp.class);
         
         
         return new S2Efun(npf, arg, res);
