@@ -4,7 +4,12 @@ public enum Efunkind {
     FK_fn("fn"), // non-recursive function 
     FK_fnx("fnx"), // tail-recursive 
     FK_fun("fun"), // recursive
-    Fk_ignored("ignore");
+    
+    FK_prfn("prfn"),
+    FK_prfun("prfun"),
+    
+    FK_praxi("praxi"),
+    FK_castfn("castfn");
     
     private String m_str;
     

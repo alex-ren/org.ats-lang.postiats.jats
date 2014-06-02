@@ -35,8 +35,7 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         if (name.equals("S2Eint")) {
             return context.deserialize(je2, S2Eint.class);
         } else if (name.equals("S2Eintinf")) {
-            Log.log4j.error("S2Eintinf not supported");
-            throw new Error("S2Eintinf not supported");
+            return context.deserialize(je2, S2Eintinf.class);
         } else if (name.equals("S2Ecst")) {
             return context.deserialize(je2, S2Ecst.class);
         } else if (name.equals("S2Eextype")) {
@@ -45,8 +44,7 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         } else if (name.equals("S2Eextkind")) {
             return context.deserialize(je2, S2Eextkind.class);
         } else if (name.equals("S2Evar")) {
-            Log.log4j.error("S2Evar not supported");
-            throw new Error("S2Evar not supported");
+        	return context.deserialize(je2, S2Evar.class);
         } else if (name.equals("S2EVar")) {
             Log.log4j.error("S2EVar not supported");
             throw new Error("S2EVar not supported");

@@ -2,6 +2,9 @@ package jats.utfpl.utfpl.dynexp;
 
 import jats.utfpl.utfpl.Cloc_t;
 
+/*
+ * Function definition.
+ */
 public class Cf2undec {
     public Cloc_t f2undec_loc;
     public Cd2var f2undec_var;  // function name

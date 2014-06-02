@@ -11,9 +11,13 @@ import jats.utfpl.utfpl.dynexp.D2Cextcode;
 import jats.utfpl.utfpl.dynexp.D2Cfundecs;
 import jats.utfpl.utfpl.dynexp.D2Cignored;
 import jats.utfpl.utfpl.dynexp.D2Cimpdec;
+import jats.utfpl.utfpl.dynexp.D2Cstacsts;
 import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
 import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
+import jats.utfpl.utfpl.dynexp.D2EannFunclo;
+import jats.utfpl.utfpl.dynexp.D2EannSeff;
+import jats.utfpl.utfpl.dynexp.D2EannType;
 import jats.utfpl.utfpl.dynexp.D2Eapplst;
 import jats.utfpl.utfpl.dynexp.D2Ecst;
 import jats.utfpl.utfpl.dynexp.D2Eempty;
@@ -39,6 +43,7 @@ import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
 import jats.utfpl.utfpl.dynexp.LABP2ATomit;
 import jats.utfpl.utfpl.dynexp.LABint;
 import jats.utfpl.utfpl.dynexp.LABsym;
+import jats.utfpl.utfpl.dynexp.P2Tann;
 import jats.utfpl.utfpl.dynexp.P2Tany;
 import jats.utfpl.utfpl.dynexp.P2Tempty;
 import jats.utfpl.utfpl.dynexp.P2Tignored;
@@ -82,6 +87,8 @@ public class UtfplProgramProcessor {
             // do nothing
         } else if (d2ecl_node instanceof D2Cignored) {
             // do nothing
+        } else if (d2ecl_node instanceof D2Cstacsts) {
+            // do nothing
         } else {
             throw new Error("node" + d2ecl_node + " is not supported");
         }
@@ -108,8 +115,7 @@ public class UtfplProgramProcessor {
         switch (d2ecl_node.m_knd) {
         case VK_val:
         case VK_val_pos:
-        case VK_val_neg:
-        case VK_ignored: {
+        case VK_val_neg: {
             for (Cv2aldec v2aldec: d2ecl_node.m_v2ds) {
                 Cv2aldec new_v2aldec = removeProof(v2aldec);
                 if (null != new_v2aldec) {
@@ -273,8 +279,14 @@ public class UtfplProgramProcessor {
             // do nothing
         } else if (d2exp_node instanceof D2Evar) {
             // do nothing
+        } else if (d2exp_node instanceof D2EannSeff) {
+        	d2exp_node = removeProof((D2EannSeff)d2exp_node);
+        } else if (d2exp_node instanceof D2EannType) {
+        	d2exp_node = removeProof((D2EannType)d2exp_node);
+        } else if (d2exp_node instanceof D2EannFunclo) {
+        	d2exp_node = removeProof((D2EannFunclo)d2exp_node);
         } else {
-            throw new Error("d2exp " + d2exp + " is not supported.");
+            throw new Error("d2exp_node " + d2exp_node + " is not supported.");
         }
         
         Cd2exp ret = new Cd2exp(d2exp.d2exp_loc, d2exp_node);
@@ -282,7 +294,19 @@ public class UtfplProgramProcessor {
         
     }
 
-    private D2ElamMet removeProof(D2ElamMet d2exp_node) {
+    private D2EannFunclo removeProof(D2EannFunclo d2exp_node) {
+	    return new D2EannFunclo(removeProof(d2exp_node.m_d2exp), d2exp_node.m_funclo);
+    }
+
+	private D2EannType removeProof(D2EannType d2exp_node) {
+    	return new D2EannType(removeProof(d2exp_node.m_d2exp), d2exp_node.m_s2exp);
+    }
+
+	private D2EannSeff removeProof(D2EannSeff d2exp_node) {
+	    return new D2EannSeff(removeProof(d2exp_node.m_d2exp));
+    }
+
+	private D2ElamMet removeProof(D2ElamMet d2exp_node) {
         return new D2ElamMet(removeProof(d2exp_node.m_d2exp));
     }
 
@@ -345,6 +369,8 @@ public class UtfplProgramProcessor {
             new_p2at_node = removeProof((P2Trec)new_p2at_node);
         } else if (new_p2at_node instanceof P2Tvar) {
             // do nothing
+        } else if (new_p2at_node instanceof P2Tann) {
+        	new_p2at_node = removeProof((P2Tann)new_p2at_node);         	
         } else {
             throw new Error("p2at_node " + new_p2at_node + " is not supported.");
         }
@@ -353,7 +379,11 @@ public class UtfplProgramProcessor {
         return ret;
     }
 
-    /*
+    private P2Tann removeProof(P2Tann p2at_node) {
+    	return new P2Tann(removeProof(p2at_node.m_p2t), p2at_node.m_ann);
+    }
+
+	/*
      * 
      */
     private Ip2at_node removeProof(P2Trec p2at_node) {

@@ -19,8 +19,16 @@ public class EfunkindDeserializer implements JsonDeserializer<Efunkind> {
             return Efunkind.FK_fnx;
         } else if (knd.equals("FK_fun")) {
             return Efunkind.FK_fun;
+        } else if (knd.equals("FK_prfn")) {
+            return Efunkind.FK_prfn;
+        } else if (knd.equals("FK_prfun")) {
+            return Efunkind.FK_prfun;
+        } else if (knd.equals("FK_praxi")) {
+            return Efunkind.FK_praxi;
+        } else if (knd.equals("FK_castfn")) {
+            return Efunkind.FK_castfn;
         } else {
-            return Efunkind.Fk_ignored;
+            throw new Error("kind " + knd + " is not supported.");
         }
     }
 

@@ -1,11 +1,13 @@
 package jats.utfpl.utfpl.dynexp;
 
+/*
+ * val x = 1
+ */
 public enum Evalkind {
     VK_val("val"), 
     VK_val_pos("val+"), 
     VK_val_neg("val-"), 
-    VK_prval("prval"), 
-    VK_ignored("ignore");
+    VK_prval("prval");
     
     private String m_str;
     

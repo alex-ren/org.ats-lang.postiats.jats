@@ -12,6 +12,7 @@ import jats.utfpl.utfpl.dynexp.D2Cextcode;
 import jats.utfpl.utfpl.dynexp.D2Cfundecs;
 import jats.utfpl.utfpl.dynexp.D2Cignored;
 import jats.utfpl.utfpl.dynexp.D2Cimpdec;
+import jats.utfpl.utfpl.dynexp.D2Cstacsts;
 import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.utfpl.dynexp.D2EXPARGdyn;
 import jats.utfpl.utfpl.dynexp.D2EXPARGsta;
@@ -51,6 +52,13 @@ import jats.utfpl.utfpl.dynexp.P2Tpat;
 import jats.utfpl.utfpl.dynexp.P2Trec;
 import jats.utfpl.utfpl.dynexp.P2Tvar;
 import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.utfpl.staexp.Cs2cst;
+import jats.utfpl.utfpl.staexp.Cs2exp;
+import jats.utfpl.utfpl.staexp.FUNCLOclo;
+import jats.utfpl.utfpl.staexp.FUNCLOfun;
+import jats.utfpl.utfpl.staexp.Ifunclo;
+import jats.utfpl.utfpl.staexp.Is2rt;
+import jats.utfpl.utfpl.staexp.S2RT;
 
 import java.net.URL;
 
@@ -101,12 +109,31 @@ public class UtfplPrinter {
             return null;
         } else if (node instanceof D2Cdcstdecs) {
             return printD2Cdcstdecs((D2Cdcstdecs)node);
+        } else if (node instanceof D2Cstacsts) {
+        	return printD2Cstacsts((D2Cstacsts)node);
         } else {
-            throw new Error("not supported");
+            throw new Error("Id2ecl_node " + node + " is not supported");
         }
     }
     
-    private ST printD2Cdcstdecs(D2Cdcstdecs node) {
+    private ST printD2Cstacsts(D2Cstacsts node) {
+	    // D2Cstacsts_st(scsts) ::= <<
+        ST st = m_stg.getInstanceOf("D2Cstacsts_st");
+        for (Cs2cst cst: node.m_s2csts) {
+            st.add("scsts", printCs2cst(cst));
+        }
+        
+        return st;
+    }
+
+	private Object printCs2cst(Cs2cst cst) {
+        // s2cst_st(s2cst) ::= <<
+        ST st = m_stg.getInstanceOf("s2cst_st");
+        st.add("s2cst", cst);
+        return st;
+    }
+
+	private ST printD2Cdcstdecs(D2Cdcstdecs node) {
         // D2Cdcstdecs_st(knd, dcsts) ::= <<
         ST st = m_stg.getInstanceOf("D2Cdcstdecs_st");
         st.add("knd", printEdcstkind(node.m_dck));
@@ -114,13 +141,6 @@ public class UtfplPrinter {
             st.add("dcsts", printCd2cst(cst));
         }
         
-        return st;
-    }
-
-    private Object printCd2cst(Cd2cst cst) {
-        // d2cst_st(d2cst) ::= <<
-        ST st = m_stg.getInstanceOf("d2cst_st");
-        st.add("d2cst", cst);
         return st;
     }
 
@@ -148,7 +168,7 @@ public class UtfplPrinter {
     private ST printCi2mpdec(Ci2mpdec node) {
         // i2mpdec_st(cst, def) ::= <<
         ST st = m_stg.getInstanceOf("i2mpdec_st");
-        st.add("cst", node.i2mpdec_cst);
+        st.add("cst", printCd2cst(node.i2mpdec_cst));
         st.add("def", printCd2exp(node.i2mpdec_def));
         return st;
         
@@ -260,7 +280,85 @@ public class UtfplPrinter {
         }
     }
 
-    private ST printD2ElamMet(D2ElamMet node) {
+    private ST printCd2cst(Cd2cst node) {
+    	// d2cst_st(sym, stamp, s2exp) ::= <<
+    	ST st = m_stg.getInstanceOf("d2cst_st");
+    	st.add("sym", node.m_symbol);
+    	st.add("stamp", node.m_stamp);
+    	st.add("s2exp", printCs2exp(node.m_type));
+    	return st;
+    }
+    private ST printD2EannType(D2EannType node) {
+	    // D2EannType_st(d2exp, s2exp) ::= <<
+        ST st = m_stg.getInstanceOf("D2EannType_st");
+        st.add("d2exp", printCd2exp(node.m_d2exp));
+        st.add("s2exp", printCs2exp(node.m_s2exp));
+        return st;
+    }
+
+	private ST printCs2exp(Cs2exp node) {
+	    // s2exp_st(srt, s2exp) ::= <<
+		ST st = m_stg.getInstanceOf("s2exp_st");
+		st.add("srt", printIs2rt(node.s2exp_srt));
+		return st;
+    }
+
+	private ST printIs2rt(Is2rt node) {
+	    if (node instanceof S2RT) {
+	    	return printS2RT((S2RT)node);
+	    } else {
+	    	throw new Error("Is2rt " + node + " is not supported");
+	    }
+    }
+
+	private ST printS2RT(S2RT node) {
+	    // S2RT_st(srt) ::= <<
+		ST st = m_stg.getInstanceOf("S2RT_st");
+		st.add("srt", node.m_srt);
+		return st;
+    }
+
+	private ST printD2EannSeff(D2EannSeff node) {
+	    // D2EannSeff_st(d2exp) ::= <<
+        ST st = m_stg.getInstanceOf("D2EannSeff_st");
+        st.add("d2exp", printCd2exp(node.m_d2exp));
+
+        return st;
+    }
+
+	private ST printD2EannFunclo(D2EannFunclo node) {
+        // D2EannFunclo_st(funclo, d2exp) ::= <<
+        ST st = m_stg.getInstanceOf("D2EannFunclo_st");
+        st.add("funclo", printIfunclo(node.m_funclo));
+        st.add("d2exp", printCd2exp(node.m_d2exp));
+        return st;
+    }
+
+	private Object printIfunclo(Ifunclo funclo) {
+	    // Ifunclo_st(funclo) ::= <<
+		ST st = m_stg.getInstanceOf("Ifunclo_st");
+		if (funclo instanceof FUNCLOfun) {
+			st.add("funclo", "fun");
+		} else if (funclo instanceof FUNCLOclo) {
+			FUNCLOclo clo = (FUNCLOclo)funclo;
+			if (clo.m_knd == 1) {
+				st.add("funclo", "clo_ptr");
+			} else if (clo.m_knd == 0) {
+				st.add("funclo", "clo_clo");
+			} else if (clo.m_knd == -1) {
+				st.add("funclo", "clo_ref");
+			} else {
+				throw new Error("Unknown type for closure.");
+			}
+		} else {
+			throw new Error("Unknown type for clofun");
+		}
+		
+		return st;
+		
+    }
+
+	private ST printD2ElamMet(D2ElamMet node) {
         // D2ElamMet_st(d2exp) ::= <<
         ST st = m_stg.getInstanceOf("D2ElamMet_st");
         st.add("d2exp", printCd2exp(node.m_d2exp));
@@ -357,10 +455,10 @@ public class UtfplPrinter {
     }
     
     private ST printP2Tann(P2Tann node) {
-	    // P2Tann_st(pat, srt) ::= <<
+	    // P2Tann_st(pat, type) ::= <<
         ST st = m_stg.getInstanceOf("P2Tann_st");
         st.add("pat", printCp2at(node.m_p2t));
-        st.add("srt", "_");
+        st.add("type", printCs2exp(node.m_ann));
 
         return st;
     }
@@ -468,7 +566,7 @@ public class UtfplPrinter {
     private ST printD2Ecst(D2Ecst node) {
         // D2Ecst_st(cst) ::= <<
         ST st = m_stg.getInstanceOf("D2Ecst_st");
-        st.add("cst", node.m_d2cst);
+        st.add("cst", printCd2cst(node.m_d2cst));
         return st;
     }
 

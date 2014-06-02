@@ -22,7 +22,7 @@ public class EvalkindDeserializer implements JsonDeserializer<Evalkind> {
         } else if (knd.equals("VK_prval")) {
             return Evalkind.VK_prval;
         } else {
-            return Evalkind.VK_ignored;
+            throw new Error("kind " + knd + " is not supported.");
         }
     }
 

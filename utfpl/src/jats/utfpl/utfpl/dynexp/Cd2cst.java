@@ -11,14 +11,17 @@ public class Cd2cst {
     public Cs2exp m_type;
     public Csymbol m_symbol;
     
+    // Used for print (stringtemplate)
     public Cstamp getStamp() {
         return m_stamp;
     }
     
+    // Used for print (stringtemplate)
     public Csymbol getSymbol() {
         return m_symbol;
     }
     
+    // Used for print (stringtemplate)
     public Cs2exp getType() {
         return m_type;
     }

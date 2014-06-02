@@ -1,7 +1,9 @@
 package jats.utfpl.utfpl.dynexp;
 
 
-
+/*
+ * Function implementation, value implementation.
+ */
 public class D2Cimpdec implements Id2ecl_node {
     public int m_knd;
     public Ci2mpdec m_i2mpdec;

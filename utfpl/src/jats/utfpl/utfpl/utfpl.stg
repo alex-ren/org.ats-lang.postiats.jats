@@ -2,8 +2,13 @@ group utfpl;
 
 
 // handle Cd2cst
-d2cst_st(d2cst) ::= <<
-<symbol_st(d2cst.symbol)>_<stamp_st(d2cst.stamp)>
+d2cst_st(sym, stamp, s2exp) ::= <<
+<symbol_st(sym)>_<stamp_st(stamp)>:<s2exp>
+>>
+
+// handle Cs2cst
+s2cst_st(s2cst) ::= <<
+<symbol_st(s2cst.symbol)>_<stamp_st(s2cst.stamp)>
 >>
 
 // handle Cstamp
@@ -17,7 +22,7 @@ symbol_st(symbol) ::= <<
 >>
 
 utfpl_prog_st(d2ecs) ::= <<
-<d2ecs; separator="\n">
+<d2ecs; separator="\n\n">
 >>
 
 D2Cextcode_st(extcode) ::= <<
@@ -26,6 +31,10 @@ D2Cextcode_st(extcode) ::= <<
 
 D2Cdcstdecs_st(knd, dcsts) ::= <<
 <knd> <dcsts; separator="\nand ">
+>>
+
+D2Cstacsts_st(scsts) ::= <<
+<scsts; separator="\nand ">
 >>
 
 dcstkind_st(knd) ::= <<
@@ -62,7 +71,7 @@ D2EXPARGdyn_st(d2exps) ::= <<
 >>
 
 D2Ecst_st(cst) ::= <<
-D2Ecst\<<d2cst_st(cst)>\>
+D2Ecst\<<cst>\>
 >>
 
 D2Eexp_st(exp) ::= <<
@@ -92,6 +101,23 @@ D2ElamMet_st(d2exp) ::= <<
 lamMet. <d2exp>
 >>
 
+D2EannFunclo_st(funclo, d2exp) ::= <<
+\<<funclo>\>
+<d2exp>
+>>
+
+Ifunclo_st(funclo) ::= <<
+<funclo>
+>>
+
+D2EannSeff_st(d2exp) ::= <<
+\<D2EannSeff>(<d2exp>)
+>>
+
+D2EannType_st(d2exp, s2exp) ::= <<
+<d2exp>:<s2exp>
+>>
+
 D2ElamDyn_st(p2ts, exp) ::= <<
 lam (<p2ts; separator=", ">) = 
   <exp>
@@ -109,8 +135,8 @@ p2at_st(node) ::= <<
 <node>
 >>
 
-P2Tann_st(pat, srt) ::= <<
-P2Tann\<<pat>:<srt>\>
+P2Tann_st(pat, type) ::= <<
+P2Tann\<<pat>:<type>\>
 >>
 
 P2Trec_st(labpats) ::= <<
@@ -175,7 +201,7 @@ D2Cimpdec_st(i2mpdec) ::= <<
 >>
 
 i2mpdec_st(cst, def) ::= <<
-implement <d2cst_st(cst)> = <def>
+implement <cst> = <def>
 >>
 
 D2Elet_st(d2cs, d2e_body) ::= <<
@@ -189,6 +215,16 @@ end
 D2Eempty_st() ::= <<
 ()
 >>
+
+s2exp_st(srt, s2exp) ::= <<
+_:<srt>
+>>
+
+S2RT_st(srt) ::= <<
+<srt>
+>>
+
+
 
 
 

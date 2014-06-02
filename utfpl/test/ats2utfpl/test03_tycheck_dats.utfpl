@@ -1,6 +1,30 @@
-fun qq_62 = lam (P2Tpat<x_63>) = 
-  3
-DCKfun foo_2524
-DCKval vv_2525
-implement foo_2524 = lamSta. lamSta. lam (P2Tpat<x_64>, P2Tpat<y_65>) = 
-  3
+fun qq_62 = lam (P2Tann<x_63:_:t@ype>) = 
+  <D2EannSeff>(3:_:t@ype)
+
+ty_720
+
+DCKfun foo_2529:_:type
+
+DCKval vv_2530:_:t@ype
+
+implement foo_2529:_:type = lamSta. lamSta. lam (P2Tann<x_64:_:type>, P2Tann<y_65:_:t@ype>) = 
+  <fun>
+  <D2EannSeff>(3:_:t@ype)
+
+DCKfun ddd1_2531:_:type
+
+fun list_add_66 = lamSta. lam (P2Tann<xs_67:_:type>) = 
+  <D2EannSeff>(3:_:t@ype)
+
+fun qq1_68 = lam (P2Tann<x_69:_:t@ype>) = 
+  <clo_ref>
+  <D2EannSeff>(3:_:t@ype)
+
+propy_721
+
+prfun qq2_70 = lamSta. lamMet. lam (P2Tann<x_71:_:prop>) = 
+  <D2EannSeff>(3:_:t@ype)
+
+val P2Tann<vv2_72:_:t@ype> = 1:_:t@ype
+
+implement vv_2530:_:t@ype = 3:_:t@ype

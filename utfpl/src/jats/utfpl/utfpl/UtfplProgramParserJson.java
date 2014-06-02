@@ -114,10 +114,14 @@ import jats.utfpl.utfpl.staexp.S2Eignored;
 import jats.utfpl.utfpl.staexp.S2EignoredDeserializer;
 import jats.utfpl.utfpl.staexp.S2Eint;
 import jats.utfpl.utfpl.staexp.S2EintDeserializer;
+import jats.utfpl.utfpl.staexp.S2Eintinf;
+import jats.utfpl.utfpl.staexp.S2EintinfDeserializer;
 import jats.utfpl.utfpl.staexp.S2Esizeof;
 import jats.utfpl.utfpl.staexp.S2EsizeofDeserializer;
 import jats.utfpl.utfpl.staexp.S2Euni;
 import jats.utfpl.utfpl.staexp.S2EuniDeserializer;
+import jats.utfpl.utfpl.staexp.S2Evar;
+import jats.utfpl.utfpl.staexp.S2EvarDeserializer;
 
 import java.io.Reader;
 
@@ -194,9 +198,11 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(S2Efun.class, new S2EfunDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eignored.class, new S2EignoredDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eint.class, new S2EintDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Eintinf.class, new S2EintinfDeserializer());
         gsonBuilder.registerTypeAdapter(S2Esizeof.class, new S2EsizeofDeserializer());
         gsonBuilder.registerTypeAdapter(S2Eexi.class, new S2EexiDeserializer());
         gsonBuilder.registerTypeAdapter(S2Euni.class, new S2EuniDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Evar.class, new S2EvarDeserializer());
         
         
         

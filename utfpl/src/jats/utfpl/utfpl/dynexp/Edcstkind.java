@@ -1,10 +1,16 @@
 package jats.utfpl.utfpl.dynexp;
 
-
 public enum Edcstkind {
-    DCK_prfun("DCKprfun"), // extern prfun
+    
+    DCK_fun("DCKfun"),  // extern fun
     DCK_val("DCKval"),  // extern val
-    DCK_fun("DCKfun");  // extern fun
+
+    DCK_praxi("DCKpraxi"),  // praxi
+    DCK_prfun("DCKprfun"), // extern prfun
+    
+    DCK_prval("DCKprval"),  // extern prval
+    DCK_castfn("DCKcastfn");  // extern castfn
+    
     
     private String m_str;
     
