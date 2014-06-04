@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl;
 
+import jats.utfpl.utfpl.dynexp.Cd2con;
+import jats.utfpl.utfpl.dynexp.Cd2conDeserializer;
 import jats.utfpl.utfpl.dynexp.Cd2cst;
 import jats.utfpl.utfpl.dynexp.Cd2cstDeserializer;
 import jats.utfpl.utfpl.dynexp.Cd2var;
@@ -76,6 +78,8 @@ import jats.utfpl.utfpl.dynexp.P2Tann;
 import jats.utfpl.utfpl.dynexp.P2TannDeserializer;
 import jats.utfpl.utfpl.dynexp.P2Tany;
 import jats.utfpl.utfpl.dynexp.P2TanyDeserializer;
+import jats.utfpl.utfpl.dynexp.P2Tcon;
+import jats.utfpl.utfpl.dynexp.P2TconDeserializer;
 import jats.utfpl.utfpl.dynexp.P2Tempty;
 import jats.utfpl.utfpl.dynexp.P2TemptyDeserializer;
 import jats.utfpl.utfpl.dynexp.P2Tignored;
@@ -144,6 +148,7 @@ public class UtfplProgramParserJson {
         
         gsonBuilder.registerTypeAdapter(Cd2cst.class, new Cd2cstDeserializer());
         gsonBuilder.registerTypeAdapter(Cd2var.class, new Cd2varDeserializer());
+        gsonBuilder.registerTypeAdapter(Cd2con.class, new Cd2conDeserializer());
         
         gsonBuilder.registerTypeAdapter(Cs2cst.class, new Cs2cstDeserializer());
         gsonBuilder.registerTypeAdapter(Cs2var.class, new Cs2varDeserializer());
@@ -218,6 +223,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(P2Tvar.class, new P2TvarDeserializer());
         gsonBuilder.registerTypeAdapter(P2Trec.class, new P2TrecDeserializer());
         gsonBuilder.registerTypeAdapter(P2Tann.class, new P2TannDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tcon.class, new P2TconDeserializer());
         
 
         

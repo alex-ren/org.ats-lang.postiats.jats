@@ -4,12 +4,16 @@ import jats.utfpl.utfpl.Cstamp;
 import jats.utfpl.utfpl.Csymbol;
 import jats.utfpl.utfpl.staexp.Cs2exp;
 
+/*
+ * constructor for datatype
+ */
 public class Cd2con {
+    public Cstamp m_stamp;
+	public Cs2exp m_type;  // Caution: this can be null
 	public Csymbol m_sym;
-	public Cs2exp m_type;
-	public Cstamp m_stamp;
+	
 
-	public Cd2con(Csymbol sym, Cs2exp type, Cstamp stamp) {
+	public Cd2con(Cstamp stamp, Cs2exp type, Csymbol sym) {
             m_sym = sym;
             m_type = type;
             m_stamp = stamp;
