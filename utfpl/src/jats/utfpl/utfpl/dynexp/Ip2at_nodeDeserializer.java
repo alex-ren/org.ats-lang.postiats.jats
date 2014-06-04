@@ -34,7 +34,7 @@ public class Ip2at_nodeDeserializer implements JsonDeserializer<Ip2at_node> {
         } else if (name.equals("P2Tvar")) {
             return context.deserialize(je2, P2Tvar.class);
         } else if (name.equals("P2Tcon")) {
-            throw new Error("P2Tcon is not supported");
+        	return context.deserialize(je2, P2Tcon.class);
         } else if (name.equals("P2Tint")) {
             throw new Error("P2Tint is not supported");
         } else if (name.equals("P2Tintrep")) {

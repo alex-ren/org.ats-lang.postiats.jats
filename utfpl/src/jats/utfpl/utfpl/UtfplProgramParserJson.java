@@ -56,6 +56,8 @@ import jats.utfpl.utfpl.dynexp.Edcstkind;
 import jats.utfpl.utfpl.dynexp.EdcstkindDeserializer;
 import jats.utfpl.utfpl.dynexp.Efunkind;
 import jats.utfpl.utfpl.dynexp.EfunkindDeserializer;
+import jats.utfpl.utfpl.dynexp.Epckind;
+import jats.utfpl.utfpl.dynexp.EpckindDeserializer;
 import jats.utfpl.utfpl.dynexp.Evalkind;
 import jats.utfpl.utfpl.dynexp.EvalkindDeserializer;
 import jats.utfpl.utfpl.dynexp.Id2ecl_node;
@@ -175,6 +177,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(Efunkind.class, new EfunkindDeserializer());
         gsonBuilder.registerTypeAdapter(Evalkind.class, new EvalkindDeserializer());
         gsonBuilder.registerTypeAdapter(Edcstkind.class, new EdcstkindDeserializer());
+        gsonBuilder.registerTypeAdapter(Epckind.class, new EpckindDeserializer());
         
         
         
