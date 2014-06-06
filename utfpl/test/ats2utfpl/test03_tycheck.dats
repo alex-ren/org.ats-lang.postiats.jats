@@ -21,3 +21,5 @@ prfun qq2 {x:int} .<>.(x: propy (3)): int = 3
 val vv2: int = 1: int
 
 implement vv = 3
+
+fun foo3 (x: '(int, int)): '(int) = '(3)

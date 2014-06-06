@@ -28,3 +28,6 @@ prfun qq2_70 = lamSta. lamMet. lam (P2Tann<x_71:_:prop>) =
 val P2Tann<vv2_72:_:t@ype> = 1:_:t@ype
 
 implement vv_2530:_:t@ype = 3:_:t@ype
+
+fun foo3_73 = lam (P2Tann<x_74:_:type>) = 
+  <D2EannSeff>((3):_:type)

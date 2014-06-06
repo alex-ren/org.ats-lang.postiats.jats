@@ -5,14 +5,14 @@ public class EleType extends FlatType {
         super();
     }
 
-    @Override
-    public boolean equals(ISType ty) {
-        if (ty == this) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    @Override
+//    public boolean equals(ISType ty) {
+//        if (ty == this) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
 }
 

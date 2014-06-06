@@ -68,8 +68,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
             Log.log4j.error("D2Elist not supported");
             throw new Error("D2Elist not supported");
         } else if (name.equals("D2Etup")) {
-            Log.log4j.error("D2Etup not supported");
-            throw new Error("D2Etup not supported");
+            return context.deserialize(je2, D2Etup.class);
         } else if (name.equals("D2Erec")) {
             Log.log4j.error("D2Erec not supported");
             throw new Error("D2Erec not supported");
