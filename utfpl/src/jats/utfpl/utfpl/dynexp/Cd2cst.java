@@ -3,6 +3,7 @@ package jats.utfpl.utfpl.dynexp;
 import jats.utfpl.utfpl.Cstamp;
 import jats.utfpl.utfpl.Csymbol;
 import jats.utfpl.utfpl.staexp.Cs2exp;
+import jats.utfpl.utfpl.stype.ISType;
 
 public class Cd2cst {
 	// What is constant? True, False?
@@ -10,6 +11,8 @@ public class Cd2cst {
     public Cstamp m_stamp;
     public Cs2exp m_type;
     public Csymbol m_symbol;
+    
+    public ISType m_stype;
     
     // Used for print (stringtemplate)
     public Cstamp getStamp() {
@@ -30,6 +33,7 @@ public class Cd2cst {
         m_stamp = stamp;
         m_type = type;
         m_symbol = symbol;
+        m_stype = null;
     }
 
 }
