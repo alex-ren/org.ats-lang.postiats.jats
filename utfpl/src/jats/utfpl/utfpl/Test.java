@@ -66,13 +66,13 @@ public class Test {
                     
                     System.out.println(outputUTFPL);
                     
-                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
-                    uProg = processor.removeProof(uProg);
-                    outputUTFPL = uPrinter.print(uProg);
-                    
-                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
-                    
-                    System.out.println(outputUTFPL);
+//                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+//                    uProg = processor.removeProof(uProg);
+//                    outputUTFPL = uPrinter.print(uProg);
+//                    
+//                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
+//                    
+//                    System.out.println(outputUTFPL);
                     
                     FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
                     BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
