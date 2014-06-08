@@ -40,6 +40,8 @@ import jats.utfpl.utfpl.dynexp.D2Ei0nt;
 import jats.utfpl.utfpl.dynexp.D2Ei0ntDeserializer;
 import jats.utfpl.utfpl.dynexp.D2Eifopt;
 import jats.utfpl.utfpl.dynexp.D2EifoptDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Eignored;
+import jats.utfpl.utfpl.dynexp.D2EignoredDeserializer;
 import jats.utfpl.utfpl.dynexp.D2ElamDyn;
 import jats.utfpl.utfpl.dynexp.D2ElamDynDeserializer;
 import jats.utfpl.utfpl.dynexp.D2ElamMet;
@@ -181,6 +183,7 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2EannSeff.class, new D2EannSeffDeserializer());
         gsonBuilder.registerTypeAdapter(D2EannFunclo.class, new D2EannFuncloDeserializer());
         gsonBuilder.registerTypeAdapter(D2Etup.class, new D2EtupDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Eignored.class, new D2EignoredDeserializer());
         
         
         

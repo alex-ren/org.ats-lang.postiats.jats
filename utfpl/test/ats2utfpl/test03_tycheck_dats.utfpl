@@ -1,7 +1,7 @@
 fun qq_62 = lam (P2Tann<x_63:_:t@ype>) = 
   <D2EannSeff>(3:_:t@ype)
 
-ty_720
+ty_750
 
 DCKfun foo_2529:_:type
 
@@ -20,7 +20,7 @@ fun qq1_68 = lam (P2Tann<x_69:_:t@ype>) =
   <clo_ref>
   <D2EannSeff>(3:_:t@ype)
 
-propy_721
+propy_751
 
 prfun qq2_70 = lamSta. lamMet. lam (P2Tann<x_71:_:prop>) = 
   <D2EannSeff>(3:_:t@ype)
@@ -31,3 +31,30 @@ implement vv_2530:_:t@ype = 3:_:t@ype
 
 fun foo3_73 = lam (P2Tann<x_74:_:type>) = 
   <D2EannSeff>((3):_:type)
+
+fun foo4_75 = lam (P2Tann<x_76:_:t@ype>) = 
+  <D2EannSeff>(3:_:t@ype)
+
+fun foo5_77 = lamSta. lam (P2Tann<x_78:_:t@ype>) = 
+  <D2EannSeff>(x_78:_:t@ype)
+
+DCKfun foo6_2532:_:type
+
+implement foo6_2532:_:type = lam (P2Tann<x_79:_:t@ype>) = 
+  <fun>
+  <D2EannSeff>(3:_:t@ype)
+
+fun foo7_80 = lam (P2Tann<x_81:_:t@ype>) = 
+  <D2EannSeff>(let
+    fun goo1_82 = lam (P2Tann<y_83:_:t@ype>) = 
+      <D2EannSeff>(3:_:t@ype)
+  in
+    x_81
+  end:_:t@ype)
+
+fun foo8_84 = lam (P2Tann<xs_85:_:type>) = 
+  <D2EannSeff>(3:_:t@ype)
+
+DCKfun foo9_2533:_:type
+
+DCKfun foo10_2534:_:type
