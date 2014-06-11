@@ -41,7 +41,7 @@ end
  fun foo8 (xs: list0 (list0 int)): int = 3
  
  extern fun {a:t@ype} foo9 (x: a): int
- extern fun foo10 {a:t@ype} (x: a): int
+ extern fun foo10 {a:type} (x: a): int
 
 
 

@@ -15,6 +15,7 @@ import jats.utfpl.utfpl.dynexp.D2Cstacsts;
 import jats.utfpl.utfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.utfpl.dynexp.Id2ecl_node;
 import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.utfpl.staexp.Cs2exp;
 import jats.utfpl.utfpl.stype.ISType;
 
 
@@ -38,7 +39,7 @@ public class UtfplTypeChecker {
     	if (d2ecl instanceof D2Cdcstdecs) {
     		typecheck((D2Cdcstdecs)d2ecl);
     	} else if (d2ecl instanceof D2Cextcode) {
-    		typecheck((D2Cextcode)d2ecl);
+    		return;
     	} else if (d2ecl instanceof D2Cfundecs) {
     		typecheck((D2Cfundecs)d2ecl);
     	} else if (d2ecl instanceof D2Cignored) {
@@ -54,7 +55,12 @@ public class UtfplTypeChecker {
     	}
     }
 
-	private void typecheck(D2Cdcstdecs d2ecl) {
+	private void typecheck(D2Cfundecs d2ecl) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    private void typecheck(D2Cdcstdecs d2ecl) {
 	    for (Cd2cst d2cst: d2ecl.m_d2cst) {
 	    	typecheck(d2cst);
 	    }
@@ -62,8 +68,10 @@ public class UtfplTypeChecker {
     }
 
 	private ISType typecheck(Cd2cst d2cst) {
-	    // TODO Auto-generated method stub
+	    ISType stype = Cs2exp.extractType(d2cst.m_type);
+	    d2cst.m_stype = stype;
 	    
+	    return stype;
     }
     
 

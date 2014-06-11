@@ -8,6 +8,8 @@ import jats.utfpl.utfpl.stype.DefaultAppType;
 import jats.utfpl.utfpl.stype.FunType;
 import jats.utfpl.utfpl.stype.ISType;
 import jats.utfpl.utfpl.stype.IntType;
+import jats.utfpl.utfpl.stype.PolyParaType;
+import jats.utfpl.utfpl.stype.PolyType;
 
 
 public class Cs2exp {
@@ -49,17 +51,43 @@ public class Cs2exp {
     	} else if (node instanceof S2Euni) {
     		return extractType((S2Euni)node);
     	} else if (node instanceof S2Evar) {
-    		return extractType((S2Evar)node);
+    	    return extractType((S2Evar)node);
     	} else {
     		throw new Error(node + " is not supported");
     	}
     	
     }
 
-	private static ISType extractType(S2Euni node) {
+	private static PolyParaType extractType(S2Evar node) {
+	    return extractType(node.m_s2var);
+    }
+	
+    private static PolyParaType extractType(Cs2var node) {
+        if (node.isType()) {
+            PolyParaType ret = new PolyParaType(node);
+            return ret;
+        } else {
+            return null;
+        }
+    }
+
+    private static PolyType extractType(S2Euni node) {
 	    List<Cs2var> s2vs = node.m_s2vs;
+	    List<PolyParaType> paras = new ArrayList<PolyParaType>();
 	    
-        return null;
+	    for (Cs2var s2var: s2vs) {
+	        PolyParaType para = extractType(s2var);
+	        
+	        if (null != para) {
+	            paras.add(para);
+	        }
+	    }
+	    
+	    ISType body = extractType(node.m_s2e_body);
+	    
+	    PolyType ret = new PolyType(paras, body);
+	    
+	    return ret;
     }
 
     private static FunType extractType(S2Efun node) {

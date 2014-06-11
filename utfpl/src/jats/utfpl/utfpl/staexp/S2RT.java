@@ -8,4 +8,13 @@ public class S2RT implements Is2rt {
         m_srt = srt;
     }
 
+    @Override
+    public boolean isType() {
+        if (m_srt.equals("type")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

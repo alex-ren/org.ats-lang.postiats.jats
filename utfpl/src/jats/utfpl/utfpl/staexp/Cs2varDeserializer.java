@@ -33,7 +33,11 @@ public class Cs2varDeserializer implements JsonDeserializer<Cs2var> {
         } else {
             JsonElement je2 = jo.get("s2var_name");
             Csymbol symbol = context.deserialize(je2, Csymbol.class);
-            s2var = new Cs2var(symbol, stamp);
+            
+            JsonElement je3 = jo.get("s2var_srt");
+            Is2rt srt = context.deserialize(je3, Is2rt.class);
+            
+            s2var = new Cs2var(symbol, stamp, srt);
             m_map.put(stamp, s2var);
             return s2var;
             
