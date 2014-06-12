@@ -42,6 +42,8 @@ end
  
  extern fun {a:t@ype} foo9 (x: a): int
  extern fun foo10 {a:type} (x: a): int
+ 
+fun foo11 {a:type} {x,y:int} .<x,y>.(): int = 3
 
 
 

@@ -9,4 +9,29 @@ public class PolyParaType extends BoxedType {
         m_var = var;
     }
 
+    @Override
+    public PolyParaType normalize() {
+        return this;
+    }
+
+    @Override
+    public ISType instantiate(PolyParaType para, ISType arg) {
+        if (para.m_var == m_var) {
+            return arg;
+        } else {
+            return this;
+        }
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        } else if (o instanceof PolyParaType) {
+            return m_var == ((PolyParaType)o).m_var;
+        } else {
+            return false;
+        }
+    }
+
 }

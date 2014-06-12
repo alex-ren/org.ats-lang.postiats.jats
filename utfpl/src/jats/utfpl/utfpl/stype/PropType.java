@@ -8,6 +8,16 @@ public class PropType extends SortType {
         super(ESort.prop);
     }
 
+    @Override
+    public PropType normalize() {
+        return this;
+    }
+
+    @Override
+    public ISType instantiate(PolyParaType para, ISType arg) {
+        return this;
+    }
+
 //    @Override
 //    public boolean equals(ISType ty) {
 //        return ty == this;

@@ -1,6 +1,6 @@
 package jats.utfpl.utfpl.stype;
 
-public class DefaultAppType {
+public class DefaultAppTypeStore {
     
     static public String conList0 = "list0_t0ype_type";
     

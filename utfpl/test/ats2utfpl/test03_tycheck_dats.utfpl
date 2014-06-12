@@ -58,3 +58,6 @@ fun foo8_84 = lam (P2Tann<xs_85:_:type>) =
 DCKfun foo9_2542:_:type
 
 DCKfun foo10_2543:_:type
+
+fun foo11_86 = lamSta. lamSta. lamMet. lam () = 
+  <D2EannSeff>(3:_:t@ype)
