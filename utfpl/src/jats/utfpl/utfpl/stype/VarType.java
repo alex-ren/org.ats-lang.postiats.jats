@@ -36,5 +36,11 @@ public class VarType implements ISType {
 //    public boolean equals(ISType ty) {
 //        return (m_ty == null) ? ty == null: ty.equals(m_ty);
 //    }
+    
+    @Override
+    public boolean equals(Object right) {
+        throw new Error("should not use this");
+        
+    }
 
 }

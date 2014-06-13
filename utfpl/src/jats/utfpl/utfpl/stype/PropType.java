@@ -18,9 +18,5 @@ public class PropType extends SortType {
         return this;
     }
 
-//    @Override
-//    public boolean equals(ISType ty) {
-//        return ty == this;
-//    }
 
 }

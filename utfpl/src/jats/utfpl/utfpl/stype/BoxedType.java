@@ -5,5 +5,4 @@ public abstract class BoxedType extends SortType {
         super(ESort.type);
     }
     
-
 }

@@ -15,5 +15,7 @@ public interface ISType {
     public ISType instantiate(PolyParaType para, ISType arg);
     
     public void match(ISType ty);
+    
+    public boolean equals(Object right);
 
 }

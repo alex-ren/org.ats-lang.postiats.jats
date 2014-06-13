@@ -41,4 +41,30 @@ public class FunType extends BoxedType {
         
         return new FunType(m_npf, args, res);
     }
+
+    @Override
+    public void match(ISType ty) {
+        FunType left = this.normalize();
+        ISType right0 = ty.normalize();
+        
+        if (right0 instanceof VarType) {
+            ((VarType)right0).setType(left);
+            return;
+        } else if (right0 instanceof FunType) {
+            FunType right = (FunType)right0;
+            Aux.matchTypeList(left.m_args, right.m_args);
+            m_res.match(right.m_res);
+        } else {
+            throw new Error("Type mismatch.");
+        }
+    }
+    
 }
+
+
+
+
+    
+    
+    
+    
