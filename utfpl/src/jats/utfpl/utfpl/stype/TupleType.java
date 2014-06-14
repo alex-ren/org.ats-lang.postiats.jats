@@ -33,6 +33,23 @@ public class TupleType extends BoxedType {
         return new TupleType(tys);
     }
 
+    @Override
+    public void match(ISType ty) {
+        TupleType left = this.normalize();
+        ISType right0 = ty.normalize();
+        
+        if (right0 instanceof VarType) {
+            ((VarType)right0).setType(left);
+            return;
+        } else if (right0 instanceof TupleType) {
+            TupleType right = (TupleType)right0;
+            Aux.matchTypeList(left.m_tys, right.m_tys);
+        } else {
+            throw new Error("Type mismatch.");
+        }
+        
+    }
+
 //	@Override
 //    public boolean equals(ISType ty) {
 //		if (this == ty) {
