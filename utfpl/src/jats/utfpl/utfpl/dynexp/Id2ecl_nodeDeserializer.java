@@ -51,8 +51,7 @@ public class Id2ecl_nodeDeserializer implements JsonDeserializer<Id2ecl_node> {
         } else if (name.equals("D2Cextcode")) {
             return context.deserialize(je2, D2Cextcode.class);
         } else if (name.equals("D2Cdatdecs")) {
-            Log.log4j.error("D2Cdatdecs not supported");
-            throw new Error("D2Cdatdecs not supported");
+        	return context.deserialize(je2, D2Cdatdecs.class);
         } else if (name.equals("D2Cexndecs")) {
             Log.log4j.error("D2Cexndecs not supported");
             throw new Error("D2Cexndecs not supported");

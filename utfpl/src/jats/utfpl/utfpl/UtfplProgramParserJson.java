@@ -6,6 +6,8 @@ import jats.utfpl.utfpl.dynexp.Cd2cst;
 import jats.utfpl.utfpl.dynexp.Cd2cstDeserializer;
 import jats.utfpl.utfpl.dynexp.Cd2var;
 import jats.utfpl.utfpl.dynexp.Cd2varDeserializer;
+import jats.utfpl.utfpl.dynexp.D2Cdatdecs;
+import jats.utfpl.utfpl.dynexp.D2CdatdecsDeserializer;
 import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
 import jats.utfpl.utfpl.dynexp.D2CdcstdecsDeserializer;
 import jats.utfpl.utfpl.dynexp.D2Cextcode;
@@ -164,6 +166,8 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Cvaldecs.class, new D2CvaldecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cdcstdecs.class, new D2CdcstdecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cstacsts.class, new D2CstacstsDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Cdatdecs.class, new D2CdatdecsDeserializer());
+        
         
         gsonBuilder.registerTypeAdapter(D2Eapplst.class, new D2EapplstDeserializer());
         gsonBuilder.registerTypeAdapter(D2Ecst.class, new D2EcstDeserializer());

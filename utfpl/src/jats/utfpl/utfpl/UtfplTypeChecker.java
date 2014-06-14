@@ -24,6 +24,11 @@ import jats.utfpl.utfpl.dynexp.Ip2at_node;
 import jats.utfpl.utfpl.dynexp.P2Tann;
 import jats.utfpl.utfpl.dynexp.P2Tany;
 import jats.utfpl.utfpl.dynexp.P2Tcon;
+import jats.utfpl.utfpl.dynexp.P2Tempty;
+import jats.utfpl.utfpl.dynexp.P2Tignored;
+import jats.utfpl.utfpl.dynexp.P2Tpat;
+import jats.utfpl.utfpl.dynexp.P2Trec;
+import jats.utfpl.utfpl.dynexp.P2Tvar;
 import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utfpl.staexp.Cs2exp;
 import jats.utfpl.utfpl.staexp.Cs2var;
@@ -152,8 +157,20 @@ public class UtfplTypeChecker {
         if (pnode instanceof P2Tann) {
             return oftype((P2Tann)pnode);
         } else if (pnode instanceof P2Tany) {
-            return null;
+            return new VarType();
         } else if (pnode instanceof P2Tcon) {
+            // todo
+        } else if (pnode instanceof P2Tempty) {
+            // todo
+        } else if (pnode instanceof P2Tignored) {
+            // todo
+        } else if (pnode instanceof P2Tpat) {
+            // todo
+        } else if (pnode instanceof P2Trec) {
+            // todo
+        } else if (pnode instanceof P2Tvar) {
+            // todo
+        } else {
             // todo
         }  // todo
     }

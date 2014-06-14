@@ -45,6 +45,21 @@ end
  
 fun foo11 {a:type} {x,y:int} .<x,y>.(): int = 3
 
+datatype mylist (int, int) =
+| {x:int}{y:int} mylist_cons (x, y) of (int x, int y, mylist (x - 1, y - 1))
+| {x:int}{y:int} mylist_nil (x, y)
+
+fun foo12 {x,y:int} (x: mylist (x, y)): int =
+case+ x of
+| mylist_cons (x, y) => 1
+| mylist_nil () => 0
+
+////
+ let
+  val mylist_cons (x, y) = x
+in
+  3
+end
 
 
 

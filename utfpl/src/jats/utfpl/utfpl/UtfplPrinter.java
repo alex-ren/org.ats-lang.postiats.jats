@@ -7,6 +7,7 @@ import jats.utfpl.utfpl.dynexp.Cf2undec;
 import jats.utfpl.utfpl.dynexp.Ci2mpdec;
 import jats.utfpl.utfpl.dynexp.Cp2at;
 import jats.utfpl.utfpl.dynexp.Cv2aldec;
+import jats.utfpl.utfpl.dynexp.D2Cdatdecs;
 import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
 import jats.utfpl.utfpl.dynexp.D2Cextcode;
 import jats.utfpl.utfpl.dynexp.D2Cfundecs;
@@ -112,12 +113,25 @@ public class UtfplPrinter {
             return printD2Cdcstdecs((D2Cdcstdecs)node);
         } else if (node instanceof D2Cstacsts) {
         	return printD2Cstacsts((D2Cstacsts)node);
+        } else if (node instanceof D2Cdatdecs) {
+        	return printD2Cdatdecs((D2Cdatdecs)node);
         } else {
             throw new Error("Id2ecl_node " + node + " is not supported");
         }
     }
     
-    private ST printD2Cstacsts(D2Cstacsts node) {
+    private ST printD2Cdatdecs(D2Cdatdecs node) {
+	    // D2Cdatdecs_st(knd, s2csts) ::= <<
+        ST st = m_stg.getInstanceOf("D2Cdatdecs_st");
+        st.add("knd", node.m_knd);
+        for (Cs2cst cst: node.m_s2csts) {
+            st.add("scsts", printCs2cst(cst));
+        }
+        
+        return st;
+    }
+
+	private ST printD2Cstacsts(D2Cstacsts node) {
 	    // D2Cstacsts_st(scsts) ::= <<
         ST st = m_stg.getInstanceOf("D2Cstacsts_st");
         for (Cs2cst cst: node.m_s2csts) {
@@ -463,7 +477,7 @@ public class UtfplPrinter {
         } else if (node instanceof P2Tann) {
             return printP2Tann((P2Tann)node); 
         } else {
-            throw new Error("not supported");
+            throw new Error(node + " is not supported");
         }
     }
     
