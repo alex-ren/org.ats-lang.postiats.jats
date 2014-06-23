@@ -29,7 +29,7 @@ public class AppType extends BoxedType {
     }
 
     @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
+    public AppType instantiate(PolyParaType para, ISType arg) {
         List<ISType> tys = new ArrayList<ISType>();
         for (ISType ty: m_tys) {
             ISType nty = ty.instantiate(para, arg);

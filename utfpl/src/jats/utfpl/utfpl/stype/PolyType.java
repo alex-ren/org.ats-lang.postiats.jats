@@ -19,7 +19,7 @@ public class PolyType extends BoxedType {
 
 
     @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
+    public PolyType instantiate(PolyParaType para, ISType arg) {
         if (m_paras.contains(para)) {
             throw new Error("This is not allowed.");
         }

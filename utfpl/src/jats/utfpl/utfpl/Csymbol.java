@@ -10,5 +10,9 @@ public class Csymbol {
     public Csymbol(String str) {
         m_str = str;
     }
+    
+    public boolean equals(Csymbol right) {
+        return m_str.equals(right.m_str);
+    }
 
 }

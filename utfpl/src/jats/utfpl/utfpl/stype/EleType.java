@@ -12,7 +12,7 @@ public class EleType extends FlatType {
     }
 
     @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
+    public EleType instantiate(PolyParaType para, ISType arg) {
         return this;
     }
 

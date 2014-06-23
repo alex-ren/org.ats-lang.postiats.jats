@@ -14,7 +14,7 @@ public class PropType extends SortType {
     }
 
     @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
+    public PropType instantiate(PolyParaType para, ISType arg) {
         return this;
     }
 

@@ -1,9 +1,10 @@
 package jats.utfpl.utfpl.stype;
 
-public class VarType implements ISType {
+public class VarType extends SortType {
     private ISType m_ty;
     
     public VarType() {
+        super()
         m_ty = null;
     }
     

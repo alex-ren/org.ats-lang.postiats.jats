@@ -14,6 +14,9 @@ public class FunType extends BoxedType {
         m_res = res;
     }
 
+    public ISType getRetType() {
+        return m_res;
+    }
     @Override
     public FunType normalize() {
         List<ISType> tys = new ArrayList<ISType>();
@@ -30,7 +33,7 @@ public class FunType extends BoxedType {
     }
 
     @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
+    public FunType instantiate(PolyParaType para, ISType arg) {
         List<ISType> args = new ArrayList<ISType>();
         for (ISType ty: m_args) {
             ISType nty = ty.instantiate(para, arg);

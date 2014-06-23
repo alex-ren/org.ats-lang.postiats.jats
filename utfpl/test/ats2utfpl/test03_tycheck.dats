@@ -49,17 +49,38 @@ datatype mylist (int, int) =
 | {x:int}{y:int} mylist_cons (x, y) of (int x, int y, mylist (x - 1, y - 1))
 | {x:int}{y:int} mylist_nil (x, y)
 
-fun foo12 {x,y:int} (x: mylist (x, y)): int =
-case+ x of
-| mylist_cons (x, y) => 1
-| mylist_nil () => 0
+//fun foo12 {x,y:int} (x: mylist (x, y)): int =
+//case+ x of
+//| mylist_cons (x, y) => 1
+//| mylist_nil () => 0
 
-////
+(*
  let
   val mylist_cons (x, y) = x
 in
   3
 end
+*)
+
+fun foo13 (x: int):<cloref1> int = 3
+fun foo14 (x: int): int = 3
+
+fun foo15 {a:type}{b:int}(): int = 3
+
+fun foo16 (x: int, f: {a:type}{b:type}(a, b) -> int): int = f ()
+
+fun foo17 (): int = foo16(1, foo16)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

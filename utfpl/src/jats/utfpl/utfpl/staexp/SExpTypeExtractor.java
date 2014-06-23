@@ -13,6 +13,8 @@ import java.util.List;
 
 public class SExpTypeExtractor {
 
+    // This function may return null if s2e is not of
+    // sort type or t@ype.
     static public ISType extractType(Cs2exp s2e) {
         Is2exp_node node = s2e.s2exp_node;
         if (node instanceof S2Eapp) {
