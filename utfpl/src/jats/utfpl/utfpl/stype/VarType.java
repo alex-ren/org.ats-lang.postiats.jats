@@ -1,15 +1,24 @@
 package jats.utfpl.utfpl.stype;
 
 public class VarType extends SortType {
-    private ISType m_ty;
+    private SortType m_ty;
     
     public VarType() {
-        super()
+        super(ESort.unknown);
         m_ty = null;
     }
     
+    public boolean isRaw() {
+        return null == m_ty;
+    }
+    
     public void setType(ISType ty) {
-        m_ty = ty;
+        if (!(ty instanceof SortType)) {
+            throw new Error("non-sort type not allowed");
+        }
+        m_ty = (SortType)ty;
+        m_srt = m_ty.m_srt;
+        
     }
     
     public ISType getType() {
@@ -27,7 +36,11 @@ public class VarType extends SortType {
     @Override
     public ISType normalize() {
         if (null != m_ty) {
-            m_ty = m_ty.normalize();
+            ISType nty = m_ty.normalize();
+            if (!(nty instanceof SortType)) {
+                throw new Error("non-sort type not allowed");
+            }
+            m_ty = (SortType)nty;
             return m_ty;
         } else {
             return this;
@@ -63,7 +76,10 @@ public class VarType extends SortType {
                 // do nothing
             }
         } else if (left instanceof VarType) {
-            m_ty = right0;
+            if (!(right0 instanceof SortType)) {
+                throw new Error("non-sort type not allowed");
+            }
+            m_ty = (SortType)right0;
         } else {
             left.match(right0);
         }

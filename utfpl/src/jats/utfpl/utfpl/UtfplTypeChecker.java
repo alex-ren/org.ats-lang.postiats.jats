@@ -22,6 +22,7 @@ import jats.utfpl.utfpl.dynexp.D2EannFunclo;
 import jats.utfpl.utfpl.dynexp.D2EannSeff;
 import jats.utfpl.utfpl.dynexp.D2EannType;
 import jats.utfpl.utfpl.dynexp.D2Eapplst;
+import jats.utfpl.utfpl.dynexp.D2Ecst;
 import jats.utfpl.utfpl.dynexp.D2ElamDyn;
 import jats.utfpl.utfpl.dynexp.D2ElamMet;
 import jats.utfpl.utfpl.dynexp.D2ElamSta;
@@ -160,7 +161,7 @@ public class UtfplTypeChecker {
         } else if (node instanceof D2Eapplst) {
             return oftype((D2Eapplst)node);
         } else if (node instanceof D2Ecst) {
-            return oftype((xxx)node);
+            return oftype((D2Ecst)node);
         } else if (node instanceof D2Eempty) {
             return oftype((xxx)node);
         } else if (node instanceof D2Eexp) {
@@ -195,9 +196,29 @@ public class UtfplTypeChecker {
 
     }
 
+    private ISType oftype(D2Ecst node) {
+        return oftype(node.m_d2cst);
+    }
+
+    private ISType oftype(Cd2cst d2cst) {
+        if (null != d2cst.m_type) {
+            d2cst.m_stype = SExpTypeExtractor.extractType(d2cst.m_type);
+            if (null == d2cst.m_stype) {
+                throw new Error("check this");
+            }
+        }
+        if (null != d2cst.m_stype) {
+            return d2cst.m_stype;
+        } else {
+            d2cst.m_stype = new VarType();
+            return d2cst.m_stype;
+        }
+    }
+
     private ISType oftype(D2Eapplst node) {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
+        ty = ty.normalize();
         if (ty instanceof UniType) {
             FunType funTy = ((UniType)ty).getNormalFunType();
             return oftype(funTy, argsLst);
@@ -246,7 +267,11 @@ public class UtfplTypeChecker {
         throw new Error("Should not happen.");
     }
     
-    private ISType oftype(VarType funType, List<Id2exparg> argsLst) {
+    private ISType oftype(VarType funType0, List<Id2exparg> argsLst) {
+        if (!funType0.isRaw()) {
+            throw new Error("should be uninitialized");
+        }
+        
         for (int i = 0; i < argsLst.size(); ++i) {
             Id2exparg args0 = argsLst.get(i);
             if (args0 instanceof D2EXPARGsta) {
@@ -261,32 +286,15 @@ public class UtfplTypeChecker {
                     argsType.add(argType);
                 }
                 VarType retType = new VarType();
-                FunType 
+                FunType funType = new FunType(-1, argsType, retType);
+                funType0.setType(funType);
                 
-                
-                
-                
-                List<ISType> argsType = funType.m_args;
-                List<Cd2exp> argsExp = args.m_d2expLst;
-                if (argsType.size() != argsExp.size()) {
-                    throw new Error("Type mismatched");
-                }
-                for (int j = 0; j < argsType.size(); ++j) {
-                    typecheck(argsExp.get(j), argsType.get(j));
-                }
-                
-                ISType retType = funType.m_res;
                 if (i == argsLst.size() - 1) {
                     return retType;
                 }
                 List<Id2exparg> nArgsLst = argsLst.subList(i, argsLst.size());
-                if (retType instanceof FunType) {
-                    return oftype((FunType)retType, nArgsLst);
-                } else if (retType instanceof VarType) {
-                    return oftype((VarType)retType, nArgsLst);
-                } else {
-                    throw new Error(retType + " is not supported.");
-                }
+                return oftype((VarType)retType, nArgsLst);
+
             } else {
                 throw new Error(args0 + " is not supported.");
             }
