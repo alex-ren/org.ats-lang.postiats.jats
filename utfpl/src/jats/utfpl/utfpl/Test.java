@@ -58,6 +58,9 @@ public class Test {
 
                     UtfplProgramParserJson utfplParser = new UtfplProgramParserJson();
                     ProgramUtfpl uProg = utfplParser.trans(fReader);
+                    
+                    UtfplTypeChecker tyChecker = new UtfplTypeChecker(uProg);
+                    tyChecker.typecheck();
 
                     UtfplPrinter uPrinter = new UtfplPrinter();
                     String outputUTFPL = uPrinter.print(uProg);

@@ -61,7 +61,7 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
             Log.log4j.info("S2Emetdec is turned into S2Eignored");
             return S2Eignored.cInstance;
         } else if (name.equals("S2Eexi")) {
-        	return context.deserialize(je2, S2Euni.class);
+        	return context.deserialize(je2, S2Eexi.class);
         } else if (name.equals("S2Euni")) {
             return context.deserialize(je2, S2Euni.class);
         } else if (name.equals("S2Einvar")) {

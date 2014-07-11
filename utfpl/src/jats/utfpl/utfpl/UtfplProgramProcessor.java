@@ -408,7 +408,7 @@ public class UtfplProgramProcessor {
             }
         }
         
-        return new P2Trec(new_labp2ats, 0/*no proof*/);
+        return new P2Trec(new_labp2ats, 0/*no proof*/, p2at_node.m_knd);
     }
 
     private LABP2ATnorm removeProof(LABP2ATnorm labp2at) {

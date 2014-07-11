@@ -84,6 +84,8 @@ public class VarType extends SortType {
             left.match(right0);
         }
         
+        m_srt = m_ty.m_srt;  // update sort
+        
     }
 
 }

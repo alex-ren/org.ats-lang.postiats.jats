@@ -36,7 +36,7 @@ public class SExpTypeExtractor {
         } else if (node instanceof S2Eint) {
             throw new Error("S2Eint encountered.");
         } else if (node instanceof S2Eintinf) {
-            throw new Error("S2Eint encountered.");
+            return null;
         } else if (node instanceof S2Esizeof) {
             return null;
         } else if (node instanceof S2Euni) {
@@ -77,7 +77,7 @@ public class SExpTypeExtractor {
         ISType body = extractType(node.m_s2e_body);
         
         PolyType ret = new PolyType(paras, body);
-        
+
         return ret;
     }
 
@@ -98,8 +98,10 @@ public class SExpTypeExtractor {
         if (node.m_fun.s2exp_node instanceof S2Ecst) {
             S2Ecst sfun = (S2Ecst)node.m_fun.s2exp_node;
             String con = sfun.getName();
-            
-            if (con.equals(DefaultAppTypeStore.conInt)) {
+
+            if (con.equals(DefaultAppTypeStore.con_g0int_t0ype)) {
+                return IntType.cInstance;
+            } else if (con.equals(DefaultAppTypeStore.con_g1int_int_t0ype)) {
                 return IntType.cInstance;
             } else {
                 List<ISType> tys = extractTypeList(node.m_arglst);

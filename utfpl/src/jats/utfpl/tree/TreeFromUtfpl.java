@@ -512,7 +512,7 @@ public class TreeFromUtfpl {
     }
 
 	private String transCd2sym(Cd2sym uNode) {
-	    return transCsymbol(uNode.d2sym_name);
+	    return transCsymbol(uNode.m_d2sym_name);
     }
 
 	private ExpId transD2Evar(Location loc, D2Evar uNode) {

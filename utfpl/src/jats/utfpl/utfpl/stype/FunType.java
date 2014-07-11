@@ -3,6 +3,9 @@ package jats.utfpl.utfpl.stype;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * This type should always appear inside UniType.
+ */
 public class FunType extends BoxedType {
     public int m_npf;
     public List<ISType> m_args;

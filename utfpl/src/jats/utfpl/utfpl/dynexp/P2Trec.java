@@ -14,8 +14,11 @@ public class P2Trec implements Ip2at_node {
     public int m_npf;  // Number of proofs in the pattern, if it is >= 0.
                        // (proof always appears starting from beginning.)
     
-    public P2Trec(List<Ilabp2at> labpats, int npf) {
+    public int m_knd;  // 0: flat, 1: boxed
+    
+    public P2Trec(List<Ilabp2at> labpats, int npf, int knd) {
         m_labpats = labpats;
         m_npf = npf;
+        m_knd = knd;
     }
 }

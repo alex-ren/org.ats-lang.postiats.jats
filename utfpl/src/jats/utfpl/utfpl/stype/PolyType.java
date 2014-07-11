@@ -43,5 +43,29 @@ public class PolyType extends BoxedType {
         }
     }
     
+    public FunType getNormalFunType() {
+        ISType aType = m_body;
+        for (PolyParaType tyPara: m_paras) {
+            VarType tyArg = new VarType();
+            aType = aType.instantiate(tyPara, tyArg);
+        }
+        
+        if (aType instanceof FunType) {
+            return (FunType)aType;
+        } else {
+            throw new Error("Check this.");
+        }
+    }
+    
+    public FunType getParaFunType() {
+        if (m_body instanceof FunType) {
+            return (FunType)m_body;
+        } else if (m_body instanceof PolyType) {
+            return ((PolyType)m_body).getParaFunType();
+        } else {
+            throw new Error("Check this.");
+        }
+    }
+    
 
 }

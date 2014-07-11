@@ -29,7 +29,7 @@ public class EleType extends FlatType {
                 throw new Error("Type mismatch.");
             }
         } else {
-            throw new Error("Type mismatch.");
+            throw new Error("Type mismatch. left is " + left + ", right is " + right0);
         }
         
     }

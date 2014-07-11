@@ -17,13 +17,16 @@ public class P2TrecDeserializer implements JsonDeserializer<P2Trec> {
     public P2Trec deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
         
+        
         JsonArray jarr = json.getAsJsonArray();
+        
+        int knd = jarr.get(0).getAsInt();
         int npf = jarr.get(1).getAsInt();
         
         JsonElement je = jarr.get(2);
         List<Ilabp2at> labpats = JsonUtilities.deserializeList(je, Ilabp2at.class, context);
         
-        return new P2Trec(labpats, npf);
+        return new P2Trec(labpats, npf, knd);
     }
 
 }

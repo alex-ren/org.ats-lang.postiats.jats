@@ -10,6 +10,9 @@ public class UniType extends BoxedType {
     private List<ISType> m_tyArgLst;
     
     public UniType(List<PolyParaType> tyParaLst, FunType funty) {
+        if (null == tyParaLst) {
+            throw new Error("typParaLst cannot be null.");
+        }
         m_tyParaLst = tyParaLst;
         m_funty = funty;
         m_tyArgLst = new ArrayList<ISType>();
@@ -33,9 +36,7 @@ public class UniType extends BoxedType {
     }
     
     public FunType getNormalFunType() {
-        if (m_tyArgLst.size() != 0) {
-            throw new Error("Check this.");
-        }
+
         FunType funTy = m_funty;
         for (PolyParaType tyPara: m_tyParaLst) {
             VarType tyArg = new VarType();
