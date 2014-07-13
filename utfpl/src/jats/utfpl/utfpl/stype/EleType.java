@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.stype;
 
+import java.util.Map;
+
 
 public class EleType extends FlatType {
     public EleType() {
@@ -8,11 +10,6 @@ public class EleType extends FlatType {
 
     @Override
     public EleType normalize() {
-        return this;
-    }
-
-    @Override
-    public EleType instantiate(PolyParaType para, ISType arg) {
         return this;
     }
 
@@ -32,6 +29,11 @@ public class EleType extends FlatType {
             throw new Error("Type mismatch. left is " + left + ", right is " + right0);
         }
         
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        return this;
     }
     
 }

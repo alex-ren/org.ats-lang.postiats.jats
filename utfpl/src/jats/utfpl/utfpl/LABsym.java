@@ -1,6 +1,5 @@
-package jats.utfpl.utfpl.dynexp;
+package jats.utfpl.utfpl;
 
-import jats.utfpl.utfpl.Csymbol;
 
 public class LABsym implements Ilabel {
     public Csymbol m_sym;

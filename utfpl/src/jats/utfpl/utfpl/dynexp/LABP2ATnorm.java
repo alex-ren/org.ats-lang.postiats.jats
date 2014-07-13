@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.dynexp;
 
+import jats.utfpl.utfpl.Ilabel;
+
 
 /*
  * The object of this class represents an item in the record.

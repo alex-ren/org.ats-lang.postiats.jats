@@ -11,6 +11,7 @@ import jats.utfpl.utfpl.dynexp.Cf2undec;
 import jats.utfpl.utfpl.dynexp.Ci2mpdec;
 import jats.utfpl.utfpl.dynexp.Cp2at;
 import jats.utfpl.utfpl.dynexp.Cv2aldec;
+import jats.utfpl.utfpl.dynexp.D2Cdatdecs;
 import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
 import jats.utfpl.utfpl.dynexp.D2Cextcode;
 import jats.utfpl.utfpl.dynexp.D2Cfundecs;
@@ -46,7 +47,6 @@ import jats.utfpl.utfpl.dynexp.Ilabp2at;
 import jats.utfpl.utfpl.dynexp.Ip2at_node;
 import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
 import jats.utfpl.utfpl.dynexp.LABP2ATomit;
-import jats.utfpl.utfpl.dynexp.LABint;
 import jats.utfpl.utfpl.dynexp.P2Tann;
 import jats.utfpl.utfpl.dynexp.P2Tany;
 import jats.utfpl.utfpl.dynexp.P2Tcon;
@@ -103,7 +103,9 @@ public class UtfplTypeChecker {
     	} else if (d2ecl instanceof D2Cstacsts) {
     		typecheck_dec((D2Cstacsts)d2ecl);
     	} else if (d2ecl instanceof D2Cvaldecs) {
-    		typecheck_dec((D2Cvaldecs)d2ecl);    		
+    		typecheck_dec((D2Cvaldecs)d2ecl);    
+    	} else if (d2ecl instanceof D2Cdatdecs) {
+    	    Log.log4j.warn("D2Cdatdecs encountered in type checking.");
     	} else {
     		throw new Error(dec + " is not supported.");
     	}

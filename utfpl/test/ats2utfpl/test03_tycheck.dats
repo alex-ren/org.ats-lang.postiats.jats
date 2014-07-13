@@ -25,8 +25,10 @@ val vv2: int = 1: int
 implement vv = 3
 
 fun foo3 (x: '(int, int)): '(int) = '(3)
-////
+
 fun {a:t@ype} foo4(x: a): int = 3
+
+
 fun foo5 {a:t@ype} (x: a): a = x
 
 extern fun {a:t@ype} foo6 (x: a): int

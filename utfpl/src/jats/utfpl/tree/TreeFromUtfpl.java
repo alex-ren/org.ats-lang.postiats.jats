@@ -5,6 +5,9 @@ import java.util.List;
 
 import jats.utfpl.ccomp.CCompUtils;
 import jats.utfpl.utfpl.Csymbol;
+import jats.utfpl.utfpl.Ilabel;
+import jats.utfpl.utfpl.LABint;
+import jats.utfpl.utfpl.LABsym;
 import jats.utfpl.tree.IExp;
 
 import jats.utfpl.utfpl.dynexp.Cd2cst;
@@ -43,13 +46,10 @@ import jats.utfpl.utfpl.dynexp.Edcstkind;
 import jats.utfpl.utfpl.dynexp.Id2ecl_node;
 import jats.utfpl.utfpl.dynexp.Id2exp_node;
 import jats.utfpl.utfpl.dynexp.Id2exparg;
-import jats.utfpl.utfpl.dynexp.Ilabel;
 import jats.utfpl.utfpl.dynexp.Ilabp2at;
 import jats.utfpl.utfpl.dynexp.Ip2at_node;
 import jats.utfpl.utfpl.dynexp.LABP2ATnorm;
 import jats.utfpl.utfpl.dynexp.LABP2ATomit;
-import jats.utfpl.utfpl.dynexp.LABint;
-import jats.utfpl.utfpl.dynexp.LABsym;
 import jats.utfpl.utfpl.dynexp.P2Tany;
 import jats.utfpl.utfpl.dynexp.P2Tempty;
 import jats.utfpl.utfpl.dynexp.P2Tignored;

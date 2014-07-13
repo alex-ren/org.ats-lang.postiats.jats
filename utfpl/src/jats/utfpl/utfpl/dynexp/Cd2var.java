@@ -27,7 +27,7 @@ public class Cd2var {
     
     public void updateSType(ISType stype) {
         if (null != m_stype) {
-            throw new Error("Should not happen.");
+            m_stype.match(stype);
         } else {
             m_stype = stype;
         }

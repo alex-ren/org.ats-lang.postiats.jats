@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.staexp;
 
+import jats.utfpl.utfpl.LABint;
+import jats.utfpl.utfpl.dynexp.Cd2exp;
 import jats.utfpl.utfpl.stype.AppType;
 import jats.utfpl.utfpl.stype.DefaultAppTypeStore;
 import jats.utfpl.utfpl.stype.FunType;
@@ -7,6 +9,9 @@ import jats.utfpl.utfpl.stype.ISType;
 import jats.utfpl.utfpl.stype.IntType;
 import jats.utfpl.utfpl.stype.PolyParaType;
 import jats.utfpl.utfpl.stype.PolyType;
+import jats.utfpl.utfpl.stype.RecType;
+import jats.utfpl.utfpl.stype.RecType.ILabPat;
+import jats.utfpl.utfpl.stype.RecType.LabPatNorm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +48,27 @@ public class SExpTypeExtractor {
             return extractType((S2Euni)node);
         } else if (node instanceof S2Evar) {
             return extractType((S2Evar)node);
+        } else if (node instanceof S2Etyrec) {
+            return extractType((S2Etyrec)node);
         } else {
             throw new Error(node + " is not supported");
         }
         
+    }
+
+    private static RecType extractType(S2Etyrec node) {
+
+        int knd = node.m_knd.getId();
+        
+        List<ILabPat> labPatLst = new ArrayList<ILabPat>();    
+        for (Clabs2exp lexp: node.m_ls2es) {
+            ISType ty = extractType(lexp.m_s2exp);
+
+            LabPatNorm labexp = new LabPatNorm(lexp.m_label, ty);
+            labPatLst.add(labexp);
+        }
+        RecType ret = new RecType(labPatLst, node.m_npf, knd);
+        return ret;
     }
 
     public static PolyParaType extractType(S2Evar node) {

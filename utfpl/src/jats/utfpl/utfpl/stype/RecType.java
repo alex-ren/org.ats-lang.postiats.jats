@@ -1,9 +1,10 @@
 package jats.utfpl.utfpl.stype;
 
-import jats.utfpl.utfpl.dynexp.Ilabel;
+import jats.utfpl.utfpl.Ilabel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RecType extends BoxedType {
     
@@ -24,15 +25,6 @@ public class RecType extends BoxedType {
             pat.normalize();
         }
         return this;
-    }
-
-    @Override
-    public RecType instantiate(PolyParaType para, ISType arg) {
-        List<ILabPat> labpats = new ArrayList<ILabPat>();
-        for (ILabPat pat: m_labtypes) {
-            labpats.add(pat.instantiate(para, arg));
-        }
-        return new RecType(labpats, m_npf, m_knd);
     }
 
     @Override
@@ -75,7 +67,7 @@ public class RecType extends BoxedType {
 
         public void match(ILabPat next);
 
-        public ILabPat instantiate(PolyParaType para, ISType arg);
+        public ILabPat instantiate(Map<PolyParaType, ISType> map);
     }
     
     static public class LabPatNorm implements ILabPat {
@@ -90,14 +82,6 @@ public class RecType extends BoxedType {
         @Override
         public void normalize() {
             m_type.normalize();
-        }
-
-        @Override
-        public ILabPat instantiate(PolyParaType para, ISType arg) {
-            ISType type = m_type.instantiate(para, arg);
-            
-            return new LabPatNorm(m_lab, type);
-            
         }
 
         @Override
@@ -119,6 +103,23 @@ public class RecType extends BoxedType {
                 throw new Error("This shall not happen.");
             }
         }
+
+        @Override
+        public ILabPat instantiate(Map<PolyParaType, ISType> map) {
+            ISType type = m_type.instantiate(map);
+            
+            return new LabPatNorm(m_lab, type);
+            
+        }
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        List<ILabPat> labpats = new ArrayList<ILabPat>();
+        for (ILabPat pat: m_labtypes) {
+            labpats.add(pat.instantiate(map));
+        }
+        return new RecType(labpats, m_npf, m_knd);
     }
     
 

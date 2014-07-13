@@ -1,6 +1,5 @@
-package jats.utfpl.utfpl.dynexp;
+package jats.utfpl.utfpl;
 
-import jats.utfpl.utfpl.Csymbol;
 
 import java.lang.reflect.Type;
 import java.util.Iterator;

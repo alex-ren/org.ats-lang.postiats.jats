@@ -8,6 +8,10 @@ public class Cs2var {
     public Csymbol m_sym;
     public Cstamp m_stamp;
     
+    @Override
+    public String toString() {
+        return m_sym.toString();
+    }
     public Cstamp getStamp() {
         return m_stamp;
     }

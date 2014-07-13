@@ -2,6 +2,7 @@ package jats.utfpl.utfpl.stype;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /*
  * This type should always appear inside UniType.
@@ -36,19 +37,6 @@ public class FunType extends BoxedType {
     }
 
     @Override
-    public FunType instantiate(PolyParaType para, ISType arg) {
-        List<ISType> args = new ArrayList<ISType>();
-        for (ISType ty: m_args) {
-            ISType nty = ty.instantiate(para, arg);
-            args.add(nty);
-        }
-        
-         ISType res = m_res.instantiate(para, arg);
-        
-        return new FunType(m_npf, args, res);
-    }
-
-    @Override
     public void match(ISType ty) {
         FunType left = this.normalize();
         ISType right0 = ty.normalize();
@@ -63,6 +51,19 @@ public class FunType extends BoxedType {
         } else {
             throw new Error("Type mismatch.");
         }
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        List<ISType> args = new ArrayList<ISType>();
+        for (ISType ty: m_args) {
+            ISType nty = ty.instantiate(map);
+            args.add(nty);
+        }
+        
+         ISType res = m_res.instantiate(map);
+        
+        return new FunType(m_npf, args, res);
     }
     
 }

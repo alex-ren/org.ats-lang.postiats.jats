@@ -10,7 +10,7 @@ public class S2RT implements Is2rt {
 
     @Override
     public boolean isType() {
-        if (m_srt.equals("type")) {
+        if (m_srt.equals("type") || m_srt.equals("t@ype")) {
             return true;
         } else {
             return false;

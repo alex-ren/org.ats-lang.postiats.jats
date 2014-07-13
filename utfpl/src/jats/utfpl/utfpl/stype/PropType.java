@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.stype;
 
+import java.util.Map;
+
 
 public class PropType extends SortType {
     public static PropType cInstance = new PropType();
@@ -10,11 +12,6 @@ public class PropType extends SortType {
 
     @Override
     public PropType normalize() {
-        return this;
-    }
-
-    @Override
-    public PropType instantiate(PolyParaType para, ISType arg) {
         return this;
     }
 
@@ -33,6 +30,11 @@ public class PropType extends SortType {
         } else {
             throw new Error("Type mismatch.");
         }
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        return this;
     }
 
 

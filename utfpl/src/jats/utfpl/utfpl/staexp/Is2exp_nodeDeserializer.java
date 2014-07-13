@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -70,6 +69,8 @@ public class Is2exp_nodeDeserializer implements JsonDeserializer<Is2exp_node> {
         } else if (name.equals("S2Eerr")) {
             Log.log4j.error("check the usage of S2Einvar");
             return context.deserialize(je2, S2Eerr.class);
+        } else if (name.equals("S2Etyrec")) {
+            return context.deserialize(je2, S2Etyrec.class);
         } else if (name.equals("S2Eignored")) {
             return context.deserialize(je2, S2Eignored.class);
         } else {

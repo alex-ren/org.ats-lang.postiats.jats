@@ -1,6 +1,9 @@
 package jats.utfpl.utfpl.stype;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PolyType extends BoxedType {
     public List<PolyParaType> m_paras;
@@ -16,18 +19,7 @@ public class PolyType extends BoxedType {
         m_body = m_body.normalize();
         return this;
     }
-
-
-    @Override
-    public PolyType instantiate(PolyParaType para, ISType arg) {
-        if (m_paras.contains(para)) {
-            throw new Error("This is not allowed.");
-        }
-        ISType body = m_body.instantiate(para, arg);
-        
-        return new PolyType(m_paras, body);
-    }
-
+    
     @Override
     public void match(ISType ty) {
         PolyType left = this.normalize();
@@ -44,16 +36,20 @@ public class PolyType extends BoxedType {
     }
     
     public FunType getNormalFunType() {
-        ISType aType = m_body;
-        for (PolyParaType tyPara: m_paras) {
-            VarType tyArg = new VarType();
-            aType = aType.instantiate(tyPara, tyArg);
+        List<PolyParaType> paras = new ArrayList<PolyParaType>(m_paras);
+        FunType funTy = getParaFunType(paras);
+        
+        Map<PolyParaType, ISType> map = new HashMap<PolyParaType, ISType>();
+        for (PolyParaType para: paras) {
+            map.put(para, new VarType());
         }
+        
+        ISType aType = funTy.instantiate(map);
         
         if (aType instanceof FunType) {
             return (FunType)aType;
         } else {
-            throw new Error("Check this.");
+            throw new Error("Check this. aType is " + aType);
         }
     }
     
@@ -65,6 +61,31 @@ public class PolyType extends BoxedType {
         } else {
             throw new Error("Check this.");
         }
+    }
+    
+    private FunType getParaFunType(List<PolyParaType> paras) {
+        paras.addAll(m_paras);
+        
+        if (m_body instanceof FunType) {
+            return (FunType)m_body;
+        } else if (m_body instanceof PolyType) {
+            return ((PolyType)m_body).getParaFunType(paras);
+        } else {
+            throw new Error("Check this.");
+        }
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        for (PolyParaType para: map.keySet()) {
+            if (m_paras.contains(para)) {
+                throw new Error("This is not allowed.");
+            }
+        }
+
+        ISType body = m_body.instantiate(map);
+        
+        return new PolyType(m_paras, body);
     }
     
 

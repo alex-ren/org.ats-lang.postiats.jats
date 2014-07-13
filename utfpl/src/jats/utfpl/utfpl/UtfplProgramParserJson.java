@@ -1,6 +1,8 @@
 package jats.utfpl.utfpl;
 
 import jats.utfpl.utfpl.dynexp.*;
+import jats.utfpl.utfpl.staexp.Clabs2exp;
+import jats.utfpl.utfpl.staexp.Clabs2expDeserializer;
 import jats.utfpl.utfpl.staexp.Cs2cst;
 import jats.utfpl.utfpl.staexp.Cs2cstDeserializer;
 import jats.utfpl.utfpl.staexp.Cs2var;
@@ -11,6 +13,8 @@ import jats.utfpl.utfpl.staexp.Is2exp_node;
 import jats.utfpl.utfpl.staexp.Is2exp_nodeDeserializer;
 import jats.utfpl.utfpl.staexp.Is2rt;
 import jats.utfpl.utfpl.staexp.Is2rtDeserializer;
+import jats.utfpl.utfpl.staexp.Ityreckind;
+import jats.utfpl.utfpl.staexp.ItyreckindDeserializer;
 import jats.utfpl.utfpl.staexp.S2Eapp;
 import jats.utfpl.utfpl.staexp.S2EappDeserializer;
 import jats.utfpl.utfpl.staexp.S2Ecst;
@@ -33,10 +37,22 @@ import jats.utfpl.utfpl.staexp.S2Eintinf;
 import jats.utfpl.utfpl.staexp.S2EintinfDeserializer;
 import jats.utfpl.utfpl.staexp.S2Esizeof;
 import jats.utfpl.utfpl.staexp.S2EsizeofDeserializer;
+import jats.utfpl.utfpl.staexp.S2Etyrec;
+import jats.utfpl.utfpl.staexp.S2EtyrecDeserializer;
 import jats.utfpl.utfpl.staexp.S2Euni;
 import jats.utfpl.utfpl.staexp.S2EuniDeserializer;
 import jats.utfpl.utfpl.staexp.S2Evar;
 import jats.utfpl.utfpl.staexp.S2EvarDeserializer;
+import jats.utfpl.utfpl.staexp.TYRECKINDbox;
+import jats.utfpl.utfpl.staexp.TYRECKINDboxDeserializer;
+import jats.utfpl.utfpl.staexp.TYRECKINDbox_lin;
+import jats.utfpl.utfpl.staexp.TYRECKINDbox_linDeserializer;
+import jats.utfpl.utfpl.staexp.TYRECKINDflt0;
+import jats.utfpl.utfpl.staexp.TYRECKINDflt0Deserializer;
+import jats.utfpl.utfpl.staexp.TYRECKINDflt1;
+import jats.utfpl.utfpl.staexp.TYRECKINDflt1Deserializer;
+import jats.utfpl.utfpl.staexp.TYRECKINDflt_ext;
+import jats.utfpl.utfpl.staexp.TYRECKINDflt_extDeserializer;
 
 import java.io.Reader;
 
@@ -51,17 +67,23 @@ public class UtfplProgramParserJson {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         
+        /* *********** common *********** */
+        
         gsonBuilder.registerTypeAdapter(Cloc_t.class, new Cloc_tDeserializer());
         gsonBuilder.registerTypeAdapter(Cstamp.class, new CstampDeserializer());
         gsonBuilder.registerTypeAdapter(Csymbol.class, new CsymbolDeserializer());
+        
+        gsonBuilder.registerTypeAdapter(Ilabel.class, new IlabelDeserializer());
+
+        /* *********** dynamics *********** */
         
         gsonBuilder.registerTypeAdapter(Cd2cst.class, new Cd2cstDeserializer());
         gsonBuilder.registerTypeAdapter(Cd2var.class, new Cd2varDeserializer());
         gsonBuilder.registerTypeAdapter(Cd2con.class, new Cd2conDeserializer());
         gsonBuilder.registerTypeAdapter(Cd2sym.class, new Cd2symDeserializer());
+
         
-        gsonBuilder.registerTypeAdapter(Cs2cst.class, new Cs2cstDeserializer());
-        gsonBuilder.registerTypeAdapter(Cs2var.class, new Cs2varDeserializer());
+        gsonBuilder.registerTypeAdapter(Id2ecl_node.class, new Id2ecl_nodeDeserializer());
         
         gsonBuilder.registerTypeAdapter(D2Cfundecs.class, new D2CfundecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cignored.class, new D2CignoredDeserializer());
@@ -72,6 +94,8 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Cstacsts.class, new D2CstacstsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cdatdecs.class, new D2CdatdecsDeserializer());
         
+        
+        gsonBuilder.registerTypeAdapter(Id2exp_node.class, new Id2exp_nodeDeserializer());
         
         gsonBuilder.registerTypeAdapter(D2Eapplst.class, new D2EapplstDeserializer());
         gsonBuilder.registerTypeAdapter(D2Ecst.class, new D2EcstDeserializer());
@@ -85,34 +109,63 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Es0tring.class, new D2Es0tringDeserializer());
         gsonBuilder.registerTypeAdapter(D2Esym.class, new D2EsymDeserializer());
         gsonBuilder.registerTypeAdapter(D2Evar.class, new D2EvarDeserializer());
-        gsonBuilder.registerTypeAdapter(D2EXPARGdyn.class, new D2EXPARGdynDeserializer());
-        gsonBuilder.registerTypeAdapter(D2EXPARGsta.class, new D2EXPARGstaDeserializer());
         gsonBuilder.registerTypeAdapter(D2EannType.class, new D2EannTypeDeserializer());
         gsonBuilder.registerTypeAdapter(D2EannSeff.class, new D2EannSeffDeserializer());
         gsonBuilder.registerTypeAdapter(D2EannFunclo.class, new D2EannFuncloDeserializer());
         gsonBuilder.registerTypeAdapter(D2Etup.class, new D2EtupDeserializer());
         gsonBuilder.registerTypeAdapter(D2Eignored.class, new D2EignoredDeserializer());
         
+        gsonBuilder.registerTypeAdapter(Id2exparg.class, new Id2expargDeserializer());
         
+        gsonBuilder.registerTypeAdapter(D2EXPARGdyn.class, new D2EXPARGdynDeserializer());
+        gsonBuilder.registerTypeAdapter(D2EXPARGsta.class, new D2EXPARGstaDeserializer());
+
+
+        gsonBuilder.registerTypeAdapter(Ip2at_node.class, new Ip2at_nodeDeserializer());
         
+        gsonBuilder.registerTypeAdapter(P2Tany.class, new P2TanyDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tempty.class, new P2TemptyDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tignored.class, new P2TignoredDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tpat.class, new P2TpatDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tvar.class, new P2TvarDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Trec.class, new P2TrecDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tann.class, new P2TannDeserializer());
+        gsonBuilder.registerTypeAdapter(P2Tcon.class, new P2TconDeserializer());
+        
+ 
         gsonBuilder.registerTypeAdapter(Efunkind.class, new EfunkindDeserializer());
         gsonBuilder.registerTypeAdapter(Evalkind.class, new EvalkindDeserializer());
         gsonBuilder.registerTypeAdapter(Edcstkind.class, new EdcstkindDeserializer());
         gsonBuilder.registerTypeAdapter(Epckind.class, new EpckindDeserializer());
         
         
-        
-        gsonBuilder.registerTypeAdapter(Id2ecl_node.class, new Id2ecl_nodeDeserializer());
-        gsonBuilder.registerTypeAdapter(Id2exp_node.class, new Id2exp_nodeDeserializer());
-        gsonBuilder.registerTypeAdapter(Id2exparg.class, new Id2expargDeserializer());
-        gsonBuilder.registerTypeAdapter(Ip2at_node.class, new Ip2at_nodeDeserializer());
         gsonBuilder.registerTypeAdapter(Ilabp2at.class, new Ilabp2atDeserializer());
-        gsonBuilder.registerTypeAdapter(Ilabel.class, new IlabelDeserializer());
-        gsonBuilder.registerTypeAdapter(Is2exp_node.class, new Is2exp_nodeDeserializer());
+
+        /* *********** statics *********** */
+        
+        gsonBuilder.registerTypeAdapter(Cs2cst.class, new Cs2cstDeserializer());
+        gsonBuilder.registerTypeAdapter(Cs2var.class, new Cs2varDeserializer());
+        
+        
         gsonBuilder.registerTypeAdapter(Ifunclo.class, new IfuncloDeserializer());
+        
+        
         gsonBuilder.registerTypeAdapter(Is2rt.class, new Is2rtDeserializer());
         
         
+        gsonBuilder.registerTypeAdapter(Ityreckind.class, new ItyreckindDeserializer());
+        
+        gsonBuilder.registerTypeAdapter(TYRECKINDbox.class, new TYRECKINDboxDeserializer());
+        gsonBuilder.registerTypeAdapter(TYRECKINDbox_lin.class, new TYRECKINDbox_linDeserializer());
+        gsonBuilder.registerTypeAdapter(TYRECKINDflt0.class, new TYRECKINDflt0Deserializer());
+        gsonBuilder.registerTypeAdapter(TYRECKINDflt1.class, new TYRECKINDflt1Deserializer());
+        gsonBuilder.registerTypeAdapter(TYRECKINDflt_ext.class, new TYRECKINDflt_extDeserializer());
+        
+        
+        gsonBuilder.registerTypeAdapter(Clabs2exp.class, new Clabs2expDeserializer());
+        
+        
+        gsonBuilder.registerTypeAdapter(Is2exp_node.class, new Is2exp_nodeDeserializer());
         
         gsonBuilder.registerTypeAdapter(S2Eapp.class, new S2EappDeserializer());
         gsonBuilder.registerTypeAdapter(S2Ecst.class, new S2EcstDeserializer());
@@ -127,23 +180,10 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(S2Eexi.class, new S2EexiDeserializer());
         gsonBuilder.registerTypeAdapter(S2Euni.class, new S2EuniDeserializer());
         gsonBuilder.registerTypeAdapter(S2Evar.class, new S2EvarDeserializer());
-        
-        
-        
-        
-        
-        gsonBuilder.registerTypeAdapter(P2Tany.class, new P2TanyDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Tempty.class, new P2TemptyDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Tignored.class, new P2TignoredDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Tpat.class, new P2TpatDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Tvar.class, new P2TvarDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Trec.class, new P2TrecDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Tann.class, new P2TannDeserializer());
-        gsonBuilder.registerTypeAdapter(P2Tcon.class, new P2TconDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Etyrec.class, new S2EtyrecDeserializer());
         
 
-        
-        
+        /* *********** all *********** */
         
         gsonBuilder.registerTypeAdapter(ProgramUtfpl.class, new ProgramUtfplDeserializer());
         

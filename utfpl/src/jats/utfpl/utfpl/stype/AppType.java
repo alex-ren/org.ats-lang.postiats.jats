@@ -3,6 +3,7 @@ package jats.utfpl.utfpl.stype;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 public class AppType extends BoxedType {
     private String m_con;
@@ -26,17 +27,6 @@ public class AppType extends BoxedType {
         
         m_tys = tys;
         return this;
-    }
-
-    @Override
-    public AppType instantiate(PolyParaType para, ISType arg) {
-        List<ISType> tys = new ArrayList<ISType>();
-        for (ISType ty: m_tys) {
-            ISType nty = ty.instantiate(para, arg);
-            tys.add(nty);
-        }
-        
-        return new AppType(m_con, tys);
     }
 
     @Override
@@ -66,6 +56,17 @@ public class AppType extends BoxedType {
             throw new Error("type mismatch");
         }
         
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        List<ISType> tys = new ArrayList<ISType>();
+        for (ISType ty: m_tys) {
+            ISType nty = ty.instantiate(map);
+            tys.add(nty);
+        }
+        
+        return new AppType(m_con, tys);
     }
 
 }

@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.stype;
 
+import java.util.Map;
+
 import jats.utfpl.utfpl.staexp.Cs2var;
 
 public class PolyParaType extends BoxedType {
@@ -8,19 +10,20 @@ public class PolyParaType extends BoxedType {
     public PolyParaType(Cs2var var) {
         m_var = var;
     }
+    
+    @Override
+    public int hashCode() {
+        return m_var.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return m_var.toString();
+    }
 
     @Override
     public PolyParaType normalize() {
         return this;
-    }
-
-    @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
-        if (para.m_var == m_var) {
-            return arg;
-        } else {
-            return this;
-        }
     }
     
     @Override
@@ -34,12 +37,29 @@ public class PolyParaType extends BoxedType {
         }
     }
 
+
     @Override
     public void match(ISType ty) {
-        throw new Error("not expecting this");
-//        PolyParaType left = this.normalize();
-//        ISType right0 = ty.normalize();
-        
+        ISType right = ty.normalize();
+        if (right instanceof VarType) {
+            ((VarType)right).setType(this);
+        } else if (right instanceof PolyParaType) {
+            if (!this.equals(right)) {
+                throw new Error("type mismatch, check this");
+            }
+        } else {
+            throw new Error("should not happen");
+        }
+
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        if (map.containsKey(this)) {
+            return map.get(this);
+        } else {
+            return this;
+        }
     }
 
 }

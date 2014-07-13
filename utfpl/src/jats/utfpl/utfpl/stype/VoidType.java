@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.stype;
 
+import java.util.Map;
+
 public class VoidType extends SortType {
     
     public VoidType() {
@@ -15,11 +17,6 @@ public class VoidType extends SortType {
     }
 
     @Override
-    public VoidType instantiate(PolyParaType para, ISType arg) {
-        return this;
-    }
-
-    @Override
     public void match(ISType ty) {
         ISType right0 = ty.normalize();
         
@@ -31,6 +28,11 @@ public class VoidType extends SortType {
         } else {
             throw new Error("Type mismatch.");
         }
+    }
+
+    @Override
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
+        return this;
     }
 
 }

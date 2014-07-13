@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.stype;
 
+import java.util.Map;
+
 public class VarType extends SortType {
     private SortType m_ty;
     
@@ -49,7 +51,7 @@ public class VarType extends SortType {
     }
 
     @Override
-    public ISType instantiate(PolyParaType para, ISType arg) {
+    public ISType instantiate(Map<PolyParaType, ISType> map) {
         // I simply disallow this to ease the implementation.
         throw new Error("should not happen");
     }
