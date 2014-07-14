@@ -16,7 +16,7 @@ public interface ISType {
     // This operation cannot change the content of the object.
     public ISType instantiate(Map<PolyParaType, ISType> map);
     
-    public void match(ISType ty);
+    public TypeCheckResult match(ISType ty);
     
     public boolean equals(Object right);
 

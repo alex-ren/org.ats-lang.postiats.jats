@@ -8,7 +8,7 @@ abstype OBJ
 
 (* ****** ****** *)
 
-fun fact (x) =
+fun fact (x: int): int =
   if x > 0 then x * fact (x-1) else 1
 
 (* ****** ****** *)
@@ -19,7 +19,7 @@ and fact12 = fact (12)
 (* ****** ****** *)
 
 extern
-fun acker (OBJ, OBJ): OBJ
+fun acker (int, int): int
 
 implement
 acker (m, n) =

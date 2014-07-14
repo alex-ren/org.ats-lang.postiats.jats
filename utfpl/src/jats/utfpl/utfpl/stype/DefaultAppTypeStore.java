@@ -8,4 +8,5 @@ public class DefaultAppTypeStore {
     
     static public String con_g1int_int_t0ype = "g1int_int_t0ype";  // g1int_int_t0ype: fun (atstype_int: tkind, y: int)
 
+    static public String ats_void_t0ype = "atsvoid_t0ype";
 }

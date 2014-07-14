@@ -3,6 +3,7 @@ package jats.utfpl.utfpl.staexp;
 import jats.utfpl.utfpl.LABint;
 import jats.utfpl.utfpl.dynexp.Cd2exp;
 import jats.utfpl.utfpl.stype.AppType;
+import jats.utfpl.utfpl.stype.DataType;
 import jats.utfpl.utfpl.stype.DefaultAppTypeStore;
 import jats.utfpl.utfpl.stype.FunType;
 import jats.utfpl.utfpl.stype.ISType;
@@ -12,6 +13,7 @@ import jats.utfpl.utfpl.stype.PolyType;
 import jats.utfpl.utfpl.stype.RecType;
 import jats.utfpl.utfpl.stype.RecType.ILabPat;
 import jats.utfpl.utfpl.stype.RecType.LabPatNorm;
+import jats.utfpl.utfpl.stype.VoidType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class SExpTypeExtractor {
         if (node instanceof S2Eapp) {
             return extractType((S2Eapp)node);
         } else if (node instanceof S2Ecst) {
-            throw new Error("S2Ecst should not be seen.");
+            return extractType((S2Ecst)node);
         } else if (node instanceof S2Eeqeq) {
             return null;
         } else if (node instanceof S2Eerr) {
@@ -54,6 +56,17 @@ public class SExpTypeExtractor {
             throw new Error(node + " is not supported");
         }
         
+    }
+
+    private static ISType extractType(S2Ecst node) {
+        String name = node.getName();
+
+        if (name.equals(DefaultAppTypeStore.ats_void_t0ype)) {
+            return VoidType.cInstance;
+        } else {
+            List<ISType> tyLst = new ArrayList<ISType>();
+            return new DataType(node.m_s2cst, tyLst);
+        }
     }
 
     private static RecType extractType(S2Etyrec node) {

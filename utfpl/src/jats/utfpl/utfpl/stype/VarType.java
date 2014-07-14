@@ -63,7 +63,7 @@ public class VarType extends SortType {
     }
 
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         ISType left = this.normalize();
         ISType right0 = ty.normalize();
         
@@ -71,7 +71,7 @@ public class VarType extends SortType {
             VarType right = (VarType)right0;
             if (this != right) {
                 if (right.m_ty != null) {
-                    throw new Error("check this");
+                    return new TypeCheckResult("check this");
                 }
                 right.m_ty = this;
             } else {
@@ -79,15 +79,18 @@ public class VarType extends SortType {
             }
         } else if (left instanceof VarType) {
             if (!(right0 instanceof SortType)) {
-                throw new Error("non-sort type not allowed");
+                return new TypeCheckResult("non-sort type not allowed");
             }
             m_ty = (SortType)right0;
         } else {
             left.match(right0);
         }
         
-        m_srt = m_ty.m_srt;  // update sort
+        if (null != m_ty) {
+            m_srt = m_ty.m_srt;  // update sort
+        }
         
+        return new TypeCheckResult();
     }
 
 }

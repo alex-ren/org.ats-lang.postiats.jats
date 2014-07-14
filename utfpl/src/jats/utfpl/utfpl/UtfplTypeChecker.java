@@ -66,6 +66,7 @@ import jats.utfpl.utfpl.stype.IntType;
 import jats.utfpl.utfpl.stype.PolyParaType;
 import jats.utfpl.utfpl.stype.PolyType;
 import jats.utfpl.utfpl.stype.RecType;
+import jats.utfpl.utfpl.stype.TypeCheckResult;
 import jats.utfpl.utfpl.stype.RecType.LabPatNorm;
 import jats.utfpl.utfpl.stype.StringType;
 import jats.utfpl.utfpl.stype.VarType;
@@ -202,21 +203,25 @@ public class UtfplTypeChecker {
 
     private void typecheck(Cd2exp d2exp, ISType ty) {
         ISType ty0 = oftype(d2exp);
-        ty0.match(ty);
+        TypeCheckResult res = ty0.match(ty);
+        if (!res.isGood()) {
+            throw new Error("Type mismatch: " + res.getMsg() + "\n" + d2exp.d2exp_loc);
+        }
     }
 
     private ISType oftype(Cd2exp d2exp) {
         Id2exp_node node = d2exp.d2exp_node;
+        Cloc_t loc = d2exp.d2exp_loc;
         if (node instanceof D2EannFunclo) {
-            return oftype((D2EannFunclo)node);
+            return oftype((D2EannFunclo)node, loc);
         } else if (node instanceof D2EannSeff) {
-            return oftype((D2EannSeff)node);
+            return oftype((D2EannSeff)node, loc);
         } else if (node instanceof D2EannType) {
-            return oftype((D2EannType)node);
+            return oftype((D2EannType)node, loc);
         } else if (node instanceof D2Eapplst) {
-            return oftype((D2Eapplst)node);
+            return oftype((D2Eapplst)node, loc);
         } else if (node instanceof D2Ecst) {
-            return oftype((D2Ecst)node);
+            return oftype((D2Ecst)node, loc);
         } else if (node instanceof D2Eempty) {
             return VoidType.cInstance;
         } else if (node instanceof D2Eexp) {
@@ -226,38 +231,38 @@ public class UtfplTypeChecker {
         } else if (node instanceof D2Ei0nt) {
             return IntType.cInstance;
         } else if (node instanceof D2Eifopt) {
-            return oftype((D2Eifopt)node);
+            return oftype((D2Eifopt)node, loc);
         } else if (node instanceof D2Eignored) {
             throw new Error("Check this");
         } else if (node instanceof D2ElamDyn) {
-            return oftype((D2ElamDyn)node);
+            return oftype((D2ElamDyn)node, loc);
         } else if (node instanceof D2ElamMet) {
-            return oftype((D2ElamMet)node);
+            return oftype((D2ElamMet)node, loc);
         } else if (node instanceof D2ElamSta) {
-            return oftype((D2ElamSta)node);
+            return oftype((D2ElamSta)node, loc);
         } else if (node instanceof D2Elet) {
-            return oftype((D2Elet)node);
+            return oftype((D2Elet)node, loc);
         } else if (node instanceof D2Es0tring) {
             return StringType.cInstance;
         } else if (node instanceof D2Esym) {
-            return oftype((D2Esym)node);
+            return oftype((D2Esym)node, loc);
         } else if (node instanceof D2Etup) {
-            return oftype((D2Etup)node);
+            return oftype((D2Etup)node, loc);
         } else if (node instanceof D2Evar) {
-            return oftype((D2Evar)node);
+            return oftype((D2Evar)node, loc);
         } else {
             throw new Error(d2exp + " is not supported");
         }
 
     }
 
-    private VarType oftype(D2Evar node) {
+    private VarType oftype(D2Evar node, Cloc_t loc) {
         VarType ret = new VarType();
         node.m_d2var.updateSType(ret);
         return ret;
     }
 
-    private RecType oftype(D2Etup node) {
+    private RecType oftype(D2Etup node, Cloc_t loc) {
         List<ILabPat> labPatLst = new ArrayList<ILabPat>();
         
         int i = 0;
@@ -272,7 +277,7 @@ public class UtfplTypeChecker {
         return ret;
     }
 
-    private ISType oftype(D2Esym node) {
+    private ISType oftype(D2Esym node, Cloc_t loc) {
         Cd2sym sym = node.m_d2sym;
         if (null == sym.m_stype) {
             sym.m_stype = new VarType();
@@ -281,7 +286,7 @@ public class UtfplTypeChecker {
         return sym.m_stype;
     }
 
-    private ISType oftype(D2Elet node) {
+    private ISType oftype(D2Elet node, Cloc_t loc) {
         for (Cd2ecl dec: node.m_d2cs) {
             typecheck_dec(dec);
         }
@@ -290,11 +295,11 @@ public class UtfplTypeChecker {
         return ret;
     }
 
-    private ISType oftype(D2ElamMet node) {
+    private ISType oftype(D2ElamMet node, Cloc_t loc) {
         return oftype(node.m_d2exp);
     }
 
-    private PolyType oftype(D2ElamSta node) {
+    private PolyType oftype(D2ElamSta node, Cloc_t loc) {
         List<PolyParaType> tyParaLst = new ArrayList<PolyParaType>();
         for (Cs2var para: node.m_s2vs) {
             PolyParaType tyPara = SExpTypeExtractor.extractType(para);
@@ -309,7 +314,7 @@ public class UtfplTypeChecker {
         
     }
 
-    private FunType oftype(D2ElamDyn node) {
+    private FunType oftype(D2ElamDyn node, Cloc_t loc) {
         List<ISType> paraTyLst = new ArrayList<ISType>();
         for (Cp2at pat : node.m_p2ts) {
             ISType paraTy = oftype(pat);
@@ -323,7 +328,7 @@ public class UtfplTypeChecker {
         return ret;
     }
 
-    private ISType oftype(D2Eifopt node) {
+    private ISType oftype(D2Eifopt node, Cloc_t loc) {
         typecheck(node.m_test, BoolType.cInstance);
         ISType ty = oftype(node.m_then);
         if (null != node.m_else) {
@@ -333,29 +338,33 @@ public class UtfplTypeChecker {
         return ty;
     }
 
-    private ISType oftype(D2Ecst node) {
-        return oftype(node.m_d2cst);
+    private ISType oftype(D2Ecst node, Cloc_t loc) {
+        return oftype(node.m_d2cst, loc);
     }
 
-    private ISType oftype(Cd2cst d2cst) {
+    private ISType oftype(Cd2cst d2cst, Cloc_t loc) {
         if (null == d2cst.m_stype) {
-            throw new Error("m_stype should have been set.");
+            throw new Error("m_stype of " + d2cst.toString() + " should have been set. @\n" + loc);
         } else {
             return d2cst.m_stype;
         }
     }
 
-    private ISType oftype(D2Eapplst node) {
+    private ISType oftype(D2Eapplst node, Cloc_t loc) {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
         ty = ty.normalize();
         if (ty instanceof PolyType) {
             FunType funTy = ((PolyType)ty).getNormalFunType();
             return oftype(funTy, argsLst);
+        } else if (ty instanceof FunType) {
+            FunType funTy = (FunType)ty;
+            return oftype(funTy, argsLst);
         } else if (ty instanceof VarType) {
             return oftype((VarType)ty, argsLst);
         } else {
-            throw new Error("Such difficult type checking task is not acceptable currently.");
+            throw new Error("Such difficult type checking task on " + 
+                   ty + " is not acceptable currently." + loc);
         }
     }
     
@@ -434,7 +443,7 @@ public class UtfplTypeChecker {
     
     /* ****************** ******************* */
     
-    private ISType oftype(D2EannType node) {
+    private ISType oftype(D2EannType node, Cloc_t loc) {
         ISType ty0 = oftype(node.m_d2exp);
         ISType ty1 = SExpTypeExtractor.extractType(node.m_s2exp);
         if (null != ty1) {
@@ -444,11 +453,11 @@ public class UtfplTypeChecker {
         return ty0;        
     }
 
-    private ISType oftype(D2EannSeff node) {
+    private ISType oftype(D2EannSeff node, Cloc_t loc) {
         return oftype(node.m_d2exp);
     }
 
-    private ISType oftype(D2EannFunclo node) {
+    private ISType oftype(D2EannFunclo node, Cloc_t loc) {
         return oftype(node.m_d2exp);
     }
 
@@ -513,7 +522,7 @@ public class UtfplTypeChecker {
                 D2EannType typeNode = (D2EannType)effNode.m_d2exp.d2exp_node;
                 return SExpTypeExtractor.extractType(typeNode.m_s2exp);
             } else {
-                Log.log4j.warn(effNode.m_d2exp.d2exp_node + " is received, check this");
+                // Log.log4j.warn(effNode.m_d2exp.d2exp_node + " is received, check this \n" + d2exp.d2exp_loc);
                 return new VarType();
             }
         } else {
@@ -597,8 +606,10 @@ public class UtfplTypeChecker {
 
 	private ISType typecheck_dec(Cd2cst d2cst) {
 	    ISType stype = SExpTypeExtractor.extractType(d2cst.m_type);
-	    d2cst.m_stype = stype;
-	    
+	    if (null == d2cst.m_stype && null != stype) {
+	        d2cst.m_stype = stype;
+	    }
+
 	    return stype;
     }
     

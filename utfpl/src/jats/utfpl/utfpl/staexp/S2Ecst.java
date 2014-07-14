@@ -10,5 +10,9 @@ public class S2Ecst implements Is2exp_node {
 	public S2Ecst(Cs2cst s2cst) {
 		m_s2cst = s2cst;
 	}
+	
+	public String toString() {
+	    return m_s2cst.toString();
+	}
 
 }

@@ -17,16 +17,16 @@ public class VoidType extends SortType {
     }
 
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         ISType right0 = ty.normalize();
         
         if (right0 instanceof VarType) {
             ((VarType)right0).setType(this);
-            return;
+            return new TypeCheckResult();
         } else if (this == right0) {
-            
+            return new TypeCheckResult();
         } else {
-            throw new Error("Type mismatch.");
+            return new TypeCheckResult("Type mismatch.");
         }
     }
 

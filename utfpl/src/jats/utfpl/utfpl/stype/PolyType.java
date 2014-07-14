@@ -21,17 +21,17 @@ public class PolyType extends BoxedType {
     }
     
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         PolyType left = this.normalize();
         ISType right0 = ty.normalize();
         
         if (right0 instanceof VarType) {
             ((VarType)right0).setType(left);
-            return;
+            return new TypeCheckResult();
         } else if (right0 instanceof PolyType) {
-            throw new Error("not expecting this");
+            return new TypeCheckResult("not expecting this");
         } else {
-            throw new Error("Type mismatch.");
+            return new TypeCheckResult("Type mismatch.");
         }
     }
     

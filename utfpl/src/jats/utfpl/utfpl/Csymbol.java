@@ -20,5 +20,9 @@ public class Csymbol {
     public boolean equals(Csymbol right) {
         return m_str.equals(right.m_str);
     }
+    
+    public boolean equals(String name) {
+        return m_str.equals(name);
+    }
 
 }

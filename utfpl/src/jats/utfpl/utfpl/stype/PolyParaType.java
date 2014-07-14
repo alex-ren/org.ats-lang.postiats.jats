@@ -39,16 +39,19 @@ public class PolyParaType extends BoxedType {
 
 
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         ISType right = ty.normalize();
         if (right instanceof VarType) {
             ((VarType)right).setType(this);
+            return new TypeCheckResult();
         } else if (right instanceof PolyParaType) {
             if (!this.equals(right)) {
-                throw new Error("type mismatch, check this");
+                return new TypeCheckResult("type mismatch, check this");
+            } else {
+                return new TypeCheckResult();
             }
         } else {
-            throw new Error("should not happen");
+            return new TypeCheckResult("should not happen");
         }
 
     }

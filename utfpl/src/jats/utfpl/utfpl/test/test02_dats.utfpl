@@ -1,10 +1,11 @@
 %{
 aaa
 %}
+
 fun foo_62 = lam () = 
-  let
+  <D2EannSeff>(let
     val x_63 = 3
     val y_64 = D2Esym<+> (x_63, 3)
   in
     ()
-  end
+  end:_:t@ype)

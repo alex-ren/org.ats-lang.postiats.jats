@@ -30,21 +30,21 @@ public class AppType extends BoxedType {
     }
 
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         AppType left = this.normalize();
         ISType right0 = ty.normalize();
         
         if (right0 instanceof VarType) {
             ((VarType)right0).setType(left);
-            return;
+            return new TypeCheckResult();
         } else if (right0 instanceof AppType) {
             AppType right = (AppType)right0;
             if (!left.m_con.equals(right.m_con)) {
-                throw new Error("type mismatch");
+                return new TypeCheckResult("type mismatch 001");
             }
             
             if (left.m_tys.size() != right.m_tys.size()) {
-                throw new Error("type mismatch");
+                return new TypeCheckResult("type mismatch 002");
             }
             
             ListIterator<ISType> iter0 = left.m_tys.listIterator();
@@ -52,8 +52,9 @@ public class AppType extends BoxedType {
             while (iter0.hasNext()) {
                 iter0.next().match(iter1.next());
             }
+            return new TypeCheckResult();
         } else {
-            throw new Error("type mismatch");
+            return new TypeCheckResult("type mismatch 003");
         }
         
     }

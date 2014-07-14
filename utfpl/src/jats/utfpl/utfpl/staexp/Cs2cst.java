@@ -24,4 +24,8 @@ public class Cs2cst {
         m_symbol = symbol;
     }
     
+    public String toString() {
+        return "Cs2cst: " + m_symbol.toString();
+    }
+    
 }

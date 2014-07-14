@@ -2,8 +2,6 @@ package jats.utfpl.utfpl;
 
 import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
-import jats.utfpl.utils.Log;
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,8 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.antlr.runtime.RecognitionException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 public class Test {
@@ -33,7 +29,10 @@ public class Test {
 //                , "test/ats2utfpl/test02.dats"
 //                "test/src_ats/51_2_4_slots.dats"
 //                "test/src_ats/54_peterson.dats"
-                "test/ats2utfpl/test03_tycheck.dats"
+//                "src/jats/utfpl/utfpl/test/test01.dats",
+//                "src/jats/utfpl/utfpl/test/test02.dats",
+//                "src/jats/utfpl/utfpl/test/test03.dats"
+                "src/jats/utfpl/utfpl/test/test04.dats"
 
         };
 

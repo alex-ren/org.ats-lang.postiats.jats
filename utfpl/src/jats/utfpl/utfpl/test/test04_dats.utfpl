@@ -1,0 +1,7 @@
+fun foo1_62 = lam () = 
+  <fun>
+  <D2EannSeff>(foo1_62 ():_:t@ype)
+
+fun foo2_63 = lamMet. lam () = 
+  <clo_ref>
+  <D2EannSeff>(():_:t@ype)

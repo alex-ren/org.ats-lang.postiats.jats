@@ -1,0 +1,41 @@
+OBJ_722
+
+fun fact_62 = lam (P2Tann<x_63:_:t@ype>) = 
+  <D2EannSeff>(if (D2Esym<>> (x_63, 0)) then
+    D2Esym<*> (x_63, fact_62 (D2Esym<-> (x_63, 1)))
+  else
+    1:_:t@ype)
+
+val fact10_64 = fact_62 (10)
+and fact12_65 = fact_62 (12)
+
+DCKfun acker_2554:_:type
+
+implement acker_2554:_:type = lam (P2Tann<m_66:_:t@ype>, P2Tann<n_67:_:t@ype>) = 
+  <fun>
+  <D2EannSeff>(if (D2Esym<>> (m_66, 0)) then
+    if (D2Esym<>> (n_67, 0)) then
+      D2Ecst<acker_2554:_:type> (D2Esym<-> (m_66, 1), D2Ecst<acker_2554:_:type> (m_66, D2Esym<-> (n_67, 1)))
+    else
+      D2Ecst<acker_2554:_:type> (D2Esym<-> (m_66, 1), 1)
+  else
+    D2Esym<+> (n_67, 1):_:t@ype)
+
+fun isevn_68 = lam (n_70) = 
+  <D2EannSeff>(if (D2Esym<>> (n_70, 0)) then
+    isodd_69 (D2Esym<-> (n_70, 1))
+  else
+    D2Ecst<true_bool_0:>)
+and isodd_69 = lam (n_71) = 
+  <D2EannSeff>(if (D2Esym<>> (n_71, 0)) then
+    isevn_68 (D2Esym<-> (n_71, 1))
+  else
+    D2Ecst<false_bool_1:>)
+
+fun foo_72 = lam (n_73) = 
+  <D2EannSeff>(let
+    val x_74 = 3
+    val y_75 = D2Esym<+> (x_74, 3)
+  in
+    y_75
+  end)

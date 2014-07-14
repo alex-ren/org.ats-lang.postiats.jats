@@ -16,19 +16,21 @@ public class PropType extends SortType {
     }
 
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         PropType left = this.normalize();
         ISType right0 = ty.normalize();
         
         if (right0 instanceof VarType) {
             ((VarType)right0).setType(left);
-            return;
+            return new TypeCheckResult();
         } else if (right0 instanceof PropType) {
             if (this != right0) {
-                throw new Error("type mismatch");
+                return new TypeCheckResult("type mismatch");
+            } else {
+                return new TypeCheckResult();
             }
         } else {
-            throw new Error("Type mismatch.");
+            return new TypeCheckResult("Type mismatch.");
         }
     }
 

@@ -28,18 +28,18 @@ public class RecType extends BoxedType {
     }
 
     @Override
-    public void match(ISType ty) {
+    public TypeCheckResult match(ISType ty) {
         RecType left = this.normalize();
         ISType right0 = ty.normalize();
         
         if (right0 instanceof VarType) {
             ((VarType)right0).setType(left);
-            return;
+            return new TypeCheckResult();
         } else if (right0 instanceof RecType) {
             RecType right = (RecType)right0;
             
             if (m_labtypes.size() != right.m_labtypes.size()) {
-                throw new Error("Type mismatch.");
+                return new TypeCheckResult("Type mismatch 01.");
             }
             
             for (ILabPat pat0: m_labtypes) {
@@ -52,11 +52,12 @@ public class RecType extends BoxedType {
                     }
                 }
                 if (false == found) {
-                    throw new Error("Type mismatch.");
+                    return new TypeCheckResult("Type mismatch.");
                 }
             }
+            return new TypeCheckResult();
         } else {
-            throw new Error("Type mismatch.");
+            return new TypeCheckResult("Type mismatch 02.");
         }
     }
     

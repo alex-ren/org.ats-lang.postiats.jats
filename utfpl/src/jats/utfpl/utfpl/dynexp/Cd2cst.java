@@ -29,11 +29,16 @@ public class Cd2cst {
         return m_type;
     }
     
-    public Cd2cst(Cstamp stamp, Cs2exp type, Csymbol symbol) {
+    public Cd2cst(Cstamp stamp, Cs2exp type, Csymbol symbol, ISType stype) {
         m_stamp = stamp;
         m_type = type;
         m_symbol = symbol;
-        m_stype = null;
+        m_stype = stype;
+    }
+    
+    @Override
+    public String toString() {
+        return m_symbol.toString();
     }
 
 }

@@ -2,7 +2,9 @@ package jats.utfpl.utfpl.dynexp;
 
 import jats.utfpl.utfpl.Cstamp;
 import jats.utfpl.utfpl.Csymbol;
+import jats.utfpl.utfpl.ccomp.DefaultLibraryTypes;
 import jats.utfpl.utfpl.staexp.Cs2exp;
+import jats.utfpl.utfpl.stype.ISType;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -39,7 +41,9 @@ public class Cd2cstDeserializer implements JsonDeserializer<Cd2cst> {
             JsonElement je3 = jo.get("d2cst_type");
             Cs2exp type = context.deserialize(je3, Cs2exp.class);
             
-            d2cst = new Cd2cst(stamp, type, symbol);
+            ISType stype = DefaultLibraryTypes.queryType(symbol);
+            
+            d2cst = new Cd2cst(stamp, type, symbol, stype);
             m_map.put(stamp, d2cst);
             return d2cst;
         }
