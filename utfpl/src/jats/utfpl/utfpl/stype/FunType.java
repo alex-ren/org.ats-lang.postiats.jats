@@ -1,5 +1,7 @@
 package jats.utfpl.utfpl.stype;
 
+import jats.utfpl.utfpl.staexp.Ifunclo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +13,19 @@ public class FunType extends BoxedType {
     public int m_npf;
     public List<ISType> m_args;
     public ISType m_res;
+    public Ifunclo m_funclo;
     
     public FunType(int npf, List<ISType> args, ISType res) {
         m_npf = npf;
         m_args = args;
         m_res = res;
+        m_funclo = null;
     }
 
     public ISType getRetType() {
         return m_res;
     }
+    
     @Override
     public FunType normalize() {
         List<ISType> tys = new ArrayList<ISType>();
