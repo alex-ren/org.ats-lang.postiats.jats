@@ -131,6 +131,10 @@ D2Etup_st(knd, d2es) ::= <<
 (<d2es; separator=", ">)
 >>
 
+D2Elist_st(knd, prfs, d2es) ::= <<
+(<prfs; separator=", "> | <d2es; separator=", ">)
+>>
+
 LABP2ATomit_st() ::= <<
 LABP2ATomit
 >>

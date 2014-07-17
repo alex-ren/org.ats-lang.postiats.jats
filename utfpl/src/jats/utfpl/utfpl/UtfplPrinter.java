@@ -32,6 +32,7 @@ import jats.utfpl.utfpl.dynexp.D2ElamDyn;
 import jats.utfpl.utfpl.dynexp.D2ElamMet;
 import jats.utfpl.utfpl.dynexp.D2ElamSta;
 import jats.utfpl.utfpl.dynexp.D2Elet;
+import jats.utfpl.utfpl.dynexp.D2Elist;
 import jats.utfpl.utfpl.dynexp.D2Es0tring;
 import jats.utfpl.utfpl.dynexp.D2Esym;
 import jats.utfpl.utfpl.dynexp.D2Etup;
@@ -292,9 +293,26 @@ public class UtfplPrinter {
             return printD2Evar((D2Evar)node);
         } else if (node instanceof D2Etup) {
             return printD2Etup((D2Etup)node);
+        } else if (node instanceof D2Elist) {
+            return printD2Elist((D2Elist)node);            
         } else {
             throw new Error(node + " is not supported.");
         }
+    }
+
+    private ST printD2Elist(D2Elist node) {
+        // D2Elist_st(knd, prfs, d2es) ::= <<
+        ST st = m_stg.getInstanceOf("D2Elist_st");
+        int i = node.m_npf;
+        for (Cd2exp d2e: node.m_d2es) {
+            if (i > 0) {
+                st.add("prfs", printCd2exp(d2e));
+            } else {
+                st.add("d2es", printCd2exp(d2e));
+            }
+            --i;            
+        }
+        return st;
     }
 
     private ST printD2Etup(D2Etup node) {

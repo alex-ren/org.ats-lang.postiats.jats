@@ -36,6 +36,7 @@ import jats.utfpl.utfpl.dynexp.D2ElamDyn;
 import jats.utfpl.utfpl.dynexp.D2ElamMet;
 import jats.utfpl.utfpl.dynexp.D2ElamSta;
 import jats.utfpl.utfpl.dynexp.D2Elet;
+import jats.utfpl.utfpl.dynexp.D2Elist;
 import jats.utfpl.utfpl.dynexp.D2Es0tring;
 import jats.utfpl.utfpl.dynexp.D2Esym;
 import jats.utfpl.utfpl.dynexp.D2Etup;
@@ -178,16 +179,19 @@ public class UtfplTypeChecker {
 
 	private D2ElamDyn exposeLamDyn(Cd2exp lambda) {
         // lamSta. lamSta. lamMet. lam ()
-        // lamSta
-        while (lambda.d2exp_node instanceof D2ElamSta) {
-            D2ElamSta lamSta = (D2ElamSta)lambda.d2exp_node;
-            lambda = lamSta.m_d2exp;
-        }
-        // LamMet
-        while (lambda.d2exp_node instanceof D2ElamMet) {
-            D2ElamMet lamMet = (D2ElamMet)lambda.d2exp_node;
-            lambda = lamMet.m_d2exp;
-        }
+        
+	    while (true) {
+	        // lamSta
+	        if (lambda.d2exp_node instanceof D2ElamSta) {
+	            D2ElamSta lamSta = (D2ElamSta)lambda.d2exp_node;
+	            lambda = lamSta.m_d2exp;
+	        } else if (lambda.d2exp_node instanceof D2ElamMet) {  // LamMet
+	            D2ElamMet lamMet = (D2ElamMet)lambda.d2exp_node;
+	            lambda = lamMet.m_d2exp;
+	        } else {
+	            break;
+	        }
+	    }
         
         if (lambda.d2exp_node instanceof D2ElamDyn) {
             return (D2ElamDyn)lambda.d2exp_node;
@@ -248,12 +252,29 @@ public class UtfplTypeChecker {
             return oftype((D2Esym)node, loc);
         } else if (node instanceof D2Etup) {
             return oftype((D2Etup)node, loc);
+        } else if (node instanceof D2Elist) {
+            return oftype((D2Elist)node, loc);            
         } else if (node instanceof D2Evar) {
             return oftype((D2Evar)node, loc);
         } else {
             throw new Error(d2exp + " is not supported");
         }
 
+    }
+
+    private ISType oftype(D2Elist node, Cloc_t loc) {
+        List<ILabPat> labPatLst = new ArrayList<ILabPat>();
+        
+        int i = 0;
+        for (Cd2exp exp: node.m_d2es) {
+            ISType ty = oftype(exp);
+            LABint lab = new LABint(i);
+            LabPatNorm labexp = new LabPatNorm(lab, ty);
+            labPatLst.add(labexp);
+            ++i;
+        }
+        RecType ret = new RecType(labPatLst, node.m_npf);
+        return ret;
     }
 
     private VarType oftype(D2Evar node, Cloc_t loc) {
@@ -356,10 +377,10 @@ public class UtfplTypeChecker {
         ty = ty.normalize();
         if (ty instanceof PolyType) {
             FunType funTy = ((PolyType)ty).getNormalFunType();
-            return oftype(funTy, argsLst);
+            return oftype(funTy, argsLst, loc);
         } else if (ty instanceof FunType) {
             FunType funTy = (FunType)ty;
-            return oftype(funTy, argsLst);
+            return oftype(funTy, argsLst, loc);
         } else if (ty instanceof VarType) {
             return oftype((VarType)ty, argsLst);
         } else {
@@ -370,7 +391,7 @@ public class UtfplTypeChecker {
     
     /* ****************** ******************* */
     
-    private ISType oftype(FunType funType, List<Id2exparg> argsLst) {
+    private ISType oftype(FunType funType, List<Id2exparg> argsLst, Cloc_t loc) {
         for (int i = 0; i < argsLst.size(); ++i) {
             Id2exparg args0 = argsLst.get(i);
             if (args0 instanceof D2EXPARGsta) {
@@ -381,7 +402,7 @@ public class UtfplTypeChecker {
                 List<ISType> argsType = funType.m_args;
                 List<Cd2exp> argsExp = args.m_d2expLst;
                 if (argsType.size() != argsExp.size()) {
-                    throw new Error("Type mismatched");
+                    throw new Error("Type mismatched@\n" + loc);
                 }
                 for (int j = 0; j < argsType.size(); ++j) {
                     typecheck(argsExp.get(j), argsType.get(j));
@@ -393,7 +414,7 @@ public class UtfplTypeChecker {
                 }
                 List<Id2exparg> nArgsLst = argsLst.subList(i, argsLst.size());
                 if (retType instanceof FunType) {
-                    return oftype((FunType)retType, nArgsLst);
+                    return oftype((FunType)retType, nArgsLst, loc);
                 } else if (retType instanceof VarType) {
                     return oftype((VarType)retType, nArgsLst);
                 } else {

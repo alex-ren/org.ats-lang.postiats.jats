@@ -63,10 +63,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
         } else if (name.equals("D2Eifhead")) {
             return context.deserialize(je2, D2Eifopt.class);
         } else if (name.equals("D2Elist")) {
-            // should add support for list containing two elements, one for
-            // proof, one for concrete
-            Log.log4j.error("D2Elist not supported");
-            throw new Error("D2Elist not supported");
+            return context.deserialize(je2, D2Elist.class);
         } else if (name.equals("D2Etup")) {
             return context.deserialize(je2, D2Etup.class);
         } else if (name.equals("D2Erec")) {

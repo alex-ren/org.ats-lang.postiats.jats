@@ -1,0 +1,17 @@
+SUM_722
+
+DCKprfun prfoo1_2554:_:prop
+
+prfun prfoo_62 = lamMet. lamSta. lam (P2Tann<x_63:_:t@ype>) = 
+  <D2EannSeff>(let
+    prval pf_64 = D2Ecst<prfoo1_2554:_:prop> ()
+  in
+    (pf_64 | 1, 2)
+  end:_:type)
+
+fun foo1_65 = lam () = 
+  <D2EannSeff>(let
+    val P2Trec<LABP2ATnorm(pf_66), LABP2ATnorm(x_67), LABP2ATnorm(y_68)> = prfoo_62 (3)
+  in
+    1
+  end:_:t@ype)
