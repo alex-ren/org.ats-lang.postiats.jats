@@ -2,6 +2,9 @@ package jats.utfpl.utfpl.dynexp;
 
 import java.util.List;
 
+/*
+ * I guess that this one is special for (pf1, pf2, ... | e1, e2, ...).
+ */
 public class D2Elist implements Id2exp_node {
     public int m_npf;
     public List<Cd2exp> m_d2es;

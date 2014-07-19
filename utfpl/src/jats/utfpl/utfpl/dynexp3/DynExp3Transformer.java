@@ -6,6 +6,7 @@ import jats.utfpl.utfpl.Csymbol;
 import jats.utfpl.utfpl.dynexp.Cd2cst;
 import jats.utfpl.utfpl.dynexp.Cd2ecl;
 import jats.utfpl.utfpl.dynexp.Cd2exp;
+import jats.utfpl.utfpl.dynexp.Cd2sym;
 import jats.utfpl.utfpl.dynexp.Cd2var;
 import jats.utfpl.utfpl.dynexp.Cf2undec;
 import jats.utfpl.utfpl.dynexp.Cp2at;
@@ -88,6 +89,7 @@ public class DynExp3Transformer {
     
     
     /*
+     * scope will be modified.
      * cur_scope:
      * needed: Symbols needed but not in cur_scope
      */
@@ -104,6 +106,9 @@ public class DynExp3Transformer {
         return d3ecs;
     }
 
+    /*
+     * scope will be modified.
+     */
     private Cd3ecl transform(Cd2ecl d2ec, Set<Cstamp> scope, Set<Cstamp> needed) {
         Id2ecl_node node0 = d2ec.d2ecl_node;
         if (node0 instanceof D2Cdcstdecs) {
@@ -165,7 +170,7 @@ public class DynExp3Transformer {
 
 
     private Cf3undec transform(Cf2undec f2un, Set<Cstamp> needed) {
-        Cd3var d3var = transform(f2un.f2undec_loc, f2un.f2undec_var);
+        Cd3var d3var = transform(f2un.f2undec_var, f2un.f2undec_loc);
         Cd3exp d3exp = transform(f2un.f2undec_def, null, needed);
         D3ElamDyn d3elam = (D3ElamDyn)(d3exp.m_node);
         
@@ -194,7 +199,8 @@ public class DynExp3Transformer {
 
 
     /*
-     * scope: names can be used. This cannot be changed.
+     * scope: names can be used. This cannot be changed since expression doesn't
+     * provide new names.
      */
     private Cd3exp transform(Cd2exp d2exp, Set<Cstamp> scope, Set<Cstamp> needed) {
         Id2exp_node node = d2exp.d2exp_node;
@@ -228,27 +234,115 @@ public class DynExp3Transformer {
         } else if (node instanceof D2ElamSta) {
             return transform((D2ElamSta)node, loc, needed);
         } else if (node instanceof D2Elet) {
-            return oftype((D2Elet)node, loc);
+            return transform((D2Elet)node, loc, scope, needed);
         } else if (node instanceof D2Es0tring) {
             return new Cd3exp(loc, new D3Es0tring(((D2Es0tring)node).m_s0tring));
         } else if (node instanceof D2Esym) {
-            return oftype((D2Esym)node, loc);
+            return transform((D2Esym)node, loc);
         } else if (node instanceof D2Etup) {
-            return oftype((D2Etup)node, loc);
+            return transform((D2Etup)node, loc, scope, needed);
         } else if (node instanceof D2Elist) {
-            return oftype((D2Elist)node, loc);            
+            return transform((D2Elist)node, loc, scope, needed);            
         } else if (node instanceof D2Evar) {
-            return oftype((D2Evar)node, loc);
+            return transform((D2Evar)node, loc, scope, needed);
         } else {
             throw new Error(d2exp + " is not supported");
         }
+    }
+
+    private Cd3exp transform(D2Evar node0, Cloc_t loc, Set<Cstamp> scope,
+            Set<Cstamp> needed) {
+        Cd3var d3var = transform(node0.m_d2var, loc);
+        if (!scope.contains(d3var.m_stamp)) {
+            needed.add(d3var.m_stamp);
+        }
+        D3Evar node = new D3Evar(d3var);
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
+    }
+
+
+    private Cd3exp transform(D2Elist node0, Cloc_t loc, Set<Cstamp> scope,
+            Set<Cstamp> needed) {
+        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
+        int i = node0.m_npf;
+        if (i < 0) {
+            i = 0;
+        }
+        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+        while (iter.hasNext()) {
+            Cd3exp d3e = transform(iter.next(), scope, needed);
+            d3es.add(d3e);
+        }
+        
+        D3Etup node = new D3Etup(1, d3es);
+        
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
+    }
+
+
+    private Cd3exp transform(D2Etup node0, Cloc_t loc, Set<Cstamp> scope,
+            Set<Cstamp> needed) {
+        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
+        if (node0.m_npf >= 0) {
+            throw new Error("Check this scenario at " + loc);
+        }
+        int i = node0.m_npf;
+        if (i < 0) {
+            i = 0;
+        }
+        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+        while (iter.hasNext()) {
+            Cd3exp d3e = transform(iter.next(), scope, needed);
+            d3es.add(d3e);
+        }
+        
+        D3Etup node = new D3Etup(node0.m_knd, d3es);
+        
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
+    }
+
+
+    private Cd3exp transform(D2Esym node0, Cloc_t loc) {
+        Cd3sym d3sym = transform(node0.m_d2sym, loc);
+        D3Esym node = new D3Esym(d3sym);
+        
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
+    }
+
+    private Cd3sym transform(Cd2sym d2sym, Cloc_t loc) {
+        return new Cd3sym(d2sym.m_d2sym_name, d2sym.m_stype);
+    }
+
+
+    private Cd3exp transform(D2Elet node0, Cloc_t loc, Set<Cstamp> scope,
+            Set<Cstamp> needed) {
+        Set<Cstamp> nscope = new HashSet<Cstamp>(scope);
+        
+        List<Cd3ecl> d3cs = transform(node0.m_d2cs, nscope, needed);
+        Cd3exp body = transform(node0.m_d2e_body, nscope, needed);
+        
+        D3Elet node = new D3Elet(d3cs, body);
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
     }
 
 
     private Cd3exp transform(D2Eifopt node0, Cloc_t loc, Set<Cstamp> scope,
             Set<Cstamp> needed) {
         Cd3exp test = transform(node0.m_test, scope, needed);
-        Cd3exp  = transform(node0.m_then, scope, needed);
+        Cd3exp athen = transform(node0.m_then, scope, needed);
+        Cd3exp aelse = null;
+        if (null != node0.m_else) {
+            aelse = transform(node0.m_else, scope, needed);
+        }
+        
+        D3Eifopt node = new D3Eifopt(test, athen, aelse);
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
     }
 
 
@@ -448,7 +542,7 @@ public class DynExp3Transformer {
 
 
     private Cp3at transform(P2Tvar node0, Cloc_t loc) {
-        Cd3var d3var = transform(loc, node0.m_var);
+        Cd3var d3var = transform(node0.m_var, loc);
         P3Tvar node = new P3Tvar(d3var);
         return new Cp3at(loc, node);
     }
@@ -479,7 +573,7 @@ public class DynExp3Transformer {
     }
 
 
-    private Cd3var transform(Cloc_t loc, Cd2var d2var) {
+    private Cd3var transform(Cd2var d2var, Cloc_t loc) {
         Cd3var d3var = m_varMap.get(d2var.m_stamp);
         if (null != d3var) {
             return d3var;
@@ -504,7 +598,7 @@ public class DynExp3Transformer {
         {
             List<Cd3cst> d3csts = new ArrayList<Cd3cst>();
             for (Cd2cst d2cst: node0.m_d2cst) {
-                Cd3cst d3cst = transform(loc, d2cst);
+                Cd3cst d3cst = transform(d2cst, loc);
                 d3csts.add(d3cst);
                 scope.add(d3cst.m_stamp);
             }
