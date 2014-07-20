@@ -2,14 +2,15 @@ package jats.utfpl.utfpl.dynexp3;
 
 import jats.utfpl.utfpl.Cloc_t;
 import jats.utfpl.utfpl.Cstamp;
-import jats.utfpl.utfpl.Csymbol;
 import jats.utfpl.utfpl.dynexp.Cd2cst;
 import jats.utfpl.utfpl.dynexp.Cd2ecl;
 import jats.utfpl.utfpl.dynexp.Cd2exp;
 import jats.utfpl.utfpl.dynexp.Cd2sym;
 import jats.utfpl.utfpl.dynexp.Cd2var;
 import jats.utfpl.utfpl.dynexp.Cf2undec;
+import jats.utfpl.utfpl.dynexp.Ci2mpdec;
 import jats.utfpl.utfpl.dynexp.Cp2at;
+import jats.utfpl.utfpl.dynexp.Cv2aldec;
 import jats.utfpl.utfpl.dynexp.D2Cdatdecs;
 import jats.utfpl.utfpl.dynexp.D2Cdcstdecs;
 import jats.utfpl.utfpl.dynexp.D2Cextcode;
@@ -40,6 +41,7 @@ import jats.utfpl.utfpl.dynexp.D2Es0tring;
 import jats.utfpl.utfpl.dynexp.D2Esym;
 import jats.utfpl.utfpl.dynexp.D2Etup;
 import jats.utfpl.utfpl.dynexp.D2Evar;
+import jats.utfpl.utfpl.dynexp.Evalkind;
 import jats.utfpl.utfpl.dynexp.Id2ecl_node;
 import jats.utfpl.utfpl.dynexp.Id2exp_node;
 import jats.utfpl.utfpl.dynexp.Id2exparg;
@@ -58,15 +60,9 @@ import jats.utfpl.utfpl.dynexp.P2Tvar;
 import jats.utfpl.utfpl.staexp.FUNCLOclo;
 import jats.utfpl.utfpl.staexp.FUNCLOfun;
 import jats.utfpl.utfpl.staexp.Ifunclo;
-import jats.utfpl.utfpl.stype.FloatType;
 import jats.utfpl.utfpl.stype.FunType;
 import jats.utfpl.utfpl.stype.ISType;
-import jats.utfpl.utfpl.stype.IntType;
 import jats.utfpl.utfpl.stype.PolyType;
-import jats.utfpl.utfpl.stype.RecType;
-import jats.utfpl.utfpl.stype.StringType;
-import jats.utfpl.utfpl.stype.VarType;
-import jats.utfpl.utfpl.stype.VoidType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -89,6 +85,13 @@ public class DynExp3Transformer {
     
     
     /*
+     * Purpose: 
+     * Remove proof
+     * 1. prval (...) = ...
+     * 2. val (pf | ...) = foo ()
+     * 
+     * Handle closure
+     * 
      * scope will be modified.
      * cur_scope:
      * needed: Symbols needed but not in cur_scope
@@ -133,6 +136,70 @@ public class DynExp3Transformer {
             throw new Error(node0 + " is not supported.");
         }
     }
+
+    private Cd3ecl transform(Cloc_t loc, D2Cvaldecs node0,
+            Set<Cstamp> scope, Set<Cstamp> needed) {
+        if (Evalkind.VK_prval == node0.m_knd) {
+            return null;
+        } else {
+            D3Cvaldecs node = transform(node0, loc, scope, needed);
+            Cd3ecl d3ecl = new Cd3ecl(loc, node);
+            return d3ecl;
+        }
+
+    }
+
+
+    private D3Cvaldecs transform(D2Cvaldecs node0, Cloc_t loc,
+            Set<Cstamp> scope, Set<Cstamp> needed) {
+        List<Cv3aldec> v3ds = new ArrayList<Cv3aldec>();
+        
+        for (Cv2aldec v2d: node0.m_v2ds) {
+            Cv3aldec v3d = transform(v2d, scope, needed);
+            v3ds.add(v3d);
+        }
+        
+        D3Cvaldecs node = new D3Cvaldecs(node0.m_knd, v3ds);
+        return node;
+    }
+
+
+    private Cv3aldec transform(Cv2aldec v2d, Set<Cstamp> scope,
+            Set<Cstamp> needed) {
+        Cp3at p3at = transform(v2d.v2aldec_pat);
+        Cd3exp d3exp = transform(v2d.v2aldec_def, scope, needed);
+        
+        Cv3aldec v3d = new Cv3aldec(v2d.v2aldec_loc, p3at, d3exp);
+        return v3d;
+    }
+
+
+    private Cd3ecl transform(Cloc_t loc, D2Cstacsts node0) {
+        D3Cstacsts node = new D3Cstacsts(node0.m_s2csts);
+        Cd3ecl d3ecl = new Cd3ecl(loc, node);
+        return d3ecl;
+    }
+
+
+    private Cd3ecl transform(Cloc_t loc, D2Cimpdec node0,
+            Set<Cstamp> scope, Set<Cstamp> needed) {
+        Ci3mpdec i3mpdec = transform(node0.m_i2mpdec, scope, needed);
+        D3Cimpdec node = new D3Cimpdec(node0.m_knd, i3mpdec);
+        
+        Cd3ecl d3ecl = new Cd3ecl(loc, node);
+        return d3ecl;
+    }
+
+
+    private Ci3mpdec transform(Ci2mpdec i2mpdec, Set<Cstamp> scope,
+            Set<Cstamp> needed) {
+        Cd3cst d3cst = transform(i2mpdec.i2mpdec_cst, i2mpdec.i2mpdec_locid);
+        Cd3exp d3exp = transform(i2mpdec.i2mpdec_def, scope, needed);
+        
+        Ci3mpdec i3mpdec = new Ci3mpdec(i2mpdec.i2mpdec_loc, i2mpdec.i2mpdec_locid, d3cst, d3exp);
+        return i3mpdec;        
+    }
+
 
     /*
      * scope: will be updated
