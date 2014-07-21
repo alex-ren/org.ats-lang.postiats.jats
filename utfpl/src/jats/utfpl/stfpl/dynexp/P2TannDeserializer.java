@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.dynexp;
 
-import jats.utfpl.utfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.staexp.Cs2exp;
 
 import java.lang.reflect.Type;
 

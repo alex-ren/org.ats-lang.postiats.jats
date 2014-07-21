@@ -57,22 +57,22 @@ import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
-import jats.utfpl.utfpl.staexp.Cs2var;
-import jats.utfpl.utfpl.staexp.SExpTypeExtractor;
-import jats.utfpl.utfpl.stype.BoolType;
-import jats.utfpl.utfpl.stype.FloatType;
-import jats.utfpl.utfpl.stype.FunType;
-import jats.utfpl.utfpl.stype.ISType;
-import jats.utfpl.utfpl.stype.IntType;
-import jats.utfpl.utfpl.stype.PolyParaType;
-import jats.utfpl.utfpl.stype.PolyType;
-import jats.utfpl.utfpl.stype.RecType;
-import jats.utfpl.utfpl.stype.TypeCheckResult;
-import jats.utfpl.utfpl.stype.RecType.LabPatNorm;
-import jats.utfpl.utfpl.stype.StringType;
-import jats.utfpl.utfpl.stype.VarType;
-import jats.utfpl.utfpl.stype.VoidType;
-import jats.utfpl.utfpl.stype.RecType.ILabPat;
+import jats.utfpl.stfpl.staexp.Cs2var;
+import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
+import jats.utfpl.stfpl.stype.BoolType;
+import jats.utfpl.stfpl.stype.FloatType;
+import jats.utfpl.stfpl.stype.FunType;
+import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.IntType;
+import jats.utfpl.stfpl.stype.PolyParaType;
+import jats.utfpl.stfpl.stype.PolyType;
+import jats.utfpl.stfpl.stype.RecType;
+import jats.utfpl.stfpl.stype.StringType;
+import jats.utfpl.stfpl.stype.TypeCheckResult;
+import jats.utfpl.stfpl.stype.VarType;
+import jats.utfpl.stfpl.stype.VoidType;
+import jats.utfpl.stfpl.stype.RecType.ILabPat;
+import jats.utfpl.stfpl.stype.RecType.LabPatNorm;
 import jats.utfpl.utils.Log;
 
 
@@ -274,6 +274,7 @@ public class UtfplTypeChecker {
             ++i;
         }
         RecType ret = new RecType(labPatLst, node.m_npf);
+        node.updateType(ret);
         return ret;
     }
 
@@ -295,16 +296,17 @@ public class UtfplTypeChecker {
             ++i;
         }
         RecType ret = new RecType(labPatLst, node.m_npf, node.m_knd);
+        node.updateType(ret);
         return ret;
     }
 
     private ISType oftype(D2Esym node, Cloc_t loc) {
         Cd2sym sym = node.m_d2sym;
-        if (null == sym.m_stype) {
-            sym.m_stype = new VarType();
+        if (null == sym.getSType()) {
+            sym.updateSType(new VarType());
         }
         
-        return sym.m_stype;
+        return sym.getSType();
     }
 
     private ISType oftype(D2Elet node, Cloc_t loc) {
@@ -313,6 +315,7 @@ public class UtfplTypeChecker {
         }
         
         ISType ret = oftype(node.m_d2e_body);
+        node.updateType(ret);
         return ret;
     }
 
@@ -331,7 +334,8 @@ public class UtfplTypeChecker {
         
         ISType restTy = oftype(node.m_d2exp);
         PolyType ret = new PolyType(tyParaLst, restTy);
-        return ret;   
+        node.updateType(ret);
+        return ret;
         
     }
 

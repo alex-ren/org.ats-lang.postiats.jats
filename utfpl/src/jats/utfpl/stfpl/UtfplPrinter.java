@@ -55,13 +55,13 @@ import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
-import jats.utfpl.utfpl.staexp.Cs2cst;
-import jats.utfpl.utfpl.staexp.Cs2exp;
-import jats.utfpl.utfpl.staexp.FUNCLOclo;
-import jats.utfpl.utfpl.staexp.FUNCLOfun;
-import jats.utfpl.utfpl.staexp.Ifunclo;
-import jats.utfpl.utfpl.staexp.Is2rt;
-import jats.utfpl.utfpl.staexp.S2RT;
+import jats.utfpl.stfpl.staexp.Cs2cst;
+import jats.utfpl.stfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.staexp.FUNCLOclo;
+import jats.utfpl.stfpl.staexp.FUNCLOfun;
+import jats.utfpl.stfpl.staexp.Ifunclo;
+import jats.utfpl.stfpl.staexp.Is2rt;
+import jats.utfpl.stfpl.staexp.S2RT;
 
 import java.net.URL;
 

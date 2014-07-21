@@ -88,18 +88,19 @@ import jats.utfpl.stfpl.dynexp3.D3Esym;
 import jats.utfpl.stfpl.dynexp3.D3Etup;
 import jats.utfpl.stfpl.dynexp3.D3Evar;
 import jats.utfpl.stfpl.dynexp3.Id3ecl_node;
+import jats.utfpl.stfpl.dynexp3.Id3exp_node;
 import jats.utfpl.stfpl.dynexp3.Ip3at_node;
 import jats.utfpl.stfpl.dynexp3.LABP3ATnorm;
 import jats.utfpl.stfpl.dynexp3.P3Tany;
 import jats.utfpl.stfpl.dynexp3.P3Tempty;
 import jats.utfpl.stfpl.dynexp3.P3Trec;
 import jats.utfpl.stfpl.dynexp3.P3Tvar;
-import jats.utfpl.utfpl.staexp.FUNCLOclo;
-import jats.utfpl.utfpl.staexp.FUNCLOfun;
-import jats.utfpl.utfpl.staexp.Ifunclo;
-import jats.utfpl.utfpl.stype.FunType;
-import jats.utfpl.utfpl.stype.ISType;
-import jats.utfpl.utfpl.stype.PolyType;
+import jats.utfpl.stfpl.staexp.FUNCLOclo;
+import jats.utfpl.stfpl.staexp.FUNCLOfun;
+import jats.utfpl.stfpl.staexp.Ifunclo; 
+import jats.utfpl.stfpl.stype.FunType;
+import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -116,7 +117,13 @@ public class InstructionTransformer {
     
     private List<InsFunDefGroup> m_defs;
     
+    private List<IStfplInstruction> m_inss;
+    
     public InstructionTransformer() {
+        m_decs = new ArrayList<InsDecGroup>();
+        m_exts = new ArrayList<D3Cextcode>();
+        m_defs = new ArrayList<InsFunDefGroup>();
+        m_inss = new ArrayList<IStfplInstruction>();
         
     }
     
@@ -129,13 +136,13 @@ public class InstructionTransformer {
     private void transform_global(Cd3ecl d3ec) {
         Id3ecl_node node0 = d3ec.m_node;
         if (node0 instanceof D3Cdcstdecs) {
-            m_decs.add(transfrom((D3Cdcstdecs)node0));
+            m_decs.add(transform((D3Cdcstdecs)node0));
         } else if (node0 instanceof D3Cextcode) {
             m_exts.add((D3Cextcode)node0);
         } else if (node0 instanceof D3Cfundecs) {
-            transform(d3ec.m_loc, (D3Cfundecs)node0);
+            transform_global(d3ec.m_loc, (D3Cfundecs)node0);
         } else if (node0 instanceof D2Cimpdec) {
-            return transform(d2ec.d2ecl_loc, (D2Cimpdec)node0, scope, needed);
+            return transform_global(d2ec.d2ecl_loc, (D2Cimpdec)node0, scope, needed);
         } else if (node0 instanceof D2Cstacsts) {
             return transform(d2ec.d2ecl_loc, (D2Cstacsts)node0);
         } else if (node0 instanceof D2Cvaldecs) {
@@ -148,7 +155,7 @@ public class InstructionTransformer {
         }
     }
 
-    private InsDecGroup transfrom(D3Cdcstdecs node0) {
+    private InsDecGroup transform(D3Cdcstdecs node0) {
         List<IVarName> names = new ArrayList<IVarName>();
         for (Cd3cst cst: node0.m_d3cst) {
             names.add(new VNameCst(cst));
@@ -158,13 +165,13 @@ public class InstructionTransformer {
         return new InsDecGroup(knd, names);
     }
 
-    private void transform(Cloc_t loc, D3Cfundecs node0) {
+    private void transform_global(Cloc_t loc, D3Cfundecs node0) {
         List<IVarName> names = new ArrayList<IVarName>();
         List<InsFunDef> funs = new ArrayList<InsFunDef>();
         for (Cf3undec f3undec: node0.m_f3ds) {
             VNameVar name = new VNameVar(f3undec.m_var);
             names.add(name);
-            InsFunDef fundef = transform(loc, f3undec);
+            InsFunDef fundef = transform_global(f3undec);
             funs.add(fundef);
         }
         
@@ -178,10 +185,73 @@ public class InstructionTransformer {
     }
 
 
-    private InsFunDef transform(Cf3undec f3undec) {
+    private InsFunDef transform_global(Cf3undec f3undec) {
+        D3ElamDyn lambda = (D3ElamDyn)f3undec.m_def.m_node;
         
+        Cloc_t loc = f3undec.m_loc;
+        IVarName name = new VNameVar(f3undec.m_var);
+        int lin = lambda.m_lin; 
+        List<Cp3at> p3ts = lambda.m_p3ts;
+        Ifunclo funclo = lambda.m_funclo; 
+        
+        Set<Cd3var> env = lambda.m_env;
+        
+        List<IStfplInstruction> inss = new ArrayList<IStfplInstruction>();
+        IValPrim vp = transform(lambda.m_d3exp, env, inss, SId.createRetHolder("ret", f3undec.getRetType()));
+        
+        InsFunDef aIns = new InsFunDef(loc, name, lin, p3ts, funclo, ins, env);
+        return aIns;
+         
+    }
+
+    private IValPrim transform(Cd3exp d3exp, Set<Cd3var> env, 
+            List<IStfplInstruction> inss, SId holder) {
+       Cloc_t loc = d3exp.m_loc;
+       Id3exp_node node0 = d3exp.m_node;
+       
+       if (node0 instanceof D3Eapplst) {
+           
+       } else if (node0 instanceof D3Ecst) {
+           D3Ecst node = (D3Ecst)node0;
+           SId v = new SId(node.m_d3cst, SId.Category.eConstant);
+           if (null != holder) {
+               InsMove aIns = new InsMove(v, holder);
+               inss.add(aIns);
+               return holder;
+           } else {
+               return v;
+           }
+       } else if (node0 instanceof D3Eempty) {
+           
+       } else if (node0 instanceof D3Ef0loat) {
+           
+       } else if (node0 instanceof D3Ei0nt) {
+           
+       } else if (node0 instanceof D3Eifopt) {
+           
+       } else if (node0 instanceof D3ElamDyn) {
+           
+       } else if (node0 instanceof D3Elet) {
+           
+       } else if (node0 instanceof D3Es0tring) {
+           
+       } else if (node0 instanceof D3Esym) {
+           
+       } else if (node0 instanceof D3Etup) {
+           
+       } else if (node0 instanceof D3Evar) {
+           
+       } else {
+           
+       }
     }
 
 
 
 }
+
+
+
+
+
+

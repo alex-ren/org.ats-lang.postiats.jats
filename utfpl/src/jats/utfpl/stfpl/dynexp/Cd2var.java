@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.dynexp;
 
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
-import jats.utfpl.utfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.ISType;
 
 public class Cd2var {
     public Csymbol m_sym;

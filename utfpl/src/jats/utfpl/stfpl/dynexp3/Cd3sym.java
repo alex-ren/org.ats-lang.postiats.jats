@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.dynexp3;
 
 import jats.utfpl.stfpl.Csymbol;
-import jats.utfpl.utfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.ISType;
 
 public class Cd3sym {
     public Csymbol m_name;

@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.dynexp;
 
-import jats.utfpl.utfpl.staexp.Ifunclo;
+import jats.utfpl.stfpl.staexp.Ifunclo;
 
 import java.lang.reflect.Type;
 

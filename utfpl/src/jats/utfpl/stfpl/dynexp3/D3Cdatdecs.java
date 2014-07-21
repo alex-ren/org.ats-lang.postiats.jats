@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.dynexp3;
 
-import jats.utfpl.utfpl.staexp.Cs2cst;
+import jats.utfpl.stfpl.staexp.Cs2cst;
 
 import java.util.List;
 

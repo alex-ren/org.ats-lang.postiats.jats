@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.dynexp;
 
-import jats.utfpl.utfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.staexp.Cs2exp;
 
 public class P2Tann implements Ip2at_node {
     public Cp2at m_p2t;

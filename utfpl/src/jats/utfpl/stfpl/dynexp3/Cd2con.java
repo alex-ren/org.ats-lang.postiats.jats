@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.dynexp3;
 
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
-import jats.utfpl.utfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.staexp.Cs2exp;
 
 /*
  * constructor for datatype

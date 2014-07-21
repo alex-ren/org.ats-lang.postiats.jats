@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.dynexp;
 
 import jats.utfpl.stfpl.JsonUtilities;
-import jats.utfpl.utfpl.staexp.Cs2cst;
+import jats.utfpl.stfpl.staexp.Cs2cst;
 
 import java.lang.reflect.Type;
 import java.util.List;

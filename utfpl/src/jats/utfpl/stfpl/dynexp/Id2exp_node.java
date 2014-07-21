@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.dynexp;
 
-public interface Id2exp_node {
+import jats.utfpl.stfpl.stype.ISType;
 
+public interface Id2exp_node {
+    public ISType getSType();
 }

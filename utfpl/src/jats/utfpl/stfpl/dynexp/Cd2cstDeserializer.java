@@ -3,8 +3,8 @@ package jats.utfpl.stfpl.dynexp;
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
 import jats.utfpl.stfpl.ccomp.DefaultLibraryTypes;
-import jats.utfpl.utfpl.staexp.Cs2exp;
-import jats.utfpl.utfpl.stype.ISType;
+import jats.utfpl.stfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.stype.ISType;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

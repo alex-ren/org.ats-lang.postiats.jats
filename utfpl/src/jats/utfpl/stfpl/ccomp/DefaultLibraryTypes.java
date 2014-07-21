@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jats.utfpl.stfpl.Csymbol;
-import jats.utfpl.utfpl.stype.BoolType;
-import jats.utfpl.utfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.BoolType;
+import jats.utfpl.stfpl.stype.ISType;
 
 public class DefaultLibraryTypes {
     static private Map<String, ISType> m_map = new HashMap<String, ISType>();  // true_bool";

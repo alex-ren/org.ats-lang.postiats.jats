@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.instructions;
 
+
 import java.util.List;
 
 public class InsDecGroup {
