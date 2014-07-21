@@ -1,7 +1,7 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.Ilabel;
-import jats.utfpl.utfpl.JsonUtilities;
+import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.JsonUtilities;
 
 import java.lang.reflect.Type;
 

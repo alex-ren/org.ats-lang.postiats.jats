@@ -1,6 +1,6 @@
 package jats.utfpl.tree;
 
-import jats.utfpl.utfpl.Cloc_t;
+import jats.utfpl.stfpl.Cloc_t;
 
 public class Location {
 	private String m_desc;

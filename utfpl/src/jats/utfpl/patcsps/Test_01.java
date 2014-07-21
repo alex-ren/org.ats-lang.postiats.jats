@@ -15,13 +15,13 @@ import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
+import jats.utfpl.stfpl.UtfplPrinter;
+import jats.utfpl.stfpl.UtfplProgramParserJson;
+import jats.utfpl.stfpl.UtfplProgramProcessor;
+import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeFromUtfpl;
 import jats.utfpl.tree.TreePrinter;
-import jats.utfpl.utfpl.UtfplPrinter;
-import jats.utfpl.utfpl.UtfplProgramParserJson;
-import jats.utfpl.utfpl.UtfplProgramProcessor;
-import jats.utfpl.utfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
 

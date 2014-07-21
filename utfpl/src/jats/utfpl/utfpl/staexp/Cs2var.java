@@ -1,7 +1,7 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.Cstamp;
-import jats.utfpl.utfpl.Csymbol;
+import jats.utfpl.stfpl.Cstamp;
+import jats.utfpl.stfpl.Csymbol;
 
 public class Cs2var {
     public Is2rt m_srt;

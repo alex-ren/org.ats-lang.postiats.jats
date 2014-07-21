@@ -1,6 +1,6 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.JsonUtilities;
+import jats.utfpl.stfpl.JsonUtilities;
 import jats.utfpl.utils.Log;
 
 import java.lang.reflect.Type;

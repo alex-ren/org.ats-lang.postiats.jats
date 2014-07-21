@@ -1,6 +1,6 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.Cstamp;
+import jats.utfpl.stfpl.Cstamp;
 
 public class TYRECKINDflt1 implements Ityreckind {
     public Cstamp m_stamp;

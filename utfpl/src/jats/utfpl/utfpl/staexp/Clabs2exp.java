@@ -1,6 +1,6 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.Ilabel;
+import jats.utfpl.stfpl.Ilabel;
 
 public class Clabs2exp {
     public Ilabel m_label;

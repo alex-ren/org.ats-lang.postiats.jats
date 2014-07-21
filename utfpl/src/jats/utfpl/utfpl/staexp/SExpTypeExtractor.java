@@ -1,7 +1,7 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.LABint;
-import jats.utfpl.utfpl.dynexp.Cd2exp;
+import jats.utfpl.stfpl.LABint;
+import jats.utfpl.stfpl.dynexp.Cd2exp;
 import jats.utfpl.utfpl.stype.AppType;
 import jats.utfpl.utfpl.stype.DataType;
 import jats.utfpl.utfpl.stype.DefaultAppTypeStore;

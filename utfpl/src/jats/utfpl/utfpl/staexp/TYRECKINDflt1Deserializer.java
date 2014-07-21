@@ -1,6 +1,6 @@
 package jats.utfpl.utfpl.staexp;
 
-import jats.utfpl.utfpl.Cstamp;
+import jats.utfpl.stfpl.Cstamp;
 
 import java.lang.reflect.Type;
 

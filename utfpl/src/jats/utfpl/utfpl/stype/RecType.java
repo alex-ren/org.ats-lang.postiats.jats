@@ -1,6 +1,6 @@
 package jats.utfpl.utfpl.stype;
 
-import jats.utfpl.utfpl.Ilabel;
+import jats.utfpl.stfpl.Ilabel;
 
 import java.util.ArrayList;
 import java.util.List;
