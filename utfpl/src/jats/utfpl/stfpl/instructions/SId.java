@@ -33,5 +33,17 @@ public class SId implements IValPrim{
         return ret;
     }
     
+    public static SId createLocalVar(String name, ISType stype) {
+        VNameId id = new VNameId(name, stype);
+        SId ret = new SId(id, Category.eLocalVar);
+        return ret;
+    }
+
+    @Override
+    public ISType getSType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
 
 }

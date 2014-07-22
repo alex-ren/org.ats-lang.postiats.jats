@@ -381,7 +381,7 @@ public class DynExp3Transformer {
     }
 
     private Cd3sym transform(Cd2sym d2sym, Cloc_t loc) {
-        return new Cd3sym(d2sym.m_d2sym_name, d2sym.m_stype);
+        return new Cd3sym(d2sym.m_d2sym_name, d2sym.getSType());
     }
 
 
@@ -427,21 +427,23 @@ public class DynExp3Transformer {
         Cd3exp fun = transform(node0.m_d2e_fun, scope, needed);
         
         List<D3EXPARGdyn> argslst = new ArrayList<D3EXPARGdyn>();
+        List<ISType> inner_types = new ArrayList<ISType>();
         
+        ListIterator<ISType> iter = node0.getInnerSType().listIterator();
         for (Id2exparg iargs: node0.m_d2as_arg) {
             if (iargs instanceof D2EXPARGsta) {
-                // do nothing
+                iter.next();  // skip this one
             } else if (iargs instanceof D2EXPARGdyn) {
                 D2EXPARGdyn a2rgs = (D2EXPARGdyn)iargs;
                 D3EXPARGdyn a3rgs = transform(a2rgs, scope, needed);
                 argslst.add(a3rgs);
-                
+                inner_types.add(iter.next());
             } else {
                 throw new Error(iargs + " is not supported.");
             }
         }
         
-        D3Eapplst node = new D3Eapplst(fun, argslst);
+        D3Eapplst node = new D3Eapplst(fun, argslst, inner_types);
         return new Cd3exp(loc, node);
     }
 

@@ -388,98 +388,130 @@ public class UtfplTypeChecker {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
         ty = ty.normalize();
-        ISType ret = null;
-        if (ty instanceof PolyType) {
-            FunType funTy = ((PolyType)ty).getNormalFunType();
-            ret = oftype(funTy, argsLst, loc);
-        } else if (ty instanceof FunType) {
-            FunType funTy = (FunType)ty;
-            ret = oftype(funTy, argsLst, loc);
-        } else if (ty instanceof VarType) {
-            ret = oftype((VarType)ty, argsLst);
-        } else {
-            throw new Error("Such difficult type checking task on " + 
-                   ty + " is not acceptable currently." + loc);
-        }
+
+        List<ISType> inner_ty = new ArrayList<ISType>();
         
+        ISType ret = oftype_applst(ty, argsLst, inner_ty, loc);
+        
+        node.updateInnerSType(inner_ty);
         node.updateSType(ret);
         return ret;
     }
     
-    /* ****************** ******************* */
+    /* ************** ******************** ***************** */
     
-    private ISType oftype(FunType funType, List<Id2exparg> argsLst, Cloc_t loc) {
-        for (int i = 0; i < argsLst.size(); ++i) {
-            Id2exparg args0 = argsLst.get(i);
-            if (args0 instanceof D2EXPARGsta) {
-                // skip
-                Log.log4j.warn("D2EXPARGsta encountered.");
-            } else if (args0 instanceof D2EXPARGdyn) {
-                D2EXPARGdyn args = (D2EXPARGdyn)args0;
-                List<ISType> argsType = funType.m_args;
-                List<Cd2exp> argsExp = args.m_d2expLst;
-                if (argsType.size() != argsExp.size()) {
-                    throw new Error("Type mismatched@\n" + loc);
-                }
-                for (int j = 0; j < argsType.size(); ++j) {
-                    typecheck(argsExp.get(j), argsType.get(j));
-                }
-                
-                ISType retType = funType.m_res;
-                if (i == argsLst.size() - 1) {
-                    return retType;
-                }
-                List<Id2exparg> nArgsLst = argsLst.subList(i, argsLst.size());
-                if (retType instanceof FunType) {
-                    return oftype((FunType)retType, nArgsLst, loc);
-                } else if (retType instanceof VarType) {
-                    return oftype((VarType)retType, nArgsLst);
-                } else {
-                    throw new Error(retType + " is not supported.");
-                }
-            } else {
-                throw new Error(args0 + " is not supported.");
-            }
+    private ISType oftype_applst(ISType ty, List<Id2exparg> argsLst,
+            List<ISType> inner_ty, Cloc_t loc) {
+        if (ty instanceof PolyType) {
+            return oftype_applst((PolyType) ty, argsLst, inner_ty, loc);
+        } else if (ty instanceof FunType) {
+            return oftype_applst((FunType) ty, argsLst, inner_ty, loc);
+        } else if (ty instanceof VarType) {
+            return oftype_applst((VarType) ty, argsLst, inner_ty, loc);
+        } else {
+            throw new Error("Such difficult type checking task on " + ty
+                    + " is not acceptable currently." + loc);
         }
-        throw new Error("Should not happen.");
     }
     
-    private ISType oftype(VarType funType0, List<Id2exparg> argsLst) {
+    private ISType oftype_applst(VarType funType0, List<Id2exparg> argsLst,
+            List<ISType> inner_ty, Cloc_t loc) {
         if (!funType0.isRaw()) {
             throw new Error("should be uninitialized");
         }
         
-        for (int i = 0; i < argsLst.size(); ++i) {
-            Id2exparg args0 = argsLst.get(i);
-            if (args0 instanceof D2EXPARGsta) {
-                // skip
-                Log.log4j.warn("D2EXPARGsta encountered.");
-            } else if (args0 instanceof D2EXPARGdyn) {
-                D2EXPARGdyn args = (D2EXPARGdyn)args0;
-                List<Cd2exp> argsExp = args.m_d2expLst;
-                List<ISType> argsType = new ArrayList<ISType>();
-                for (Cd2exp argExp: argsExp) {
-                    ISType argType = oftype(argExp);
-                    argsType.add(argType);
-                }
-                VarType retType = new VarType();
-                FunType funType = new FunType(argsType, retType, null);
-                funType0.setType(funType);
-                
-                if (i == argsLst.size() - 1) {
-                    return retType;
-                }
-                List<Id2exparg> nArgsLst = argsLst.subList(i, argsLst.size());
-                return oftype((VarType)retType, nArgsLst);
-
+        Id2exparg args0 = argsLst.get(0);
+        argsLst = argsLst.subList(0, argsLst.size());
+        
+        if (args0 instanceof D2EXPARGsta) {
+            inner_ty.add(funType0);
+            if (argsLst.isEmpty()) {
+                return funType0;
             } else {
-                throw new Error(args0 + " is not supported.");
+                return oftype_applst(funType0, argsLst, inner_ty, loc);
             }
+        } else if (args0 instanceof D2EXPARGdyn) {
+            D2EXPARGdyn args = (D2EXPARGdyn)args0;
+            List<Cd2exp> argsExp = args.m_d2expLst;
+            List<ISType> argsType = new ArrayList<ISType>();
+            for (Cd2exp argExp: argsExp) {
+                ISType argType = oftype(argExp);
+                argsType.add(argType);
+            }
+            VarType retType = new VarType();
+            FunType funType = new FunType(argsType, retType, null);
+            funType0.setType(funType);
+            
+            inner_ty.add(funType);
+            if (argsLst.isEmpty()) {
+                return funType;
+            } else {
+                return oftype_applst(retType, argsLst, inner_ty, loc);
+            }
+            
+        } else {
+            throw new Error(args0 + " is not supported.");
         }
-        throw new Error("Should not happen."); 
+    }
+
+    private ISType oftype_applst(FunType funType, List<Id2exparg> argsLst,
+            List<ISType> inner_ty, Cloc_t loc) {
+        Id2exparg args0 = argsLst.get(0);
+        argsLst = argsLst.subList(0, argsLst.size());
+        
+        D2EXPARGdyn args = (D2EXPARGdyn)args0; // must be of D2EXPARGdyn
+        List<ISType> argsType = funType.m_args;
+        List<Cd2exp> argsExp = args.m_d2expLst;
+        if (argsType.size() != argsExp.size()) {
+            throw new Error("Type mismatched@\n" + loc);
+        }
+        for (int j = 0; j < argsType.size(); ++j) {
+            typecheck(argsExp.get(j), argsType.get(j));
+        }
+        
+        ISType retType = funType.m_res;
+        inner_ty.add(retType);
+        if (argsLst.isEmpty()) {  // no more application
+            return retType;
+        } else {
+            return oftype_applst(retType, argsLst, inner_ty, loc);
+        }
+    }
+
+    private ISType oftype_applst(PolyType ty, List<Id2exparg> argsLst,
+            List<ISType> inner_ty, Cloc_t loc) {
+        Id2exparg args0 = argsLst.get(0);
+        
+        if (args0 instanceof D2EXPARGsta) {
+            // Since currently D2EXPARGsta is not ported into JSON, I 
+            // use VarType for all of them.
+            ISType ty1 = ty.instantiateOne();
+            inner_ty.add(ty1);
+            argsLst = argsLst.subList(0, argsLst.size());  // shorten the argsLst
+            if (argsLst.isEmpty()) {
+                return ty1;
+            } else {
+                return oftype_applst(ty1, argsLst, inner_ty, loc);
+            }
+            
+        } else if (args0 instanceof D2EXPARGdyn) {
+            // Turn all those type paras, which have been instatiated, into VarType.
+            while (true) {
+                ISType ty0 = ty.instantiateOne();
+                if (ty0 instanceof FunType) {
+                    return oftype_applst((FunType)ty0, argsLst, inner_ty, loc);
+                } else if (ty0 instanceof PolyType) {
+                    ty = (PolyType)ty0;
+                } else {
+                    throw new Error("check this");
+                }
+            }
+        } else {
+            throw new Error(args0 + " is not supported.");
+        }
     }
     
-    /* ****************** ******************* */
+    /* ************** ******************** ***************** */
     
     private ISType oftype(D2EannType node, Cloc_t loc) {
         ISType ty0 = oftype(node.m_d2exp);

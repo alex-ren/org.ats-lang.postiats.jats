@@ -35,24 +35,27 @@ public class PolyType extends BoxedType {
         }
     }
     
-    public FunType getNormalFunType() {
-        List<PolyParaType> paras = new ArrayList<PolyParaType>(m_paras);
-        FunType funTy = getParaFunType(paras);
-        
-        Map<PolyParaType, ISType> map = new HashMap<PolyParaType, ISType>();
-        for (PolyParaType para: paras) {
-            map.put(para, new VarType());
-        }
-        
-        ISType aType = funTy.instantiate(map);
-        
-        if (aType instanceof FunType) {
-            return (FunType)aType;
-        } else {
-            throw new Error("Check this. aType is " + aType);
-        }
-    }
+//    public FunType getNormalFunType() {
+//        List<PolyParaType> paras = new ArrayList<PolyParaType>(m_paras);
+//        FunType funTy = getParaFunType(paras);
+//        
+//        Map<PolyParaType, ISType> map = new HashMap<PolyParaType, ISType>();
+//        for (PolyParaType para: paras) {
+//            map.put(para, new VarType());
+//        }
+//        
+//        ISType aType = funTy.instantiate(map);
+//        
+//        if (aType instanceof FunType) {
+//            return (FunType)aType;
+//        } else {
+//            throw new Error("Check this. aType is " + aType);
+//        }
+//    }
     
+    /*
+     * Get the inner-most FunType, which consists of PolyParaType.
+     */
     public FunType getParaFunType() {
         if (m_body instanceof FunType) {
             return (FunType)m_body;
@@ -63,6 +66,9 @@ public class PolyType extends BoxedType {
         }
     }
     
+    /*
+     * Collect all the PloyParaType's and return the inner-most FunType.
+     */
     private FunType getParaFunType(List<PolyParaType> paras) {
         paras.addAll(m_paras);
         
@@ -86,6 +92,19 @@ public class PolyType extends BoxedType {
         ISType body = m_body.instantiate(map);
         
         return new PolyType(m_paras, body);
+    }
+
+    /*
+     * Turn one level of type paras into VarType.
+     */
+    public ISType instantiateOne() {
+        Map<PolyParaType, ISType> map = new HashMap<PolyParaType, ISType>();
+        for (PolyParaType para : m_paras) {
+            map.put(para, new VarType());
+        }
+        
+        ISType aType = m_body.instantiate(map);
+        return aType;
     }
     
 

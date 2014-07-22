@@ -1,6 +1,8 @@
 package jats.utfpl.stfpl.dynexp3;
 
 
+import jats.utfpl.stfpl.stype.ISType;
+
 import java.util.List;
 
 public class D3Eapplst implements Id3exp_node {
@@ -12,9 +14,12 @@ public class D3Eapplst implements Id3exp_node {
     // Read the code $PATSHOME/MEDIUM/UTFPL0/evaluating/eval_d2exp.dats: aux_d2exp_applst
     public List<D3EXPARGdyn> m_args;
     
-    public D3Eapplst(Cd3exp fun, List<D3EXPARGdyn> args) {
+    public List<ISType> m_inner_stype;
+    
+    public D3Eapplst(Cd3exp fun, List<D3EXPARGdyn> args, List<ISType> inner_stype) {
         m_fun = fun;
         m_args = args;
+        m_inner_stype = inner_stype;
     }
 
 }

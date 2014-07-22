@@ -210,19 +210,11 @@ public class InstructionTransformer {
        Id3exp_node node0 = d3exp.m_node;
        
        if (node0 instanceof D3Eapplst) {
-           
+           return transform((D3Eapplst)node0, env, inss, holder);
        } else if (node0 instanceof D3Ecst) {
-           D3Ecst node = (D3Ecst)node0;
-           SId v = new SId(node.m_d3cst, SId.Category.eConstant);
-           if (null != holder) {
-               InsMove aIns = new InsMove(v, holder);
-               inss.add(aIns);
-               return holder;
-           } else {
-               return v;
-           }
+           return transform((D3Ecst)node0, env, inss, holder);
        } else if (node0 instanceof D3Eempty) {
-           
+           return transform((D3Eempty)node0, env, inss, holder);
        } else if (node0 instanceof D3Ef0loat) {
            
        } else if (node0 instanceof D3Ei0nt) {
@@ -244,6 +236,61 @@ public class InstructionTransformer {
        } else {
            
        }
+    }
+
+    private IValPrim transform(D3Eempty node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder) {
+        
+        IValPrim v = AtomValue.sEmpty;
+        if (null != holder) {
+            InsMove aIns = new InsMove(v, holder);
+            inss.add(aIns);
+            return holder;
+        } else {
+            return v;
+        }
+    }
+
+    private IValPrim transform(D3Eapplst node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder) {
+        IValPrim vpFun = transform(node0.m_fun, env, inss, null);
+
+        ListIterator<D3EXPARGdyn> iter = node0.m_args.listIterator();
+        
+        D3EXPARGdyn args = iter.next();
+        
+        while (true) {
+            List<IValPrim> vpArgs = new ArrayList<IValPrim>();
+            for (Cd3exp arg: args.m_d3expLst) {
+                IValPrim vpArg = transform(arg, env, inss, holder);
+            }
+            
+            ISType ty = vpFun.getSType();
+            FunType funTy = (FunType)ty;
+            
+            
+            if (iter.hasNext()) {
+                SId id = SId.createLocalVar("temp", stype)
+            }
+        }
+        
+
+        
+        if 
+        
+    }
+    
+
+    private IValPrim transform(D3Ecst node, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder) {
+        SId v = new SId(node.m_d3cst, SId.Category.eConstant);
+        if (null != holder) {
+            InsMove aIns = new InsMove(v, holder);
+            inss.add(aIns);
+            return holder;
+        } else {
+            return v;
+        }
     }
 
 

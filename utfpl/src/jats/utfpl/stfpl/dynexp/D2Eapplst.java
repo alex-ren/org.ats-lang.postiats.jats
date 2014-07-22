@@ -10,6 +10,9 @@ public class D2Eapplst implements Id2exp_node {
     
     private ISType m_ty;
     
+    private List<ISType> m_inner_ty;  // The types after applying all the Id2exparg's.
+                                      // The last one is equal to m_ty.
+    
     // m_d2as_arg can have multiple elements. E.g. val xx = foof {int}{int} (pf1 | 0, 1)(pf2 | 33.3)
     // m_d2e_fun is foof
     // m_d2as_arg has 4 elements, D2EXPARGsta, D2EXPARGsta, D2EXPARGdyn, D2EXPARGdyn
@@ -25,6 +28,14 @@ public class D2Eapplst implements Id2exp_node {
         m_ty = ty;
     }
 
+    public void updateInnerSType(List<ISType> ty) {
+        m_inner_ty = ty;
+    }
+    
+    public List<ISType> getInnerSType() {
+        return m_inner_ty;
+    }
+    
     @Override
     public ISType getSType() {
         if (null == m_ty) {
