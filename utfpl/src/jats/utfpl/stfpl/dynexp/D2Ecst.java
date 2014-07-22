@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.dynexp;
 
+import jats.utfpl.stfpl.stype.ISType;
+
 
 // This can be true, false, or function name in "implement".
 public class D2Ecst implements Id2exp_node {
@@ -20,5 +22,11 @@ public class D2Ecst implements Id2exp_node {
     public D2Ecst(Cd2cst d2cst) {
         m_d2cst = d2cst;
     }
+
+    @Override
+    public ISType getSType() {
+        return m_d2cst.m_stype;
+    }
+    
 
 }

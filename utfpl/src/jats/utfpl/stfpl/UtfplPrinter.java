@@ -74,7 +74,7 @@ public class UtfplPrinter {
     private STGroup m_stg;
     
     public  UtfplPrinter() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/utfpl/utfpl.stg");
+        URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/utfpl.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
 
     }

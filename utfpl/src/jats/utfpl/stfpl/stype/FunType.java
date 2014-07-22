@@ -15,11 +15,18 @@ public class FunType extends BoxedType {
     public ISType m_res;
     public Ifunclo m_funclo;
     
-    public FunType(int npf, List<ISType> args, ISType res) {
+    public FunType(int npf, List<ISType> args, ISType res, Ifunclo funclo) {
         m_npf = npf;
         m_args = args;
         m_res = res;
-        m_funclo = null;
+        m_funclo = funclo;
+    }
+    
+    public FunType(List<ISType> args, ISType res, Ifunclo funclo) {
+        m_npf = -999;  // todo handle this for "private ISType oftype(VarType funType0, List<Id2exparg> argsLst) {"
+        m_args = args;
+        m_res = res;
+        m_funclo = funclo;
     }
 
     public ISType getRetType() {
@@ -53,6 +60,19 @@ public class FunType extends BoxedType {
             FunType right = (FunType)right0;
             Aux.matchTypeList(left.m_args, right.m_args);
             m_res.match(right.m_res);
+            
+            if (-999 == m_npf) {
+                m_npf = right.m_npf;
+            } else {
+                right.m_npf = m_npf;
+            }
+            
+            if (null == m_funclo) {
+                m_funclo = right.m_funclo;
+            } else {
+                right.m_funclo = m_funclo;
+            }
+            
             return new TypeCheckResult();
         } else {
             return new TypeCheckResult("Type mismatch.");
@@ -69,7 +89,7 @@ public class FunType extends BoxedType {
         
          ISType res = m_res.instantiate(map);
         
-        return new FunType(m_npf, args, res);
+        return new FunType(m_npf, args, res, m_funclo);
     }
     
 }

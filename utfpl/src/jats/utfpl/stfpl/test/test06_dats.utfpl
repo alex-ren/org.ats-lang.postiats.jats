@@ -1,0 +1,18 @@
+fun foo_62 = lam () = 
+  <D2EannSeff>(let
+    val x_63 = 1
+    fun foo1_64 = lam (P2Tann<y_65:_:t@ype>) = 
+      <D2EannSeff>(x_63:_:t@ype)
+  in
+    foo1_64
+  end:_:type)
+
+fun foo2_66 = lam () = 
+  <D2EannSeff>(let
+    val x_67 = 1
+    fun foo1_68 = lam (P2Tann<y_69:_:t@ype>) = 
+      <clo_ref>
+      <D2EannSeff>(x_67:_:t@ype)
+  in
+    ()
+  end:_:t@ype)

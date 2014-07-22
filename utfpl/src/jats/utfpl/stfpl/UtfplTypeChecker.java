@@ -58,6 +58,7 @@ import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.stfpl.staexp.Cs2var;
+import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.FloatType;
@@ -227,13 +228,16 @@ public class UtfplTypeChecker {
         } else if (node instanceof D2Ecst) {
             return oftype((D2Ecst)node, loc);
         } else if (node instanceof D2Eempty) {
-            return VoidType.cInstance;
+            ((D2Eempty)node).updateType(VoidType.cInstance);
+            return ((D2Eempty)node).getSType();
         } else if (node instanceof D2Eexp) {
             return oftype(((D2Eexp)node).m_d2exp);
         } else if (node instanceof D2Ef0loat) {
-            return FloatType.cInstance;
+            ((D2Ef0loat)node).updateType(FloatType.cInstance);
+            return ((D2Ef0loat)node).getSType();
         } else if (node instanceof D2Ei0nt) {
-            return IntType.cInstance;
+            ((D2Ei0nt)node).updateType(IntType.cInstance);
+            return ((D2Ei0nt)node).getSType();
         } else if (node instanceof D2Eifopt) {
             return oftype((D2Eifopt)node, loc);
         } else if (node instanceof D2Eignored) {
@@ -247,7 +251,8 @@ public class UtfplTypeChecker {
         } else if (node instanceof D2Elet) {
             return oftype((D2Elet)node, loc);
         } else if (node instanceof D2Es0tring) {
-            return StringType.cInstance;
+            ((D2Es0tring)node).updateType(StringType.cInstance);
+            return ((D2Es0tring)node).getSType();
         } else if (node instanceof D2Esym) {
             return oftype((D2Esym)node, loc);
         } else if (node instanceof D2Etup) {
@@ -348,7 +353,10 @@ public class UtfplTypeChecker {
 
         ISType retTy = oftype(node.m_d2exp);
         
-        FunType ret = new FunType(node.m_npf, paraTyLst, retTy);
+        Ifunclo funclo = getClosureInformation(node.m_d2exp);
+        
+        FunType ret = new FunType(node.m_npf, paraTyLst, retTy, funclo);
+        node.updateSType(ret);
 
         return ret;
     }
@@ -360,6 +368,7 @@ public class UtfplTypeChecker {
             typecheck(node.m_else, ty);
         }
         
+        node.updateType(ty);
         return ty;
     }
 
@@ -379,18 +388,22 @@ public class UtfplTypeChecker {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
         ty = ty.normalize();
+        ISType ret = null;
         if (ty instanceof PolyType) {
             FunType funTy = ((PolyType)ty).getNormalFunType();
-            return oftype(funTy, argsLst, loc);
+            ret = oftype(funTy, argsLst, loc);
         } else if (ty instanceof FunType) {
             FunType funTy = (FunType)ty;
-            return oftype(funTy, argsLst, loc);
+            ret = oftype(funTy, argsLst, loc);
         } else if (ty instanceof VarType) {
-            return oftype((VarType)ty, argsLst);
+            ret = oftype((VarType)ty, argsLst);
         } else {
             throw new Error("Such difficult type checking task on " + 
                    ty + " is not acceptable currently." + loc);
         }
+        
+        node.updateSType(ret);
+        return ret;
     }
     
     /* ****************** ******************* */
@@ -450,7 +463,7 @@ public class UtfplTypeChecker {
                     argsType.add(argType);
                 }
                 VarType retType = new VarType();
-                FunType funType = new FunType(-1, argsType, retType);
+                FunType funType = new FunType(argsType, retType, null);
                 funType0.setType(funType);
                 
                 if (i == argsLst.size() - 1) {
@@ -475,6 +488,7 @@ public class UtfplTypeChecker {
 //            System.out.println("ty0 is " + ty0 + ", ty1 is " + ty1);
             ty0.match(ty1);
         }
+        node.updateType(ty0);
         return ty0;        
     }
 
@@ -508,6 +522,7 @@ public class UtfplTypeChecker {
             
             ISType restTy = oftype_fun_head(lamSta.m_d2exp);
             PolyType ret = new PolyType(tyParaLst, restTy);
+            lamSta.updateType(ret);
             return ret;
             
         } else if (def.d2exp_node instanceof D2ElamMet) {
@@ -521,14 +536,25 @@ public class UtfplTypeChecker {
                 ISType paraTy = oftype(pat);
                 paraTyLst.add(paraTy);
             }
-            
+
             ISType retTy = getTypeLamDynRet(lamDyn.m_d2exp);
             
-            FunType funTy = new FunType(lamDyn.m_npf, paraTyLst, retTy);
+            Ifunclo funclo = getClosureInformation(lamDyn.m_d2exp);
+            
+            FunType funTy = new FunType(lamDyn.m_npf, paraTyLst, retTy, funclo);
+            lamDyn.updateSType(funTy);
             return funTy;
             
         } else {
             throw new Error("This should not happen.");
+        }
+    }
+
+    private Ifunclo getClosureInformation(Cd2exp d2exp) {
+        if (d2exp.d2exp_node instanceof D2EannFunclo) {
+             return ((D2EannFunclo)d2exp.d2exp_node).m_funclo;
+        } else {
+            return null;
         }
     }
 

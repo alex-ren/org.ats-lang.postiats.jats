@@ -23,7 +23,7 @@ public class D2EannFunclo implements Id2exp_node {
 
     @Override
     public ISType getSType() {
-        return m_stype.normalize();
+        return m_stype;
     }
 
 }
