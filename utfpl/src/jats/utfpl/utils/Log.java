@@ -14,4 +14,9 @@ public class Log {
         log4j.info("This is an info message."); 
         log4j.error("This is an error message");
     }
+    
+    public static String getFilePos() {
+        StackTraceElement trace = Thread.currentThread().getStackTrace()[2];
+        return trace.getFileName() + " @ " + trace.getLineNumber();
+    }
 }

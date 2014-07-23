@@ -14,7 +14,7 @@ public class InsFunDef {
     public int m_lin;  // something to do with linear type?
     public List<Cp3at> m_p3ts;
     public Ifunclo m_funclo;
-    public List<IStfplInstruction> m_ins;  // body of the function
+    public List<IStfplInstruction> m_inss;  // body of the function
     public Set<Cd3var> m_env;
     
     public InsFunDef(Cloc_t loc, 
@@ -22,14 +22,14 @@ public class InsFunDef {
                      int lin,  // something to do with linear type?
                      List<Cp3at> p3ts,
                      Ifunclo funclo,
-                     List<IStfplInstruction> ins,  // body of the function
+                     List<IStfplInstruction> inss,  // body of the function
                      Set<Cd3var> env) {
         m_loc = loc;
         m_name = name;
         m_lin = lin;
         m_p3ts = p3ts;
         m_funclo = funclo;
-        m_ins = ins;
+        m_inss = inss;
         m_env = env;
                 
     }

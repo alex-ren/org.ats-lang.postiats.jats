@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import java.util.Map;
 
 import jats.utfpl.stfpl.staexp.Cs2var;
+import jats.utfpl.utils.Log;
 
 public class PolyParaType extends BoxedType {
     private Cs2var m_var;
@@ -46,7 +47,7 @@ public class PolyParaType extends BoxedType {
             return new TypeCheckResult();
         } else if (right instanceof PolyParaType) {
             if (!this.equals(right)) {
-                return new TypeCheckResult("type mismatch, check this");
+                return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
             } else {
                 return new TypeCheckResult();
             }

@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.instructions;
 
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
+import jats.utfpl.stfpl.dynexp3.Cd3sym;
 import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.stype.ISType;
 
@@ -24,6 +25,11 @@ public class SId implements IValPrim{
     
     public SId(Cd3var d3var, Category cat) {
         m_name = new VNameVar(d3var);
+        m_cat = cat;
+    }
+    
+    public SId(Cd3sym d3sym, Category cat) {
+        m_name = new VNameSym(d3sym);
         m_cat = cat;
     }
     

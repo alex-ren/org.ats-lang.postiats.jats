@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.staexp.Ifunclo;
+import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class FunType extends BoxedType {
             
             return new TypeCheckResult();
         } else {
-            return new TypeCheckResult("Type mismatch.");
+            return new TypeCheckResult("Type mismatch: " + Log.getFilePos() + " right is " + right0);
         }
     }
 

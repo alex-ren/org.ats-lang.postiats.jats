@@ -270,48 +270,51 @@ public class DynExp3Transformer {
      * provide new names.
      */
     private Cd3exp transform(Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
-        Id2exp_node node = d2exp.d2exp_node;
+        Id2exp_node node0 = d2exp.d2exp_node;
         Cloc_t loc = d2exp.d2exp_loc;
-        if (node instanceof D2EannFunclo) {
-            return transform((D2EannFunclo)node, needed, loc);
-        } else if (node instanceof D2EannSeff) {
-            return transform(((D2EannSeff)node).m_d2exp, scope, needed);
-        } else if (node instanceof D2EannType) {
-            return transform(((D2EannType)node).m_d2exp, scope, needed);
-        } else if (node instanceof D2Eapplst) {
-            return transform((D2Eapplst)node, scope, needed, loc);
-        } else if (node instanceof D2Ecst) {
-            return transform((D2Ecst)node, loc);
-        } else if (node instanceof D2Eempty) {
+        if (node0 instanceof D2EannFunclo) {
+            return transform((D2EannFunclo)node0, needed, loc);
+        } else if (node0 instanceof D2EannSeff) {
+            return transform(((D2EannSeff)node0).m_d2exp, scope, needed);
+        } else if (node0 instanceof D2EannType) {
+            return transform(((D2EannType)node0).m_d2exp, scope, needed);
+        } else if (node0 instanceof D2Eapplst) {
+            return transform((D2Eapplst)node0, scope, needed, loc);
+        } else if (node0 instanceof D2Ecst) {
+            return transform((D2Ecst)node0, loc);
+        } else if (node0 instanceof D2Eempty) {
             return new Cd3exp(loc, D3Eempty.cInstance);
-        } else if (node instanceof D2Eexp) {
-            return transform(((D2Eexp)node).m_d2exp, scope, needed);
-        } else if (node instanceof D2Ef0loat) {
-            return new Cd3exp(loc, new D3Ef0loat(((D2Ef0loat)node).m_f0loat));
-        } else if (node instanceof D2Ei0nt) {
-            return new Cd3exp(loc, new D3Ei0nt(((D2Ei0nt)node).m_i0nt));
-        } else if (node instanceof D2Eifopt) {
-            return transform((D2Eifopt)node, loc, scope, needed);
-        } else if (node instanceof D2Eignored) {
+        } else if (node0 instanceof D2Eexp) {
+            return transform(((D2Eexp)node0).m_d2exp, scope, needed);
+        } else if (node0 instanceof D2Ef0loat) {
+            D2Ef0loat node = (D2Ef0loat)node0;
+            return new Cd3exp(loc, new D3Ef0loat(node.m_f0loat, node.getSType()));
+        } else if (node0 instanceof D2Ei0nt) {
+            D2Ei0nt node = (D2Ei0nt)node0;
+            return new Cd3exp(loc, new D3Ei0nt(node.m_i0nt, node.getSType()));
+        } else if (node0 instanceof D2Eifopt) {
+            return transform((D2Eifopt)node0, loc, scope, needed);
+        } else if (node0 instanceof D2Eignored) {
             throw new Error("Check this");
-        } else if (node instanceof D2ElamDyn) {
-            return transform((D2ElamDyn)node, loc, needed);
-        } else if (node instanceof D2ElamMet) {
-            return transform((D2ElamMet)node, loc, needed);
-        } else if (node instanceof D2ElamSta) {
-            return transform((D2ElamSta)node, loc, needed);
-        } else if (node instanceof D2Elet) {
-            return transform((D2Elet)node, loc, scope, needed);
-        } else if (node instanceof D2Es0tring) {
-            return new Cd3exp(loc, new D3Es0tring(((D2Es0tring)node).m_s0tring));
-        } else if (node instanceof D2Esym) {
-            return transform((D2Esym)node, loc);
-        } else if (node instanceof D2Etup) {
-            return transform((D2Etup)node, loc, scope, needed);
-        } else if (node instanceof D2Elist) {
-            return transform((D2Elist)node, loc, scope, needed);            
-        } else if (node instanceof D2Evar) {
-            return transform((D2Evar)node, loc, scope, needed);
+        } else if (node0 instanceof D2ElamDyn) {
+            return transform((D2ElamDyn)node0, loc, needed);
+        } else if (node0 instanceof D2ElamMet) {
+            return transform((D2ElamMet)node0, loc, needed);
+        } else if (node0 instanceof D2ElamSta) {
+            return transform((D2ElamSta)node0, loc, needed);
+        } else if (node0 instanceof D2Elet) {
+            return transform((D2Elet)node0, loc, scope, needed);
+        } else if (node0 instanceof D2Es0tring) {
+            D2Es0tring node = (D2Es0tring)node0;
+            return new Cd3exp(loc, new D3Es0tring(node.m_s0tring, node.getSType()));
+        } else if (node0 instanceof D2Esym) {
+            return transform((D2Esym)node0, loc);
+        } else if (node0 instanceof D2Etup) {
+            return transform((D2Etup)node0, loc, scope, needed);
+        } else if (node0 instanceof D2Elist) {
+            return transform((D2Elist)node0, loc, scope, needed);            
+        } else if (node0 instanceof D2Evar) {
+            return transform((D2Evar)node0, loc, scope, needed);
         } else {
             throw new Error(d2exp + " is not supported");
         }

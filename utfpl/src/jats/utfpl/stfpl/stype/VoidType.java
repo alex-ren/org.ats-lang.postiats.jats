@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.utils.Log;
+
 import java.util.Map;
 
 public class VoidType extends SortType {
@@ -26,7 +28,7 @@ public class VoidType extends SortType {
         } else if (this == right0) {
             return new TypeCheckResult();
         } else {
-            return new TypeCheckResult("Type mismatch.");
+            return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
         }
     }
 

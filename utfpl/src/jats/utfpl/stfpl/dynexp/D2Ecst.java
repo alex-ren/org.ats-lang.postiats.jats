@@ -25,7 +25,7 @@ public class D2Ecst implements Id2exp_node {
 
     @Override
     public ISType getSType() {
-        return m_d2cst.m_stype;
+        return m_d2cst.getSType();
     }
     
 

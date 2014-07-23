@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.utils.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,7 @@ public class PolyType extends BoxedType {
         } else if (right0 instanceof PolyType) {
             return new TypeCheckResult("not expecting this");
         } else {
-            return new TypeCheckResult("Type mismatch.");
+            return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
         }
     }
     

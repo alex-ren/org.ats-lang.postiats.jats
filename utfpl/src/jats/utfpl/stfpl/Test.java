@@ -34,7 +34,8 @@ public class Test {
 //                "src/jats/utfpl/utfpl/test/test03.dats"
 //                "src/jats/utfpl/utfpl/test/test04.dats"
 //                "src/jats/utfpl/stfpl/test/test05.dats"
-                "src/jats/utfpl/stfpl/test/test06.dats"
+//                "src/jats/utfpl/stfpl/test/test06.dats"
+                "src/jats/utfpl/stfpl/test/test07.dats"
 
         };
 

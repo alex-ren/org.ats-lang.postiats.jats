@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.utils.Log;
+
 import java.util.Map;
 
 
@@ -25,12 +27,12 @@ public class PropType extends SortType {
             return new TypeCheckResult();
         } else if (right0 instanceof PropType) {
             if (this != right0) {
-                return new TypeCheckResult("type mismatch");
+                return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
             } else {
                 return new TypeCheckResult();
             }
         } else {
-            return new TypeCheckResult("Type mismatch.");
+            return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
         }
     }
 

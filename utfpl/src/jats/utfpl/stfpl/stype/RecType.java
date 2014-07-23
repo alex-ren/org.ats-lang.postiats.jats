@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class RecType extends BoxedType {
             RecType right = (RecType)right0;
             
             if (m_labtypes.size() != right.m_labtypes.size()) {
-                return new TypeCheckResult("Type mismatch 01.");
+                return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
             }
             
             if (-1 == m_knd) {
@@ -65,12 +66,12 @@ public class RecType extends BoxedType {
                     }
                 }
                 if (false == found) {
-                    return new TypeCheckResult("Type mismatch.");
+                    return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
                 }
             }
             return new TypeCheckResult();
         } else {
-            return new TypeCheckResult("Type mismatch 02.");
+            return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
         }
     }
     

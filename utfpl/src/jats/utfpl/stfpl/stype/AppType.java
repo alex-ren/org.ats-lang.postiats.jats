@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.utils.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -40,11 +42,11 @@ public class AppType extends BoxedType {
         } else if (right0 instanceof AppType) {
             AppType right = (AppType)right0;
             if (!left.m_con.equals(right.m_con)) {
-                return new TypeCheckResult("type mismatch 001");
+                return new TypeCheckResult("type mismatch: " + Log.getFilePos());
             }
             
             if (left.m_tys.size() != right.m_tys.size()) {
-                return new TypeCheckResult("type mismatch 002");
+                return new TypeCheckResult("type mismatch: " + Log.getFilePos());
             }
             
             ListIterator<ISType> iter0 = left.m_tys.listIterator();
@@ -54,7 +56,7 @@ public class AppType extends BoxedType {
             }
             return new TypeCheckResult();
         } else {
-            return new TypeCheckResult("type mismatch 003");
+            return new TypeCheckResult("type mismatch: " + Log.getFilePos());
         }
         
     }

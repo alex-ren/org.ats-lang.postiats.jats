@@ -18,11 +18,15 @@ public class Cd2sym {
         m_stype = null;
     }
     
-    public ISType getSType() {
-        return m_stype;
+    public void updateSType(ISType stype) {
+        if (null != m_stype) {
+            m_stype.match(stype);
+        } else {
+            m_stype = stype;
+        }
     }
     
-    public void updateSType(ISType ty) {
-        m_stype = ty;
+    public ISType getSType() {
+        return m_stype;
     }
 }

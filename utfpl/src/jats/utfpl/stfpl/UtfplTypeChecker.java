@@ -210,7 +210,8 @@ public class UtfplTypeChecker {
         ISType ty0 = oftype(d2exp);
         TypeCheckResult res = ty0.match(ty);
         if (!res.isGood()) {
-            throw new Error("Type mismatch: " + res.getMsg() + "\n" + d2exp.d2exp_loc);
+            throw new Error("Type mismatch Cd2exp: " + 
+                    res.getMsg() + "\n" + d2exp.d2exp_loc);
         }
     }
 
@@ -377,10 +378,10 @@ public class UtfplTypeChecker {
     }
 
     private ISType oftype(Cd2cst d2cst, Cloc_t loc) {
-        if (null == d2cst.m_stype) {
+        if (null == d2cst.getSType()) {
             throw new Error("m_stype of " + d2cst.toString() + " should have been set. @\n" + loc);
         } else {
-            return d2cst.m_stype;
+            return d2cst.getSType();
         }
     }
 
@@ -421,7 +422,7 @@ public class UtfplTypeChecker {
         }
         
         Id2exparg args0 = argsLst.get(0);
-        argsLst = argsLst.subList(0, argsLst.size());
+        argsLst = argsLst.subList(1, argsLst.size());
         
         if (args0 instanceof D2EXPARGsta) {
             inner_ty.add(funType0);
@@ -442,9 +443,9 @@ public class UtfplTypeChecker {
             FunType funType = new FunType(argsType, retType, null);
             funType0.setType(funType);
             
-            inner_ty.add(funType);
+            inner_ty.add(retType);
             if (argsLst.isEmpty()) {
-                return funType;
+                return retType;
             } else {
                 return oftype_applst(retType, argsLst, inner_ty, loc);
             }
@@ -457,13 +458,13 @@ public class UtfplTypeChecker {
     private ISType oftype_applst(FunType funType, List<Id2exparg> argsLst,
             List<ISType> inner_ty, Cloc_t loc) {
         Id2exparg args0 = argsLst.get(0);
-        argsLst = argsLst.subList(0, argsLst.size());
+        argsLst = argsLst.subList(1, argsLst.size());
         
         D2EXPARGdyn args = (D2EXPARGdyn)args0; // must be of D2EXPARGdyn
         List<ISType> argsType = funType.m_args;
         List<Cd2exp> argsExp = args.m_d2expLst;
         if (argsType.size() != argsExp.size()) {
-            throw new Error("Type mismatched@\n" + loc);
+            throw new Error("Type mismatched: " + loc);
         }
         for (int j = 0; j < argsType.size(); ++j) {
             typecheck(argsExp.get(j), argsType.get(j));
@@ -487,7 +488,7 @@ public class UtfplTypeChecker {
             // use VarType for all of them.
             ISType ty1 = ty.instantiateOne();
             inner_ty.add(ty1);
-            argsLst = argsLst.subList(0, argsLst.size());  // shorten the argsLst
+            argsLst = argsLst.subList(1, argsLst.size());  // shorten the argsLst
             if (argsLst.isEmpty()) {
                 return ty1;
             } else {
@@ -689,9 +690,7 @@ public class UtfplTypeChecker {
 
 	private ISType typecheck_dec(Cd2cst d2cst) {
 	    ISType stype = SExpTypeExtractor.extractType(d2cst.m_type);
-	    if (null == d2cst.m_stype && null != stype) {
-	        d2cst.m_stype = stype;
-	    }
+	    d2cst.updateSType(stype);
 
 	    return stype;
     }

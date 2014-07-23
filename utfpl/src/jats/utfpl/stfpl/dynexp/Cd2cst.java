@@ -12,7 +12,7 @@ public class Cd2cst {
     public Cs2exp m_type;
     public Csymbol m_symbol;
     
-    public ISType m_stype;
+    private ISType m_stype;
     
     // Used for print (stringtemplate)
     public Cstamp getStamp() {
@@ -27,6 +27,18 @@ public class Cd2cst {
     // Used for print (stringtemplate)
     public Cs2exp getType() {
         return m_type;
+    }
+    
+    public void updateSType(ISType stype) {
+        if (null != m_stype) {
+            m_stype.match(stype);
+        } else {
+            m_stype = stype;
+        }
+    }
+    
+    public ISType getSType() {
+        return m_stype;
     }
     
     public Cd2cst(Cstamp stamp, Cs2exp type, Csymbol symbol, ISType stype) {
