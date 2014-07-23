@@ -19,7 +19,7 @@ public class AtomValue implements IValPrim {
     }
     
     @Override
-    public ISType getSType() {
+    public ISType getType() {
         return m_ty;
     }
 

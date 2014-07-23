@@ -7,17 +7,16 @@ import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.stype.ISType;
 
-
-public class VNameVar implements IVarName {
+public class VNameClosurePara implements IVarName {
     public Cd3var m_var;
     
-    static private Map<Cstamp, VNameVar> s_map = 
-            new HashMap<Cstamp, VNameVar>();
+    static private Map<Cstamp, VNameClosurePara> s_map = 
+            new HashMap<Cstamp, VNameClosurePara>();
     
-    static public VNameVar fromCd3var(Cd3var var) {
-        VNameVar v = s_map.get(var.m_stamp);
+    static public VNameClosurePara fromClosurePara(Cd3var var) {
+        VNameClosurePara v = s_map.get(var.m_stamp);
         if (null == v) {
-            v = new VNameVar(var);
+            v = new VNameClosurePara(var);
             s_map.put(var.m_stamp, v);
             return v;
         } else {
@@ -25,7 +24,7 @@ public class VNameVar implements IVarName {
         }
     }
     
-    private VNameVar(Cd3var var) {
+    private VNameClosurePara(Cd3var var) {
         m_var = var;
     }
 
@@ -33,5 +32,5 @@ public class VNameVar implements IVarName {
     public ISType getType() {
         return m_var.m_stype;
     }
-    
+
 }

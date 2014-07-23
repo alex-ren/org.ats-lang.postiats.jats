@@ -21,7 +21,7 @@ public class VNameId implements IVarName {
     }
 
     @Override
-    public ISType getSType() {
+    public ISType getType() {
         return m_stype;
     }
 

@@ -95,6 +95,7 @@ import jats.utfpl.stfpl.dynexp3.P3Tany;
 import jats.utfpl.stfpl.dynexp3.P3Tempty;
 import jats.utfpl.stfpl.dynexp3.P3Trec;
 import jats.utfpl.stfpl.dynexp3.P3Tvar;
+import jats.utfpl.stfpl.instructions.SId.Category;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo; 
@@ -111,36 +112,40 @@ import java.util.Set;
 
 public class InstructionTransformer {
     
-    private List<InsDecGroup> m_decs;
+    private List<DecGroup> m_decs;
     
     private List<D3Cextcode> m_exts;
     
-    private List<InsFunDefGroup> m_defs;
+    private List<DefFunGroup> m_defs;
     
-    private List<IStfplInstruction> m_inss;  // global instructions
+    private List<IStfplInstruction> m_main_inss;  // global instructions
     
     public InstructionTransformer() {
-        m_decs = new ArrayList<InsDecGroup>();
+        m_decs = new ArrayList<DecGroup>();
         m_exts = new ArrayList<D3Cextcode>();
-        m_defs = new ArrayList<InsFunDefGroup>();
-        m_inss = new ArrayList<IStfplInstruction>();
+        m_defs = new ArrayList<DefFunGroup>();
+        m_main_inss = new ArrayList<IStfplInstruction>();
         
     }
     
-    public void transform(List<Cd3ecl> d3ecs, boolean is_global) {
+    public void transform_global(List<Cd3ecl> d3ecs) {
         for (Cd3ecl d3ec: d3ecs) {
-            transform(d3ec, is_global);
+            transform(d3ec, null, null, true);
         }
     }
 
-    private void transform(Cd3ecl d3ec, boolean is_global) {
+    private void transform(Cd3ecl d3ec, Set<Cd3var> env, 
+            List<IStfplInstruction> inss, boolean is_global) {
         Id3ecl_node node0 = d3ec.m_node;
         if (node0 instanceof D3Cdcstdecs) {
-            m_decs.add(transform((D3Cdcstdecs)node0), is_global);
+            transform((D3Cdcstdecs)node0, env, inss, is_global);
+            return;
         } else if (node0 instanceof D3Cextcode) {
             m_exts.add((D3Cextcode)node0);
+            return;
         } else if (node0 instanceof D3Cfundecs) {
-            transform(d3ec.m_loc, (D3Cfundecs)node0, is_global);
+            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss, is_global);
+            return;
         } else if (node0 instanceof D2Cimpdec) {
             return transform_global(d2ec.d2ecl_loc, (D2Cimpdec)node0, scope, needed);
         } else if (node0 instanceof D2Cstacsts) {
@@ -155,58 +160,76 @@ public class InstructionTransformer {
         }
     }
 
-    private InsDecGroup transform(D3Cdcstdecs node0, boolean is_global) {
+    private void transform(D3Cdcstdecs node0, Set<Cd3var> env, 
+            List<IStfplInstruction> inss, boolean is_global) {
         List<IVarName> names = new ArrayList<IVarName>();
         for (Cd3cst cst: node0.m_d3cst) {
-            names.add(new VNameCst(cst));
+            names.add(VNameCst.fromCd3cst(cst));
         }
         
         Edeckind knd = Edeckind.fromEcstkind(node0.m_dck);
-        return new InsDecGroup(knd, names);
+        m_decs.add(new DecGroup(knd, names));
     }
 
-    private void transform(Cloc_t loc, D3Cfundecs node0, boolean is_global) {
+    private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, 
+            List<IStfplInstruction> inss, boolean is_global) {
         List<IVarName> names = new ArrayList<IVarName>();
-        List<InsFunDef> funs = new ArrayList<InsFunDef>();
+        List<DefFun> funs = new ArrayList<DefFun>();
         for (Cf3undec f3undec: node0.m_f3ds) {
-            VNameVar name = new VNameVar(f3undec.m_var);
+            VNameVar name = VNameVar.fromCd3var(f3undec.m_var);
             names.add(name);
-            InsFunDef fundef = transform(f3undec, is_global);
+            DefFun fundef = transform(f3undec, inss, is_global);
             funs.add(fundef);
         }
         
         Edeckind knd = Edeckind.fromEfunkind(node0.m_knd);
-        InsDecGroup protos = new InsDecGroup(knd, names);
+        DecGroup protos = new DecGroup(knd, names);
         m_decs.add(protos);
         
-        InsFunDefGroup fungrp = new InsFunDefGroup(node0.m_knd, funs);
+        DefFunGroup fungrp = new DefFunGroup(node0.m_knd, funs);
         m_defs.add(fungrp);
         
     }
 
 
-    private InsFunDef transform(Cf3undec f3undec, boolean is_global) {
+    /*
+     * create function definition and, closure if necessary
+     */
+    private DefFun transform(Cf3undec f3undec, Set<Cd3var> env, List<IStfplInstruction> inss, boolean is_global) {
         D3ElamDyn lambda = (D3ElamDyn)f3undec.m_def.m_node;
         
         Cloc_t loc = f3undec.m_loc;
-        IVarName name = new VNameVar(f3undec.m_var);
+        SId name = SId.fromCd3var(f3undec.m_var, Category.eUserFun);
         int lin = lambda.m_lin; 
         List<Cp3at> p3ts = lambda.m_p3ts;
         Ifunclo funclo = lambda.m_funclo; 
         
-        Set<Cd3var> env = lambda.m_env;
+        Set<Cd3var> env2 = lambda.m_env;
         
-        List<IStfplInstruction> inss = new ArrayList<IStfplInstruction>();
-        IValPrim vp = transform(lambda.m_d3exp, env, inss, SId.createRetHolder("ret", f3undec.getRetType()), false);
-        
-        if (is_global) {
-            InsFunDef aIns = new InsFunDef(loc, name, lin, p3ts, funclo, inss, env);
-        } else {
+        List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
+        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", f3undec.getRetType()), false);
+        DefFun def_fun = new DefFun(loc, name, lin, p3ts, funclo, inss2, env2);
+
+        if (funclo != FUNCLOfun.cInstance) {  // closure
+            Set<SId> form_env = new HashSet<SId>();
             
+            for (Cd3var d3var: env2) {
+                if (env.contains(d3var)) {
+                    SId clo_id = SId.fromCloCd3var(d3var, Category.eOther);
+                    form_env.add(clo_id);
+                } else {
+                    form_env.add(SId.fromCd3var(d3var, Category.eOther));
+                }
+            }
+            InsClosure ins_clo = new InsClosure(name, form_env);
+            if (is_global) {
+                m_main_inss.add(ins_clo);
+            } else {
+                inss.add(ins_clo);
+            }
         }
         
-        return aIns;
-         
+        return def_fun;
     }
 
     private IValPrim transform(Cd3exp d3exp, Set<Cd3var> env, 
@@ -301,7 +324,7 @@ public class InstructionTransformer {
 
     private IValPrim transform(D3Ecst node, Set<Cd3var> env,
             List<IStfplInstruction> inss, SId holder, boolean is_global) {
-        SId v = new SId(node.m_d3cst, SId.Category.eConstant);
+        SId v = SId.fromCd3cst(node.m_d3cst, SId.Category.eConstant)
         if (null != holder) {
             InsMove aIns = new InsMove(v, holder);
             inss.add(aIns);
@@ -313,7 +336,7 @@ public class InstructionTransformer {
 
     private IValPrim transform(D3Esym node, Set<Cd3var> env,
             List<IStfplInstruction> inss, SId holder, boolean is_global) {
-        SId v = new SId(node.m_d3sym, SId.Category.eConstant);
+        SId v = SId.fromCd3sym(node.m_d3sym, SId.Category.eConstant);
         if (null != holder) {
             throw new Error("Check this.");
         } else {

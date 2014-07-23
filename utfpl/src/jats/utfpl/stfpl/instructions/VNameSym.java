@@ -11,7 +11,7 @@ public class VNameSym implements IVarName {
     }
 
     @Override
-    public ISType getSType() {
+    public ISType getType() {
         return m_sym.m_stype;
     }
 

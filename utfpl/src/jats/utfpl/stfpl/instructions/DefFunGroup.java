@@ -4,11 +4,11 @@ import jats.utfpl.stfpl.dynexp.Efunkind;
 
 import java.util.List;
 
-public class InsFunDefGroup {
+public class DefFunGroup {
     public Efunkind m_knd;
-    public List<InsFunDef> m_funs;
+    public List<DefFun> m_funs;
     
-    public InsFunDefGroup(Efunkind knd, List<InsFunDef> funs) {
+    public DefFunGroup(Efunkind knd, List<DefFun> funs) {
         m_knd = knd;
         m_funs = funs;
     }

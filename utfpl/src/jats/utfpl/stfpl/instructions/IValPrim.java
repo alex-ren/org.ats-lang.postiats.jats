@@ -4,6 +4,6 @@ import jats.utfpl.stfpl.stype.ISType;
 
 public interface IValPrim {
     
-    public ISType getSType(); 
+    public ISType getType(); 
 
 }

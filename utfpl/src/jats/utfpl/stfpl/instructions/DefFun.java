@@ -8,17 +8,17 @@ import jats.utfpl.stfpl.staexp.Ifunclo;
 import java.util.List;
 import java.util.Set;
 
-public class InsFunDef {
+public class DefFun {
     public Cloc_t m_loc;
-    public IVarName m_name;
+    public SId m_name;
     public int m_lin;  // something to do with linear type?
     public List<Cp3at> m_p3ts;
     public Ifunclo m_funclo;
     public List<IStfplInstruction> m_inss;  // body of the function
     public Set<Cd3var> m_env;
     
-    public InsFunDef(Cloc_t loc, 
-                     IVarName name, 
+    public DefFun(Cloc_t loc, 
+                     SId name, 
                      int lin,  // something to do with linear type?
                      List<Cp3at> p3ts,
                      Ifunclo funclo,
