@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.dynexp3;
 
+import jats.utfpl.stfpl.stype.ISType;
+
 
 // This can be true, false, or function name in "implement".
 public class D3Ecst implements Id3exp_node {
@@ -15,6 +17,11 @@ public class D3Ecst implements Id3exp_node {
     
     public D3Ecst(Cd3cst d3cst) {
         m_d3cst = d3cst;
+    }
+
+    @Override
+    public ISType getType() {
+        return m_d3cst.getType();
     }
 
 }

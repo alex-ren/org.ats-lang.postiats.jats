@@ -130,21 +130,21 @@ public class InstructionTransformer {
     
     public void transform_global(List<Cd3ecl> d3ecs) {
         for (Cd3ecl d3ec: d3ecs) {
-            transform(d3ec, null, null, true);
+            transform(d3ec, new HashSet<Cd3var>(), m_main_inss);
         }
     }
 
     private void transform(Cd3ecl d3ec, Set<Cd3var> env, 
-            List<IStfplInstruction> inss, boolean is_global) {
+            List<IStfplInstruction> inss) {
         Id3ecl_node node0 = d3ec.m_node;
         if (node0 instanceof D3Cdcstdecs) {
-            transform((D3Cdcstdecs)node0, env, inss, is_global);
+            transform((D3Cdcstdecs)node0, env, inss);
             return;
         } else if (node0 instanceof D3Cextcode) {
             m_exts.add((D3Cextcode)node0);
             return;
         } else if (node0 instanceof D3Cfundecs) {
-            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss, is_global);
+            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss);
             return;
         } else if (node0 instanceof D2Cimpdec) {
             return transform_global(d2ec.d2ecl_loc, (D2Cimpdec)node0, scope, needed);
@@ -161,7 +161,7 @@ public class InstructionTransformer {
     }
 
     private void transform(D3Cdcstdecs node0, Set<Cd3var> env, 
-            List<IStfplInstruction> inss, boolean is_global) {
+            List<IStfplInstruction> inss) {
         List<IVarName> names = new ArrayList<IVarName>();
         for (Cd3cst cst: node0.m_d3cst) {
             names.add(VNameCst.fromCd3cst(cst));
@@ -172,13 +172,13 @@ public class InstructionTransformer {
     }
 
     private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, 
-            List<IStfplInstruction> inss, boolean is_global) {
+            List<IStfplInstruction> inss) {
         List<IVarName> names = new ArrayList<IVarName>();
         List<DefFun> funs = new ArrayList<DefFun>();
         for (Cf3undec f3undec: node0.m_f3ds) {
             VNameVar name = VNameVar.fromCd3var(f3undec.m_var);
             names.add(name);
-            DefFun fundef = transform(f3undec, inss, is_global);
+            DefFun fundef = transform(f3undec, env, inss);
             funs.add(fundef);
         }
         
@@ -195,7 +195,7 @@ public class InstructionTransformer {
     /*
      * create function definition and, closure if necessary
      */
-    private DefFun transform(Cf3undec f3undec, Set<Cd3var> env, List<IStfplInstruction> inss, boolean is_global) {
+    private DefFun transform(Cf3undec f3undec, Set<Cd3var> env, List<IStfplInstruction> inss) {
         D3ElamDyn lambda = (D3ElamDyn)f3undec.m_def.m_node;
         
         Cloc_t loc = f3undec.m_loc;
@@ -207,7 +207,7 @@ public class InstructionTransformer {
         Set<Cd3var> env2 = lambda.m_env;
         
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", f3undec.getRetType()), false);
+        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", f3undec.getRetType()));
         DefFun def_fun = new DefFun(loc, name, lin, p3ts, funclo, inss2, env2);
 
         if (funclo != FUNCLOfun.cInstance) {  // closure
@@ -222,27 +222,23 @@ public class InstructionTransformer {
                 }
             }
             InsClosure ins_clo = new InsClosure(name, form_env);
-            if (is_global) {
-                m_main_inss.add(ins_clo);
-            } else {
-                inss.add(ins_clo);
-            }
+            inss.add(ins_clo);
         }
         
         return def_fun;
     }
 
     private IValPrim transform(Cd3exp d3exp, Set<Cd3var> env, 
-            List<IStfplInstruction> inss, SId holder, boolean is_global) {
+            List<IStfplInstruction> inss, SId holder) {
        Cloc_t loc = d3exp.m_loc;
        Id3exp_node node0 = d3exp.m_node;
        
        if (node0 instanceof D3Eapplst) {
-           return transform((D3Eapplst)node0, env, inss, holder, is_global);
+           return transform((D3Eapplst)node0, env, inss, holder);
        } else if (node0 instanceof D3Ecst) {
-           return transform((D3Ecst)node0, env, inss, holder, is_global);
+           return transform((D3Ecst)node0, env, inss, holder);
        } else if (node0 instanceof D3Eempty) {
-           return transform((D3Eempty)node0, env, inss, holder, is_global);
+           return transform((D3Eempty)node0, env, inss, holder);
        } else if (node0 instanceof D3Ef0loat) {
            D3Ef0loat node = (D3Ef0loat)node0;
            return new AtomValue(node.m_ty, node.m_f0loat);
@@ -250,7 +246,7 @@ public class InstructionTransformer {
            D3Ei0nt node = (D3Ei0nt)node0;
            return new AtomValue(node.m_ty, node.m_i0nt);
        } else if (node0 instanceof D3Eifopt) {
-           
+           return transform((D3Eifopt)node0, env, inss, holder);
        } else if (node0 instanceof D3ElamDyn) {
            
        } else if (node0 instanceof D3Elet) {
@@ -269,8 +265,28 @@ public class InstructionTransformer {
        }
     }
 
+    private IValPrim transform(D3Eifopt node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder) {
+        if (null == holder) {
+            SId vp = SId.createLocalVar("cond", node0.m_test.m_node.m)
+        }
+        IValPrim vp_cond = transform(node0.m_test, env, inss, null);
+        
+        List<IStfplInstruction> btrue = new ArrayList<IStfplInstruction>();
+        List<IStfplInstruction> bfalse = new ArrayList<IStfplInstruction>();
+        
+        transform(node0.m_then, env, btrue, holder);
+        if (null != node0.m_else) {
+            transform(node0.m_else, env, btrue, holder);
+        }
+        
+        
+        
+        
+    }
+
     private IValPrim transform(D3Eempty node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, boolean is_global) {
+            List<IStfplInstruction> inss, SId holder) {
         
         IValPrim v = AtomValue.sEmpty;
         if (null != holder) {
@@ -283,7 +299,7 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Eapplst node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, boolean is_global) {
+            List<IStfplInstruction> inss, SId holder) {
         IValPrim vpFun = transform(node0.m_fun, env, inss, null);
 
         ListIterator<D3EXPARGdyn> iter_args = node0.m_args.listIterator();
@@ -323,8 +339,8 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Ecst node, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, boolean is_global) {
-        SId v = SId.fromCd3cst(node.m_d3cst, SId.Category.eConstant)
+            List<IStfplInstruction> inss, SId holder) {
+        SId v = SId.fromCd3cst(node.m_d3cst, SId.Category.eConstant);
         if (null != holder) {
             InsMove aIns = new InsMove(v, holder);
             inss.add(aIns);
@@ -335,7 +351,7 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Esym node, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, boolean is_global) {
+            List<IStfplInstruction> inss, SId holder) {
         SId v = SId.fromCd3sym(node.m_d3sym, SId.Category.eConstant);
         if (null != holder) {
             throw new Error("Check this.");
@@ -345,9 +361,14 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Evar node, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, boolean is_global) {
-        todo check env
-        SId v = new SId(node.m_d2var, SId.Category.eLocalVar);
+            List<IStfplInstruction> inss, SId holder) {
+        IValPrim v = null;
+        if (env.contains(node)) {
+            v = SId.fromCloCd3var(node.m_d3var, Category.eOther);
+        } else {
+            v = SId.fromCd3var(node.m_d3var, SId.Category.eLocalVar);
+        }
+
         if (null != holder) {
             InsMove aIns = new InsMove(v, holder);
             inss.add(aIns);
@@ -356,6 +377,8 @@ public class InstructionTransformer {
             return v;
         }
     }
+    
+
 
 
 }

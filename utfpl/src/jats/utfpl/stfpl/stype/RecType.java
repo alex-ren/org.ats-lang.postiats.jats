@@ -1,10 +1,13 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.dynexp.Cd2exp;
+import jats.utfpl.stfpl.dynexp3.Cd3exp;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class RecType extends BoxedType {
@@ -135,6 +138,20 @@ public class RecType extends BoxedType {
             labpats.add(pat.instantiate(map));
         }
         return new RecType(labpats, m_npf, m_knd);
+    }
+
+    public RecType removeProof() {
+        List<ILabPat> tys = new ArrayList<ILabPat>();
+        int i = 0;
+        if (m_npf > 0) {
+            i = m_npf;
+        }
+        ListIterator<ILabPat> iter = m_labtypes.listIterator(i);
+        while (iter.hasNext()) {
+            tys.add(iter.next());
+        }
+        RecType ret = new RecType(tys, 0);
+        return ret;
     }
     
 

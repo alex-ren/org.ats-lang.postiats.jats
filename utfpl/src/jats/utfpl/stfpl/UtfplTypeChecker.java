@@ -357,6 +357,11 @@ public class UtfplTypeChecker {
         Ifunclo funclo = getClosureInformation(node.m_d2exp);
         
         FunType ret = new FunType(node.m_npf, paraTyLst, retTy, funclo);
+        
+        // set function type (From my observation, the indented is D2EannFunclo.)
+        if (node.m_d2exp.d2exp_node instanceof D2EannFunclo) {
+            ((D2EannFunclo)node.m_d2exp.d2exp_node).updateSType(ret);
+        }
         node.updateSType(ret);
 
         return ret;

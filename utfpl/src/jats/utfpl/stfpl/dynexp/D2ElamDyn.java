@@ -27,7 +27,7 @@ public class D2ElamDyn implements Id2exp_node {
     }
 
     @Override
-    public ISType getSType() {
+    public FunType getSType() {
         if (null == m_ty) {
             throw new Error("check this");
         } else {

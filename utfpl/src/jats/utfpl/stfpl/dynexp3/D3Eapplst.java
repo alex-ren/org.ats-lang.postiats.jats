@@ -22,4 +22,9 @@ public class D3Eapplst implements Id3exp_node {
         m_inner_stype = inner_stype;
     }
 
+    @Override
+    public ISType getType() {
+        return m_inner_stype.get(m_inner_stype.size() - 1);
+    }
+
 }

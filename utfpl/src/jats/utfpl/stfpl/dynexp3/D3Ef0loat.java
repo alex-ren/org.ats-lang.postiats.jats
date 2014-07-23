@@ -12,4 +12,9 @@ public class D3Ef0loat implements Id3exp_node {
         m_ty = ty;
     }
 
+    @Override
+    public ISType getType() {
+        return m_ty;
+    }
+
 }
