@@ -11,5 +11,17 @@ public class Cp3at {
         m_loc = loc;
         m_node = node;
     }
+    
+//    /*
+//     * This function may return null.
+//     */
+//    public Cd3var getCd3var() {
+//        if (m_node instanceof P3Tvar) {
+//            return ((P3Tvar)m_node).m_var;
+//        } else {
+//            return null;
+//        }
+//        
+//    }
 
 }

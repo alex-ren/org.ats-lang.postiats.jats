@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.dynexp;
 
+import jats.utfpl.utils.Log;
+
 public enum Efunkind {
     FK_fn("fn"), // non-recursive function 
     FK_fnx("fnx"), // tail-recursive 
@@ -20,6 +22,11 @@ public enum Efunkind {
     @Override
     public String toString() {
         return m_str;        
+    }
+
+    public static Efunkind fromInt(int knd) {
+        Log.log4j.warn("Efunknd takes " + knd + ".");
+        return FK_fun;
     }
 
 }

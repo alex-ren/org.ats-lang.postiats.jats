@@ -13,6 +13,6 @@ public class P2TemptyDeserializer  implements JsonDeserializer<P2Tempty> {
     public P2Tempty deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
         json.getAsJsonArray();
-        return P2Tempty.cInstance;
+        return new P2Tempty();
     }
 }

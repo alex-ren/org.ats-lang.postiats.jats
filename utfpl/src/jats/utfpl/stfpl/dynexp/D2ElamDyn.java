@@ -2,7 +2,6 @@ package jats.utfpl.stfpl.dynexp;
 
 
 import jats.utfpl.stfpl.stype.FunType;
-import jats.utfpl.stfpl.stype.ISType;
 
 import java.util.List;
 

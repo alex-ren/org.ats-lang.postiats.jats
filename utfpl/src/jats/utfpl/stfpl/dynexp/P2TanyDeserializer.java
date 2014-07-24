@@ -13,7 +13,7 @@ public class P2TanyDeserializer implements JsonDeserializer<P2Tany> {
     public P2Tany deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
         json.getAsJsonArray();
-        return P2Tany.cInstance;
+        return new P2Tany();
     }
 
 }

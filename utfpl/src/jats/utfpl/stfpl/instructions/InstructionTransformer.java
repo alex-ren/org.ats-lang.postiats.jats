@@ -1,73 +1,16 @@
 package jats.utfpl.stfpl.instructions;
 
 import jats.utfpl.stfpl.Cloc_t;
-import jats.utfpl.stfpl.Cstamp;
-import jats.utfpl.stfpl.dynexp.Cd2cst;
-import jats.utfpl.stfpl.dynexp.Cd2ecl;
-import jats.utfpl.stfpl.dynexp.Cd2exp;
-import jats.utfpl.stfpl.dynexp.Cd2sym;
-import jats.utfpl.stfpl.dynexp.Cd2var;
-import jats.utfpl.stfpl.dynexp.Cf2undec;
-import jats.utfpl.stfpl.dynexp.Ci2mpdec;
-import jats.utfpl.stfpl.dynexp.Cp2at;
-import jats.utfpl.stfpl.dynexp.Cv2aldec;
-import jats.utfpl.stfpl.dynexp.D2Cdatdecs;
-import jats.utfpl.stfpl.dynexp.D2Cdcstdecs;
-import jats.utfpl.stfpl.dynexp.D2Cextcode;
-import jats.utfpl.stfpl.dynexp.D2Cfundecs;
-import jats.utfpl.stfpl.dynexp.D2Cignored;
-import jats.utfpl.stfpl.dynexp.D2Cimpdec;
-import jats.utfpl.stfpl.dynexp.D2Cstacsts;
-import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
-import jats.utfpl.stfpl.dynexp.D2EXPARGdyn;
-import jats.utfpl.stfpl.dynexp.D2EXPARGsta;
-import jats.utfpl.stfpl.dynexp.D2EannFunclo;
-import jats.utfpl.stfpl.dynexp.D2EannSeff;
-import jats.utfpl.stfpl.dynexp.D2EannType;
-import jats.utfpl.stfpl.dynexp.D2Eapplst;
-import jats.utfpl.stfpl.dynexp.D2Ecst;
-import jats.utfpl.stfpl.dynexp.D2Eempty;
-import jats.utfpl.stfpl.dynexp.D2Eexp;
-import jats.utfpl.stfpl.dynexp.D2Ef0loat;
-import jats.utfpl.stfpl.dynexp.D2Ei0nt;
-import jats.utfpl.stfpl.dynexp.D2Eifopt;
-import jats.utfpl.stfpl.dynexp.D2Eignored;
-import jats.utfpl.stfpl.dynexp.D2ElamDyn;
-import jats.utfpl.stfpl.dynexp.D2ElamMet;
-import jats.utfpl.stfpl.dynexp.D2ElamSta;
-import jats.utfpl.stfpl.dynexp.D2Elet;
-import jats.utfpl.stfpl.dynexp.D2Elist;
-import jats.utfpl.stfpl.dynexp.D2Es0tring;
-import jats.utfpl.stfpl.dynexp.D2Esym;
-import jats.utfpl.stfpl.dynexp.D2Etup;
-import jats.utfpl.stfpl.dynexp.D2Evar;
-import jats.utfpl.stfpl.dynexp.Edcstkind;
+
 import jats.utfpl.stfpl.dynexp.Efunkind;
-import jats.utfpl.stfpl.dynexp.Evalkind;
-import jats.utfpl.stfpl.dynexp.Id2ecl_node;
-import jats.utfpl.stfpl.dynexp.Id2exp_node;
-import jats.utfpl.stfpl.dynexp.Id2exparg;
-import jats.utfpl.stfpl.dynexp.Ilabp2at;
-import jats.utfpl.stfpl.dynexp.Ip2at_node;
-import jats.utfpl.stfpl.dynexp.LABP2ATnorm;
-import jats.utfpl.stfpl.dynexp.LABP2ATomit;
-import jats.utfpl.stfpl.dynexp.P2Tann;
-import jats.utfpl.stfpl.dynexp.P2Tany;
-import jats.utfpl.stfpl.dynexp.P2Tcon;
-import jats.utfpl.stfpl.dynexp.P2Tempty;
-import jats.utfpl.stfpl.dynexp.P2Tignored;
-import jats.utfpl.stfpl.dynexp.P2Tpat;
-import jats.utfpl.stfpl.dynexp.P2Trec;
-import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
 import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.Cd3exp;
-import jats.utfpl.stfpl.dynexp3.Cd3sym;
 import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.dynexp3.Cf3undec;
-import jats.utfpl.stfpl.dynexp3.Ci3mpdec;
 import jats.utfpl.stfpl.dynexp3.Cp3at;
 import jats.utfpl.stfpl.dynexp3.Cv3aldec;
+import jats.utfpl.stfpl.dynexp3.D3Cdatdecs;
 import jats.utfpl.stfpl.dynexp3.D3Cdcstdecs;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.dynexp3.D3Cfundecs;
@@ -92,17 +35,14 @@ import jats.utfpl.stfpl.dynexp3.Id3exp_node;
 import jats.utfpl.stfpl.dynexp3.Ip3at_node;
 import jats.utfpl.stfpl.dynexp3.LABP3ATnorm;
 import jats.utfpl.stfpl.dynexp3.P3Tany;
+import jats.utfpl.stfpl.dynexp3.P3Tcon;
 import jats.utfpl.stfpl.dynexp3.P3Tempty;
 import jats.utfpl.stfpl.dynexp3.P3Trec;
 import jats.utfpl.stfpl.dynexp3.P3Tvar;
 import jats.utfpl.stfpl.instructions.SId.Category;
-import jats.utfpl.stfpl.staexp.FUNCLOclo;
-import jats.utfpl.stfpl.staexp.FUNCLOfun;
-import jats.utfpl.stfpl.staexp.Ifunclo; 
+import jats.utfpl.stfpl.staexp.FUNCLOfun; 
 import jats.utfpl.stfpl.stype.Aux;
-import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
-import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -145,25 +85,142 @@ public class InstructionTransformer {
         Id3ecl_node node0 = d3ec.m_node;
         if (node0 instanceof D3Cdcstdecs) {
             transform((D3Cdcstdecs)node0, env, inss);
-            return;
         } else if (node0 instanceof D3Cextcode) {
             m_exts.add((D3Cextcode)node0);
-            return;
         } else if (node0 instanceof D3Cfundecs) {
             transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss);
-            return;
-        } else if (node0 instanceof D2Cimpdec) {
-            return transform_global(d2ec.d2ecl_loc, (D2Cimpdec)node0, scope, needed);
-        } else if (node0 instanceof D2Cstacsts) {
-            return transform(d2ec.d2ecl_loc, (D2Cstacsts)node0);
-        } else if (node0 instanceof D2Cvaldecs) {
-            return transform(d2ec.d2ecl_loc, (D2Cvaldecs)node0, scope, needed);    
-        } else if (node0 instanceof D2Cdatdecs) {
-            Log.log4j.warn("D2Cdatdecs encountered in generating dynexp3.");
-            return null;
+        } else if (node0 instanceof D3Cimpdec) {
+            transform(d3ec.m_loc, (D3Cimpdec)node0, env, inss);
+        } else if (node0 instanceof D3Cstacsts) {
+            Log.log4j.warn("D3Cstacsts encountered in generating instruction.");
+        } else if (node0 instanceof D3Cvaldecs) {
+            transform(d3ec.m_loc, (D3Cvaldecs)node0, env, inss);
+        } else if (node0 instanceof D3Cdatdecs) {
+            throw new Error("D3Cdatdecs not supported yet");
         } else {
             throw new Error(node0 + " is not supported.");
         }
+    }
+
+    private void transform(Cloc_t m_loc, D3Cvaldecs node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss) {
+        for (Cv3aldec valdec: node0.m_v3ds) {
+            transfrom(valdec, env, inss);
+        }
+        
+    }
+
+    private void transfrom(Cv3aldec valdec, Set<Cd3var> env,
+            List<IStfplInstruction> inss) {
+        
+        Ip3at_node node0 = valdec.m_pat.m_node;
+        if (node0 instanceof P3Tany
+            || node0 instanceof P3Tempty
+            || node0 instanceof P3Tvar) {
+            SId holder = null;
+            if (node0 instanceof P3Tvar) {
+                holder = SId.fromCd3var(((P3Tvar)node0).m_var, Category.eLocalVar);
+            }
+            transform(valdec.m_def, env, inss, holder);
+            return;
+        } else {
+            SId holder = null;
+            IValPrim vp = transform(valdec.m_def, env, inss, holder);
+            transform(valdec.m_pat, vp, inss);
+            return;
+        }
+    }
+
+    private void transform(Cp3at pat, IValPrim vp,
+            List<IStfplInstruction> inss) {
+        Ip3at_node node0 = pat.m_node;
+        if (node0 instanceof P3Tany) {
+            throw new Error("Should not happen.");
+        } else if (node0 instanceof P3Tvar) {
+            throw new Error("Should not happen.");
+        } else if (node0 instanceof P3Tempty) {
+            throw new Error("Should not happen.");
+        } else if (node0 instanceof P3Trec) {
+            transform((P3Trec)node0, vp, inss);
+        } else if (node0 instanceof P3Tcon) {
+            throw new Error("P3Tcon is not supported yet.");
+        } else {
+            throw new Error(node0 + " is not supported");
+        }
+        
+    }
+
+    private void transform(P3Trec node, IValPrim vp,
+            List<IStfplInstruction> inss) {
+        for (LABP3ATnorm lab_pat: node.m_labpats) {
+            Ip3at_node node0 = lab_pat.m_pat.m_node;
+            if (node0 instanceof P3Tany
+                    || node0 instanceof P3Tempty
+                    || node0 instanceof P3Tvar) {
+                    SId holder = null;
+                    if (node0 instanceof P3Tvar) {
+                        holder = SId.fromCd3var(((P3Tvar)node0).m_var, Category.eLocalVar);
+                    }
+                    InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab, holder, vp);
+                    inss.add(ins);
+                    return;
+                } else {
+                    SId holder = SId.createLocalVar("pat", lab_pat.m_pat.m_node.getType());
+                    InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab, holder, vp);
+                    inss.add(ins);
+                    transform(lab_pat.m_pat, holder, inss);
+                    return;
+                }
+        }
+    }
+
+    private void transform(Cloc_t m_loc, D3Cimpdec node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss) {
+        List<DefFun> funs = new ArrayList<DefFun>();
+        DefFun fundef = transform(node0, env, inss);  
+        funs.add(fundef);
+        
+        DefFunGroup fungrp = new DefFunGroup(Efunkind.fromInt(node0.m_knd), funs);
+        m_defs.add(fungrp);
+    }
+
+    private DefFun transform(D3Cimpdec node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss) {
+        Cd3exp fun_exp = node0.m_i3mpdec.i2mpdec_def;
+        
+        D3ElamDyn lambda = (D3ElamDyn)(fun_exp.m_node);
+        Cloc_t loc = fun_exp.m_loc;
+        SId name = SId.fromCd3cst(node0.m_i3mpdec.i2mpdec_cst, Category.eUserFun);
+        int lin = lambda.m_lin; 
+        List<Cp3at> p3ts = lambda.m_p3ts;
+        Set<Cd3var> env2 = lambda.m_env;
+        
+        // transform the body of the function
+        List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
+        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())));
+        DefFun def_fun = new DefFun(loc, name, lin, p3ts, inss2, env2);
+
+        // create the closure if necessary
+        ISType clo_type = lambda.getType();
+        if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
+            if (inss != m_main_inss) {
+                throw new Error("Implementing closure is only allowed on the first level.");
+            }
+            Set<SId> form_env = new HashSet<SId>();
+            
+            for (Cd3var d3var: env2) {
+                if (env.contains(d3var)) {
+                    SId clo_id = SId.fromCloCd3var(d3var, Category.eOther);
+                    form_env.add(clo_id);
+                } else {
+                    form_env.add(SId.fromCd3var(d3var, Category.eOther));
+                }
+            }
+            InsClosure ins_clo = new InsClosure(name, form_env);
+            inss.add(ins_clo);
+        }
+        
+        return def_fun;
     }
 
     private void transform(D3Cdcstdecs node0, Set<Cd3var> env, 

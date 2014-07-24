@@ -662,12 +662,12 @@ public class DynExp3Transformer {
 
 
     private Cp3at transform(P2Tempty node0, Cloc_t loc) {
-        return new Cp3at(loc, P3Tempty.cInstance);
+        return new Cp3at(loc, new P3Tempty(node0.getSType()));
     }
 
 
     private Cp3at transform(P2Tany node0, Cloc_t loc) {
-        return new Cp3at(loc, P3Tany.cInstance);
+        return new Cp3at(loc, new P3Tany(node0.getSType()));
     }
 
 

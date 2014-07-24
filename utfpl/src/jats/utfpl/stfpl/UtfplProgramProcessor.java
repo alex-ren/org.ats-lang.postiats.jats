@@ -48,6 +48,7 @@ import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.stype.VoidType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -150,7 +151,7 @@ public class UtfplProgramProcessor {
             List<Ilabp2at> labp2ats = p2trec.m_labpats;
             int size = labp2ats.size();
             if (0 == size) {
-                new_pat = new Cp2at(new_pat.p2at_loc, P2Tempty.cInstance);
+                new_pat = new Cp2at(new_pat.p2at_loc, new P2Tempty(VoidType.cInstance));
             } else if (1 == size) {
                 // Turn singleton list into a value.
                 new_pat = ((LABP2ATnorm)labp2ats.get(0)).m_pat;                
@@ -209,7 +210,7 @@ public class UtfplProgramProcessor {
                 if (!isMCCall(new_def.d2exp_node)) {  // totally remove this value dec
                     return null;
                 } else {
-                    new_pat = new Cp2at(new_pat.p2at_loc, P2Tempty.cInstance);
+                    new_pat = new Cp2at(new_pat.p2at_loc, new P2Tempty(VoidType.cInstance));
                 }
             } else if (1 == size) {
                 // Turn singleton list into a value.

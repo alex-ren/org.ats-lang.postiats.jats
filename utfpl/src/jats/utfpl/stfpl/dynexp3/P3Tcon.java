@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.dynexp3;
 
 import jats.utfpl.stfpl.dynexp.Epckind;
+import jats.utfpl.stfpl.stype.ISType;
 
 import java.util.List;
 
@@ -20,5 +21,10 @@ public class P3Tcon implements Ip3at_node {
 	    m_p2ts = p2ts;
 	    
 	}
+
+    @Override
+    public ISType getType() {
+        throw new Error("not supported");
+    }
 
 }

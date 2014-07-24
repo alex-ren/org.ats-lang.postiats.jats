@@ -1,10 +1,18 @@
 package jats.utfpl.stfpl.dynexp3;
 
+import jats.utfpl.stfpl.stype.ISType;
+
 
 public class P3Tempty implements Ip3at_node {
-    static public P3Tempty cInstance = new P3Tempty();
+    private ISType m_type;
     
-    private P3Tempty() {
+    public P3Tempty(ISType type) {
+        m_type = type;
+    }
+
+    @Override
+    public ISType getType() {
+        return m_type;
     }
 
 }

@@ -624,11 +624,14 @@ public class UtfplTypeChecker {
         if (pnode instanceof P2Tann) {
             return oftype((P2Tann)pnode);
         } else if (pnode instanceof P2Tany) {
-            return new VarType();
+            VarType ty = new VarType();
+            ((P2Tany)pnode).updateSType(ty);
+            return ((P2Tany)pnode).getSType();
         } else if (pnode instanceof P2Tcon) {
             throw new Error("not supported yet");
         } else if (pnode instanceof P2Tempty) {
-            return VoidType.cInstance;
+            ((P2Tempty)pnode).updateSType(VoidType.cInstance);
+            return ((P2Tempty)pnode).getSType();
         } else if (pnode instanceof P2Tignored) {
             throw new Error("Check this.");
         } else if (pnode instanceof P2Tpat) {

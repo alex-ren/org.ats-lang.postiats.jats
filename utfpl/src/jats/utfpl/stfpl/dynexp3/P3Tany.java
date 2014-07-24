@@ -1,10 +1,19 @@
 package jats.utfpl.stfpl.dynexp3;
 
+import jats.utfpl.stfpl.stype.ISType;
+
 
 public class P3Tany implements Ip3at_node {
-    static public P3Tany cInstance = new P3Tany();
     
-    private P3Tany() {
+    private ISType m_type;
+    
+    public P3Tany(ISType type) {
+        m_type = type;
+    }
+
+    @Override
+    public ISType getType() {
+        return m_type;
     }
 
 }
