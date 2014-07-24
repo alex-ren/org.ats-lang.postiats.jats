@@ -1,8 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
-import jats.utfpl.stfpl.dynexp.Cd2exp;
-import jats.utfpl.stfpl.dynexp3.Cd3exp;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -16,6 +14,10 @@ public class RecType extends BoxedType {
     private int m_npf;  // Number of proofs in the pattern, if it is >= 0.
                        // (proof always appears starting from beginning.)
     private int m_knd;  // 0: flat, 1: boxed, -1: uninitialized
+    
+    public int getKind() {
+        return m_knd;
+    }
     
     public RecType(List<ILabPat> labtypes, int npf, int knd) {
         m_labtypes = labtypes;

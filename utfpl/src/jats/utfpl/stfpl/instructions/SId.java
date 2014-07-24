@@ -85,6 +85,12 @@ public class SId implements IValPrim{
         SId ret = new SId(id, Category.eLocalVar);
         return ret;
     }
+    
+    public static SId createUserFunction(String name, ISType stype) {
+        VNameId id = new VNameId(name, stype);
+        SId ret = new SId(id, Category.eUserFun);
+        return ret;
+    }
 
     @Override
     public ISType getType() {

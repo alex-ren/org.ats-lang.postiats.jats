@@ -14,6 +14,10 @@ public class D3Etup implements Id3exp_node {
         m_knd = knd;
         m_d2es = d2es;
         m_type = ty;
+        if (m_type.getKind() != m_knd) {
+            throw new Error("Check this. m_knd is " + m_knd + 
+                    " while m_type.getKind() is " + m_type.getKind());
+        }
     }
 
     @Override
