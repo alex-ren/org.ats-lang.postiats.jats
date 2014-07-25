@@ -1,5 +1,8 @@
-package jats.utfpl.stfpl;
+package jats.utfpl.stfpl.dynexp3;
 
+import jats.utfpl.stfpl.StfplPrinter;
+import jats.utfpl.stfpl.StfplProgramParserJson;
+import jats.utfpl.stfpl.StfplTypeChecker;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
 
@@ -10,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -35,7 +39,8 @@ public class Test {
 //                "src/jats/utfpl/utfpl/test/test04.dats"
 //                "src/jats/utfpl/stfpl/test/test05.dats"
 //                "src/jats/utfpl/stfpl/test/test06.dats"
-                "src/jats/utfpl/stfpl/test/test07.dats"
+//                "src/jats/utfpl/stfpl/test/test07.dats"
+                "src/jats/utfpl/stfpl/test/test_helloworld.dats"
 
         };
 
@@ -67,9 +72,12 @@ public class Test {
                     StfplPrinter uPrinter = new StfplPrinter();
                     String outputUTFPL = uPrinter.print(uProg);
                     
-                    System.out.println("==stfpl's ast code (layer 01) is ==========================");
+                    System.out.println("==utfpl's ast code after type checking (dynexp2) is ==========================");
                     
                     System.out.println(outputUTFPL);
+                    
+                    DynExp3Transformer exp3_transformer = new DynExp3Transformer(uProg.m_d2ecs);
+                    List<Cd3ecl> d3ecs = exp3_transformer.transform();
                     
 //                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
 //                    uProg = processor.removeProof(uProg);

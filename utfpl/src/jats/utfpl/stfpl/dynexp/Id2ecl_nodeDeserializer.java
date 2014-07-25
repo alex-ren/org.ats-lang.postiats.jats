@@ -32,11 +32,10 @@ public class Id2ecl_nodeDeserializer implements JsonDeserializer<Id2ecl_node> {
         JsonElement je2 = item.getValue();
         
         if (name.equals("D2Cnone")) {
-            Log.log4j.error("D2Cnone not supported");
-            throw new Error("D2Cnone not supported");
+//            Log.log4j.warn("D2Cnone encountered");
+            return D2Cnone.cInstance;
         } else if (name.equals("D2Clist")) {
-            Log.log4j.error("D2Clist not supported");
-            throw new Error("D2Clist not supported");
+            return context.deserialize(je2, D2Clist.class);
         } else if (name.equals("D2Cstacsts")) {
             return context.deserialize(je2, D2Cstacsts.class);
         } else if (name.equals("D2Cstacons")) {
@@ -64,8 +63,7 @@ public class Id2ecl_nodeDeserializer implements JsonDeserializer<Id2ecl_node> {
         } else if (name.equals("D2Cvaldecs")) {
             return context.deserialize(je2, D2Cvaldecs.class);
         } else if (name.equals("D2Cinclude")) {
-            Log.log4j.error("D2Cinclude not supported");
-            throw new Error("D2Cinclude not supported");
+            return context.deserialize(je2, D2Cinclude.class);
         } else if (name.equals("D2Clocal")) {
             Log.log4j.error("D2Clocal not supported");
             throw new Error("D2Clocal not supported");

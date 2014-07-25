@@ -17,6 +17,8 @@ import jats.utfpl.stfpl.dynexp.D2Cextcode;
 import jats.utfpl.stfpl.dynexp.D2Cfundecs;
 import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
+import jats.utfpl.stfpl.dynexp.D2Cinclude;
+import jats.utfpl.stfpl.dynexp.D2Clist;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.stfpl.dynexp.D2EXPARGdyn;
@@ -77,11 +79,11 @@ import jats.utfpl.stfpl.stype.RecType.LabPatNorm;
 import jats.utfpl.utils.Log;
 
 
-public class UtfplTypeChecker {
+public class StfplTypeChecker {
     private ProgramUtfpl m_prog;
 //    private Map<Cd2cst, ISType> m_tymap;
 
-    public UtfplTypeChecker(ProgramUtfpl prog) {
+    public StfplTypeChecker(ProgramUtfpl prog) {
         m_prog = prog;
     }
     
@@ -109,6 +111,10 @@ public class UtfplTypeChecker {
     		typecheck_dec((D2Cvaldecs)d2ecl);    
     	} else if (d2ecl instanceof D2Cdatdecs) {
     	    Log.log4j.warn("D2Cdatdecs encountered in type checking.");
+    	} else if (d2ecl instanceof D2Clist) {
+    	    Log.log4j.warn("D2Clist encountered");
+    	} else if (d2ecl instanceof D2Cinclude) {
+    	    Log.log4j.warn("D2Cinclude encountered");
     	} else {
     		throw new Error(dec + " is not supported.");
     	}

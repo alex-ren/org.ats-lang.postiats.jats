@@ -60,10 +60,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-public class UtfplProgramParserJson {
+public class StfplProgramParserJson {
     private Gson m_gson;
     
-    public UtfplProgramParserJson() {
+    public StfplProgramParserJson() {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         
@@ -92,7 +92,9 @@ public class UtfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Cvaldecs.class, new D2CvaldecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cdcstdecs.class, new D2CdcstdecsDeserializer());
         gsonBuilder.registerTypeAdapter(D2Cstacsts.class, new D2CstacstsDeserializer());
-        gsonBuilder.registerTypeAdapter(D2Cdatdecs.class, new D2CdatdecsDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Cdatdecs.class, new D2CdatdecsDeserializer());  
+        gsonBuilder.registerTypeAdapter(D2Cinclude.class, new D2CincludeDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Clist.class, new D2ClistDeserializer());
         
         
         gsonBuilder.registerTypeAdapter(Id2exp_node.class, new Id2exp_nodeDeserializer());

@@ -13,6 +13,9 @@ import jats.utfpl.stfpl.dynexp.D2Cextcode;
 import jats.utfpl.stfpl.dynexp.D2Cfundecs;
 import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
+import jats.utfpl.stfpl.dynexp.D2Cinclude;
+import jats.utfpl.stfpl.dynexp.D2Clist;
+import jats.utfpl.stfpl.dynexp.D2Cnone;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.stfpl.dynexp.D2EXPARGdyn;
@@ -69,12 +72,12 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-public class UtfplPrinter {
+public class StfplPrinter {
 
     private STGroup m_stg;
     
-    public  UtfplPrinter() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/utfpl.stg");
+    public  StfplPrinter() {
+        URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/stfpl.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
 
     }
@@ -116,11 +119,44 @@ public class UtfplPrinter {
         	return printD2Cstacsts((D2Cstacsts)node);
         } else if (node instanceof D2Cdatdecs) {
         	return printD2Cdatdecs((D2Cdatdecs)node);
+        } else if (node instanceof D2Cinclude) {
+            return printD2Cinclude((D2Cinclude)node);
+        } else if (node instanceof D2Cnone) {
+            return printD2Cnone((D2Cnone)node);
+        } else if (node instanceof D2Clist) {
+            return printD2Clist((D2Clist)node);      
         } else {
             throw new Error("Id2ecl_node " + node + " is not supported");
         }
     }
     
+    private ST printD2Clist(D2Clist node) {
+        // D2Clist_st(d2cs) ::= <<
+        ST st = m_stg.getInstanceOf("D2Clist_st");
+        for (Cd2ecl d2c: node.m_d2cs) {
+            st.add("d2cs", printCd2ecl(d2c));
+        }
+        
+        return st;
+    }
+
+    private ST printD2Cnone(D2Cnone node) {
+        // D2Cnone_st() ::= <<
+        ST st = m_stg.getInstanceOf("D2Cnone_st");
+        return st;
+    }
+
+    private ST printD2Cinclude(D2Cinclude node) {
+        // D2Cinclude_st(knd, d2cs) ::= <<
+        ST st = m_stg.getInstanceOf("D2Cinclude_st");
+        st.add("knd", node.m_knd);
+        for (Cd2ecl d2c: node.m_d2cs) {
+            st.add("d2cs", printCd2ecl(d2c));
+        }
+        
+        return st;
+    }
+
     private ST printD2Cdatdecs(D2Cdatdecs node) {
 	    // D2Cdatdecs_st(knd, s2csts) ::= <<
         ST st = m_stg.getInstanceOf("D2Cdatdecs_st");
@@ -460,7 +496,7 @@ public class UtfplPrinter {
 
     private ST printD2Es0tring(D2Es0tring node) {
         // D2Es0tring_st(str) ::=<<
-        ST st = m_stg.getInstanceOf("D2Es0tring");
+        ST st = m_stg.getInstanceOf("D2Es0tring_st");
         st.add("str", node.m_s0tring);
         return st;
     }

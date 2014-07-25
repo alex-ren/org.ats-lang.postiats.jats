@@ -49,6 +49,20 @@ D2Cfundecs_st(knd, f2ds) ::= <<
 <knd> <f2ds; separator="\nand ">
 >>
 
+D2Cinclude_st(knd, d2cs) ::= <<
+#include {
+  <d2cs; separator="\n">
+}
+>>
+
+D2Clist_st(d2cs) ::= <<
+<d2cs; separator="\n">
+>>
+
+D2Cnone_st() ::= <<
+D2Cnone
+>>
+
 funkind_st(knd) ::= <<
 <knd>
 >>

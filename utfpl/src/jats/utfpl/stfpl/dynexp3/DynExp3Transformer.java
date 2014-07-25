@@ -17,6 +17,7 @@ import jats.utfpl.stfpl.dynexp.D2Cextcode;
 import jats.utfpl.stfpl.dynexp.D2Cfundecs;
 import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
+import jats.utfpl.stfpl.dynexp.D2Cinclude;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.stfpl.dynexp.D2EXPARGdyn;
@@ -79,12 +80,20 @@ public class DynExp3Transformer {
     
     private Map<Cstamp, Cd3cst> m_cstMap;
     private Map<Cstamp, Cd3var> m_varMap;
+    private List<Cd2ecl> m_d2ecs;
     
-    public DynExp3Transformer() {
+    public DynExp3Transformer(List<Cd2ecl> d2ecs) {
         m_cstMap = new HashMap<Cstamp, Cd3cst>();
         m_varMap = new HashMap<Cstamp, Cd3var>();
+        m_d2ecs = d2ecs;
     }
     
+    public List<Cd3ecl> transform() {
+
+        Set<Cd3var> scope = new HashSet<Cd3var>();
+        Set<Cd3var> needed = new HashSet<Cd3var>();
+        return transform(m_d2ecs, scope, needed);
+    }
     
     /*
      * Purpose: 
@@ -98,7 +107,7 @@ public class DynExp3Transformer {
      * cur_scope:
      * needed: Symbols needed but not in cur_scope
      */
-    public List<Cd3ecl> transform(List<Cd2ecl> d2ecs, Set<Cd3var> scope, Set<Cd3var> needed) {
+    private List<Cd3ecl> transform(List<Cd2ecl> d2ecs, Set<Cd3var> scope, Set<Cd3var> needed) {
 
         List<Cd3ecl> d3ecs = new ArrayList<Cd3ecl>();
         for (Cd2ecl d2ec: d2ecs) {
@@ -133,6 +142,9 @@ public class DynExp3Transformer {
             return transform(d2ec.d2ecl_loc, (D2Cvaldecs)node0, scope, needed);    
         } else if (node0 instanceof D2Cdatdecs) {
             Log.log4j.warn("D2Cdatdecs encountered in generating dynexp3.");
+            return null;
+        } else if (node0 instanceof D2Cinclude) {
+            Log.log4j.warn("D2Cinclude encountered in generating dynexp3.");
             return null;
         } else {
             throw new Error(node0 + " is not supported.");
@@ -169,7 +181,7 @@ public class DynExp3Transformer {
     private Cv3aldec transform(Cv2aldec v2d, Set<Cd3var> scope,
             Set<Cd3var> needed) {
         Cp3at p3at = transform(v2d.v2aldec_pat);
-        Cd3exp d3exp = transform(v2d.v2aldec_def, scope, needed, null);
+        Cd3exp d3exp = transform(v2d.v2aldec_def, scope, needed, new ArrayList<List<PolyParaType>>());
         
         Cv3aldec v3d = new Cv3aldec(v2d.v2aldec_loc, p3at, d3exp);
         return v3d;
@@ -196,7 +208,7 @@ public class DynExp3Transformer {
     private Ci3mpdec transform(Ci2mpdec i2mpdec, Set<Cd3var> scope,
             Set<Cd3var> needed) {
         Cd3cst d3cst = transform(i2mpdec.i2mpdec_cst, i2mpdec.i2mpdec_locid);
-        Cd3exp d3exp = transform(i2mpdec.i2mpdec_def, scope, needed, null);
+        Cd3exp d3exp = transform(i2mpdec.i2mpdec_def, scope, needed, new ArrayList<List<PolyParaType>>());
         
         Ci3mpdec i3mpdec = new Ci3mpdec(i2mpdec.i2mpdec_loc, i2mpdec.i2mpdec_locid, d3cst, d3exp);
         return i3mpdec;        
@@ -261,54 +273,54 @@ public class DynExp3Transformer {
         Id2exp_node node0 = d2exp.d2exp_node;
         Cloc_t loc = d2exp.d2exp_loc;
         if (node0 instanceof D2EannFunclo) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
-            return transform(((D2EannSeff)node0).m_d2exp, scope, needed, accu);
+            return transform(((D2EannFunclo)node0).m_d2exp, scope, needed, accu);
         } else if (node0 instanceof D2EannSeff) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform(((D2EannSeff)node0).m_d2exp, scope, needed, accu);
         } else if (node0 instanceof D2EannType) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform(((D2EannType)node0).m_d2exp, scope, needed, accu);
         } else if (node0 instanceof D2Eapplst) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Eapplst)node0, scope, needed, loc);
         } else if (node0 instanceof D2Ecst) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Ecst)node0, loc);
         } else if (node0 instanceof D2Eempty) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return new Cd3exp(loc, D3Eempty.cInstance);
         } else if (node0 instanceof D2Eexp) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform(((D2Eexp)node0).m_d2exp, scope, needed, accu);
         } else if (node0 instanceof D2Ef0loat) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             D2Ef0loat node = (D2Ef0loat)node0;
             return new Cd3exp(loc, new D3Ef0loat(node.m_f0loat, node.getSType()));
         } else if (node0 instanceof D2Ei0nt) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             D2Ei0nt node = (D2Ei0nt)node0;
             return new Cd3exp(loc, new D3Ei0nt(node.m_i0nt, node.getSType()));
         } else if (node0 instanceof D2Eifopt) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Eifopt)node0, loc, scope, needed);
@@ -328,28 +340,28 @@ public class DynExp3Transformer {
         } else if (node0 instanceof D2Elet) {
             return transform((D2Elet)node0, loc, scope, needed);
         } else if (node0 instanceof D2Es0tring) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             D2Es0tring node = (D2Es0tring)node0;
             return new Cd3exp(loc, new D3Es0tring(node.m_s0tring, node.getSType()));
         } else if (node0 instanceof D2Esym) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Esym)node0, loc);
         } else if (node0 instanceof D2Etup) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Etup)node0, loc, scope, needed);
         } else if (node0 instanceof D2Elist) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Elist)node0, loc, scope, needed);            
         } else if (node0 instanceof D2Evar) {
-            if (null != accu) {
+            if (accu.size() != 0) {
                 throw new Error("Check this.");
             }
             return transform((D2Evar)node0, loc, scope, needed);
@@ -431,7 +443,7 @@ public class DynExp3Transformer {
         Set<Cd3var> nscope = new HashSet<Cd3var>(scope);
         
         List<Cd3ecl> d3cs = transform(node0.m_d2cs, nscope, needed);
-        Cd3exp body = transform(node0.m_d2e_body, nscope, needed, null);
+        Cd3exp body = transform(node0.m_d2e_body, nscope, needed, new ArrayList<List<PolyParaType>>());
         
         D3Elet node = new D3Elet(d3cs, body);
         Cd3exp d3exp = new Cd3exp(loc, node);
@@ -441,11 +453,11 @@ public class DynExp3Transformer {
 
     private Cd3exp transform(D2Eifopt node0, Cloc_t loc, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        Cd3exp test = transform(node0.m_test, scope, needed, null);
-        Cd3exp athen = transform(node0.m_then, scope, needed, null);
+        Cd3exp test = transform(node0.m_test, scope, needed, new ArrayList<List<PolyParaType>>());
+        Cd3exp athen = transform(node0.m_then, scope, needed, new ArrayList<List<PolyParaType>>());
         Cd3exp aelse = null;
         if (null != node0.m_else) {
-            aelse = transform(node0.m_else, scope, needed, null);
+            aelse = transform(node0.m_else, scope, needed, new ArrayList<List<PolyParaType>>());
         }
         
         D3Eifopt node = new D3Eifopt(test, athen, aelse);
@@ -465,7 +477,7 @@ public class DynExp3Transformer {
 
     private Cd3exp transform(D2Eapplst node0, Set<Cd3var> scope,
             Set<Cd3var> needed, Cloc_t loc) {
-        Cd3exp fun = transform(node0.m_d2e_fun, scope, needed, null);
+        Cd3exp fun = transform(node0.m_d2e_fun, scope, needed, new ArrayList<List<PolyParaType>>());
         
         List<D3EXPARGdyn> argslst = new ArrayList<D3EXPARGdyn>();
         List<ISType> inner_types = new ArrayList<ISType>();
@@ -502,7 +514,7 @@ public class DynExp3Transformer {
         ListIterator<Cd2exp> iter = node0.m_d2expLst.listIterator(i);
         
         while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, null);
+            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
             d3es.add(d3e);    
         }
         
@@ -518,7 +530,7 @@ public class DynExp3Transformer {
         
         Set<Cd3var> cur_needed = new HashSet<Cd3var>();
         
-        Cd3exp body = transform(node0.m_d2exp, paras, cur_needed, null);
+        Cd3exp body = transform(node0.m_d2exp, paras, cur_needed, new ArrayList<List<PolyParaType>>());
 
         Ifunclo funclo = null;
         if (cur_needed.isEmpty()) {
