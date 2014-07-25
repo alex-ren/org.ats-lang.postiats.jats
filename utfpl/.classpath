@@ -11,5 +11,10 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="apache-log4j-2.0/apache-log4j-2.0-rc1-bin/log4j-api-2.0-rc1.jar"/>
 	<classpathentry kind="lib" path="apache-log4j-2.0/apache-log4j-2.0-rc1-bin/log4j-core-2.0-rc1.jar"/>
+	<classpathentry kind="lib" path="commons-lang3-3.3.2/commons-lang3-3.3.2.jar" sourcepath="commons-lang3-3.3.2-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/utfpl/commons-lang3-3.3.2-src.zip!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
