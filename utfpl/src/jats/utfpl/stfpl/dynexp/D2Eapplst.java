@@ -3,12 +3,13 @@ package jats.utfpl.stfpl.dynexp;
 
 import jats.utfpl.stfpl.stype.ISType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class D2Eapplst implements Id2exp_node {
     public Cd2exp m_d2e_fun;
     
-    private ISType m_ty;
+    private ISType m_stype;
     
     private List<ISType> m_inner_ty;  // The types after applying all the Id2exparg's.
                                       // The last one is equal to m_ty.
@@ -25,7 +26,7 @@ public class D2Eapplst implements Id2exp_node {
     }
     
     public void updateSType(ISType ty) {
-        m_ty = ty;
+        m_stype = ty;
     }
 
     public void updateInnerSType(List<ISType> ty) {
@@ -38,11 +39,21 @@ public class D2Eapplst implements Id2exp_node {
     
     @Override
     public ISType getSType() {
-        if (null == m_ty) {
+        if (null == m_stype) {
             throw new Error("check this");
         } else {
-            return m_ty;
+            return m_stype;
         }
+    }
+    
+    @Override
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
+        List<ISType> temp = new ArrayList<ISType>();
+        for (ISType stype: m_inner_ty) {
+            temp.add(stype.normalize());
+        }
+        m_inner_ty = temp;
     }
     
     

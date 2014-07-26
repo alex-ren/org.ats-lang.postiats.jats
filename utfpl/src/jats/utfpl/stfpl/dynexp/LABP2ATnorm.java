@@ -16,4 +16,9 @@ public class LABP2ATnorm implements Ilabp2at {
         m_pat = pat;
     }
 
+    @Override
+    public void normalizeType() {
+        m_pat.p2at_node.normalizeType();
+    }
+
 }

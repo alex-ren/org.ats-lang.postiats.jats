@@ -9,10 +9,10 @@ public class D2Etup implements Id2exp_node {
     public int m_npf;  // no. of proof, be -1 is none
     public List<Cd2exp> m_d2es;
     
-    private RecType m_ty;
+    private RecType m_stype;
     
     public void updateType(RecType ty) {
-        m_ty = ty;
+        m_stype = ty;
     }
     
     public D2Etup(int knd, int npf, List<Cd2exp> d2es) {
@@ -23,11 +23,16 @@ public class D2Etup implements Id2exp_node {
     
     @Override
     public RecType getSType() {
-        if (null == m_ty) {
+        if (null == m_stype) {
             throw new Error("check this");
         } else {
-            return m_ty;
+            return m_stype;
         }
+    }
+
+    @Override
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
     }
 
 }

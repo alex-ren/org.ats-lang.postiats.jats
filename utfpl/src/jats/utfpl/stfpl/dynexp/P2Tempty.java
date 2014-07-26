@@ -26,4 +26,8 @@ public class P2Tempty implements Ip2at_node {
             return m_type;
         }
     }
+
+    @Override
+    public void normalizeType() {
+    }
 }

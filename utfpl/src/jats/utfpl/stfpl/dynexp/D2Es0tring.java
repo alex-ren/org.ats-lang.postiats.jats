@@ -25,6 +25,11 @@ public class D2Es0tring implements Id2exp_node {
         }
     }
     
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
+    
 }
 
 

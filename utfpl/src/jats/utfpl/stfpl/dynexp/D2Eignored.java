@@ -14,5 +14,10 @@ public class D2Eignored implements Id2exp_node {
     public ISType getSType() {
         throw new Error("should not happen");
     }
+    
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
 
 }

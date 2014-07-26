@@ -37,6 +37,10 @@ public class Cd2cst {
         }
     }
     
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
+    }
+    
     public ISType getSType() {
         return m_stype;
     }
@@ -52,5 +56,7 @@ public class Cd2cst {
     public String toString() {
         return m_symbol.toString();
     }
+    
+    
 
 }

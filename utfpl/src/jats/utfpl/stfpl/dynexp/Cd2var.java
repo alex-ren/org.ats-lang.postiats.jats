@@ -33,6 +33,10 @@ public class Cd2var {
         }
     }
     
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
+    }
+    
     public ISType getSType() {
         return m_stype;
     }

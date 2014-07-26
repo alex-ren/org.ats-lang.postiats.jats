@@ -16,4 +16,9 @@ public class D2Esym implements Id2exp_node {
         return m_d2sym.getSType();
     }
 
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
+
 }

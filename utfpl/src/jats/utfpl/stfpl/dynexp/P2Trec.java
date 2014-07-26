@@ -21,4 +21,11 @@ public class P2Trec implements Ip2at_node {
         m_npf = npf;
         m_knd = knd;
     }
+
+    @Override
+    public void normalizeType() {
+        for (Ilabp2at p2at: m_labpats) {
+            p2at.normalizeType();
+        }
+    }
 }

@@ -8,4 +8,8 @@ public class P2Tignored implements Ip2at_node {
         
     }
 
+    @Override
+    public void normalizeType() {
+    }
+
 }

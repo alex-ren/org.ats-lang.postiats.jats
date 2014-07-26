@@ -26,4 +26,9 @@ public class D2Eempty implements Id2exp_node {
         }
     }
 
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
+
 }

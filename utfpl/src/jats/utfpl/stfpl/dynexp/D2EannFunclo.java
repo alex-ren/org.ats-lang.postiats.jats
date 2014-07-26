@@ -34,5 +34,10 @@ public class D2EannFunclo implements Id2exp_node {
         }
         return m_stype;
     }
+    
+    @Override
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
+    }
 
 }

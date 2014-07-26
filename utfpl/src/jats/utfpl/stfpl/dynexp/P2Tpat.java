@@ -16,4 +16,9 @@ public class P2Tpat implements Ip2at_node {
         m_p2at = p2at;
     }
 
+    @Override
+    public void normalizeType() {
+        m_p2at.p2at_node.normalizeType();
+    }
+
 }

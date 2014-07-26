@@ -91,7 +91,10 @@ public class StfplTypeChecker {
         for (Cd2ecl dec: m_prog.m_d2ecs) {
             typecheck_dec(dec);
         }
+
+        normalizeTypeDecLst(m_prog.m_d2ecs);
     }
+    
 
     private void typecheck_dec(Cd2ecl dec) {
     	Id2ecl_node d2ecl = dec.d2ecl_node;
@@ -709,6 +712,234 @@ public class StfplTypeChecker {
 	    return stype;
     }
     
+	/* ************* ************** */
+
+    private void normalizeTypeDecLst(List<Cd2ecl> d2ecs) {
+        for (Cd2ecl d2ec: d2ecs) {
+            normalizeType(d2ec);
+        }
+    }
+
+    private void normalizeType(Cd2ecl dec) {
+
+        Id2ecl_node d2ecl = dec.d2ecl_node;
+        if (d2ecl instanceof D2Cdcstdecs) {
+            normalizeType((D2Cdcstdecs)d2ecl);
+        } else if (d2ecl instanceof D2Cextcode) {
+            return;
+        } else if (d2ecl instanceof D2Cfundecs) {
+            normalizeType((D2Cfundecs)d2ecl);
+        } else if (d2ecl instanceof D2Cignored) {
+        } else if (d2ecl instanceof D2Cimpdec) {
+            normalizeType((D2Cimpdec)d2ecl);
+        } else if (d2ecl instanceof D2Cstacsts) {
+            normalizeType((D2Cstacsts)d2ecl);
+        } else if (d2ecl instanceof D2Cvaldecs) {
+            normalizeType((D2Cvaldecs)d2ecl);    
+        } else if (d2ecl instanceof D2Cdatdecs) {
+        } else if (d2ecl instanceof D2Clist) {
+        } else if (d2ecl instanceof D2Cinclude) {
+        } else {
+            throw new Error(dec + " is not supported.");
+        }
+    }
+
+    private void normalizeType(D2Cvaldecs d2ecl) {
+        for (Cv2aldec valdec: d2ecl.m_v2ds) {
+            normalizeType(valdec);
+        }
+    }
+
+    private void normalizeType(Cv2aldec valdec) {
+        valdec.v2aldec_pat.p2at_node.normalizeType();
+        normalizeType(valdec.v2aldec_def);
+    }
+
+    private void normalizeType(D2Cstacsts d2ecl) {
+    }
+
+    private void normalizeType(D2Cimpdec d2ecl) {
+        normalizeType(d2ecl.m_i2mpdec);
+    }
+
+    private void normalizeType(Ci2mpdec node) {
+        normalizeType(node.i2mpdec_def);
+        node.i2mpdec_cst.normalizeType();
+    }
+
+    private void normalizeType(D2Cfundecs d2ecl) {
+        for (Cf2undec fundec: d2ecl.m_f2ds) {
+            normalizeType(fundec);
+        }
+    }
+
+    private void normalizeType(Cf2undec fundec) {
+        fundec.f2undec_var.normalizeType();
+        normalizeType(fundec.f2undec_def);        
+    }
+
+    private void normalizeType(Cd2exp d2exp) {
+        Id2exp_node node = d2exp.d2exp_node;
+        Cloc_t loc = d2exp.d2exp_loc;
+        if (node instanceof D2EannFunclo) {
+            normalizeType((D2EannFunclo)node, loc);
+        } else if (node instanceof D2EannSeff) {
+            normalizeType((D2EannSeff)node, loc);
+        } else if (node instanceof D2EannType) {
+            normalizeType((D2EannType)node, loc);
+        } else if (node instanceof D2Eapplst) {
+            normalizeType((D2Eapplst)node, loc);
+        } else if (node instanceof D2Ecst) {
+            normalizeType((D2Ecst)node, loc);
+        } else if (node instanceof D2Eempty) {
+            
+        } else if (node instanceof D2Eexp) {
+            normalizeType(((D2Eexp)node).m_d2exp);
+        } else if (node instanceof D2Ef0loat) {
+            
+        } else if (node instanceof D2Ei0nt) {
+            
+        } else if (node instanceof D2Eifopt) {
+            normalizeType((D2Eifopt)node, loc);
+        } else if (node instanceof D2Eignored) {
+            throw new Error("Check this");
+        } else if (node instanceof D2ElamDyn) {
+            normalizeType((D2ElamDyn)node, loc);
+        } else if (node instanceof D2ElamMet) {
+            normalizeType((D2ElamMet)node, loc);
+        } else if (node instanceof D2ElamSta) {
+            normalizeType((D2ElamSta)node, loc);
+        } else if (node instanceof D2Elet) {
+            normalizeType((D2Elet)node, loc);
+        } else if (node instanceof D2Es0tring) {
+            return;
+        } else if (node instanceof D2Esym) {
+            normalizeType((D2Esym)node, loc);
+        } else if (node instanceof D2Etup) {
+            normalizeType((D2Etup)node, loc);
+        } else if (node instanceof D2Elist) {
+            normalizeType((D2Elist)node, loc);            
+        } else if (node instanceof D2Evar) {
+            normalizeType((D2Evar)node, loc);
+        } else {
+            throw new Error(d2exp + " is not supported");
+        }
+
+    }
+
+    private void normalizeType(D2Evar node, Cloc_t loc) {
+        node.m_d2var.normalizeType();
+    }
+
+    private void normalizeType(D2Elist node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeTypeD2Exp(node.m_d2es);
+    }
+
+    private void normalizeType(D2Etup node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeTypeD2Exp(node.m_d2es);
+    }
+
+    private void normalizeTypeD2Exp(List<Cd2exp> d2es) {
+        for (Cd2exp d2exp: d2es) {
+            normalizeType(d2exp);
+        }
+    }
+
+    private void normalizeType(D2Esym node, Cloc_t loc) {
+        node.m_d2sym.normalizeType();
+    }
+
+    private void normalizeType(D2Elet node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeTypeDecLst(node.m_d2cs);
+        normalizeType(node.m_d2e_body);
+        
+    }
+
+    private void normalizeType(D2ElamSta node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeType(node.m_d2exp);
+    }
+
+    private void normalizeType(D2ElamMet node, Cloc_t loc) {
+        normalizeType(node.m_d2exp);
+    }
+
+    private void normalizeType(D2ElamDyn node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeType(node.m_d2exp);
+        normalizeTypePatLst(node.m_p2ts);
+        
+    }
+
+    private void normalizeTypePatLst(List<Cp2at> p2ts) {
+        for (Cp2at p2at: p2ts) {
+            p2at.p2at_node.normalizeType();
+        }
+        
+    }
+
+    private void normalizeType(D2Eifopt node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeType(node.m_test);
+        normalizeType(node.m_then);
+        if (null != node.m_else) {
+            normalizeType(node.m_else);
+        }
+        
+    }
+
+    private void normalizeType(D2Ecst node, Cloc_t loc) {
+        node.m_d2cst.normalizeType();
+    }
+
+    private void normalizeType(D2Eapplst node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeType(node.m_d2e_fun);
+        normalizeTypeArgsLst(node.m_d2as_arg);
+        
+    }
+
+    private void normalizeTypeArgsLst(List<Id2exparg> args_lst) {
+        for (Id2exparg args: args_lst) {
+            normalizeType(args);
+        }
+    }
+
+    private void normalizeType(Id2exparg args0) {
+        if (args0 instanceof D2EXPARGsta) {
+        } else if (args0 instanceof D2EXPARGdyn) {
+            D2EXPARGdyn args = (D2EXPARGdyn)args0;
+            for (Cd2exp d2exp: args.m_d2expLst) {
+                normalizeType(d2exp);
+            }
+        } else {
+            throw new Error(args0 + " is not supported.");
+        }
+    }
+
+    private void normalizeType(D2EannType node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeType(node.m_d2exp);
+        
+    }
+
+    private void normalizeType(D2EannSeff node, Cloc_t loc) {
+        normalizeType(node.m_d2exp);
+    }
+
+    private void normalizeType(D2EannFunclo node, Cloc_t loc) {
+        node.normalizeType();
+        normalizeType(node.m_d2exp);
+    }
+
+    private void normalizeType(D2Cdcstdecs node) {
+        for (Cd2cst d2cst: node.m_d2cst) {
+            d2cst.normalizeType();
+        }
+    }
 
 
 }

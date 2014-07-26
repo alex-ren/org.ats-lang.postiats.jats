@@ -11,4 +11,9 @@ public class P2Tann implements Ip2at_node {
         m_ann = ann;
     }
 
+    @Override
+    public void normalizeType() {
+        m_p2t.p2at_node.normalizeType();
+    }
+
 }

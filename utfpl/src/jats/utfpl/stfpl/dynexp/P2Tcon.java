@@ -19,4 +19,11 @@ public class P2Tcon implements Ip2at_node {
 	    
 	}
 
+    @Override
+    public void normalizeType() {
+        for (Cp2at p2at: m_p2ts) {
+            p2at.p2at_node.normalizeType();
+        }
+    }
+
 }

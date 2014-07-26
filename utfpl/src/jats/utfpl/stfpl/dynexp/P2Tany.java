@@ -4,23 +4,28 @@ import jats.utfpl.stfpl.stype.ISType;
 
 
 public class P2Tany implements Ip2at_node {
-    private ISType m_type;
+    private ISType m_stype;
     
     public P2Tany() {
-        m_type = null;
+        m_stype = null;
     
     }
     
     public void updateSType(ISType type) {
-        m_type = type;
+        m_stype = type;
     }
     
     public ISType getSType() {
-        if (null == m_type) {
+        if (null == m_stype) {
             throw new Error("Check this.");
         } else {
-            return m_type;
+            return m_stype;
         }
+    }
+
+    @Override
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
     }
 }
 

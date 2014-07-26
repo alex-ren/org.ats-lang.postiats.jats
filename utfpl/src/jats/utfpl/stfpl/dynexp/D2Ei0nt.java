@@ -24,4 +24,9 @@ public class D2Ei0nt implements Id2exp_node {
         }
     }
     
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
+    
 }

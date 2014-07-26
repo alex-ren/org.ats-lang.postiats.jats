@@ -18,5 +18,11 @@ public class D2EannSeff implements Id2exp_node {
         return m_d2exp.d2exp_node.getSType();
     }
 
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
+
+
 
 }

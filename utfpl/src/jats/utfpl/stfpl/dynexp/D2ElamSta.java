@@ -12,10 +12,10 @@ public class D2ElamSta implements Id2exp_node {
     public List<Cs2var> m_s2vs;  // static variables
     public List<Cs2exp> m_s2ps;  // predictes in statics
     
-    private ISType m_ty;
+    private ISType m_stype;
     
     public void updateType(ISType ty) {
-        m_ty = ty;
+        m_stype = ty;
     }
     
     public D2ElamSta(List<Cs2var> s2vs, List<Cs2exp> s2ps, Cd2exp d2exp) {
@@ -26,11 +26,18 @@ public class D2ElamSta implements Id2exp_node {
 
     @Override
     public ISType getSType() {
-        if (null == m_ty) {
+        if (null == m_stype) {
             throw new Error("check this");
         } else {
-            return m_ty;
+            return m_stype;
         }
     }
+
+    @Override
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
+    }
+    
+    
     
 }

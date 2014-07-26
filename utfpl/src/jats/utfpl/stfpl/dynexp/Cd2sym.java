@@ -29,4 +29,8 @@ public class Cd2sym {
     public ISType getSType() {
         return m_stype;
     }
+    
+    public void normalizeType() {
+        m_stype = m_stype.normalize();
+    }
 }

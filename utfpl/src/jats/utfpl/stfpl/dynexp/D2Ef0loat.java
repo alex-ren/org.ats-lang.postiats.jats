@@ -24,5 +24,10 @@ public class D2Ef0loat implements Id2exp_node {
             return m_ty;
         }
     }
+    
+    @Override
+    public void normalizeType() {
+        throw new Error("check this");
+    }
 
 }
