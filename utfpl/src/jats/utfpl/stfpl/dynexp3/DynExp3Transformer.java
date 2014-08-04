@@ -58,6 +58,7 @@ import jats.utfpl.stfpl.dynexp.P2Tignored;
 import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
+import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
@@ -65,7 +66,9 @@ import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
+import jats.utfpl.stfpl.stype.TNameCst;
 import jats.utfpl.stfpl.stype.TypeCheckResult;
+import jats.utfpl.stfpl.stype.ITypeName;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -81,11 +84,13 @@ public class DynExp3Transformer {
     private Map<Cstamp, Cd3cst> m_cstMap;
     private Map<Cstamp, Cd3var> m_varMap;
     private List<Cd2ecl> m_d2ecs;
+    private Map<ITypeName, ISType> m_types;
     
     public DynExp3Transformer(List<Cd2ecl> d2ecs) {
         m_cstMap = new HashMap<Cstamp, Cd3cst>();
         m_varMap = new HashMap<Cstamp, Cd3var>();
         m_d2ecs = d2ecs;
+        m_types = new HashMap<ITypeName, ISType>();
     }
     
     public List<Cd3ecl> transform() {
@@ -189,12 +194,18 @@ public class DynExp3Transformer {
 
 
     private Cd3ecl transform(Cloc_t loc, D2Cstacsts node0) {
-        D3Cstacsts node = new D3Cstacsts(node0.m_s2csts);
+        List<TNameCst> csts = new ArrayList<TNameCst>();
+        for (Cs2cst s2cst: node0.m_s2csts) {
+            csts.add(TNameCst.fromCs2cst(s2cst));
+        }
+        D3Cstacsts node = new D3Cstacsts(csts);
         Cd3ecl d3ecl = new Cd3ecl(loc, node);
         return d3ecl;
     }
 
 
+    // to be continued
+    x
     private Cd3ecl transform(Cloc_t loc, D2Cimpdec node0,
             Set<Cd3var> scope, Set<Cd3var> needed) {
         Ci3mpdec i3mpdec = transform(node0.m_i2mpdec, scope, needed);
