@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
+// refer to DefaultAppTypeStore.java
 public class AppType extends BoxedType {
     private String m_con;
     private List<ISType> m_tys;
@@ -70,6 +72,12 @@ public class AppType extends BoxedType {
         }
         
         return new AppType(m_con, tys);
+    }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map,
+            Set<PolyParaType> env) {
+        throw new Error("not supported yet");
     }
 
 }

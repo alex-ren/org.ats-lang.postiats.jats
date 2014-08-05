@@ -41,6 +41,11 @@ public class EleType extends FlatType {
     public ISType instantiate(Map<PolyParaType, ISType> map) {
         return this;
     }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map) {
+        return new NamifyResult(null, false);
+    }
     
 }
 

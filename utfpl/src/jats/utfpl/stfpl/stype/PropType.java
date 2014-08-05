@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.utils.Log;
 
 import java.util.Map;
+import java.util.Set;
 
 
 public class PropType extends SortType {
@@ -40,6 +41,14 @@ public class PropType extends SortType {
     public ISType instantiate(Map<PolyParaType, ISType> map) {
         return this;
     }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map,
+            Set<PolyParaType> env) {
+        throw new Error("should not happen");
+    }
+
+
 
 
 }

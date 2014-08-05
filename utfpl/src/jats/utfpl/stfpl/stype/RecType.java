@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 public class RecType extends BoxedType {
     
@@ -88,6 +89,11 @@ public class RecType extends BoxedType {
         public void match(ILabPat next);
 
         public ILabPat instantiate(Map<PolyParaType, ISType> map);
+        
+        public NamifyResult namify(Map<ITypeName, NamedType> map,
+                Set<PolyParaType> env);
+        
+        public void updateType(ISType type);
     }
     
     static public class LabPatNorm implements ILabPat {
@@ -131,6 +137,19 @@ public class RecType extends BoxedType {
             return new LabPatNorm(m_lab, type);
             
         }
+
+        @Override
+        public NamifyResult namify(Map<ITypeName, NamedType> map,
+                Set<PolyParaType> env) {
+            NamifyResult nret = m_type.namify(map, env);
+            return nret;
+            
+        }
+
+        @Override
+        public void updateType(ISType type) {
+            m_type = type;
+        }
     }
 
     @Override
@@ -154,6 +173,39 @@ public class RecType extends BoxedType {
         }
         RecType ret = new RecType(tys, 0);
         return ret;
+    }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map,
+            Set<PolyParaType> env) {
+        boolean is_new = false;
+        boolean is_escaped = false;
+        
+        for (ILabPat labtype: m_labtypes) {
+            NamifyResult nret = labtype.namify(map, env);
+            if (nret.m_new) {
+                is_new = true;
+            }
+            if (nret.m_escaped) {
+                is_escaped = true;
+            }
+            
+            if (null != nret.m_type) {
+                labtype.updateType(nret.m_type);
+            }
+        }
+        if (is_escaped) {
+            return new NamifyResult(null, false, true);
+        } else {
+            if (is_new) {
+                TNameId name = TNameId.createTypeId("rec");
+                NamedType ntype = new NamedType(this, name);
+                map.put(name, ntype);
+                return new NamifyResult(ntype, true, false);
+            } else {
+                ITypeName name = 
+            }
+        }
     }
     
 

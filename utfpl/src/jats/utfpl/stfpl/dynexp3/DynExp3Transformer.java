@@ -64,9 +64,12 @@ import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.FunType; 
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.NamedType;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
+import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.stfpl.stype.TNameCst;
+import jats.utfpl.stfpl.stype.TNameId;
 import jats.utfpl.stfpl.stype.TypeCheckResult;
 import jats.utfpl.stfpl.stype.ITypeName;
 import jats.utfpl.utils.Log;
@@ -84,13 +87,13 @@ public class DynExp3Transformer {
     private Map<Cstamp, Cd3cst> m_cstMap;
     private Map<Cstamp, Cd3var> m_varMap;
     private List<Cd2ecl> m_d2ecs;
-    private Map<ITypeName, ISType> m_types;
+    private Map<ITypeName, NamedType> m_types;
     
     public DynExp3Transformer(List<Cd2ecl> d2ecs) {
         m_cstMap = new HashMap<Cstamp, Cd3cst>();
         m_varMap = new HashMap<Cstamp, Cd3var>();
         m_d2ecs = d2ecs;
-        m_types = new HashMap<ITypeName, ISType>();
+        m_types = new HashMap<ITypeName, NamedType>();
     }
     
     public List<Cd3ecl> transform() {
@@ -204,8 +207,6 @@ public class DynExp3Transformer {
     }
 
 
-    // to be continued
-    x
     private Cd3ecl transform(Cloc_t loc, D2Cimpdec node0,
             Set<Cd3var> scope, Set<Cd3var> needed) {
         Ci3mpdec i3mpdec = transform(node0.m_i2mpdec, scope, needed);
@@ -243,7 +244,8 @@ public class DynExp3Transformer {
             
             for (Cf3undec f3un: f3uns) {
                 scope.add(f3un.m_var);
-                needed.remove(f3un.m_var.m_stamp);
+                needed.remove(f3un.m_var.m_stamp);  // due to mutually recursive, we
+                                                    // may have put functions into "needed".
             }
             D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns);
             
@@ -266,14 +268,15 @@ public class DynExp3Transformer {
         Cd3exp d3exp = transform(f2un.f2undec_def, null, needed, null);
         D3ElamDyn d3elam = (D3ElamDyn)(d3exp.m_node);
         
-        TypeCheckResult res = d3var.m_stype.match(d3elam.getType());  // caution:
+        // Just curious whether this would be triggered. 
+        TypeCheckResult res = d3var.m_stype.match(d3elam.getType());
         if (!res.isGood()) {
             throw new Error(res.getMsg());
         }
 
         return new Cf3undec(f2un.f2undec_loc, d3var, d3exp);
     }
-
+    
     /*
      * scope: names can be used. This cannot be changed since expression doesn't
      * provide new names.
@@ -395,21 +398,22 @@ public class DynExp3Transformer {
 
     private Cd3exp transform(D2Elist node0, Cloc_t loc, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
-        int i = node0.m_npf;
-        if (i < 0) {
-            i = 0;
-        }
-        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
-        while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, null);
-            d3es.add(d3e);
-        }
-        
-        D3Etup node = new D3Etup(1, d3es, node0.getSType().removeProof());
-        
-        Cd3exp d3exp = new Cd3exp(loc, node);
-        return d3exp;
+        throw new Error("check this");
+//        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
+//        int i = node0.m_npf;
+//        if (i < 0) {
+//            i = 0;
+//        }
+//        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+//        while (iter.hasNext()) {
+//            Cd3exp d3e = transform(iter.next(), scope, needed, null);
+//            d3es.add(d3e);
+//        }
+//        
+//        D3Etup node = new D3Etup(1, d3es, node0.getSType().removeProof());  // todo
+//        
+//        Cd3exp d3exp = new Cd3exp(loc, node);
+//        return d3exp;
     }
 
 
@@ -429,7 +433,11 @@ public class DynExp3Transformer {
             d3es.add(d3e);
         }
         
-        D3Etup node = new D3Etup(node0.m_knd, d3es, node0.getSType().removeProof());
+        RecType recType = node0.getSType().removeProof();
+        
+        NamedType nType = recType.namify(m_types);
+
+        D3Etup node = new D3Etup(node0.m_knd, d3es, nType);
         
         Cd3exp d3exp = new Cd3exp(loc, node);
         return d3exp;
@@ -445,7 +453,7 @@ public class DynExp3Transformer {
     }
 
     private Cd3sym transform(Cd2sym d2sym, Cloc_t loc) {
-        return new Cd3sym(d2sym.m_d2sym_name, d2sym.getSType());
+        return new Cd3sym(d2sym.m_d2sym_name, d2sym.getSType());  // todo
     }
 
 
@@ -493,7 +501,7 @@ public class DynExp3Transformer {
         List<D3EXPARGdyn> argslst = new ArrayList<D3EXPARGdyn>();
         List<ISType> inner_types = new ArrayList<ISType>();
         
-        ListIterator<ISType> iter = node0.getInnerSType().listIterator();
+        ListIterator<ISType> iter = node0.getInnerSType().listIterator();  // todo
         for (Id2exparg iargs: node0.m_d2as_arg) {
             if (iargs instanceof D2EXPARGsta) {
                 iter.next();  // skip this one
@@ -552,7 +560,7 @@ public class DynExp3Transformer {
         
         needed.addAll(cur_needed);
         
-        FunType fun_type = node0.getSType();
+        FunType fun_type = node0.getSType();  // todo
         if (null != fun_type.m_funclo) {
             Log.log4j.warn("funclo has been set already.");
         } else {
@@ -714,7 +722,7 @@ public class DynExp3Transformer {
         if (null != d3var) {
             return d3var;
         } else {
-            d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType());
+            d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType());  // todo
             m_varMap.put(d2var.m_stamp, d3var);
             return d3var;
         }
@@ -760,7 +768,7 @@ public class DynExp3Transformer {
         if (null != d3cst) {
             return d3cst;
         } else {
-            d3cst = new Cd3cst(d2cst.m_stamp, d2cst.m_symbol, d2cst.getSType());
+            d3cst = new Cd3cst(d2cst.m_stamp, d2cst.m_symbol, d2cst.getSType());  // todo
             m_cstMap.put(d2cst.m_stamp, d3cst);
             return d3cst;
         }

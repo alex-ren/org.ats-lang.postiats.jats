@@ -4,6 +4,8 @@ import jats.utfpl.stfpl.staexp.Ifunclo;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 public class Aux {
     public static void matchTypeList(List<ISType> left, List<ISType> right) {
@@ -40,6 +42,17 @@ public class Aux {
             }
         }
     
+    }
+    
+    public static ITypeName findType(Map<ITypeName, NamedType> map, ISType type) {
+        Set<Map.Entry<ITypeName, NamedType>> entry_set = map.entrySet();
+        for (Map.Entry<ITypeName, NamedType> entry: entry_set) {
+            if (entry.getValue().getContent().equalCSharp(type)) {
+                return entry.getKey();
+            } else {
+                return null;
+            }
+        }
     }
 
 }

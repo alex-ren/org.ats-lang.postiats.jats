@@ -6,7 +6,7 @@ public class TNameId implements ITypeName {
     private int m_stamp;
     private String m_symbol;
     
-    public ITypeName createTypeId(String symbol) {
+    static public TNameId createTypeId(String symbol) {
         int stamp = ++m_count;
         return new TNameId(stamp, symbol);
     }

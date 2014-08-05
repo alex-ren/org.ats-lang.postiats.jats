@@ -5,6 +5,7 @@ import jats.utfpl.stfpl.staexp.Cs2cst;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 public class DataType extends BoxedType {
     public List<ISType> m_tyLst;
@@ -49,6 +50,12 @@ public class DataType extends BoxedType {
         } else {
             return new TypeCheckResult("not expecting " + ty);
         }
+    }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map,
+            Set<PolyParaType> env) {
+        throw new Error("not supported");
     }
 
 }
