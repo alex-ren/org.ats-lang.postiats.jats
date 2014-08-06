@@ -1,7 +1,9 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.staexp.Ifunclo;
+import jats.utfpl.stfpl.stype.ISType.NamifyResult;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -45,17 +47,45 @@ public class Aux {
     }
     
     public static NamedType findType(Map<ITypeName, NamedType> map, ISType type) {
-        if (type instanceof NamedType) {
-            throw new Error("This is not allowed.");
-        }
         Set<Map.Entry<ITypeName, NamedType>> entry_set = map.entrySet();
         for (Map.Entry<ITypeName, NamedType> entry: entry_set) {
-            if (entry.getValue().getContent().equalCSharp(type)) {
-                return entry.getKey();
+            Map<PolyParaType, PolyParaType> env = new HashMap<PolyParaType, PolyParaType>();
+            if (entry.getValue().equalCSharp(type, env)) {
+                // found
+                return entry.getValue();
+            }
+        }
+        
+        return null;  // not found
+    }
+
+    public static NamifyResult namifySummary(boolean is_escaped,
+            boolean is_new, SortType type, String name,
+            Map<ITypeName, NamedType> map) {
+        if (is_escaped) {
+            return new NamifyResult(null, null, true);
+        } else {
+            if (is_new) {
+                TNameId tid = TNameId.createTypeId(name);
+                NamedType named_type = new NamedType(type, tid);
+                map.put(tid, named_type);
+                NamifyResult ret = new NamifyResult(named_type, true, false);
+                return ret;
             } else {
-                return null;
+                NamedType named_type = Aux.findType(map, type);
+                if (null == named_type) {
+                    TNameId tid = TNameId.createTypeId(name);
+                    named_type = new NamedType(type, tid);
+                    map.put(tid, named_type);
+                    NamifyResult ret = new NamifyResult(named_type, true, false);
+                    return ret;
+                } else {
+                    NamifyResult ret = new NamifyResult(named_type, false, false);
+                    return ret;
+                }
             }
         }
     }
+
 
 }

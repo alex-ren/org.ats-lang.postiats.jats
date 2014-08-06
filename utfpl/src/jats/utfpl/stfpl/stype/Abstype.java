@@ -3,33 +3,16 @@ package jats.utfpl.stfpl.stype;
 import java.util.Map;
 import java.util.Set;
 
-/*
- * This is a special type used only after type checking.
- * This serves as a wrapper for unnamed types.
- * 
- * 08/06/2014
- * The equality of NamedType is based on their identity.
- * 
- * If m_type is abstype, then m_name is the name of the abstype.
- */
-public class NamedType extends SortType {
-    private SortType m_type;
+public class Abstype extends SortType {
     private ITypeName m_name;
 
-    public NamedType(SortType type, ITypeName name) {
-        super(type.m_srt);
-        if (type instanceof NamedType) {
-            throw new Error("should not happen");
-        }
+    public Abstype(ESort srt, ITypeName name) {
+        super(srt);
         m_name = name;
     }
     
     public ITypeName getName() {
         return m_name;
-    }
-    
-    public SortType getContent() {
-        return m_type;
     }
 
     @Override
@@ -50,17 +33,31 @@ public class NamedType extends SortType {
     @Override
     public NamifyResult namify(Map<ITypeName, NamedType> map,
             Set<PolyParaType> env) {
-        throw new Error("This would not happen.");
+        boolean is_new = false;
+        NamedType nty = map.get(m_name);
+        if (null == nty) {
+            nty = new NamedType(this, m_name);
+            map.put(m_name, nty);
+            is_new = true;
+        }
+        
+        NamifyResult ret = new NamifyResult(nty, is_new, false);
+        return ret;
     }
 
     @Override
     public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
         if (type instanceof NamedType) {
-            return m_name.equals(((NamedType)type).m_name);
+            type = ((NamedType)type).getContent();            
         }
-        
-        return m_type.equalCSharp(type, env);
+        if (!(type instanceof Abstype)) {
+            Abstype right = (Abstype)type;
+            return m_name.equals(right.m_name);
+        } else {
+            return false;
+        }
     }
 
-
 }
+
+

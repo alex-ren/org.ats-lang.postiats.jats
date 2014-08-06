@@ -8,5 +8,16 @@ public class FUNCLOclo implements Ifunclo {
     public FUNCLOclo(int knd) {
         m_knd = knd;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FUNCLOclo)) {
+            return false;
+        }
+        return m_knd == ((FUNCLOclo)o).m_knd;
+    }
 
 }

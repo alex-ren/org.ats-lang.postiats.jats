@@ -36,10 +36,15 @@ public interface ISType {
     public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env);
     
     static public class NamifyResult {
-        public NamedType m_type;
+        public NamedType m_type;  // (m_type == null) <=> (m_new == null)
+                                  // The current type doesn't deserve a name.
+        
         public Boolean m_new;  // is newly created or already in the map
-                               // can be null, which indicates invalid
-        public boolean m_escaped;
+                               // can be null, which indicates invalid.
+                               // (m_new == true) => (m_type != null)
+                               // not correct on the other direction.
+                               
+        public boolean m_escaped;  // is this type closed
         
         public NamifyResult(NamedType type, Boolean _new, boolean escaped) {
             m_type = type;

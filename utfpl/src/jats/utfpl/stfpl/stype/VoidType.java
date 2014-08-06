@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.utils.Log;
 
 import java.util.Map;
+import java.util.Set;
 
 public class VoidType extends SortType {
     
@@ -35,6 +36,18 @@ public class VoidType extends SortType {
     @Override
     public ISType instantiate(Map<PolyParaType, ISType> map) {
         return this;
+    }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map,
+            Set<PolyParaType> env) {
+        NamifyResult ret = new NamifyResult(null, null, false);
+        return ret;
+    }
+
+    @Override
+    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+        return this == type;
     }
 
 

@@ -116,37 +116,11 @@ public class PolyType extends BoxedType {
             Set<PolyParaType> env) {
         Set<PolyParaType> nenv = new HashSet<PolyParaType>(m_paras);
         NamifyResult nres = m_body.namify(map, nenv);
-        if (nres.m_escaped) {
-            // I will not assign name to open type.
-            NamifyResult ret = new NamifyResult(null, null, true);
-            return ret;
-        } else {
-            // update the content
-            if (null != nres.m_type) {
-                m_body = nres.m_type;
-            }
-            
-            if (nres.m_new) {
-                // m_body is a newly encountered type, create a name for "this"
-                TNameId tid = TNameId.createTypeId("sta");
-                NamedType named_type = new NamedType(this, tid);
-                map.put(tid, named_type);
-                NamifyResult ret = new NamifyResult(named_type, true, false);
-                return ret;
-            } else {
-                NamedType named_type = Aux.findType(map, this);
-                if (null != named_type) {
-                    NamifyResult ret = new NamifyResult(named_type, false/*already seen*/, false);
-                    return ret;
-                } else {
-                    TNameId tid = TNameId.createTypeId("sta");
-                    named_type = new NamedType(this, tid);
-                    map.put(tid, named_type);
-                    NamifyResult ret = new NamifyResult(named_type, true, false);
-                    return ret;
-                }
-            }
+        if (null != nres.m_type) {
+            m_body = nres.m_type;
         }
+                
+        return Aux.namifySummary(nres.m_escaped, nres.m_new, this, "poly", map);
     }
 
     @Override

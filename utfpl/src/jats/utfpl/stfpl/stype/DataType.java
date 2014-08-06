@@ -58,6 +58,11 @@ public class DataType extends BoxedType {
         throw new Error("not supported");
     }
 
+    @Override
+    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+        throw new Error("not supported");
+    }
+
 }
 
 

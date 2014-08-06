@@ -9,7 +9,6 @@ import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
 import jats.utfpl.stfpl.StfplPrinter;
 import jats.utfpl.stfpl.StfplProgramParserJson;
-import jats.utfpl.stfpl.UtfplProgramProcessor;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.utils.FilenameUtils;
 import jats.utfpl.utils.MapScope;
@@ -77,8 +76,8 @@ public class Test_01 {
                     
                     System.out.println(outputUTFPL);
                     
-                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
-                    uProg = processor.removeProof(uProg);
+//x                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
+//x                    uProg = processor.removeProof(uProg);
                     outputUTFPL = uPrinter.print(uProg);
                     
                     System.out.println("==utfpl's ast code (layer 02) is ==========================");

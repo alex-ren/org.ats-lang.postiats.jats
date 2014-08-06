@@ -80,6 +80,11 @@ public class AppType extends BoxedType {
         throw new Error("not supported yet");
     }
 
+    @Override
+    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+        throw new Error("not supported yet");
+    }
+
 }
 
 
