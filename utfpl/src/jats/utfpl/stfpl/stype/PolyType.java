@@ -5,6 +5,7 @@ import jats.utfpl.utils.Log;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,20 +70,20 @@ public class PolyType extends BoxedType {
         }
     }
     
-    /*
-     * Collect all the PloyParaType's and return the inner-most FunType.
-     */
-    private FunType getParaFunType(List<PolyParaType> paras) {
-        paras.addAll(m_paras);
-        
-        if (m_body instanceof FunType) {
-            return (FunType)m_body;
-        } else if (m_body instanceof PolyType) {
-            return ((PolyType)m_body).getParaFunType(paras);
-        } else {
-            throw new Error("Check this.");
-        }
-    }
+//    /*
+//     * Collect all the PloyParaType's and return the inner-most FunType.
+//     */
+//    private FunType getParaFunType(List<PolyParaType> paras) {
+//        paras.addAll(m_paras);
+//        
+//        if (m_body instanceof FunType) {
+//            return (FunType)m_body;
+//        } else if (m_body instanceof PolyType) {
+//            return ((PolyType)m_body).getParaFunType(paras);
+//        } else {
+//            throw new Error("Check this.");
+//        }
+//    }
 
     @Override
     public ISType instantiate(Map<PolyParaType, ISType> map) {
@@ -150,8 +151,28 @@ public class PolyType extends BoxedType {
 
     @Override
     public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        // TODO Auto-generated method stub
-        return false;
+        if (type instanceof NamedType) {
+        	type = ((NamedType)type).getContent();
+        }
+        if (!(type instanceof PolyType)) {
+        	return false;
+        } else {
+        	PolyType that = (PolyType)type;
+        	if (this.m_paras.size() != that.m_paras.size() || this.m_srt != that.m_srt) {
+        		return false;
+        	} else {
+        		ListIterator<PolyParaType> left = m_paras.listIterator();
+        		ListIterator<PolyParaType> right = that.m_paras.listIterator();
+        		
+        		Map<PolyParaType, PolyParaType> nenv = new HashMap<PolyParaType, PolyParaType>(env);
+        		while (left.hasNext()) {
+        			nenv.put(left.next(), right.next());
+        		}
+        		
+        		return m_body.equalCSharp(that.m_body, nenv);
+        		
+        	}
+        }
     }
     
 

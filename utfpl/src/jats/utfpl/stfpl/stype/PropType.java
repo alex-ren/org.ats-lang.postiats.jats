@@ -48,6 +48,11 @@ public class PropType extends SortType {
         throw new Error("should not happen");
     }
 
+	@Override
+    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+		throw new Error("should not happen");
+    }
+
 
 
 

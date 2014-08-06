@@ -78,10 +78,10 @@ public class PolyParaType extends BoxedType {
     public NamifyResult namify(Map<ITypeName, NamedType> map,
             Set<PolyParaType> env) {
         if (!env.contains(this)) {
-            NamifyResult ret = new NamifyResult(null, false, true);
+            NamifyResult ret = new NamifyResult(null, null, true);
             return ret;
         } else {
-            NamifyResult ret = new NamifyResult(null, false, false);
+            NamifyResult ret = new NamifyResult(null, null, false);
             return ret;
         }
     }
