@@ -44,7 +44,10 @@ public class Aux {
     
     }
     
-    public static ITypeName findType(Map<ITypeName, NamedType> map, ISType type) {
+    public static NamedType findType(Map<ITypeName, NamedType> map, ISType type) {
+        if (type instanceof NamedType) {
+            throw new Error("This is not allowed.");
+        }
         Set<Map.Entry<ITypeName, NamedType>> entry_set = map.entrySet();
         for (Map.Entry<ITypeName, NamedType> entry: entry_set) {
             if (entry.getValue().getContent().equalCSharp(type)) {

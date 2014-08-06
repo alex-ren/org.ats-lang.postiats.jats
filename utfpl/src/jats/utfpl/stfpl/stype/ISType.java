@@ -21,19 +21,27 @@ public interface ISType {
     
     public boolean equals(Object right);
     
+    /*
+     * If the function returns null, then use the original type 
+     * instead of the type inside the NamifyResult.
+     * After Namify, all nonnamed types are updated by named types.
+     */
+    /*
+     * Caution: This method may modify the content of the object.
+     */
     public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> env);
 
-//    public boolean containPolyType();
-    
-
-    public boolean equalCSharp(ISType type);
+    // Both current and the input type have to be closed.
+    // env is for mapping of Type parameters.
+    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env);
     
     static public class NamifyResult {
         public NamedType m_type;
-        public boolean m_new;  // is newly created or already in the map
+        public Boolean m_new;  // is newly created or already in the map
+                               // can be null, which indicates invalid
         public boolean m_escaped;
         
-        public NamifyResult(NamedType type, boolean _new, boolean escaped) {
+        public NamifyResult(NamedType type, Boolean _new, boolean escaped) {
             m_type = type;
             m_new = _new;
             m_escaped = escaped;

@@ -3,8 +3,10 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.utils.Log;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PolyType extends BoxedType {
     public List<PolyParaType> m_paras;
@@ -106,6 +108,50 @@ public class PolyType extends BoxedType {
         
         ISType aType = m_body.instantiate(map);
         return aType;
+    }
+
+    @Override
+    public NamifyResult namify(Map<ITypeName, NamedType> map,
+            Set<PolyParaType> env) {
+        Set<PolyParaType> nenv = new HashSet<PolyParaType>(m_paras);
+        NamifyResult nres = m_body.namify(map, nenv);
+        if (nres.m_escaped) {
+            // I will not assign name to open type.
+            NamifyResult ret = new NamifyResult(null, null, true);
+            return ret;
+        } else {
+            // update the content
+            if (null != nres.m_type) {
+                m_body = nres.m_type;
+            }
+            
+            if (nres.m_new) {
+                // m_body is a newly encountered type, create a name for "this"
+                TNameId tid = TNameId.createTypeId("sta");
+                NamedType named_type = new NamedType(this, tid);
+                map.put(tid, named_type);
+                NamifyResult ret = new NamifyResult(named_type, true, false);
+                return ret;
+            } else {
+                NamedType named_type = Aux.findType(map, this);
+                if (null != named_type) {
+                    NamifyResult ret = new NamifyResult(named_type, false/*already seen*/, false);
+                    return ret;
+                } else {
+                    TNameId tid = TNameId.createTypeId("sta");
+                    named_type = new NamedType(this, tid);
+                    map.put(tid, named_type);
+                    NamifyResult ret = new NamifyResult(named_type, true, false);
+                    return ret;
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+        // TODO Auto-generated method stub
+        return false;
     }
     
 

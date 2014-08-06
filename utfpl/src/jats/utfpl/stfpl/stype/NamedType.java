@@ -2,6 +2,10 @@ package jats.utfpl.stfpl.stype;
 
 import java.util.Map;
 
+/*
+ * This is a special type used only after type checking.
+ * This serves as a wrapper for unnamed types.
+ */
 public class NamedType extends SortType {
     private SortType m_type;
     private ITypeName m_name;

@@ -3,6 +3,9 @@ package jats.utfpl.stfpl.staexp;
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
 
+/*
+ * Two Cs2var's have different Cstamp.
+ */
 public class Cs2var {
     public Is2rt m_srt;
     public Csymbol m_sym;
