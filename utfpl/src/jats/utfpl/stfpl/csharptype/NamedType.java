@@ -1,4 +1,10 @@
-package jats.utfpl.stfpl.stype;
+package jats.utfpl.stfpl.csharptype;
+
+import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.PolyParaType;
+import jats.utfpl.stfpl.stype.SortType;
+import jats.utfpl.stfpl.stype.TypeCheckResult;
+import jats.utfpl.stfpl.stype.ISType.NamifyResult;
 
 import java.util.Map;
 import java.util.Set;
@@ -48,8 +54,7 @@ public class NamedType extends SortType {
     }
 
     @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
+    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
         throw new Error("This would not happen.");
     }
 

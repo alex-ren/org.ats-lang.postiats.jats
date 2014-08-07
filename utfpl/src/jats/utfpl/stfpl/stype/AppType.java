@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -74,16 +75,15 @@ public class AppType extends BoxedType {
         return new AppType(m_con, tys);
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        throw new Error("not supported yet");
-    }
-
-    @Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        throw new Error("not supported yet");
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        throw new Error("not supported yet");
+//    }
+//
+//    @Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//        throw new Error("not supported yet");
+//    }
 
 }
 

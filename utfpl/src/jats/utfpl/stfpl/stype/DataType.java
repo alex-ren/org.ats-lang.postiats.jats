@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 
 import java.util.List;
@@ -52,16 +53,15 @@ public class DataType extends BoxedType {
         }
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        throw new Error("not supported");
-    }
-
-    @Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        throw new Error("not supported");
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        throw new Error("not supported");
+//    }
+//
+//    @Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//        throw new Error("not supported");
+//    }
 
 }
 

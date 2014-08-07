@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.utils.Log;
 
@@ -95,77 +96,76 @@ public class FunType extends BoxedType {
         return new FunType(m_npf, args, res, m_funclo);
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        boolean is_new = false;
-        boolean is_escaped = false;
-        
-        ListIterator<ISType> iter = m_args.listIterator();
-        while (iter.hasNext()) {
-            ISType type = iter.next();
-            NamifyResult res = type.namify(map, env);
-            if (res.m_escaped) {
-                is_escaped = true;
-            } else {
-                if (true == res.m_new) {
-                    is_new = true;
-                }
-                if (null != res.m_type) {
-                    iter.set(res.m_type);
-                }
-            }
-        }
-        
-        NamifyResult res = m_res.namify(map, env);
-        if (res.m_escaped) {
-            is_escaped = true;
-        } else {
-            if (true == res.m_new) {
-                is_new = true;
-            }
-            if (null != res.m_type) {
-                m_res = res.m_type;
-            }
-        }
-        
-        return Aux.namifySummary(is_escaped, is_new, this, "fun", map);
-
-    }
-
-    @Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        if (type instanceof NamedType) {
-            type = ((NamedType)type).getContent();
-        }
-        
-        if (!(type instanceof FunType)) {
-            return false;
-        }
-        
-        /* compare parameters */
-        FunType ftype = (FunType)type;
-        if (m_args.size() != ftype.m_args.size()) {
-            return false;
-        }
-        
-        ListIterator<ISType> liter = m_args.listIterator();
-        ListIterator<ISType> riter = ftype.m_args.listIterator();
-        
-        while (liter.hasNext()) {
-            if (!liter.next().equalCSharp(riter.next(), env)) {
-                return false;
-            }
-        }
-        
-        /* compare return type */
-        if (!m_res.equalCSharp(ftype.m_res, env)) {
-            return false;
-        }
-        
-        return true; 
-        
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        boolean is_new = false;
+//        boolean is_escaped = false;
+//
+//        ListIterator<ISType> iter = m_args.listIterator();
+//        while (iter.hasNext()) {
+//            ISType type = iter.next();
+//            NamifyResult res = type.namify(map, esc);
+//            if (res.m_escaped) {
+//                is_escaped = true;
+//            } else {
+//                if (true == res.m_new) {
+//                    is_new = true;
+//                }
+//                if (null != res.m_type) {
+//                    iter.set(res.m_type);
+//                }
+//            }
+//        }
+//        
+//        NamifyResult res = m_res.namify(map, esc);
+//        if (res.m_escaped) {
+//            is_escaped = true;
+//        } else {
+//            if (true == res.m_new) {
+//                is_new = true;
+//            }
+//            if (null != res.m_type) {
+//                m_res = res.m_type;
+//            }
+//        }
+//
+//        return Aux.namifySummary(is_escaped, is_new, this, "fun", map);
+//
+//    }
+//
+//    @Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//        if (type instanceof NamedType) {
+//            type = ((NamedType)type).getContent();
+//        }
+//        
+//        if (!(type instanceof FunType)) {
+//            return false;
+//        }
+//        
+//        /* compare parameters */
+//        FunType ftype = (FunType)type;
+//        if (m_args.size() != ftype.m_args.size()) {
+//            return false;
+//        }
+//        
+//        ListIterator<ISType> liter = m_args.listIterator();
+//        ListIterator<ISType> riter = ftype.m_args.listIterator();
+//        
+//        while (liter.hasNext()) {
+//            if (!liter.next().equalCSharp(riter.next(), env)) {
+//                return false;
+//            }
+//        }
+//        
+//        /* compare return type */
+//        if (!m_res.equalCSharp(ftype.m_res, env)) {
+//            return false;
+//        }
+//        
+//        return true; 
+//        
+//    }
     
 }
 

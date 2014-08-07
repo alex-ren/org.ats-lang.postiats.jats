@@ -64,14 +64,10 @@ import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.FunType; 
 import jats.utfpl.stfpl.stype.ISType;
-import jats.utfpl.stfpl.stype.NamedType;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.stfpl.stype.RecType;
-import jats.utfpl.stfpl.stype.TNameCst;
-import jats.utfpl.stfpl.stype.TNameId;
 import jats.utfpl.stfpl.stype.TypeCheckResult;
-import jats.utfpl.stfpl.stype.ITypeName;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -87,13 +83,11 @@ public class DynExp3Transformer {
     private Map<Cstamp, Cd3cst> m_cstMap;
     private Map<Cstamp, Cd3var> m_varMap;
     private List<Cd2ecl> m_d2ecs;
-    private Map<ITypeName, NamedType> m_types;
     
     public DynExp3Transformer(List<Cd2ecl> d2ecs) {
         m_cstMap = new HashMap<Cstamp, Cd3cst>();
         m_varMap = new HashMap<Cstamp, Cd3var>();
         m_d2ecs = d2ecs;
-        m_types = new HashMap<ITypeName, NamedType>();
     }
     
     public List<Cd3ecl> transform() {
@@ -197,11 +191,7 @@ public class DynExp3Transformer {
 
 
     private Cd3ecl transform(Cloc_t loc, D2Cstacsts node0) {
-        List<TNameCst> csts = new ArrayList<TNameCst>();
-        for (Cs2cst s2cst: node0.m_s2csts) {
-            csts.add(TNameCst.fromCs2cst(s2cst));
-        }
-        D3Cstacsts node = new D3Cstacsts(csts);
+        D3Cstacsts node = new D3Cstacsts(node0.m_s2csts);
         Cd3ecl d3ecl = new Cd3ecl(loc, node);
         return d3ecl;
     }
@@ -434,10 +424,8 @@ public class DynExp3Transformer {
         }
         
         RecType recType = node0.getSType().removeProof();
-        
-        NamedType nType = recType.namify(m_types);
 
-        D3Etup node = new D3Etup(node0.m_knd, d3es, nType);
+        D3Etup node = new D3Etup(node0.m_knd, d3es, recType);
         
         Cd3exp d3exp = new Cd3exp(loc, node);
         return d3exp;
@@ -453,7 +441,8 @@ public class DynExp3Transformer {
     }
 
     private Cd3sym transform(Cd2sym d2sym, Cloc_t loc) {
-        return new Cd3sym(d2sym.m_d2sym_name, d2sym.getSType());  // todo
+        ISType type = d2sym.getSType();
+        return new Cd3sym(d2sym.m_d2sym_name, type);
     }
 
 
@@ -501,7 +490,7 @@ public class DynExp3Transformer {
         List<D3EXPARGdyn> argslst = new ArrayList<D3EXPARGdyn>();
         List<ISType> inner_types = new ArrayList<ISType>();
         
-        ListIterator<ISType> iter = node0.getInnerSType().listIterator();  // todo
+        ListIterator<ISType> iter = node0.getInnerSType().listIterator();
         for (Id2exparg iargs: node0.m_d2as_arg) {
             if (iargs instanceof D2EXPARGsta) {
                 iter.next();  // skip this one
@@ -560,7 +549,7 @@ public class DynExp3Transformer {
         
         needed.addAll(cur_needed);
         
-        FunType fun_type = node0.getSType();  // todo
+        FunType fun_type = node0.getSType();
         if (null != fun_type.m_funclo) {
             Log.log4j.warn("funclo has been set already.");
         } else {
@@ -722,7 +711,7 @@ public class DynExp3Transformer {
         if (null != d3var) {
             return d3var;
         } else {
-            d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType());  // todo
+            d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType());
             m_varMap.put(d2var.m_stamp, d3var);
             return d3var;
         }
@@ -768,7 +757,7 @@ public class DynExp3Transformer {
         if (null != d3cst) {
             return d3cst;
         } else {
-            d3cst = new Cd3cst(d2cst.m_stamp, d2cst.m_symbol, d2cst.getSType());  // todo
+            d3cst = new Cd3cst(d2cst.m_stamp, d2cst.m_symbol, d2cst.getSType());
             m_cstMap.put(d2cst.m_stamp, d3cst);
             return d3cst;
         }

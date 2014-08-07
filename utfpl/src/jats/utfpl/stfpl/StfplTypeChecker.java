@@ -510,7 +510,7 @@ public class StfplTypeChecker {
             }
             
         } else if (args0 instanceof D2EXPARGdyn) {
-            // Turn all those type paras, which have been instatiated, into VarType.
+            // Turn all those type paras, which have been instantiated, into VarType.
             while (true) {
                 ISType ty0 = ty.instantiateOne();
                 if (ty0 instanceof FunType) {

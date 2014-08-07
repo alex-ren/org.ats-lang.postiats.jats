@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import java.util.Map;
 import java.util.Set;
 
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.stfpl.staexp.Cs2var;
 import jats.utfpl.utils.Log;
 
@@ -74,36 +75,31 @@ public class PolyParaType extends BoxedType {
         }
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        if (!env.contains(this)) {
-            NamifyResult ret = new NamifyResult(null, null, true);
-            return ret;
-        } else {
-            NamifyResult ret = new NamifyResult(null, null, false);
-            return ret;
-        }
-    }
-
-    @Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        if (type instanceof PolyParaType) {
-            PolyParaType rtype1 = (PolyParaType)type;
-            PolyParaType rtype2 = env.get(this);
-            if (null == rtype2) {
-                throw new Error("This should not happen.");
-            } else {
-                if (rtype1.equals(rtype2)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-           
-        } else {
-            return false;
-        }
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        esc.add(this);
+//        NamifyResult ret = new NamifyResult(null, null, true);
+//        return ret;
+//    }
+//
+//    @Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//        if (type instanceof PolyParaType) {
+//            PolyParaType rtype1 = (PolyParaType)type;
+//            PolyParaType rtype2 = env.get(this);
+//            if (null == rtype2) {
+//                throw new Error("This should not happen.");
+//            } else {
+//                if (rtype1.equals(rtype2)) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//           
+//        } else {
+//            return false;
+//        }
+//    }
 
 }

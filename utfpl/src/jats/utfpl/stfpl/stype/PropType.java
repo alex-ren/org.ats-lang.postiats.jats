@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.utils.Log;
 
 import java.util.Map;
@@ -42,16 +43,15 @@ public class PropType extends SortType {
         return this;
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        throw new Error("should not happen");
-    }
-
-	@Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-		throw new Error("should not happen");
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        throw new Error("should not happen");
+//    }
+//
+//	@Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//		throw new Error("should not happen");
+//    }
 
 
 

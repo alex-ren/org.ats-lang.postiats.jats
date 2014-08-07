@@ -1,4 +1,4 @@
-package jats.utfpl.stfpl.stype;
+package jats.utfpl.stfpl.csharptype;
 
 public interface ITypeName {
     

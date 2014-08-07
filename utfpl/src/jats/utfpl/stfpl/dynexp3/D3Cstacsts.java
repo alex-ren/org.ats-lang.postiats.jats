@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.dynexp3;
 
-import jats.utfpl.stfpl.stype.TNameCst;
+import jats.utfpl.stfpl.staexp.Cs2cst;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import java.util.List;
  * Used for abstype, ...
  */
 public class D3Cstacsts implements Id3ecl_node {
-    public List<TNameCst> m_csts;
+    public List<Cs2cst> m_csts;
     
-    public D3Cstacsts(List<TNameCst> csts) {
+    public D3Cstacsts(List<Cs2cst> csts) {
         m_csts = csts;
     }
 

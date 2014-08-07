@@ -1,5 +1,8 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.stfpl.csharptype.ITypeName;
+import jats.utfpl.stfpl.csharptype.NamedType;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -21,19 +24,22 @@ public interface ISType {
     
     public boolean equals(Object right);
     
-    /*
-     * If the function returns null, then use the original type 
-     * instead of the type inside the NamifyResult.
-     * After Namify, all nonnamed types are updated by named types.
-     */
-    /*
-     * Caution: This method may modify the content of the object.
-     */
-    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> env);
+//    /*
+//     * If the function returns null, then use the original type 
+//     * instead of the type inside the NamifyResult.
+//     * After Namify, all nonnamed types are updated by named types.
+//     */
+//    /*
+//     * Caution: This method may modify the content of the object.
+//     */
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc);
+    
+    
+//    public NamifyResult namify2(Map<ITypeName, NamedType> map, Set<PolyParaType> esc);
 
-    // Both current and the input type have to be closed.
-    // env is for mapping of Type parameters.
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env);
+//    // Both current and the input type have to be closed.
+//    // env is for mapping of Type parameters.
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env);
     
     static public class NamifyResult {
         public NamedType m_type;  // (m_type == null) <=> (m_new == null)
@@ -45,6 +51,7 @@ public interface ISType {
                                // not correct on the other direction.
                                
         public boolean m_escaped;  // is this type closed
+                                   // (m_escaped == true) => (m_new == null)
         
         public NamifyResult(NamedType type, Boolean _new, boolean escaped) {
             m_type = type;

@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -90,11 +91,10 @@ public class RecType extends BoxedType {
 
         public ILabPat instantiate(Map<PolyParaType, ISType> map);
         
-        public NamifyResult namify(Map<ITypeName, NamedType> map,
-                Set<PolyParaType> env);
-
-        public boolean equalCSharp(ILabPat next,
-                Map<PolyParaType, PolyParaType> env);
+//        public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc);
+//
+//        public boolean equalCSharp(ILabPat next,
+//                Map<PolyParaType, PolyParaType> env);
         
     }
     
@@ -140,32 +140,31 @@ public class RecType extends BoxedType {
             
         }
 
-        @Override
-        public NamifyResult namify(Map<ITypeName, NamedType> map,
-                Set<PolyParaType> env) {
-            NamifyResult nres = m_type.namify(map, env);
-            if (null != nres.m_type) {
-                m_type = nres.m_type;
-            }
-            return nres;
-            
-        }
-
-        @Override
-        public boolean equalCSharp(ILabPat rlab,
-                Map<PolyParaType, PolyParaType> env) {
-            if (rlab instanceof LabPatNorm) {
-                LabPatNorm right = (LabPatNorm)rlab;
-                
-                if (!m_lab.equals(right.m_lab)) {
-                    return false;
-                } else {
-                    return m_type.equalCSharp(right.m_type, env);
-                }
-            } else {
-                throw new Error("not supported");
-            }
-        }
+//        @Override
+//        public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//            NamifyResult nres = m_type.namify(map, esc);
+//            if (null != nres.m_type) {
+//                m_type = nres.m_type;
+//            }
+//            return nres;
+//            
+//        }
+//
+//        @Override
+//        public boolean equalCSharp(ILabPat rlab,
+//                Map<PolyParaType, PolyParaType> env) {
+//            if (rlab instanceof LabPatNorm) {
+//                LabPatNorm right = (LabPatNorm)rlab;
+//                
+//                if (!m_lab.equals(right.m_lab)) {
+//                    return false;
+//                } else {
+//                    return m_type.equalCSharp(right.m_type, env);
+//                }
+//            } else {
+//                throw new Error("not supported");
+//            }
+//        }
 
     }
 
@@ -192,52 +191,51 @@ public class RecType extends BoxedType {
         return ret;
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        boolean is_new = false;
-        boolean is_escaped = false;
-        
-        for (ILabPat labtype: m_labtypes) {
-            NamifyResult nret = labtype.namify(map, env);
-            if (nret.m_new) {
-                is_new = true;
-            }
-            if (nret.m_escaped) {
-                is_escaped = true;
-            }
-        }
-        
-        return Aux.namifySummary(is_escaped, is_new, this, "rec", map);
-    }
-
-    @Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        if (type instanceof NamedType) {
-            type = ((NamedType)type).getContent();
-        }
-        
-        if (!(type instanceof RecType)) {
-            return false;
-        }
-        
-        /* compare parameters */
-        RecType rtype = (RecType)type;
-        if (m_labtypes.size() != rtype.m_labtypes.size()) {
-            return false;
-        }
-        
-        ListIterator<ILabPat> liter = m_labtypes.listIterator();
-        ListIterator<ILabPat> riter = rtype.m_labtypes.listIterator();
-        
-        while (liter.hasNext()) {
-            if (!liter.next().equalCSharp(riter.next(), env)) {
-                return false;
-            }
-        }
-
-        return true; 
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        boolean is_new = false;
+//        boolean is_escaped = false;
+//        
+//        for (ILabPat labtype: m_labtypes) {
+//            NamifyResult nret = labtype.namify(map, esc);
+//            if (nret.m_new) {
+//                is_new = true;
+//            }
+//            if (nret.m_escaped) {
+//                is_escaped = true;
+//            }
+//        }
+//        
+//        return Aux.namifySummary(is_escaped, is_new, this, "rec", map);
+//    }
+//
+//    @Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//        if (type instanceof NamedType) {
+//            type = ((NamedType)type).getContent();
+//        }
+//        
+//        if (!(type instanceof RecType)) {
+//            return false;
+//        }
+//        
+//        /* compare parameters */
+//        RecType rtype = (RecType)type;
+//        if (m_labtypes.size() != rtype.m_labtypes.size()) {
+//            return false;
+//        }
+//        
+//        ListIterator<ILabPat> liter = m_labtypes.listIterator();
+//        ListIterator<ILabPat> riter = rtype.m_labtypes.listIterator();
+//        
+//        while (liter.hasNext()) {
+//            if (!liter.next().equalCSharp(riter.next(), env)) {
+//                return false;
+//            }
+//        }
+//
+//        return true; 
+//    }
     
 
     

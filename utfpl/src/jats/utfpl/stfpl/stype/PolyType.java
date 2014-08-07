@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
+import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.utils.Log;
 
 import java.util.HashMap;
@@ -111,43 +112,49 @@ public class PolyType extends BoxedType {
         return aType;
     }
 
-    @Override
-    public NamifyResult namify(Map<ITypeName, NamedType> map,
-            Set<PolyParaType> env) {
-        Set<PolyParaType> nenv = new HashSet<PolyParaType>(m_paras);
-        NamifyResult nres = m_body.namify(map, nenv);
-        if (null != nres.m_type) {
-            m_body = nres.m_type;
-        }
-                
-        return Aux.namifySummary(nres.m_escaped, nres.m_new, this, "poly", map);
-    }
-
-    @Override
-    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-        if (type instanceof NamedType) {
-        	type = ((NamedType)type).getContent();
-        }
-        if (!(type instanceof PolyType)) {
-        	return false;
-        } else {
-        	PolyType that = (PolyType)type;
-        	if (this.m_paras.size() != that.m_paras.size() || this.m_srt != that.m_srt) {
-        		return false;
-        	} else {
-        		ListIterator<PolyParaType> left = m_paras.listIterator();
-        		ListIterator<PolyParaType> right = that.m_paras.listIterator();
-        		
-        		Map<PolyParaType, PolyParaType> nenv = new HashMap<PolyParaType, PolyParaType>(env);
-        		while (left.hasNext()) {
-        			nenv.put(left.next(), right.next());
-        		}
-        		
-        		return m_body.equalCSharp(that.m_body, nenv);
-        		
-        	}
-        }
-    }
+//    @Override
+//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
+//        Set<PolyParaType> nesc = new HashSet<PolyParaType>();
+//        NamifyResult nres = m_body.namify(map, nesc);
+//        if (null != nres.m_type) {
+//            m_body = nres.m_type;
+//        }
+//        
+//        boolean is_escaped = false;
+//        nesc.removeAll(m_paras);
+//        if (0 < nesc.size()) {
+//            is_escaped = true;
+//            esc.addAll(nesc);
+//        }
+//
+//        return Aux.namifySummary(is_escaped, nres.m_new, this, "poly", map);
+//    }
+//
+//    @Override
+//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
+//        if (type instanceof NamedType) {
+//        	type = ((NamedType)type).getContent();
+//        }
+//        if (!(type instanceof PolyType)) {
+//        	return false;
+//        } else {
+//        	PolyType that = (PolyType)type;
+//        	if (this.m_paras.size() != that.m_paras.size() || this.m_srt != that.m_srt) {
+//        		return false;
+//        	} else {
+//        		ListIterator<PolyParaType> left = m_paras.listIterator();
+//        		ListIterator<PolyParaType> right = that.m_paras.listIterator();
+//        		
+//        		Map<PolyParaType, PolyParaType> nenv = new HashMap<PolyParaType, PolyParaType>(env);
+//        		while (left.hasNext()) {
+//        			nenv.put(left.next(), right.next());
+//        		}
+//        		
+//        		return m_body.equalCSharp(that.m_body, nenv);
+//        		
+//        	}
+//        }
+//    }
     
 
 }
