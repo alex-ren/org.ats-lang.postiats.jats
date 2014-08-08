@@ -1,11 +1,8 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.NamedType;
 import jats.utfpl.utils.Log;
 
 import java.util.Map;
-import java.util.Set;
-
 
 public abstract class EleType extends FlatType {
     public EleType() {

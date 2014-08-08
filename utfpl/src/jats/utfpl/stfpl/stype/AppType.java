@@ -1,6 +1,9 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.NamedType;
+import jats.utfpl.stfpl.csharptype.CSPolyParaType;
+import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.csharptype.ICSTypeName;
+import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -73,6 +76,12 @@ public class AppType extends BoxedType {
         }
         
         return new AppType(m_con, tys);
+    }
+
+    @Override
+    public ToCSTypeResult toCSType(Map<ICSTypeName, ICSType> map,
+            Set<CSPolyParaType> esc) {
+        throw new Error("This should not happen.");
     }
 
 //    @Override

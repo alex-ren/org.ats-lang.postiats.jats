@@ -1,7 +1,9 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.ITypeName;
-import jats.utfpl.stfpl.csharptype.NamedType;
+import jats.utfpl.stfpl.csharptype.CSPolyParaType;
+import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.csharptype.ICSTypeName;
+import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +26,8 @@ public interface ISType {
     
     public boolean equals(Object right);
     
+    public ToCSTypeResult toCSType(Map<ICSTypeName, ICSType> map, Set<CSPolyParaType> esc);
+    
 //    /*
 //     * If the function returns null, then use the original type 
 //     * instead of the type inside the NamifyResult.
@@ -41,23 +45,22 @@ public interface ISType {
 //    // env is for mapping of Type parameters.
 //    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env);
     
-    static public class NamifyResult {
-        public NamedType m_type;  // (m_type == null) <=> (m_new == null)
-                                  // The current type doesn't deserve a name.
-        
-        public Boolean m_new;  // is newly created or already in the map
-                               // can be null, which indicates invalid.
-                               // (m_new == true) => (m_type != null)
-                               // not correct on the other direction.
-                               
-        public boolean m_escaped;  // is this type closed
-                                   // (m_escaped == true) => (m_new == null)
-        
-        public NamifyResult(NamedType type, Boolean _new, boolean escaped) {
-            m_type = type;
-            m_new = _new;
-            m_escaped = escaped;
-        }
-    }
+//    static public class NamifyResult {
+//        public ICSType m_type;
+//        
+//        public Boolean m_new;  // is newly created or already in the map
+//                               // can be null, which indicates invalid.
+//                               // (m_new == true) => (m_type != null)
+//                               // not correct on the other direction.
+//                               
+////        public boolean m_escaped;  // is this type closed
+////                                   // (m_escaped == true) => (m_new == null)
+//        
+//        public NamifyResult(NamedType type, Boolean _new/*, boolean escaped*/) {
+//            m_type = type;
+//            m_new = _new;
+////            m_escaped = escaped;
+//        }
+//    }
     
 }

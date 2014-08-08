@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.csharptype;
 
-public interface ITypeName {
+public interface ICSTypeName {
     
 
 }

@@ -1,8 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.NamedType;
+import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.staexp.Ifunclo;
-import jats.utfpl.stfpl.stype.ISType.NamifyResult;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +45,19 @@ public class Aux {
         }
     
     }
+    
+    static public class ToCSTypeResult {
+        public ICSType m_type;
+        
+        public Boolean m_new;  // is newly created or already in the map
+                               // can be null, which indicates invalid.
+        
+        public ToCSTypeResult(ICSType type, Boolean _new) {
+            m_type = type;
+            m_new = _new;
+        }
+    }
+
 //    
 //    public static NamedType findType(Map<ITypeName, NamedType> map, ISType type) {
 //        Set<Map.Entry<ITypeName, NamedType>> entry_set = map.entrySet();
