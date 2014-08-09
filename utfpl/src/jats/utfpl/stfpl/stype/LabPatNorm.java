@@ -1,8 +1,11 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
+import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
 import java.util.Map;
+import java.util.Set;
 
 
 public class LabPatNorm implements ILabPat {
@@ -14,6 +17,10 @@ public class LabPatNorm implements ILabPat {
         m_type = type;
     }
 
+    public Ilabel getLabel() {
+        return m_lab;
+    }
+    
     @Override
     public void normalize() {
         m_type.normalize();
@@ -45,6 +52,11 @@ public class LabPatNorm implements ILabPat {
         
         return new LabPatNorm(m_lab, type);
         
+    }
+
+    @Override
+    public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        return m_type.toCSType(track);
     }
 
 //    @Override

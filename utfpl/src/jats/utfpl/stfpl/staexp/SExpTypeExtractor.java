@@ -1,19 +1,17 @@
 package jats.utfpl.stfpl.staexp;
 
-import jats.utfpl.stfpl.LABint;
-import jats.utfpl.stfpl.dynexp.Cd2exp;
 import jats.utfpl.stfpl.stype.AppType;
 import jats.utfpl.stfpl.stype.DataType;
 import jats.utfpl.stfpl.stype.DefaultAppTypeStore;
 import jats.utfpl.stfpl.stype.FunType;
+import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.IntType;
+import jats.utfpl.stfpl.stype.LabPatNorm;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.stfpl.stype.VoidType;
-import jats.utfpl.stfpl.stype.RecType.ILabPat;
-import jats.utfpl.stfpl.stype.RecType.LabPatNorm;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,8 +5,10 @@ import java.util.List;
 import jats.utfpl.stfpl.Ilabel;
 
 public class CSClassType implements ICSNamedType {
+    private ICSTypeName m_name;
     
-    static class LabPatNorm {
+    
+    public static class LabPatNorm {
         private Ilabel m_lab;
         private ICSType m_type;
         
@@ -18,8 +20,14 @@ public class CSClassType implements ICSNamedType {
     
     private List<LabPatNorm> m_members;
     
-    public CSClassType(List<LabPatNorm> members) {
+    public CSClassType(ICSTypeName name, List<LabPatNorm> members) {
+        m_name = name;
         m_members = members;
+    }
+
+    @Override
+    public ICSTypeName getName() {
+        return m_name;
     }
 
 }

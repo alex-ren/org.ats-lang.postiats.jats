@@ -1,8 +1,11 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
-import jats.utfpl.stfpl.csharptype.CSPolyParaType;
-import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.csharptype.Aux;
+import jats.utfpl.stfpl.csharptype.CSClassType;
+import jats.utfpl.stfpl.csharptype.CSTBookingRecord;
+import jats.utfpl.stfpl.csharptype.CSTNameId;
+import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.ICSTypeName;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
@@ -110,20 +113,34 @@ public class RecType extends BoxedType {
     }
 
     @Override
-    public ToCSTypeResult toCSType(Map<ICSTypeName, ICSType> map,
-            Set<CSPolyParaType> esc) {
-        for (ILabPat labtype: m_labtypes) {
-            ToCSTypeResult nret = labtype.toCSType(map, esc);
+    public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        List<CSClassType.LabPatNorm> cslabpats = new ArrayList<CSClassType.LabPatNorm>();
+        List<Ilabel> labs = new ArrayList<Ilabel>();
+        for (ILabPat labpat: m_labtypes) {
+            ToCSTypeResult res = labpat.toCSType(track);
+            CSClassType.LabPatNorm cslabpat = new CSClassType.LabPatNorm(((LabPatNorm)labpat).getLabel(), res.m_type);
             
-            
-            if (nret.m_new) {
-                is_new = true;
-            }
-            if (nret.m_escaped) {
-                is_escaped = true;
-            }
+            labs.add(((LabPatNorm)labpat).getLabel());
+            cslabpats.add(cslabpat);
         }
+        
+        // find an appropriate name
+        CSTBookingRecord booking = Aux.findBookingRec(track, labs);
+        ICSTypeName name = null;
+        if (null == booking) {
+            name = CSTNameId.createTypeId("rec"); 
+            booking = new CSTBookingRecord(name, labs);
+            track.add(booking);            
+        } else {
+            name = booking.m_name;
+        }
+        
+        CSClassType cstype = new CSClassType(name, cslabpats);
+        return new ToCSTypeResult(cstype, null);
     }
+    
+    
+
 
 //    @Override
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {

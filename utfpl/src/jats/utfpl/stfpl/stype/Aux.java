@@ -3,11 +3,8 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
 
 public class Aux {
     public static void matchTypeList(List<ISType> left, List<ISType> right) {

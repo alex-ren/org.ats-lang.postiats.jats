@@ -1,10 +1,9 @@
 package jats.utfpl.stfpl.dynexp3;
 
 
+import jats.utfpl.stfpl.stype.ILabPat;
+import jats.utfpl.stfpl.stype.LabPatNorm;
 import jats.utfpl.stfpl.stype.RecType;
-import jats.utfpl.stfpl.stype.RecType.ILabPat;
-import jats.utfpl.stfpl.stype.RecType.LabPatNorm;
-
 import java.util.ArrayList;
 import java.util.List;
 

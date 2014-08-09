@@ -1,6 +1,8 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.NamedType;
+import jats.utfpl.stfpl.csharptype.CSVoidType;
+import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
+import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
 import java.util.Map;
@@ -37,6 +39,11 @@ public class VoidType extends SortType {
     @Override
     public ISType instantiate(Map<PolyParaType, ISType> map) {
         return this;
+    }
+
+    @Override
+    public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        return new ToCSTypeResult(CSVoidType.c_instance, null);
     }
 
 //    @Override

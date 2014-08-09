@@ -58,7 +58,6 @@ import jats.utfpl.stfpl.dynexp.P2Tignored;
 import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
-import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;

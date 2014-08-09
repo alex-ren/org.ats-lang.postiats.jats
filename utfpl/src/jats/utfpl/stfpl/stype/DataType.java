@@ -1,8 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.CSPolyParaType;
-import jats.utfpl.stfpl.csharptype.ICSType;
-import jats.utfpl.stfpl.csharptype.ICSTypeName;
+import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
@@ -57,8 +55,7 @@ public class DataType extends BoxedType {
     }
 
     @Override
-    public ToCSTypeResult toCSType(Map<ICSTypeName, ICSType> map,
-            Set<CSPolyParaType> esc) {
+    public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         throw new Error("not supported yet");
     }
 

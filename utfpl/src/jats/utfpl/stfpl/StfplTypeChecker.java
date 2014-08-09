@@ -65,8 +65,10 @@ import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.FloatType;
 import jats.utfpl.stfpl.stype.FunType;
+import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.IntType;
+import jats.utfpl.stfpl.stype.LabPatNorm;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.stfpl.stype.RecType;
@@ -74,8 +76,6 @@ import jats.utfpl.stfpl.stype.StringType;
 import jats.utfpl.stfpl.stype.TypeCheckResult;
 import jats.utfpl.stfpl.stype.VarType;
 import jats.utfpl.stfpl.stype.VoidType;
-import jats.utfpl.stfpl.stype.RecType.ILabPat;
-import jats.utfpl.stfpl.stype.RecType.LabPatNorm;
 import jats.utfpl.utils.Log;
 
 
@@ -661,11 +661,11 @@ public class StfplTypeChecker {
     }
 
     private ISType oftype(P2Trec pnode) {
-        List<RecType.ILabPat> labpats = new ArrayList<RecType.ILabPat>();
+        List<ILabPat> labpats = new ArrayList<ILabPat>();
         for (Ilabp2at p2at: pnode.m_labpats) {
             if (p2at instanceof LABP2ATnorm) {
                 LABP2ATnorm patnorm = (LABP2ATnorm)p2at;
-                RecType.ILabPat labpat = oftype_pat(patnorm);
+                ILabPat labpat = oftype_pat(patnorm);
                 labpats.add(labpat);
             } else if (p2at instanceof LABP2ATomit) {
                 throw new Error(p2at + " is not supported.");
@@ -679,10 +679,10 @@ public class StfplTypeChecker {
         return ret;
     }
 
-    private RecType.ILabPat oftype_pat(LABP2ATnorm patnorm) {
+    private ILabPat oftype_pat(LABP2ATnorm patnorm) {
         ISType ty = oftype(patnorm.m_pat);
         
-        RecType.ILabPat ret = new RecType.LabPatNorm(patnorm.m_lab, ty);
+        ILabPat ret = new LabPatNorm(patnorm.m_lab, ty);
         return ret;
     }
 

@@ -1,12 +1,18 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.NamedType;
+import jats.utfpl.stfpl.csharptype.Aux;
+import jats.utfpl.stfpl.csharptype.CSFunType;
+import jats.utfpl.stfpl.csharptype.CSTBookingFun;
+import jats.utfpl.stfpl.csharptype.CSTNameId;
+import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
+import jats.utfpl.stfpl.csharptype.ICSTypeName;
 import jats.utfpl.stfpl.staexp.Ifunclo;
+import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,7 +68,7 @@ public class FunType extends BoxedType {
             return new TypeCheckResult();
         } else if (right0 instanceof FunType) {
             FunType right = (FunType)right0;
-            Aux.matchTypeList(left.m_args, right.m_args);
+            jats.utfpl.stfpl.stype.Aux.matchTypeList(left.m_args, right.m_args);
             m_res.match(right.m_res);
             
             if (-999 == m_npf) {
@@ -96,77 +102,31 @@ public class FunType extends BoxedType {
         return new FunType(m_npf, args, res, m_funclo);
     }
 
-//    @Override
-//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
-//        boolean is_new = false;
-//        boolean is_escaped = false;
-//
-//        ListIterator<ISType> iter = m_args.listIterator();
-//        while (iter.hasNext()) {
-//            ISType type = iter.next();
-//            NamifyResult res = type.namify(map, esc);
-//            if (res.m_escaped) {
-//                is_escaped = true;
-//            } else {
-//                if (true == res.m_new) {
-//                    is_new = true;
-//                }
-//                if (null != res.m_type) {
-//                    iter.set(res.m_type);
-//                }
-//            }
-//        }
-//        
-//        NamifyResult res = m_res.namify(map, esc);
-//        if (res.m_escaped) {
-//            is_escaped = true;
-//        } else {
-//            if (true == res.m_new) {
-//                is_new = true;
-//            }
-//            if (null != res.m_type) {
-//                m_res = res.m_type;
-//            }
-//        }
-//
-//        return Aux.namifySummary(is_escaped, is_new, this, "fun", map);
-//
-//    }
-//
-//    @Override
-//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-//        if (type instanceof NamedType) {
-//            type = ((NamedType)type).getContent();
-//        }
-//        
-//        if (!(type instanceof FunType)) {
-//            return false;
-//        }
-//        
-//        /* compare parameters */
-//        FunType ftype = (FunType)type;
-//        if (m_args.size() != ftype.m_args.size()) {
-//            return false;
-//        }
-//        
-//        ListIterator<ISType> liter = m_args.listIterator();
-//        ListIterator<ISType> riter = ftype.m_args.listIterator();
-//        
-//        while (liter.hasNext()) {
-//            if (!liter.next().equalCSharp(riter.next(), env)) {
-//                return false;
-//            }
-//        }
-//        
-//        /* compare return type */
-//        if (!m_res.equalCSharp(ftype.m_res, env)) {
-//            return false;
-//        }
-//        
-//        return true; 
-//        
-//    }
-    
+    @Override
+    public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        List<ICSType> arg_types = new ArrayList<ICSType>();
+        for (ISType arg_type: m_args) {
+            ToCSTypeResult res = arg_type.toCSType(track);
+            arg_types.add(res.m_type);
+        }
+        
+        ICSType ret_type = m_res.toCSType(track).m_type;
+        
+        // find an appropriate name
+        CSTBookingFun booking = Aux.findBookingFun(track, m_args.size());
+        ICSTypeName name = null;
+        if (null == booking) {
+            name = CSTNameId.createTypeId("fun"); 
+            booking = new CSTBookingFun(name, m_args.size());
+            track.add(booking);   
+        } else {
+            name = booking.m_name;
+        }
+        
+        CSFunType cstype = new CSFunType(name, arg_types, ret_type);;
+        return new ToCSTypeResult(cstype, null);
+    }
+
 }
 
 

@@ -1,8 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.CSPolyParaType;
-import jats.utfpl.stfpl.csharptype.ICSType;
-import jats.utfpl.stfpl.csharptype.ICSTypeName;
+import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
 import java.util.Map;
@@ -98,21 +96,11 @@ public class VarType extends SortType {
         
         return new TypeCheckResult();
     }
-
+    
     @Override
-    public ToCSTypeResult toCSType(Map<ICSTypeName, ICSType> map,
-            Set<CSPolyParaType> esc) {
-        throw new Error("This should not happen.");
+    public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        throw new Error("should not happen");
     }
 
-//	@Override
-//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
-//		throw new Error("should not happen");
-//    }
-//
-//	@Override
-//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-//		throw new Error("should not happen");
-//    }
 
 }
