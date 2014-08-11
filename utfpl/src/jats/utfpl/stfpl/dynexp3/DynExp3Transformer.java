@@ -89,6 +89,9 @@ public class DynExp3Transformer {
         m_d2ecs = d2ecs;
     }
     
+    /*
+     * Remove proof.
+     */
     public List<Cd3ecl> transform() {
 
         Set<Cd3var> scope = new HashSet<Cd3var>();

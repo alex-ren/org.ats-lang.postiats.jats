@@ -1,0 +1,11 @@
+group csharp;
+
+
+
+ICSTypeBooking_st(grecords, gdelegates) ::= <<
+<grecords; separator="\n">
+<gdelegates; separator="\n">
+>>
+
+CSTBookingRecord_st(
+

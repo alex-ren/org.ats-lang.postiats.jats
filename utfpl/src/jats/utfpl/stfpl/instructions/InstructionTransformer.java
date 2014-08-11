@@ -52,6 +52,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+/*
+ * Handle closure.
+ */
 public class InstructionTransformer {
     
     private List<DecGroup> m_decs;  // global declaration
@@ -69,6 +72,23 @@ public class InstructionTransformer {
         m_main_inss = new ArrayList<IStfplInstruction>();
         
     }
+    
+    public List<DecGroup> getDecs() {
+    	return m_decs;
+    }
+    
+    public List<D3Cextcode> getExts() {
+    	return m_exts;
+    }
+    
+    public List<DefFunGroup> getDefs() {
+    	return m_defs;
+    }
+    
+    public List<IStfplInstruction> getMainInss() {
+    	return m_main_inss;
+    }
+    
     
     public void transform_global(List<Cd3ecl> d3ecs) {
         transform(d3ecs, new HashSet<Cd3var>(), m_main_inss);

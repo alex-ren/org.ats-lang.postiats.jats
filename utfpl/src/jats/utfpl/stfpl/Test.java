@@ -1,6 +1,10 @@
 package jats.utfpl.stfpl;
 
+import jats.utfpl.stfpl.csharpins.CSInstructionTransformer;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.dynexp3.Cd3ecl;
+import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
+import jats.utfpl.stfpl.instructions.InstructionTransformer;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -10,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -70,6 +75,19 @@ public class Test {
                     System.out.println("==stfpl's ast code (layer 01) is ==========================");
                     
                     System.out.println(outputUTFPL);
+                    
+                    DynExp3Transformer d3transformer = new DynExp3Transformer(uProg.m_d2ecs);
+                    List<Cd3ecl> d3ecs = d3transformer.transform();
+                    
+                    InstructionTransformer ins_cvt = new InstructionTransformer();
+                    ins_cvt.transform_global(d3ecs);
+                    
+                    CSInstructionTransformer csins_cvt = new CSInstructionTransformer();
+                    csins_cvt.transformProgram(ins_cvt.getDecs(), 
+					                    		ins_cvt.getExts(),
+					                    		ins_cvt.getDefs(), 
+					                    		ins_cvt.getMainInss());
+                    
                     
 //                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
 //                    uProg = processor.removeProof(uProg);
