@@ -1,4 +1,4 @@
-package jats.utfpl.stfpl.instructions;
+package jats.utfpl.stfpl.csharpins;
 
 import jats.utfpl.stfpl.dynexp.Cd2ecl;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
@@ -11,13 +11,13 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-public class Instruction2Csharp {
+public class CopyOfInstruction2Csharp {
 
     private STGroup m_stg;
     
     private List<Cd3ecl> m_decs;
     
-    public  Instruction2Csharp(List<Cd3ecl> decs) {
+    public  CopyOfInstruction2Csharp(List<Cd3ecl> decs) {
         URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/instructions/csharp.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
         m_decs = decs;

@@ -5,9 +5,9 @@ import java.util.List;
 
 public class DecGroup {
     public Edeckind m_knd;
-    public List<IVarName> m_names;
+    public List<SId> m_names;
     
-    public DecGroup(Edeckind knd, List<IVarName> names) {
+    public DecGroup(Edeckind knd, List<SId> names) {
         m_knd = knd;
         m_names = names;
     }

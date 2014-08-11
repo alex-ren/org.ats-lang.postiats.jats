@@ -2,6 +2,7 @@ package jats.utfpl.stfpl.instructions;
 
 import jats.utfpl.stfpl.Cloc_t;
 
+import jats.utfpl.stfpl.dynexp.Edcstkind;
 import jats.utfpl.stfpl.dynexp.Efunkind;
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
 import jats.utfpl.stfpl.dynexp3.Cd3ecl;
@@ -53,7 +54,7 @@ import java.util.Set;
 
 public class InstructionTransformer {
     
-    private List<DecGroup> m_decs;
+    private List<DecGroup> m_decs;  // global declaration
     
     private List<D3Cextcode> m_exts;
     
@@ -225,9 +226,15 @@ public class InstructionTransformer {
 
     private void transform(D3Cdcstdecs node0, Set<Cd3var> env, 
             List<IStfplInstruction> inss) {
-        List<IVarName> names = new ArrayList<IVarName>();
+        List<SId> names = new ArrayList<SId>();
         for (Cd3cst cst: node0.m_d3cst) {
-            names.add(VNameCst.fromCd3cst(cst));
+        	SId.Category cat = null;
+        	if (Edcstkind.DCK_val == node0.m_dck) {
+        		cat = SId.Category.eGloValue;
+        	} else {
+        		cat = SId.Category.eUserFun;
+        	}
+            names.add(SId.fromCd3cst(cst, cat));
         }
         
         Edeckind knd = Edeckind.fromEcstkind(node0.m_dck);
@@ -236,10 +243,10 @@ public class InstructionTransformer {
 
     private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, 
             List<IStfplInstruction> inss) {
-        List<IVarName> names = new ArrayList<IVarName>();
+        List<SId> names = new ArrayList<SId>();
         List<DefFun> funs = new ArrayList<DefFun>();
         for (Cf3undec f3undec: node0.m_f3ds) {
-            VNameVar name = VNameVar.fromCd3var(f3undec.m_var);
+            SId name = SId.fromCd3var(f3undec.m_var, SId.Category.eUserFun);
             names.add(name);
             DefFun fundef = transform(f3undec, env, inss);
             funs.add(fundef);
@@ -375,8 +382,8 @@ public class InstructionTransformer {
         m_defs.add(fun_group);
 
         // add to global declaration
-        List<IVarName> name_lst = new ArrayList<IVarName>();
-        name_lst.add(name.m_name);
+        List<SId> name_lst = new ArrayList<SId>();
+        name_lst.add(name);
         Edeckind dec_knd = Edeckind.fromEfunkind(fun_knd);
         DecGroup protos = new DecGroup(dec_knd, name_lst);
         m_decs.add(protos);
