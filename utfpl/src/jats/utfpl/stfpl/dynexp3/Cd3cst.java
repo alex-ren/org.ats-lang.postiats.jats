@@ -35,7 +35,7 @@ public class Cd3cst {
     
     @Override
     public String toString() {
-        return m_symbol.toString();
+        return m_symbol.toString() + "_" + m_stamp.getData();
     }
 
 }

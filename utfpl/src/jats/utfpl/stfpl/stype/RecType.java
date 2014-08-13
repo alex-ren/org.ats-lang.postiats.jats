@@ -21,23 +21,24 @@ public class RecType extends BoxedType {
     private List<ILabPat> m_labtypes;
     private int m_npf;  // Number of proofs in the pattern, if it is >= 0.
                        // (proof always appears starting from beginning.)
-    private int m_knd;  // 0: flat, 1: boxed, -1: uninitialized
+    private int m_knd;  
     
     public int getKind() {
         return m_knd;
     }
     
+    // knd: 0: flat, 1: boxed, -1: unset yet
     public RecType(List<ILabPat> labtypes, int npf, int knd) {
         m_labtypes = labtypes;
         m_npf = npf;
         m_knd = knd;
     }
     
-    public RecType(List<ILabPat> labtypes, int npf) {
-        m_labtypes = labtypes;
-        m_npf = npf;
-        m_knd = -1;
-    }
+//    public RecType(List<ILabPat> labtypes, int npf) {
+//        m_labtypes = labtypes;
+//        m_npf = npf;
+//        m_knd = -1;
+//    }
 
     @Override
     public RecType normalize() {
@@ -108,7 +109,7 @@ public class RecType extends BoxedType {
         while (iter.hasNext()) {
             tys.add(iter.next());
         }
-        RecType ret = new RecType(tys, 0);
+        RecType ret = new RecType(tys, 0, m_knd);
         return ret;
     }
 

@@ -33,4 +33,9 @@ public class VNameCst implements IVarName {
     public ISType getType() {
         return m_cst.m_stype;
     }
+
+    @Override
+    public String toStringCS() {
+        return m_cst.toString();
+    }
 }

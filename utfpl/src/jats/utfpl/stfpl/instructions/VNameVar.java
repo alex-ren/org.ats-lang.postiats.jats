@@ -33,5 +33,10 @@ public class VNameVar implements IVarName {
     public ISType getType() {
         return m_var.m_stype;
     }
+
+    @Override
+    public String toStringCS() {
+        return m_var.toString();
+    }
     
 }

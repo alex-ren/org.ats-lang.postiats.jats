@@ -1,11 +1,11 @@
 package jats.utfpl.stfpl.csharpins;
 
+import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.csharptype.CSFunType;
 import jats.utfpl.stfpl.csharptype.CSTBookingFun;
 import jats.utfpl.stfpl.csharptype.CSTBookingRecord;
+import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
-import jats.utfpl.stfpl.dynexp.Cd2ecl;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
-import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 
 import java.net.URL;
@@ -42,16 +42,63 @@ public class CSharpPrinter {
     }
     
     public String printCSharp() {
+        // program_st(types, funs, main) ::= <<
+        ST st_prog = m_stg.getInstanceOf("program_st");
+        
         ST st_booking = printBooking(m_track);
+        st_prog.add("types", st_booking);
         
+        printFunGroups(st_prog, m_defs);
         
-        return st_booking.render();
+        return st_prog.render();
     }
     
 
+    private ST printFunGroups(ST st_prog, List<CSDefFunGroup> fun_grps) {
+        for (CSDefFunGroup fun_grp: fun_grps) {
+            for (CSDefFun fun_def: fun_grp.m_funs) {
+                st_prog.add("funs", printFunDef(fun_def));
+            }
+        }
+        return st_prog;
+    }
+
+    private ST printFunDef(CSDefFun def) {
+        // CSDefFun_st(name, paras, ret_type, inss) ::= <<
+        ST st_fun = m_stg.getInstanceOf("CSDefFun_st");
+        st_fun.add("name", def.m_name.toStringCS());
+        
+        CSFunType fun_ty = (CSFunType)def.m_name.getType();
+        
+        for (CSVar para: def.m_paras) {
+            // fun_para_st(name, type) ::= <<
+            ST st_para = m_stg.getInstanceOf("fun_para_st");
+            st_para.add("name", para.toString());
+            st_para.add("type", para.getType().toSt(m_stg, 0));
+            st_fun.add("paras", st_para);
+        }
+        
+        if (def.getType().isClosure()) {
+            ST st_cloenv = m_stg.getInstanceOf("closure_env_para_t");
+            st_fun.add("paras", st_cloenv);
+        }
+        
+        ICSType ret_ty = fun_ty.getRetType();
+//        System.out.println("=====ret_ty is " + ret_ty);
+        st_fun.add("ret_type", ret_ty.toSt(m_stg, 0));
+
+        for (ICSInstruction ins: def.m_inss) {
+            st_fun.add("inss", ins.toST(m_stg));
+        }
+        
+        
+        
+        return st_fun;
+    }
+
     private ST printBooking(Set<ICSTypeBooking> bookings) {
     	// ICSTypeBooking_st(grecords, gdelegates) ::= <<
-    	ST st = m_stg.getInstanceOf("booking_st");
+    	ST st = m_stg.getInstanceOf("ICSTypeBooking_st");
 	    for (ICSTypeBooking b: bookings) {
 	    	if (b instanceof CSTBookingRecord) {
 	    		ST stb = print((CSTBookingRecord)b);
@@ -63,11 +110,77 @@ public class CSharpPrinter {
 	    		throw new Error(b + " is not supported");
 	    	}
 	    }
+	    
+	    return st;
     }
 
-	private ST print(CSTBookingRecord b) {
-	    // TODO Auto-generated method stub
-	    return null;
+	private ST print(CSTBookingFun b) {
+	    // CSTBookingFun_st(name, type_paras, paras, ret_para) ::= <<
+	    ST st = m_stg.getInstanceOf("CSTBookingFun_st");
+        st.add("name", b.m_name.toStringCS());
+        int i = 1;
+        while (i <= b.m_para_size) {
+            String para_type = "X" + i;
+            st.add("type_paras", para_type);
+            String para = para_type + " m" + i;
+            st.add("paras", para);
+            ++i;
+        }
+        
+        String ret_para = "Y";
+        st.add("type_paras", ret_para);
+        st.add("ret_para", ret_para);
+        
+        return st;
+    }
+
+    private ST print(CSTBookingRecord b) {
+	    // CSTBookingRecord_st(name, type_paras, members, init_paras, init_members) ::= <<
+	    ST st = m_stg.getInstanceOf("CSTBookingRecord_st");
+	    st.add("name", b.m_name.toStringCS());
+	    int i = 1;
+	    for (Ilabel label: b.m_labs) {
+	        String type_para = "T" + i;
+	        st.add("type_paras", type_para);
+	        
+	        // rec_member_st(type, name) ::= <<
+	        ST st_lab = m_stg.getInstanceOf("rec_member_st");
+	        String Ti = "T" + i;
+	        st_lab.add("type", Ti);
+	        st_lab.add("name", label);
+	        
+	        st.add("members", st_lab);
+	        
+	        String label0 = label + "0";
+	        ST st_init_para = m_stg.getInstanceOf("fun_para_st");
+	        st_init_para.add("name", label0);
+	        st_init_para.add("type", Ti);
+	        st.add("init_paras", st_init_para);
+	        
+	        // assignment_st(holder, value) ::= <<
+	        ST st_ass = m_stg.getInstanceOf("assignment_st");
+	        st_ass.add("holder", label);
+	        st_ass.add("value", label0);
+	        st.add("init_members", st_ass);
+
+	        ++i;
+	    }
+	    return st;
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

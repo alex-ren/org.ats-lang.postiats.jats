@@ -20,4 +20,9 @@ public class FUNCLOclo implements Ifunclo {
         return m_knd == ((FUNCLOclo)o).m_knd;
     }
 
+    @Override
+    public boolean isClosure() {
+        return true;
+    }
+
 }

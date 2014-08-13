@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
-import jats.utfpl.stfpl.csharptype.ObjectType;
+import jats.utfpl.stfpl.csharptype.CSObjectType;
 import jats.utfpl.stfpl.staexp.Cs2var;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
@@ -79,7 +79,7 @@ public class PolyParaType extends BoxedType {
 
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
-        return new ToCSTypeResult(ObjectType.c_instance, null);
+        return new ToCSTypeResult(CSObjectType.c_instance, null);
     }
 
 //    @Override

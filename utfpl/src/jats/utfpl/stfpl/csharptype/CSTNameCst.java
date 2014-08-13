@@ -27,4 +27,9 @@ public class CSTNameCst implements ICSTypeName {
         m_cst = cst;
     }
 
+    public String toStringCS() {
+        return m_cst.toString();
+        
+    }
+
 }

@@ -33,4 +33,9 @@ public class VNameClosurePara implements IVarName {
         return m_var.m_stype;
     }
 
+    @Override
+    public String toStringCS() {
+        return m_var.toString();
+    }
+
 }

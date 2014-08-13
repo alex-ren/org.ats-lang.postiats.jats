@@ -22,5 +22,10 @@ public class Cd3var {
         m_stamp = stamp;
         m_stype = stype;
     }
+    
+    @Override
+    public String toString() {
+        return m_sym.toString() + "_" + m_stamp.getData();
+    }
 
 }

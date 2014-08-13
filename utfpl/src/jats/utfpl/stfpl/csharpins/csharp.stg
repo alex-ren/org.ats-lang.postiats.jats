@@ -1,11 +1,187 @@
 group csharp;
 
 
+program_st(types, funs, main) ::= <<
+<types; separator="\n">
+
+class Program {
+    <funs; separator="\n">
+    <main>
+}
+>>
+
 
 ICSTypeBooking_st(grecords, gdelegates) ::= <<
 <grecords; separator="\n">
+
 <gdelegates; separator="\n">
 >>
 
-CSTBookingRecord_st(
+CSTBookingRecord_st(name, type_paras, members, init_paras, init_members) ::= <<
+class <name>\<<type_paras; separator=", ">\> {
+    <members; separator="\n">
+    
+    public <name>(<init_paras; separator=", ">) {
+        <init_members; separator="\n">
+    }
+};
+>>
+
+rec_member_st(type, name) ::= <<
+public <type> <name>;
+>>
+
+CSTBookingFun_st(name, type_paras, paras, ret_para) ::= <<
+delegate <ret_para> <name>\<<type_paras;separator=", ">\>(<paras; separator=", ">);
+>>
+
+CSDefFun_st(name, paras, ret_type, inss) ::= <<
+static public <ret_type> <name>(<paras; separator=", ">) {
+    <inss; separator="\n">
+}
+>>
+
+closure_env_para_t () ::= <<
+xxxxxxxx
+>>
+
+fun_para_st(name, type) ::= <<
+<type> <name>
+>>
+
+assignment_st(holder, value) ::= <<
+<holder> = <value>;
+>>
+
+
+// ======================
+
+CSInsCall_st(name, type, call) ::= <<
+<if(type)><type> <name> = <endif><call>;
+>>
+
+CSInsCall_ret_st(name, type, call) ::= <<
+return <call>;
+>>
+
+CSInsCall_call_fun_st(fun_name, fun_type, args) ::= <<
+fun: <if(fun_type)>((<fun_type>)<fun_name>)<else><fun_name><endif>(<args; separator=", ">)
+>>
+
+// Caller takes cares of the env argument.
+CSInsCall_call_clo_st(fun_name, fun_type, args) ::= <<
+clo: <if(fun_type)>((<fun_type>)<closure_func_st(fun_name)>)<else><fun_name><endif>(<args; separator=", ">)
+>>
+
+closure_func_st(fun_name) ::= <<
+((<closure_type_st()>)<fun_name>).func
+>>
+
+closure_env_st(fun_name) ::= <<
+((<closure_type_st()>)<fun_name>).env
+>>
+
+fun_clo_env_st (clo_name) ::= <<
+yyyyyyy
+>>
+
+closure_type_st() ::= <<
+Closure
+>>
+
+CSInsClosure_st() ::= <<
+CSInsClosure_st
+>>
+
+CSInsCond_st(type, name, cond, btrue, bfalse) ::= <<
+<type> <name>;
+if (<cond>) {
+    <btrue; separator="\n">
+}<if(bfalse)> else {
+    <bfalse; separator="\n">
+}<endif>
+>>
+
+CSInsCond_ret_st(type, name, cond, btrue, bfalse) ::= <<
+if (<cond>) {
+    <btrue; separator="\n">
+}<if(bfalse)> else {
+    <bfalse; separator="\n">
+}<endif>
+>>
+
+CSInsMove_st(type, name, v) ::= <<
+<type> <name> = <v>;
+>>
+
+CSInsPatLabDecompose_st(type, name, tuple_type, tuple_ele, member) ::= <<
+<type> <name> = ((<tuple_type>)<tuple_ele>).<member>;
+>>
+
+CSInsPatLabDecompose_ret_st(type, name, tuple_type, tuple_ele, member) ::= <<
+return ((<tuple_type>)<tuple_ele>).<member>;
+>>
+
+CSInsTuple_st(name, type, values) ::= <<
+<type> <name> = new <type>(<values; separator=", ">);
+>>
+
+CSInsTuple_ret_st(name, type, values) ::= <<
+return new <type>(<values; separator=", ">);
+>>
+
+ret_st(v) ::= <<
+return<if(v)> <v><endif>;
+>>
+
+// ======================
+CSBoolType_st() ::= <<
+bool
+>>
+
+CSCharType_st() ::= <<
+char
+>>
+
+CSClassType_st(name, type_args) ::= <<
+<name>\<<type_args; separator=", ">\>
+>>
+
+CSFloatType_st() ::= <<
+double
+>>
+
+CSFunType_st (name, args) ::= <<
+<name>\<<args; separator=", ">\>
+>>
+
+CSIntType_st() ::= <<
+int
+>>
+
+CSObjectType_st() ::= <<
+Object
+>>
+
+CSStringType_st() ::= <<
+String
+>>
+
+CSVoidType_st() ::= <<
+void
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

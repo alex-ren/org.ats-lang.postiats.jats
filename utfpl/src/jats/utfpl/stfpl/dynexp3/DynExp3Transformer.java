@@ -257,7 +257,7 @@ public class DynExp3Transformer {
 
     private Cf3undec transform(Cf2undec f2un, Set<Cd3var> needed) {
         Cd3var d3var = transform(f2un.f2undec_var, f2un.f2undec_loc);
-        Cd3exp d3exp = transform(f2un.f2undec_def, null, needed, null);
+        Cd3exp d3exp = transform(f2un.f2undec_def, null, needed, new ArrayList<List<PolyParaType>>());
         D3ElamDyn d3elam = (D3ElamDyn)(d3exp.m_node);
         
         // Just curious whether this would be triggered. 
@@ -388,24 +388,28 @@ public class DynExp3Transformer {
     }
 
 
+    /*
+     * Currently I treat D2Elist as a tuple.
+     */
     private Cd3exp transform(D2Elist node0, Cloc_t loc, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        throw new Error("check this");
-//        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
-//        int i = node0.m_npf;
-//        if (i < 0) {
-//            i = 0;
-//        }
-//        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
-//        while (iter.hasNext()) {
-//            Cd3exp d3e = transform(iter.next(), scope, needed, null);
-//            d3es.add(d3e);
-//        }
-//        
-//        D3Etup node = new D3Etup(1, d3es, node0.getSType().removeProof());  // todo
-//        
-//        Cd3exp d3exp = new Cd3exp(loc, node);
-//        return d3exp;
+        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
+        int i = node0.m_npf;
+        if (i < 0) {
+            i = 0;
+        }
+        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+        while (iter.hasNext()) {
+            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
+            d3es.add(d3e);
+        }
+        
+        RecType recType = node0.getSType().removeProof();
+        
+        D3Etup node = new D3Etup(recType.getKind(), d3es, recType);  // todo
+        
+        Cd3exp d3exp = new Cd3exp(loc, node);
+        return d3exp;
     }
 
 
@@ -421,7 +425,7 @@ public class DynExp3Transformer {
         }
         ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
         while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, null);
+            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
             d3es.add(d3e);
         }
         
@@ -552,10 +556,10 @@ public class DynExp3Transformer {
         needed.addAll(cur_needed);
         
         FunType fun_type = node0.getSType();
-        if (null != fun_type.m_funclo) {
+        if (null != fun_type.getFunClo()) {
             Log.log4j.warn("funclo has been set already.");
         } else {
-            fun_type.m_funclo = funclo;
+            fun_type.updateFunClo(funclo);
         }
         
         ISType ty = fun_type;

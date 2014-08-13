@@ -60,6 +60,7 @@ import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.stfpl.staexp.Cs2var;
+import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 import jats.utfpl.stfpl.stype.BoolType;
@@ -171,6 +172,7 @@ public class StfplTypeChecker {
     }
 
 	private void typecheck_fun_body(Cf2undec def) {
+	    
 	    ISType type = def.f2undec_var.getSType();
 	    FunType funTy = null;
 	    if (type instanceof PolyType) {
@@ -277,6 +279,11 @@ public class StfplTypeChecker {
 
     }
 
+    /*
+     * Currently, I always treat D2Elist as a tuple. I
+     * repy on programmers to write the program in a clearer
+     * style.
+     */
     private ISType oftype(D2Elist node, Cloc_t loc) {
         List<ILabPat> labPatLst = new ArrayList<ILabPat>();
         
@@ -288,7 +295,8 @@ public class StfplTypeChecker {
             labPatLst.add(labexp);
             ++i;
         }
-        RecType ret = new RecType(labPatLst, node.m_npf);
+        
+        RecType ret = new RecType(labPatLst, node.m_npf, -1);
         node.updateType(ret);
         return ret;
     }
@@ -589,6 +597,10 @@ public class StfplTypeChecker {
             Ifunclo funclo = getClosureInformation(lamDyn.m_d2exp);
             
             FunType funTy = new FunType(lamDyn.m_npf, paraTyLst, retTy, funclo);
+            
+            if (lamDyn.m_d2exp.d2exp_node instanceof D2EannFunclo) {
+                ((D2EannFunclo)lamDyn.m_d2exp.d2exp_node).updateSType(funTy);
+            }
             lamDyn.updateSType(funTy);
             return funTy;
             
@@ -828,7 +840,7 @@ public class StfplTypeChecker {
     }
 
     private void normalizeType(D2Evar node, Cloc_t loc) {
-        node.m_d2var.normalizeType();
+        node.normalizeType();
     }
 
     private void normalizeType(D2Elist node, Cloc_t loc) {

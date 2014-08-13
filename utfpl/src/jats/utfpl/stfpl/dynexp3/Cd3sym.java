@@ -12,4 +12,9 @@ public class Cd3sym {
         m_name = name;
         m_stype = stype;
     }
+    
+    @Override
+    public String toString() {
+        return m_name.toString();
+    }
 }

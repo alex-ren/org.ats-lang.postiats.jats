@@ -20,4 +20,8 @@ public class LABsym implements Ilabel {
         }
     }
 
+    @Override
+    public String toString() {
+        return m_sym.toString();
+    }
 }

@@ -97,4 +97,32 @@ public class SId implements IValPrim{
         return m_name.getType();
     }
 
+    public String toStringCS() {
+        return m_name.toStringCS();
+    }
+
+    public boolean isRet() {
+        return Category.eRetHolder == m_cat;
+    }
+    
+    public boolean isUserFun() {
+        return Category.eUserFun == m_cat;
+    }
+    
+    public boolean isConstant() {
+        return Category.eConstant == m_cat;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

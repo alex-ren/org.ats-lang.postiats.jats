@@ -17,4 +17,9 @@ public class CSAtomValue implements ICSValPrim {
 		return m_type;
 	}
 
+    @Override
+    public String toStringCS() {
+        return m_v.toString();
+    }
+
 }

@@ -1,5 +1,5 @@
 package jats.utfpl.stfpl.csharptype;
 
-public class CSEleType implements ICSType {
+public abstract class CSEleType implements ICSType {
 
 }

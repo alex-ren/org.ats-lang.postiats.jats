@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.csharpins;
 
 import jats.utfpl.stfpl.Cloc_t;
+import jats.utfpl.stfpl.csharptype.CSFunType;
 
 
 import java.util.List;
@@ -27,5 +28,9 @@ public class CSDefFun {
         m_inss = inss;
         m_env = env;
                 
+    }
+    
+    CSFunType getType() {
+        return (CSFunType)m_name.getType();
     }
 }

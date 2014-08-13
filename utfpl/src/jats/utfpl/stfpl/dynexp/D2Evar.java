@@ -17,7 +17,7 @@ public class D2Evar implements Id2exp_node {
 
     @Override
     public void normalizeType() {
-        throw new Error("check this");
+        m_d2var.normalizeType();
     }
 
 }

@@ -7,6 +7,7 @@ import jats.utfpl.stfpl.csharptype.CSTNameId;
 import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.ICSTypeName;
+import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
@@ -23,12 +24,21 @@ public class FunType extends BoxedType {
     public int m_npf;
     public List<ISType> m_args;
     public ISType m_res;
-    public Ifunclo m_funclo;
+    private Ifunclo m_funclo;
+    
+    public Ifunclo getFunClo() {
+        return m_funclo;
+    }
+    
+    public void updateFunClo(Ifunclo clo) {
+        m_funclo = clo;
+    }
     
     public FunType(int npf, List<ISType> args, ISType res, Ifunclo funclo) {
         m_npf = npf;
         m_args = args;
         m_res = res;
+
         m_funclo = funclo;
     }
     
@@ -112,18 +122,30 @@ public class FunType extends BoxedType {
         
         ICSType ret_type = m_res.toCSType(track).m_type;
         
+        Ifunclo clo = null;
+        if (null == m_funclo) {
+            // no annotation, treat it as cloref
+            clo = new FUNCLOclo(-1);
+        } else {
+            clo = m_funclo;
+        }
+
+        int arg_size = m_args.size();
+        if (clo.isClosure()) {
+            ++arg_size;
+        }
         // find an appropriate name
-        CSTBookingFun booking = Aux.findBookingFun(track, m_args.size());
+        CSTBookingFun booking = Aux.findBookingFun(track, arg_size);
         ICSTypeName name = null;
         if (null == booking) {
             name = CSTNameId.createTypeId("fun"); 
-            booking = new CSTBookingFun(name, m_args.size());
+            booking = new CSTBookingFun(name, arg_size);
             track.add(booking);   
         } else {
             name = booking.m_name;
         }
         
-        CSFunType cstype = new CSFunType(name, arg_types, ret_type);;
+        CSFunType cstype = new CSFunType(name, arg_types, ret_type, clo);;
         return new ToCSTypeResult(cstype, null);
     }
 

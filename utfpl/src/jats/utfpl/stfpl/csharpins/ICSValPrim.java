@@ -4,5 +4,7 @@ import jats.utfpl.stfpl.csharptype.ICSType;
 
 public interface ICSValPrim {
 	public ICSType getType();
+	
+	public String toStringCS();
 
 }

@@ -1,0 +1,57 @@
+#include {
+  #include {
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+    D2Cnone
+  }
+}
+
+#include {
+  D2Cnone
+}
+
+fun foo1_3420 = lam (P2Tann<x_3421:_:t@ype>, P2Tann<y_3422:_:t@ype>) = 
+  <D2EannSeff>(( | 1, ( | 2, 3)):_:t@ype)
+
+fun foo1_3423 = lam (P2Tann<x_3424:_:t@ype>, P2Tann<y_3425:_:t@ype>) = 
+  <D2EannSeff>(let
+    val P2Trec<LABP2ATnorm(_), LABP2ATnorm(x_3426)> = x_3424
+    val P2Trec<LABP2ATnorm(a_3427), LABP2ATnorm(b_3428)> = x_3426
+  in
+    a_3427
+  end:_:t@ype)
+
+implement main_void_0_54: = lam () = 
+  <fun>
+  <D2EannSeff>(let
+    val () = D2Esym<print> ("Helloworld")
+  in
+    ()
+  end:_:t@ype)

@@ -10,6 +10,7 @@ public class FilenameUtils {
 	static public final String cUTFPL = "utfpl";
 //	static public final String cMUTFPL = "mats";
 	static public final String cINS = "ins";
+	static public final String cCSHARP = "cs";
 	
 	
 	private static String removeExtension2String(File path) {

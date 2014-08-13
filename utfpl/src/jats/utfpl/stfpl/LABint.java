@@ -18,5 +18,10 @@ public class LABint implements Ilabel {
             return false;
         }
     }
+    
+    @Override
+    public String toString() {
+        return "m" + m;
+    }
 
 }

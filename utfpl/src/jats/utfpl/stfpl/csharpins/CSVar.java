@@ -11,7 +11,10 @@ public class CSVar {
 	private ICSType m_type;
 	
 	private static Map<Cd3var, CSVar> s_map = new HashMap<Cd3var, CSVar>();
-	
+
+	public ICSType getType() {
+	    return m_type;
+	}
 
 	public static CSVar fromCd3var(Cd3var var, ICSType type) {
 		CSVar csvar = s_map.get(var);
@@ -29,4 +32,8 @@ public class CSVar {
 		m_type = type;
 	}
 
+	@Override
+	public String toString() {
+	    return m_var.toString();
+	}
 }

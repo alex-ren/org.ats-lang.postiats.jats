@@ -23,15 +23,11 @@ import jats.utfpl.stfpl.instructions.InsPatLabDecompose;
 import jats.utfpl.stfpl.instructions.InsTuple;
 import jats.utfpl.stfpl.instructions.SId;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 public class CSInstructionTransformer {
     private List<CSDecGroup> m_decs;  // global declaration
@@ -40,6 +36,23 @@ public class CSInstructionTransformer {
     private List<ICSInstruction> m_main_inss;  // global instructions
     private Set<ICSTypeBooking> m_track;  // type booking info
 
+    public List<CSDecGroup> getDecs() {
+        return m_decs;
+    }
+    
+    public List<D3Cextcode> getExts() {
+        return m_exts;
+    }
+    public List<CSDefFunGroup> getDefs() {
+        return m_defs;
+    }
+    public List<ICSInstruction> getMain_inss() {
+        return m_main_inss;
+    }
+    public Set<ICSTypeBooking> getTrack() {
+        return m_track;
+    }
+    
     public CSInstructionTransformer() {
         m_decs = new ArrayList<CSDecGroup>();
         m_exts = null;
@@ -187,6 +200,7 @@ public class CSInstructionTransformer {
     }
 	
 	private CSSId StfplVP2CS(SId sid) {
+//	    System.out.println("sid is " + sid.toStringCS());
 		return CSSId.fromSId(sid,
 				sid.getType().toCSType(m_track).m_type);
 	}

@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.stype;
 
-import jats.utfpl.stfpl.csharptype.CSFloatType;
+import jats.utfpl.stfpl.csharptype.CSIntType;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
@@ -13,7 +13,7 @@ public class IntType extends EleType {
     }
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
-        return new ToCSTypeResult(CSFloatType.c_instance, null);
+        return new ToCSTypeResult(CSIntType.c_instance, null);
     }
 
 }

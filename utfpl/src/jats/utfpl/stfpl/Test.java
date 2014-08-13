@@ -1,6 +1,8 @@
 package jats.utfpl.stfpl;
 
+import jats.utfpl.csps.CSPSPrinter;
 import jats.utfpl.stfpl.csharpins.CSInstructionTransformer;
+import jats.utfpl.stfpl.csharpins.CSharpPrinter;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
@@ -40,7 +42,11 @@ public class Test {
 //                "src/jats/utfpl/utfpl/test/test04.dats"
 //                "src/jats/utfpl/stfpl/test/test05.dats"
 //                "src/jats/utfpl/stfpl/test/test06.dats"
-                "src/jats/utfpl/stfpl/test/test07.dats"
+//                "src/jats/utfpl/stfpl/test/test07.dats"
+//                "src/jats/utfpl/stfpl/test/test_helloworld.dats",
+//                "src/jats/utfpl/stfpl/csharpins/test/01_tuple_op.dats"
+//                "src/jats/utfpl/stfpl/csharpins/test/02_if_branch.dats"
+                "src/jats/utfpl/stfpl/csharpins/test/03_closure.dats"
 
         };
 
@@ -73,8 +79,11 @@ public class Test {
                     String outputUTFPL = uPrinter.print(uProg);
                     
                     System.out.println("==stfpl's ast code (layer 01) is ==========================");
-                    
                     System.out.println(outputUTFPL);
+                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
+                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
+                    bwUTFPL.write(outputUTFPL);
+                    bwUTFPL.close();
                     
                     DynExp3Transformer d3transformer = new DynExp3Transformer(uProg.m_d2ecs);
                     List<Cd3ecl> d3ecs = d3transformer.transform();
@@ -88,6 +97,20 @@ public class Test {
 					                    		ins_cvt.getDefs(), 
 					                    		ins_cvt.getMainInss());
                     
+                    CSharpPrinter csprinter = new CSharpPrinter(
+                                              csins_cvt.getDecs(),
+                                              csins_cvt.getExts(),
+                                              csins_cvt.getDefs(),
+                                              csins_cvt.getMain_inss(),
+                                              csins_cvt.getTrack());
+                    
+                    String cs_output = csprinter.printCSharp();
+                    System.out.println("==csharp code is ==========================");
+                    System.out.println(cs_output);
+                    FileWriter cs_filew = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cCSHARP));
+                    BufferedWriter cs_bw = new BufferedWriter(cs_filew);
+                    cs_bw.write(cs_output);
+                    cs_bw.close();
                     
 //                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
 //                    uProg = processor.removeProof(uProg);
@@ -97,10 +120,7 @@ public class Test {
 //                    
 //                    System.out.println(outputUTFPL);
                     
-                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
-                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
-                    bwUTFPL.write(outputUTFPL);
-                    bwUTFPL.close();
+
             	} else {
             		String line;
             		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));

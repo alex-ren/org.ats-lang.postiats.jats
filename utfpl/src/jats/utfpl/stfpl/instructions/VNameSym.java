@@ -15,4 +15,9 @@ public class VNameSym implements IVarName {
         return m_sym.m_stype;
     }
 
+    @Override
+    public String toStringCS() {
+        return m_sym.toString();
+    }
+
 }

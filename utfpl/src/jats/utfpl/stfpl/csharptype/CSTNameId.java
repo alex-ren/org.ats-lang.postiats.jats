@@ -16,4 +16,9 @@ public class CSTNameId implements ICSTypeName {
         m_symbol = symbol;
     }
 
+    @Override
+    public String toStringCS() {
+        return m_symbol + m_stamp + "_id";
+    }
+
 }

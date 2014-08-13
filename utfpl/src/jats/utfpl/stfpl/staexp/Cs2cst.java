@@ -25,7 +25,7 @@ public class Cs2cst {
     }
     
     public String toString() {
-        return "Cs2cst: " + m_symbol.toString();
+        return m_symbol.toString() + m_stamp.getData();
     }
     
 }

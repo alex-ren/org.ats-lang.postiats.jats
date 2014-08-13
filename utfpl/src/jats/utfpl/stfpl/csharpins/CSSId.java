@@ -33,4 +33,8 @@ public class CSSId implements ICSValPrim {
 	    return m_type;
     }
 	
+	public String toStringCS() {
+	    return m_sid.toStringCS();
+	}
+	
 }

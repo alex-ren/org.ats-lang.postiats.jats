@@ -142,6 +142,7 @@ public class InstructionTransformer {
             if (node0 instanceof P3Tvar) {
                 holder = SId.fromCd3var(((P3Tvar)node0).m_var, Category.eLocalVar);
             }
+//            System.out.println("P3Tvar is " + ((P3Tvar)node0).m_var.toString() + " holder is " + holder);
             transform(valdec.m_def, env, inss, holder);
             return;
         } else {
@@ -173,25 +174,30 @@ public class InstructionTransformer {
 
     private void transform(P3Trec node, IValPrim vp,
             List<IStfplInstruction> inss) {
-        for (LABP3ATnorm lab_pat: node.m_labpats) {
+        for (LABP3ATnorm lab_pat : node.m_labpats) {
             Ip3at_node node0 = lab_pat.m_pat.m_node;
-            if (node0 instanceof P3Tany
-                    || node0 instanceof P3Tempty
-                    || node0 instanceof P3Tvar) {
-                    SId holder = null;
-                    if (node0 instanceof P3Tvar) {
-                        holder = SId.fromCd3var(((P3Tvar)node0).m_var, Category.eLocalVar);
-                    }
-                    InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab, holder, vp);
+            if (node0 instanceof P3Tany 
+                || node0 instanceof P3Tempty
+                || node0 instanceof P3Tvar) {
+                SId holder = null;
+                if (node0 instanceof P3Tvar) {
+                    holder = SId.fromCd3var(((P3Tvar) node0).m_var,
+                            Category.eLocalVar);
+                    InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab,
+                            holder, vp);
                     inss.add(ins);
-                    return;
-                } else {
-                    SId holder = SId.createLocalVar("pat", lab_pat.m_pat.m_node.getType());
-                    InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab, holder, vp);
-                    inss.add(ins);
-                    transform(lab_pat.m_pat, holder, inss);
                     return;
                 }
+
+            } else {
+                SId holder = SId.createLocalVar("pat",
+                        lab_pat.m_pat.m_node.getType());
+                InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab,
+                        holder, vp);
+                inss.add(ins);
+                transform(lab_pat.m_pat, holder, inss);
+                return;
+            }
         }
     }
 
@@ -330,11 +336,9 @@ public class InstructionTransformer {
        } else if (node0 instanceof D3Eempty) {
            return transform((D3Eempty)node0, env, inss, holder);
        } else if (node0 instanceof D3Ef0loat) {
-           D3Ef0loat node = (D3Ef0loat)node0;
-           return new AtomValue(node.m_ty, node.m_f0loat);
+           return transform((D3Ef0loat)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Ei0nt) {
-           D3Ei0nt node = (D3Ei0nt)node0;
-           return new AtomValue(node.m_ty, node.m_i0nt);
+           return transform((D3Ei0nt)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Eifopt) {
            return transform((D3Eifopt)node0, env, inss, holder);
        } else if (node0 instanceof D3ElamDyn) {
@@ -342,8 +346,7 @@ public class InstructionTransformer {
        } else if (node0 instanceof D3Elet) {
            return transform((D3Elet)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Es0tring) {
-           D3Es0tring node = (D3Es0tring)node0;
-           return new AtomValue(node.m_ty, node.m_s0tring);
+           return transform((D3Es0tring)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Esym) {
            return transform((D3Esym)node0, env, inss, holder);
        } else if (node0 instanceof D3Etup) {
@@ -353,6 +356,46 @@ public class InstructionTransformer {
        } else {
            throw new Error(node0 + " is not supported.");
        }
+    }
+
+    private IValPrim transform(D3Ef0loat node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
+        AtomValue v = new AtomValue(node0.m_ty, node0.m_f0loat);
+        
+        if (null != holder && holder.isRet()) {
+            InsMove aIns = new InsMove(v, holder);
+            inss.add(aIns);
+            return holder;
+        } else {
+            return v;
+        }
+    }
+    
+    private IValPrim transform(D3Ei0nt node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
+        AtomValue v = new AtomValue(node0.m_ty, node0.m_i0nt);
+        
+        // holder may be a return holder
+        if (null != holder) {
+            InsMove aIns = new InsMove(v, holder);
+            inss.add(aIns);
+            return holder;
+        } else {
+            return v;
+        }
+    }
+    
+    private IValPrim transform(D3Es0tring node0, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
+        AtomValue v = new AtomValue(node0.m_ty, node0.m_s0tring);
+        
+        if (null != holder && holder.isRet()) {
+            InsMove aIns = new InsMove(v, holder);
+            inss.add(aIns);
+            return holder;
+        } else {
+            return v;
+        }
     }
 
     private IValPrim transform(D3Etup node0, Set<Cd3var> env,
@@ -448,7 +491,7 @@ public class InstructionTransformer {
         
         transform(node0.m_then, env, btrue, holder);
         if (null != node0.m_else) {
-            transform(node0.m_else, env, btrue, holder);
+            transform(node0.m_else, env, bfalse, holder);
         }
         
         InsCond ins = new InsCond(holder, vp_cond, btrue, bfalse);
@@ -481,7 +524,7 @@ public class InstructionTransformer {
         while (true) {
             List<IValPrim> vpArgs = new ArrayList<IValPrim>();
             for (Cd3exp arg: args.m_d3expLst) {
-                IValPrim vpArg = transform(arg, env, inss, holder);
+                IValPrim vpArg = transform(arg, env, inss, null);
                 vpArgs.add(vpArg);
             }
 

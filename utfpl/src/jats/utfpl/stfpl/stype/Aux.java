@@ -22,7 +22,7 @@ public class Aux {
     
     public static Ifunclo getClosureInfo(ISType type) {
         if (type instanceof FunType) {
-            return ((FunType)type).m_funclo;
+            return ((FunType)type).getFunClo();
         } else if (type instanceof PolyType) {
             return getClosureInfo(((PolyType)type).m_body);
         } else {

@@ -37,10 +37,22 @@
   D2Cnone
 }
 
+fun foo1_3420 = lam (P2Tann<x_3421:_:t@ype>, P2Tann<y_3422:_:t@ype>) = 
+  <D2EannSeff>(3:_:t@ype)
+
+fun foo2_3423 = lam (P2Tann<x_3424:_:t@ype>, P2Tann<y_3425:_:t@ype>) = 
+  <D2EannSeff>(y_3425:_:t@ype)
+
+fun foo3_3426 = lam (P2Tann<x_3427:_:t@ype>) = 
+  <D2EannSeff>(( | 3, 3):_:t@ype)
+
+fun foo4_3428 = lam () = 
+  <D2EannSeff>(D2Esym<+> (1, 2):_:t@ype)
+
 implement main_void_0_54: = lam () = 
   <fun>
   <D2EannSeff>(let
-    val () = D2Esym<print> ("Helloworld\n")
+    val () = D2Esym<print> ("Helloworld")
   in
     ()
   end:_:t@ype)

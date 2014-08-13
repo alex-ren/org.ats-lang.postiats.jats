@@ -25,5 +25,10 @@ public class VNameId implements IVarName {
         return m_stype;
     }
 
+    @Override
+    public String toStringCS() {
+        return m_name + m_stamp + "_id";
+    }
+
 
 }

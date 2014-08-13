@@ -18,6 +18,7 @@ public class D2EannFunclo implements Id2exp_node {
     private FunType m_stype;  // m_stype is actually the FunType, which contains m_funclo.
     
     public void updateSType(FunType ty) {
+
         m_stype = ty;
     }
     
