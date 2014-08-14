@@ -2,6 +2,7 @@ package jats.utfpl.stfpl.csharpins;
 
 import jats.utfpl.stfpl.Ilabel;
 import jats.utfpl.stfpl.csharptype.CSFunType;
+import jats.utfpl.stfpl.csharptype.CSTBookingEnv;
 import jats.utfpl.stfpl.csharptype.CSTBookingFun;
 import jats.utfpl.stfpl.csharptype.CSTBookingRecord;
 import jats.utfpl.stfpl.csharptype.ICSType;
@@ -64,7 +65,7 @@ public class CSharpPrinter {
     }
 
     private ST printFunDef(CSDefFun def) {
-        // CSDefFun_st(name, paras, ret_type, inss) ::= <<
+        // CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss) ::= <<
         ST st_fun = m_stg.getInstanceOf("CSDefFun_st");
         st_fun.add("name", def.m_name.toStringCS());
         
@@ -79,8 +80,17 @@ public class CSharpPrinter {
         }
         
         if (def.getType().isClosure()) {
+            // different name for function and closure
+            st_fun.add("is_clo", true);
+            
             ST st_cloenv = m_stg.getInstanceOf("closure_env_para_t");
             st_fun.add("paras", st_cloenv);
+            if (null != def.m_env_type) {
+                st_fun.add("env_type", def.m_env_type.m_name.toStringCS());
+            }
+            
+        } else {
+            st_fun.add("is_clo", false);
         }
         
         ICSType ret_ty = fun_ty.getRetType();
@@ -97,7 +107,7 @@ public class CSharpPrinter {
     }
 
     private ST printBooking(Set<ICSTypeBooking> bookings) {
-    	// ICSTypeBooking_st(grecords, gdelegates) ::= <<
+    	// ICSTypeBooking_st(grecords, gdelegates, genvs) ::= <<
     	ST st = m_stg.getInstanceOf("ICSTypeBooking_st");
 	    for (ICSTypeBooking b: bookings) {
 	    	if (b instanceof CSTBookingRecord) {
@@ -106,15 +116,46 @@ public class CSharpPrinter {
 	    	} else if (b instanceof CSTBookingFun) {
 	    		ST stb = print((CSTBookingFun)b);
 	    		st.add("gdelegates", stb);
-	    	} else {
-	    		throw new Error(b + " is not supported");
+	    	} else if (b instanceof CSTBookingEnv) {
+                ST stb = print((CSTBookingEnv)b);
+                st.add("genvs", stb);
 	    	}
 	    }
 	    
 	    return st;
     }
 
-	private ST print(CSTBookingFun b) {
+	private ST print(CSTBookingEnv b) {
+	    // CSTBookingEnv_st(name, members, init_paras, init_members) ::= <<
+        ST st = m_stg.getInstanceOf("CSTBookingEnv_st");
+        st.add("name", b.m_name.toStringCS());
+
+        for (CSVar var: b.m_env) {
+            ST st_type = var.getType().toSt(m_stg, 1);
+            String name = var.toString();
+
+            // rec_member_st(type, name) ::= <<
+            ST st_lab = m_stg.getInstanceOf("rec_member_st");
+            st_lab.add("type", st_type);
+            st_lab.add("name", name);
+            st.add("members", st_lab);
+            
+            String name0 = name + "0";
+            ST st_init_para = m_stg.getInstanceOf("fun_para_st");
+            st_init_para.add("name", name0);
+            st_init_para.add("type", st_type);
+            st.add("init_paras", st_init_para);
+            
+            // assignment_st(holder, value) ::= <<
+            ST st_ass = m_stg.getInstanceOf("assignment_st");
+            st_ass.add("holder", name);
+            st_ass.add("value", name0);
+            st.add("init_members", st_ass);
+        }
+        return st;
+    }
+
+    private ST print(CSTBookingFun b) {
 	    // CSTBookingFun_st(name, type_paras, paras, ret_para) ::= <<
 	    ST st = m_stg.getInstanceOf("CSTBookingFun_st");
         st.add("name", b.m_name.toStringCS());

@@ -17,7 +17,14 @@ public class CSInsClosure implements ICSInstruction {
 
     @Override
     public ST toST(STGroup stg) {
+        // CSInsClosure_st(name, fun_type, args) ::= <<
         ST st = stg.getInstanceOf("CSInsClosure_st");
+        st.add("name", m_name.toStringCS()); 
+        for (CSSId id: m_env) {
+            st.add("args", id.toStringCS());
+        }
+        
+        st.add("fun_type", m_name.getType().toSt(stg, 1));
         return st;
     }
 }

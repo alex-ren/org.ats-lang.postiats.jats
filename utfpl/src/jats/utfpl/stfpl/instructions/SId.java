@@ -11,7 +11,7 @@ import jats.utfpl.stfpl.stype.ISType;
 public class SId implements IValPrim{
     static public SId ANONY = new SId(VNameId.s_anony, Category.eOther);
     
-    enum Category {/*eLibFun, *//*eGloVar, */eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
+    enum Category {/*eLibFun, *//*eGloVar, */eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eEnvPara, eOther};
     
     public IVarName m_name;
     public Category m_cat;

@@ -453,6 +453,7 @@ public class InstructionTransformer {
 
         // create the closure if necessary
         ISType clo_type = lambda.getType();
+        // if no annotation about closure, then treat it as closure
         if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
             Set<SId> form_env = new HashSet<SId>();
             

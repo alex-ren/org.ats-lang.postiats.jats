@@ -136,8 +136,8 @@ D2EannType_st(d2exp, s2exp) ::= <<
 <d2exp>:<s2exp>
 >>
 
-D2ElamDyn_st(p2ts, exp) ::= <<
-lam (<p2ts; separator=", ">) = 
+D2ElamDyn_st(p2ts, exp, clo) ::= <<
+lam (<p2ts; separator=", ">) \<<clo>\> = 
   <exp>
 >>
 

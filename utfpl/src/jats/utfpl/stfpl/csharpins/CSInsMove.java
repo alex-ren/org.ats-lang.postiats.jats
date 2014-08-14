@@ -29,18 +29,9 @@ public class CSInsMove implements ICSInstruction {
             return st;
         } else {
             // CSInsMove_st(type, name, v) ::= <<
-            if (stg == null) {
-                throw new Error("fffffffffffffffffff");
-            }
             ST st = stg.getInstanceOf("CSInsMove_st");
             
-            if (m_holder.getType() == null) {
-                throw new Error("dddddddddddddddddddd");
-            }
             if (m_holder.getType() != CSVoidType.c_instance) {
-                if (st == null) {
-                    throw new Error("eeeeeeeeeeeeeeeeee");
-                }
                 st.add("type", m_holder.getType().toSt(stg, 1));
             } else {
                 throw new Error("check this");

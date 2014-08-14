@@ -58,9 +58,6 @@ import jats.utfpl.stfpl.dynexp.P2Tignored;
 import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
-import jats.utfpl.stfpl.staexp.FUNCLOclo;
-import jats.utfpl.stfpl.staexp.FUNCLOfun;
-import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.FunType; 
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyParaType;
@@ -546,21 +543,21 @@ public class DynExp3Transformer {
         
         Cd3exp body = transform(node0.m_d2exp, paras, cur_needed, new ArrayList<List<PolyParaType>>());
 
-        Ifunclo funclo = null;
-        if (cur_needed.isEmpty()) {
-            funclo = FUNCLOfun.cInstance;
-        } else {
-            funclo = new FUNCLOclo(-1);
-        }
+//        Ifunclo funclo = null;
+//        if (cur_needed.isEmpty()) {
+//            funclo = FUNCLOfun.cInstance;
+//        } else {
+//            funclo = new FUNCLOclo(-1);
+//        }
         
         needed.addAll(cur_needed);
         
         FunType fun_type = node0.getSType();
-        if (null != fun_type.getFunClo()) {
-            Log.log4j.warn("funclo has been set already.");
-        } else {
-            fun_type.updateFunClo(funclo);
-        }
+//        if (null != fun_type.getFunClo()) {
+//            Log.log4j.warn("funclo has been set already.");
+//        } else {
+//            fun_type.updateFunClo(funclo);
+//        }
         
         ISType ty = fun_type;
         for (List<PolyParaType> para_types: accu) {

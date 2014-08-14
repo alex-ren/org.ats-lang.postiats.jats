@@ -2,6 +2,7 @@ package jats.utfpl.stfpl.csharpins;
 
 import jats.utfpl.stfpl.Cloc_t;
 import jats.utfpl.stfpl.csharptype.CSFunType;
+import jats.utfpl.stfpl.csharptype.CSTBookingEnv;
 
 
 import java.util.List;
@@ -15,18 +16,22 @@ public class CSDefFun {
     public List<ICSInstruction> m_inss;  // body of the function
     public Set<CSVar> m_env;
     
+    public CSTBookingEnv m_env_type;
+    
     public CSDefFun(Cloc_t loc, 
     	         	CSSId name, 
                      int lin,  // something to do with linear type?
                      List<CSVar> paras,
                      List<ICSInstruction> inss,  // body of the function
-                     Set<CSVar> env) {
+                     Set<CSVar> env,
+                     CSTBookingEnv env_type) {
         m_loc = loc;
         m_name = name;
         m_lin = lin;
         m_paras = paras;
         m_inss = inss;
         m_env = env;
+        m_env_type = env_type;
                 
     }
     

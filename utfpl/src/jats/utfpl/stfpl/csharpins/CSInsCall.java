@@ -46,15 +46,15 @@ public class CSInsCall implements ICSInstruction {
         ST st_call = null;
         CSFunType fun_type = (CSFunType)m_fun.getType();
         if (fun_type.isClosure()) {  // is closure
-            // CSInsCall_call_clo_st(fun_name, fun_type, args) ::= <<
-            st_call = stg.getInstanceOf("CSInsCall_call_clo_st");
-            st_call.add("fun_name", m_fun.toStringCS());
-            if (((CSSId)m_fun).m_sid.isUserFun()) {
-            } else {  // not user function, need to do cast
-                st_call.add("fun_type", m_fun.getType().toSt(stg, 1));
-            }
+
+            // CSInsCall_call_clo_obj_st(fun_name, fun_type, args) ::= <<
+            st_call = stg.getInstanceOf("CSInsCall_call_clo_obj_st");
+            st_call.add("obj", m_fun.toStringCS());
+            // todo: optimize: add check to see whether we can call the closure by its function name directly.
             
-            for (ICSValPrim vp: m_args) {
+            st_call.add("fun_type", m_fun.getType().toSt(stg, 1));
+            
+            for (ICSValPrim vp : m_args) {
                 st_call.add("args", vp.toStringCS());
             }
             
@@ -63,7 +63,8 @@ public class CSInsCall implements ICSInstruction {
             ST st_env = stg.getInstanceOf("closure_env_st");
             st_env.add("fun_name", m_fun.toStringCS());
             st_call.add("args", st_env);
-        } else {
+
+        } else {  // is function
             // CSInsCall_call_fun_st(fun_name, fun_type, args) ::= <<
             st_call = stg.getInstanceOf("CSInsCall_call_fun_st");
             st_call.add("fun_name", m_fun.toStringCS());

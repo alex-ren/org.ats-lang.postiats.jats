@@ -61,6 +61,7 @@ import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.stfpl.staexp.Cs2var;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
+import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 import jats.utfpl.stfpl.stype.BoolType;
@@ -595,7 +596,7 @@ public class StfplTypeChecker {
             ISType retTy = getTypeLamDynRet(lamDyn.m_d2exp);
             
             Ifunclo funclo = getClosureInformation(lamDyn.m_d2exp);
-            
+
             FunType funTy = new FunType(lamDyn.m_npf, paraTyLst, retTy, funclo);
             
             if (lamDyn.m_d2exp.d2exp_node instanceof D2EannFunclo) {

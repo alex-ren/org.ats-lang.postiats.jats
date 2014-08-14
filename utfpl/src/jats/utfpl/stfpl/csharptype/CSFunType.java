@@ -46,15 +46,17 @@ public class CSFunType implements ICSNamedType {
             ST st = stg.getInstanceOf("CSFunType_st");
             st.add("name", m_name.toStringCS());
             
+            // Add type argument
             for (ICSType type_arg: m_paras) {
                 st.add("args", type_arg.toSt(stg, 1));
             }
             
             // Add type argument for env.
             if (m_clo.isClosure()) {
-                x tod st.add("args", stg.getInstanceOf("closure_env_type_st"));
+                st.add("args", stg.getInstanceOf("CSObjectType_st"));
             }
             
+            // Add type for return value.
             st.add("args", m_ret.toSt(stg, 1));
             
             return st;

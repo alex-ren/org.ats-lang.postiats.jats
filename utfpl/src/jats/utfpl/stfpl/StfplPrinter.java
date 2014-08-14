@@ -502,8 +502,19 @@ public class StfplPrinter {
     }
 
     private ST printD2ElamDyn(D2ElamDyn node) {
-        // D2ElamDyn_st(p2ts, exp) ::= <<
+        // D2ElamDyn_st(p2ts, exp, clo) ::= <<
         ST st = m_stg.getInstanceOf("D2ElamDyn_st");
+        Ifunclo funclo = node.getSType().getFunClo();
+        if (null == funclo) {
+            
+        } else {
+            if (funclo.isClosure()) {
+                st.add("clo", "clo");
+            } else {
+                st.add("clo", "fun");
+            }
+        }
+        
         for (Cp2at pat: node.m_p2ts) {
             st.add("p2ts", printCp2at(pat));
         }

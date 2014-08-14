@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.csharpins;
 
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.csharptype.CSTBookingEnv;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp.Cd2ecl;
 import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
@@ -81,10 +82,9 @@ public class CSInstructionTransformer {
     	
     	m_main_inss = transform(main_inss);
     	
-    	
     }
 
-	private CSDefFunGroup transform(DefFunGroup def_grp) {
+    private CSDefFunGroup transform(DefFunGroup def_grp) {
 		List<CSDefFun> csdefs = new ArrayList<CSDefFun>();
 	    for (DefFun def: def_grp.m_funs) {
 	    	CSDefFun csdef = transform(def);
@@ -115,7 +115,14 @@ public class CSInstructionTransformer {
 	    	csenv.add(csvar);
 	    }
 	    
-	    return new CSDefFun(fun_def.m_loc, csid, fun_def.m_lin, csparas, csinss, csenv);
+	    // Each closure has the potential to create a new type.
+	    CSTBookingEnv benv = null;
+	    if (!csenv.isEmpty()) {
+	        benv = new CSTBookingEnv(csid, csenv);
+	        m_track.add(benv);
+	    }
+
+	    return new CSDefFun(fun_def.m_loc, csid, fun_def.m_lin, csparas, csinss, csenv, benv);
     }
 	
 	List<ICSInstruction> transform(List<IStfplInstruction> inss) {

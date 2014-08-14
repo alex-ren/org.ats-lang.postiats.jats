@@ -2,6 +2,17 @@ group csharp;
 
 
 program_st(types, funs, main) ::= <<
+class <closure_type_st()> {
+    public Object func;
+    public Object env;
+    
+    public <closure_type_st()>(Object func0, Object env0) {
+        func = func0;
+        env = env0;
+    }
+}
+
+
 <types; separator="\n">
 
 class Program {
@@ -11,10 +22,13 @@ class Program {
 >>
 
 
-ICSTypeBooking_st(grecords, gdelegates) ::= <<
+ICSTypeBooking_st(grecords, gdelegates, genvs) ::= <<
 <grecords; separator="\n">
 
 <gdelegates; separator="\n">
+
+<genvs; separator="\n">
+
 >>
 
 CSTBookingRecord_st(name, type_paras, members, init_paras, init_members) ::= <<
@@ -35,15 +49,56 @@ CSTBookingFun_st(name, type_paras, paras, ret_para) ::= <<
 delegate <ret_para> <name>\<<type_paras;separator=", ">\>(<paras; separator=", ">);
 >>
 
-CSDefFun_st(name, paras, ret_type, inss) ::= <<
-static public <ret_type> <name>(<paras; separator=", ">) {
+CSTBookingEnv_st(name, members, init_paras, init_members) ::= <<
+class <env_type_t(name)> {
+    <members; separator="\n">
+    
+    public <env_type_t(name)>(<init_paras; separator=", ">) {
+        <init_members; separator="\n">
+    }
+};
+>>
+
+
+CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss) ::= <<
+static public <ret_type> <if(is_clo)><closure_fun_name_t(name)><else><name><endif>(<paras; separator=", ">) {
+    <if(env_type)><env_type> env0 = (<env_type>)env;<endif>
     <inss; separator="\n">
 }
 >>
 
-closure_env_para_t () ::= <<
-xxxxxxxx
+// == closure related ======================
+
+closure_fun_name_t(name) ::= <<
+<name>_clo_impl
 >>
+
+env_type_t(name) ::= <<
+Env_<name>
+>>
+
+env_obj_t(name) ::= <<
+<name>_env_obj
+>>
+
+// Function of closure has an extra parameter.
+closure_env_para_t () ::= <<
+<CSObjectType_st()> env
+>>
+
+closure_func_st(fun_name) ::= <<
+((<closure_type_st()>)<fun_name>).func
+>>
+
+closure_env_st(fun_name) ::= <<
+((<closure_type_st()>)<fun_name>).env
+>>
+
+closure_type_st() ::= <<
+Closure
+>>
+
+// ========================
 
 fun_para_st(name, type) ::= <<
 <type> <name>
@@ -69,28 +124,18 @@ fun: <if(fun_type)>((<fun_type>)<fun_name>)<else><fun_name><endif>(<args; separa
 >>
 
 // Caller takes cares of the env argument.
-CSInsCall_call_clo_st(fun_name, fun_type, args) ::= <<
-clo: <if(fun_type)>((<fun_type>)<closure_func_st(fun_name)>)<else><fun_name><endif>(<args; separator=", ">)
+CSInsCall_call_clo_obj_st(obj, fun_type, args) ::= <<
+clo1: ((<fun_type>)<closure_func_st(obj)>)(<args; separator=", ">)
 >>
 
-closure_func_st(fun_name) ::= <<
-((<closure_type_st()>)<fun_name>).func
+// Caller takes cares of the env argument.
+CSInsCall_call_clo_name_st(fun_name, args) ::= <<
+clo2: <fun_name>(<args; separator=", ">)
 >>
 
-closure_env_st(fun_name) ::= <<
-((<closure_type_st()>)<fun_name>).env
->>
-
-fun_clo_env_st (clo_name) ::= <<
-yyyyyyy
->>
-
-closure_type_st() ::= <<
-Closure
->>
-
-CSInsClosure_st() ::= <<
-CSInsClosure_st
+CSInsClosure_st(name, fun_type, args) ::= <<
+<env_type_t(name)> <env_obj_t(name)> = new <env_type_t(name)>(<args; separator=", ">);
+<closure_type_st()> <name> = new <closure_type_st()>((<fun_type>)<closure_fun_name_t(name)>, <env_obj_t(name)>);
 >>
 
 CSInsCond_st(type, name, cond, btrue, bfalse) ::= <<
