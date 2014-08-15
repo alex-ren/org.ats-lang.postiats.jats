@@ -21,27 +21,27 @@
 // 
 // todo ===========================
 // Call a closure via name.
-fun foo3 (x: int): int = let
-  val x = 1
-  fun foo4 (y: int): int = y + x
-  val y = foo4 (2)
-in
-  y
-end
-
-// // indented closure
-// fun foo5 (): void = let
+// fun foo3 (x: int): int = let
 //   val x = 1
-//   fun foo6 (): void = let
-//     val y = x
-//     fun foo7 (): void = let
-//       val z:int = x + y
-//     in
-//     end
-//   in
-//   end
+//   fun foo4 (y: int): int = y + x
+//   val y = foo4 (2)
 // in
+//   y
 // end
+
+// indented closure
+fun foo5 (): void = let
+  val x = 1
+  fun foo6 (): void = let
+    val y = x
+    fun foo7 (): void = let
+      val z:int = x + y
+    in
+    end
+  in
+  end
+in
+end
     
    
 ////

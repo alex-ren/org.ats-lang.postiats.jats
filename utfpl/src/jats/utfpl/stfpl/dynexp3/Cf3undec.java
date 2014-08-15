@@ -1,6 +1,9 @@
 package jats.utfpl.stfpl.dynexp3;
 
+import java.util.List;
+
 import jats.utfpl.stfpl.Cloc_t;
+import jats.utfpl.stfpl.stype.ISType;
 
 /*
  * Function definition.
@@ -8,7 +11,16 @@ import jats.utfpl.stfpl.Cloc_t;
 public class Cf3undec {
     public Cloc_t m_loc;
     public Cd3var m_var;  // function name
-    public Cd3exp m_def;  // This is a lambda
+
+    public int m_lin;  // something to do with linear type?
+    public List<Cp3at> m_p3ts;  // arguments including proof and normal arguments
+                                // proof arguments appear first in the list
+    
+    public Cd3exp m_body;  // body of the function
+
+    public ISType m_type;
+    
+    public int m_grp_id;  // group id of the function
     
     /*
      * m_var as well as m_def should contain the same type information.
@@ -16,10 +28,16 @@ public class Cf3undec {
      * clear. (I haven't really checked this.) But it doesn't matter.
      */
     
-    public Cf3undec(Cloc_t loc, Cd3var var, Cd3exp def) {
+    public Cf3undec(Cloc_t loc, Cd3var var, int lin, List<Cp3at> p3ts, Cd3exp body, ISType type, int grp_id) {
         m_loc = loc;
         m_var = var;
-        m_def = def;
+        
+        m_lin = lin;
+        m_p3ts = p3ts;
+        m_body = body;
+        m_type = type;
+        
+        m_grp_id = grp_id;
     }
 
 }

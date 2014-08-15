@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.instructions;
 
 import jats.utfpl.stfpl.Cloc_t;
+import jats.utfpl.stfpl.LABsym;
 
 import jats.utfpl.stfpl.dynexp.Edcstkind;
 import jats.utfpl.stfpl.dynexp.Efunkind;
@@ -43,7 +44,10 @@ import jats.utfpl.stfpl.dynexp3.P3Tvar;
 import jats.utfpl.stfpl.instructions.SId.Category;
 import jats.utfpl.stfpl.staexp.FUNCLOfun; 
 import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.LabPatNorm;
+import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -94,7 +98,7 @@ public class InstructionTransformer {
         transform(d3ecs, new HashSet<Cd3var>(), m_main_inss);
     }
     
-    private void transform(List<Cd3ecl> d3ecs, Set<Cd3var> env,
+    private void transform(List<Cd3ecl> d3ecs, Set<Cd3var> env,  // names from outside
             List<IStfplInstruction> inss) {
         for (Cd3ecl d3ec: d3ecs) {
             transform(d3ec, env, inss);
@@ -237,13 +241,25 @@ public class InstructionTransformer {
             
             for (Cd3var d3var: env2) {
                 if (env.contains(d3var)) {
-                    SId clo_id = SId.fromCloCd3var(d3var, Category.eOther);
+                    SId clo_id = SId.fromCloCd3var(d3var);
                     form_env.add(clo_id);
                 } else {
-                    form_env.add(SId.fromCd3var(d3var, Category.eOther));
+                    form_env.add(SId.fromCd3var(d3var, null/*useless, v has been created*/));
                 }
             }
-            InsClosure ins_clo = new InsClosure(name, form_env);
+            
+            List<ILabPat> labpats = new ArrayList<ILabPat>();
+            for (Cd3var env_ele: env2) {
+                LABsym labsym = new LABsym(env_ele.m_sym);
+                LabPatNorm labpat = new LabPatNorm(labsym, env_ele.m_stype);
+                labpats.add(labpat);
+            }
+            RecType env_type = new RecType(labpats, -1, 1);
+            SId env_name = SId.createEnv("env", env_type);
+            InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
+            inss.add(ins_env);
+            
+            InsClosure ins_clo = new InsClosure(name, env_name);
             inss.add(ins_clo);
         }
         
@@ -311,10 +327,10 @@ public class InstructionTransformer {
             
             for (Cd3var d3var: env2) {
                 if (env.contains(d3var)) {
-                    SId clo_id = SId.fromCloCd3var(d3var, Category.eOther);
+                    SId clo_id = SId.fromCloCd3var(d3var);
                     form_env.add(clo_id);
                 } else {
-                    form_env.add(SId.fromCd3var(d3var, Category.eOther));
+                    form_env.add(SId.fromCd3var(d3var, null/*useless, v has been created*/));
                 }
             }
             InsClosure ins_clo = new InsClosure(name, form_env);
@@ -459,13 +475,25 @@ public class InstructionTransformer {
             
             for (Cd3var d3var: env2) {
                 if (env.contains(d3var)) {
-                    SId clo_id = SId.fromCloCd3var(d3var, Category.eOther);
+                    SId clo_id = SId.fromCloCd3var(d3var);
                     form_env.add(clo_id);
                 } else {
-                    form_env.add(SId.fromCd3var(d3var, Category.eOther));
+                    form_env.add(SId.fromCd3var(d3var, null/*useless, v has been created*/));
                 }
             }
-            InsClosure ins_clo = new InsClosure(name, form_env);
+            
+            List<ILabPat> labpats = new ArrayList<ILabPat>();
+            for (Cd3var env_ele: env2) {
+                LABsym labsym = new LABsym(env_ele.m_sym);
+                LabPatNorm labpat = new LabPatNorm(labsym, env_ele.m_stype);
+                labpats.add(labpat);
+            }
+            RecType env_type = new RecType(labpats, -1, 1);
+            SId env_name = SId.createEnv("env", env_type);
+            InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
+            inss.add(ins_env);
+            
+            InsClosure ins_clo = new InsClosure(name, env_name);
             inss.add(ins_clo);
         }
         
@@ -579,9 +607,9 @@ public class InstructionTransformer {
             List<IStfplInstruction> inss, SId holder) {
         IValPrim v = null;
         if (env.contains(node)) {
-            v = SId.fromCloCd3var(node.m_d3var, Category.eOther);
+            v = SId.fromCloCd3var(node.m_d3var);
         } else {
-            v = SId.fromCd3var(node.m_d3var, SId.Category.eLocalVar);
+            v = SId.fromCd3var(node.m_d3var, null/*useless, v has been created*/);
         }
 
         if (null != holder) {

@@ -36,6 +36,7 @@ public class SId implements IValPrim{
 
     }
     
+    // called by D3Esym
     static public SId fromCd3sym(Cd3sym d3sym, Category cat) {
         VNameSym name = new VNameSym(d3sym);
         SId id = s_map.get(name);
@@ -61,11 +62,11 @@ public class SId implements IValPrim{
 
     }
     
-    static public SId fromCloCd3var(Cd3var d3var, Category cat) {
+    static public SId fromCloCd3var(Cd3var d3var) {
         VNameClosurePara name = VNameClosurePara.fromClosurePara(d3var);
         SId id = s_map.get(name);
         if (null == id) {
-            id = new SId(name, cat);
+            id = new SId(name, Category.eOther);
             s_map.put(name, id);
             return id;
         } else {
@@ -87,6 +88,12 @@ public class SId implements IValPrim{
     }
     
     public static SId createUserFunction(String name, ISType stype) {
+        VNameId id = new VNameId(name, stype);
+        SId ret = new SId(id, Category.eUserFun);
+        return ret;
+    }
+    
+    public static SId createEnv(String name, ISType stype) {
         VNameId id = new VNameId(name, stype);
         SId ret = new SId(id, Category.eUserFun);
         return ret;

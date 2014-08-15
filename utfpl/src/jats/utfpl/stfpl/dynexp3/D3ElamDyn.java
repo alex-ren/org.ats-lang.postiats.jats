@@ -13,15 +13,17 @@ public class D3ElamDyn implements Id3exp_node {
     public Cd3exp m_d3exp;  // body of the function
 
     private ISType m_type;
+    
     public Set<Cd3var> m_env;
+    int m_grp_id;
 
-    public D3ElamDyn(int lin, List<Cp3at> p3ts, Cd3exp d3exp, ISType type, Set<Cd3var> env) {
+    public D3ElamDyn(int lin, List<Cp3at> p3ts, Cd3exp d3exp, ISType type, Set<Cd3var> env, int grp_id) {
         m_lin = lin;
         m_p3ts = p3ts;
         m_d3exp = d3exp;
         m_type = type;
         m_env = env;
-        
+        m_grp_id = grp_id;
     }
 
     @Override

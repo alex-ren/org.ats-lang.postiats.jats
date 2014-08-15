@@ -10,37 +10,34 @@ class Closure {
 
 
 
-delegate Y fun1_id<X1, X2, Y>(X1 m1, X2 m2);
+delegate Y fun2_id<X1, X2, Y>(X1 m1, X2 m2);
+delegate Y fun1_id<X1, Y>(X1 m1);
 
-class Env_foo3_3420 {
-    public int y_3425;
-    public int x_3422;
+class Env_foo7_3424 {
+    public int x_3421;
 
-    public Env_foo3_3420(int y_34250, int x_34220) {
-        y_3425 = y_34250;
-        x_3422 = x_34220;
-    }
-};
-class Env_foo4_3423 {
-    public int x_3422;
-
-    public Env_foo4_3423(int x_34220) {
-        x_3422 = x_34220;
+    public Env_foo7_3424(int x_34210) {
+        x_3421 = x_34210;
     }
 };
 
 
 class Program {
-    static public int foo4_3423_clo_impl(int y_3424, Object env) {
-        foo4_3423 env0 = (foo4_3423)env;
-        return fun: +(y_3424, x_3422);
+    static public void foo7_3424_clo_impl(Object env) {
+        foo7_3424 env0 = (foo7_3424)env;
+        int z_3425 = fun: +(x_3421, y_3423);
+        return;
     }
-    static public int foo3_3420_clo_impl(int x_3421, Object env) {
-        foo3_3420 env0 = (foo3_3420)env;
-        int x_3422 = 1;
-        Env_foo4_3423 foo4_3423_env_obj = new Env_foo4_3423(x_3422);
-        Closure foo4_3423 = new Closure((fun1_id<int, Object, int>)foo4_3423_clo_impl, foo4_3423_env_obj);
-        int y_3425 = clo1: ((fun1_id<int, Object, int>)((Closure)foo4_3423).func)(2, ((Closure)foo4_3423).env);
-        return y_3425;
+    static public void foo6_3422_clo_impl(Object env) {
+        int y_3423 = x_3421;
+        Env_foo7_3424 foo7_3424_env_obj = new Env_foo7_3424(x_3421);
+        Closure foo7_3424 = new Closure((fun1_id<Object, void>)foo7_3424_clo_impl, foo7_3424_env_obj);
+        return;
+    }
+    static public void foo5_3420_clo_impl(Object env) {
+        int x_3421 = 1;
+        Env_foo6_3422 foo6_3422_env_obj = new Env_foo6_3422();
+        Closure foo6_3422 = new Closure((fun1_id<Object, void>)foo6_3422_clo_impl, foo6_3422_env_obj);
+        return;
     }
 }

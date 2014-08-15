@@ -37,12 +37,21 @@
   D2Cnone
 }
 
-fun foo3_3420 = lam (P2Tann<x_3421:_:t@ype>) <> = 
+fun foo5_3420 = lam () <> = 
   <D2EannSeff>(let
-    val x_3422 = 1
-    fun foo4_3423 = lam (P2Tann<y_3424:_:t@ype>) <> = 
-      <D2EannSeff>(D2Esym<+> (y_3424, x_3422):_:t@ype)
-    val y_3425 = foo4_3423 (2)
+    val x_3421 = 1
+    fun foo6_3422 = lam () <> = 
+      <D2EannSeff>(let
+        val y_3423 = x_3421
+        fun foo7_3424 = lam () <> = 
+          <D2EannSeff>(let
+            val P2Tann<z_3425:_:t@ype> = D2Esym<+> (x_3421, y_3423)
+          in
+            ()
+          end:_:t@ype)
+      in
+        ()
+      end:_:t@ype)
   in
-    y_3425
+    ()
   end:_:t@ype)

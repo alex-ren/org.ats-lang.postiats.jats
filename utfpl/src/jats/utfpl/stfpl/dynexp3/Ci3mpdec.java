@@ -14,8 +14,6 @@ public class Ci3mpdec {
         i2mpdec_cst = cst;
         i2mpdec_def = def;
     }
-    
-    public Ci3mpdec() {
-        // used by gson
-    }
 }
+
+
