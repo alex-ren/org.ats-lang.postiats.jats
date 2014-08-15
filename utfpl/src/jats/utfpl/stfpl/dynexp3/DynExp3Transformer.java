@@ -59,6 +59,7 @@ import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
+import jats.utfpl.stfpl.stype.Aux;
 import jats.utfpl.stfpl.stype.FunType; 
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyParaType;
@@ -210,9 +211,11 @@ public class DynExp3Transformer {
     private Ci3mpdec transform(Ci2mpdec i2mpdec, Set<Cd3var> scope,
             Set<Cd3var> needed) {
         Cd3cst d3cst = transform(i2mpdec.i2mpdec_cst, i2mpdec.i2mpdec_locid);
+        String env_name = d3cst.toString() + "env";
+        
         Cd3exp d3exp = transform(i2mpdec.i2mpdec_def, scope, needed, new ArrayList<List<PolyParaType>>());
         
-        Ci3mpdec i3mpdec = new Ci3mpdec(i2mpdec.i2mpdec_loc, i2mpdec.i2mpdec_locid, d3cst, d3exp);
+        Ci3mpdec i3mpdec = new Ci3mpdec(i2mpdec.i2mpdec_loc, i2mpdec.i2mpdec_locid, d3cst, d3exp, env_name);
         return i3mpdec;        
     }
 
@@ -226,6 +229,28 @@ public class DynExp3Transformer {
         case FK_fnx: // tail-recursive 
         case FK_fun: // recursive
         {
+
+            Cf2undec f2undec0 = node0.m_f2ds.get(0);
+            boolean isFun = true;
+            
+            if (Aux.getClosureInfo(f2undec0.f2undec_var.getSType()) instanceof FUNCLOfun) {
+                isFun = true;
+            } else {
+                isFun = false;
+            }
+            
+            for (Cf2undec f2undec: node0.m_f2ds) {
+                if (Aux.getClosureInfo(f2undec.f2undec_var.getSType()) instanceof FUNCLOfun) {
+                    if (false == isFun) {
+                        throw new Error("not allowed");
+                    }
+                } else {
+                    if (true == isFun) {
+                        throw new Error("not allowed");
+                    }
+                }
+            }
+            
             List<Cf3undec> f3uns = new ArrayList<Cf3undec>();
             Set<Cd3var> total_needed = new HashSet<Cd3var>();
             
@@ -263,7 +288,7 @@ public class DynExp3Transformer {
                 total_needed.remove(f3un.m_var.m_stamp);  // due to mutually recursive, we
                                                     // may have put sibling closures into "needed".
             }
-            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed);
+            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, env_name, !isFun);
             
             return new Cd3ecl(loc, node);
         }
@@ -390,7 +415,7 @@ public class DynExp3Transformer {
         Cd3var d3var = transform(node0.m_d2var, loc);
         
         // not a normal function // treat no annotation as closure
-        if (!(((FunType)node0.m_d2var.getSType()).getFunClo() instanceof FUNCLOfun)) {
+        if (!(Aux.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
             if (!scope.contains(d3var)) {
                 needed.add(d3var);
             }

@@ -11,7 +11,7 @@ import jats.utfpl.stfpl.stype.ISType;
 public class SId implements IValPrim{
     static public SId ANONY = new SId(VNameId.s_anony, Category.eOther);
     
-    enum Category {/*eLibFun, *//*eGloVar, */eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eEnvPara, eOther};
+    enum Category {/*eLibFun, *//*eGloVar, */eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
     
     public IVarName m_name;
     public Category m_cat;
@@ -53,6 +53,9 @@ public class SId implements IValPrim{
         VNameVar name = VNameVar.fromCd3var(d3var);
         SId id = s_map.get(name);
         if (null == id) {
+            if (cat == null) {
+                throw new Error("should not happen");
+            }
             id = new SId(name, cat);
             s_map.put(name, id);
             return id;
@@ -62,18 +65,18 @@ public class SId implements IValPrim{
 
     }
     
-    static public SId fromCloCd3var(Cd3var d3var) {
-        VNameClosurePara name = VNameClosurePara.fromClosurePara(d3var);
-        SId id = s_map.get(name);
-        if (null == id) {
-            id = new SId(name, Category.eOther);
-            s_map.put(name, id);
-            return id;
-        } else {
-            return id;
-        }
-
-    }
+//    static public SId fromCloCd3var(Cd3var d3var) {
+//        VNameClosurePara name = VNameClosurePara.fromClosurePara(d3var);
+//        SId id = s_map.get(name);
+//        if (null == id) {
+//            id = new SId(name, Category.eOther);
+//            s_map.put(name, id);
+//            return id;
+//        } else {
+//            return id;
+//        }
+//
+//    }
 
     public static SId createRetHolder(String name, ISType stype) {
         VNameId id = new VNameId(name, stype);
@@ -93,9 +96,9 @@ public class SId implements IValPrim{
         return ret;
     }
     
-    public static SId createEnv(String name, ISType stype) {
-        VNameId id = new VNameId(name, stype);
-        SId ret = new SId(id, Category.eUserFun);
+    public static SId createEnvId(String name, ISType stype) {
+        VNameString id = VNameString.fromString(name, stype);
+        SId ret = new SId(id, Category.eLocalVar);
         return ret;
     }
 
@@ -118,6 +121,15 @@ public class SId implements IValPrim{
     
     public boolean isConstant() {
         return Category.eConstant == m_cat;
+    }
+
+    @Override
+    public String getEnvName() {
+        if (m_name instanceof VNameVar) {
+            return ((VNameVar)m_name).m_var.m_env_name;
+        } else {
+            return null;
+        }
     }
 }
 

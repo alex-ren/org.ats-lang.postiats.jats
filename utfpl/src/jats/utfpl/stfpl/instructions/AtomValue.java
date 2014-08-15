@@ -34,5 +34,11 @@ public class AtomValue implements IValPrim {
 
     }
 
+    @Override
+    public String getEnvName() {
+        return null;
+
+    }
+    
 
 }
