@@ -229,10 +229,13 @@ public class DynExp3Transformer {
             List<Cf3undec> f3uns = new ArrayList<Cf3undec>();
             Set<Cd3var> total_needed = new HashSet<Cd3var>();
             
-            int grp_id = D3Cfundecs.getGroupId();
+            // Use the name of the first element.
+            Cf2undec instance = node0.m_f2ds.get(0);
+            String env_name = instance.f2undec_var.toString() + "env";
             
             for (Cf2undec f2un: node0.m_f2ds) {
                 Cd3var name = transform(f2un.f2undec_var, f2un.f2undec_loc);
+                name.update(env_name);
                 
                 Set<Cd3var> cur_scope = new HashSet<Cd3var>();
                 Set<Cd3var> cur_needed = new HashSet<Cd3var>();
@@ -249,7 +252,8 @@ public class DynExp3Transformer {
                     throw new Error(res.getMsg());
                 }
                 
-                Cf3undec f3un = new Cf3undec(f2un.f2undec_loc, name, d3elam.m_lin, d3elam.m_p3ts, d3elam.m_d3exp, d3elam.getType(), grp_id);
+                Cf3undec f3un = new Cf3undec(f2un.f2undec_loc, name, 
+                		d3elam.m_lin, d3elam.m_p3ts, d3elam.m_d3exp, d3elam.getType());
                 f3uns.add(f3un);
             }
             
@@ -259,7 +263,7 @@ public class DynExp3Transformer {
                 total_needed.remove(f3un.m_var.m_stamp);  // due to mutually recursive, we
                                                     // may have put sibling closures into "needed".
             }
-            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, grp_id);
+            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed);
             
             return new Cd3ecl(loc, node);
         }
@@ -389,7 +393,7 @@ public class DynExp3Transformer {
         if (!(((FunType)node0.m_d2var.getSType()).getFunClo() instanceof FUNCLOfun)) {
             if (!scope.contains(d3var)) {
                 needed.add(d3var);
-            }todo
+            }
         }
 
         D3Evar node = new D3Evar(d3var);
@@ -582,7 +586,7 @@ public class DynExp3Transformer {
             ty = new PolyType(para_types, ty);
         }
         
-        D3ElamDyn node = new D3ElamDyn(node0.m_lin, p3ats, body, ty, cur_needed, D3Cfundecs.getGroupId());
+        D3ElamDyn node = new D3ElamDyn(node0.m_lin, p3ats, body, ty, cur_needed);
         
         Cd3exp ret = new Cd3exp(loc, node);
         return ret;

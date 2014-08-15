@@ -542,7 +542,7 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Eapplst node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder) {
+            List<IStfplInstruction> inss, SId holder, List<String> env_names) {
         IValPrim vpFun = transform(node0.m_fun, env, inss, null);
 
         ListIterator<D3EXPARGdyn> iter_args = node0.m_args.listIterator();

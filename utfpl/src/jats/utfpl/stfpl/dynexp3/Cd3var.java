@@ -8,6 +8,7 @@ public class Cd3var {
     public Csymbol m_sym;
     public Cstamp m_stamp;
     public ISType m_stype;
+    public String m_env_name;
     
     public Cstamp getStamp() {
         return m_stamp;
@@ -21,6 +22,11 @@ public class Cd3var {
         m_sym = sym;
         m_stamp = stamp;
         m_stype = stype;
+        m_env_name = null;
+    }
+    
+    public void update(String env_name) {
+    	m_env_name = env_name;
     }
     
     @Override

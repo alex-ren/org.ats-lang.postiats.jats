@@ -19,16 +19,14 @@ public class Cf3undec {
     public Cd3exp m_body;  // body of the function
 
     public ISType m_type;
-    
-    public int m_grp_id;  // group id of the function
-    
+
     /*
      * m_var as well as m_def should contain the same type information.
      * But whether the two ISType's are actually the same object is not
      * clear. (I haven't really checked this.) But it doesn't matter.
      */
     
-    public Cf3undec(Cloc_t loc, Cd3var var, int lin, List<Cp3at> p3ts, Cd3exp body, ISType type, int grp_id) {
+    public Cf3undec(Cloc_t loc, Cd3var var, int lin, List<Cp3at> p3ts, Cd3exp body, ISType type) {
         m_loc = loc;
         m_var = var;
         
@@ -36,8 +34,6 @@ public class Cf3undec {
         m_p3ts = p3ts;
         m_body = body;
         m_type = type;
-        
-        m_grp_id = grp_id;
     }
 
 }
