@@ -18,17 +18,15 @@ public class D3Cfundecs implements Id3ecl_node {
     public Efunkind m_knd;
     public List<Cf3undec> m_f3ds;
     public Set<Cd3var> m_env;  
-    public String m_env_name;
     
     public boolean m_is_clo;
     
 //    public int m_grp_id;
     
-    public D3Cfundecs(Efunkind knd, List<Cf3undec> f3ds, Set<Cd3var> env, String env_name, boolean is_clo) {
+    public D3Cfundecs(Efunkind knd, List<Cf3undec> f3ds, Set<Cd3var> env, boolean is_clo) {
         m_knd = knd;
         m_f3ds = f3ds;
         m_env = env;
-        m_env_name = env_name;
         m_is_clo = is_clo;
     }
 

@@ -41,7 +41,6 @@ import jats.utfpl.stfpl.dynexp3.P3Tcon;
 import jats.utfpl.stfpl.dynexp3.P3Tempty;
 import jats.utfpl.stfpl.dynexp3.P3Trec;
 import jats.utfpl.stfpl.dynexp3.P3Tvar;
-import jats.utfpl.stfpl.instructions.EscapedVar.EEscType;
 import jats.utfpl.stfpl.instructions.InsCall.ECallType;
 import jats.utfpl.stfpl.instructions.SId.Category;
 import jats.utfpl.stfpl.staexp.FUNCLOfun; 
@@ -50,7 +49,6 @@ import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.LabPatNorm;
-import jats.utfpl.stfpl.stype.ObjectType;
 import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.utils.Log;
 
@@ -69,14 +67,14 @@ public class InstructionTransformer {
     
     private List<D3Cextcode> m_exts;
     
-    private List<DefFunGroup> m_defs;
+    private List<IFunDef> m_defs;
     
     private List<IStfplInstruction> m_main_inss;  // global instructions
     
     public InstructionTransformer() {
         m_decs = new ArrayList<DecGroup>();
         m_exts = new ArrayList<D3Cextcode>();
-        m_defs = new ArrayList<DefFunGroup>();
+        m_defs = new ArrayList<IFunDef>();
         m_main_inss = new ArrayList<IStfplInstruction>();
         
     }
@@ -89,7 +87,7 @@ public class InstructionTransformer {
     	return m_exts;
     }
     
-    public List<DefFunGroup> getDefs() {
+    public List<IFunDef> getDefs() {
     	return m_defs;
     }
     
@@ -99,31 +97,31 @@ public class InstructionTransformer {
     
     
     public void transform_global(List<Cd3ecl> d3ecs) {
-        transform(d3ecs, new HashSet<Cd3var>(), m_main_inss, new ArrayList<String>());
+        transform(d3ecs, new HashSet<Cd3var>(), m_main_inss);
     }
     
     private void transform(List<Cd3ecl> d3ecs, Set<Cd3var> env,  // names from outside
-            List<IStfplInstruction> inss, List<String> env_names) {
+            List<IStfplInstruction> inss) {
         for (Cd3ecl d3ec: d3ecs) {
-            transform(d3ec, env, inss, env_names);
+            transform(d3ec, env, inss);
         }
     }
 
     private void transform(Cd3ecl d3ec, Set<Cd3var> env, 
-            List<IStfplInstruction> inss, List<String> env_names) {
+            List<IStfplInstruction> inss) {
         Id3ecl_node node0 = d3ec.m_node;
         if (node0 instanceof D3Cdcstdecs) {
             transform((D3Cdcstdecs)node0, env, inss);
         } else if (node0 instanceof D3Cextcode) {
             m_exts.add((D3Cextcode)node0);
         } else if (node0 instanceof D3Cfundecs) {
-            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss, env_names);
+            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss);
         } else if (node0 instanceof D3Cimpdec) {
-            transform((D3Cimpdec)node0, d3ec.m_loc, env, inss, env_names);
+            transform((D3Cimpdec)node0, d3ec.m_loc, env, inss);
         } else if (node0 instanceof D3Cstacsts) {
             Log.log4j.warn("D3Cstacsts encountered in generating instruction.");
         } else if (node0 instanceof D3Cvaldecs) {
-            transform((D3Cvaldecs)node0, d3ec.m_loc, env, inss, env_names);
+            transform((D3Cvaldecs)node0, d3ec.m_loc, env, inss);
         } else if (node0 instanceof D3Cdatdecs) {
             throw new Error("D3Cdatdecs not supported yet");
         } else {
@@ -131,16 +129,25 @@ public class InstructionTransformer {
         }
     }
 
+    /*
+     * Assume there is no mutually recursively defined values.
+     * E.g.
+     *     val x = y + 1
+     *     and y = x + 1
+     *     
+     *     val fx = lam x => fy x
+     *     and fy = lam y = fx y
+     */
     private void transform(D3Cvaldecs node0, Cloc_t m_loc, Set<Cd3var> env,
-            List<IStfplInstruction> inss, List<String> env_names) {
+            List<IStfplInstruction> inss) {
         for (Cv3aldec valdec: node0.m_v3ds) {
-            transfrom(valdec, env, inss, env_names);
+            transfrom(valdec, env, inss);
         }
         
     }
 
     private void transfrom(Cv3aldec valdec, Set<Cd3var> env,
-            List<IStfplInstruction> inss, List<String> env_names) {
+            List<IStfplInstruction> inss) {
         
         Ip3at_node node0 = valdec.m_pat.m_node;
         if (node0 instanceof P3Tany
@@ -151,11 +158,11 @@ public class InstructionTransformer {
                 holder = SId.fromCd3var(((P3Tvar)node0).m_var, Category.eLocalVar);
             }
 //            System.out.println("P3Tvar is " + ((P3Tvar)node0).m_var.toString() + " holder is " + holder);
-            transform(valdec.m_def, env, inss, holder, env_names);
+            transform(valdec.m_def, env, inss, holder);
             return;
         } else {
             SId holder = null;
-            IValPrim vp = transform(valdec.m_def, env, inss, holder, env_names);
+            IValPrim vp = transform(valdec.m_def, env, inss, holder);
             transform(valdec.m_pat, vp, inss);
             return;
         }
@@ -208,47 +215,66 @@ public class InstructionTransformer {
             }
         }
     }
-
-    private void transform(D3Cimpdec node0, Cloc_t m_loc, Set<Cd3var> env,
-            List<IStfplInstruction> inss, List<String> env_names) {
-        List<DefFun> funs = new ArrayList<DefFun>();
-        DefFun fundef = transform(node0, env, inss, env_names);  
-        funs.add(fundef);
-        
-        DefFunGroup fungrp = new DefFunGroup(Efunkind.fromInt(node0.m_knd), funs);
-        m_defs.add(fungrp);
+    
+    // generate SId for parameter
+    private List<SId> collectPatVarFunPara(List<Cp3at> pats) {
+        List<SId> paras = new ArrayList<SId>();
+        for (Cp3at pat: pats) {
+            Ip3at_node node0 = (Ip3at_node)pat.m_node;
+            if (node0 instanceof P3Tany) {
+                throw new Error("Should not happen.");
+            } else if (node0 instanceof P3Tvar) {
+                SId para = SId.fromCd3var(((P3Tvar) node0).m_var, Category.ePara);
+                paras.add(para);
+            } else if (node0 instanceof P3Tempty) {
+                throw new Error("Should not happen.");
+            } else if (node0 instanceof P3Trec) {
+                throw new Error("Should not happen.");
+            } else if (node0 instanceof P3Tcon) {
+                throw new Error("Should not happen.");
+            } else {
+                throw new Error(node0 + " is not supported");
+            }
+        }
+        return paras;
     }
 
-    private DefFun transform(D3Cimpdec node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, List<String> env_names) {
+    private ImplFun transform(D3Cimpdec node0, Cloc_t loc, Set<Cd3var> env,
+            List<IStfplInstruction> inss) {
         Cd3exp fun_exp = node0.m_i3mpdec.i2mpdec_def;
-        
         D3ElamDyn lambda = (D3ElamDyn)(fun_exp.m_node);
-        Cloc_t loc = fun_exp.m_loc;
+        
         SId name = SId.fromCd3cst(node0.m_i3mpdec.i2mpdec_cst, Category.eUserFun);
-        int lin = lambda.m_lin; 
+        int lin = lambda.m_lin;
+        
         List<Cp3at> p3ts = lambda.m_p3ts;
+        List<SId> paras = collectPatVarFunPara(p3ts);
+        
         Set<Cd3var> env2 = lambda.m_env;
         
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())), env_names);
-        DefFun def_fun = new DefFun(loc, name, lin, p3ts, inss2, env2);
-
+        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())));
+  
+        SId env_name = null;
+        Set<SIdUser> form_env = null;
+        
         // create the closure if necessary
         ISType clo_type = lambda.getType();
         if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
             if (inss != m_main_inss) {
                 throw new Error("Implementing closure is only allowed on the first level.");
             }
-            Set<SId> form_env = new HashSet<SId>();
+            
+            form_env = new HashSet<SIdUser>();
             
             for (Cd3var d3var: env2) {
                 if (env.contains(d3var)) {
-                    SId clo_id = SId.fromCloCd3var(d3var);
-                    form_env.add(clo_id);
+                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, true);
+                    form_env.add(env_member);
                 } else {
-                    form_env.add(SId.fromCd3var(d3var, null/*useless, v has been created*/));
+                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, false);
+                    form_env.add(env_member);
                 }
             }
             
@@ -259,15 +285,18 @@ public class InstructionTransformer {
                 labpats.add(labpat);
             }
             RecType env_type = new RecType(labpats, -1, 1);
-            SId env_name = SId.createEnv("env", env_type);
+            env_name = SId.createEnvId("env", env_type);
             InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
             
-            InsClosure ins_clo = new InsClosure(name, env_name);
+            SIdUser env_name_user = new SIdUser(env_name, false);
+            InsClosure ins_clo = new InsClosure(name, env_name_user);
             inss.add(ins_clo);
         }
         
-        return def_fun;
+        ImplFun ret = new ImplFun(loc, name, lin, paras, inss2, env_name, form_env);
+        
+        return ret;
     }
 
     private void transform(D3Cdcstdecs node0, Set<Cd3var> env,  
@@ -288,51 +317,42 @@ public class InstructionTransformer {
     }
 
     private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, // names from outside
-            List<IStfplInstruction> inss, List<String> env_names) {
+            List<IStfplInstruction> inss) {
 
-        Set<EscapedVar> needed = null;
+        Set<SIdUser> form_env = null;
         SId env_name = null;
+        
         // form environment if necessary
         if (node0.m_is_clo) {
-            needed = new HashSet<EscapedVar>();
-            for (Cd3var e3sc: node0.m_env) {
-                EscapedVar esc_var = null;
-                if (env.contains(e3sc)) {
-                    // the variable is from the env of the outer function
-                    esc_var = new EscapedVar(e3sc, EEscType.from_env);
+            form_env = new HashSet<SIdUser>();
+            
+            for (Cd3var d3var: node0.m_env) {
+                if (env.contains(d3var)) {
+                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, true);
+                    form_env.add(env_member);
                 } else {
-                    esc_var = new EscapedVar(e3sc, EEscType.normal);
+                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, false);
+                    form_env.add(env_member);
                 }
-                needed.add(esc_var);
             }
             
             List<ILabPat> labpats = new ArrayList<ILabPat>();
             for (Cd3var env_ele: node0.m_env) {
                 LABsym labsym = new LABsym(env_ele.m_sym);
-                LabPatNorm labpat = null;
-                if (env_names.contains(env_ele.m_env_name)) {
-                    // need the env of an outer closure
-                    labpat = new LabPatNorm(labsym, ObjectType.c_instance);
-                } else {
-                    labpat = new LabPatNorm(labsym, env_ele.m_stype);
-                }
-                
+                LabPatNorm labpat = new LabPatNorm(labsym, env_ele.m_stype);
                 labpats.add(labpat);
             }
-            RecType env_type = new RecType(labpats, -1, 1);
-            env_name = SId.createEnvId(node0.m_env_name, env_type);
-            
-            InsFormEnv ins_env = new InsFormEnv(env_name, needed);
+            RecType env_type = new RecType(labpats, -1/*no proof*/, 1/*boxed*/);
+            env_name = SId.createEnvId("env", env_type);
+            InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
+            
         }
         
         List<SId> names = new ArrayList<SId>();
         List<DefFun> funs = new ArrayList<DefFun>();
         
-        // go inside scope
-        List<String> env_names2 = new ArrayList<String>(env_names);
-        env_names2.add(node0.m_env_name);
-        
+
         for (Cf3undec f3undec: node0.m_f3ds) {
             // populate the map
             SId name = SId.fromCd3var(f3undec.m_var, SId.Category.eUserFun);
@@ -340,13 +360,11 @@ public class InstructionTransformer {
         }
         
         for (Cf3undec f3undec: node0.m_f3ds) {
-            SId name = SId.fromCd3var(f3undec.m_var, null/*Doesn't matter.*/);
-            DefFun fundef = transform(f3undec, 
-                    name,
+            
+            DefFun fundef = transform(f3undec,
                     node0.m_env/*the is the env for the function*/, 
-                    env_name, 
-                    inss, 
-                    env_names2 /**/);
+                    env_name,
+                    inss);
             funs.add(fundef);
         }
         
@@ -354,7 +372,7 @@ public class InstructionTransformer {
         DecGroup protos = new DecGroup(knd, names);
         m_decs.add(protos);
         
-        DefFunGroup fungrp = new DefFunGroup(node0.m_knd, funs, node0.m_env_name, needed);
+        DefFunGroup fungrp = new DefFunGroup(node0.m_knd, funs, env_name, form_env);
         m_defs.add(fungrp);
         
     }
@@ -363,41 +381,48 @@ public class InstructionTransformer {
      * create function definition and, closure if necessary
      * We are inside the function body.
      * 
-     * env: the environent for the function
+     * env: the environment for the function
      * env_names: including env_name
      * env_name: current env_name if not null
      */
-    private DefFun transform(Cf3undec f3undec, SId name, Set<Cd3var> env, SId env_name, 
-            List<IStfplInstruction> inss, List<String> env_names) {
+    private DefFun transform(Cf3undec f3undec, Set<Cd3var> env, SId env_name,
+            List<IStfplInstruction> inss) {
+        
+        SId name = SId.fromCd3var(f3undec.m_var);
+        
+        List<Cp3at> p3ts = f3undec.m_p3ts;
+        List<SId> paras = collectPatVarFunPara(p3ts);
+        
         Cd3exp body = f3undec.m_body;
         
         Cloc_t loc = f3undec.m_loc;
+        
         int lin = f3undec.m_lin; 
-        List<Cp3at> p3ts = f3undec.m_p3ts;
+        
 
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(body, env, inss2, SId.createRetHolder("ret", Aux.getRetType(body.m_node.getType())), env_names);
-        DefFun def_fun = new DefFun(loc, name, lin, p3ts, inss2);
+        transform(body, env, inss2, SId.createRetHolder("ret", Aux.getRetType(body.m_node.getType())));
+        DefFun def_fun = new DefFun(loc, name, lin, paras, inss2);
 
         // create the closure if necessary
         ISType clo_type = f3undec.m_type;
         if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
-            InsClosure ins_clo = new InsClosure(name, env_name);
+            SIdUser env_name_user = new SIdUser(env_name, false);
+            InsClosure ins_clo = new InsClosure(name, env_name_user);
             inss.add(ins_clo);
         }
-        
-        
+
         return def_fun;
     }
 
     private IValPrim transform(Cd3exp d3exp, Set<Cd3var> env, 
-            List<IStfplInstruction> inss, SId holder, List<String> env_names) {
+            List<IStfplInstruction> inss, SId holder) {
        Cloc_t loc = d3exp.m_loc;
        Id3exp_node node0 = d3exp.m_node;
        
        if (node0 instanceof D3Eapplst) {
-           return transform((D3Eapplst)node0, env, inss, holder, env_names);
+           return transform((D3Eapplst)node0, env, inss, holder);
        } else if (node0 instanceof D3Ecst) {
            return transform((D3Ecst)node0, env, inss, holder);
        } else if (node0 instanceof D3Eempty) {
@@ -407,17 +432,17 @@ public class InstructionTransformer {
        } else if (node0 instanceof D3Ei0nt) {
            return transform((D3Ei0nt)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Eifopt) {
-           return transform((D3Eifopt)node0, env, inss, holder, env_names);
+           return transform((D3Eifopt)node0, env, inss, holder);
        } else if (node0 instanceof D3ElamDyn) {
-           return transform((D3ElamDyn)node0, env, inss, holder, loc, env_names);
+           return transform((D3ElamDyn)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Elet) {
-           return transform((D3Elet)node0, env, inss, holder, loc, env_names);
+           return transform((D3Elet)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Es0tring) {
-           return transform((D3Es0tring)node0, env, inss, holder, loc, env_names);
+           return transform((D3Es0tring)node0, env, inss, holder, loc);
        } else if (node0 instanceof D3Esym) {
            return transform((D3Esym)node0, env, inss, holder);
        } else if (node0 instanceof D3Etup) {
-           return transform((D3Etup)node0, env, inss, holder, env_names);           
+           return transform((D3Etup)node0, env, inss, holder);           
        } else if (node0 instanceof D3Evar) {
            return transform((D3Evar)node0, env, inss, holder);
        } else {
@@ -453,7 +478,7 @@ public class InstructionTransformer {
     }
     
     private IValPrim transform(D3Es0tring node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, Cloc_t loc, List<String> env_names) {
+            List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
         AtomValue v = new AtomValue(node0.m_ty, node0.m_s0tring);
         
         if (null != holder && holder.isRet()) {
@@ -466,10 +491,10 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Etup node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, List<String> env_names) {
+            List<IStfplInstruction> inss, SId holder) {
         List<IValPrim> elements = new ArrayList<IValPrim>();
         for (Cd3exp d3exp: node0.m_d2es) {
-            IValPrim element = transform(d3exp, env, inss, null, env_names);
+            IValPrim element = transform(d3exp, env, inss, null);
             elements.add(element);
         }
         
@@ -484,71 +509,70 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Elet node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, Cloc_t loc, List<String> env_names) {
-        transform(node0.m_d3cs, env, inss, env_names);
-        return transform(node0.m_body, env, inss, holder, env_names);     
+            List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
+        transform(node0.m_d3cs, env, inss);
+        return transform(node0.m_body, env, inss, holder);     
     }
 
     private IValPrim transform(D3ElamDyn node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, Cloc_t loc, List<String> env_names) {
+            List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
         D3ElamDyn lambda = node0;
+
+        int lin = lambda.m_lin; 
         
+        List<Cp3at> p3ts = lambda.m_p3ts;
+        List<SId> paras = collectPatVarFunPara(p3ts);
+
+        Set<Cd3var> env2 = lambda.m_env;
+
         // unnamed lambda
         SId name = SId.createUserFunction("lam", lambda.getType());
-        String str_env_name = name.toString()+ "env";
-                
-        int lin = lambda.m_lin; 
-        List<Cp3at> p3ts = lambda.m_p3ts;
-
-        Set<EscapedVar> needed = null;
+        
         SId env_name = null;
-
+        Set<SIdUser> form_env = null;
+        
         // create the closure if necessary
         ISType clo_type = lambda.getType();
         if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
-            needed = new HashSet<EscapedVar>();
-            for (Cd3var e3sc: node0.m_env) {
-                EscapedVar esc_var = null;
-                if (env.contains(e3sc)) {
-                    // the variable is from the env of the outer function
-                    esc_var = new EscapedVar(e3sc, EEscType.from_env);
+            form_env = new HashSet<SIdUser>();
+            
+            for (Cd3var d3var: env2) {
+                if (env.contains(d3var)) {
+                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, true);
+                    form_env.add(env_member);
                 } else {
-                    esc_var = new EscapedVar(e3sc, EEscType.normal);
+                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, false);
+                    form_env.add(env_member);
                 }
-                needed.add(esc_var);
             }
             
             List<ILabPat> labpats = new ArrayList<ILabPat>();
-            for (Cd3var env_ele: node0.m_env) {
+            for (Cd3var env_ele: env2) {
                 LABsym labsym = new LABsym(env_ele.m_sym);
-                LabPatNorm labpat = null;
-                if (env_names.contains(env_ele.m_env_name)) {
-                    // need the env of an outer closure
-                    labpat = new LabPatNorm(labsym, ObjectType.c_instance);
-                } else {
-                    labpat = new LabPatNorm(labsym, env_ele.m_stype);
-                }
-                
+                LabPatNorm labpat = new LabPatNorm(labsym, env_ele.m_stype);
                 labpats.add(labpat);
             }
             RecType env_type = new RecType(labpats, -1, 1);
-            env_name = SId.createEnvId(str_env_name, env_type);
+            env_name = SId.createEnvId("env", env_type);
             
-            InsFormEnv ins_env = new InsFormEnv(env_name, needed);
+            InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
+            
+            SIdUser env_name_user = new SIdUser(env_name, false);
+            InsClosure ins_clo = new InsClosure(name, env_name_user);
+            inss.add(ins_clo);
         }
 
-        
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(lambda.m_d3exp, node0.m_env, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())), env_names);
-        DefFun def_fun = new DefFun(loc, name, lin, p3ts, inss2);
+        transform(lambda.m_d3exp, node0.m_env, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())));
+        DefFun def_fun = new DefFun(loc, name, lin, paras, inss2);
         List<DefFun> fun_lst = new ArrayList<DefFun>();
         fun_lst.add(def_fun);
         
         // add to global definition
         Efunkind fun_knd = Efunkind.FK_fn;  // Unnamed lambda is non-recursive.
-        DefFunGroup fun_group = new DefFunGroup(fun_knd, fun_lst, str_env_name, needed);
+        DefFunGroup fun_group = new DefFunGroup(fun_knd, fun_lst, env_name, form_env);
         m_defs.add(fun_group);
 
         // add to global declaration
@@ -558,13 +582,6 @@ public class InstructionTransformer {
         DecGroup protos = new DecGroup(dec_knd, name_lst);
         m_decs.add(protos);
 
-        // create the closure if necessary
-        // if no annotation about closure, then treat it as closure
-        if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
-            InsClosure ins_clo = new InsClosure(name, env_name);
-            inss.add(ins_clo);
-        }
-        
         // add instruction for move
         if (null == holder) {
             return name;
@@ -576,19 +593,19 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Eifopt node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, List<String> env_names) {
+            List<IStfplInstruction> inss, SId holder) {
         if (null == holder) {
             holder = SId.createLocalVar("cond", node0.m_test.m_node.getType());
         }
         
-        IValPrim vp_cond = transform(node0.m_test, env, inss, null, env_names);
+        IValPrim vp_cond = transform(node0.m_test, env, inss, null);
         
         List<IStfplInstruction> btrue = new ArrayList<IStfplInstruction>();
         List<IStfplInstruction> bfalse = new ArrayList<IStfplInstruction>();
         
-        transform(node0.m_then, env, btrue, holder, env_names);
+        transform(node0.m_then, env, btrue, holder);
         if (null != node0.m_else) {
-            transform(node0.m_else, env, bfalse, holder, env_names);
+            transform(node0.m_else, env, bfalse, holder);
         }
         
         InsCond ins = new InsCond(holder, vp_cond, btrue, bfalse);
@@ -610,8 +627,8 @@ public class InstructionTransformer {
     }
 
     private IValPrim transform(D3Eapplst node0, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, List<String> env_names) {
-        IValPrim vpFun = transform(node0.m_fun, env, inss, null, env_names);
+            List<IStfplInstruction> inss, SId holder) {
+        IValPrim vpFun = transform(node0.m_fun, env, inss, null);
 
         ListIterator<D3EXPARGdyn> iter_args = node0.m_args.listIterator();
         D3EXPARGdyn args = iter_args.next();
@@ -621,13 +638,13 @@ public class InstructionTransformer {
         while (true) {
             List<IValPrim> vpArgs = new ArrayList<IValPrim>();
             for (Cd3exp arg: args.m_d3expLst) {
-                IValPrim vpArg = transform(arg, env, inss, null, env_names);
+                IValPrim vpArg = transform(arg, env, inss, null);
                 vpArgs.add(vpArg);
             }
 
             if (iter_args.hasNext()) {
                 SId id = SId.createLocalVar("temp", iter_types.next());
-                formInsCall(id, vpFun, vpArgs, env_names, inss);
+                formInsCall(id, vpFun, vpArgs, inss);
 
                 vpFun = id;
                 args = iter_args.next();
@@ -635,10 +652,10 @@ public class InstructionTransformer {
             } else {
                 if (null == holder) {
                     SId id = SId.createLocalVar("temp", iter_types.next());
-                    formInsCall(id, vpFun, vpArgs, env_names, inss);
+                    formInsCall(id, vpFun, vpArgs, inss);
                     return id;
                 } else {
-                    formInsCall(holder, vpFun, vpArgs, env_names, inss);
+                    formInsCall(holder, vpFun, vpArgs, inss);
                     return holder;
                 }
                 
@@ -647,19 +664,13 @@ public class InstructionTransformer {
     }
     
     private void formInsCall(SId holder, IValPrim fun, 
-            List<IValPrim> args, 
-            List<String> env_names,
+            List<IValPrim> args,
             List<IStfplInstruction> inss) {
         InsCall aIns = null;
         
         if (((FunType)fun.getType()).getFunClo() != FUNCLOfun.cInstance) {
             // Call a closure
-            String env_name = fun.getEnvName();
-            if (env_names.contains(env_name)) {  // Call a enclosing closure
-                aIns = new InsCall(holder, fun, args, ECallType.eCloEnv);
-            } else {
-                aIns = new InsCall(holder, fun, args, ECallType.eCloObj);
-            }
+            aIns = new InsCall(holder, fun, args, ECallType.eCloObj);
         } else {
             // Call a function
             aIns = new InsCall(holder, fun, args, ECallType.eFun);
@@ -691,23 +702,23 @@ public class InstructionTransformer {
 
     /*
      * Usage of variable
+     * IValPrim can only be of SIdUser or SId.
      */
-    private VNameSId transform(D3Evar node, Set<Cd3var> env,
-            List<IStfplInstruction> inss, SId holder, List<String> env_names) {
-        SId var_def = SId.fromCd3var(node.m_d3var, null/*useless, v has been created*/);
-        SId v = null;
+    private IValPrim transform(D3Evar node, Set<Cd3var> env,
+            List<IStfplInstruction> inss, SId holder) {
+        SIdUser sid_user = null;
         if (env.contains(node)) {
-            v = new VNameSId(var_def, false);
+            sid_user = SId.createSIdUserByCd3var(node.m_d3var, true);
         } else {
-            v = SId.fromCd3var(node.m_d3var, null/*useless, v has been created*/);
+            sid_user = SId.createSIdUserByCd3var(node.m_d3var, false);
         }
 
         if (null != holder) {
-            InsMove aIns = new InsMove(v, holder);
+            InsMove aIns = new InsMove(sid_user, holder);
             inss.add(aIns);
             return holder;
         } else {
-            return v;
+            return sid_user;
         }
     }
     

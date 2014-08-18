@@ -10,8 +10,8 @@ public class InsCall implements IStfplInstruction {
     
     static enum ECallType {
     	eFun,
-    	eCloObj,
-    	eCloEnv  // calling an enclosing function
+    	eCloObj
+//    	eCloEnv  // calling an enclosing function
     }
     
     public InsCall(SId holder, IValPrim fun, List<IValPrim> args, ECallType call_type) {

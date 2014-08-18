@@ -9,13 +9,14 @@ import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.stype.ISType;
 
 public class SId implements IValPrim{
-    static public SId ANONY = new SId(VNameId.s_anony, Category.eOther);
     
     enum Category {/*eLibFun, *//*eGloVar, */eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
     
+    static public SId ANONY = new SId(VNameId.s_anony, Category.eOther);
+
     public IVarName m_name;
     public Category m_cat;
-    
+
     static private Map<IVarName, SId> s_map = new HashMap<IVarName, SId>(); 
 
     public SId(IVarName name, Category cat) {
@@ -53,16 +54,32 @@ public class SId implements IValPrim{
         VNameVar name = VNameVar.fromCd3var(d3var);
         SId id = s_map.get(name);
         if (null == id) {
-            if (cat == null) {
-                throw new Error("should not happen");
-            }
             id = new SId(name, cat);
             s_map.put(name, id);
             return id;
         } else {
+            throw new Error("Should not happen.");
+        }
+    }
+    
+    static public SId fromCd3var(Cd3var d3var) {
+        VNameVar name = VNameVar.fromCd3var(d3var);
+        SId id = s_map.get(name);
+        if (null == id) {
+            throw new Error("Should not happen.");
+        } else {
             return id;
         }
-
+    }
+    
+    static public SIdUser createSIdUserByCd3var(Cd3var d3var, boolean from_env) {
+        VNameVar name = VNameVar.fromCd3var(d3var);
+        SId sid = s_map.get(name);
+        if (null == sid) {
+            throw new Error("should not happen");
+        }
+        SIdUser su = new SIdUser(sid, from_env);
+        return su;
     }
     
 //    static public SId fromCloCd3var(Cd3var d3var) {
@@ -97,7 +114,7 @@ public class SId implements IValPrim{
     }
     
     public static SId createEnvId(String name, ISType stype) {
-        VNameString id = VNameString.fromString(name, stype);
+        VNameId id = new VNameId(name, stype);
         SId ret = new SId(id, Category.eLocalVar);
         return ret;
     }
@@ -123,14 +140,6 @@ public class SId implements IValPrim{
         return Category.eConstant == m_cat;
     }
 
-    @Override
-    public String getEnvName() {
-        if (m_name instanceof VNameVar) {
-            return ((VNameVar)m_name).m_var.m_env_name;
-        } else {
-            return null;
-        }
-    }
 }
 
 

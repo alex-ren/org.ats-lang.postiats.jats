@@ -14,15 +14,19 @@ import jats.utfpl.stfpl.instructions.AtomValue;
 import jats.utfpl.stfpl.instructions.DecGroup;
 import jats.utfpl.stfpl.instructions.DefFun;
 import jats.utfpl.stfpl.instructions.DefFunGroup;
+import jats.utfpl.stfpl.instructions.IFunDef;
 import jats.utfpl.stfpl.instructions.IStfplInstruction;
 import jats.utfpl.stfpl.instructions.IValPrim;
+import jats.utfpl.stfpl.instructions.ImplFun;
 import jats.utfpl.stfpl.instructions.InsCall;
 import jats.utfpl.stfpl.instructions.InsClosure;
 import jats.utfpl.stfpl.instructions.InsCond;
+import jats.utfpl.stfpl.instructions.InsFormEnv;
 import jats.utfpl.stfpl.instructions.InsMove;
 import jats.utfpl.stfpl.instructions.InsPatLabDecompose;
 import jats.utfpl.stfpl.instructions.InsTuple;
 import jats.utfpl.stfpl.instructions.SId;
+import jats.utfpl.stfpl.instructions.SIdUser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,7 +69,7 @@ public class CSInstructionTransformer {
     
     public void transformProgram(List<DecGroup> decs,
     		List<D3Cextcode> exts,
-    		List<DefFunGroup> defs,
+    		List<IFunDef> defs,
     		List<IStfplInstruction> main_inss) {
 
     	for (DecGroup dec: decs) {
@@ -75,7 +79,7 @@ public class CSInstructionTransformer {
     	
     	m_exts = exts;
     	
-    	for (DefFunGroup def: defs) {
+    	for (IFunDef def: defs) {
     		CSDefFunGroup csdef = transform(def);
     		m_defs.add(csdef);
     	}
@@ -84,45 +88,87 @@ public class CSInstructionTransformer {
     	
     }
 
-    private CSDefFunGroup transform(DefFunGroup def_grp) {
+    private CSDefFunGroup transform(IFunDef def) {
+        if (def instanceof DefFunGroup) {
+            return transform((DefFunGroup)def);
+        } else if (def instanceof ImplFun) {
+            return transform((ImplFun)def);
+        } else {
+            throw new Error(def + " is not supported.");
+        }
+    }
+    
+    private CSDefFunGroup transform(ImplFun node) {
+        // Each closure has the potential to create a new type.
+        Set<SIdUser> env = node.m_env;
+        Set<CSSIdUser> csenv = new HashSet<CSSIdUser>();
+        for (SIdUser sid_user: env) {
+            CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
+                    sid_user, sid_user.getType().toCSType(m_track).m_type);
+            csenv.add(cssid_user);
+        }
+        
+        CSSId cs_env_id = StfplVP2CS(node.m_env_name);
+        
+        CSTBookingEnv env_book = null;
+        if (!env.isEmpty()) {
+            env_book = new CSTBookingEnv(cs_env_id, csenv);
+            m_track.add(env_book);
+        }
+        
+        List<CSDefFun> csdefs = new ArrayList<CSDefFun>();
+        CSSId csid = StfplVP2CS(node.m_name);
+        List<CSSId> csparas = new ArrayList<CSSId>();
+        for (SId sid: node.m_paras) {
+            CSSId cssid = StfplVP2CS(sid);
+            csparas.add(cssid);
+        }
+
+        List<ICSInstruction> csinss = transform(node.m_inss);
+        CSDefFun csdef = new CSDefFun(node.m_loc, csid, node.m_lin, csparas, csinss);
+        csdefs.add(csdef);
+        
+        return new CSDefFunGroup(null/*no info about kind*/, csdefs, env_book);
+    }
+
+    private CSDefFunGroup transform(DefFunGroup node) {
+        // Each closure has the potential to create a new type.
+        Set<SIdUser> env = node.m_env;
+        Set<CSSIdUser> csenv = new HashSet<CSSIdUser>();
+        for (SIdUser sid_user: env) {
+            CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
+                    sid_user, sid_user.getType().toCSType(m_track).m_type);
+            csenv.add(cssid_user);
+        }
+        
+        CSSId cs_env_id = StfplVP2CS(node.m_env_name);
+
+        CSTBookingEnv env_book = null;
+        if (!env.isEmpty()) {
+            env_book = new CSTBookingEnv(cs_env_id, csenv);
+            m_track.add(env_book);
+        }
+        
 		List<CSDefFun> csdefs = new ArrayList<CSDefFun>();
-	    for (DefFun def: def_grp.m_funs) {
+	    for (DefFun def: node.m_funs) {
 	    	CSDefFun csdef = transform(def);
 	    	csdefs.add(csdef);
 	    }
 	    
-	    return new CSDefFunGroup(def_grp.m_knd, csdefs);
+	    return new CSDefFunGroup(node.m_knd, csdefs, env_book);
     }
 
 	private CSDefFun transform(DefFun fun_def) {
-	    CSSId csid = CSSId.fromSId(fun_def.m_name,
-	    		                   fun_def.m_name.getType().toCSType(m_track).m_type);
+	    CSSId csid = StfplVP2CS(fun_def.m_name);
 	    
-	    List<CSVar> csparas = new ArrayList<CSVar>();
-	    for (Cp3at pat: fun_def.m_p3ts) {
-	    	if (pat.m_node instanceof P3Tvar) {
-	    		Cd3var var = ((P3Tvar)pat.m_node).m_var;
-	    		CSVar csvar = CSVar.fromCd3var(var, var.m_stype.toCSType(m_track).m_type);
-	    		csparas.add(csvar);
-	    	}
+	    List<CSSId> csparas = new ArrayList<CSSId>();
+	    for (SId sid: fun_def.m_paras) {
+	        CSSId cssid = StfplVP2CS(sid);
+	        csparas.add(cssid);
 	    }
 
 	    List<ICSInstruction> csinss = transform(fun_def.m_inss);
-	    
-	    Set<CSVar> csenv = new HashSet<CSVar>();
-	    for (Cd3var var: fun_def.m_env) {
-	    	CSVar csvar = CSVar.fromCd3var(var, var.m_stype.toCSType(m_track).m_type);
-	    	csenv.add(csvar);
-	    }
-	    
-	    // Each closure has the potential to create a new type.
-	    CSTBookingEnv benv = null;
-	    if (!csenv.isEmpty()) {
-	        benv = new CSTBookingEnv(csid, csenv);
-	        m_track.add(benv);
-	    }
-
-	    return new CSDefFun(fun_def.m_loc, csid, fun_def.m_lin, csparas, csinss, csenv, benv);
+	    return new CSDefFun(fun_def.m_loc, csid, fun_def.m_lin, csparas, csinss);
     }
 	
 	List<ICSInstruction> transform(List<IStfplInstruction> inss) {
@@ -147,12 +193,20 @@ public class CSInstructionTransformer {
 	    	return transform_ins((InsPatLabDecompose)ins);
 	    } else if (ins instanceof InsTuple) {
 	    	return transform_ins((InsTuple)ins);
+	      } else if (ins instanceof InsFormEnv) {
+	        return transform_ins((InsFormEnv)ins);
 	    } else {
 	    	throw new Error(ins + " is not supported");
 	    }
     }
 
-	private CSInsTuple transform_ins(InsTuple ins) {
+	private CSInsFormEnv transform_ins(InsFormEnv ins) {
+	    CSSId name = StfplVP2CS(ins.m_name);
+	    Set<CSSIdUser> env = StfplVP2CS(ins.m_env);
+	    return new CSInsFormEnv(name, env);
+    }
+
+    private CSInsTuple transform_ins(InsTuple ins) {
 
 	    List<ICSValPrim> elements = StfplVP2CS(ins.m_elements);
 	    CSSId holder = StfplVP2CS(ins.m_holder);
@@ -190,7 +244,7 @@ public class CSInstructionTransformer {
 	private CSInsClosure transform_ins(InsClosure ins) {
 
 	    CSSId name = StfplVP2CS(ins.m_name);
-	    Set<CSSId> env = StfplVP2CS(ins.m_env);
+	    CSSIdUser env = StfplVP2CS(ins.m_env);
 	    
 	    return new CSInsClosure(name, env);
 	    
@@ -212,6 +266,11 @@ public class CSInstructionTransformer {
 				sid.getType().toCSType(m_track).m_type);
 	}
 	
+	   private CSSIdUser StfplVP2CS(SIdUser sid_user) {
+	        return CSSIdUser.fromSIdUser(sid_user,
+	                sid_user.getType().toCSType(m_track).m_type);
+	    }
+	
 	private CSAtomValue StfplVP2CS(AtomValue v) {
 		return new CSAtomValue(v, v.getType().toCSType(m_track).m_type);
 	}
@@ -221,6 +280,9 @@ public class CSInstructionTransformer {
 			return StfplVP2CS((AtomValue)vp);
 		} else if (vp instanceof SId) {
 			return StfplVP2CS((SId)vp);
+		}
+		else if (vp instanceof SIdUser) {
+			    return StfplVP2CS((SIdUser)vp);
 		} else {
 			throw new Error(vp + " is not supported.");
 		}
@@ -244,10 +306,10 @@ public class CSInstructionTransformer {
 //		return csvps;
 //	}
 	
-	private Set<CSSId> StfplVP2CS(Set<SId> vps) {
-		Set<CSSId> csvps = new HashSet<CSSId>();
-		for (SId vp: vps) {
-			CSSId csvp = StfplVP2CS(vp);
+	private Set<CSSIdUser> StfplVP2CS(Set<SIdUser> vps) {
+		Set<CSSIdUser> csvps = new HashSet<CSSIdUser>();
+		for (SIdUser vp: vps) {
+		    CSSIdUser csvp = StfplVP2CS(vp);
 			csvps.add(csvp);
 		}
 		return csvps;

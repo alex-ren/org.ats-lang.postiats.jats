@@ -10,6 +10,9 @@ import jats.utfpl.stfpl.Csymbol;
 public class Cs2cst {
     public Cstamp m_stamp;
     public Csymbol m_symbol;
+    // todo 
+    // s2cst_supcls
+    // s2cst_srt
     
     public Cstamp getStamp() {
         return m_stamp;

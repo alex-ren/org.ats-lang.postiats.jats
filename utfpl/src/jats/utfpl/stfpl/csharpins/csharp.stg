@@ -60,11 +60,16 @@ class <env_type_t(name)> {
 >>
 
 
-CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss) ::= <<
+CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss, form_closures) ::= <<
 static public <ret_type> <if(is_clo)><closure_fun_name_t(name)><else><name><endif>(<paras; separator=", ">) {
     <if(env_type)><env_type> env0 = (<env_type>)env;<endif>
+    <form_closures>
     <inss; separator="\n">
 }
+>>
+
+form_closure_t(fun_name) ::= <<
+<closure_type_st()> fun_name = new <closure_type_st()>(<closure_fun_name_t(fun_name)>, env0);
 >>
 
 // == closure related ======================
@@ -133,9 +138,8 @@ CSInsCall_call_clo_name_st(fun_name, args) ::= <<
 clo2: <fun_name>(<args; separator=", ">)
 >>
 
-CSInsClosure_st(name, fun_type, args) ::= <<
-<env_type_t(name)> <env_obj_t(name)> = new <env_type_t(name)>(<args; separator=", ">);
-<closure_type_st()> <name> = new <closure_type_st()>((<fun_type>)<closure_fun_name_t(name)>, <env_obj_t(name)>);
+CSInsClosure_st(name, fun_type, env_name) ::= <<
+<closure_type_st()> <name> = new <closure_type_st()>((<fun_type>)<closure_fun_name_t(name)>, <env_name>);
 >>
 
 CSInsCond_st(type, name, cond, btrue, bfalse) ::= <<
@@ -177,6 +181,10 @@ return new <type>(<values; separator=", ">);
 
 ret_st(v) ::= <<
 return<if(v)> <v><endif>;
+>>
+
+CSInsFormEnv_st(name, args) ::= <<
+<env_type_t(name)> <name> = new <env_type_t(name)>(<args; separator=", ">);
 >>
 
 // ======================

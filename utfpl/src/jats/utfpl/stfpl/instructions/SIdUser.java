@@ -11,15 +11,18 @@ public class SIdUser implements IValPrim {
         m_sid = sid;
         m_from_env = from_env;
     }
+    
+    boolean isFromEnv() {
+        return m_from_env;
+    }
 
     @Override
     public ISType getType() {
         return m_sid.getType();
     }
-
-    @Override
-    public String getEnvName() {
-        return m_sid.getEnvName();
+    
+    public String toStringCS() {
+        return m_sid.toStringCS();
     }
 
 }

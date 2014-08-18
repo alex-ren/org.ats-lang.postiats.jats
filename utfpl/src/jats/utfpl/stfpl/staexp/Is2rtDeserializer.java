@@ -17,6 +17,9 @@ public class Is2rtDeserializer implements JsonDeserializer<Is2rt> {
             JsonDeserializationContext context) throws JsonParseException {
         String srt = json.getAsString();
         S2RT ret = new S2RT(srt);
+        map
+        // S2RTbas
+        // S2RTfun
         return ret;
     }
 }

@@ -39,6 +39,10 @@ public class Cs2cstDeserializer implements JsonDeserializer<Cs2cst> {
             return s2cst;
         }
         
+        // todo 
+        // s2cst_supcls
+        // s2cst_srt
+        
     }
 
 }

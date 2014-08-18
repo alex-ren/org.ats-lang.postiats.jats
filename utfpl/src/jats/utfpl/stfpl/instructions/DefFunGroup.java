@@ -5,13 +5,13 @@ import jats.utfpl.stfpl.dynexp.Efunkind;
 import java.util.List;
 import java.util.Set;
 
-public class DefFunGroup {
+public class DefFunGroup implements IFunDef {
     public Efunkind m_knd;
     public List<DefFun> m_funs;
-    public String m_env_name;
-    public Set<EscapedVar> m_env;  
+    public SId m_env_name;
+    public Set<SIdUser> m_env;  
     
-    public DefFunGroup(Efunkind knd, List<DefFun> funs, String env_name, Set<EscapedVar> env) {
+    public DefFunGroup(Efunkind knd, List<DefFun> funs, SId env_name, Set<SIdUser> env) {
         m_knd = knd;
         m_funs = funs;
         m_env_name = env_name;

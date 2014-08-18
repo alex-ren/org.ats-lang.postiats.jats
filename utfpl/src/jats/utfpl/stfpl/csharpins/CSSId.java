@@ -10,6 +10,7 @@ public class CSSId implements ICSValPrim {
 	public SId m_sid;
 	private ICSType m_type;
 	
+	// basically this is not necessary
 	private static Map<SId, CSSId> s_map = new HashMap<SId, CSSId>();
 	
 	private CSSId(SId sid, ICSType type) {
@@ -20,7 +21,7 @@ public class CSSId implements ICSValPrim {
 	public static CSSId fromSId(SId sid, ICSType type) {
 		CSSId cssid = s_map.get(sid);
 		if (null != cssid) {
-			return cssid;
+			throw new Error("This should not happen.");
 		} else {
 			cssid = new CSSId(sid, type);
 			s_map.put(sid, cssid);

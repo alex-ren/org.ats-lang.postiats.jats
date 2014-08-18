@@ -76,6 +76,15 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+/*
+ * Some explanation about needed and scope.
+ * scope contains the current variables within scope.
+ * needed is used to accumulate all the variables needed
+ * but not in the current scope. Such variables are expected
+ * to come from the environment.
+ * 
+ */
+
 public class DynExp3Transformer {
     
     private Map<Cstamp, Cd3cst> m_cstMap;
@@ -213,7 +222,9 @@ public class DynExp3Transformer {
         Cd3cst d3cst = transform(i2mpdec.i2mpdec_cst, i2mpdec.i2mpdec_locid);
         String env_name = d3cst.toString() + "env";
         
-        Cd3exp d3exp = transform(i2mpdec.i2mpdec_def, scope, needed, new ArrayList<List<PolyParaType>>());
+        Set<Cd3var> total_needed = new HashSet<Cd3var>();
+        
+        Cd3exp d3exp = transform(i2mpdec.i2mpdec_def, scope, total_needed, new ArrayList<List<PolyParaType>>());
         
         Ci3mpdec i3mpdec = new Ci3mpdec(i2mpdec.i2mpdec_loc, i2mpdec.i2mpdec_locid, d3cst, d3exp, env_name);
         return i3mpdec;        
@@ -254,13 +265,8 @@ public class DynExp3Transformer {
             List<Cf3undec> f3uns = new ArrayList<Cf3undec>();
             Set<Cd3var> total_needed = new HashSet<Cd3var>();
             
-            // Use the name of the first element.
-            Cf2undec instance = node0.m_f2ds.get(0);
-            String env_name = instance.f2undec_var.toString() + "env";
-            
             for (Cf2undec f2un: node0.m_f2ds) {
                 Cd3var name = transform(f2un.f2undec_var, f2un.f2undec_loc);
-                name.update(env_name);
                 
                 Set<Cd3var> cur_scope = new HashSet<Cd3var>();
                 Set<Cd3var> cur_needed = new HashSet<Cd3var>();
@@ -285,10 +291,10 @@ public class DynExp3Transformer {
 
             for (Cf3undec f3un: f3uns) {
                 scope.add(f3un.m_var);
-                total_needed.remove(f3un.m_var.m_stamp);  // due to mutually recursive, we
+                total_needed.remove(f3un.m_var);  // due to mutually recursive, we
                                                     // may have put sibling closures into "needed".
             }
-            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, env_name, !isFun);
+            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, !isFun);
             
             return new Cd3ecl(loc, node);
         }

@@ -10,6 +10,7 @@ import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,21 +58,26 @@ public class CSharpPrinter {
 
     private ST printFunGroups(ST st_prog, List<CSDefFunGroup> fun_grps) {
         for (CSDefFunGroup fun_grp: fun_grps) {
+            Set<CSSId> siblings = new HashSet<CSSId>();
             for (CSDefFun fun_def: fun_grp.m_funs) {
-                st_prog.add("funs", printFunDef(fun_def));
+                siblings.add(fun_def.m_name);
+            }
+            
+            for (CSDefFun fun_def: fun_grp.m_funs) {
+                st_prog.add("funs", printFunDef(fun_def, siblings, fun_grp.m_env_book));
             }
         }
         return st_prog;
     }
 
-    private ST printFunDef(CSDefFun def) {
-        // CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss) ::= <<
+    private ST printFunDef(CSDefFun def, Set<CSSId> siblings, CSTBookingEnv env_book) {
+        // CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss, form_closures) ::= <<
         ST st_fun = m_stg.getInstanceOf("CSDefFun_st");
         st_fun.add("name", def.m_name.toStringCS());
         
         CSFunType fun_ty = (CSFunType)def.m_name.getType();
         
-        for (CSVar para: def.m_paras) {
+        for (CSSId para: def.m_paras) {
             // fun_para_st(name, type) ::= <<
             ST st_para = m_stg.getInstanceOf("fun_para_st");
             st_para.add("name", para.toString());
@@ -85,9 +91,16 @@ public class CSharpPrinter {
             
             ST st_cloenv = m_stg.getInstanceOf("closure_env_para_t");
             st_fun.add("paras", st_cloenv);
-            if (null != def.m_env_type) {
-                st_fun.add("env_type", def.m_env_type.m_name.toStringCS());
+            if (null != env_book) {
+                st_fun.add("env_type", env_book.m_name.toStringCS());
             }
+
+            // form_closure_t(fun_name) ::= <<
+            ST st_form_clo = m_stg.getInstanceOf("form_closure_t");
+            for (CSSId sib: siblings) {
+                st_form_clo.add("fun_name", sib.toStringCS()); 
+            }
+            st_fun.add("form_closures", st_form_clo);
             
         } else {
             st_fun.add("is_clo", false);
@@ -130,7 +143,7 @@ public class CSharpPrinter {
         ST st = m_stg.getInstanceOf("CSTBookingEnv_st");
         st.add("name", b.m_name.toStringCS());
 
-        for (CSVar var: b.m_env) {
+        for (CSSIdUser var: b.m_env) {
             ST st_type = var.getType().toSt(m_stg, 1);
             String name = var.toString();
 
