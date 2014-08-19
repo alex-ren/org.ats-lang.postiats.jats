@@ -28,6 +28,9 @@ public class D3Cfundecs implements Id3ecl_node {
         m_f3ds = f3ds;
         m_env = env;
         m_is_clo = is_clo;
+//        for (Cd3var var: env) {
+//            System.out.println("ssssssssss var is " + var);
+//        }
     }
 
 }

@@ -135,11 +135,12 @@ public class FunType extends BoxedType {
             ++arg_size;
         }
         // find an appropriate name
-        CSTBookingFun booking = Aux.findBookingFun(track, arg_size);
+        boolean is_void = (m_res instanceof VoidType);
+        CSTBookingFun booking = Aux.findBookingFun(track, arg_size, is_void);
         ICSTypeName name = null;
         if (null == booking) {
             name = CSTNameId.createTypeId("fun"); 
-            booking = new CSTBookingFun(name, arg_size);
+            booking = new CSTBookingFun(name, arg_size, is_void);
             track.add(booking);   
         } else {
             name = booking.m_name;

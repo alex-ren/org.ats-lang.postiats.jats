@@ -37,21 +37,151 @@
   D2Cnone
 }
 
-fun foo5_3420 = lam () <> = 
+fun foo_3447 = lam () <fun> = 
+  <fun>
   <D2EannSeff>(let
-    val x_3421 = 1
-    fun foo6_3422 = lam () <> = 
+    val P2Tann<x_3448:_:t@ype> = 3
+    fun foo1_3449 = lam () <fun> = 
+      <fun>
       <D2EannSeff>(let
-        val y_3423 = x_3421
-        fun foo7_3424 = lam () <> = 
+        val y_3450 = 1
+      in
+        ()
+      end:_:t@ype)
+  in
+    ()
+  end:_:t@ype)
+
+fun foo1_3451 = lam (P2Tann<x_3452:_:t@ype>) <fun> = 
+  <fun>
+  <D2EannSeff>(let
+    val P2Tann<x1_3453:_:t@ype> = D2Esym<+> (1, 2)
+    val x2_3454 = foo1_3451 (x_3452)
+  in
+    x1_3453
+  end:_:t@ype)
+
+fun foo2_3455 = lam (P2Tann<f_3456:_:type>) <> = 
+  <D2EannSeff>(let
+    val x_3457 = 1
+    val y_3458 = f_3456 (x_3457)
+  in
+    y_3458
+  end:_:t@ype)
+
+fun foo3_3459 = lam (P2Tann<x_3460:_:t@ype>) <> = 
+  <D2EannSeff>(let
+    val x_3461 = 1
+    fun foo4_3462 = lam (P2Tann<y_3463:_:t@ype>) <> = 
+      <D2EannSeff>(D2Esym<+> (y_3463, x_3461):_:t@ype)
+    val y_3464 = foo4_3462 (2)
+  in
+    y_3464
+  end:_:t@ype)
+
+fun foo5_3465 = lam () <> = 
+  <D2EannSeff>(let
+    val x_3466 = 1
+    fun foo6_3467 = lam () <> = 
+      <D2EannSeff>(let
+        val y_3468 = x_3466
+        fun foo7_3469 = lam () <> = 
           <D2EannSeff>(let
-            val P2Tann<z_3425:_:t@ype> = D2Esym<+> (x_3421, y_3423)
+            val P2Tann<z_3470:_:t@ype> = D2Esym<+> (x_3466, y_3468)
           in
             ()
           end:_:t@ype)
       in
         ()
       end:_:t@ype)
+  in
+    ()
+  end:_:t@ype)
+
+fun foo8_3471 = lam () <> = 
+  <D2EannSeff>(let
+    fun foo9_3472 = lam () <> = 
+      <D2EannSeff>(let
+        fun foo10_3473 = lam () <> = 
+          <D2EannSeff>(let
+            val () = foo8_3471 ()
+            val () = foo9_3472 ()
+            val () = foo10_3473 ()
+          in
+            foo8_3471 ()
+          end:_:t@ype)
+      in
+        foo8_3471 ()
+      end:_:t@ype)
+  in
+    foo9_3472 ()
+  end:_:t@ype)
+
+fun foo11_3474 = lam () <> = 
+  <D2EannSeff>(let
+    fun foo12_3475 = lam (P2Tann<x_3476:_:t@ype>) <> = 
+      <D2EannSeff>(x_3476:_:t@ype)
+  in
+    foo12_3475
+  end:_:type)
+
+fun foo13_3477 = lam () <> = 
+  <D2EannSeff>(let
+    val y_3478 = 1
+    fun foo14_3479 = lam (P2Tann<x_3480:_:t@ype>) <> = 
+      <D2EannSeff>(D2Esym<+> (y_3478, x_3480):_:t@ype)
+  in
+    foo14_3479 (1)
+  end:_:t@ype)
+
+fun foo15_3481 = lam () <fun> = 
+  <fun>
+  <D2EannSeff>(let
+    val x_3482 = 1
+    fun foo16_3483 = lam (P2Tann<y_3484:_:t@ype>) <> = 
+      <D2EannSeff>(D2Esym<+> (x_3482, y_3484):_:t@ype)
+    val y_3485 = foo16_3483 (3)
+  in
+    ()
+  end:_:t@ype)
+
+fun foo17_3486 = lam (P2Tann<f_3487:_:type>, P2Tann<x_3488:_:t@ype>) <> = 
+  <D2EannSeff>(let
+    val y_3489 = f_3487 (x_3488)
+  in
+    y_3489
+  end:_:t@ype)
+
+fun foo18_3490 = lam (P2Tann<f_3491:_:type>, P2Tann<x_3492:_:t@ype>) <> = 
+  <D2EannSeff>(let
+    val y_3493 = f_3491 (x_3492)
+  in
+    y_3493
+  end:_:t@ype)
+
+fun foo19_3494 = lam () <> = 
+  <D2EannSeff>(let
+    fun foo20_3495 = lamMet. lam (P2Tann<x_3496:_:t@ype>) <clo> = 
+      <clo_ref>
+      <D2EannSeff>(x_3496:_:t@ype)
+  in
+    foo20_3495
+  end:_:type)
+
+fun foo21_3497 = lam () <> = 
+  <D2EannSeff>(let
+    val y_3498 = 3
+    fun foo22_3499 = lamMet. lam (P2Tann<x_3500:_:t@ype>) <fun> = 
+      <fun>
+      <D2EannSeff>(x_3500:_:t@ype)
+  in
+    foo22_3499
+  end:_:type)
+
+implement main_void_0_55: = lam () <fun> = 
+  <fun>
+  <D2EannSeff>(let
+    val () = D2Esym<print> ("Helloworld, ATS2.\n")
   in
     ()
   end:_:t@ype)

@@ -131,7 +131,8 @@ public class RecType extends BoxedType {
         if (null == booking) {
             name = CSTNameId.createTypeId("rec"); 
             booking = new CSTBookingRecord(name, labs);
-            track.add(booking);            
+            track.add(booking);  
+//            throw new Error("dddddddddddddddddddddd");
         } else {
             name = booking.m_name;
         }

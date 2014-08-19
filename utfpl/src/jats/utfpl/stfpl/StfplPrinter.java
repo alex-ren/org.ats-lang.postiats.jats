@@ -64,7 +64,9 @@ import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.Is2rt;
-import jats.utfpl.stfpl.staexp.S2RT;
+import jats.utfpl.stfpl.staexp.S2RTbas;
+import jats.utfpl.stfpl.staexp.S2RTfun;
+import jats.utfpl.stfpl.staexp.S2RTtup;
 
 import java.net.URL;
 
@@ -388,17 +390,41 @@ public class StfplPrinter {
     }
 
 	private ST printIs2rt(Is2rt node) {
-	    if (node instanceof S2RT) {
-	    	return printS2RT((S2RT)node);
+	    if (node instanceof S2RTbas) {
+	    	return printS2RTbas((S2RTbas)node);
+	    } else if (node instanceof S2RTfun) {
+	        return printS2RTfun((S2RTfun)node);
+	    } else if (node instanceof S2RTtup) {
+	        return printS2RTtup((S2RTtup)node);
 	    } else {
 	    	throw new Error("Is2rt " + node + " is not supported");
 	    }
     }
 
-	private ST printS2RT(S2RT node) {
-	    // S2RT_st(srt) ::= <<
-		ST st = m_stg.getInstanceOf("S2RT_st");
-		st.add("srt", node.m_srt);
+	private ST printS2RTtup(S2RTtup node) {
+        // S2RTtup_st(eles) ::= <<
+        ST st = m_stg.getInstanceOf("S2RTtup_st");
+        for (Is2rt ele: node.m_s2ts) {
+            st.add("eles", printIs2rt(ele));
+        }
+
+        return st;
+    }
+
+    private ST printS2RTfun(S2RTfun node) {
+        // S2RTfun_st(args, res) ::= <<
+	    ST st = m_stg.getInstanceOf("S2RTfun_st");
+	    for (Is2rt arg: node.m_args) {
+	        st.add("args", printIs2rt(arg));
+	    }
+	    st.add("res", printIs2rt(node.m_res));
+	    return st;
+    }
+
+    private ST printS2RTbas(S2RTbas node) {
+	    // S2RTbas_st(sym) ::= <<
+		ST st = m_stg.getInstanceOf("S2RTbas_st");
+		st.add("sym", node.m_sym);
 		return st;
     }
 

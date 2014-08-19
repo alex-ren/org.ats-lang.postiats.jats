@@ -32,10 +32,10 @@ public class Aux {
         return null;
     }
     
-    static public CSTBookingFun findBookingFun(Set<ICSTypeBooking> track, int para_size) {
+    static public CSTBookingFun findBookingFun(Set<ICSTypeBooking> track, int para_size, boolean is_void) {
         for (ICSTypeBooking tybook: track) {
             if (tybook instanceof CSTBookingFun) {
-                if (((CSTBookingFun)tybook).m_para_size == para_size) {
+                if (((CSTBookingFun)tybook).m_para_size == para_size && ((CSTBookingFun)tybook).m_is_void == is_void) {
                     return (CSTBookingFun)tybook;
                 }
             }

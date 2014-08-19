@@ -1,15 +1,8 @@
 package jats.utfpl.stfpl.csharpins;
 
 import jats.utfpl.stfpl.Ilabel;
-import jats.utfpl.stfpl.csharptype.CSTBookingEnv;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
-import jats.utfpl.stfpl.dynexp.Cd2ecl;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
-import jats.utfpl.stfpl.dynexp3.Cd3ecl;
-import jats.utfpl.stfpl.dynexp3.Cd3var;
-import jats.utfpl.stfpl.dynexp3.Cp3at;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
-import jats.utfpl.stfpl.dynexp3.P3Tvar;
 import jats.utfpl.stfpl.instructions.AtomValue;
 import jats.utfpl.stfpl.instructions.DecGroup;
 import jats.utfpl.stfpl.instructions.DefFun;
@@ -40,6 +33,7 @@ public class CSInstructionTransformer {
     private List<CSDefFunGroup> m_defs;  // function definition
     private List<ICSInstruction> m_main_inss;  // global instructions
     private Set<ICSTypeBooking> m_track;  // type booking info
+    private String m_main_name;
 
     public List<CSDecGroup> getDecs() {
         return m_decs;
@@ -51,8 +45,12 @@ public class CSInstructionTransformer {
     public List<CSDefFunGroup> getDefs() {
         return m_defs;
     }
-    public List<ICSInstruction> getMain_inss() {
+    public List<ICSInstruction> getMainInss() {
         return m_main_inss;
+    }
+    
+    public String getMainName() {
+        return m_main_name;
     }
     public Set<ICSTypeBooking> getTrack() {
         return m_track;
@@ -64,7 +62,7 @@ public class CSInstructionTransformer {
         m_defs = new ArrayList<CSDefFunGroup>();
         m_main_inss = null;
         m_track = new HashSet<ICSTypeBooking>();
-        
+        m_main_name = null;
     }
     
     public void transformProgram(List<DecGroup> decs,
@@ -99,22 +97,32 @@ public class CSInstructionTransformer {
     }
     
     private CSDefFunGroup transform(ImplFun node) {
+        if (node.m_name.toStringCS().startsWith("main")) {
+            m_main_name = node.m_name.toStringCS();
+        }
         // Each closure has the potential to create a new type.
         Set<SIdUser> env = node.m_env;
-        Set<CSSIdUser> csenv = new HashSet<CSSIdUser>();
-        for (SIdUser sid_user: env) {
-            CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
-                    sid_user, sid_user.getType().toCSType(m_track).m_type);
-            csenv.add(cssid_user);
+        Set<CSSIdUser> csenv = null;
+        
+        if (null != env) {
+            csenv = new HashSet<CSSIdUser>();
+            for (SIdUser sid_user: env) {
+                CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
+                        sid_user, sid_user.getType().toCSType(m_track).m_type);
+                csenv.add(cssid_user);
+            }
+        }
+
+        CSSId cs_env_id = null;
+        if (null != node.m_env_name) {
+            cs_env_id = StfplVP2CS(node.m_env_name);
         }
         
-        CSSId cs_env_id = StfplVP2CS(node.m_env_name);
-        
-        CSTBookingEnv env_book = null;
-        if (!env.isEmpty()) {
-            env_book = new CSTBookingEnv(cs_env_id, csenv);
-            m_track.add(env_book);
-        }
+//        CSTBookingEnv env_book = null;
+//        if (!env.isEmpty()) {
+//            env_book = new CSTBookingEnv(cs_env_id, csenv);
+//            m_track.add(env_book);
+//        }
         
         List<CSDefFun> csdefs = new ArrayList<CSDefFun>();
         CSSId csid = StfplVP2CS(node.m_name);
@@ -128,38 +136,46 @@ public class CSInstructionTransformer {
         CSDefFun csdef = new CSDefFun(node.m_loc, csid, node.m_lin, csparas, csinss);
         csdefs.add(csdef);
         
-        return new CSDefFunGroup(null/*no info about kind*/, csdefs, env_book);
+        return new CSDefFunGroup(null/*no info about kind*/, csdefs, cs_env_id, csenv);
     }
 
     private CSDefFunGroup transform(DefFunGroup node) {
         // Each closure has the potential to create a new type.
         Set<SIdUser> env = node.m_env;
-        Set<CSSIdUser> csenv = new HashSet<CSSIdUser>();
-        for (SIdUser sid_user: env) {
-            CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
-                    sid_user, sid_user.getType().toCSType(m_track).m_type);
-            csenv.add(cssid_user);
-        }
+        Set<CSSIdUser> csenv = null;
         
-        CSSId cs_env_id = StfplVP2CS(node.m_env_name);
+        if (null != env) {
+            csenv = new HashSet<CSSIdUser>();
+            for (SIdUser sid_user: env) {
+                CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
+                        sid_user, sid_user.getType().toCSType(m_track).m_type);
+                csenv.add(cssid_user);
+            }
+            
+        }
 
-        CSTBookingEnv env_book = null;
-        if (!env.isEmpty()) {
-            env_book = new CSTBookingEnv(cs_env_id, csenv);
-            m_track.add(env_book);
+        CSSId cs_env_id = null;
+        if (null != node.m_env_name) {
+            cs_env_id = StfplVP2CS(node.m_env_name);
         }
-        
+
+//        CSTBookingEnv env_book = null;
+//        if (!env.isEmpty()) {
+//            env_book = new CSTBookingEnv(cs_env_id, csenv);
+//            m_track.add(env_book);
+//        }
+
 		List<CSDefFun> csdefs = new ArrayList<CSDefFun>();
 	    for (DefFun def: node.m_funs) {
 	    	CSDefFun csdef = transform(def);
 	    	csdefs.add(csdef);
 	    }
 	    
-	    return new CSDefFunGroup(node.m_knd, csdefs, env_book);
+	    return new CSDefFunGroup(node.m_knd, csdefs, cs_env_id, csenv);
     }
 
 	private CSDefFun transform(DefFun fun_def) {
-	    CSSId csid = StfplVP2CS(fun_def.m_name);
+	    CSSId csid = StfplVP2CS_second(fun_def.m_name);
 	    
 	    List<CSSId> csparas = new ArrayList<CSSId>();
 	    for (SId sid: fun_def.m_paras) {
@@ -171,7 +187,11 @@ public class CSInstructionTransformer {
 	    return new CSDefFun(fun_def.m_loc, csid, fun_def.m_lin, csparas, csinss);
     }
 	
-	List<ICSInstruction> transform(List<IStfplInstruction> inss) {
+	private CSSId StfplVP2CS_second(SId sid) {  // This sid has been touched.
+        return CSSId.fromSId2(sid);
+    }
+
+    List<ICSInstruction> transform(List<IStfplInstruction> inss) {
 		List<ICSInstruction> csinss = new ArrayList<ICSInstruction>();
 		for (IStfplInstruction ins: inss) {
 			ICSInstruction csins = transform(ins);
@@ -201,7 +221,7 @@ public class CSInstructionTransformer {
     }
 
 	private CSInsFormEnv transform_ins(InsFormEnv ins) {
-	    CSSId name = StfplVP2CS(ins.m_name);
+	    CSSId name = StfplVP2CS_second(ins.m_name);
 	    Set<CSSIdUser> env = StfplVP2CS(ins.m_env);
 	    return new CSInsFormEnv(name, env);
     }
@@ -243,7 +263,7 @@ public class CSInstructionTransformer {
 
 	private CSInsClosure transform_ins(InsClosure ins) {
 
-	    CSSId name = StfplVP2CS(ins.m_name);
+	    CSSId name = StfplVP2CS_second(ins.m_name);
 	    CSSIdUser env = StfplVP2CS(ins.m_env);
 	    
 	    return new CSInsClosure(name, env);
@@ -253,7 +273,7 @@ public class CSInstructionTransformer {
 	private CSInsCall transform_ins(InsCall ins) {
 
 	    CSSId holder = StfplVP2CS(ins.m_holder);
-	    ICSValPrim fun = StfplVP2CS(ins.m_fun);
+	    CSSIdUser fun = StfplVP2CS(ins.m_fun);
 	    List<ICSValPrim> args = StfplVP2CS(ins.m_args);
 	    
 	    return new CSInsCall(holder, fun, args);

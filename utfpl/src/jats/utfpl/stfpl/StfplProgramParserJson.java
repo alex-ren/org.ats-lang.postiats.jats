@@ -43,6 +43,12 @@ import jats.utfpl.stfpl.staexp.S2Euni;
 import jats.utfpl.stfpl.staexp.S2EuniDeserializer;
 import jats.utfpl.stfpl.staexp.S2Evar;
 import jats.utfpl.stfpl.staexp.S2EvarDeserializer;
+import jats.utfpl.stfpl.staexp.S2RTbas;
+import jats.utfpl.stfpl.staexp.S2RTbasDeserializer;
+import jats.utfpl.stfpl.staexp.S2RTfun;
+import jats.utfpl.stfpl.staexp.S2RTfunDeserializer;
+import jats.utfpl.stfpl.staexp.S2RTtup;
+import jats.utfpl.stfpl.staexp.S2RTtupDeserializer;
 import jats.utfpl.stfpl.staexp.TYRECKINDbox;
 import jats.utfpl.stfpl.staexp.TYRECKINDboxDeserializer;
 import jats.utfpl.stfpl.staexp.TYRECKINDbox_lin;
@@ -154,6 +160,9 @@ public class StfplProgramParserJson {
         
         
         gsonBuilder.registerTypeAdapter(Is2rt.class, new Is2rtDeserializer());
+        gsonBuilder.registerTypeAdapter(S2RTbas.class, new S2RTbasDeserializer());
+        gsonBuilder.registerTypeAdapter(S2RTfun.class, new S2RTfunDeserializer());
+        gsonBuilder.registerTypeAdapter(S2RTtup.class, new S2RTtupDeserializer());
         
         
         gsonBuilder.registerTypeAdapter(Ityreckind.class, new ItyreckindDeserializer());

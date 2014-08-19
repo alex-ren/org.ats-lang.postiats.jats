@@ -246,13 +246,17 @@ s2exp_st(srt, s2exp) ::= <<
 _:<srt>
 >>
 
-S2RT_st(srt) ::= <<
-<srt>
+S2RTbas_st(sym) ::= <<
+<sym>
 >>
 
+S2RTfun_st(args, res) ::= <<
+(<args; separator=", ">) -\> <res>
+>>
 
-
-
+S2RTtup_st(eles) ::= <<
+(<eles; separator=", ">)
+>>
 
 
 

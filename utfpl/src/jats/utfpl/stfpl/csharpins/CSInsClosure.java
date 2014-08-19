@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.csharpins;
 
+import jats.utfpl.stfpl.csharptype.CSFunType;
+
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
@@ -18,7 +20,7 @@ public class CSInsClosure implements ICSInstruction {
         ST st = stg.getInstanceOf("CSInsClosure_st");
         st.add("name", m_name.toStringCS()); 
         st.add("env_name", m_env.toStringCS());
-        st.add("fun_type", m_name.getType().toSt(stg, 1));
+        st.add("fun_type", ((CSFunType)m_name.getType()).toSTFun(stg));
         return st;
     }
 }

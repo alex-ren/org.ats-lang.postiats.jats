@@ -17,8 +17,9 @@ public class CSInsFormEnv implements ICSInstruction {
     @Override
     public ST toST(STGroup stg) {
         
-        // CSInsFormEnv_st(name, args) ::= <<
+        // CCSInsFormEnv_st(type, name, args) ::= <<
         ST st = stg.getInstanceOf("CSInsFormEnv_st");
+        st.add("type", m_name.getType().toSt(stg, 1));
         st.add("name", m_name.toStringCS()); 
         for (CSSIdUser id: m_env) {
             st.add("args", id.toStringCS());

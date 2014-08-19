@@ -1,7 +1,12 @@
 package jats.utfpl.stfpl.instructions;
 
+import jats.utfpl.stfpl.csharpins.ccomp.DefaultLib;
 import jats.utfpl.stfpl.stype.ISType;
 
+/*
+ * SIdUser can be viewed as a right value, which is a
+ * reference to a left value.
+ */
 public class SIdUser implements IValPrim {
     
     private SId m_sid;
@@ -15,6 +20,10 @@ public class SIdUser implements IValPrim {
     boolean isFromEnv() {
         return m_from_env;
     }
+    
+    public SId getSId() {
+        return m_sid;
+    }
 
     @Override
     public ISType getType() {
@@ -22,7 +31,17 @@ public class SIdUser implements IValPrim {
     }
     
     public String toStringCS() {
-        return m_sid.toStringCS();
+        if (m_from_env) {
+            return "env0." + m_sid.toStringCS();
+        } else {
+            String str = m_sid.toStringCS();
+            if (DefaultLib.s_sym_table.containsKey(str)) {
+                return DefaultLib.s_sym_table.get(str);
+            } else {
+                return str;
+            }
+        }
+        
     }
 
 }

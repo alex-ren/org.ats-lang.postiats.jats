@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdUser;
 
 public class CSSIdUser implements ICSValPrim {
@@ -17,7 +18,7 @@ public class CSSIdUser implements ICSValPrim {
     public static CSSIdUser fromSIdUser(SIdUser var, ICSType type) {
         CSSIdUser cs_sid_user = s_map.get(var);
         if (null != cs_sid_user) {
-            throw new Error("This should not happen.");
+            return cs_sid_user;
         } else {
             CSSIdUser ret = new CSSIdUser(var, type);
             s_map.put(var, ret);
@@ -25,6 +26,9 @@ public class CSSIdUser implements ICSValPrim {
         }
     }
 
+    public SId getSId() {
+        return m_sid_user.getSId();
+    }
     private CSSIdUser(SIdUser sid_user, ICSType type) {
         m_sid_user = sid_user;
         m_type = type;

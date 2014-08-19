@@ -101,7 +101,8 @@ public class Test {
                                               csins_cvt.getDecs(),
                                               csins_cvt.getExts(),
                                               csins_cvt.getDefs(),
-                                              csins_cvt.getMain_inss(),
+                                              csins_cvt.getMainInss(),
+                                              csins_cvt.getMainName(),
                                               csins_cvt.getTrack());
                     
                     String cs_output = csprinter.printCSharp();

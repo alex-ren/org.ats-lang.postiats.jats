@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.csharpins;
 
+import jats.utfpl.stfpl.csharptype.CSFunType;
 import jats.utfpl.stfpl.csharptype.CSVoidType;
 
 import org.stringtemplate.v4.ST;
@@ -17,9 +18,16 @@ public class CSInsMove implements ICSInstruction {
     @Override
     public ST toST(STGroup stg) {
         if (m_holder.m_sid.isRet()) {
-            // ret_st(v) ::= <<
+            // ret_st(type, v) ::= <<
             ST st = stg.getInstanceOf("ret_st");
-//            System.out.println("v is ============ " + m_vp.toStringCS() + "holder is " + m_holder.toStringCS());
+            
+            if (m_vp.getType() instanceof CSFunType) {
+                CSFunType fun_type = (CSFunType)m_vp.getType();
+                if (fun_type.isClosure()) { 
+                } else {
+                    st.add("type", fun_type.toSTFun(stg));
+                }
+            }
             if (m_vp.getType() == CSVoidType.c_instance) {
                 st.add("v", null);
             } else {

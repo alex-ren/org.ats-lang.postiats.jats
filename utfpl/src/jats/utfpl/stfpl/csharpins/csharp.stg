@@ -2,6 +2,10 @@ group csharp;
 
 
 program_st(types, funs, main) ::= <<
+
+using System;
+using Postiats;
+
 class <closure_type_st()> {
     public Object func;
     public Object env;
@@ -21,6 +25,13 @@ class Program {
 }
 >>
 
+main_st(inss, main_name) ::= <<
+static void Main() {
+    <inss; separator="\n">
+    <main_name>();
+    return;
+}
+>>
 
 ICSTypeBooking_st(grecords, gdelegates, genvs) ::= <<
 <grecords; separator="\n">
@@ -32,7 +43,7 @@ ICSTypeBooking_st(grecords, gdelegates, genvs) ::= <<
 >>
 
 CSTBookingRecord_st(name, type_paras, members, init_paras, init_members) ::= <<
-class <name>\<<type_paras; separator=", ">\> {
+class <name><if(type_paras)>\<<type_paras; separator=", ">\><endif> {
     <members; separator="\n">
     
     public <name>(<init_paras; separator=", ">) {
@@ -46,18 +57,18 @@ public <type> <name>;
 >>
 
 CSTBookingFun_st(name, type_paras, paras, ret_para) ::= <<
-delegate <ret_para> <name>\<<type_paras;separator=", ">\>(<paras; separator=", ">);
+delegate <if(ret_para)><ret_para><else>void<endif> <name><if(type_paras)>\<<type_paras;separator=", ">\><endif>(<paras; separator=", ">);
 >>
 
-CSTBookingEnv_st(name, members, init_paras, init_members) ::= <<
-class <env_type_t(name)> {
-    <members; separator="\n">
-    
-    public <env_type_t(name)>(<init_paras; separator=", ">) {
-        <init_members; separator="\n">
-    }
-};
->>
+// CSTBookingEnv_st(name, members, init_paras, init_members) ::= <<
+// class <env_type_t(name)> {
+//     <members; separator="\n">
+//     
+//     public <env_type_t(name)>(<init_paras; separator=", ">) {
+//         <init_members; separator="\n">
+//     }
+// };
+// >>
 
 
 CSDefFun_st(is_clo, env_type, name, paras, ret_type, inss, form_closures) ::= <<
@@ -68,8 +79,8 @@ static public <ret_type> <if(is_clo)><closure_fun_name_t(name)><else><name><endi
 }
 >>
 
-form_closure_t(fun_name) ::= <<
-<closure_type_st()> fun_name = new <closure_type_st()>(<closure_fun_name_t(fun_name)>, env0);
+form_closure_t(fun_name, fun_type) ::= <<
+<closure_type_st()> <fun_name> = new <closure_type_st()>((<fun_type>)<closure_fun_name_t(fun_name)>, env0);
 >>
 
 // == closure related ======================
@@ -78,9 +89,9 @@ closure_fun_name_t(name) ::= <<
 <name>_clo_impl
 >>
 
-env_type_t(name) ::= <<
-Env_<name>
->>
+// env_type_t(name) ::= <<
+// Env_<name>
+// >>
 
 env_obj_t(name) ::= <<
 <name>_env_obj
@@ -121,16 +132,18 @@ CSInsCall_st(name, type, call) ::= <<
 >>
 
 CSInsCall_ret_st(name, type, call) ::= <<
-return <call>;
+<if(type)>return <call>;<else><call>;
+return;
+<endif>
 >>
 
 CSInsCall_call_fun_st(fun_name, fun_type, args) ::= <<
-fun: <if(fun_type)>((<fun_type>)<fun_name>)<else><fun_name><endif>(<args; separator=", ">)
+<if(fun_type)>((<fun_type>)<fun_name>)<else><fun_name><endif>(<args; separator=", ">)
 >>
 
 // Caller takes cares of the env argument.
 CSInsCall_call_clo_obj_st(obj, fun_type, args) ::= <<
-clo1: ((<fun_type>)<closure_func_st(obj)>)(<args; separator=", ">)
+((<fun_type>)<closure_func_st(obj)>)(<args; separator=", ">)
 >>
 
 // Caller takes cares of the env argument.
@@ -179,12 +192,12 @@ CSInsTuple_ret_st(name, type, values) ::= <<
 return new <type>(<values; separator=", ">);
 >>
 
-ret_st(v) ::= <<
-return<if(v)> <v><endif>;
+ret_st(type, v) ::= <<
+return<if(v)> <if(type)>(<type>)<endif><v><endif>;
 >>
 
-CSInsFormEnv_st(name, args) ::= <<
-<env_type_t(name)> <name> = new <env_type_t(name)>(<args; separator=", ">);
+CSInsFormEnv_st(type, name, args) ::= <<
+<type> <name> = new <type>(<args; separator=", ">);
 >>
 
 // ======================
@@ -197,7 +210,7 @@ char
 >>
 
 CSClassType_st(name, type_args) ::= <<
-<name>\<<type_args; separator=", ">\>
+<name><if(type_args)>\<<type_args; separator=", ">\><endif>
 >>
 
 CSFloatType_st() ::= <<

@@ -421,11 +421,18 @@ public class DynExp3Transformer {
         Cd3var d3var = transform(node0.m_d2var, loc);
         
         // not a normal function // treat no annotation as closure
-        if (!(Aux.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
-            if (!scope.contains(d3var)) {
+        ISType type = node0.m_d2var.getSType();
+        
+        if (!scope.contains(d3var)) {
+            if (type instanceof FunType || type instanceof PolyType) {
+                if (!(Aux.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
+                    needed.add(d3var);
+                }
+            } else {
                 needed.add(d3var);
             }
         }
+
 
         D3Evar node = new D3Evar(d3var);
         Cd3exp d3exp = new Cd3exp(loc, node);
@@ -754,12 +761,12 @@ public class DynExp3Transformer {
 
 
     private Cd3exp transform(D2ElamMet node, Cloc_t loc, Set<Cd3var> needed, List<List<PolyParaType>> accu) {
-        return transform(node.m_d2exp, null, needed, accu);
+        return transform(node.m_d2exp, new HashSet<Cd3var>(), needed, accu);
     }
 
 
     private Cd3exp transform(D2ElamSta node, Cloc_t loc, Set<Cd3var> needed, List<List<PolyParaType>> accu) {
-        return transform(node.m_d2exp, null, needed, accu);
+        return transform(node.m_d2exp, new HashSet<Cd3var>(), needed, accu);
     }
 
 

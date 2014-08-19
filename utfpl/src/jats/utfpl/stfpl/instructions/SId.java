@@ -8,6 +8,18 @@ import jats.utfpl.stfpl.dynexp3.Cd3sym;
 import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.stype.ISType;
 
+/*
+ * SId can be viewed as left value, which serves as a holder.
+ * Due to the existence of branching in the program, the same SId
+ * can appear in multiple places.
+ * E.g.
+ * int x;
+ * if (..) {
+ *     x = 1;
+ * } else {
+ *     x = 2;
+ * }
+ */
 public class SId implements IValPrim{
     
     enum Category {/*eLibFun, *//*eGloVar, */eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};

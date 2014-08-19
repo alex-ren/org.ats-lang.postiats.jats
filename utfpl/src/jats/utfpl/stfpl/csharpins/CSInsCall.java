@@ -11,10 +11,10 @@ import org.stringtemplate.v4.STGroup;
 
 public class CSInsCall implements ICSInstruction {
     public CSSId m_holder;
-    public ICSValPrim m_fun;
+    public CSSIdUser m_fun;
     public List<ICSValPrim> m_args;
     
-    public CSInsCall(CSSId holder, ICSValPrim fun, List<ICSValPrim> args) {
+    public CSInsCall(CSSId holder, CSSIdUser fun, List<ICSValPrim> args) {
         m_holder = holder;
         m_fun = fun;
         m_args = args;
@@ -50,9 +50,8 @@ public class CSInsCall implements ICSInstruction {
             // CSInsCall_call_clo_obj_st(fun_name, fun_type, args) ::= <<
             st_call = stg.getInstanceOf("CSInsCall_call_clo_obj_st");
             st_call.add("obj", m_fun.toStringCS());
-            // todo: optimize: add check to see whether we can call the closure by its function name directly.
-            
-            st_call.add("fun_type", m_fun.getType().toSt(stg, 1));
+
+            st_call.add("fun_type", ((CSFunType)m_fun.getType()).toSTFun(stg));
             
             for (ICSValPrim vp : m_args) {
                 st_call.add("args", vp.toStringCS());
@@ -68,7 +67,7 @@ public class CSInsCall implements ICSInstruction {
             // CSInsCall_call_fun_st(fun_name, fun_type, args) ::= <<
             st_call = stg.getInstanceOf("CSInsCall_call_fun_st");
             st_call.add("fun_name", m_fun.toStringCS());
-            if (((CSSId)m_fun).m_sid.isUserFun() || ((CSSId)m_fun).m_sid.isConstant()) {
+            if (((CSSIdUser)m_fun).getSId().isUserFun() || ((CSSIdUser)m_fun).getSId().isConstant()) {
             } else {  // not user function, need to do cast
                 st_call.add("fun_type", m_fun.getType().toSt(stg, 1));
             }

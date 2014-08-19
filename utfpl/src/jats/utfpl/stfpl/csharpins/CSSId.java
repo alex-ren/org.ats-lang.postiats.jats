@@ -21,10 +21,15 @@ public class CSSId implements ICSValPrim {
 	public static CSSId fromSId(SId sid, ICSType type) {
 		CSSId cssid = s_map.get(sid);
 		if (null != cssid) {
-			throw new Error("This should not happen.");
+		    return cssid;
+//			throw new Error("This should not happen. cssid is " + cssid.toStringCS());
 		} else {
 			cssid = new CSSId(sid, type);
 			s_map.put(sid, cssid);
+//			if (cssid.toStringCS().equals("ret2_id")) {
+//			    throw new Error("ddddddddddddddd");
+//			}
+			System.out.println("cssid is " + cssid.toStringCS());
 			return cssid;
 		}
 	}
@@ -37,5 +42,14 @@ public class CSSId implements ICSValPrim {
 	public String toStringCS() {
 	    return m_sid.toStringCS();
 	}
+
+    public static CSSId fromSId2(SId sid) {
+        CSSId cssid = s_map.get(sid);
+        if (null == cssid) {
+            throw new Error("This should not happen. sid is " + sid.toStringCS());
+        } else {
+            return cssid;
+        }
+    }
 	
 }

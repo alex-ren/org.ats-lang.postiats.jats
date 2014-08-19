@@ -18,7 +18,7 @@ public class Cf3undec {
     
     public Cd3exp m_body;  // body of the function
 
-    public ISType m_type;
+    public ISType m_type;  // type of the whole function
 
     /*
      * m_var as well as m_def should contain the same type information.
