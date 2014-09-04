@@ -58,7 +58,7 @@ import jats.utfpl.stfpl.dynexp.P2Tignored;
 import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.stfpl.staexp.Cs2var;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
@@ -82,10 +82,10 @@ import jats.utfpl.utils.Log;
 
 
 public class StfplTypeChecker {
-    private ProgramUtfpl m_prog;
+    private ProgramStfpl2 m_prog;
 //    private Map<Cd2cst, ISType> m_tymap;
 
-    public StfplTypeChecker(ProgramUtfpl prog) {
+    public StfplTypeChecker(ProgramStfpl2 prog) {
         m_prog = prog;
     }
     
@@ -402,7 +402,7 @@ public class StfplTypeChecker {
 
     private ISType oftype(Cd2cst d2cst, Cloc_t loc) {
         if (null == d2cst.getSType()) {
-            throw new Error("m_stype of " + d2cst.toString() + " should have been set. @\n" + loc);
+            throw new Error("m_stype of Cd2cst " + d2cst.toString() + " should have been set. @\n" + loc);
         } else {
             return d2cst.getSType();
         }

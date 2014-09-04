@@ -11,15 +11,15 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class ProgramUtfplDeserializer implements JsonDeserializer<ProgramUtfpl> {
+public class ProgramUtfplDeserializer implements JsonDeserializer<ProgramStfpl2> {
 
     @Override
-    public ProgramUtfpl deserialize(JsonElement json, Type typeOfT,
+    public ProgramStfpl2 deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
         JsonArray jarr = json.getAsJsonArray();
         
         List<Cd2ecl> d2ecs = JsonUtilities.deserializeList(jarr, Cd2ecl.class, context);
-        ProgramUtfpl prog = new ProgramUtfpl(d2ecs);
+        ProgramStfpl2 prog = new ProgramStfpl2(d2ecs);
         
         return prog;
     }

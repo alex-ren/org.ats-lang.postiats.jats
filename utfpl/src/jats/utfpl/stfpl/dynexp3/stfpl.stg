@@ -1,0 +1,338 @@
+group stfpl;
+
+stfpl_prog_st(d3ecs) ::= <<
+<d3ecs; separator="\n\n">
+>>
+
+D3Cdatdecs_st(knd, scsts) ::= <<
+datatype(<knd>)<scsts; separator="\nand ">
+>>
+
+// handle Cs2cst
+s2cst_st(s2cst) ::= <<
+<symbol_st(s2cst.symbol)>_<stamp_st(s2cst.stamp)>
+>>
+
+D3Cdcstdecs_st(knd, dcsts) ::= <<
+<knd> <dcsts; separator="\nand ">
+>>
+
+dcstkind_st(knd) ::= <<
+<knd>
+>>
+
+// handle Cd3cst
+d3cst_st(sym, stamp, stype) ::= <<
+<symbol_st(sym)>_<stamp_st(stamp)>:<stype>
+>>
+
+D3Cextcode_st(extcode) ::= <<
+%{<extcode>%}
+>>
+
+D3Cfundecs_st(knd, f3ds) ::= <<
+<knd> <f3ds; separator="\nand ">
+>>
+
+funkind_st(knd) ::= <<
+<knd>
+>>
+
+f3undec_st(loc, var, stype, def) ::= <<
+<d3var_st(var)>: <stype> = <def>
+>>
+
+// handle Cd3var
+d3var_st(d3var) ::= <<
+<symbol_st(d3var.symbol)>_<stamp_st(d3var.stamp)>
+>>
+
+d3exp_st(d3exp_node) ::= <<
+<d3exp_node>
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// handle Cstamp
+stamp_st(stamp) ::= <<
+<stamp.data>
+>>
+
+// handle Csymbol
+symbol_st(symbol) ::= <<
+<symbol.data>
+>>
+
+
+
+
+
+
+
+D2Cstacsts_st(scsts) ::= <<
+<scsts; separator="\nand ">
+>>
+
+
+
+
+D2Cinclude_st(knd, d2cs) ::= <<
+#include {
+  <d2cs; separator="\n">
+}
+>>
+
+D2Clist_st(d2cs) ::= <<
+<d2cs; separator="\n">
+>>
+
+D2Cnone_st() ::= <<
+D2Cnone
+>>
+
+
+
+
+
+
+
+
+
+D2Eapplst_st(fun, args) ::= <<
+<fun> (<args; separator=", ">)
+>>
+   
+D2EXPARGdyn_st(d2exps) ::= <<
+<d2exps;separator=", ">
+>>
+
+D2Ecst_st(cst) ::= <<
+D2Ecst\<<cst>\>
+>>
+
+D2Eexp_st(exp) ::= <<
+<exp>
+>>
+
+D2Ef0loat_st(flt) ::=<<
+<flt>
+>>
+
+D2Ei0nt_st(int) ::=<<
+<int>
+>>
+
+D2Eifopt_st(testa, thena, elsea) ::= <<
+if (<testa>) then
+  <thena>
+else
+  <elsea>
+>>
+
+D2ElamSta_st(d2exp) ::= <<
+lamSta. <d2exp>
+>>
+
+D2ElamMet_st(d2exp) ::= <<
+lamMet. <d2exp>
+>>
+
+D2EannFunclo_st(funclo, d2exp) ::= <<
+\<<funclo>\>
+<d2exp>
+>>
+
+Ifunclo_st(funclo) ::= <<
+<funclo>
+>>
+
+D2EannSeff_st(d2exp) ::= <<
+\<D2EannSeff>(<d2exp>)
+>>
+
+D2EannType_st(d2exp, s2exp) ::= <<
+<d2exp>:<s2exp>
+>>
+
+D2ElamDyn_st(p2ts, exp, clo) ::= <<
+lam (<p2ts; separator=", ">) \<<clo>\> = 
+  <exp>
+>>
+
+D2Etup_st(knd, d2es) ::= <<
+(<d2es; separator=", ">)
+>>
+
+D2Elist_st(knd, prfs, d2es) ::= <<
+(<prfs; separator=", "> | <d2es; separator=", ">)
+>>
+
+LABP2ATomit_st() ::= <<
+LABP2ATomit
+>>
+
+LABP2ATnorm_st(lab, pat) ::= <<
+LABP2ATnorm(<pat>)
+>>
+
+p2at_st(node) ::= <<
+<node>
+>>
+
+P2Tann_st(pat, type) ::= <<
+P2Tann\<<pat>:<type>\>
+>>
+
+P2Trec_st(labpats) ::= <<
+P2Trec\<<labpats; separator=", ">\>
+>>
+
+P2Tany_st() ::= <<
+_
+>>
+
+P2Tempty_st() ::= <<
+()
+>>
+
+P2Tpat_st(pat) ::= <<
+P2Tpat\<<pat>\>
+>>
+
+P2Tvar_st(var) ::= <<
+<d2var_st(var)>
+>>
+
+P2Tignored_st() ::= <<
+()
+>>
+
+D2Es0tring_st(str) ::= <<
+<str>
+>>
+
+// handle Cd2sym
+d2sym_st (d2sym) ::= <<
+<symbol_st(d2sym.symbol)>
+>>
+
+D2Eignored_st() ::= <<
+D2Eignored
+>>
+
+D2Esym_st(d2sym) ::= <<
+D2Esym\<<d2sym_st(d2sym)>\>
+>>
+
+D2Evar_st(var) ::= <<
+<d2var_st(var)>
+>>
+    
+D2Cvaldecs_st(knd, v2ds) ::= <<
+<knd> <v2ds; separator="\nand ">
+>>
+
+valkind_st(knd) ::= <<
+<knd>
+>>
+
+v2aldec_st(pat, def) ::= <<
+<pat> = <def>
+>>
+
+D2Cimpdec_st(i2mpdec) ::= <<
+<i2mpdec>
+>>
+
+i2mpdec_st(cst, def) ::= <<
+implement <cst> = <def>
+>>
+
+D2Elet_st(d2cs, d2e_body) ::= <<
+let
+  <d2cs; separator="\n">
+in
+  <d2e_body>
+end
+>>
+
+D2Eempty_st() ::= <<
+()
+>>
+
+s2exp_st(srt, s2exp) ::= <<
+_:<srt>
+>>
+
+S2RTbas_st(sym) ::= <<
+<sym>
+>>
+
+S2RTfun_st(args, res) ::= <<
+(<args; separator=", ">) -\> <res>
+>>
+
+S2RTtup_st(eles) ::= <<
+(<eles; separator=", ">)
+>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

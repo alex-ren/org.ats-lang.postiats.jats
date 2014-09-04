@@ -16,7 +16,7 @@ import jats.utfpl.patcsps.PATCSPSPrinter;
 import jats.utfpl.patcsps.PModel;
 import jats.utfpl.patcsps.PatCspsTransformer;
 import jats.utfpl.stfpl.StfplProgramParserJson;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeFromUtfpl;
 import jats.utfpl.utils.FilenameUtils;
@@ -133,7 +133,7 @@ public class MGenerator {
                     FileReader fReader = new FileReader(path);
 
                     StfplProgramParserJson utfplParser = new StfplProgramParserJson();
-                    ProgramUtfpl uProg = utfplParser.trans(fReader);
+                    ProgramStfpl2 uProg = utfplParser.trans(fReader);
 
 //                    UtfplPrinter uPrinter = new UtfplPrinter();
 //                    String outputUTFPL = uPrinter.print(uProg);

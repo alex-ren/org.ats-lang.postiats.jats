@@ -1,9 +1,9 @@
 package jats.utfpl.stfpl.dynexp3;
 
-import jats.utfpl.stfpl.StfplPrinter;
 import jats.utfpl.stfpl.StfplProgramParserJson;
 import jats.utfpl.stfpl.StfplTypeChecker;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2Printer;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -64,12 +64,12 @@ public class Test {
                     FileReader fReader = new FileReader(path);
 
                     StfplProgramParserJson utfplParser = new StfplProgramParserJson();
-                    ProgramUtfpl uProg = utfplParser.trans(fReader);
+                    ProgramStfpl2 uProg = utfplParser.trans(fReader);
                     
                     StfplTypeChecker tyChecker = new StfplTypeChecker(uProg);
                     tyChecker.typecheck();
 
-                    StfplPrinter uPrinter = new StfplPrinter();
+                    ProgramStfpl2Printer uPrinter = new ProgramStfpl2Printer();
                     String outputUTFPL = uPrinter.print(uProg);
                     
                     System.out.println("==utfpl's ast code after type checking (dynexp2) is ==========================");

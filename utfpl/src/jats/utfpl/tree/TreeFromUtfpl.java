@@ -54,13 +54,13 @@ import jats.utfpl.stfpl.dynexp.P2Tignored;
 import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.tree.IExp;
 
 
 public class TreeFromUtfpl {
 	
-	public ProgramTree trans(ProgramUtfpl uProg) {
+	public ProgramTree trans(ProgramStfpl2 uProg) {
 		List<IDec> decs = new ArrayList<IDec>();
 		for (Cd2ecl uD2ecl: uProg.m_d2ecs) {
 			List<IDec> decLst = transGlobalCd2ecl(uD2ecl);

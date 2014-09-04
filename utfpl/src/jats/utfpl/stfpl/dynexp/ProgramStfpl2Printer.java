@@ -1,63 +1,5 @@
-package jats.utfpl.stfpl;
+package jats.utfpl.stfpl.dynexp;
 
-import jats.utfpl.stfpl.dynexp.Cd2cst;
-import jats.utfpl.stfpl.dynexp.Cd2ecl;
-import jats.utfpl.stfpl.dynexp.Cd2exp;
-import jats.utfpl.stfpl.dynexp.Cf2undec;
-import jats.utfpl.stfpl.dynexp.Ci2mpdec;
-import jats.utfpl.stfpl.dynexp.Cp2at;
-import jats.utfpl.stfpl.dynexp.Cv2aldec;
-import jats.utfpl.stfpl.dynexp.D2Cdatdecs;
-import jats.utfpl.stfpl.dynexp.D2Cdcstdecs;
-import jats.utfpl.stfpl.dynexp.D2Cextcode;
-import jats.utfpl.stfpl.dynexp.D2Cfundecs;
-import jats.utfpl.stfpl.dynexp.D2Cignored;
-import jats.utfpl.stfpl.dynexp.D2Cimpdec;
-import jats.utfpl.stfpl.dynexp.D2Cinclude;
-import jats.utfpl.stfpl.dynexp.D2Clist;
-import jats.utfpl.stfpl.dynexp.D2Cnone;
-import jats.utfpl.stfpl.dynexp.D2Cstacsts;
-import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
-import jats.utfpl.stfpl.dynexp.D2EXPARGdyn;
-import jats.utfpl.stfpl.dynexp.D2EXPARGsta;
-import jats.utfpl.stfpl.dynexp.D2EannFunclo;
-import jats.utfpl.stfpl.dynexp.D2EannSeff;
-import jats.utfpl.stfpl.dynexp.D2EannType;
-import jats.utfpl.stfpl.dynexp.D2Eapplst;
-import jats.utfpl.stfpl.dynexp.D2Ecst;
-import jats.utfpl.stfpl.dynexp.D2Eempty;
-import jats.utfpl.stfpl.dynexp.D2Eexp;
-import jats.utfpl.stfpl.dynexp.D2Ef0loat;
-import jats.utfpl.stfpl.dynexp.D2Ei0nt;
-import jats.utfpl.stfpl.dynexp.D2Eifopt;
-import jats.utfpl.stfpl.dynexp.D2Eignored;
-import jats.utfpl.stfpl.dynexp.D2ElamDyn;
-import jats.utfpl.stfpl.dynexp.D2ElamMet;
-import jats.utfpl.stfpl.dynexp.D2ElamSta;
-import jats.utfpl.stfpl.dynexp.D2Elet;
-import jats.utfpl.stfpl.dynexp.D2Elist;
-import jats.utfpl.stfpl.dynexp.D2Es0tring;
-import jats.utfpl.stfpl.dynexp.D2Esym;
-import jats.utfpl.stfpl.dynexp.D2Etup;
-import jats.utfpl.stfpl.dynexp.D2Evar;
-import jats.utfpl.stfpl.dynexp.Edcstkind;
-import jats.utfpl.stfpl.dynexp.Efunkind;
-import jats.utfpl.stfpl.dynexp.Evalkind;
-import jats.utfpl.stfpl.dynexp.Id2ecl_node;
-import jats.utfpl.stfpl.dynexp.Id2exp_node;
-import jats.utfpl.stfpl.dynexp.Id2exparg;
-import jats.utfpl.stfpl.dynexp.Ilabp2at;
-import jats.utfpl.stfpl.dynexp.Ip2at_node;
-import jats.utfpl.stfpl.dynexp.LABP2ATnorm;
-import jats.utfpl.stfpl.dynexp.LABP2ATomit;
-import jats.utfpl.stfpl.dynexp.P2Tann;
-import jats.utfpl.stfpl.dynexp.P2Tany;
-import jats.utfpl.stfpl.dynexp.P2Tempty;
-import jats.utfpl.stfpl.dynexp.P2Tignored;
-import jats.utfpl.stfpl.dynexp.P2Tpat;
-import jats.utfpl.stfpl.dynexp.P2Trec;
-import jats.utfpl.stfpl.dynexp.P2Tvar;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.staexp.Cs2exp;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
@@ -74,22 +16,22 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-public class StfplPrinter {
+public class ProgramStfpl2Printer {
 
     private STGroup m_stg;
     
-    public  StfplPrinter() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/stfpl.stg");
+    public  ProgramStfpl2Printer() {
+        URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/dynexp/stfpl.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
 
     }
     
-    public String print(ProgramUtfpl uProg) {
+    public String print(ProgramStfpl2 uProg) {
         ST st = printUtfplProgram(uProg);
         return st.render();
     }
     
-    private ST printUtfplProgram(ProgramUtfpl uProg) {
+    private ST printUtfplProgram(ProgramStfpl2 uProg) {
         // utfpl_prog_st(d2ecs) ::= <<
         ST st = m_stg.getInstanceOf("utfpl_prog_st");
         for (Cd2ecl d2ec: uProg.m_d2ecs) {

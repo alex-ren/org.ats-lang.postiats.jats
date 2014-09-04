@@ -197,14 +197,14 @@ public class StfplProgramParserJson {
 
         /* *********** all *********** */
         
-        gsonBuilder.registerTypeAdapter(ProgramUtfpl.class, new ProgramUtfplDeserializer());
+        gsonBuilder.registerTypeAdapter(ProgramStfpl2.class, new ProgramUtfplDeserializer());
         
         m_gson = gsonBuilder.create();
     }
     
-    public ProgramUtfpl trans(Reader iReader) {
+    public ProgramStfpl2 trans(Reader iReader) {
         JsonReader reader = new JsonReader(iReader);
-        ProgramUtfpl prog = m_gson.fromJson(reader, ProgramUtfpl.class);
+        ProgramStfpl2 prog = m_gson.fromJson(reader, ProgramStfpl2.class);
         return prog;
     }
 }

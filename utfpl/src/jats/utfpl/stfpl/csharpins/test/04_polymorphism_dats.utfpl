@@ -1,0 +1,10 @@
+fun left_63 = lam (P2Tann<x_64:_:type>, P2Tann<y_65:_:type>) <fun> = 
+  <fun>
+  <D2EannSeff>(x_64:_:type)
+
+implement main_void_0_55: = lam () <fun> = 
+  <fun>
+  <D2EannSeff>(let
+  in
+    ()
+  end:_:t@ype)

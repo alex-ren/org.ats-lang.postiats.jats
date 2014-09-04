@@ -1,23 +1,11 @@
-DCKval g1_2523
-DCKval g2_2524
-DCKprfun gen_proof_2525
-fun read_62 = lamSta. lam (P2Tpat<q_65>, P2Tpat<z_66>) = 
-  999
-fun boo_67 = lam () = 
-  let
-    val x_68 = 3
-    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<g1_2523>, x_68)
-    prval () = D2Ecst<mc_set_int_2520> (D2Ecst<g2_2524>, x_68)
-    val y_69 = 3
-  in
-    ()
-  end
-fun foo_70 = lam () = 
-  let
-    prval mc_x_72 = D2Ecst<mc_get_int_2521> (D2Ecst<g1_2523>)
-    prval xx_73 = D2Esym<+> (mc_x_72, 3)
-    prval () = D2Ecst<mc_assert_2522> (D2Esym<>> (xx_73, 6))
-    val _ = read_62 (1, 2)
-  in
-    ()
-  end
+g1_737
+
+g2_738
+
+DCKval g1_2591:_:t@ype
+
+DCKval g2_2592:_:t@ype
+
+vprop_739
+
+DCKprfun gen_proof_2593:_:prop

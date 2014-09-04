@@ -136,6 +136,8 @@ public class SExpTypeExtractor {
                 return IntType.cInstance;
             } else if (con.equals(DefaultAppTypeStore.con_g1int_int_t0ype)) {
                 return IntType.cInstance;
+            } else if (con.equals(DefaultAppTypeStore.con_mc_sid_t0ype)) {
+                return IntType.cInstance;
             } else {
                 List<ISType> tys = extractTypeList(node.m_arglst);
                 AppType ret = new AppType(con, tys);

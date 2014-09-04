@@ -18,9 +18,14 @@ extern val g2: mc_gv_t (g2)
 
 
 absprop vprop
-extern prfun gen_proof (): (vprop | )
+extern prfun gen_proof (): vprop
 
-fun read {x:int | x > 3} (pf1: vprop, pf: int_value_of (g1, x)| q: int, z: int): int = 999
+
+fun read {x:int | x > 3} .<>. (pf1: vprop, pf: int_value_of (g1, x)| q: int, z: int): int = 999
+
+extern fun read0 (): int
+extern prfun read1 (): vprop
+extern prfun read2 (): '(vprop | int)
 
 (* ******** ********* *)
 
@@ -38,7 +43,7 @@ fun foo (): void = let
   prval (pf | mc_x) = mc_get_int (g1)  // Use proof.
   prval xx = mc_x + 3
   prval () = mc_assert (xx > 6)
-  prval (pf1 | ) = gen_proof ()
+  prval pf1 = gen_proof ()
   val _ = read (pf1, pf | 1, 2)
 in
 end

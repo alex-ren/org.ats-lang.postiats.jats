@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.dynexp3;
 
+import jats.utfpl.stfpl.dynexp.Cd2con;
 import jats.utfpl.stfpl.dynexp.Epckind;
 import jats.utfpl.stfpl.stype.ISType;
 

@@ -6,9 +6,9 @@ import jats.utfpl.parser.NamingVisitor;
 import jats.utfpl.parser.UtfplLexer;
 import jats.utfpl.parser.UtfplParser;
 import jats.utfpl.parser.Utfpl_tree;
-import jats.utfpl.stfpl.StfplPrinter;
 import jats.utfpl.stfpl.StfplProgramParserJson;
-import jats.utfpl.stfpl.dynexp.ProgramUtfpl;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
+import jats.utfpl.stfpl.dynexp.ProgramStfpl2Printer;
 import jats.utfpl.tree.ProgramTree;
 import jats.utfpl.tree.TreeFromUtfpl;
 import jats.utfpl.tree.TreePrinter;
@@ -70,9 +70,9 @@ public class Test_02_ins_processing {
                     FileReader fReader = new FileReader(path);
 
                     StfplProgramParserJson utfplParser = new StfplProgramParserJson();
-                    ProgramUtfpl uProg = utfplParser.trans(fReader);
+                    ProgramStfpl2 uProg = utfplParser.trans(fReader);
 
-                    StfplPrinter uPrinter = new StfplPrinter();
+                    ProgramStfpl2Printer uPrinter = new ProgramStfpl2Printer();
                     String outputUTFPL = uPrinter.print(uProg);
                     
                     System.out.println("==utfpl's ast code (layer 01) is ==========================");

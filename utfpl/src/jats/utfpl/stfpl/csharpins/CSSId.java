@@ -29,7 +29,7 @@ public class CSSId implements ICSValPrim {
 //			if (cssid.toStringCS().equals("ret2_id")) {
 //			    throw new Error("ddddddddddddddd");
 //			}
-			System.out.println("cssid is " + cssid.toStringCS());
+//			System.out.println("cssid is " + cssid.toStringCS());
 			return cssid;
 		}
 	}

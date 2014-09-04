@@ -5,6 +5,9 @@ import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 /*
  * SType: Simple Type
  */
@@ -24,6 +27,8 @@ public interface ISType {
     public boolean equals(Object right);
     
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track);
+    
+    public ST toSTStfpl3(STGroup stg);
     
     
 //    /*

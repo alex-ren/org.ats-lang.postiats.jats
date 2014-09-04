@@ -17,9 +17,9 @@ public class D2CstacstsDeserializer implements JsonDeserializer<D2Cstacsts> {
     @Override
     public D2Cstacsts deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException {
- 
+
     	JsonArray jarr = json.getAsJsonArray();
-    	JsonElement je = jarr.get(1);
+    	JsonElement je = jarr.get(jarr.size()-1);
         List<Cs2cst> s2csts = JsonUtilities.deserializeList(je, Cs2cst.class, context);
         
         D2Cstacsts ret = new D2Cstacsts(s2csts);

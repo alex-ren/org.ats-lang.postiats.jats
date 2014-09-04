@@ -136,7 +136,7 @@ prfun mc_get_int4 {id1,id2,id3,id4: sid} (
             int_value_of (id3, x3),
             int_value_of (id4, x4)
             | 
-            int x1, 
+            int x1,
             int x2,
             int x3,
             int x4
