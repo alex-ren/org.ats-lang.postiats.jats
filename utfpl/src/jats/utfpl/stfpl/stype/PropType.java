@@ -7,6 +7,9 @@ import jats.utfpl.utils.Log;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 
 public class PropType extends SortType {
     public static PropType cInstance = new PropType();
@@ -47,6 +50,13 @@ public class PropType extends SortType {
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         throw new Error("should not happen");
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // PropType_t() ::= <<
+        ST st = stg.getInstanceOf("PropType_t");
+        return st;
     }
 
 

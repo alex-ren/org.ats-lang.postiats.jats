@@ -64,20 +64,20 @@ public class Test {
                     FileReader fReader = new FileReader(path);
 
                     StfplProgramParserJson utfplParser = new StfplProgramParserJson();
-                    ProgramStfpl2 uProg = utfplParser.trans(fReader);
+                    ProgramStfpl2 prog2 = utfplParser.trans(fReader);
                     
-                    StfplTypeChecker tyChecker = new StfplTypeChecker(uProg);
+                    StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
                     tyChecker.typecheck();
 
                     ProgramStfpl2Printer uPrinter = new ProgramStfpl2Printer();
-                    String outputUTFPL = uPrinter.print(uProg);
+                    String outputUTFPL = uPrinter.print(prog2);
                     
                     System.out.println("==utfpl's ast code after type checking (dynexp2) is ==========================");
                     
                     System.out.println(outputUTFPL);
                     
-                    DynExp3Transformer exp3_transformer = new DynExp3Transformer(uProg.m_d2ecs);
-                    List<Cd3ecl> d3ecs = exp3_transformer.transform();
+                    DynExp3Transformer exp3_transformer = new DynExp3Transformer(prog2.m_d2ecs);
+                    ProgramStfpl3 prog3 = exp3_transformer.transform();
                     
 //                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
 //                    uProg = processor.removeProof(uProg);

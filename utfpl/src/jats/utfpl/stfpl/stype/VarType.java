@@ -6,6 +6,9 @@ import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class VarType extends SortType {
     private SortType m_ty;
     
@@ -99,6 +102,11 @@ public class VarType extends SortType {
     
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        throw new Error("should not happen");
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
         throw new Error("should not happen");
     }
 

@@ -9,6 +9,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class DataType extends BoxedType {
     public List<ISType> m_tyLst;
     public Cs2cst m_name;
@@ -57,6 +60,15 @@ public class DataType extends BoxedType {
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         throw new Error("not supported yet");
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // DataType_st(cst_name) ::= <<
+        ST st = stg.getInstanceOf("DataType_st");
+        st.add("cst_name", m_name);
+        return st;
+        
     }
 
 //    @Override

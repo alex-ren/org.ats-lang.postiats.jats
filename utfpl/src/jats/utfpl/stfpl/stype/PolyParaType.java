@@ -3,6 +3,9 @@ package jats.utfpl.stfpl.stype;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.CSObjectType;
 import jats.utfpl.stfpl.staexp.Cs2var;
@@ -80,6 +83,14 @@ public class PolyParaType extends BoxedType {
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         return new ToCSTypeResult(CSObjectType.c_instance, null);
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // PolyParaType_st(s2var) ::= <<
+        ST st = stg.getInstanceOf("PolyParaType_st");
+        st.add("s2var", m_var);
+        return st;
     }
 
 //    @Override

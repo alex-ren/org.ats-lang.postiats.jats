@@ -6,6 +6,9 @@ import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class Abstype extends SortType {
 //    private ITypeName m_name;
 
@@ -35,6 +38,11 @@ public class Abstype extends SortType {
 
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        throw new Error("not supported");
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
         throw new Error("not supported");
     }
 

@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 /*
  * This type should always appear inside UniType.
  */
@@ -148,6 +151,26 @@ public class FunType extends BoxedType {
         
         CSFunType cstype = new CSFunType(name, arg_types, ret_type, clo);;
         return new ToCSTypeResult(cstype, null);
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // FunType_st(paras, clo, ret) ::= <<
+        ST st = stg.getInstanceOf("FunType_st");
+        for (ISType arg: m_args) {
+            st.add("paras", arg.toSTStfpl3(stg));
+        }
+        
+        if (null == m_funclo) {
+            st.add("clo", "n/a");
+        } else if (m_funclo.isClosure()) {
+            st.add("clo", "clo");
+        } else {
+            st.add("clo", "fun");
+        }
+        
+        st.add("ret", m_res.toSTStfpl3(stg));
+        return st;
     }
 
 }

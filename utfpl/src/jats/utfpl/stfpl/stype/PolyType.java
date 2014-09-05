@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class PolyType extends BoxedType {
     public List<PolyParaType> m_paras;
     public ISType m_body;
@@ -116,6 +119,17 @@ public class PolyType extends BoxedType {
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         return m_body.toCSType(track);
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // PolyType_st(paras, body) ::= <<
+        ST st = stg.getInstanceOf("PolyType_st");
+        for (PolyParaType para: m_paras) {
+            st.add("paras", para.toSTStfpl3(stg));
+        }
+        st.add("body", m_body.toSTStfpl3(stg));
+        return st;
     }
 
     

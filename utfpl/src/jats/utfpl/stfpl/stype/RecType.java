@@ -16,6 +16,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class RecType extends BoxedType {
     
     private List<ILabPat> m_labtypes;
@@ -139,6 +142,16 @@ public class RecType extends BoxedType {
         
         CSClassType cstype = new CSClassType(name, cslabpats);
         return new ToCSTypeResult(cstype, null);
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // RecType_st(labpats) ::= <<
+        ST st = stg.getInstanceOf("RecType_st");
+        for (ILabPat labpat: m_labtypes) {
+            st.add("labpats", labpat.toSTStfpl3(stg));
+        }
+        return st;
     }
     
     

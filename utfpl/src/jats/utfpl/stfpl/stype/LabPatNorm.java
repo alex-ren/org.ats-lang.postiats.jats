@@ -7,6 +7,9 @@ import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 
 public class LabPatNorm implements ILabPat {
     private Ilabel m_lab;
@@ -57,6 +60,14 @@ public class LabPatNorm implements ILabPat {
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         return m_type.toCSType(track);
+    }
+    
+    public ST toSTStfpl3(STGroup stg) {
+        ST st = stg.getInstanceOf("labpat_st");
+        // labpat_st(lab, type) ::= <<
+        st.add("lab", m_lab);
+        st.add("type", m_type.toSTStfpl3(stg));
+        return st;
     }
 
 //    @Override

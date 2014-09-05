@@ -8,6 +8,9 @@ import jats.utfpl.utils.Log;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class VoidType extends SortType {
     
     public VoidType() {
@@ -56,6 +59,12 @@ public class VoidType extends SortType {
 //    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
 //        return this == type;
 //    }
-
+    
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // VoidType_st() ::= <<
+        ST st = stg.getInstanceOf("VoidType_st");
+        return st;
+    }
 
 }

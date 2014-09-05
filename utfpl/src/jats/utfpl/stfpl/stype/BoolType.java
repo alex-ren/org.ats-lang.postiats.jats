@@ -6,6 +6,9 @@ import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class BoolType extends EleType {
     public static BoolType cInstance = new BoolType();
     private BoolType() {
@@ -15,6 +18,13 @@ public class BoolType extends EleType {
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
         return new ToCSTypeResult(CSBoolType.c_instance, null);
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // BoolType_st() ::= <<
+        ST st = stg.getInstanceOf("BoolType_st");
+        return st;
     }
 
 }

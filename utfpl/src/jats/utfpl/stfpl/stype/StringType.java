@@ -6,6 +6,9 @@ import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 public class StringType extends EleType {
     public static StringType cInstance = new StringType();
     private StringType() {
@@ -17,4 +20,11 @@ public class StringType extends EleType {
         return new ToCSTypeResult(CSStringType.c_instance, null);
     }
 
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
+        // StringType_st() ::= <<
+        ST st = stg.getInstanceOf("StringType_st");
+        return st;
+    }
+    
 }

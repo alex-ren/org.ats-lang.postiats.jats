@@ -242,10 +242,10 @@ public class InstructionTransformer {
 
     private ImplFun transform(D3Cimpdec node0, Cloc_t loc, Set<Cd3var> env,
             List<IStfplInstruction> inss) {
-        Cd3exp fun_exp = node0.m_i3mpdec.i2mpdec_def;
+        Cd3exp fun_exp = node0.m_i3mpdec.i3mpdec_def;
         D3ElamDyn lambda = (D3ElamDyn)(fun_exp.m_node);
         
-        SId name = SId.fromCd3cst(node0.m_i3mpdec.i2mpdec_cst, Category.eUserFun);
+        SId name = SId.fromCd3cst(node0.m_i3mpdec.i3mpdec_cst, Category.eUserFun);
         int lin = lambda.m_lin;
         
         List<Cp3at> p3ts = lambda.m_p3ts;
@@ -500,7 +500,7 @@ public class InstructionTransformer {
     private SIdUser transform(D3Etup node0, Set<Cd3var> env,
             List<IStfplInstruction> inss, SId holder) {
         List<IValPrim> elements = new ArrayList<IValPrim>();
-        for (Cd3exp d3exp: node0.m_d2es) {
+        for (Cd3exp d3exp: node0.m_d3es) {
             IValPrim element = transform(d3exp, env, inss, null);
             elements.add(element);
         }

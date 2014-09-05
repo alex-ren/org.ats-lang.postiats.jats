@@ -51,37 +51,83 @@ d3exp_st(d3exp_node) ::= <<
 <d3exp_node>
 >>
 
+D3Eapplst_st(fun, args) ::= <<
+<fun> (<args; separator=", ">)
+>>
+
+D3EXPARGdyn_st(d3exps) ::= <<
+<d3exps;separator=", ">
+>>
+
+D3Ecst_st(cst) ::= <<
+D3Ecst\<<cst>\>
+>>
+
+D3Ef0loat_st(flt) ::=<<
+<flt>
+>>
+
+D3Ei0nt_st(int) ::=<<
+<int>
+>>
 
 
+D3Eifopt_st(testa, thena, elsea) ::= <<
+if (<testa>) then
+  <thena>
+else
+  <elsea>
+>>
 
+D3ElamDyn_st(p3ts, exp, clo) ::= <<
+lam (<p3ts; separator=", ">) \<<clo>\> = 
+  <exp>
+>>
 
+p3at_st(node) ::= <<
+<node>
+>>
 
+P3Tany_st() ::= <<
+_
+>>
 
+P3Tempty_st() ::= <<
+()
+>>
 
+P3Trec_st(labpats) ::= <<
+{<labpats; separator=", ">}
+>>
 
+LABP3ATnorm_st(lab, pat) ::= <<
+<lab> = <pat>
+>>
 
+P3Tvar_st(var, type) ::= <<
+<d3var_st(var)>: <type>
+>>
 
+D3Elet_st(d3cs, d3e_body) ::= <<
+let
+  <d3cs; separator="\n">
+in
+  <d3e_body>
+end
+>>
 
+D3Es0tring_st(str) ::= <<
+<str>
+>>
 
+D3Esym_st(d3sym) ::= <<
+<d3sym_st(d3sym)>
+>>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// handle Cd3sym
+d3sym_st (d3sym) ::= <<
+<symbol_st(d2sym.symbol)>
+>>
 
 // handle Cstamp
 stamp_st(stamp) ::= <<
@@ -93,236 +139,37 @@ symbol_st(symbol) ::= <<
 <symbol.data>
 >>
 
+D3Etup_st(knd, d3es) ::= <<
+(<d3es; separator=", ">)
+>>
 
+D3Cimpdec_st(cst, def) ::= <<
+implement <cst> = <def>
+>>
 
-
-
-
-
-D2Cstacsts_st(scsts) ::= <<
+D3Cstacsts_st(scsts) ::= <<
 <scsts; separator="\nand ">
 >>
 
-
-
-
-D2Cinclude_st(knd, d2cs) ::= <<
-#include {
-  <d2cs; separator="\n">
-}
+D3Evar_st(var, type) ::= <<
+<d3var_st(var)>:<type>
 >>
 
-D2Clist_st(d2cs) ::= <<
-<d2cs; separator="\n">
->>
-
-D2Cnone_st() ::= <<
-D2Cnone
->>
-
-
-
-
-
-
-
-
-
-D2Eapplst_st(fun, args) ::= <<
-<fun> (<args; separator=", ">)
->>
-   
-D2EXPARGdyn_st(d2exps) ::= <<
-<d2exps;separator=", ">
->>
-
-D2Ecst_st(cst) ::= <<
-D2Ecst\<<cst>\>
->>
-
-D2Eexp_st(exp) ::= <<
-<exp>
->>
-
-D2Ef0loat_st(flt) ::=<<
-<flt>
->>
-
-D2Ei0nt_st(int) ::=<<
-<int>
->>
-
-D2Eifopt_st(testa, thena, elsea) ::= <<
-if (<testa>) then
-  <thena>
-else
-  <elsea>
->>
-
-D2ElamSta_st(d2exp) ::= <<
-lamSta. <d2exp>
->>
-
-D2ElamMet_st(d2exp) ::= <<
-lamMet. <d2exp>
->>
-
-D2EannFunclo_st(funclo, d2exp) ::= <<
-\<<funclo>\>
-<d2exp>
->>
-
-Ifunclo_st(funclo) ::= <<
-<funclo>
->>
-
-D2EannSeff_st(d2exp) ::= <<
-\<D2EannSeff>(<d2exp>)
->>
-
-D2EannType_st(d2exp, s2exp) ::= <<
-<d2exp>:<s2exp>
->>
-
-D2ElamDyn_st(p2ts, exp, clo) ::= <<
-lam (<p2ts; separator=", ">) \<<clo>\> = 
-  <exp>
->>
-
-D2Etup_st(knd, d2es) ::= <<
-(<d2es; separator=", ">)
->>
-
-D2Elist_st(knd, prfs, d2es) ::= <<
-(<prfs; separator=", "> | <d2es; separator=", ">)
->>
-
-LABP2ATomit_st() ::= <<
-LABP2ATomit
->>
-
-LABP2ATnorm_st(lab, pat) ::= <<
-LABP2ATnorm(<pat>)
->>
-
-p2at_st(node) ::= <<
-<node>
->>
-
-P2Tann_st(pat, type) ::= <<
-P2Tann\<<pat>:<type>\>
->>
-
-P2Trec_st(labpats) ::= <<
-P2Trec\<<labpats; separator=", ">\>
->>
-
-P2Tany_st() ::= <<
-_
->>
-
-P2Tempty_st() ::= <<
-()
->>
-
-P2Tpat_st(pat) ::= <<
-P2Tpat\<<pat>\>
->>
-
-P2Tvar_st(var) ::= <<
-<d2var_st(var)>
->>
-
-P2Tignored_st() ::= <<
-()
->>
-
-D2Es0tring_st(str) ::= <<
-<str>
->>
-
-// handle Cd2sym
-d2sym_st (d2sym) ::= <<
-<symbol_st(d2sym.symbol)>
->>
-
-D2Eignored_st() ::= <<
-D2Eignored
->>
-
-D2Esym_st(d2sym) ::= <<
-D2Esym\<<d2sym_st(d2sym)>\>
->>
-
-D2Evar_st(var) ::= <<
-<d2var_st(var)>
->>
-    
-D2Cvaldecs_st(knd, v2ds) ::= <<
-<knd> <v2ds; separator="\nand ">
+D3Cvaldecs_st(knd, v3ds) ::= <<
+<knd> <v3ds; separator="\nand ">
 >>
 
 valkind_st(knd) ::= <<
 <knd>
 >>
 
-v2aldec_st(pat, def) ::= <<
+v3aldec_st(pat, def) ::= <<
 <pat> = <def>
 >>
 
-D2Cimpdec_st(i2mpdec) ::= <<
-<i2mpdec>
->>
-
-i2mpdec_st(cst, def) ::= <<
-implement <cst> = <def>
->>
-
-D2Elet_st(d2cs, d2e_body) ::= <<
-let
-  <d2cs; separator="\n">
-in
-  <d2e_body>
-end
->>
-
-D2Eempty_st() ::= <<
+D3Eempty_st() ::= <<
 ()
 >>
-
-s2exp_st(srt, s2exp) ::= <<
-_:<srt>
->>
-
-S2RTbas_st(sym) ::= <<
-<sym>
->>
-
-S2RTfun_st(args, res) ::= <<
-(<args; separator=", ">) -\> <res>
->>
-
-S2RTtup_st(eles) ::= <<
-(<eles; separator=", ">)
->>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

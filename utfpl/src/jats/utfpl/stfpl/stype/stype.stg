@@ -1,0 +1,75 @@
+group stype;
+
+BoolType_st() ::= <<
+bool
+>>
+
+CharType_st() ::= <<
+char
+>>
+
+FloatType_st() ::= <<
+float
+>>
+
+IntType_st() ::= <<
+int
+>>
+
+StringType_st() ::= <<
+string
+>>
+
+VoidType_st() ::= <<
+void
+>>
+
+FunType_st(paras, clo, ret) ::= <<
+(<paras; separator=", ">) -\<<clo>\> <ret>
+>>
+
+Cs2var_st(s2var) ::= <<
+<symbol_st(s2var.m_sym)>_<stamp_st(s2var.m_stamp)>
+>>
+
+PolyParaType_st(s2var) ::= <<
+<Cs2var_st(s2var)>
+>>
+
+PolyType_st(paras, body) ::= <<
+{<paras; separator=", ">}(<body>)
+>>
+
+PropType_st() ::= <<
+prop
+>>
+
+RecType_st(labpats) ::= <<
+{<labpats; separator=", ">}
+>>
+
+labpat_st(lab, type) ::= <<
+<lab> = <type>
+>>
+
+DataType_st(cst_name) ::= <<
+<s2cst_st(cst_name)>
+>>
+
+s2cst_st(s2cst) ::= <<
+<symbol_st(s2cst.symbol)>_<stamp_st(s2cst.stamp)>
+>>
+
+// handle Csymbol
+symbol_st(symbol) ::= <<
+<symbol.data>
+>>
+
+// handle Cstamp
+stamp_st(stamp) ::= <<
+<stamp.data>
+>>
+
+
+
+

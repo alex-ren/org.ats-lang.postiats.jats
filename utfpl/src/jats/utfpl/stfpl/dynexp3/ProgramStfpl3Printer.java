@@ -2,15 +2,12 @@ package jats.utfpl.stfpl.dynexp3;
 
 import jats.utfpl.stfpl.dynexp.Edcstkind;
 import jats.utfpl.stfpl.dynexp.Efunkind;
+import jats.utfpl.stfpl.dynexp.Evalkind;
 import jats.utfpl.stfpl.staexp.Cs2cst;
-import jats.utfpl.stfpl.staexp.Cs2exp;
-import jats.utfpl.stfpl.staexp.FUNCLOclo;
-import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
-import jats.utfpl.stfpl.staexp.Is2rt;
-import jats.utfpl.stfpl.staexp.S2RTbas;
-import jats.utfpl.stfpl.staexp.S2RTfun;
-import jats.utfpl.stfpl.staexp.S2RTtup;
+import jats.utfpl.stfpl.stype.FunType;
+import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.PolyType;
 
 import java.net.URL;
 
@@ -21,11 +18,14 @@ import org.stringtemplate.v4.STGroupFile;
 public class ProgramStfpl3Printer {
 
     private STGroup m_stg;
+    private STGroup m_stg_type;
     
     public  ProgramStfpl3Printer() {
         URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/dynexp3/stfpl.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
-
+        
+        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
+        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
     }
     
     public String print(ProgramStfpl3 uProg) {
@@ -112,7 +112,7 @@ public class ProgramStfpl3Printer {
         st.add("sym", node.m_symbol);
         st.add("stamp", node.m_stamp);
         if (null != node.m_stype) {
-            st.add("stype", node.m_stype.toSTStfpl3(m_stg));
+            st.add("stype", node.m_stype.toSTStfpl3(m_stg_type));
         }
         
         return st;
@@ -150,7 +150,7 @@ public class ProgramStfpl3Printer {
         // f3undec_st(loc, var, stype, def) ::= <<
         ST st = m_stg.getInstanceOf("f3undec_st");
         st.add("var", node.m_var);
-        st.add("stype", node.m_type.toSTStfpl3(m_stg));
+        st.add("stype", node.m_type.toSTStfpl3(m_stg_type));
         st.add("def", printCd3exp(node.m_body));
         
         return st;
@@ -193,74 +193,226 @@ public class ProgramStfpl3Printer {
         }
     }
     
+    private ST printD3Eapplst(D3Eapplst node) {
+        // D3Eapplst_st(fun, args) ::= <<
+        ST st = m_stg.getInstanceOf("D3Eapplst_st");
+        st.add("fun", printCd3exp(node.m_fun));
+        
+        for (D3EXPARGdyn arg: node.m_args) {
+            st.add("args", printD3EXPARGdyn(arg));
+        }
+        
+        return st;
+    }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    private ST printD3EXPARGdyn(D3EXPARGdyn node) {
+        // D3EXPARGdyn_st(d3exps) ::= <<
+        ST st = m_stg.getInstanceOf("D3EXPARGdyn_st");
+        for (Cd3exp d3exp: node.m_d3expLst) {
+            st.add("d3exps", printCd3exp(d3exp));
+        }
 
-	private ST printD3Cstacsts(D2Cstacsts node) {
-	    // D2Cstacsts_st(scsts) ::= <<
-        ST st = m_stg.getInstanceOf("D2Cstacsts_st");
-        for (Cs2cst cst: node.m_s2csts) {
+        return st;
+    }
+    
+    private ST printD3Ecst(D3Ecst node) {
+        // D3Ecst_st(cst) ::= <<
+        ST st = m_stg.getInstanceOf("D3Ecst_st");
+        st.add("cst", printCd3cst(node.m_d3cst));
+        return st;
+    }
+
+    private ST printD3Ei0nt(D3Ei0nt node) {
+        // D3Ei0nt_st(int) ::=<<
+        ST st = m_stg.getInstanceOf("D3Ei0nt_st");
+        st.add("int", node.m_i0nt);
+        return st;
+    }
+
+    private ST printD3Ef0loat(D3Ef0loat node) {
+        // D3Ef0loat_st(flt) ::=<<
+        ST st = m_stg.getInstanceOf("D3Ef0loat_st");
+        st.add("flt", node.m_f0loat);
+        return st;
+    }
+
+    private ST printD3Eifopt(D3Eifopt node) {
+        // D3Eifopt_st(testa, thena, elsea) ::= <<
+        ST st = m_stg.getInstanceOf("D3Eifopt_st");
+        st.add("testa", printCd3exp(node.m_test));
+        st.add("thena", printCd3exp(node.m_then));
+        st.add("elsea", printCd3exp(node.m_else));
+        
+        return st;
+    }
+
+    private ST printD3ElamDyn(D3ElamDyn node) {
+        // D3ElamDyn_st(p3ts, exp, clo) ::= <<
+        ST st = m_stg.getInstanceOf("D3ElamDyn_st");
+        Ifunclo funclo = null;
+        
+        ISType type = node.getType();
+        while (true) {
+            if (type instanceof FunType) {
+                funclo = ((FunType)type).getFunClo();
+                break;
+            } else if (type instanceof PolyType) {
+                type = ((PolyType)type).m_body;
+                continue;
+            } else {
+                throw new Error("This should not happen.");
+            }
+        }
+        if (null == funclo) {
+            st.add("clo", "na");            
+        } else {
+            if (funclo.isClosure()) {
+                st.add("clo", "clo");
+            } else {
+                st.add("clo", "fun");
+            }
+        }
+        
+        for (Cp3at pat: node.m_p3ts) {
+            st.add("p3ts", printCp3at(pat));
+        }
+        st.add("exp", printCd3exp(node.m_d3exp));
+        return st;
+    }
+    
+    private ST printCp3at(Cp3at node) {
+        // p3at_st(node) ::= <<
+        ST st = m_stg.getInstanceOf("p3at_st");
+        st.add("node", printIp3at_node(node.m_node));
+        return st;
+    }
+
+    private ST printIp3at_node(Ip3at_node node) {
+        if (node instanceof P3Tany) {
+            return printP3Tany((P3Tany)node);
+        } else if (node instanceof P3Tcon) {
+            throw new Error("P3Tcon is not finished yet.");      
+        } else if (node instanceof P3Tempty) {
+            return printP3Tempty((P3Tempty)node);
+        } else if (node instanceof P3Trec) {
+            return printP3Trec((P3Trec)node);
+        } else if (node instanceof P3Tvar) {
+            return printP3Tvar((P3Tvar)node);
+        } else {
+            throw new Error(node + " is not supported");
+        }
+    }
+    
+    private ST printP3Tany(P3Tany node) {
+        // P3Tany_st() ::= <<
+        ST st = m_stg.getInstanceOf("P3Tany_st");
+        return st;
+        
+    }
+    
+    private ST printP3Tempty(P3Tempty node) {
+        // P3Tempty_st() ::= <<
+        ST st = m_stg.getInstanceOf("P3Tempty_st");
+        return st; 
+    }
+    
+    private ST printP3Trec(P3Trec node) {
+        // P3Trec_st(labpats) ::= <<
+        ST st = m_stg.getInstanceOf("P3Trec_st");
+        for (LABP3ATnorm labpat: node.m_labpats) {
+            st.add("labpats", printLABP3ATnorm(labpat));
+        }
+        return st;
+        
+    }
+    
+    private ST printLABP3ATnorm(LABP3ATnorm node) {
+        // LABP3ATnorm_st(lab, pat) ::= <<
+        ST st = m_stg.getInstanceOf("LABP3ATnorm_st");
+        st.add("pat", printCp3at(node.m_pat));
+        return st;
+    }
+    
+    private ST printP3Tvar(P3Tvar node) {
+        // P3Tvar_st(var, type) ::= <<
+        ST st = m_stg.getInstanceOf("P3Tvar_st");
+        st.add("var", node.m_var);
+        st.add("type", node.getType().toSTStfpl3(m_stg_type));
+        
+        return st;
+    }
+
+    private ST printD3Elet(D3Elet node) {
+        // D3Elet_st(d3cs, d3e_body) ::= <<
+        ST st = m_stg.getInstanceOf("D3Elet_st");
+        for (Cd3ecl d3ecl: node.m_d3cs) {
+            st.add("d3cs", printCd3ecl(d3ecl));
+        }
+        st.add("d3e_body", printCd3exp(node.m_body));
+        
+        return st;
+    }
+    
+    private ST printD3Es0tring(D3Es0tring node) {
+        // D3Es0tring_st(str) ::=<<
+        ST st = m_stg.getInstanceOf("D3Es0tring_st");
+        st.add("str", node.m_s0tring);
+        return st;
+    }
+    
+    private ST printD3Esym(D3Esym node) {
+        // D3Esym_st(d3sym) ::= <<
+        ST st = m_stg.getInstanceOf("D3Esym_st");
+        st.add("d3sym", node.m_d3sym);        
+
+        return st;
+    }
+
+    private ST printD3Etup(D3Etup node) {
+        // D3Etup_st(knd, d3es) ::= <<
+        ST st = m_stg.getInstanceOf("D3Etup_st");
+        st.add("knd", node.m_knd);
+        for (Cd3exp d3e: node.m_d3es) {
+            st.add("d3es", printCd3exp(d3e));
+        }
+        return st;
+    }
+    
+    private ST printD3Evar(D3Evar node) {
+        // D3Evar_st(var, type) ::= <<
+        ST st = m_stg.getInstanceOf("D3Evar_st");
+        st.add("var", node.m_d3var);
+        st.add("type", node.getType().toSTStfpl3(m_stg_type));
+        return st;
+    }
+
+    private ST printD3Cimpdec(D3Cimpdec node) {
+        // D3Cimpdec_st(cst, def) ::= <<
+        ST st = m_stg.getInstanceOf("D3Cimpdec_st");
+        Ci3mpdec imp = node.m_i3mpdec;
+        
+        st.add("cst", printCd3cst(imp.i3mpdec_cst));
+        st.add("def", printCd3exp(imp.i3mpdec_def));
+        return st;
+    }
+    
+    private ST printD3Cstacsts(D3Cstacsts node) {
+        // D3Cstacsts_st(scsts) ::= <<
+        ST st = m_stg.getInstanceOf("D3Cstacsts_st");
+        for (Cs2cst cst: node.m_csts) {
             st.add("scsts", printCs2cst(cst));
         }
         
         return st;
     }
-
-
-
-
-	private ST printD3Cimpdec(D2Cimpdec node) {
-        // D2Cimpdec_st(i2mpdec) ::= <<
-        ST st = m_stg.getInstanceOf("D2Cimpdec_st");
-        st.add("i2mpdec", printCi2mpdec(node.m_i2mpdec));
-        return st;
-    }
-
-    private ST printCi2mpdec(Ci2mpdec node) {
-        // i2mpdec_st(cst, def) ::= <<
-        ST st = m_stg.getInstanceOf("i2mpdec_st");
-        st.add("cst", printCd2cst(node.i2mpdec_cst));
-        st.add("def", printCd2exp(node.i2mpdec_def));
-        return st;
-        
-    }
-
-    private ST printD3Cvaldecs(D2Cvaldecs node) {
-        // D2Cvaldecs_st(knd, v2ds) ::= <<
-        ST st = m_stg.getInstanceOf("D2Cvaldecs_st");
+    
+    private ST printD3Cvaldecs(D3Cvaldecs node) {
+        // D3Cvaldecs_st(knd, v3ds) ::= <<
+        ST st = m_stg.getInstanceOf("D3Cvaldecs_st");
         st.add("knd", printEvalkind(node.m_knd));
-        for (Cv2aldec valdec: node.m_v2ds) {
-            st.add("v2ds", printCv2aldec(valdec));
+        for (Cv3aldec valdec: node.m_v3ds) {
+            st.add("v3ds", printCv3aldec(valdec));
         }
-        
-        return st;
-    }
-
-    private ST printCv2aldec(Cv2aldec node) {
-        // v2aldec_st(pat, def) ::= <<
-        ST st = m_stg.getInstanceOf("v2aldec_st");
-        st.add("pat", printCp2at(node.v2aldec_pat));
-        st.add("def", printCd2exp(node.v2aldec_def));
         
         return st;
     }
@@ -271,398 +423,24 @@ public class ProgramStfpl3Printer {
         st.add("knd", node.toString());
         return st;
     }
-
     
-
-    
-
-
-    
-
-    private ST printD2Elist(D2Elist node) {
-        // D2Elist_st(knd, prfs, d2es) ::= <<
-        ST st = m_stg.getInstanceOf("D2Elist_st");
-        int i = node.m_npf;
-        for (Cd2exp d2e: node.m_d2es) {
-            if (i > 0) {
-                st.add("prfs", printCd2exp(d2e));
-            } else {
-                st.add("d2es", printCd2exp(d2e));
-            }
-            --i;            
-        }
-        return st;
-    }
-
-    private ST printD3Etup(D2Etup node) {
-        // D2Etup_st(knd, d2es) ::= <<
-        ST st = m_stg.getInstanceOf("D2Etup_st");
-        st.add("knd", node.m_knd);
-        for (Cd2exp d2e: node.m_d2es) {
-            st.add("d2es", printCd2exp(d2e));
-        }
-        return st;
-    }
-
-    private ST printD2EannType(D2EannType node) {
-	    // D2EannType_st(d2exp, s2exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2EannType_st");
-        st.add("d2exp", printCd2exp(node.m_d2exp));
-        st.add("s2exp", printCs2exp(node.m_s2exp));
-        return st;
-    }
-
-	private ST printCs2exp(Cs2exp node) {
-	    // s2exp_st(srt, s2exp) ::= <<
-		ST st = m_stg.getInstanceOf("s2exp_st");
-		st.add("srt", printIs2rt(node.s2exp_srt));
-		return st;
-    }
-
-	private ST printIs2rt(Is2rt node) {
-	    if (node instanceof S2RTbas) {
-	    	return printS2RTbas((S2RTbas)node);
-	    } else if (node instanceof S2RTfun) {
-	        return printS2RTfun((S2RTfun)node);
-	    } else if (node instanceof S2RTtup) {
-	        return printS2RTtup((S2RTtup)node);
-	    } else {
-	    	throw new Error("Is2rt " + node + " is not supported");
-	    }
-    }
-
-	private ST printS2RTtup(S2RTtup node) {
-        // S2RTtup_st(eles) ::= <<
-        ST st = m_stg.getInstanceOf("S2RTtup_st");
-        for (Is2rt ele: node.m_s2ts) {
-            st.add("eles", printIs2rt(ele));
-        }
-
-        return st;
-    }
-
-    private ST printS2RTfun(S2RTfun node) {
-        // S2RTfun_st(args, res) ::= <<
-	    ST st = m_stg.getInstanceOf("S2RTfun_st");
-	    for (Is2rt arg: node.m_args) {
-	        st.add("args", printIs2rt(arg));
-	    }
-	    st.add("res", printIs2rt(node.m_res));
-	    return st;
-    }
-
-    private ST printS2RTbas(S2RTbas node) {
-	    // S2RTbas_st(sym) ::= <<
-		ST st = m_stg.getInstanceOf("S2RTbas_st");
-		st.add("sym", node.m_sym);
-		return st;
-    }
-
-	private ST printD2EannSeff(D2EannSeff node) {
-	    // D2EannSeff_st(d2exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2EannSeff_st");
-        st.add("d2exp", printCd2exp(node.m_d2exp));
-
-        return st;
-    }
-
-	private ST printD2EannFunclo(D2EannFunclo node) {
-        // D2EannFunclo_st(funclo, d2exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2EannFunclo_st");
-        st.add("funclo", printIfunclo(node.m_funclo));
-        st.add("d2exp", printCd2exp(node.m_d2exp));
-        return st;
-    }
-
-	private Object printIfunclo(Ifunclo funclo) {
-	    // Ifunclo_st(funclo) ::= <<
-		ST st = m_stg.getInstanceOf("Ifunclo_st");
-		if (funclo instanceof FUNCLOfun) {
-			st.add("funclo", "fun");
-		} else if (funclo instanceof FUNCLOclo) {
-			FUNCLOclo clo = (FUNCLOclo)funclo;
-			if (clo.m_knd == 1) {
-				st.add("funclo", "clo_ptr");
-			} else if (clo.m_knd == 0) {
-				st.add("funclo", "clo_clo");
-			} else if (clo.m_knd == -1) {
-				st.add("funclo", "clo_ref");
-			} else {
-				throw new Error("Unknown type for closure.");
-			}
-		} else {
-			throw new Error("Unknown type for clofun");
-		}
-		
-		return st;
-		
-    }
-
-	private ST printD2ElamMet(D2ElamMet node) {
-        // D2ElamMet_st(d2exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2ElamMet_st");
-        st.add("d2exp", printCd2exp(node.m_d2exp));
-        return st;
-    }
-
-    private ST printD2ElamSta(D2ElamSta node) {
-        // D2ElamSta_st(d2exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2ElamSta_st");
-        st.add("d2exp", printCd2exp(node.m_d2exp));
-        return st;
-    }
-
-    private ST printD2Eignored(D2Eignored node) {
-        // D2Eignored_st() ::= <<
-        ST st = m_stg.getInstanceOf("D2Eignored_st");
+    private ST printCv3aldec(Cv3aldec node) {
+        // v3aldec_st(pat, def) ::= <<
+        ST st = m_stg.getInstanceOf("v3aldec_st");
+        st.add("pat", printCp3at(node.m_pat));
+        st.add("def", printCd3exp(node.m_def));
+        
         return st;
     }
 
     private ST printD3Eempty() {
-    	// D2Eempty_st() ::= <<
-	    ST st = m_stg.getInstanceOf("D2Eempty_st");
-	    return st;
-    }
-
-	private ST printD3Elet(D2Elet node) {
-        // D2Elet_st(d2cs, d2e_body) ::= <<
-        ST st = m_stg.getInstanceOf("D2Elet_st");
-        for (Cd2ecl d2ecl: node.m_d2cs) {
-            st.add("d2cs", printCd2ecl(d2ecl));
-        }
-        st.add("d2e_body", printCd2exp(node.m_d2e_body));
-        
+        // D3Eempty_st() ::= <<
+        ST st = m_stg.getInstanceOf("D3Eempty_st");
         return st;
-    }
-
-    private ST printD3Evar(D2Evar node) {
-        // D2Evar_st(var) ::= <<
-        ST st = m_stg.getInstanceOf("D2Evar_st");
-        st.add("var", node.m_d2var);
-        return st;
-    }
-
-    private ST printD3Esym(D2Esym node) {
-        // D2Esym_st(d2sym) ::= <<
-        ST st = m_stg.getInstanceOf("D2Esym_st");
-        st.add("d2sym", node.m_d2sym);        
-
-        return st;
-    }
-
-    private ST printD3Es0tring(D2Es0tring node) {
-        // D2Es0tring_st(str) ::=<<
-        ST st = m_stg.getInstanceOf("D2Es0tring_st");
-        st.add("str", node.m_s0tring);
-        return st;
-    }
-
-    private ST printD3ElamDyn(D2ElamDyn node) {
-        // D2ElamDyn_st(p2ts, exp, clo) ::= <<
-        ST st = m_stg.getInstanceOf("D2ElamDyn_st");
-        Ifunclo funclo = node.getSType().getFunClo();
-        if (null == funclo) {
-            
-        } else {
-            if (funclo.isClosure()) {
-                st.add("clo", "clo");
-            } else {
-                st.add("clo", "fun");
-            }
-        }
-        
-        for (Cp2at pat: node.m_p2ts) {
-            st.add("p2ts", printCp2at(pat));
-        }
-        st.add("exp", printCd2exp(node.m_d2exp));
-        return st;
-    }
-
-    private ST printCp2at(Cp2at node) {
-        // p2at_st(node) ::= <<
-        ST st = m_stg.getInstanceOf("p2at_st");
-        st.add("node", printIp2at_node(node.p2at_node));
-        return st;
-    }
-
-    private ST printIp2at_node(Ip2at_node node) {
-        if (node instanceof P2Tany) {
-            return printP2Tany((P2Tany)node);
-        } else if (node instanceof P2Tpat) {
-            return printP2Tpat((P2Tpat)node);
-        } else if (node instanceof P2Tvar) {
-            return printP2Tvar((P2Tvar)node);
-        } else if (node instanceof P2Tignored) {
-        	return printP2Tignored((P2Tignored)node);
-        } else if (node instanceof P2Tempty) {
-            return printP2Tempty((P2Tempty)node);
-        } else if (node instanceof P2Trec) {
-            return printP2Trec((P2Trec)node);
-        } else if (node instanceof P2Tann) {
-            return printP2Tann((P2Tann)node); 
-        } else {
-            throw new Error(node + " is not supported");
-        }
     }
     
-    private ST printP2Tann(P2Tann node) {
-	    // P2Tann_st(pat, type) ::= <<
-        ST st = m_stg.getInstanceOf("P2Tann_st");
-        st.add("pat", printCp2at(node.m_p2t));
-        st.add("type", printCs2exp(node.m_ann));
+    
 
-        return st;
-    }
-
-	private ST printP2Trec(P2Trec node) {
-        // P2Trec_st(labpats) ::= <<
-        ST st = m_stg.getInstanceOf("P2Trec_st");
-        for (Ilabp2at labpat: node.m_labpats) {
-            st.add("labpats", printIlabp2at(labpat));
-        }
-        return st;
-        
-    }
-
-    private ST printIlabp2at(Ilabp2at node) {
-        if (node instanceof LABP2ATnorm) {
-            return printLABP2ATnorm((LABP2ATnorm)node);
-        } else if (node instanceof LABP2ATomit) {
-            return printLABP2ATomit((LABP2ATomit)node);
-        } else {
-            throw new Error("not supported");
-        }
-    }
-
-    private ST printLABP2ATnorm(LABP2ATnorm node) {
-        // LABP2ATnorm_st(lab, pat) ::= <<
-        ST st = m_stg.getInstanceOf("LABP2ATnorm_st");
-        st.add("pat", printCp2at(node.m_pat));
-        return st;
-    }
-
-    private ST printLABP2ATomit(LABP2ATomit node) {
-        // LABP2ATomit_st() ::= <<
-        ST st = m_stg.getInstanceOf("LABP2ATomit_st");
-        return st;
-    }
-
-    private ST printP2Tempty(P2Tempty node) {
-        // P2Tempty_st() ::= <<
-        ST st = m_stg.getInstanceOf("P2Tempty_st");
-        return st; 
-    }
-
-    private ST printP2Tignored(P2Tignored node) {
-	    // P2Tignored_st() ::= <<
-	    ST st = m_stg.getInstanceOf("P2Tignored_st");
-	    return st; 
-    }
-
-	private ST printP2Tvar(P2Tvar node) {
-        // P2Tvar_st(var) ::= <<
-        ST st = m_stg.getInstanceOf("P2Tvar_st");
-        st.add("var", node.m_var);
-        
-        return st;
-    }
-
-    private ST printP2Tpat(P2Tpat node) {
-        // P2Tpat_st(pat) ::= <<
-        ST st = m_stg.getInstanceOf("P2Tpat_st");
-//        System.err.println("pat in pat");
-        st.add("pat", printCp2at(node.m_p2at));
-        return st;
-    }
-
-    private ST printP2Tany(P2Tany node) {
-        // P2Tany_st() ::= <<
-        ST st = m_stg.getInstanceOf("P2Tany_st");
-        return st;
-        
-    }
-
-    private ST printD3Eifopt(D2Eifopt node) {
-        // D2Eifopt_st(testa, thena, elsea) ::= <<
-        ST st = m_stg.getInstanceOf("D2Eifopt_st");
-        st.add("testa", printCd2exp(node.m_test));
-        st.add("thena", printCd2exp(node.m_then));
-        st.add("elsea", printCd2exp(node.m_else));
-        
-        return st;
-    }
-
-    private ST printD3Ei0nt(D2Ei0nt node) {
-        // D2Ei0nt_st(int) ::=<<
-        ST st = m_stg.getInstanceOf("D2Ei0nt_st");
-        st.add("int", node.m_i0nt);
-        return st;
-    }
-
-    private ST printD3Ef0loat(D2Ef0loat node) {
-        // D2Ef0loat_st(flt) ::=<<
-        ST st = m_stg.getInstanceOf("D2Ef0loat_st");
-        st.add("flt", node.m_f0loat);
-        return st;
-    }
-
-    private ST printD2Eexp(D2Eexp node) {
-        // D2Eexp_st(exp) ::= <<
-        ST st = m_stg.getInstanceOf("D2Eexp_st");
-        st.add("exp", printCd2exp(node.m_d2exp));
-        
-        return st;
-    }
-
-    private ST printD3Ecst(D2Ecst node) {
-        // D2Ecst_st(cst) ::= <<
-        ST st = m_stg.getInstanceOf("D2Ecst_st");
-        st.add("cst", printCd2cst(node.m_d2cst));
-        return st;
-    }
-
-    private ST printD3Eapplst(D2Eapplst node) {
-        // D2Eapplst_st(fun, args) ::= <<
-        ST st = m_stg.getInstanceOf("D2Eapplst_st");
-        st.add("fun", printCd2exp(node.m_d2e_fun));
-        
-        Id2exparg exparg = null;
-        if (node.m_d2as_arg.size() > 1) {
-//            System.err.println("D2Eapplst has " + node.m_d2as_arg.size() +  " lists of arguments");
-            exparg = node.m_d2as_arg.get(1);
-        } else {
-            exparg = node.m_d2as_arg.get(0);
-        }
-            
-        // for (Id2exparg arg: node.m_d2as_arg) {
-            st.add("args", printId2exparg(exparg));
-        // }
-        return st;
-    }
-
-    private ST printId2exparg(Id2exparg node) {
-        if (node instanceof D2EXPARGdyn) {
-            return printD2EXPARGdyn((D2EXPARGdyn)node);
-        } else if (node instanceof D2EXPARGsta) {
-            return printD2EXPARGsta((D2EXPARGsta)node);
-        } else {
-            throw new Error("not supported");
-        }
-    }
-
-    private ST printD2EXPARGdyn(D2EXPARGdyn node) {
-        // D2EXPARGdyn_st(d2exps) ::= <<
-        ST st = m_stg.getInstanceOf("D2EXPARGdyn_st");
-        for (Cd2exp d2exp: node.m_d2expLst) {
-            st.add("d2exps", printCd2exp(d2exp));
-        }
-
-        return st;
-    }
-
-    private ST printD2EXPARGsta(D2EXPARGsta node) {
-        throw new Error("D2EXPARGsta is encountered");
-    }
 }
 
 

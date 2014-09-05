@@ -10,6 +10,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
 // refer to DefaultAppTypeStore.java
 public class AppType extends BoxedType {
     private String m_con;
@@ -78,6 +81,11 @@ public class AppType extends BoxedType {
 
     @Override
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track) {
+        throw new Error("This should not happen.");
+    }
+
+    @Override
+    public ST toSTStfpl3(STGroup stg) {
         throw new Error("This should not happen.");
     }
 

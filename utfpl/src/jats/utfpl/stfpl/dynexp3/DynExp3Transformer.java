@@ -101,11 +101,13 @@ public class DynExp3Transformer {
     /*
      * Remove proof.
      */
-    public List<Cd3ecl> transform() {
+    public ProgramStfpl3 transform() {
 
         Set<Cd3var> scope = new HashSet<Cd3var>();
         Set<Cd3var> needed = new HashSet<Cd3var>();
-        return transform(m_d2ecs, scope, needed);
+        
+        List<Cd3ecl> decs = transform(m_d2ecs, scope, needed);
+        return new ProgramStfpl3(decs);
     }
     
     /*
@@ -166,7 +168,7 @@ public class DynExp3Transformer {
     private Cd3ecl transform(D2Cvaldecs node0, Cloc_t loc, 
             Set<Cd3var> scope, Set<Cd3var> needed) {
         if (Evalkind.VK_prval == node0.m_knd) {
-            return null;
+            D3Cvaldecs node = transform_prval(node0, loc, scope, needed);
         } else {
             D3Cvaldecs node = transform_val(node0, loc, scope, needed);
             Cd3ecl d3ecl = new Cd3ecl(loc, node);

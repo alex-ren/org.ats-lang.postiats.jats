@@ -7,6 +7,8 @@ import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.stfpl.dynexp.ProgramStfpl2Printer;
 import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
+import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
+import jats.utfpl.stfpl.dynexp3.ProgramStfpl3Printer;
 import jats.utfpl.stfpl.instructions.InstructionTransformer;
 import jats.utfpl.utils.FilenameUtils;
 
@@ -74,24 +76,32 @@ public class Test {
                     FileReader fReader = new FileReader(path);
 
                     StfplProgramParserJson utfplParser = new StfplProgramParserJson();
-                    ProgramStfpl2 uProg = utfplParser.trans(fReader);
+                    ProgramStfpl2 prog2 = utfplParser.trans(fReader);
                     
-                    StfplTypeChecker tyChecker = new StfplTypeChecker(uProg);
+                    StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
                     tyChecker.typecheck();
 
-                    ProgramStfpl2Printer uPrinter = new ProgramStfpl2Printer();
-                    String outputUTFPL = uPrinter.print(uProg);
+                    ProgramStfpl2Printer uPrinter2 = new ProgramStfpl2Printer();
+                    String outputUTFPL = uPrinter2.print(prog2);
                     
-                    System.out.println("==stfpl's ast code (layer 01) is ==========================");
+                    System.out.println("==stfpl's ast code (layer 02) is ==========================");
                     System.out.println(outputUTFPL);
                     FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
                     BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
                     bwUTFPL.write(outputUTFPL);
                     bwUTFPL.close();
                     
-//                    DynExp3Transformer d3transformer = new DynExp3Transformer(uProg.m_d2ecs);
-//                    List<Cd3ecl> d3ecs = d3transformer.transform();
-//                    
+                    /* ************* ************** */
+                    
+                    DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
+                    ProgramStfpl3 prog3 = d3transformer.transform();
+
+                    ProgramStfpl3Printer uPrinter3 = new ProgramStfpl3Printer();
+                    String outputUTFPL3 = uPrinter3.print(prog3);
+                    System.out.println("==stfpl's ast code (layer 03) is ==========================");
+                    System.out.println(outputUTFPL3);
+
+                    
 //                    InstructionTransformer ins_cvt = new InstructionTransformer();
 //                    ins_cvt.transform_global(d3ecs);
 //                    
