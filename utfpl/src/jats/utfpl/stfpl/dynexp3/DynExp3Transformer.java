@@ -168,15 +168,23 @@ public class DynExp3Transformer {
     private Cd3ecl transform(D2Cvaldecs node0, Cloc_t loc, 
             Set<Cd3var> scope, Set<Cd3var> needed) {
         if (Evalkind.VK_prval == node0.m_knd) {
-            D3Cvaldecs node = transform_prval(node0, loc, scope, needed);
+            D3Cvaldecs node = transform_val(node0, loc, scope, needed);
+            if (null != node) {
+                Cd3ecl d3ecl = new Cd3ecl(loc, node);
+                return d3ecl;
+            } else {
+                return null;
+            }
         } else {
             D3Cvaldecs node = transform_val(node0, loc, scope, needed);
+            if (null == node) {
+                throw new Error("assignment proof to value");
+            }
             Cd3ecl d3ecl = new Cd3ecl(loc, node);
             return d3ecl;
         }
 
     }
-
 
     private D3Cvaldecs transform_val(D2Cvaldecs node0, Cloc_t loc,
             Set<Cd3var> scope, Set<Cd3var> needed) {
@@ -184,21 +192,35 @@ public class DynExp3Transformer {
         
         for (Cv2aldec v2d: node0.m_v2ds) {
             Cv3aldec v3d = transform(v2d, scope, needed);
-            v3ds.add(v3d);
+            if (null != v3d) {
+                v3ds.add(v3d);
+            }
         }
-        
-        D3Cvaldecs node = new D3Cvaldecs(node0.m_knd, v3ds);
-        return node;
+        if (v3ds.size() > 0) {
+            D3Cvaldecs node = new D3Cvaldecs(node0.m_knd, v3ds);
+            return node;
+        } else {
+            return null;
+        }
     }
 
 
     private Cv3aldec transform(Cv2aldec v2d, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        Cp3at p3at = transform(v2d.v2aldec_pat, scope);
+        Cp3at p3at = transform(v2d.v2aldec_pat, scope);todo
         Cd3exp d3exp = transform(v2d.v2aldec_def, scope, needed, new ArrayList<List<PolyParaType>>());
         
         Cv3aldec v3d = new Cv3aldec(v2d.v2aldec_loc, p3at, d3exp);
         return v3d;
+    }
+    
+    private Cd3exp transform_pattern_exp(Cp2at p2at, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
+        Ip2at_node pnode = p2at.p2at_node;
+        if (pnode instanceof P2Tann) {
+            return transform_pattern_exp(((P2Tann) pnode).m_p2t, d2exp, scope, needed);
+        } else if (pnode instanceof P2Tany) { // prval _ = mc_set
+            d2exp.d2exp_node.getSType();
+        }
     }
 
 
@@ -428,6 +450,7 @@ public class DynExp3Transformer {
         if (!scope.contains(d3var)) {
             if (type instanceof FunType || type instanceof PolyType) {
                 if (!(Aux.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
+                    // global function is always accessible
                     needed.add(d3var);
                 }
             } else {

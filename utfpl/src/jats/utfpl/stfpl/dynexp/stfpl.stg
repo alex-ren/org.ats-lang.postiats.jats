@@ -55,6 +55,10 @@ D2Cinclude_st(knd, d2cs) ::= <<
 }
 >>
 
+D2Cstaload_st(filename) ::= <<
+staload "<filename>"
+>>
+
 D2Clist_st(d2cs) ::= <<
 <d2cs; separator="\n">
 >>

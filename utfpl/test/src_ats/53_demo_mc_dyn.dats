@@ -31,8 +31,8 @@ extern prfun read2 (): '(vprop | int)
 
 fun boo (): void = let
   val x = 3
-  prval () = mc_set_int (g1, x)
-  prval () = mc_set_int (g2, x)
+  prval () = mc_set_int1 (g1, x)
+  prval () = mc_set_int1 (g2, x)
   val y = 3 
 in
 end
@@ -40,8 +40,8 @@ end
 (* ******** ********* *)
 
 fun foo (): void = let
-  prval (pf | mc_x) = mc_get_int (g1)  // Use proof.
-  prval xx = mc_x + 3
+  prval (pf | mc_x) = mc_get_int1 (g1)  // Use proof.
+  prval xx:int = mc_x + 3
   prval () = mc_assert (xx > 6)
   prval pf1 = gen_proof ()
   val _ = read (pf1, pf | 1, 2)

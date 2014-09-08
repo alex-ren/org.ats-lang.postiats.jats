@@ -4,6 +4,7 @@ import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
 import jats.utfpl.stfpl.ccomp.DefaultLibraryTypes;
 import jats.utfpl.stfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 import jats.utfpl.stfpl.stype.ISType;
 
 import java.lang.reflect.Type;
@@ -39,9 +40,15 @@ public class Cd2cstDeserializer implements JsonDeserializer<Cd2cst> {
             Csymbol symbol = context.deserialize(je2, Csymbol.class);
             
             JsonElement je3 = jo.get("d2cst_type");
-            Cs2exp type = context.deserialize(je3, Cs2exp.class);
-            
-            ISType stype = DefaultLibraryTypes.queryType(symbol);
+            Cs2exp type = null;
+            if (null != je3) {
+                type = context.deserialize(je3, Cs2exp.class);
+            }
+
+            ISType stype = SExpTypeExtractor.extractType(type);
+            if (null == stype) {
+                stype = DefaultLibraryTypes.queryType(symbol);
+            }
             
             d2cst = new Cd2cst(stamp, type, symbol, stype);
             m_map.put(stamp, d2cst);

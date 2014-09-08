@@ -101,6 +101,7 @@ public class StfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(D2Cdatdecs.class, new D2CdatdecsDeserializer());  
         gsonBuilder.registerTypeAdapter(D2Cinclude.class, new D2CincludeDeserializer());
         gsonBuilder.registerTypeAdapter(D2Clist.class, new D2ClistDeserializer());
+        gsonBuilder.registerTypeAdapter(D2Cstaload.class, new D2CstaloadDeserializer());
         
         
         gsonBuilder.registerTypeAdapter(Id2exp_node.class, new Id2exp_nodeDeserializer());

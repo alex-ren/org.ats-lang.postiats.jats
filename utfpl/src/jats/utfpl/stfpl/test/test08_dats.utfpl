@@ -1,5 +1,9 @@
 prop1_t_722
 
+prop2_t_723
+
+datatype(0)dt_t_724
+
 DCKprfun gen_prop_2559:_:prop
 
 fun foo1_63 = lam () <> = 
@@ -7,5 +11,12 @@ fun foo1_63 = lam () <> =
     val P2Tann<x_64:_:t@ype> = 3
     prval p_65 = D2Ecst<gen_prop_2559:_:prop> ()
   in
-    (p_65 | x_64)
+    ( | p_65, x_64)
   end:_:t@ype)
+
+fun foo2_66 = lam () <> = 
+  <D2EannSeff>(let
+    prval p_67 = D2Ecst<gen_prop_2559:_:prop> ()
+  in
+    (p_67, 3)
+  end:_:type)

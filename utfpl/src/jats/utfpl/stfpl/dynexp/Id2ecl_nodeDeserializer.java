@@ -69,6 +69,8 @@ public class Id2ecl_nodeDeserializer implements JsonDeserializer<Id2ecl_node> {
             throw new Error("D2Clocal not supported");
         } else if (name.equals("D2Cignored")) {
             return context.deserialize(je2, D2Cignored.class);
+        } else if (name.equals("D2Cstaload")) {
+            return context.deserialize(je2, D2Cstaload.class);
         } else {
             Log.log4j.error(name + " unexpected");
             throw new Error(name + " unexpected");

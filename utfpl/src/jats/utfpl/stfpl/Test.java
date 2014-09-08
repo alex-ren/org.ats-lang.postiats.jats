@@ -51,8 +51,8 @@ public class Test {
 //                "src/jats/utfpl/stfpl/csharpins/test/02_if_branch.dats"
 //                "src/jats/utfpl/stfpl/csharpins/test/03_closure.dats"
 //                "src/jats/utfpl/stfpl/csharpins/test/04_polymorphism.dats"
-//                "test/src_ats/53_demo_mc_dyn.dats"
-                "src/jats/utfpl/stfpl/test/test08.dats"
+                "test/src_ats/53_demo_mc_dyn.dats"
+//                "src/jats/utfpl/stfpl/test/test08.dats"
 
         };
 
@@ -93,13 +93,13 @@ public class Test {
                     
                     /* ************* ************** */
                     
-                    DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
-                    ProgramStfpl3 prog3 = d3transformer.transform();
-
-                    ProgramStfpl3Printer uPrinter3 = new ProgramStfpl3Printer();
-                    String outputUTFPL3 = uPrinter3.print(prog3);
-                    System.out.println("==stfpl's ast code (layer 03) is ==========================");
-                    System.out.println(outputUTFPL3);
+//                    DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
+//                    ProgramStfpl3 prog3 = d3transformer.transform();
+//
+//                    ProgramStfpl3Printer uPrinter3 = new ProgramStfpl3Printer();
+//                    String outputUTFPL3 = uPrinter3.print(prog3);
+//                    System.out.println("==stfpl's ast code (layer 03) is ==========================");
+//                    System.out.println(outputUTFPL3);
 
                     
 //                    InstructionTransformer ins_cvt = new InstructionTransformer();
