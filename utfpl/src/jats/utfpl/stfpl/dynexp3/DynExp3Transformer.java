@@ -214,21 +214,24 @@ public class DynExp3Transformer {
         return v3d;
     }
     
-    private Cv3aldec transform_prval_pat_exp(Cloc_t loc, Cp2at p2at, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
+    private Cv3aldec transform_prval_pat_exp(int level, Cloc_t loc, Cp2at p2at, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
         Ip2at_node pnode = p2at.p2at_node;
         Cloc_t loc_pat = p2at.p2at_loc;
         if (pnode instanceof P2Tann) {
-            return transform_prval_pat_exp(loc, ((P2Tann) pnode).m_p2t, d2exp, scope, needed);
+            return transform_prval_pat_exp(level, loc, ((P2Tann) pnode).m_p2t, d2exp, scope, needed);
         } else if (pnode instanceof P2Tany) { // prval _ = mc_set
             // Nobody is gonna use the return value. 
         	// We keep this only if RHS is an app of mc-related function.
         	if (isMCApp(d2exp)) {
         		Cd3exp d3exp = transform(d2exp, scope, needed, 
         				new ArrayList<List<PolyParaType>>());
-        		Cp3at p3at = transform(p2at, scope);
+        		Cp3at p3at = transform(level, p2at, scope);
         	    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
         	    return v3d;
         	} else {
+        	    // prval _ = gen_proof () will be erased. This is good.
+        	    // prval _ = (x | mc_xx ()) will be erased. This is not so good. But programmers'd
+        	    // better not write program like this.
         		return null;
         	}
         } else if (pnode instanceof P2Tcon) {
@@ -239,29 +242,41 @@ public class DynExp3Transformer {
         	if (isMCApp(d2exp)) {
         		Cd3exp d3exp = transform(d2exp, scope, needed, 
         				new ArrayList<List<PolyParaType>>());
-        		Cp3at p3at = transform(p2at, scope);
+        		Cp3at p3at = transform(level, p2at, scope);
         	    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
         	    return v3d;
         	} else {
-        		return null;
+                throw new Error("Check this. I think this should not happen.");
         	}
         } else if (pnode instanceof P2Tignored) {
             throw new Error("Check this.");
         } else if (pnode instanceof P2Tpat) {
-            return transform_prval_pat_exp(loc, ((P2Tpat)pnode).m_p2at, d2exp, scope, needed);
+            return transform_prval_pat_exp(1, loc , ((P2Tpat)pnode).m_p2at, d2exp, scope, needed);
         } else if (pnode instanceof P2Trec) {
-            return transform_prval_pat_exp(loc, loc_pat, (P2Trec)pnode, d2exp, scope, needed);
-        } else if (node0 instanceof P2Tvar) {
-            return transform((P2Tvar)node0, loc, scope);
+            return transform_prval_pat_exp(1, loc, loc_pat, (P2Trec)pnode, d2exp, scope, needed);
+        } else if (pnode instanceof P2Tvar) {
+            P2Tvar p2t = (P2Tvar)pnode;
+            // prval x = gen_proof () will be erased.
+            // prval x = (pf | x) will be erased.
+            if (p2t.m_var.getSType().isProof()) {
+                return null;
+            } else if (isMCApp(d2exp)) {
+                // change the type of p2t
+            } else {
+                // return null;
+            }
         } else {
-            throw new Error(node0 + " is not supported.");
+            throw new Error(pnode + " is not supported.");
         }
     }
     
-    private Cv3aldec transform_prval_pat_exp(Cloc_t loc, Cloc_t loc_pat,
+    private Cv3aldec transform_prval_pat_exp(int level, Cloc_t loc, Cloc_t loc_pat,
             P2Trec pnode, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
         int i = 0;
         if (pnode.m_npf > 0) {
+            if (level > 0) {
+                throw new Error("This should not happen.");
+            }
             i = pnode.m_npf;            
         }
         
@@ -269,7 +284,7 @@ public class DynExp3Transformer {
         // skip all the proofs
         ListIterator<Ilabp2at> iter = pnode.m_labpats.listIterator(i);
         while (iter.hasNext()) {
-            LABP3ATnorm labitem = transform(iter.next(), scope);
+            LABP3ATnorm labitem = transform(level, iter.next(), scope);
             labitems.add(labitem);
         }
         
@@ -791,7 +806,7 @@ public class DynExp3Transformer {
     }
 
 
-    private Cp3at transform(Cp2at p2at, Set<Cd3var> scope) {
+    private Cp3at transform(int level, Cp2at p2at, Set<Cd3var> scope) {
         Cloc_t loc = p2at.p2at_loc;
         Ip2at_node node0 = p2at.p2at_node;
         
@@ -806,9 +821,9 @@ public class DynExp3Transformer {
         } else if (node0 instanceof P2Tignored) {
             throw new Error("Check this.");
         } else if (node0 instanceof P2Tpat) {
-            return transform(((P2Tpat)node0).m_p2at, scope);
+            return transform(level, ((P2Tpat)node0).m_p2at, scope);
         } else if (node0 instanceof P2Trec) {
-            return transform(((P2Trec)node0), loc, scope);
+            return transform(level, ((P2Trec)node0), loc, scope);
         } else if (node0 instanceof P2Tvar) {
             return transform((P2Tvar)node0, loc, scope);
         } else {
@@ -816,9 +831,12 @@ public class DynExp3Transformer {
         }
     }
 
-    private Cp3at transform(P2Trec node0, Cloc_t loc, Set<Cd3var> scope) {
+    private Cp3at transform(int level, P2Trec node0, Cloc_t loc, Set<Cd3var> scope) {
         int i = 0;
         if (node0.m_npf > 0) {
+            if (level > 0) {
+                throw new Error("This should not happen.");
+            }
             i = node0.m_npf;            
         }
         
@@ -826,20 +844,26 @@ public class DynExp3Transformer {
         // skip all the proofs
         ListIterator<Ilabp2at> iter = node0.m_labpats.listIterator(i);
         while (iter.hasNext()) {
-            LABP3ATnorm labitem = transform(iter.next(), scope);
+            LABP3ATnorm labitem = transform(1, iter.next(), scope);
             labitems.add(labitem);
         }
         
-        P3Trec node = new P3Trec(labitems, node0.m_knd);
-        return new Cp3at(loc, node);        
-        
+        if (labitems.isEmpty()) {
+            P3Tempty node = new P3Tempty(VoidType.cInstance);
+            Cp3at p3at = new Cp3at(loc, node);
+            return p3at;
+        } else {
+            P3Trec node = new P3Trec(labitems, node0.m_knd);
+            Cp3at p3at = new Cp3at(loc, node);
+            return p3at;
+        }
     }
 
 
-    private LABP3ATnorm transform(Ilabp2at node0, Set<Cd3var> scope) {
+    private LABP3ATnorm transform(int level, Ilabp2at node0, Set<Cd3var> scope) {
         if (node0 instanceof LABP2ATnorm) {
             LABP2ATnorm p2atnorm = (LABP2ATnorm) node0;
-            Cp3at p3at = transform(p2atnorm.m_pat, scope);
+            Cp3at p3at = transform(level, p2atnorm.m_pat, scope);
             LABP3ATnorm p3atnorm = new LABP3ATnorm(p2atnorm.m_lab, p3at);
             return p3atnorm;
         } else if (node0 instanceof LABP2ATomit) {
@@ -848,7 +872,6 @@ public class DynExp3Transformer {
             throw new Error(node0 + " is not supported.");
         }
     }
-
 
     private Cp3at transform(P2Tvar node0, Cloc_t loc, Set<Cd3var> scope) {
         Cd3var d3var = transform(node0.m_var, loc);
