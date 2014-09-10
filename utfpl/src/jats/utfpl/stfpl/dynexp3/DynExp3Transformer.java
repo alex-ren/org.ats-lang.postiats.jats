@@ -66,6 +66,7 @@ import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.stfpl.stype.TypeCheckResult;
+import jats.utfpl.stfpl.stype.VoidType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -272,11 +273,22 @@ public class DynExp3Transformer {
             labitems.add(labitem);
         }
         
-        P3Trec node = new P3Trec(labitems, pnode.m_knd);
-        Cp3at p3at = new Cp3at(, node);        
-        Cd3exp d3exp = transform(v2d.v2aldec_def, scope, needed, new ArrayList<List<PolyParaType>>());
-        
-        Cv3aldec v3d = new Cv3aldec(v2d.v2aldec_loc, p3at, d3exp);
+        if (labitems.isEmpty()) {
+            P3Tempty node = new P3Tempty(VoidType.cInstance);
+            Cp3at p3at = new Cp3at(loc_pat, node);        
+            Cd3exp d3exp = transform(d2exp, scope, needed, new ArrayList<List<PolyParaType>>());
+            
+            Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+            return v3d;
+        } else {
+            P3Trec node = new P3Trec(labitems, pnode.m_knd);
+            Cp3at p3at = new Cp3at(loc_pat, node);        
+            Cd3exp d3exp = transform(d2exp, scope, needed, new ArrayList<List<PolyParaType>>());
+            
+            Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+            return v3d;
+        }
+
     }
 
 	private D3Cvaldecs transform_val(D2Cvaldecs node0, Cloc_t loc,
