@@ -45,5 +45,10 @@ public class Cd2var {
     public ISType getSType() {
         return m_stype;
     }
+    
+    public ISType removeSTypeProof() {
+    	m_stype = m_stype.removeProof();
+    	return m_stype;
+    }
 
 }

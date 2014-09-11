@@ -28,7 +28,11 @@ public interface ISType {
     
     public ToCSTypeResult toCSType(Set<ICSTypeBooking> track);
     
+    // For print at layer of dynexp3
     public ST toSTStfpl3(STGroup stg);
+    
+    // create a new type without any proof
+    public ISType removeProof();
     
     
 //    /*

@@ -256,13 +256,23 @@ public class DynExp3Transformer {
             return transform_prval_pat_exp(1, loc, loc_pat, (P2Trec)pnode, d2exp, scope, needed);
         } else if (pnode instanceof P2Tvar) {
             P2Tvar p2t = (P2Tvar)pnode;
-            // prval x = gen_proof () will be erased.
-            // prval x = (pf | x) will be erased.
+
             if (p2t.m_var.getSType().isProof()) {
+            	// prval x = gen_proof () will be erased.
                 return null;
             } else if (isMCApp(d2exp)) {
+            	// prval x = mc_xx () is kept.
                 // change the type of p2t
+            	p2t.m_var.removeSTypeProof();
+            	Cp3at p3at = transform(level, p2at, scope);
+            	
+        		Cd3exp d3exp = transform(d2exp, scope, needed, 
+        				new ArrayList<List<PolyParaType>>());
+        		
+        	    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+        	    return v3d;
             } else {
+            	// prval x = (pf | x) will be erased.
                 // return null;
             }
         } else {
