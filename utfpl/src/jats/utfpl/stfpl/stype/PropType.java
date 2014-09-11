@@ -59,6 +59,11 @@ public class PropType extends SortType {
         return st;
     }
 
+    @Override
+    public ISType removeProof() {
+        throw new Error("This should not happen. Check the program.");
+    }
+
 
 
 }

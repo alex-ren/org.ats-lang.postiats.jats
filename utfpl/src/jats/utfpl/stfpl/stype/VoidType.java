@@ -11,10 +11,10 @@ import java.util.Set;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-public class VoidType extends SortType {
+public class VoidType extends EleType {
     
     public VoidType() {
-        super(ESort.t0ype);
+        
     }
 
     public static VoidType cInstance = new VoidType();

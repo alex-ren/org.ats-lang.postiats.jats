@@ -173,8 +173,20 @@ public class FunType extends BoxedType {
         return st;
     }
 
-}
+    @Override
+    public ISType removeProof() {
+        int npf = 0;
+        if (m_npf > 0) {
+            npf = m_npf;
+        }
+        
+        List<ISType> args = m_args.subList(npf, m_args.size());
+        ISType res = m_res.removeProof();
+        
+        return new FunType(npf, args, res, m_funclo);
+    }
 
+}
 
 
 

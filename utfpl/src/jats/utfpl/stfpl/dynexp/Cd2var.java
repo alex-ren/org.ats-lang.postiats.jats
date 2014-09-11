@@ -46,9 +46,9 @@ public class Cd2var {
         return m_stype;
     }
     
-    public ISType removeSTypeProof() {
-    	m_stype = m_stype.removeProof();
-    	return m_stype;
+    @Override
+    public String toString() {
+        return m_sym.toString() + m_stamp.getData();
     }
 
 }

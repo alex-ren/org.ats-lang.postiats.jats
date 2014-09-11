@@ -93,6 +93,11 @@ public class PolyParaType extends BoxedType {
         return st;
     }
 
+    @Override
+    public ISType removeProof() {
+        return this;
+    }
+
 //    @Override
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
 //        esc.add(this);

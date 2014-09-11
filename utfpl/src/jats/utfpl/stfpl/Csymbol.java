@@ -24,5 +24,9 @@ public class Csymbol {
     public boolean equals(String name) {
         return m_str.equals(name);
     }
+    
+    public boolean isMC() {
+        return m_str.startsWith(ModelCheckUtil.cMCPrefix);
+    }
 
 }

@@ -26,5 +26,4 @@ public class BoolType extends EleType {
         ST st = stg.getInstanceOf("BoolType_st");
         return st;
     }
-
 }

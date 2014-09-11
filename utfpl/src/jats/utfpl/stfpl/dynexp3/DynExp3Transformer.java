@@ -19,6 +19,7 @@ import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
 import jats.utfpl.stfpl.dynexp.D2Cinclude;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
+import jats.utfpl.stfpl.dynexp.D2Cstaload;
 import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
 import jats.utfpl.stfpl.dynexp.D2EXPARGdyn;
 import jats.utfpl.stfpl.dynexp.D2EXPARGsta;
@@ -42,6 +43,8 @@ import jats.utfpl.stfpl.dynexp.D2Es0tring;
 import jats.utfpl.stfpl.dynexp.D2Esym;
 import jats.utfpl.stfpl.dynexp.D2Etup;
 import jats.utfpl.stfpl.dynexp.D2Evar;
+import jats.utfpl.stfpl.dynexp.Edcstkind;
+import jats.utfpl.stfpl.dynexp.Efunkind;
 import jats.utfpl.stfpl.dynexp.Evalkind;
 import jats.utfpl.stfpl.dynexp.Id2ecl_node;
 import jats.utfpl.stfpl.dynexp.Id2exp_node;
@@ -64,6 +67,7 @@ import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
+import jats.utfpl.stfpl.stype.PropType;
 import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.stfpl.stype.TypeCheckResult;
 import jats.utfpl.stfpl.stype.VoidType;
@@ -161,6 +165,9 @@ public class DynExp3Transformer {
         } else if (node0 instanceof D2Cinclude) {
             Log.log4j.warn("D2Cinclude encountered in generating dynexp3.");
             return null;
+        } else if (node0 instanceof D2Cstaload) {
+            Log.log4j.warn("D2Cstaload encountered in generating dynexp3.");
+            return null;
         } else {
             throw new Error(node0 + " is not supported.");
         }
@@ -210,8 +217,24 @@ public class DynExp3Transformer {
     	Cd2exp d2e = v2d.v2aldec_def;
     	Cloc_t loc = v2d.v2aldec_loc;
     	
-        Cv3aldec v3d = transform_prval_pat_exp(loc, p2at, d2e, scope, needed);
+        Cv3aldec v3d = transform_prval_pat_exp(0, loc, p2at, d2e, scope, needed);
         return v3d;
+    }
+    
+    private boolean isMCApp(Cd2exp d2exp) {
+        Id2exp_node node = d2exp.d2exp_node;
+        if (node instanceof D2Eapplst) {
+            Cd2exp fun_exp = ((D2Eapplst)node).m_d2e_fun;
+            Id2exp_node fun_node = fun_exp.d2exp_node;
+            if (fun_node instanceof D2Ecst) {
+                Cd2cst d2cst = ((D2Ecst)fun_node).m_d2cst;
+                return d2cst.m_symbol.isMC();
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
     
     private Cv3aldec transform_prval_pat_exp(int level, Cloc_t loc, Cp2at p2at, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
@@ -257,23 +280,31 @@ public class DynExp3Transformer {
         } else if (pnode instanceof P2Tvar) {
             P2Tvar p2t = (P2Tvar)pnode;
 
-            if (p2t.m_var.getSType().isProof()) {
+            if (p2t.m_var.getSType() instanceof PropType) {
             	// prval x = gen_proof () will be erased.
                 return null;
-            } else if (isMCApp(d2exp)) {
-            	// prval x = mc_xx () is kept.
-                // change the type of p2t
-            	p2t.m_var.removeSTypeProof();
-            	Cp3at p3at = transform(level, p2at, scope);
-            	
-        		Cd3exp d3exp = transform(d2exp, scope, needed, 
-        				new ArrayList<List<PolyParaType>>());
-        		
-        	    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
-        	    return v3d;
+            } else if (VoidType.cInstance == p2t.m_var.getSType()) {
+                if (isMCApp(d2exp)) {
+                    // prval x:void = mc_xx () is kept.
+                    Cp3at p3at = transform(level, p2at, scope);
+                    
+                    Cd3exp d3exp = transform(d2exp, scope, needed, 
+                            new ArrayList<List<PolyParaType>>());
+                    
+                    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+                    return v3d;
+                } else {
+                    return null;
+                }
             } else {
-            	// prval x = (pf | x) will be erased.
-                // return null;
+                Cp3at p3at = transform(level, p2at, scope);
+                
+                Cd3exp d3exp = transform(d2exp, scope, needed, 
+                        new ArrayList<List<PolyParaType>>());
+                
+                Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+                return v3d;                
+                
             }
         } else {
             throw new Error(pnode + " is not supported.");
@@ -330,7 +361,7 @@ public class DynExp3Transformer {
 
     private Cv3aldec transform_val(Cv2aldec v2d, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        Cp3at p3at = transform(v2d.v2aldec_pat, scope);
+        Cp3at p3at = transform(0, v2d.v2aldec_pat, scope);
         Cd3exp d3exp = transform(v2d.v2aldec_def, scope, needed, new ArrayList<List<PolyParaType>>());
         
         Cv3aldec v3d = new Cv3aldec(v2d.v2aldec_loc, p3at, d3exp);
@@ -373,6 +404,8 @@ public class DynExp3Transformer {
      */
     private Cd3ecl transform(D2Cfundecs node0, Cloc_t loc, Set<Cd3var> scope, Set<Cd3var> needed) {
         switch (node0.m_knd) {
+        case FK_prfn:
+        case FK_prfun:
         case FK_fn: // non-recursive function 
         case FK_fnx: // tail-recursive 
         case FK_fun: // recursive
@@ -403,26 +436,34 @@ public class DynExp3Transformer {
             Set<Cd3var> total_needed = new HashSet<Cd3var>();
             
             for (Cf2undec f2un: node0.m_f2ds) {
-                Cd3var name = transform(f2un.f2undec_var, f2un.f2undec_loc);
-                
-                Set<Cd3var> cur_scope = new HashSet<Cd3var>();
-                Set<Cd3var> cur_needed = new HashSet<Cd3var>();
-                
-                Cd3exp d3exp = transform(f2un.f2undec_def, cur_scope, cur_needed, new ArrayList<List<PolyParaType>>());
-                // Since cur_scope is empty, cur_needed is the env for the function.
+                if (   Efunkind.FK_fn == node0.m_knd 
+                    || Efunkind.FK_fnx == node0.m_knd
+                    || Efunkind.FK_fun == node0.m_knd 
+                    || f2un.f2undec_var.m_sym.isMC()) {
 
-                D3ElamDyn d3elam = (D3ElamDyn)(d3exp.m_node);
-                total_needed.addAll(d3elam.m_env);
-                
-                // Just curious whether this would be triggered. 
-                TypeCheckResult res = name.m_stype.match(d3elam.getType());
-                if (!res.isGood()) {
-                    throw new Error(res.getMsg());
+                    System.out.println("========= trans fundec " + f2un.f2undec_var);
+                    
+                    Cd3var name = transform(f2un.f2undec_var, f2un.f2undec_loc);
+                    
+                    Set<Cd3var> cur_scope = new HashSet<Cd3var>();
+                    Set<Cd3var> cur_needed = new HashSet<Cd3var>();
+                    
+                    Cd3exp d3exp = transform(f2un.f2undec_def, cur_scope, cur_needed, new ArrayList<List<PolyParaType>>());
+                    // Since cur_scope is empty, cur_needed is the env for the function.
+    
+                    D3ElamDyn d3elam = (D3ElamDyn)(d3exp.m_node);
+                    total_needed.addAll(d3elam.m_env);
+                    
+                    // Just curious whether this would be triggered. 
+                    TypeCheckResult res = name.m_stype.match(d3elam.getType());
+                    if (!res.isGood()) {
+                        throw new Error(res.getMsg());
+                    }
+                    
+                    Cf3undec f3un = new Cf3undec(f2un.f2undec_loc, name, 
+                    		d3elam.m_lin, d3elam.m_p3ts, d3elam.m_d3exp, d3elam.getType());
+                    f3uns.add(f3un);
                 }
-                
-                Cf3undec f3un = new Cf3undec(f2un.f2undec_loc, name, 
-                		d3elam.m_lin, d3elam.m_p3ts, d3elam.m_d3exp, d3elam.getType());
-                f3uns.add(f3un);
             }
             
 
@@ -436,8 +477,7 @@ public class DynExp3Transformer {
             return new Cd3ecl(loc, node);
         }
         
-        case FK_prfn:
-        case FK_prfun:
+
         case FK_praxi:
         case FK_castfn:
             return null;
@@ -637,7 +677,7 @@ public class DynExp3Transformer {
     }
 
     private Cd3sym transform(Cd2sym d2sym, Cloc_t loc) {
-        ISType type = d2sym.getSType();
+        ISType type = d2sym.getSType().removeProof();
         return new Cd3sym(d2sym.m_d2sym_name, type);
     }
 
@@ -694,7 +734,7 @@ public class DynExp3Transformer {
                 D2EXPARGdyn a2rgs = (D2EXPARGdyn)iargs;
                 D3EXPARGdyn a3rgs = transform(a2rgs, scope, needed);
                 argslst.add(a3rgs);
-                inner_types.add(iter.next());
+                inner_types.add(iter.next().removeProof());
             } else {
                 throw new Error(iargs + " is not supported.");
             }
@@ -710,10 +750,10 @@ public class DynExp3Transformer {
         List<Cd3exp> d3es = new ArrayList<Cd3exp>();
         
         int i = 0;
-        if (node0.m_i < 0) {
+        if (node0.m_npf < 0) {
             i = 0;
         } else {
-            i = node0.m_i;
+            i = node0.m_npf;
         }
         ListIterator<Cd2exp> iter = node0.m_d2expLst.listIterator(i);
         
@@ -730,7 +770,14 @@ public class DynExp3Transformer {
     private Cd3exp transform(D2ElamDyn node0, Cloc_t loc, 
             Set<Cd3var> scope, Set<Cd3var> needed, List<List<PolyParaType>> accu) {
         Set<Cd3var> cur_scope = new HashSet<Cd3var>();
-        List<Cp3at> p3ats = transform(node0.m_p2ts, cur_scope);
+        int npf = 0;
+        if (node0.m_npf > 0) {
+            npf = node0.m_npf;
+        }
+        
+        
+        // remove proof parameters
+        List<Cp3at> p3ats = transform(node0.m_p2ts.subList(npf, node0.m_p2ts.size()), cur_scope);
 //        Set<Cd3var> paras = collect_stamps(p3ats);
         
         Set<Cd3var> cur_needed = new HashSet<Cd3var>();
@@ -809,7 +856,10 @@ public class DynExp3Transformer {
     private List<Cp3at> transform(List<Cp2at> p2ts, Set<Cd3var> scope) {
         List<Cp3at> p3ats = new ArrayList<Cp3at>();
         for (Cp2at p2at: p2ts) {
-            Cp3at p3at = transform(p2at, scope);
+            Cp3at p3at = transform(0, p2at, scope);
+            if (null == p3at) {
+                throw new Error("This is not supported.");
+            }
             p3ats.add(p3at);
         }
         return p3ats;
@@ -821,7 +871,7 @@ public class DynExp3Transformer {
         Ip2at_node node0 = p2at.p2at_node;
         
         if (node0 instanceof P2Tann) {
-            return transform((P2Tann)node0, scope);
+            return transform(level, (P2Tann)node0, scope);
         } else if (node0 instanceof P2Tany) {
             return transform((P2Tany)node0, loc);
         } else if (node0 instanceof P2Tcon) {
@@ -901,8 +951,8 @@ public class DynExp3Transformer {
     }
 
 
-    private Cp3at transform(P2Tann node0, Set<Cd3var> scope) {
-        return transform(node0.m_p2t, scope);
+    private Cp3at transform(int level, P2Tann node0, Set<Cd3var> scope) {
+        return transform(level, node0.m_p2t, scope);
     }
 
 
@@ -915,13 +965,14 @@ public class DynExp3Transformer {
         return transform(node.m_d2exp, new HashSet<Cd3var>(), needed, accu);
     }
 
-
     private Cd3var transform(Cd2var d2var, Cloc_t loc) {
         Cd3var d3var = m_varMap.get(d2var.m_stamp);
         if (null != d3var) {
             return d3var;
         } else {
-            d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType());
+            System.out.println("==========" + d2var.m_sym);
+            d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType().removeProof());
+            System.out.println("==========");
             m_varMap.put(d2var.m_stamp, d3var);
             return d3var;
         }
@@ -936,13 +987,23 @@ public class DynExp3Transformer {
 
     private Cd3ecl transform(Cloc_t loc, D2Cdcstdecs node0, Set<Cd3var> scope) {
         switch (node0.m_dck) {
+        case DCK_prfun: // extern prfun
+        case DCK_prval:  // extern prval
         case DCK_fun:  // extern fun
         case DCK_val:  // extern val
         {
             List<Cd3cst> d3csts = new ArrayList<Cd3cst>();
             for (Cd2cst d2cst: node0.m_d2cst) {
-                Cd3cst d3cst = transform(d2cst, loc);
-                d3csts.add(d3cst);
+                if (node0.m_dck == Edcstkind.DCK_prfun || node0.m_dck == Edcstkind.DCK_prval) {
+                    if (d2cst.m_symbol.isMC()) {  // mc_xx is kept.
+                        Cd3cst d3cst = transform(d2cst, loc);
+                        d3csts.add(d3cst);
+                    }
+                } else {
+                    Cd3cst d3cst = transform(d2cst, loc);
+                    d3csts.add(d3cst);
+                }
+
                 // scope.add(d3cst.m_stamp);  07/21/2014 Do not take into consideration of cst.
             }
             
@@ -952,8 +1013,6 @@ public class DynExp3Transformer {
         }
 
         case DCK_praxi:  // praxi
-        case DCK_prfun: // extern prfun
-        case DCK_prval:  // extern prval
         case DCK_castfn:  // extern castfn
             return null;
         default:
@@ -967,11 +1026,10 @@ public class DynExp3Transformer {
         if (null != d3cst) {
             return d3cst;
         } else {
-            d3cst = new Cd3cst(d2cst.m_stamp, d2cst.m_symbol, d2cst.getSType());
+            d3cst = new Cd3cst(d2cst.m_stamp, d2cst.m_symbol, d2cst.getSType().removeProof());
             m_cstMap.put(d2cst.m_stamp, d3cst);
             return d3cst;
         }
     }
-
 
 }

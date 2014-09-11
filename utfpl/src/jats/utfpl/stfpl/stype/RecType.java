@@ -12,7 +12,6 @@ import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -102,16 +101,14 @@ public class RecType extends BoxedType {
         return new RecType(labpats, m_npf, m_knd);
     }
 
+    @Override
     public RecType removeProof() {
-        List<ILabPat> tys = new ArrayList<ILabPat>();
         int i = 0;
         if (m_npf > 0) {
             i = m_npf;
         }
-        ListIterator<ILabPat> iter = m_labtypes.listIterator(i);
-        while (iter.hasNext()) {
-            tys.add(iter.next());
-        }
+        
+        List<ILabPat> tys = m_labtypes.subList(i, m_labtypes.size());
         RecType ret = new RecType(tys, 0, m_knd);
         return ret;
     }

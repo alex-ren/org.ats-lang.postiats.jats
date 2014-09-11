@@ -110,5 +110,10 @@ public class VarType extends SortType {
         throw new Error("should not happen");
     }
 
+    @Override
+    public ISType removeProof() {
+        throw new Error("should not happen");
+    }
+
 
 }

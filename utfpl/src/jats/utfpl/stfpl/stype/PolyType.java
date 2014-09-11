@@ -132,6 +132,16 @@ public class PolyType extends BoxedType {
         return st;
     }
 
+    @Override
+    public ISType removeProof() {
+        ISType body = m_body.removeProof();
+        if (null == body) {
+            return null;
+        } else {
+            return new PolyType(m_paras, body);
+        }
+    }
+
     
 
 }

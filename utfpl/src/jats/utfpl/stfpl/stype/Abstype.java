@@ -46,6 +46,11 @@ public class Abstype extends SortType {
         throw new Error("not supported");
     }
 
+    @Override
+    public ISType removeProof() {
+        return new Abstype(m_srt);
+    }
+
 
 //    @Override
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {

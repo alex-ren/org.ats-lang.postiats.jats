@@ -89,6 +89,11 @@ public class AppType extends BoxedType {
         throw new Error("This should not happen.");
     }
 
+    @Override
+    public ISType removeProof() {
+        throw new Error("This should not happen.");
+    }
+
 
 //    @Override
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {

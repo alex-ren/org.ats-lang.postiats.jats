@@ -19,6 +19,7 @@ public class DataType extends BoxedType {
     public DataType(Cs2cst name, List<ISType> tyLst) {
         m_tyLst = tyLst;
         m_name = name;
+        throw new Error("not allowed to use now");
     }
 
     @Override
@@ -69,6 +70,11 @@ public class DataType extends BoxedType {
         st.add("cst_name", m_name);
         return st;
         
+    }
+
+    @Override
+    public ISType removeProof() {
+        throw new Error("Not supported");
     }
 
 //    @Override

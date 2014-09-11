@@ -40,6 +40,11 @@ public abstract class EleType extends FlatType {
     public ISType instantiate(Map<PolyParaType, ISType> map) {
         return this;
     }
+    
+    @Override
+    public EleType removeProof() {
+        return this;
+    }
 //
 //    @Override
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {

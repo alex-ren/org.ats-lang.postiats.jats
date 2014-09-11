@@ -14,7 +14,7 @@ public class D3Eapplst implements Id3exp_node {
     // Read the code $PATSHOME/MEDIUM/UTFPL0/evaluating/eval_d2exp.dats: aux_d2exp_applst
     public List<D3EXPARGdyn> m_args;
     
-    public List<ISType> m_inner_stype;
+    public List<ISType> m_inner_stype;  // Contains all the types after applying inputs one by one.
     
     public D3Eapplst(Cd3exp fun, List<D3EXPARGdyn> args, List<ISType> inner_stype) {
         m_fun = fun;

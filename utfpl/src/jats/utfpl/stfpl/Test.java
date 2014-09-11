@@ -93,13 +93,13 @@ public class Test {
                     
                     /* ************* ************** */
                     
-//                    DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
-//                    ProgramStfpl3 prog3 = d3transformer.transform();
-//
-//                    ProgramStfpl3Printer uPrinter3 = new ProgramStfpl3Printer();
-//                    String outputUTFPL3 = uPrinter3.print(prog3);
-//                    System.out.println("==stfpl's ast code (layer 03) is ==========================");
-//                    System.out.println(outputUTFPL3);
+                    DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
+                    ProgramStfpl3 prog3 = d3transformer.transform();
+
+                    ProgramStfpl3Printer uPrinter3 = new ProgramStfpl3Printer();
+                    String outputUTFPL3 = uPrinter3.print(prog3);
+                    System.out.println("==stfpl's ast code (layer 03) is ==========================");
+                    System.out.println(outputUTFPL3);
 
                     
 //                    InstructionTransformer ins_cvt = new InstructionTransformer();
