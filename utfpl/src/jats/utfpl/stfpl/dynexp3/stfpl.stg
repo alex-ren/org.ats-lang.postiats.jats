@@ -38,8 +38,8 @@ funkind_st(knd) ::= <<
 <knd>
 >>
 
-f3undec_st(loc, var, stype, def) ::= <<
-<d3var_st(var)>: <stype> = <def>
+f3undec_st(loc, var, stype, p3ts, clo, body) ::= <<
+<d3var_st(var)>: <stype> = lam (<p3ts; separator=", ">) \<<clo>\> = <body>
 >>
 
 // handle Cd3var
@@ -96,8 +96,8 @@ P3Tempty_st() ::= <<
 ()
 >>
 
-P3Trec_st(labpats) ::= <<
-{<labpats; separator=", ">}
+P3Trec_st(isbox, labpats) ::= <<
+<if(isbox)>'<else>@<endif>{<labpats; separator=", ">}
 >>
 
 LABP3ATnorm_st(lab, pat) ::= <<
@@ -126,7 +126,7 @@ D3Esym_st(d3sym) ::= <<
 
 // handle Cd3sym
 d3sym_st (d3sym) ::= <<
-<symbol_st(d2sym.symbol)>
+<symbol_st(d3sym.symbol)>
 >>
 
 // handle Cstamp

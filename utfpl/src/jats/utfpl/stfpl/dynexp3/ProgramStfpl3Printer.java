@@ -147,11 +147,19 @@ public class ProgramStfpl3Printer {
     }
     
     private ST printCf3undec(Cf3undec node) {
-        // f3undec_st(loc, var, stype, def) ::= <<
+        // f3undec_st(loc, var, stype, clo, body) ::= <<
         ST st = m_stg.getInstanceOf("f3undec_st");
         st.add("var", node.m_var);
         st.add("stype", node.m_type.toSTStfpl3(m_stg_type));
-        st.add("def", printCd3exp(node.m_body));
+        
+        for (Cp3at pat: node.m_p3ts) {
+            st.add("p3ts", printCp3at(pat));
+        }
+        
+        ISType type = node.m_type;
+        st.add("clo", getCloInfo(type));
+        
+        st.add("body", printCd3exp(node.m_body));
         
         return st;
     }
@@ -245,17 +253,11 @@ public class ProgramStfpl3Printer {
         
         return st;
     }
-
-    private ST printD3ElamDyn(D3ElamDyn node) {
-        // D3ElamDyn_st(p3ts, exp, clo) ::= <<
-        ST st = m_stg.getInstanceOf("D3ElamDyn_st");
-        Ifunclo funclo = null;
-        
-        ISType type = node.getType();
+    
+    private String getCloInfo(ISType type) {
         while (true) {
             if (type instanceof FunType) {
-                funclo = ((FunType)type).getFunClo();
-                break;
+                return ((FunType)type).getCloInfo();
             } else if (type instanceof PolyType) {
                 type = ((PolyType)type).m_body;
                 continue;
@@ -263,15 +265,14 @@ public class ProgramStfpl3Printer {
                 throw new Error("This should not happen.");
             }
         }
-        if (null == funclo) {
-            st.add("clo", "na");            
-        } else {
-            if (funclo.isClosure()) {
-                st.add("clo", "clo");
-            } else {
-                st.add("clo", "fun");
-            }
-        }
+    }
+
+    private ST printD3ElamDyn(D3ElamDyn node) {
+        // D3ElamDyn_st(p3ts, exp, clo) ::= <<
+        ST st = m_stg.getInstanceOf("D3ElamDyn_st");
+
+        ISType type = node.getType();
+        st.add("clo", getCloInfo(type));
         
         for (Cp3at pat: node.m_p3ts) {
             st.add("p3ts", printCp3at(pat));
@@ -317,11 +318,13 @@ public class ProgramStfpl3Printer {
     }
     
     private ST printP3Trec(P3Trec node) {
-        // P3Trec_st(labpats) ::= <<
+        // P3Trec_st(isbox, labpats) ::= <<
         ST st = m_stg.getInstanceOf("P3Trec_st");
         for (LABP3ATnorm labpat: node.m_labpats) {
             st.add("labpats", printLABP3ATnorm(labpat));
         }
+        
+        st.add("isbox", node.isBoxed());
         return st;
         
     }
@@ -330,6 +333,7 @@ public class ProgramStfpl3Printer {
         // LABP3ATnorm_st(lab, pat) ::= <<
         ST st = m_stg.getInstanceOf("LABP3ATnorm_st");
         st.add("pat", printCp3at(node.m_pat));
+        st.add("lab", node.m_lab);
         return st;
     }
     

@@ -24,6 +24,7 @@ public class AppType extends BoxedType {
         }
         m_con = con;
         m_tys = tys;
+        throw new Error("not in use now");
     }
 
     @Override

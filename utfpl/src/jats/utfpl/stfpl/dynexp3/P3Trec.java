@@ -20,6 +20,10 @@ public class P3Trec implements Ip3at_node {
         m_labpats = labpats;
         m_knd = knd;
     }
+    
+    boolean isBoxed() {
+        return 1 == m_knd;
+    }
 
     @Override
     public RecType getType() {

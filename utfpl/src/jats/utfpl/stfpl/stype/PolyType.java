@@ -36,7 +36,8 @@ public class PolyType extends BoxedType {
             ((VarType)right0).setType(left);
             return new TypeCheckResult();
         } else if (right0 instanceof PolyType) {
-            return new TypeCheckResult("not expecting this");
+            return m_body.match(((PolyType)right0).m_body);
+//            return new TypeCheckResult("not expecting this");
         } else {
             return new TypeCheckResult("Type mismatch: " + Log.getFilePos());
         }
@@ -137,6 +138,8 @@ public class PolyType extends BoxedType {
         ISType body = m_body.removeProof();
         if (null == body) {
             return null;
+        } else if (m_paras.isEmpty()) {
+            return body;
         } else {
             return new PolyType(m_paras, body);
         }

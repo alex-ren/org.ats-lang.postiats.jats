@@ -12,6 +12,8 @@ import org.stringtemplate.v4.STGroup;
 
 public interface ILabPat {
     public void normalize();
+    
+    public ISType getType();
 
     public boolean sameLab(ILabPat pat1);
 

@@ -16,6 +16,9 @@ public class PolyParaType extends BoxedType {
     private Cs2var m_var;
     
     public PolyParaType(Cs2var var) {
+        if (!var.m_srt.isType()) {
+            throw new Error("not supported");
+        }
         m_var = var;
     }
     

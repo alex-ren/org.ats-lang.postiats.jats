@@ -44,8 +44,8 @@ PropType_st() ::= <<
 prop
 >>
 
-RecType_st(labpats) ::= <<
-{<labpats; separator=", ">}
+RecType_st(isbox, labpats) ::= <<
+<if(isbox)>'<else>@<endif>{<labpats; separator=", ">}
 >>
 
 labpat_st(lab, type) ::= <<

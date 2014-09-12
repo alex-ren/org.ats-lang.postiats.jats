@@ -73,6 +73,7 @@ import jats.utfpl.stfpl.stype.TypeCheckResult;
 import jats.utfpl.stfpl.stype.VoidType;
 import jats.utfpl.utils.Log;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,6 +81,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 /*
  * Some explanation about needed and scope.
@@ -221,21 +225,7 @@ public class DynExp3Transformer {
         return v3d;
     }
     
-    private boolean isMCApp(Cd2exp d2exp) {
-        Id2exp_node node = d2exp.d2exp_node;
-        if (node instanceof D2Eapplst) {
-            Cd2exp fun_exp = ((D2Eapplst)node).m_d2e_fun;
-            Id2exp_node fun_node = fun_exp.d2exp_node;
-            if (fun_node instanceof D2Ecst) {
-                Cd2cst d2cst = ((D2Ecst)fun_node).m_d2cst;
-                return d2cst.m_symbol.isMC();
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+
     
     private Cv3aldec transform_prval_pat_exp(int level, Cloc_t loc, Cp2at p2at, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
         Ip2at_node pnode = p2at.p2at_node;
@@ -244,44 +234,44 @@ public class DynExp3Transformer {
             return transform_prval_pat_exp(level, loc, ((P2Tann) pnode).m_p2t, d2exp, scope, needed);
         } else if (pnode instanceof P2Tany) { // prval _ = mc_set
             // Nobody is gonna use the return value. 
-        	// We keep this only if RHS is an app of mc-related function.
-        	if (isMCApp(d2exp)) {
-        		Cd3exp d3exp = transform(d2exp, scope, needed, 
-        				new ArrayList<List<PolyParaType>>());
-        		Cp3at p3at = transform(level, p2at, scope);
-        	    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
-        	    return v3d;
-        	} else {
-        	    // prval _ = gen_proof () will be erased. This is good.
-        	    // prval _ = (x | mc_xx ()) will be erased. This is not so good. But programmers'd
-        	    // better not write program like this.
-        		return null;
-        	}
+            // We keep this only if RHS is an app of mc-related function.
+            if (isMCApp(d2exp)) {
+                Cd3exp d3exp = transform(d2exp, scope, needed, 
+                        new ArrayList<List<PolyParaType>>());
+                Cp3at p3at = transform(level, p2at, scope);
+                Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+                return v3d;
+            } else {
+                // prval _ = gen_proof () will be erased. This is good.
+                // prval _ = (x | mc_xx ()) will be erased. This is not so good. But programmers'd
+                // better not write program like this.
+                return null;
+            }
         } else if (pnode instanceof P2Tcon) {
-        	throw new Error("not supported yet");
+            throw new Error("not supported yet");
         } else if (pnode instanceof P2Tempty) {
-        	// Nobody is gonna use the return value. 
-        	// We keep this only if RHS is an app of mc-related function.
-        	if (isMCApp(d2exp)) {
-        		Cd3exp d3exp = transform(d2exp, scope, needed, 
-        				new ArrayList<List<PolyParaType>>());
-        		Cp3at p3at = transform(level, p2at, scope);
-        	    Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
-        	    return v3d;
-        	} else {
+            // Nobody is gonna use the return value. 
+            // We keep this only if RHS is an app of mc-related function.
+            if (isMCApp(d2exp)) {
+                Cd3exp d3exp = transform(d2exp, scope, needed, 
+                        new ArrayList<List<PolyParaType>>());
+                Cp3at p3at = transform(level, p2at, scope);
+                Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+                return v3d;
+            } else {
                 throw new Error("Check this. I think this should not happen.");
-        	}
+            }
         } else if (pnode instanceof P2Tignored) {
             throw new Error("Check this.");
         } else if (pnode instanceof P2Tpat) {
-            return transform_prval_pat_exp(1, loc , ((P2Tpat)pnode).m_p2at, d2exp, scope, needed);
+            return transform_prval_pat_exp(level, loc , ((P2Tpat)pnode).m_p2at, d2exp, scope, needed);
         } else if (pnode instanceof P2Trec) {
-            return transform_prval_pat_exp(1, loc, loc_pat, (P2Trec)pnode, d2exp, scope, needed);
+            return transform_prval_pat_exp(level, loc, loc_pat, (P2Trec)pnode, d2exp, scope, needed);
         } else if (pnode instanceof P2Tvar) {
             P2Tvar p2t = (P2Tvar)pnode;
 
             if (p2t.m_var.getSType() instanceof PropType) {
-            	// prval x = gen_proof () will be erased.
+                // prval x = gen_proof () will be erased.
                 return null;
             } else if (VoidType.cInstance == p2t.m_var.getSType()) {
                 if (isMCApp(d2exp)) {
@@ -311,8 +301,14 @@ public class DynExp3Transformer {
         }
     }
     
-    private Cv3aldec transform_prval_pat_exp(int level, Cloc_t loc, Cloc_t loc_pat,
-            P2Trec pnode, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
+    private Cv3aldec transform_prval_pat_exp(
+            int level, 
+            Cloc_t loc, 
+            Cloc_t loc_pat,
+            P2Trec pnode, 
+            Cd2exp d2exp, 
+            Set<Cd3var> scope, 
+            Set<Cd3var> needed) {
         int i = 0;
         if (pnode.m_npf > 0) {
             if (level > 0) {
@@ -325,7 +321,7 @@ public class DynExp3Transformer {
         // skip all the proofs
         ListIterator<Ilabp2at> iter = pnode.m_labpats.listIterator(i);
         while (iter.hasNext()) {
-            LABP3ATnorm labitem = transform(level, iter.next(), scope);
+            LABP3ATnorm labitem = transform(1, iter.next(), scope);
             labitems.add(labitem);
         }
         
@@ -336,6 +332,14 @@ public class DynExp3Transformer {
             
             Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
             return v3d;
+        } if (labitems.size() == 1 && !pnode.isBoxed() && pnode.isTuple()) {
+            // flat tuple with one element
+            // degrade into the element
+            Cp3at p3at = labitems.get(0).m_pat;
+            Cd3exp d3exp = transform(d2exp, scope, needed, new ArrayList<List<PolyParaType>>());
+            Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
+            return v3d;
+            
         } else {
             P3Trec node = new P3Trec(labitems, pnode.m_knd);
             Cp3at p3at = new Cp3at(loc_pat, node);        
@@ -347,6 +351,22 @@ public class DynExp3Transformer {
 
     }
 
+    
+    private boolean isMCApp(Cd2exp d2exp) {
+        Id2exp_node node = d2exp.d2exp_node;
+        if (node instanceof D2Eapplst) {
+            Cd2exp fun_exp = ((D2Eapplst)node).m_d2e_fun;
+            Id2exp_node fun_node = fun_exp.d2exp_node;
+            if (fun_node instanceof D2Ecst) {
+                Cd2cst d2cst = ((D2Ecst)fun_node).m_d2cst;
+                return d2cst.m_symbol.isMC();
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 	private D3Cvaldecs transform_val(D2Cvaldecs node0, Cloc_t loc,
             Set<Cd3var> scope, Set<Cd3var> needed) {
         List<Cv3aldec> v3ds = new ArrayList<Cv3aldec>();
@@ -368,6 +388,99 @@ public class DynExp3Transformer {
         return v3d;
     }
 
+
+    private Cp3at transform(int level, Cp2at p2at, Set<Cd3var> scope) {
+        Cloc_t loc = p2at.p2at_loc;
+        Ip2at_node node0 = p2at.p2at_node;
+        
+        if (node0 instanceof P2Tann) {
+            return transform(level, (P2Tann)node0, scope);
+        } else if (node0 instanceof P2Tany) {
+            return transform((P2Tany)node0, loc);
+        } else if (node0 instanceof P2Tcon) {
+            throw new Error("not supported yet");
+        } else if (node0 instanceof P2Tempty) {
+            return transform((P2Tempty)node0, loc);
+        } else if (node0 instanceof P2Tignored) {
+            throw new Error("Check this.");
+        } else if (node0 instanceof P2Tpat) {
+            return transform(level, ((P2Tpat)node0).m_p2at, scope);
+        } else if (node0 instanceof P2Trec) {
+            return transform(level, ((P2Trec)node0), loc, scope);
+        } else if (node0 instanceof P2Tvar) {
+            return transform((P2Tvar)node0, loc, scope);
+        } else {
+            throw new Error(node0 + " is not supported.");
+        }
+    }
+    
+
+    private Cp3at transform(P2Tvar node0, Cloc_t loc, Set<Cd3var> scope) {
+        Cd3var d3var = transform(node0.m_var, loc);
+        scope.add(d3var);
+        P3Tvar node = new P3Tvar(d3var);
+        return new Cp3at(loc, node);
+    }
+
+
+    private Cp3at transform(P2Tempty node0, Cloc_t loc) {
+        return new Cp3at(loc, new P3Tempty(node0.getSType()));
+    }
+
+
+    private Cp3at transform(P2Tany node0, Cloc_t loc) {
+        return new Cp3at(loc, new P3Tany(node0.getSType()));
+    }
+
+
+    private Cp3at transform(int level, P2Tann node0, Set<Cd3var> scope) {
+        return transform(level, node0.m_p2t, scope);
+    }
+
+    private Cp3at transform(int level, P2Trec node0, Cloc_t loc, Set<Cd3var> scope) {
+        int i = 0;
+        if (node0.m_npf > 0) {
+            if (level > 0) {
+                throw new Error("This should not happen.");
+            }
+            i = node0.m_npf;            
+        }
+        
+        List<LABP3ATnorm> labitems = new ArrayList<LABP3ATnorm>();
+        // skip all the proofs
+        ListIterator<Ilabp2at> iter = node0.m_labpats.listIterator(i);
+        while (iter.hasNext()) {
+            LABP3ATnorm labitem = transform(1, iter.next(), scope);
+            labitems.add(labitem);
+        }
+        
+        if (labitems.isEmpty()) {
+            P3Tempty node = new P3Tempty(VoidType.cInstance);
+            Cp3at p3at = new Cp3at(loc, node);
+            return p3at;
+        } if (labitems.size() == 1 && !node0.isBoxed()) {
+            return labitems.get(0).m_pat;
+        } else {
+            P3Trec node = new P3Trec(labitems, node0.m_knd);
+            Cp3at p3at = new Cp3at(loc, node);
+            return p3at;
+        }
+    }
+
+
+    private LABP3ATnorm transform(int level, Ilabp2at node0, Set<Cd3var> scope) {
+        if (node0 instanceof LABP2ATnorm) {
+            LABP2ATnorm p2atnorm = (LABP2ATnorm) node0;
+            Cp3at p3at = transform(level, p2atnorm.m_pat, scope);
+            LABP3ATnorm p3atnorm = new LABP3ATnorm(p2atnorm.m_lab, p3at);
+            return p3atnorm;
+        } else if (node0 instanceof LABP2ATomit) {
+            throw new Error(node0 + " is not supported.");
+        } else {
+            throw new Error(node0 + " is not supported.");
+        }
+    }
+    
     private Cd3ecl transform(D2Cstacsts node0, Cloc_t loc) {
         D3Cstacsts node = new D3Cstacsts(node0.m_s2csts);
         Cd3ecl d3ecl = new Cd3ecl(loc, node);
@@ -441,7 +554,7 @@ public class DynExp3Transformer {
                     || Efunkind.FK_fun == node0.m_knd 
                     || f2un.f2undec_var.m_sym.isMC()) {
 
-                    System.out.println("========= trans fundec " + f2un.f2undec_var);
+//                    System.out.println("========= trans fundec " + f2un.f2undec_var);
                     
                     Cd3var name = transform(f2un.f2undec_var, f2un.f2undec_loc);
                     
@@ -457,6 +570,11 @@ public class DynExp3Transformer {
                     // Just curious whether this would be triggered. 
                     TypeCheckResult res = name.m_stype.match(d3elam.getType());
                     if (!res.isGood()) {
+                        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
+                        STGroup stg = new STGroupFile(fileURL_stype, "ascii", '<', '>');
+                        System.out.println("left is " + name.m_stype.toSTStfpl3(stg).render());
+                        System.out.println("right is " + d3elam.getType().toSTStfpl3(stg).render());
+
                         throw new Error(res.getMsg());
                     }
                     
@@ -472,9 +590,13 @@ public class DynExp3Transformer {
                 total_needed.remove(f3un.m_var);  // due to mutually recursive, we
                                                     // may have put sibling closures into "needed".
             }
-            D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, !isFun);
-            
-            return new Cd3ecl(loc, node);
+            if (f3uns.isEmpty()) {
+                return null;
+            } else {
+                D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, !isFun);
+                return new Cd3ecl(loc, node);
+            }
+
         }
         
 
@@ -623,23 +745,24 @@ public class DynExp3Transformer {
      */
     private Cd3exp transform(D2Elist node0, Cloc_t loc, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
-        int i = node0.m_npf;
-        if (i < 0) {
-            i = 0;
-        }
-        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
-        while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
-            d3es.add(d3e);
-        }
-        
-        RecType recType = node0.getSType().removeProof();
-        
-        D3Etup node = new D3Etup(recType.getKind(), d3es, recType);  // todo
-        
-        Cd3exp d3exp = new Cd3exp(loc, node);
-        return d3exp;
+        throw new Error("D2Elist should be handled previously.");
+//        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
+//        int i = node0.m_npf;
+//        if (i < 0) {
+//            i = 0;
+//        }
+//        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+//        while (iter.hasNext()) {
+//            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
+//            d3es.add(d3e);
+//        }
+//        
+//        RecType recType = node0.getSType().removeProof();
+//        
+//        D3Etup node = new D3Etup(recType.getKind(), d3es, recType);  // todo
+//        
+//        Cd3exp d3exp = new Cd3exp(loc, node);
+//        return d3exp;
     }
 
 
@@ -659,12 +782,20 @@ public class DynExp3Transformer {
             d3es.add(d3e);
         }
         
-        RecType recType = node0.getSType().removeProof();
+        if (d3es.size() == 1 && !node0.isBoxed()) {
+            return d3es.get(0);
+        } else {
+            ISType recType = node0.getSType().removeProof();
+            if (!(recType instanceof RecType)) {
+                throw new Error("Check this.");
+            }
 
-        D3Etup node = new D3Etup(node0.m_knd, d3es, recType);
-        
-        Cd3exp d3exp = new Cd3exp(loc, node);
-        return d3exp;
+            D3Etup node = new D3Etup(node0.m_knd, d3es, (RecType)recType);
+            
+            Cd3exp d3exp = new Cd3exp(loc, node);
+            return d3exp;
+        }
+
     }
 
 
@@ -797,7 +928,7 @@ public class DynExp3Transformer {
         actually_needed.removeAll(scope);
         needed.addAll(cur_needed);
         
-        FunType fun_type = node0.getSType();
+        FunType fun_type = (FunType)node0.getSType().removeProof();
 //        if (null != fun_type.getFunClo()) {
 //            Log.log4j.warn("funclo has been set already.");
 //        } else {
@@ -806,7 +937,9 @@ public class DynExp3Transformer {
         
         ISType ty = fun_type;
         for (List<PolyParaType> para_types: accu) {
-            ty = new PolyType(para_types, ty);
+            if (!para_types.isEmpty()) {
+                ty = new PolyType(para_types, ty);
+            }
         }
         
         D3ElamDyn node = new D3ElamDyn(node0.m_lin, p3ats, body, ty, cur_needed);
@@ -866,95 +999,6 @@ public class DynExp3Transformer {
     }
 
 
-    private Cp3at transform(int level, Cp2at p2at, Set<Cd3var> scope) {
-        Cloc_t loc = p2at.p2at_loc;
-        Ip2at_node node0 = p2at.p2at_node;
-        
-        if (node0 instanceof P2Tann) {
-            return transform(level, (P2Tann)node0, scope);
-        } else if (node0 instanceof P2Tany) {
-            return transform((P2Tany)node0, loc);
-        } else if (node0 instanceof P2Tcon) {
-            throw new Error("not supported yet");
-        } else if (node0 instanceof P2Tempty) {
-            return transform((P2Tempty)node0, loc);
-        } else if (node0 instanceof P2Tignored) {
-            throw new Error("Check this.");
-        } else if (node0 instanceof P2Tpat) {
-            return transform(level, ((P2Tpat)node0).m_p2at, scope);
-        } else if (node0 instanceof P2Trec) {
-            return transform(level, ((P2Trec)node0), loc, scope);
-        } else if (node0 instanceof P2Tvar) {
-            return transform((P2Tvar)node0, loc, scope);
-        } else {
-            throw new Error(node0 + " is not supported.");
-        }
-    }
-
-    private Cp3at transform(int level, P2Trec node0, Cloc_t loc, Set<Cd3var> scope) {
-        int i = 0;
-        if (node0.m_npf > 0) {
-            if (level > 0) {
-                throw new Error("This should not happen.");
-            }
-            i = node0.m_npf;            
-        }
-        
-        List<LABP3ATnorm> labitems = new ArrayList<LABP3ATnorm>();
-        // skip all the proofs
-        ListIterator<Ilabp2at> iter = node0.m_labpats.listIterator(i);
-        while (iter.hasNext()) {
-            LABP3ATnorm labitem = transform(1, iter.next(), scope);
-            labitems.add(labitem);
-        }
-        
-        if (labitems.isEmpty()) {
-            P3Tempty node = new P3Tempty(VoidType.cInstance);
-            Cp3at p3at = new Cp3at(loc, node);
-            return p3at;
-        } else {
-            P3Trec node = new P3Trec(labitems, node0.m_knd);
-            Cp3at p3at = new Cp3at(loc, node);
-            return p3at;
-        }
-    }
-
-
-    private LABP3ATnorm transform(int level, Ilabp2at node0, Set<Cd3var> scope) {
-        if (node0 instanceof LABP2ATnorm) {
-            LABP2ATnorm p2atnorm = (LABP2ATnorm) node0;
-            Cp3at p3at = transform(level, p2atnorm.m_pat, scope);
-            LABP3ATnorm p3atnorm = new LABP3ATnorm(p2atnorm.m_lab, p3at);
-            return p3atnorm;
-        } else if (node0 instanceof LABP2ATomit) {
-            throw new Error(node0 + " is not supported.");
-        } else {
-            throw new Error(node0 + " is not supported.");
-        }
-    }
-
-    private Cp3at transform(P2Tvar node0, Cloc_t loc, Set<Cd3var> scope) {
-        Cd3var d3var = transform(node0.m_var, loc);
-        scope.add(d3var);
-        P3Tvar node = new P3Tvar(d3var);
-        return new Cp3at(loc, node);
-    }
-
-
-    private Cp3at transform(P2Tempty node0, Cloc_t loc) {
-        return new Cp3at(loc, new P3Tempty(node0.getSType()));
-    }
-
-
-    private Cp3at transform(P2Tany node0, Cloc_t loc) {
-        return new Cp3at(loc, new P3Tany(node0.getSType()));
-    }
-
-
-    private Cp3at transform(int level, P2Tann node0, Set<Cd3var> scope) {
-        return transform(level, node0.m_p2t, scope);
-    }
-
 
     private Cd3exp transform(D2ElamMet node, Cloc_t loc, Set<Cd3var> needed, List<List<PolyParaType>> accu) {
         return transform(node.m_d2exp, new HashSet<Cd3var>(), needed, accu);
@@ -970,9 +1014,9 @@ public class DynExp3Transformer {
         if (null != d3var) {
             return d3var;
         } else {
-            System.out.println("==========" + d2var.m_sym);
+//            System.out.println("==========" + d2var.m_sym);
             d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType().removeProof());
-            System.out.println("==========");
+//            System.out.println("==========");
             m_varMap.put(d2var.m_stamp, d3var);
             return d3var;
         }
@@ -1007,9 +1051,12 @@ public class DynExp3Transformer {
                 // scope.add(d3cst.m_stamp);  07/21/2014 Do not take into consideration of cst.
             }
             
-            D3Cdcstdecs node = new D3Cdcstdecs(node0.m_knd, node0.m_dck, d3csts);
-            
-            return new Cd3ecl(loc, node);
+            if (d3csts.isEmpty()) {
+                return null;
+            } else {
+                D3Cdcstdecs node = new D3Cdcstdecs(node0.m_knd, node0.m_dck, d3csts);
+                return new Cd3ecl(loc, node);
+            }
         }
 
         case DCK_praxi:  // praxi

@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
+import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 
 import java.util.Map;
@@ -11,10 +12,11 @@ import org.stringtemplate.v4.STGroup;
 
 public class Abstype extends SortType {
 //    private ITypeName m_name;
+    public Cs2cst m_name;
 
-    public Abstype(ESort srt/*, ITypeName name*/) {
+    public Abstype(Cs2cst name, ESort srt/*, ITypeName name*/) {
         super(srt);
-//        m_name = name;
+        m_name = name;
     }
     
 //    public ITypeName getName() {
@@ -48,7 +50,7 @@ public class Abstype extends SortType {
 
     @Override
     public ISType removeProof() {
-        return new Abstype(m_srt);
+        return new Abstype(m_name, m_srt);
     }
 
 

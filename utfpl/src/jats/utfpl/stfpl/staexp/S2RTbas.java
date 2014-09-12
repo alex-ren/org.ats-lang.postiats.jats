@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.staexp;
 
 import jats.utfpl.stfpl.Csymbol;
+import jats.utfpl.stfpl.stype.ESort;
 
 public class S2RTbas implements Is2rt {
 
@@ -11,10 +12,23 @@ public class S2RTbas implements Is2rt {
     }
 
     @Override
+    public ESort simplify() {
+        return ESort.fromString(m_sym.m_str);
+    }
+    
+    @Override
+    public String toString() {
+        return m_sym.toString();
+    }
+
+    @Override
     public boolean isType() {
-        if (m_sym.equals("type") || m_sym.equals("t@ype")) {
+        switch (this.simplify())
+        {
+        case type:
+        case t0ype:
             return true;
-        } else {
+        default:
             return false;
         }
     }

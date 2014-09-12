@@ -23,6 +23,9 @@ public class IntType extends EleType {
     public ST toSTStfpl3(STGroup stg) {
         // IntType_st() ::= <<
         ST st = stg.getInstanceOf("IntType_st");
+        if (null == st) {
+            throw new Error("ererer");
+        }
         return st;
     }
     

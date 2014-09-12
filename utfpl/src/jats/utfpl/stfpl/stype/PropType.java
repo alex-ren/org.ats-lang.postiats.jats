@@ -54,8 +54,8 @@ public class PropType extends SortType {
 
     @Override
     public ST toSTStfpl3(STGroup stg) {
-        // PropType_t() ::= <<
-        ST st = stg.getInstanceOf("PropType_t");
+        // PropType_st() ::= <<
+        ST st = stg.getInstanceOf("PropType_st");
         return st;
     }
 

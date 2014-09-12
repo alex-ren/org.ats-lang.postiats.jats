@@ -18,14 +18,15 @@ extern val g2: mc_gv_t (g2)
 
 
 absprop vprop
-extern prfun gen_proof (): vprop
 
+
+extern prfun gen_proof (): vprop
 
 fun read {x:int | x > 3} .<>. (pf1: vprop, pf: int_value_of (g1, x)| q: int, z: int): int = 999
 
 extern fun read0 (): int
+
 extern prfun read1 (): vprop
-extern prfun read2 (): '(vprop | int)
 
 (* ******** ********* *)
 

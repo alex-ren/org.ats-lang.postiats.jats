@@ -13,7 +13,7 @@ public class VarType extends SortType {
     private SortType m_ty;
     
     public VarType() {
-        super(ESort.unknown);
+        super(ESort.advance);
         m_ty = null;
     }
     

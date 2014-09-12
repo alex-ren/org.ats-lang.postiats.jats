@@ -21,7 +21,7 @@ public class LABint implements Ilabel {
     
     @Override
     public String toString() {
-        return "m" + m;
+        return "" + m;
     }
 
 }

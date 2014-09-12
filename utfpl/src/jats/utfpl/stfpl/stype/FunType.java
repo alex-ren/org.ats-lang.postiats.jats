@@ -161,16 +161,20 @@ public class FunType extends BoxedType {
             st.add("paras", arg.toSTStfpl3(stg));
         }
         
-        if (null == m_funclo) {
-            st.add("clo", "n/a");
-        } else if (m_funclo.isClosure()) {
-            st.add("clo", "clo");
-        } else {
-            st.add("clo", "fun");
-        }
+        st.add("clo", getCloInfo());
         
         st.add("ret", m_res.toSTStfpl3(stg));
         return st;
+    }
+    
+    public String getCloInfo() {
+        if (null == m_funclo) {
+            return "n/a";
+        } else if (m_funclo.isClosure()) {
+            return "clo";
+        } else {
+            return "fun";
+        }
     }
 
     @Override

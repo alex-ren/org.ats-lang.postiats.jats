@@ -2,6 +2,8 @@ package jats.utfpl.stfpl.dynexp;
 
 
 
+import jats.utfpl.stfpl.LABint;
+
 import java.util.List;
 
 /*
@@ -26,6 +28,22 @@ public class P2Trec implements Ip2at_node {
     public void normalizeType() {
         for (Ilabp2at p2at: m_labpats) {
             p2at.normalizeType();
+        }
+    }
+    
+    public boolean isBoxed() {
+        return 1 == m_knd;
+    }
+
+    public boolean isTuple() {
+        if (m_labpats.isEmpty()) {
+            return true;
+        } else {
+            if (((LABP2ATnorm)m_labpats.get(0)).m_lab instanceof LABint) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

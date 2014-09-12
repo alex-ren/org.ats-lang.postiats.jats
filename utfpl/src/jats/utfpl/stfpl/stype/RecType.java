@@ -1,12 +1,14 @@
 package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.LABint;
 import jats.utfpl.stfpl.csharptype.Aux;
 import jats.utfpl.stfpl.csharptype.CSClassType;
 import jats.utfpl.stfpl.csharptype.CSTBookingRecord;
 import jats.utfpl.stfpl.csharptype.CSTNameId;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.ICSTypeName;
+import jats.utfpl.stfpl.dynexp.LABP2ATnorm;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
@@ -23,13 +25,12 @@ public class RecType extends BoxedType {
     private List<ILabPat> m_labtypes;
     private int m_npf;  // Number of proofs in the pattern, if it is >= 0.
                        // (proof always appears starting from beginning.)
-    private int m_knd;  
+    private int m_knd;   // knd: 0: flat, 1: boxed, -1: unset yet
     
     public int getKind() {
         return m_knd;
     }
     
-    // knd: 0: flat, 1: boxed, -1: unset yet
     public RecType(List<ILabPat> labtypes, int npf, int knd) {
         m_labtypes = labtypes;
         m_npf = npf;
@@ -41,7 +42,23 @@ public class RecType extends BoxedType {
 //        m_npf = npf;
 //        m_knd = -1;
 //    }
+    
+    public boolean isBoxed() {
+        return 1 == m_knd;
+    }
 
+    public boolean isTuple() {
+        if (m_labtypes.isEmpty()) {
+            return true;
+        } else {
+            if (((LabPatNorm)m_labtypes.get(0)).getLabel() instanceof LABint) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    
     @Override
     public RecType normalize() {
         for (ILabPat pat: m_labtypes) {
@@ -102,15 +119,21 @@ public class RecType extends BoxedType {
     }
 
     @Override
-    public RecType removeProof() {
+    public ISType removeProof() {
         int i = 0;
         if (m_npf > 0) {
             i = m_npf;
         }
         
+        System.out.println("npf is " + i);
+        
         List<ILabPat> tys = m_labtypes.subList(i, m_labtypes.size());
-        RecType ret = new RecType(tys, 0, m_knd);
-        return ret;
+        if (tys.size() == 1 && isTuple()) {
+            return tys.get(0).getType();
+        } else {
+            RecType ret = new RecType(tys, 0, m_knd);
+            return ret;
+        }
     }
 
     @Override
@@ -143,11 +166,14 @@ public class RecType extends BoxedType {
 
     @Override
     public ST toSTStfpl3(STGroup stg) {
-        // RecType_st(labpats) ::= <<
+        // RecType_st(isbox, labpats) ::= <<
         ST st = stg.getInstanceOf("RecType_st");
         for (ILabPat labpat: m_labtypes) {
             st.add("labpats", labpat.toSTStfpl3(stg));
         }
+
+        st.add("isbox", isBoxed());
+
         return st;
     }
     

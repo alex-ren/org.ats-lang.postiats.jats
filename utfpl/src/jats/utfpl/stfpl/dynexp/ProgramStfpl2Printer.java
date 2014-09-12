@@ -5,10 +5,13 @@ import jats.utfpl.stfpl.staexp.Cs2exp;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.Ifunclo;
+import jats.utfpl.stfpl.staexp.Is2exp_node;
 import jats.utfpl.stfpl.staexp.Is2rt;
+import jats.utfpl.stfpl.staexp.S2Ecst;
 import jats.utfpl.stfpl.staexp.S2RTbas;
 import jats.utfpl.stfpl.staexp.S2RTfun;
 import jats.utfpl.stfpl.staexp.S2RTtup;
+import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 
 import java.net.URL;
 
@@ -19,10 +22,14 @@ import org.stringtemplate.v4.STGroupFile;
 public class ProgramStfpl2Printer {
 
     private STGroup m_stg;
+    private STGroup m_stg_type;
     
     public  ProgramStfpl2Printer() {
         URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/dynexp/stfpl.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
+        
+        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
+        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
 
     }
     
@@ -133,9 +140,11 @@ public class ProgramStfpl2Printer {
     }
 
 	private Object printCs2cst(Cs2cst cst) {
-        // s2cst_st(s2cst) ::= <<
+        // s2cst_st(symbol, stamp, srt) ::= <<
         ST st = m_stg.getInstanceOf("s2cst_st");
-        st.add("s2cst", cst);
+        st.add("symbol", cst.m_symbol);
+        st.add("stamp", cst.m_stamp);
+        st.add("srt", printIs2rt(cst.m_srt));
         return st;
     }
 
@@ -335,13 +344,15 @@ public class ProgramStfpl2Printer {
     }
 
 	private ST printCs2exp(Cs2exp node) {
-	    // s2exp_st(srt, s2exp) ::= <<
+	    // s2exp_st(srt, stype) ::= <<
 		ST st = m_stg.getInstanceOf("s2exp_st");
+		st.add("stype", SExpTypeExtractor.extractType(node).toSTStfpl3(m_stg_type));
 		st.add("srt", printIs2rt(node.s2exp_srt));
 		return st;
     }
 
-	private ST printIs2rt(Is2rt node) {
+
+    private ST printIs2rt(Is2rt node) {
 	    if (node instanceof S2RTbas) {
 	    	return printS2RTbas((S2RTbas)node);
 	    } else if (node instanceof S2RTfun) {

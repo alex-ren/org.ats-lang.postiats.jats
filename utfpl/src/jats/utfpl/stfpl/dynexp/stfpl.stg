@@ -7,8 +7,8 @@ d2cst_st(sym, stamp, s2exp) ::= <<
 >>
 
 // handle Cs2cst
-s2cst_st(s2cst) ::= <<
-<symbol_st(s2cst.symbol)>_<stamp_st(s2cst.stamp)>
+s2cst_st(symbol, stamp, srt) ::= <<
+<symbol_st(symbol)>_<stamp_st(stamp)>: <srt>
 >>
 
 // handle Cstamp
@@ -30,15 +30,15 @@ D2Cextcode_st(extcode) ::= <<
 >>
 
 D2Cdcstdecs_st(knd, dcsts) ::= <<
-<knd> <dcsts; separator="\nand ">
+"D2Cdcstdecs" <dcsts; separator="\nand ">
 >>
 
 D2Cdatdecs_st(knd, scsts) ::= <<
-datatype(<knd>)<scsts; separator="\nand ">
+datatype(<knd>) <scsts; separator="\nand ">
 >>
 
 D2Cstacsts_st(scsts) ::= <<
-<scsts; separator="\nand ">
+"D2Cstacsts" <scsts; separator="\nand ">
 >>
 
 dcstkind_st(knd) ::= <<
@@ -246,8 +246,8 @@ D2Eempty_st() ::= <<
 ()
 >>
 
-s2exp_st(srt, s2exp) ::= <<
-_:<srt>
+s2exp_st(srt, stype) ::= <<
+<stype>:<srt>
 >>
 
 S2RTbas_st(sym) ::= <<

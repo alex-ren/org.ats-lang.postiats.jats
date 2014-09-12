@@ -1,8 +1,11 @@
 package jats.utfpl.stfpl.staexp;
 
+import jats.utfpl.stfpl.stype.Abstype;
 import jats.utfpl.stfpl.stype.AppType;
+import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.DataType;
 import jats.utfpl.stfpl.stype.DefaultAppTypeStore;
+import jats.utfpl.stfpl.stype.ESort;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
@@ -10,6 +13,7 @@ import jats.utfpl.stfpl.stype.IntType;
 import jats.utfpl.stfpl.stype.LabPatNorm;
 import jats.utfpl.stfpl.stype.PolyParaType;
 import jats.utfpl.stfpl.stype.PolyType;
+import jats.utfpl.stfpl.stype.PropType;
 import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.stfpl.stype.VoidType;
 
@@ -62,8 +66,20 @@ public class SExpTypeExtractor {
         if (name.equals(DefaultAppTypeStore.ats_void_t0ype)) {
             return VoidType.cInstance;
         } else {
-            List<ISType> tyLst = new ArrayList<ISType>();
-            return new DataType(node.m_s2cst, tyLst);
+            Is2rt srt = node.m_s2cst.m_srt;
+            ESort sort = srt.simplify();
+            switch (sort)
+            {
+            case prop:
+            {
+                return PropType.cInstance;
+            }
+            case type:
+            case t0ype:
+                return new Abstype(node.m_s2cst, sort);
+            default:
+                throw new Error("srt " + srt + " is not supported");
+            }
         }
     }
 
@@ -95,7 +111,7 @@ public class SExpTypeExtractor {
         }
     }
 
-    public static PolyType extractType(S2Euni node) {
+    public static ISType extractType(S2Euni node) {
         List<Cs2var> s2vs = node.m_s2vs;
         List<PolyParaType> paras = new ArrayList<PolyParaType>();
         
@@ -109,9 +125,12 @@ public class SExpTypeExtractor {
         
         ISType body = extractType(node.m_s2e_body);
         
-        PolyType ret = new PolyType(paras, body);
+        if (paras.isEmpty()) {
+            return body;
+        } else {
+            return new PolyType(paras, body);
+        }
 
-        return ret;
     }
 
     public static FunType extractType(S2Efun node) {
@@ -129,19 +148,35 @@ public class SExpTypeExtractor {
     public static ISType extractType(S2Eapp node) {
         // Currently, we get the type information from the function in the statics.
         if (node.m_fun.s2exp_node instanceof S2Ecst) {
-            S2Ecst sfun = (S2Ecst)node.m_fun.s2exp_node;
-            String con = sfun.getName();
+            S2Ecst snode = (S2Ecst)node.m_fun.s2exp_node;
+            S2RTfun sort =  (S2RTfun)node.m_fun.s2exp_srt;
+            String con = snode.getName();
 
             if (con.equals(DefaultAppTypeStore.con_g0int_t0ype)) {
                 return IntType.cInstance;
             } else if (con.equals(DefaultAppTypeStore.con_g1int_int_t0ype)) {
                 return IntType.cInstance;
+            } else if (con.equals(DefaultAppTypeStore.con_bool_bool_t0ype)) {
+                return BoolType.cInstance;
+                
             } else if (con.equals(DefaultAppTypeStore.con_mc_sid_t0ype)) {
                 return IntType.cInstance;
             } else {
-                List<ISType> tys = extractTypeList(node.m_arglst);
-                AppType ret = new AppType(con, tys);
-                return ret;
+                switch (sort.m_res.simplify())
+                {
+                    case type:
+                    case t0ype:
+                    {
+                        List<ISType> tys = extractTypeList(node.m_arglst);
+                        DataType ret = new DataType(snode.m_s2cst, tys);
+                        return ret;
+                    }
+                    case prop:
+                        return PropType.cInstance;
+                    default:
+//                        return null;
+                        throw new Error("Not supported");
+                }
             }
 
         } else {

@@ -34,5 +34,9 @@ public class D2Etup implements Id2exp_node {
     public void normalizeType() {
         m_stype = m_stype.normalize();
     }
+    
+    public boolean isBoxed() {
+        return 1 == m_knd;
+    }
 
 }

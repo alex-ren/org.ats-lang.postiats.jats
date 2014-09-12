@@ -34,14 +34,17 @@ public class Cs2cstDeserializer implements JsonDeserializer<Cs2cst> {
         } else {
             JsonElement je2 = jo.get("s2cst_name");
             Csymbol symbol = context.deserialize(je2, Csymbol.class);
-            s2cst = new Cs2cst(stamp, symbol);
+            
+            JsonElement je3 = jo.get("s2cst_srt");
+            Is2rt s2rt = context.deserialize(je3, Is2rt.class);
+            
+            
+            s2cst = new Cs2cst(stamp, symbol, s2rt);
             m_map.put(stamp, s2cst);
             return s2cst;
         }
-        
         // todo 
         // s2cst_supcls
-        // s2cst_srt
         
     }
 

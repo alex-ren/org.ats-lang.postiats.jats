@@ -22,6 +22,7 @@ public class D2ElamSta implements Id2exp_node {
         m_s2vs = s2vs;
         m_s2ps = s2ps;
         m_d2exp = d2exp;
+        m_stype = null;
     }
 
     @Override
