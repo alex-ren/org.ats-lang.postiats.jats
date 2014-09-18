@@ -1,0 +1,8 @@
+group instructions;
+
+prog_st(fun_defs, main_inss) ::= <<
+<fun_defs; separator="\n\n">
+
+fun main0 () =
+  <main_inss; separator="\n">
+>>

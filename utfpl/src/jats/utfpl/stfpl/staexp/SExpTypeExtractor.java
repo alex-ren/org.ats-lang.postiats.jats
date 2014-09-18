@@ -1,7 +1,6 @@
 package jats.utfpl.stfpl.staexp;
 
 import jats.utfpl.stfpl.stype.Abstype;
-import jats.utfpl.stfpl.stype.AppType;
 import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.DataType;
 import jats.utfpl.stfpl.stype.DefaultAppTypeStore;

@@ -1,47 +1,41 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/test/src_ats/sys_model.sats"
-
-"D2Cdcstdecs" xx_2591:(int) -<n/a> int:type
-
-implement xx_2591:(int) -<n/a> int:type = lam (P2Tann<x_63:int:t@ype>) <fun> = 
-  <fun>
-  <D2EannSeff>(3:int:t@ype)
+staload "/home/alex/workspace/Postiats/projects/utfpl/test/src_ats/sys_model.sats"
 
 "D2Cstacsts" g1_737: int
 
 "D2Cstacsts" g2_738: int
 
-"D2Cdcstdecs" g1_2592:int:t@ype
+"D2Cdcstdecs" g1_2591:int:t@ype
 
-"D2Cdcstdecs" g2_2593:int:t@ype
+"D2Cdcstdecs" g2_2592:int:t@ype
 
 "D2Cstacsts" vprop_739: prop
 
-"D2Cdcstdecs" gen_proof_2594:() -<n/a> prop:prop
+"D2Cdcstdecs" gen_proof_2593:() -<n/a> prop:prop
 
-fun read_64 = lamSta. lamMet. lam (P2Tann<pf1_65:prop:prop>, P2Tann<pf_66:prop:prop>, P2Tann<q_67:int:t@ype>, P2Tann<z_68:int:t@ype>) <> = 
+fun read_63 = lamSta. lamMet. lam (P2Tann<pf1_64:prop:prop>, P2Tann<pf_65:prop:prop>, P2Tann<q_66:int:t@ype>, P2Tann<z_67:int:t@ype>) <> = 
   <D2EannSeff>(999:int:t@ype)
 
-"D2Cdcstdecs" read0_2595:() -<n/a> int:type
+"D2Cdcstdecs" read0_2594:() -<n/a> int:type
 
-"D2Cdcstdecs" read1_2596:() -<n/a> prop:prop
+"D2Cdcstdecs" read1_2595:() -<n/a> prop:prop
 
-fun boo_69 = lam () <> = 
+fun boo_68 = lam () <> = 
   <D2EannSeff>(let
-    val x_70 = 3
-    prval () = D2Ecst<mc_set_int1_2581:(int, int) -<n/a> void:prop> (D2Ecst<g1_2592:int:t@ype>, x_70)
-    prval () = D2Ecst<mc_set_int1_2581:(int, int) -<n/a> void:prop> (D2Ecst<g2_2593:int:t@ype>, x_70)
-    val y_71 = 3
+    val x_69 = 3
+    prval () = D2Ecst<mc_set_int1_2581:(int, int) -<n/a> void:prop> (D2Ecst<g1_2591:int:t@ype>, x_69)
+    prval () = D2Ecst<mc_set_int1_2581:(int, int) -<n/a> void:prop> (D2Ecst<g2_2592:int:t@ype>, x_69)
+    val y_70 = 3
   in
     ()
   end:void:t@ype)
 
-fun foo_72 = lam () <> = 
+fun foo_71 = lam () <> = 
   <D2EannSeff>(let
-    prval P2Trec<LABP2ATnorm(pf_73), LABP2ATnorm(mc_x_74)> = D2Ecst<mc_get_int1_2585:(int) -<n/a> @{0 = prop, 1 = int}:prop> (D2Ecst<g1_2592:int:t@ype>)
-    prval P2Tann<xx_75:int:t@ype> = D2Esym<+> (mc_x_74, 3)
-    prval () = D2Ecst<mc_assert_2589:(bool) -<n/a> void:prop> (D2Esym<>> (xx_75, 6))
-    prval pf1_76 = D2Ecst<gen_proof_2594:() -<n/a> prop:prop> ()
-    val _ = read_64 (pf1_76, pf_73, 1, 2)
+    prval P2Trec<LABP2ATnorm(pf_72), LABP2ATnorm(mc_x_73)> = D2Ecst<mc_get_int1_2585:(int) -<n/a> @{0 = prop, 1 = int}:prop> (D2Ecst<g1_2591:int:t@ype>)
+    prval P2Tann<xx_74:int:t@ype> = D2Esym<+> (mc_x_73, 3)
+    prval () = D2Ecst<mc_assert_2589:(bool) -<n/a> void:prop> (D2Esym<>> (xx_74, 6))
+    prval pf1_75 = D2Ecst<gen_proof_2593:() -<n/a> prop:prop> ()
+    val _ = read_63 (pf1_75, pf_72, 1, 2)
   in
     ()
   end:void:t@ype)
