@@ -42,6 +42,7 @@ import jats.utfpl.stfpl.dynexp3.P3Tcon;
 import jats.utfpl.stfpl.dynexp3.P3Tempty;
 import jats.utfpl.stfpl.dynexp3.P3Trec;
 import jats.utfpl.stfpl.dynexp3.P3Tvar;
+import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.instructions.InsCall.ECallType;
 import jats.utfpl.stfpl.instructions.SId.Category;
 import jats.utfpl.stfpl.staexp.FUNCLOfun; 
@@ -97,8 +98,8 @@ public class InstructionTransformer {
     }
     
     
-    public void transform_global(List<Cd3ecl> d3ecs) {
-        transform(d3ecs, new HashSet<Cd3var>(), m_main_inss);
+    public void transform_global(ProgramStfpl3 prog) {
+        transform(prog.m_d3ecs, new HashSet<Cd3var>(), m_main_inss);
     }
     
     private void transform(List<Cd3ecl> d3ecs, Set<Cd3var> env,  // names from outside

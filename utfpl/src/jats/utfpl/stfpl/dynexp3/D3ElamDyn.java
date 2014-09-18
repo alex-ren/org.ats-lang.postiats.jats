@@ -14,7 +14,7 @@ public class D3ElamDyn implements Id3exp_node {
 
     private ISType m_type;
     
-    public Set<Cd3var> m_env;
+    public Set<Cd3var> m_env;  // out-of-scope variables used inside the function
 
     public D3ElamDyn(int lin, List<Cp3at> p3ts, Cd3exp d3exp, ISType type, Set<Cd3var> env) {
         m_lin = lin;

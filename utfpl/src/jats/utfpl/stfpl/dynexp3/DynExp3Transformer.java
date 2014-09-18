@@ -121,15 +121,18 @@ public class DynExp3Transformer {
     
     /*
      * Purpose: 
-     * Remove proof
-     * 1. prval (...) = ...
-     * 2. val (pf | ...) = foo ()
+     * 1. Remove proof
+     * 1) prval (...) = ...
+     * 2) val (pf | ...) = foo ()
      * 
-     * Handle closure
-     * 
+     * 2. Handle closure
      * scope will be modified.
      * cur_scope:
      * needed: Symbols needed but not in cur_scope
+     * 
+     * 3. Remove polymorphism, simplify AST.
+     * There is no lamSta any more. But PolyType still exists.
+     * 
      */
     private List<Cd3ecl> transform(List<Cd2ecl> d2ecs, Set<Cd3var> scope, Set<Cd3var> needed) {
         List<Cd3ecl> d3ecs = new ArrayList<Cd3ecl>();

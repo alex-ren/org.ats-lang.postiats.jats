@@ -75,11 +75,15 @@ public class Test {
             	if (0 == returnCode) {
                     FileReader fReader = new FileReader(path);
 
+                    System.out.println("== Parsing JSON start ==========================");
                     StfplProgramParserJson utfplParser = new StfplProgramParserJson();
                     ProgramStfpl2 prog2 = utfplParser.trans(fReader);
+                    System.out.println("== Parsing JSON end   ==========================");
                     
+                    System.out.println("== Type Checking start ==========================");
                     StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
                     tyChecker.typecheck();
+                    System.out.println("== Type Checking end   ==========================");
 
                     ProgramStfpl2Printer uPrinter2 = new ProgramStfpl2Printer();
                     String outputUTFPL = uPrinter2.print(prog2);
@@ -93,18 +97,22 @@ public class Test {
                     
                     /* ************* ************** */
                     
+                    System.out.println("== Generating dynexp3 start ==========================");
                     DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
                     ProgramStfpl3 prog3 = d3transformer.transform();
+                    System.out.println("== Generating dynexp3 end ==========================");
 
                     ProgramStfpl3Printer uPrinter3 = new ProgramStfpl3Printer();
                     String outputUTFPL3 = uPrinter3.print(prog3);
                     System.out.println("==stfpl's ast code (layer 03) is ==========================");
                     System.out.println(outputUTFPL3);
 
+                    System.out.println("== Generating instruction start ==========================");
+                    InstructionTransformer ins_cvt = new InstructionTransformer();
+                    ins_cvt.transform_global(prog3);
                     
-//                    InstructionTransformer ins_cvt = new InstructionTransformer();
-//                    ins_cvt.transform_global(d3ecs);
-//                    
+                    System.out.println("== Generating instruction end ==========================");
+                    
 //                    CSInstructionTransformer csins_cvt = new CSInstructionTransformer();
 //                    csins_cvt.transformProgram(ins_cvt.getDecs(), 
 //					                    		ins_cvt.getExts(),
