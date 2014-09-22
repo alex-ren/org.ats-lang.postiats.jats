@@ -7,4 +7,7 @@ public interface IVarName {
     
     public String toStringCS();
     
+    // print for layer of instruction
+    public String toStringIns();
+    
 }

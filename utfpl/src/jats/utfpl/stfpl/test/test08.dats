@@ -1,4 +1,7 @@
 
+/*
+ * Test for removing proofs.
+ */
 
 
 absprop prop1_t

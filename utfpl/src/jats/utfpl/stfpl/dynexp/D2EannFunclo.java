@@ -13,7 +13,7 @@ public class D2EannFunclo implements Id2exp_node {
     
     public Cd2exp m_d2exp;
     public Ifunclo m_funclo;  // This is supposed to indicate whether it's a function
-                              // or a closure. But such information may be incorrect at all.
+                              // or a closure.
     
     private FunType m_stype;  // m_stype is actually the FunType, which contains m_funclo.
     

@@ -28,6 +28,6 @@ public enum Efunkind {
         Log.log4j.warn("Efunknd takes " + knd + ".");
         return FK_fun;
     }
-
+    
 }
 

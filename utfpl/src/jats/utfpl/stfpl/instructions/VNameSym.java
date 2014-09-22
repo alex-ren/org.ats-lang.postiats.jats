@@ -20,4 +20,9 @@ public class VNameSym implements IVarName {
         return m_sym.toString();
     }
 
+    @Override
+    public String toStringIns() {
+        return m_sym.toString();
+    }
+
 }

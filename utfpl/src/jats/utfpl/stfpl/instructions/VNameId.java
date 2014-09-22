@@ -27,6 +27,16 @@ public class VNameId implements IVarName {
 
     @Override
     public String toStringCS() {
+        return toString();
+    }
+
+    @Override
+    public String toStringIns() {
+        return toString();
+    }
+    
+    @Override
+    public String toString() {
         return m_name + m_stamp + "_id";
     }
 

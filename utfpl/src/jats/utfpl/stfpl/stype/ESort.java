@@ -23,5 +23,10 @@ public enum ESort {
             return advance;
         }
     }
+    
+    @Override
+    public String toString() {
+        return m_str;
+    }
 
 }

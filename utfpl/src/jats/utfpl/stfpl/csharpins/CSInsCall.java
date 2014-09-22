@@ -29,7 +29,7 @@ public class CSInsCall implements ICSInstruction {
     @Override
     public ST toST(STGroup stg) {
         ST st = null;
-        if (m_holder.m_sid.isRet()) {
+        if (m_holder.m_sid.isRetHolder()) {
             // CSInsCall_ret_st(name, type, call) ::= <<
             st = stg.getInstanceOf("CSInsCall_ret_st");
         } else {

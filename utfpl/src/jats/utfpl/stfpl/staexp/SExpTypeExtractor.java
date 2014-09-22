@@ -137,7 +137,7 @@ public class SExpTypeExtractor {
         List<ISType> args = extractTypeList(node.m_arg);
         ISType res = extractType(node.m_res);
         
-        return new FunType(npf, args, res, null);
+        return new FunType(npf, args, res, FunCloNA.cInstance);
     }
 
     public static ISType extractType(S2Eexi node) {

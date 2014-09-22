@@ -17,7 +17,7 @@ public class CSInsMove implements ICSInstruction {
     
     @Override
     public ST toST(STGroup stg) {
-        if (m_holder.m_sid.isRet()) {
+        if (m_holder.m_sid.isRetHolder()) {
             // ret_st(type, v) ::= <<
             ST st = stg.getInstanceOf("ret_st");
             

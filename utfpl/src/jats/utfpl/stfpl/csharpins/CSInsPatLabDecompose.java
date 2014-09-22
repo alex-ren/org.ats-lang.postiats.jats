@@ -20,7 +20,7 @@ public class CSInsPatLabDecompose implements ICSInstruction {
     public ST toST(STGroup stg) {
         ST st = null;
         
-        if (m_holder.m_sid.isRet()) {
+        if (m_holder.m_sid.isRetHolder()) {
          // CSInsPatLabDecompose_ret_st(type, name, tuple_type, tuple_ele, member) ::= <<
             st = stg.getInstanceOf("CSInsPatLabDecompose_ret_st");
         } else {

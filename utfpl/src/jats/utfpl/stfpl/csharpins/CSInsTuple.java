@@ -17,7 +17,7 @@ public class CSInsTuple implements ICSInstruction {
     @Override
     public ST toST(STGroup stg) {
         ST st = null;
-        if (m_holder.m_sid.isRet()) {
+        if (m_holder.m_sid.isRetHolder()) {
             // CSInsTuple_st(name, type, values) ::= <<
             st = stg.getInstanceOf("CSInsTuple_ret_st");
             

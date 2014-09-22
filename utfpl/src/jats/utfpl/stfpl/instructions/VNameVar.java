@@ -38,5 +38,10 @@ public class VNameVar implements IVarName {
     public String toStringCS() {
         return m_var.toString();
     }
+
+    @Override
+    public String toStringIns() {
+        return m_var.toString();
+    }
     
 }

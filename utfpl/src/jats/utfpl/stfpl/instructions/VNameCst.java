@@ -38,4 +38,9 @@ public class VNameCst implements IVarName {
     public String toStringCS() {
         return m_cst.toString();
     }
+
+    @Override
+    public String toStringIns() {
+        return m_cst.toString();
+    }
 }

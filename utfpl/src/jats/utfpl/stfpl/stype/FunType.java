@@ -8,6 +8,7 @@ import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.ICSTypeName;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
+import jats.utfpl.stfpl.staexp.FunCloNA;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
@@ -33,9 +34,9 @@ public class FunType extends BoxedType {
         return m_funclo;
     }
     
-    public void updateFunClo(Ifunclo clo) {
-        m_funclo = clo;
-    }
+//    public void updateFunClo(Ifunclo clo) {
+//        m_funclo = clo;
+//    }
     
     public FunType(int npf, List<ISType> args, ISType res, Ifunclo funclo) {
         m_npf = npf;
@@ -90,7 +91,7 @@ public class FunType extends BoxedType {
                 right.m_npf = m_npf;
             }
             
-            if (null == m_funclo) {
+            if ( m_funclo instanceof FunCloNA) {
                 m_funclo = right.m_funclo;
             } else {
                 right.m_funclo = m_funclo;

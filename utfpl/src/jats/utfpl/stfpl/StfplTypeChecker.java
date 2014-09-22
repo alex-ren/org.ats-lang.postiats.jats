@@ -63,6 +63,7 @@ import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.stfpl.staexp.Cs2var;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
+import jats.utfpl.stfpl.staexp.FunCloNA;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
 import jats.utfpl.stfpl.stype.BoolType;
@@ -465,7 +466,7 @@ public class StfplTypeChecker {
                 argsType.add(argType);
             }
             VarType retType = new VarType();
-            FunType funType = new FunType(argsType, retType, null);
+            FunType funType = new FunType(argsType, retType, FunCloNA.cInstance);
             funType0.setType(funType);
             
             inner_ty.add(retType);
@@ -616,7 +617,7 @@ public class StfplTypeChecker {
         if (d2exp.d2exp_node instanceof D2EannFunclo) {
              return ((D2EannFunclo)d2exp.d2exp_node).m_funclo;
         } else {
-            return null;
+            return FunCloNA.cInstance;
         }
     }
 

@@ -24,5 +24,20 @@ public class FUNCLOclo implements Ifunclo {
     public boolean isClosure() {
         return true;
     }
+    
+    @Override
+    public String toString() {
+        switch (m_knd)
+        {
+        case 1:
+            return "cloptr";
+        case 0:
+            return "cloclo";
+        case -1:
+            return "cloref";
+        default:
+            throw new Error(m_knd + " is not supported.");
+        }
+    }
 
 }

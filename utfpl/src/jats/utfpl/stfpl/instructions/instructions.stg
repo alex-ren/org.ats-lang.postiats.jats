@@ -6,3 +6,17 @@ prog_st(fun_defs, main_inss) ::= <<
 fun main0 () =
   <main_inss; separator="\n">
 >>
+
+DefFunGroup_st(fun_defs, fun_lab) ::= <<
+<fun_lab> <fun_defs; separator="\nand\n">
+>>
+
+DefFun_st(name, paras, clo_info, ret_type, body) ::= <<
+<name> (<paras; separator=", ">):\<<clo_info>\> <ret_type> =
+  <body; separator="\n">
+>>
+
+ImplFun_st(name, paras, clo_info, ret_type, body) ::= <<
+implement <name> (<paras; separator=", ">):\<<clo_info>\> <ret_type> =
+  <body; separator="\n">
+>>

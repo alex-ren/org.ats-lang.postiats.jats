@@ -23,7 +23,7 @@ absprop vprop
 
 extern prfun gen_proof (): vprop
 
-fun read {x:int | x > 3} .<>. (pf1: vprop, pf: int_value_of (g1, x)| q: int, z: int): int = 999
+fun read {x:int | x > 3} .<>. (pf1: vprop, pf: int_value_of (g1, x)| q: int, z: int):<fun1> int = 999
 
 extern fun read0 (): int
 
@@ -31,7 +31,7 @@ extern prfun read1 (): vprop
 
 (* ******** ********* *)
 
-fun boo (): void = let
+fun boo ():<fun1> void = let
   val x = 3
   prval () = mc_set_int1 (g1, x)
   prval () = mc_set_int1 (g2, x)
@@ -41,7 +41,7 @@ end
 
 (* ******** ********* *)
 
-fun foo (): void = let
+fun foo ():<fun1> void = let
   prval (pf | mc_x) = mc_get_int1 (g1)  // Use proof.
   prval xx:int = mc_x + 3
   prval () = mc_assert (xx > 6)

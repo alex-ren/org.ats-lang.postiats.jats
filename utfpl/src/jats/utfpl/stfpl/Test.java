@@ -9,6 +9,7 @@ import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3Printer;
+import jats.utfpl.stfpl.instructions.InstructionPrinter;
 import jats.utfpl.stfpl.instructions.InstructionTransformer;
 import jats.utfpl.utils.FilenameUtils;
 
@@ -51,13 +52,14 @@ public class Test {
 //                "src/jats/utfpl/stfpl/csharpins/test/02_if_branch.dats"
 //                "src/jats/utfpl/stfpl/csharpins/test/03_closure.dats"
 //                "src/jats/utfpl/stfpl/csharpins/test/04_polymorphism.dats"
-                "test/src_ats/53_demo_mc_dyn.dats"
+//                "test/src_ats/53_demo_mc_dyn.dats"
 //                "src/jats/utfpl/stfpl/test/test08.dats"
 
         };
 
-        for (String strPath: paths) {
+//        for (String strPath: paths) {
         	
+            String strPath = paths[0];
             System.out.println("==Processing file " + strPath + "==========");
             System.out.println("");
             
@@ -113,35 +115,40 @@ public class Test {
                     
                     System.out.println("== Generating instruction end ==========================");
                     
-//                    CSInstructionTransformer csins_cvt = new CSInstructionTransformer();
-//                    csins_cvt.transformProgram(ins_cvt.getDecs(), 
-//					                    		ins_cvt.getExts(),
-//					                    		ins_cvt.getDefs(), 
-//					                    		ins_cvt.getMainInss());
-//                    
-//                    CSharpPrinter csprinter = new CSharpPrinter(
-//                                              csins_cvt.getDecs(),
-//                                              csins_cvt.getExts(),
-//                                              csins_cvt.getDefs(),
-//                                              csins_cvt.getMainInss(),
-//                                              csins_cvt.getMainName(),
-//                                              csins_cvt.getTrack());
-//                    
-//                    String cs_output = csprinter.printCSharp();
-//                    System.out.println("==csharp code is ==========================");
-//                    System.out.println(cs_output);
-//                    FileWriter cs_filew = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cCSHARP));
-//                    BufferedWriter cs_bw = new BufferedWriter(cs_filew);
-//                    cs_bw.write(cs_output);
-//                    cs_bw.close();
+                    InstructionPrinter insPrinter = new InstructionPrinter();
+                    String outputIns = insPrinter.print(
+                            ins_cvt.getDecs(), 
+                            ins_cvt.getExts(), 
+                            ins_cvt.getDefs(),
+                            ins_cvt.getMainInss());
+                    System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
+                    System.out.println(outputIns);
                     
-//                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
-//                    uProg = processor.removeProof(uProg);
-//                    outputUTFPL = uPrinter.print(uProg);
-//                    
-//                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
-//                    
-//                    System.out.println(outputUTFPL);
+                    
+                    System.out.println("== Generating CSP instruction start ==========================");
+                    CSInstructionTransformer csins_cvt = new CSInstructionTransformer();
+                    csins_cvt.transformProgram(ins_cvt.getDecs(), 
+					                    		ins_cvt.getExts(),
+					                    		ins_cvt.getDefs(), 
+					                    		ins_cvt.getMainInss());
+                    
+                    System.out.println("== Generating CSP instruction end ==========================");
+                    
+                    CSharpPrinter csprinter = new CSharpPrinter(
+                                              csins_cvt.getDecs(),
+                                              csins_cvt.getExts(),
+                                              csins_cvt.getDefs(),
+                                              csins_cvt.getMainInss(),
+                                              csins_cvt.getMainName(),
+                                              csins_cvt.getTrack());
+                    
+                    String cs_output = csprinter.printCSharp();
+                    System.out.println("==csharp code is ==========================");
+                    System.out.println(cs_output);
+                    FileWriter cs_filew = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cCSHARP));
+                    BufferedWriter cs_bw = new BufferedWriter(cs_filew);
+                    cs_bw.write(cs_output);
+                    cs_bw.close();
                     
 
             	} else {
@@ -153,7 +160,7 @@ public class Test {
             		return;            		
             	}
 
-            }
+//            }
 
 //            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
         }

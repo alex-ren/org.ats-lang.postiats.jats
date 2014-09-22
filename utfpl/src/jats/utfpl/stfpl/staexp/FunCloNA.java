@@ -1,9 +1,11 @@
 package jats.utfpl.stfpl.staexp;
 
-public class FUNCLOfun implements Ifunclo {
-    public static FUNCLOfun cInstance = new FUNCLOfun();
-    private FUNCLOfun() {}
+public class FunCloNA implements Ifunclo {
     
+    public static FunCloNA cInstance = new FunCloNA();
+    
+    private FunCloNA() {}
+
     @Override
     public boolean isClosure() {
         return false;
@@ -11,7 +13,7 @@ public class FUNCLOfun implements Ifunclo {
     
     @Override
     public String toString() {
-        return "fun";
+        return "n/a";
     }
 
 }

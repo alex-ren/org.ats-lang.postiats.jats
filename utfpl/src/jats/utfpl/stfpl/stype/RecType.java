@@ -8,7 +8,6 @@ import jats.utfpl.stfpl.csharptype.CSTBookingRecord;
 import jats.utfpl.stfpl.csharptype.CSTNameId;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.ICSTypeName;
-import jats.utfpl.stfpl.dynexp.LABP2ATnorm;
 import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 

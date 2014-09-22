@@ -22,7 +22,7 @@ public class CSInsCond implements ICSInstruction {
     @Override
     public ST toST(STGroup stg) {
         ST st = null;
-        if (m_holder.m_sid.isRet()) {
+        if (m_holder.m_sid.isRetHolder()) {
             // CSInsCond_ret_st(type, name, cond, btrue, bfalse) ::= <<
             st = stg.getInstanceOf("CSInsCond_ret_st"); 
         } else {

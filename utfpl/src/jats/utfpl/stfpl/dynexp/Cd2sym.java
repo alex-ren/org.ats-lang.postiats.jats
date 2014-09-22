@@ -37,8 +37,9 @@ public class Cd2sym {
         if (m_stype instanceof FunType) {
             FunType fun_ty = (FunType)m_stype;
             if (null == fun_ty.getFunClo()) {
-                // symbol is treated as function
-                fun_ty.updateFunClo(FUNCLOfun.cInstance);
+                throw new Error("Check this.");
+//                // symbol is treated as function
+//                fun_ty.updateFunClo(FUNCLOfun.cInstance);
             }
         }
     }

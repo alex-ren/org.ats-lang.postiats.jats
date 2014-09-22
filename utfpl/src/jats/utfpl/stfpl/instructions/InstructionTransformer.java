@@ -44,7 +44,7 @@ import jats.utfpl.stfpl.dynexp3.P3Trec;
 import jats.utfpl.stfpl.dynexp3.P3Tvar;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.instructions.InsCall.ECallType;
-import jats.utfpl.stfpl.instructions.SId.Category;
+import jats.utfpl.stfpl.instructions.SId.SIdCategory;
 import jats.utfpl.stfpl.staexp.FUNCLOfun; 
 import jats.utfpl.stfpl.stype.Aux;
 import jats.utfpl.stfpl.stype.FunType;
@@ -99,32 +99,32 @@ public class InstructionTransformer {
     
     
     public void transform_global(ProgramStfpl3 prog) {
-        transform(prog.m_d3ecs, new HashSet<Cd3var>(), m_main_inss);
+        transform(prog.m_d3ecs, new HashSet<Cd3var>(), m_main_inss, true);
     }
     
     private void transform(List<Cd3ecl> d3ecs, Set<Cd3var> env,  // names from outside
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
         for (Cd3ecl d3ec: d3ecs) {
-            transform(d3ec, env, inss);
+            transform(d3ec, env, inss, is_top);
         }
     }
 
     private void transform(Cd3ecl d3ec, Set<Cd3var> env, 
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
         Id3ecl_node node0 = d3ec.m_node;
         if (node0 instanceof D3Cdcstdecs) {
-            transform((D3Cdcstdecs)node0, env, inss);
+            transform((D3Cdcstdecs)node0, env, inss, is_top);
         } else if (node0 instanceof D3Cextcode) {
             m_exts.add((D3Cextcode)node0);
         } else if (node0 instanceof D3Cfundecs) {
-            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss);
+            transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss, is_top);
         } else if (node0 instanceof D3Cimpdec) {
-            transform((D3Cimpdec)node0, d3ec.m_loc, env, inss);
+            transform((D3Cimpdec)node0, d3ec.m_loc, env, inss, is_top);
         } else if (node0 instanceof D3Cstacsts) {
             Log.log4j.warn("D3Cstacsts encountered in generating instruction.");
         } else if (node0 instanceof D3Cvaldecs) {
-            transform((D3Cvaldecs)node0, d3ec.m_loc, env, inss);
-        } else if (node0 instanceof D3Cdatdecs) {
+            transform((D3Cvaldecs)node0, d3ec.m_loc, env, inss, is_top);
+        } else if (node0 instanceof D3Cdatdecs, is_top) {
             throw new Error("D3Cdatdecs not supported yet");
         } else {
             throw new Error(node0 + " is not supported.");
@@ -141,15 +141,15 @@ public class InstructionTransformer {
      *     and fy = lam y = fx y
      */
     private void transform(D3Cvaldecs node0, Cloc_t m_loc, Set<Cd3var> env,
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
         for (Cv3aldec valdec: node0.m_v3ds) {
-            transfrom(valdec, env, inss);
+            transfrom(valdec, env, inss, is_top);
         }
         
     }
 
     private void transfrom(Cv3aldec valdec, Set<Cd3var> env,
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
         
         Ip3at_node node0 = valdec.m_pat.m_node;
         if (node0 instanceof P3Tany
@@ -157,21 +157,26 @@ public class InstructionTransformer {
             || node0 instanceof P3Tvar) {
             SId holder = null;
             if (node0 instanceof P3Tvar) {
-                holder = SId.fromCd3var(((P3Tvar)node0).m_var, Category.eLocalVar);
+                if (is_top) {
+                    holder = SId.fromCd3var(((P3Tvar)node0).m_var, SIdCategory.eGloValue);
+                } else {
+                    holder = SId.fromCd3var(((P3Tvar)node0).m_var, SIdCategory.eLocalVar);
+                }
+                
             }
 //            System.out.println("P3Tvar is " + ((P3Tvar)node0).m_var.toString() + " holder is " + holder);
-            transform(valdec.m_def, env, inss, holder);
+            transform(valdec.m_def, env, inss, holder, false);
             return;
         } else {  // P3Tcon, P3Trec
             SId holder = null;
-            IValPrim vp = transform(valdec.m_def, env, inss, holder);
-            transform(valdec.m_pat, vp, inss);
+            IValPrim vp = transform(valdec.m_def, env, inss, holder, false);
+            transform(valdec.m_pat, vp, inss, is_top);
             return;
         }
     }
 
     private void transform(Cp3at pat, IValPrim vp,
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
         Ip3at_node node0 = pat.m_node;
         if (node0 instanceof P3Tany) {
             throw new Error("Should not happen.");
@@ -180,7 +185,7 @@ public class InstructionTransformer {
         } else if (node0 instanceof P3Tempty) {
             throw new Error("Should not happen.");
         } else if (node0 instanceof P3Trec) {
-            transform((P3Trec)node0, vp, inss);
+            transform((P3Trec)node0, vp, inss, is_top);
         } else if (node0 instanceof P3Tcon) {
             throw new Error("P3Tcon is not supported yet.");
         } else {
@@ -190,7 +195,7 @@ public class InstructionTransformer {
     }
 
     private void transform(P3Trec node, IValPrim vp,
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
         for (LABP3ATnorm lab_pat : node.m_labpats) {
             Ip3at_node node0 = lab_pat.m_pat.m_node;
             if (node0 instanceof P3Tany 
@@ -198,8 +203,14 @@ public class InstructionTransformer {
                 || node0 instanceof P3Tvar) {
                 SId holder = null;
                 if (node0 instanceof P3Tvar) {
-                    holder = SId.fromCd3var(((P3Tvar) node0).m_var,
-                            Category.eLocalVar);
+                    if (is_top) {
+                        holder = SId.fromCd3var(((P3Tvar) node0).m_var,
+                                SIdCategory.eGloValue);
+                    } else {
+                        holder = SId.fromCd3var(((P3Tvar) node0).m_var,
+                                SIdCategory.eLocalVar);
+                    }
+                    
                     InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab,
                             holder, vp);
                     inss.add(ins);
@@ -212,7 +223,7 @@ public class InstructionTransformer {
                 InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab,
                         holder, vp);
                 inss.add(ins);
-                transform(lab_pat.m_pat, holder, inss);
+                transform(lab_pat.m_pat, holder, inss, is_top);
                 return;
             }
         }
@@ -226,7 +237,7 @@ public class InstructionTransformer {
             if (node0 instanceof P3Tany) {
                 throw new Error("Should not happen.");
             } else if (node0 instanceof P3Tvar) {
-                SId para = SId.fromCd3var(((P3Tvar) node0).m_var, Category.ePara);
+                SId para = SId.fromCd3var(((P3Tvar) node0).m_var, SIdCategory.ePara);
                 paras.add(para);
             } else if (node0 instanceof P3Tempty) {
                 throw new Error("Should not happen.");
@@ -246,7 +257,7 @@ public class InstructionTransformer {
         Cd3exp fun_exp = node0.m_i3mpdec.i3mpdec_def;
         D3ElamDyn lambda = (D3ElamDyn)(fun_exp.m_node);
         
-        SId name = SId.fromCd3cst(node0.m_i3mpdec.i3mpdec_cst, Category.eUserFun);
+        SId name = SId.fromCd3cst(node0.m_i3mpdec.i3mpdec_cst, SIdCategory.eUserFun);
         int lin = lambda.m_lin;
         
         List<Cp3at> p3ts = lambda.m_p3ts;
@@ -256,7 +267,7 @@ public class InstructionTransformer {
         
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())));
+        transform(lambda.m_d3exp, env2, inss2, SId.createRetHolder("ret", Aux.getRetType(lambda.getType())), false);
   
         SId env_name = null;
         Set<SIdUser> form_env = null;
@@ -288,7 +299,7 @@ public class InstructionTransformer {
                 labpats.add(labpat);
             }
             RecType env_type = new RecType(labpats, -1, 1);
-            env_name = SId.createEnvId("env", env_type);
+            env_name = SId.createEnvForclosure("env", env_type);
             InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
             
@@ -304,14 +315,17 @@ public class InstructionTransformer {
     }
 
     private void transform(D3Cdcstdecs node0, Set<Cd3var> env,  
-            List<IStfplInstruction> inss) {
+            List<IStfplInstruction> inss, boolean is_top) {
+        if (!is_top) {
+            throw new Error("Check this.");todo
+        }
         List<SId> names = new ArrayList<SId>();
         for (Cd3cst cst: node0.m_d3cst) {
-        	SId.Category cat = null;
+            SIdCategory cat = null;
         	if (Edcstkind.DCK_val == node0.m_dck) {
-        		cat = SId.Category.eGloValue;
+        		cat = SIdCategory.eGloValue;
         	} else {
-        		cat = SId.Category.eUserFun;
+        		cat = SIdCategory.eUserFun;
         	}
             names.add(SId.fromCd3cst(cst, cat));
         }
@@ -348,7 +362,7 @@ public class InstructionTransformer {
                 labpats.add(labpat);
             }
             RecType env_type = new RecType(labpats, -1/*no proof*/, 1/*boxed*/);
-            env_name = SId.createEnvId("env", env_type);
+            env_name = SId.createEnvForclosure("env", env_type);
             InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
             
@@ -360,7 +374,7 @@ public class InstructionTransformer {
 
         for (Cf3undec f3undec: node0.m_f3ds) {
             // populate the map
-            SId name = SId.fromCd3var(f3undec.m_var, SId.Category.eUserFun);
+            SId name = SId.fromCd3var(f3undec.m_var, SIdCategory.eUserFun);
             names.add(name);
         }
         
@@ -387,12 +401,12 @@ public class InstructionTransformer {
      * We are inside the function body.
      * 
      * env: the environment for the function
-     * env_names: including env_name
      * env_name: current env_name if not null
      */
     private DefFun transform(Cf3undec f3undec, Set<Cd3var> env, SId env_name,
             List<IStfplInstruction> inss) {
         
+        // SId has already been created when transforming D3Cfundecs.
         SId name = SId.fromCd3var(f3undec.m_var);
         
         List<Cp3at> p3ts = f3undec.m_p3ts;
@@ -459,7 +473,7 @@ public class InstructionTransformer {
             List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
         AtomValue v = new AtomValue(node0.m_ty, node0.m_f0loat);
         
-        if (null != holder && holder.isRet()) {
+        if (null != holder && holder.isRetHolder()) {
             InsMove aIns = new InsMove(v, holder);
             inss.add(aIns);
             SIdUser ret = new SIdUser(holder, false);
@@ -488,7 +502,7 @@ public class InstructionTransformer {
             List<IStfplInstruction> inss, SId holder, Cloc_t loc) {
         AtomValue v = new AtomValue(node0.m_ty, node0.m_s0tring);
         
-        if (null != holder && holder.isRet()) {
+        if (null != holder && holder.isRetHolder()) {
             InsMove aIns = new InsMove(v, holder);
             inss.add(aIns);
             SIdUser ret = new SIdUser(holder, false);
@@ -536,7 +550,7 @@ public class InstructionTransformer {
         Set<Cd3var> env2 = lambda.m_env;
 
         // unnamed lambda
-        SId name = SId.createUserFunction("lam", lambda.getType());
+        SId name = SId.createLambdaFunction("lam", lambda.getType());
         
         SId env_name = null;
         Set<SIdUser> form_env = null;
@@ -564,7 +578,7 @@ public class InstructionTransformer {
                 labpats.add(labpat);
             }
             RecType env_type = new RecType(labpats, -1, 1);
-            env_name = SId.createEnvId("env", env_type);
+            env_name = SId.createEnvForclosure("env", env_type);
             
             InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
@@ -701,7 +715,7 @@ public class InstructionTransformer {
 
     private SIdUser transform(D3Ecst node, Set<Cd3var> env,
             List<IStfplInstruction> inss, SId holder) {
-        SId v = SId.fromCd3cst(node.m_d3cst, SId.Category.eConstant);
+        SId v = SId.fromCd3cst(node.m_d3cst, SIdCategory.eConstant);
         SIdUser vu = new SIdUser(v, false);
         if (null != holder) {
             InsMove aIns = new InsMove(vu, holder);
@@ -716,7 +730,7 @@ public class InstructionTransformer {
 
     private SIdUser transform(D3Esym node, Set<Cd3var> env,
             List<IStfplInstruction> inss, SId holder) {
-        SId v = SId.fromCd3sym(node.m_d3sym, SId.Category.eConstant);
+        SId v = SId.fromCd3sym(node.m_d3sym, SIdCategory.eConstant);
         if (null != holder) {
             throw new Error("Check this.");
         } else {
