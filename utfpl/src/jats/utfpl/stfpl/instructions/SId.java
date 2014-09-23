@@ -35,6 +35,12 @@ public class SId implements IValPrim{
 
     static private Map<IVarName, SId> s_map = new HashMap<IVarName, SId>(); 
 
+    public static SId getSId(Cd3var var) {
+    	VNameVar name = VNameVar.fromCd3var(var);
+        SId sid = s_map.get(name);
+        return sid;
+    }
+    
     public SId(IVarName name, SIdCategory cat) {
         m_name = name;
         m_cat = cat;
@@ -150,6 +156,10 @@ public class SId implements IValPrim{
     
     public String toStringIns() {
         return m_name.toStringIns();
+    }
+    
+    public boolean isGlobal() {
+    	return m_cat == SIdCategory.eGloVar || m_cat == SIdCategory.eGloValue;
     }
     
 }

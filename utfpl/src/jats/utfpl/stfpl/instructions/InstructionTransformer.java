@@ -316,9 +316,6 @@ public class InstructionTransformer {
 
     private void transform(D3Cdcstdecs node0, Set<Cd3var> env,  
             List<IStfplInstruction> inss, boolean is_top) {
-        if (!is_top) {
-            throw new Error("Check this.");todo
-        }
         List<SId> names = new ArrayList<SId>();
         for (Cd3cst cst: node0.m_d3cst) {
             SIdCategory cat = null;
@@ -334,8 +331,8 @@ public class InstructionTransformer {
         m_decs.add(new DecGroup(knd, names));
     }
 
-    private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, // names from outside
-            List<IStfplInstruction> inss) {
+    private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, // env of the outer function
+            List<IStfplInstruction> inss, boolean is_top) {
 
         Set<SIdUser> form_env = null;
         SId env_name = null;
@@ -344,15 +341,19 @@ public class InstructionTransformer {
         if (node0.m_is_clo) {
             form_env = new HashSet<SIdUser>();
             
-            for (Cd3var d3var: node0.m_env) {
-                if (env.contains(d3var)) {
-                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, true);
-                    form_env.add(env_member);
-                } else {
-                    SIdUser env_member = SId.createSIdUserByCd3var(d3var, false);
-                    form_env.add(env_member);
-                }
-            }
+            for (Cd3var d3var: node0.m_env /*env of the current function*/) {
+            	SId sid = SId.getSId(d3var);
+            	if (!sid.isGlobal()) {  // global var will not be put into env.
+                    if (env.contains(d3var)) {
+                        SIdUser env_member = SId.createSIdUserByCd3var(d3var, true);
+                        form_env.add(env_member);
+                    } else {
+                        SIdUser env_member = SId.createSIdUserByCd3var(d3var, false);
+                        form_env.add(env_member);
+                    }
+            	}
+
+            } todo
             
             List<ILabPat> labpats = new ArrayList<ILabPat>();
             for (Cd3var env_ele: node0.m_env) {
