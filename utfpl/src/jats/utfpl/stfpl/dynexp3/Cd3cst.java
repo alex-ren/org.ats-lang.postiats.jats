@@ -37,5 +37,9 @@ public class Cd3cst {
     public String toString() {
         return m_symbol.toString() + "_" + m_stamp.getData();
     }
+    
+    public boolean compSymbolString(String x) {
+        return m_symbol.equals(x);
+    }
 
 }

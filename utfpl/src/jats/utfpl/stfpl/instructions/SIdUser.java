@@ -7,7 +7,7 @@ import jats.utfpl.stfpl.stype.ISType;
  * SIdUser can be viewed as a right value, which is a
  * reference to a left value.
  */
-public class SIdUser implements IValPrim {
+public class SIdUser implements IIdPrim {
     
     private SId m_sid;
     private boolean m_from_env;

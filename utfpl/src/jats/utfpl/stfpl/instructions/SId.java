@@ -24,14 +24,18 @@ import jats.utfpl.stfpl.stype.ISType;
 /*
  * one to one correspondence between SId and IVarName
  */
-public class SId implements IValPrim{
+public class SId implements IIdPrim{
     
     public static enum SIdCategory {/*eLibFun, */eGloVar, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
     
     static public SId ANONY = new SId(VNameId.s_anony, SIdCategory.eOther);
 
     public IVarName m_name;
-    public SIdCategory m_cat;
+    private SIdCategory m_cat;
+    
+    public void updateCat(SIdCategory cat) {
+        m_cat = cat;
+    }
 
     static private Map<IVarName, SId> s_map = new HashMap<IVarName, SId>(); 
 

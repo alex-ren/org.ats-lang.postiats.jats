@@ -13,26 +13,28 @@ datatype dt_t (int) =
 
 
 extern prfun gen_prop (): prop1_t
+// 
+// fun foo1 (pf: prop1_t | x: int): (prop1_t | int) = let
+//   val x: int = 3
+//   prval p = gen_prop ()
+//   val _ = foo1 (p | x)
+// in
+//   (p | x)
+// end
 
-fun foo1 (): (prop1_t, int) = let
-  val x: int = 3
+fun foo2 (): @(prop1_t | int) = let
   prval p = gen_prop ()
 in
-  (p, x)
+  @(p | 3)
 end
 
-fun foo2 (): '(prop1_t, int) = let
-  prval p = gen_prop ()
+////
+fun foo3 (): (int, int) = let
+  fun foo4 (x: @(int, int)): void = ()
+  val _ = foo4 ((3, 3))
+  val (x, y) = foo3 ()
 in
-  '(p, 3)
+  (1, 1)
 end
-
-//fun foo3 (): (int, int) = let
-//  fun foo4 (x: @(int, int)): void = ()
-//  val _ = foo4 ((3, 3))
-//  val '(x, y) = foo3 ()
-//in
-//  (1, 1)
-//end
 
 

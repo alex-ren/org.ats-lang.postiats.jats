@@ -26,6 +26,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/*
+ * todo:
+ * handling global value and global variable
+ */
 
 public class CSInstructionTransformer {
     private List<CSDecGroup> m_decs;  // global declaration

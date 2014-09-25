@@ -20,6 +20,10 @@ public class Aux {
         }
     }
     
+    public static boolean isFunction(ISType type) {
+        
+    }
+    
     public static Ifunclo getClosureInfo(ISType type) {
         if (type instanceof FunType) {
             return ((FunType)type).getFunClo();

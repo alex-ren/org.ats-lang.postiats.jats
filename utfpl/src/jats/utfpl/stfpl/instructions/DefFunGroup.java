@@ -7,8 +7,8 @@ import java.util.Set;
 public class DefFunGroup implements IFunDef {
     public Efunkind m_knd;
     public List<DefFun> m_funs;
-    public SId m_env_name;  // can be null
-    public Set<SIdUser> m_env;  // can be null
+    public SId m_env_name;  // can be null if not closure
+    public Set<SIdUser> m_env;  // can be null if not closure
     
     public DefFunGroup(Efunkind knd, List<DefFun> funs, SId env_name, Set<SIdUser> env) {
         m_knd = knd;

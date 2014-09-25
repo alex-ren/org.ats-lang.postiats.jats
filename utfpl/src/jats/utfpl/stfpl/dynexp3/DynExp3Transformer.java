@@ -748,33 +748,8 @@ public class DynExp3Transformer {
      */
     private Cd3exp transform(D2Elist node0, Cloc_t loc, Set<Cd3var> scope,
             Set<Cd3var> needed) {
-        throw new Error("D2Elist should be handled previously.");
-//        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
-//        int i = node0.m_npf;
-//        if (i < 0) {
-//            i = 0;
-//        }
-//        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
-//        while (iter.hasNext()) {
-//            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
-//            d3es.add(d3e);
-//        }
-//        
-//        RecType recType = node0.getSType().removeProof();
-//        
-//        D3Etup node = new D3Etup(recType.getKind(), d3es, recType);  // todo
-//        
-//        Cd3exp d3exp = new Cd3exp(loc, node);
-//        return d3exp;
-    }
-
-
-    private Cd3exp transform(D2Etup node0, Cloc_t loc, Set<Cd3var> scope,
-            Set<Cd3var> needed) {
+//        throw new Error("D2Elist should be handled previously.");
         List<Cd3exp> d3es = new ArrayList<Cd3exp>();
-        if (node0.m_npf >= 0) {
-            throw new Error("Check this scenario at " + loc);
-        }
         int i = node0.m_npf;
         if (i < 0) {
             i = 0;
@@ -785,12 +760,42 @@ public class DynExp3Transformer {
             d3es.add(d3e);
         }
         
-        if (d3es.size() == 1 && !node0.isBoxed()) {
+        if (d3es.size() == 1 && !node0.getSType().isBoxed()) {
             return d3es.get(0);
         } else {
             ISType recType = node0.getSType().removeProof();
             if (!(recType instanceof RecType)) {
                 throw new Error("Check this.");
+            }
+
+            D3Etup node = new D3Etup(node0.getSType().getKind(), d3es, (RecType)recType);
+            
+            Cd3exp d3exp = new Cd3exp(loc, node);
+            return d3exp;
+        }
+    }
+
+
+    private Cd3exp transform(D2Etup node0, Cloc_t loc, Set<Cd3var> scope,
+            Set<Cd3var> needed) {
+        List<Cd3exp> d3es = new ArrayList<Cd3exp>();
+        int i = node0.m_npf;
+        if (i < 0) {
+            i = 0;
+        }
+        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+        while (iter.hasNext()) {
+            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
+            d3es.add(d3e);
+        }
+        
+        // flat tuple with one element
+        if (d3es.size() == 1 && !node0.isBoxed()) {
+            return d3es.get(0);
+        } else {
+            ISType recType = node0.getSType().removeProof();
+            if (!(recType instanceof RecType)) {
+                throw new Error("Should not happen.");
             }
 
             D3Etup node = new D3Etup(node0.m_knd, d3es, (RecType)recType);

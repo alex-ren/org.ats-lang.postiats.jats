@@ -4,6 +4,21 @@ import jats.utfpl.stfpl.stype.RecType;
 
 import java.util.List;
 
+/*
+*   ============
+*   let
+*     xxx
+*   in
+*     @(pf | v)  // This is D2Etup
+*   end
+*   ============
+*   let
+*     xxx
+*   in
+*     '(pf | v)  // This is D2Etup
+*   end
+*
+*/
 public class D2Etup implements Id2exp_node {
     public int m_knd;  // 0: flat, 1: boxed
     public int m_npf;  // no. of proof, be -1 is none

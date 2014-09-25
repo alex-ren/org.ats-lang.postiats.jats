@@ -1,22 +1,14 @@
-prop1_t_722
+"D2Cstacsts" prop1_t_722: prop
 
-prop2_t_723
+"D2Cstacsts" prop2_t_723: (int) -\> prop
 
-datatype(0)dt_t_724
+datatype(0) dt_t_724: (int) -\> type
 
-DCKprfun gen_prop_2559:_:prop
+"D2Cdcstdecs" gen_prop_2559:() -<fun> prop:prop
 
-fun foo1_63 = lam () <> = 
+fun foo2_63 = lam () <fun> = 
   <D2EannSeff>(let
-    val P2Tann<x_64:_:t@ype> = 3
-    prval p_65 = D2Ecst<gen_prop_2559:_:prop> ()
+    prval p_64 = D2Ecst<gen_prop_2559:() -<fun> prop:prop> ()
   in
-    ( | p_65, x_64)
-  end:_:t@ype)
-
-fun foo2_66 = lam () <> = 
-  <D2EannSeff>(let
-    prval p_67 = D2Ecst<gen_prop_2559:_:prop> ()
-  in
-    (p_67, 3)
-  end:_:type)
+    (p_64, 3)
+  end:@{0 = prop, 1 = int}:t@ype)

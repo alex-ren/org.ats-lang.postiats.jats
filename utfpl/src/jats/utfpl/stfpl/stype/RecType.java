@@ -46,6 +46,9 @@ public class RecType extends BoxedType {
         return 1 == m_knd;
     }
 
+    /*
+     * Check this type is tuple not record.
+     */
     public boolean isTuple() {
         if (m_labtypes.isEmpty()) {
             return true;
@@ -124,10 +127,9 @@ public class RecType extends BoxedType {
             i = m_npf;
         }
         
-        System.out.println("npf is " + i);
-        
         List<ILabPat> tys = m_labtypes.subList(i, m_labtypes.size());
-        if (tys.size() == 1 && isTuple()) {
+        // flat tuple with one element
+        if (tys.size() == 1 && isTuple() && !isBoxed()) {
             return tys.get(0).getType();
         } else {
             RecType ret = new RecType(tys, 0, m_knd);

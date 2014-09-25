@@ -9,7 +9,7 @@ public class CSInsCond implements ICSInstruction {
     public CSSId m_holder;
     public ICSValPrim m_cond;
     public List<ICSInstruction> m_btrue;
-    public List<ICSInstruction> m_bfalse;  // cannot be null, but can be empty list
+    public List<ICSInstruction> m_bfalse;  // can be null
     
     public CSInsCond(CSSId holder, ICSValPrim cond,
             List<ICSInstruction> btrue, List<ICSInstruction> bfalse) {

@@ -6,7 +6,7 @@ public class InsCall implements IStfplInstruction {
     public SId m_holder;
     public SIdUser m_fun;
     public List<IValPrim> m_args;
-    public ECallType m_call_type;
+    public ECallType m_call_type;  // this formation is redundant to m_fun
     
     static enum ECallType {
     	eFun,

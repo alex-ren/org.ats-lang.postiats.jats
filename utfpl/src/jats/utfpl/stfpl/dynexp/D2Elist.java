@@ -5,7 +5,25 @@ import jats.utfpl.stfpl.stype.RecType;
 import java.util.List;
 
 /*
- * I guess that this one is special for (pf1, pf2, ... | e1, e2, ...) for function application
+ * 1. usage:
+ *   let
+ *     xxx
+ *   in
+ *     (pf | v)  // This is D2Elist
+ *   end
+ *   ============
+ *   let
+ *     xxx
+ *   in
+ *     @(pf | v)  // This is D2Etup
+ *   end
+ *   ============
+ *   let
+ *     xxx
+ *   in
+ *     '(pf | v)  // This is D2Etup
+ *   end
+ *   
  */
 public class D2Elist implements Id2exp_node {
     public int m_npf;
