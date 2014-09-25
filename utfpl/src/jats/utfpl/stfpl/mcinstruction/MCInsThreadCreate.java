@@ -5,17 +5,17 @@ import jats.utfpl.patcsps.Aux;
 public class MCInsThreadCreate implements IMCInstruction {
     public IMCValPrim m_tid;
     public MCSIdUser m_funlab;
-    public IMCValPrim m_args;
+    public IMCValPrim m_arg;
     
-    public MCInsThreadCreate(IMCValPrim tid, MCSIdUser funlab, IMCValPrim args) {
+    public MCInsThreadCreate(IMCValPrim tid, MCSIdUser funlab, IMCValPrim arg) {
         m_tid = tid;
     	m_funlab = funlab;
         m_funlab.updateAddr(Aux.Address.createPointer());
-    	m_args = args;    	
+    	m_arg = arg;    	
     }
 
 	@Override
-    public Object accept(InsVisitor visitor) {
+    public Object accept(IMCInsVisitor visitor) {
 	    return visitor.visit(this);
     }
 

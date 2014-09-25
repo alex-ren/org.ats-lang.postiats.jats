@@ -26,7 +26,7 @@ public class MCInsCall implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return xx;
+        return m_fun.hasSideEffect();
     }
 
 //    /*

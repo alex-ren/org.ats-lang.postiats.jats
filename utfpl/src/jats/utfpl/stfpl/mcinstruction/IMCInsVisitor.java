@@ -12,8 +12,6 @@ public interface IMCInsVisitor {
     public Object visit(MCInsClosure ins);
     
     public Object visit(MCInsMove ins);
-    
-    public Object visit(IMCInsVisitor ins);
 
     public Object visit(MCInsCall ins);
     
@@ -22,7 +20,7 @@ public interface IMCInsVisitor {
     
     public Object visit(MCInsLoad ins);
         
-    public Object visit(MCInsLoadArray ins);
+//    public Object visit(MCInsLoadArray ins);
     
     public Object visit(MCInsMutexAlloc ins);
     
@@ -32,9 +30,7 @@ public interface IMCInsVisitor {
     
     public Object visit(MCInsCondRelease ins);
     
-    
-    
-    
+
     
     public Object visit(MCInsThreadCreate ins);
     

@@ -36,6 +36,10 @@ public class SId implements IIdPrim{
     public void updateCat(SIdCategory cat) {
         m_cat = cat;
     }
+    
+    public SIdCategory getCat() {
+    	return m_cat;
+    }
 
     static private Map<IVarName, SId> s_map = new HashMap<IVarName, SId>(); 
 

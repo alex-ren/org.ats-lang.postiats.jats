@@ -378,14 +378,15 @@ public class MCInstructionTransformer {
                 return new MCInsCondRelease(mutex);
 
             } else if (fname.compSymbolString(CCompUtils.cSysThreadCreate)) {
-                MCSId dst = StfplVP2CS(ins.m_holder);
-                IMCValPrim src = StfplVP2CS(ins.m_args.get(0));
-                
-                return new xx(src, dst);
+            	// val () = sys_thread_create (tid, funlab, arg)
+            	IMCValPrim tid = StfplVP2CS(ins.m_args.get(0));
+            	MCSIdUser funlab = StfplVP2CS((SIdUser)ins.m_args.get(0));
+            	IMCValPrim arg = StfplVP2CS(ins.m_args.get(0));
+
+                return new MCInsThreadCreate(tid, funlab, arg);
             } else {
-                xx
+            	// do nothing
             }
-            
         }
 
         MCSId holder = StfplVP2CS(ins.m_holder);
@@ -393,9 +394,6 @@ public class MCInstructionTransformer {
         List<IMCValPrim> args = StfplVP2CS(ins.m_args);
         
         return new MCInsCall(holder, fun, args);
-        
-        todo
-        
     }
     
     private MCSId StfplVP2CS(SId sid) {

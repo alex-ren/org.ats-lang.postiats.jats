@@ -20,31 +20,32 @@ public class Aux {
         }
     }
     
-    public static boolean isFunction(ISType type) {
-        
+    public static FunType getFunctionType(ISType type) {
+        if (type instanceof FunType) {
+            return (FunType)type;
+        } else if (type instanceof PolyType) {
+            return getFunctionType(((PolyType)type).m_body);
+        } else {
+            return null;
+        }  
     }
     
     public static Ifunclo getClosureInfo(ISType type) {
-        if (type instanceof FunType) {
-            return ((FunType)type).getFunClo();
-        } else if (type instanceof PolyType) {
-            return getClosureInfo(((PolyType)type).m_body);
-        } else {
-            throw new Error(type + " is not supported.");
-        }
+    	FunType fun_type = getFunctionType(type);
+    	if (null == fun_type) {
+    		throw new Error(type + " is not supported.");
+    	} else {
+    		return fun_type.getFunClo();
+    	}
     }
     
     public static ISType getRetType(ISType type) {
-        while (true) {
-            if (type instanceof FunType) {
-                return ((FunType)type).getRetType();
-            } else if (type instanceof PolyType) {
-                type = ((PolyType)type).m_body;
-            } else {
-                throw new Error("unexcepted type " + type);
-            }
-        }
-    
+    	FunType fun_type = getFunctionType(type);
+    	if (null == fun_type) {
+    		throw new Error("unexcepted type " + type);
+    	} else {
+    		return fun_type.getRetType();
+    	}
     }
     
     static public class ToCSTypeResult {
