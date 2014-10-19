@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MCInsMCGet implements IMCInstruction {
     public MCSId m_localHolder;
-    public List<MCSIdUser> m_globalVars;
+    public List<MCSId> m_globalVars;
 
-    public MCInsMCGet(MCSId localHolder, List<MCSIdUser> globalVars) {
+    public MCInsMCGet(MCSId localHolder, List<MCSId> globalVars) {
         m_localHolder = localHolder;
         m_globalVars = globalVars;
     }

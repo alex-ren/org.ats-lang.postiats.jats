@@ -4,10 +4,10 @@ import jats.utfpl.patcsps.Aux;
 
 public class MCInsThreadCreate implements IMCInstruction {
     public IMCValPrim m_tid;
-    public MCSIdUser m_funlab;
+    public MCSId m_funlab;
     public IMCValPrim m_arg;
     
-    public MCInsThreadCreate(IMCValPrim tid, MCSIdUser funlab, IMCValPrim arg) {
+    public MCInsThreadCreate(IMCValPrim tid, MCSId funlab, IMCValPrim arg) {
         m_tid = tid;
     	m_funlab = funlab;
         m_funlab.updateAddr(Aux.Address.createPointer());

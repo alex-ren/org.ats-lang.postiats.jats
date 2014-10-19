@@ -10,10 +10,10 @@ import java.util.List;
 
 public class MCInsCall implements IMCInstruction {
     public MCSId m_holder;
-    public MCSIdUser m_fun;
+    public MCSId m_fun;
     public List<IMCValPrim> m_args;
     
-    public MCInsCall(MCSId holder, MCSIdUser fun, List<IMCValPrim> args) {
+    public MCInsCall(MCSId holder, MCSId fun, List<IMCValPrim> args) {
         m_holder = holder;
         m_fun = fun;
         m_args = args;
@@ -26,7 +26,7 @@ public class MCInsCall implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return m_fun.hasSideEffect();
+        return m_fun.hasEffect();
     }
 
 //    /*

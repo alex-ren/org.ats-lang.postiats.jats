@@ -1,15 +1,7 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-
-
-import jats.utfpl.instruction.InsMCAssert;
-import jats.utfpl.instruction.TID;
-import jats.utfpl.instruction.ValPrim;
 import jats.utfpl.stfpl.ccomp.CCompUtils;
 import jats.utfpl.stfpl.Ilabel;
-import jats.utfpl.stfpl.csharpins.CSDecGroup;
-import jats.utfpl.stfpl.csharpins.CSDefFunGroup;
-import jats.utfpl.stfpl.csharpins.ICSInstruction;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
@@ -33,8 +25,6 @@ import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SId.SIdCategory;
 import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.instructions.VNameCst;
-import jats.utfpl.tree.ExpId;
-import jats.utfpl.tree.IExp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,7 +56,7 @@ public class MCInstructionTransformer {
                 
     }
     
-    public void transformProgram(List<DecGroup> decs,
+    public ProgramMCIns transformProgram(List<DecGroup> decs,
             List<D3Cextcode> exts,
             List<IFunDef> defs,
             List<IStfplInstruction> main_inss) {
@@ -87,6 +77,8 @@ public class MCInstructionTransformer {
         }
         
         m_main_inss = transform(main_inss);
+        
+        return new ProgramMCIns(m_g_eneities, m_exts, m_decs, m_defs, m_main_inss, m_track, m_main_name);
         
     }
     
@@ -112,25 +104,28 @@ public class MCInstructionTransformer {
     }
     
     private MCDefFunGroup transform(ImplFun node) {
+        
+        todo
+        
         if (node.m_name.toStringCS().startsWith("main")) {
             m_main_name = node.m_name.toStringCS();
         }
         // Each closure has the potential to create a new type.
         Set<SIdUser> env = node.m_env;
-        Set<MCSIdUser> csenv = null;
+        Set<MCSId> csenv = null;
         
         if (null != env) {
-            csenv = new HashSet<MCSIdUser>();
-            for (SIdUser sid_user: env) {
-                MCSIdUser cssid_user = MCSIdUser.fromSIdUser(
-                        sid_user, sid_user.getType().toCSType(m_track).m_type);
-                csenv.add(cssid_user);
-            }
+            throw new Error("implemenatating a closure is not supported.");
+//            csenv = new HashSet<MCSId>();
+//            for (SIdUser sid_user: env) {
+//                MCSId cssid_user = StfplVP2MC(sid_user);
+//                csenv.add(cssid_user);
+//            }
         }
 
         MCSId cs_env_id = null;
         if (null != node.m_env_name) {
-            cs_env_id = StfplVP2CS(node.m_env_name);
+            cs_env_id = StfplVP2MC(node.m_env_name);
         }
         
 //        CSTBookingEnv env_book = null;
@@ -140,10 +135,10 @@ public class MCInstructionTransformer {
 //        }
         
         List<MCDefFun> mcdefs = new ArrayList<MCDefFun>();
-        MCSId mcid = StfplVP2CS(node.m_name);
+        MCSId mcid = StfplVP2MC(node.m_name);
         List<MCSId> mcparas = new ArrayList<MCSId>();
         for (SId sid: node.m_paras) {
-            MCSId mcsid = StfplVP2CS(sid);
+            MCSId mcsid = StfplVP2MC(sid);
             mcparas.add(mcsid);
         }
 
@@ -157,13 +152,12 @@ public class MCInstructionTransformer {
     private MCDefFunGroup transform(DefFunGroup node) {
         // Each closure has the potential to create a new type.
         Set<SIdUser> env = node.m_env;
-        Set<MCSIdUser> mcenv = null;
+        Set<MCSId> mcenv = null;
         
         if (null != env) {
-            mcenv = new HashSet<MCSIdUser>();
+            mcenv = new HashSet<MCSId>();
             for (SIdUser sid_user: env) {
-                MCSIdUser cssid_user = MCSIdUser.fromSIdUser(
-                        sid_user, sid_user.getType().toCSType(m_track).m_type);
+                MCSId cssid_user = StfplVP2MC(sid_user);
                 mcenv.add(cssid_user);
             }
             
@@ -171,7 +165,7 @@ public class MCInstructionTransformer {
 
         MCSId mc_env_id = null;
         if (null != node.m_env_name) {
-            mc_env_id = StfplVP2CS(node.m_env_name);
+            mc_env_id = StfplVP2MC(node.m_env_name);
         }
 
 //        CSTBookingEnv env_book = null;
@@ -194,7 +188,7 @@ public class MCInstructionTransformer {
         
         List<MCSId> mcparas = new ArrayList<MCSId>();
         for (SId sid: fun_def.m_paras) {
-            MCSId mcsid = StfplVP2CS(sid);
+            MCSId mcsid = StfplVP2MC(sid);
             mcparas.add(mcsid);
         }
 
@@ -237,36 +231,36 @@ public class MCInstructionTransformer {
 
     private MCInsFormEnv transform_ins(InsFormEnv ins) {
         MCSId name = StfplVP2MC_second(ins.m_name);
-        Set<MCSIdUser> env = StfplVP2CS(ins.m_env);
+        Set<MCSId> env = StfplVP2MC(ins.m_env);
         return new MCInsFormEnv(name, env);
     }
 
     private MCInsTuple transform_ins(InsTuple ins) {
 
-        List<IMCValPrim> elements = StfplVP2CS(ins.m_elements);
-        MCSId holder = StfplVP2CS(ins.m_holder);
+        List<IMCValPrim> elements = StfplVP2MC(ins.m_elements);
+        MCSId holder = StfplVP2MC(ins.m_holder);
         return new MCInsTuple(elements, holder);
     }
 
     private MCInsPatLabDecompose transform_ins(InsPatLabDecompose ins) {
 
         Ilabel lab = ins.m_lab;
-        MCSId holder = StfplVP2CS(ins.m_holder);
-        IMCValPrim vp = StfplVP2CS(ins.m_vp);
+        MCSId holder = StfplVP2MC(ins.m_holder);
+        IMCValPrim vp = StfplVP2MC(ins.m_vp);
         return new MCInsPatLabDecompose(lab, holder, vp);
     }
 
     private MCInsMove transform_ins(InsMove ins) {
 
-        MCSId holder = StfplVP2CS(ins.m_holder);
-        IMCValPrim vp = StfplVP2CS(ins.m_vp);
+        MCSId holder = StfplVP2MC(ins.m_holder);
+        IMCValPrim vp = StfplVP2MC(ins.m_vp);
         return new MCInsMove(vp, holder);
     }
 
     private MCInsCond transform_ins(InsCond ins) {
 
-        MCSId holder = StfplVP2CS(ins.m_holder);
-        IMCValPrim cond = StfplVP2CS(ins.m_cond);
+        MCSId holder = StfplVP2MC(ins.m_holder);
+        IMCValPrim cond = StfplVP2MC(ins.m_cond);
         List<IMCInstruction> btrue = transform(ins.m_btrue);
         List<IMCInstruction> bfalse = null;
         if (null != ins.m_bfalse) {
@@ -279,7 +273,7 @@ public class MCInstructionTransformer {
     private MCInsClosure transform_ins(InsClosure ins) {
 
         MCSId name = StfplVP2MC_second(ins.m_name);
-        MCSIdUser env = StfplVP2CS(ins.m_env);
+        MCSId env = StfplVP2MC(ins.m_env);
         
         return new MCInsClosure(name, env);
         
@@ -293,35 +287,35 @@ public class MCInstructionTransformer {
                 // val gdst = sys_gvar_create (src)
                 // initialize global variable
                 
-                MCSId dst = StfplVP2CS(ins.m_holder);
+                MCSId dst = StfplVP2MC(ins.m_holder);
                 // update category
-                dst.m_sid.updateCat(SIdCategory.eGloVar);
+                ins.m_holder.updateCat(SIdCategory.eGloVar);
                 
-                IMCValPrim src = StfplVP2CS(ins.m_args.get(0));
+                IMCValPrim src = StfplVP2MC(ins.m_args.get(0));
                 
                 return new MCInsStore(src, dst);
                 
             } else if (fname.compSymbolString(CCompUtils.cSysGvarUpdate)) {
                 // val () = sys_gvar_update (gdst, src): void
-                MCSId dst = StfplVP2CS(ins.m_holder);
-                IMCValPrim src = StfplVP2CS(ins.m_args.get(0));
+                MCSId dst = StfplVP2MC(ins.m_holder);
+                IMCValPrim src = StfplVP2MC(ins.m_args.get(0));
                 
                 return new MCInsStore(src, dst);
             } else if (fname.compSymbolString(CCompUtils.cSysGvarGet)) {
                 // val dst = sys_gvar_get (gsrc)
-                MCSId dst = StfplVP2CS(ins.m_holder);
-                IMCValPrim src = StfplVP2CS(ins.m_args.get(0));
+                MCSId dst = StfplVP2MC(ins.m_holder);
+                IMCValPrim src = StfplVP2MC(ins.m_args.get(0));
                 
-                return new MCInsLoad((MCSIdUser)src, dst);
+                return new MCInsLoad((MCSId)src, dst);
             } else if (fname.compSymbolString(CCompUtils.cSysMCSetInt)) {
                 // prval () = mc_set_int (g1, local1, g2, local2)
-                List<MCSIdUser> global_vars = new ArrayList<MCSIdUser>();
+                List<MCSId> global_vars = new ArrayList<MCSId>();
                 List<IMCValPrim> local_values = new ArrayList<IMCValPrim>();
                 
                 Iterator<IValPrim> iter = ins.m_args.iterator();
                 while (iter.hasNext()) {
                     IValPrim gv = iter.next();
-                    MCSIdUser global_var = StfplVP2CS((SIdUser)gv);
+                    MCSId global_var = StfplVP2MC((SIdUser)gv);
                                         
                     // update category
                     global_var.getSId().updateCat(SIdCategory.eGloVar);
@@ -329,21 +323,21 @@ public class MCInstructionTransformer {
                     global_vars.add(global_var);
                     
                     IValPrim lv = iter.next();
-                    IMCValPrim local_value = StfplVP2CS(lv);
+                    IMCValPrim local_value = StfplVP2MC(lv);
                     local_values.add(local_value);
                 }
                 
                 return new MCInsMCSet(local_values, global_vars);
             } else if (fname.compSymbolString(CCompUtils.cSysMCGetInt)) {
                 // prval local = mc_get_int (g1, g2)
-                MCSId local_value = StfplVP2CS(ins.m_holder);
+                MCSId local_value = StfplVP2MC(ins.m_holder);
                 
-                List<MCSIdUser> global_vars = new ArrayList<MCSIdUser>();
+                List<MCSId> global_vars = new ArrayList<MCSId>();
                 
                 Iterator<IValPrim> iter = ins.m_args.iterator();
                 while (iter.hasNext()) {
                     IValPrim gv = iter.next();
-                    MCSIdUser global_var = StfplVP2CS((SIdUser)gv);
+                    MCSId global_var = StfplVP2MC((SIdUser)gv);
                                         
                     // update category
                     global_var.getSId().updateCat(SIdCategory.eGloVar);
@@ -354,34 +348,34 @@ public class MCInstructionTransformer {
                 return new MCInsMCGet(local_value, global_vars);
             } else if (fname.compSymbolString(CCompUtils.cSysMCAssert)) {
                 //   prval () = mc_assert (xx > 6)
-                IMCValPrim v = StfplVP2CS(ins.m_args.get(0));
+                IMCValPrim v = StfplVP2MC(ins.m_args.get(0));
 
                 return new MCInsMCAssert(v);
             } else if (fname.compSymbolString(CCompUtils.cSysMutexAlloc)) {
                 // val holder = sys_mutex_allocate ()
-                MCSId holder = StfplVP2CS(ins.m_holder);
+                MCSId holder = StfplVP2MC(ins.m_holder);
 
                 return new MCInsMutexAlloc(holder);
             } else if (fname.compSymbolString(CCompUtils.cSysMutexRelease)) {
                 // val () = sys_mutex_release (m)
-                IMCValPrim mutex = StfplVP2CS(ins.m_args.get(0));
+                IMCValPrim mutex = StfplVP2MC(ins.m_args.get(0));
                 return new MCInsMutexRelease(mutex);
 
             } else if (fname.compSymbolString(CCompUtils.cSysCondAlloc)) {
                 // val holder = sys_mutex_allocate ()
-                MCSId holder = StfplVP2CS(ins.m_holder);
+                MCSId holder = StfplVP2MC(ins.m_holder);
 
                 return new MCInsCondAlloc(holder);
             } else if (fname.compSymbolString(CCompUtils.cSysCondRelease)) {
                 // val () = sys_mutex_release (m)
-                IMCValPrim mutex = StfplVP2CS(ins.m_args.get(0));
+                IMCValPrim mutex = StfplVP2MC(ins.m_args.get(0));
                 return new MCInsCondRelease(mutex);
 
             } else if (fname.compSymbolString(CCompUtils.cSysThreadCreate)) {
             	// val () = sys_thread_create (tid, funlab, arg)
-            	IMCValPrim tid = StfplVP2CS(ins.m_args.get(0));
-            	MCSIdUser funlab = StfplVP2CS((SIdUser)ins.m_args.get(0));
-            	IMCValPrim arg = StfplVP2CS(ins.m_args.get(0));
+            	IMCValPrim tid = StfplVP2MC(ins.m_args.get(0));
+            	MCSId funlab = StfplVP2MC((SIdUser)ins.m_args.get(0));
+            	IMCValPrim arg = StfplVP2MC(ins.m_args.get(0));
 
                 return new MCInsThreadCreate(tid, funlab, arg);
             } else {
@@ -389,63 +383,56 @@ public class MCInstructionTransformer {
             }
         }
 
-        MCSId holder = StfplVP2CS(ins.m_holder);
-        MCSIdUser fun = StfplVP2CS(ins.m_fun);
-        List<IMCValPrim> args = StfplVP2CS(ins.m_args);
+        MCSId holder = StfplVP2MC(ins.m_holder);
+        MCSId fun = StfplVP2MC(ins.m_fun);
+        List<IMCValPrim> args = StfplVP2MC(ins.m_args);
         
         return new MCInsCall(holder, fun, args);
     }
     
-    private MCSId StfplVP2CS(SId sid) {
-//      System.out.println("sid is " + sid.toStringCS());
-        return MCSId.fromSId(sid,
-                sid.getType().toCSType(m_track).m_type);
-    }
-    
-       private MCSIdUser StfplVP2CS(SIdUser sid_user) {
-            return MCSIdUser.fromSIdUser(sid_user,
-                    sid_user.getType().toCSType(m_track).m_type);
-        }
-    
-    private MCAtomValue StfplVP2CS(AtomValue v) {
+
+    private MCAtomValue StfplVP2MC(AtomValue v) {
         return new MCAtomValue(v, v.getType().toCSType(m_track).m_type);
     }
     
-    private IMCValPrim StfplVP2CS(IValPrim vp) {
+    private IMCValPrim StfplVP2MC(IValPrim vp) {
         if (vp instanceof AtomValue) {
-            return StfplVP2CS((AtomValue)vp);
+            return StfplVP2MC((AtomValue)vp);
         } else if (vp instanceof SId) {
-            return StfplVP2CS((SId)vp);
+            return StfplVP2MC((SId)vp);
         }
         else if (vp instanceof SIdUser) {
-                return StfplVP2CS((SIdUser)vp);
+                return StfplVP2MC((SIdUser)vp);
         } else {
             throw new Error(vp + " is not supported.");
         }
     }
     
-    private List<IMCValPrim> StfplVP2CS(List<IValPrim> vps) {
+    private List<IMCValPrim> StfplVP2MC(List<IValPrim> vps) {
         List<IMCValPrim> mcvps = new ArrayList<IMCValPrim>();
         for (IValPrim vp: vps) {
-            IMCValPrim mcvp = StfplVP2CS(vp);
+            IMCValPrim mcvp = StfplVP2MC(vp);
             mcvps.add(mcvp);
         }
         return mcvps;
     }
     
-//  private Set<ICSValPrim> StfplVP2CS(Set<IValPrim> vps) {
-//      Set<ICSValPrim> csvps = new HashSet<ICSValPrim>();
-//      for (IValPrim vp: vps) {
-//          ICSValPrim csvp = StfplVP2CS(vp);
-//          csvps.add(csvp);
-//      }
-//      return csvps;
-//  }
+    private MCSId StfplVP2MC(SId sid) {
+//      System.out.println("sid is " + sid.toStringCS());
+        return MCSId.fromSId(sid,
+                sid.getType().toCSType(m_track).m_type);
+    }
     
-    private Set<MCSIdUser> StfplVP2CS(Set<SIdUser> vps) {
-        Set<MCSIdUser> csvps = new HashSet<MCSIdUser>();
+
+    private MCSId StfplVP2MC(SIdUser sid_user) {
+        return MCSId.fromSIdUser(sid_user,
+                sid_user.getType().toCSType(m_track).m_type);
+    }
+
+    private Set<MCSId> StfplVP2MC(Set<SIdUser> vps) {
+        Set<MCSId> csvps = new HashSet<MCSId>();
         for (SIdUser vp: vps) {
-            MCSIdUser csvp = StfplVP2CS(vp);
+            MCSId csvp = StfplVP2MC(vp);
             csvps.add(csvp);
         }
         return csvps;
@@ -454,3 +441,6 @@ public class MCInstructionTransformer {
 
     
 }
+
+
+

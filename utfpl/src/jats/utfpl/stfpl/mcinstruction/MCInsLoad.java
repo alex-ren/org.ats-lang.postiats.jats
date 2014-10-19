@@ -3,13 +3,13 @@ package jats.utfpl.stfpl.mcinstruction;
 
 public class MCInsLoad implements IMCInstruction {
 
-    public MCSId m_localHolder;
-    public MCSIdUser m_globalVar;
+    public MCSId m_l_holder;
+    public MCSId m_g_src;
 
-    public MCInsLoad(MCSIdUser globalVar, MCSId localHolder) {
+    public MCInsLoad(MCSId g_src, MCSId l_holder) {
         
-        m_globalVar = globalVar;
-        m_localHolder = localHolder;
+        m_g_src = g_src;
+        m_l_holder = l_holder;
     }
 
     @Override

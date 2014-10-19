@@ -5,26 +5,45 @@ import java.util.Map;
 
 import jats.utfpl.patcsps.Aux;
 import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.instructions.IIdPrim;
 import jats.utfpl.stfpl.instructions.SId;
+import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.instructions.SId.SIdCategory;
 import jats.utfpl.stfpl.stype.FunType;
 
 
 public class MCSId implements IMCIdPrim {
-	public SId m_sid;
+	private IIdPrim m_id_prim;  todo
 	private ICSType m_type;
 	private Aux.Address m_addr;
 	private Boolean m_has_effect;
+	private int m_count;
 	
 	private static Map<SId, MCSId> s_map = new HashMap<SId, MCSId>();
+	private static Map<SIdUser, MCSId> s_map_user = new HashMap<SIdUser, MCSId>();
+	private static int c_count = 0;
 	
-	private MCSId(SId sid, ICSType type) {
-		m_sid = sid;
+	private MCSId(IIdPrim id_prim, ICSType type) {
+	    m_id_prim = id_prim;
 		m_type = type;
 		m_addr = null;
 		m_has_effect = null;
+		m_count = c_count++; 
 	}
 	
+    private MCSId(IIdPrim id_prim, ICSType type, Aux.Address addr,
+            Boolean has_effect) {
+        m_id_prim = id_prim;
+        m_type = type;
+        m_addr = addr;
+        m_has_effect = has_effect;
+        m_count = c_count++; 
+    }
+
+    public MCSId dup() {
+        return new MCSId(m_id_prim, m_type, m_addr, m_has_effect);
+    }
+    
 	public Boolean hasEffect() {
 		return m_has_effect;
 	}
@@ -34,12 +53,17 @@ public class MCSId implements IMCIdPrim {
 	}
 	
     public void updateAddr(Aux.Address addr) {
-    	FunType fun_type = jats.utfpl.stfpl.stype.Aux.getFunctionType(m_sid.getType());
+        if (!(m_id_prim instanceof SId)) {
+            throw new Error("This should not happen.");
+        }
+        
+        SId sid = (SId)m_id_prim;
+    	FunType fun_type = jats.utfpl.stfpl.stype.Aux.getFunctionType(m_id_prim.getType());
     	if (null == fun_type) {
     		throw new Error("Should not happen");
     	}
     	
-    	if (m_sid.getCat() != SIdCategory.eUserFun) {
+    	if (sid.getCat() != SIdCategory.eUserFun) {
     		throw new Error("not supported for function variable");
     	}
     	
@@ -70,11 +94,34 @@ public class MCSId implements IMCIdPrim {
             return cssid;
         }
     }
+    
+    public static MCSId fromSIdUser(SIdUser var, ICSType type) {
+        MCSId mc_sid = s_map_user.get(var);
+        if (null != mc_sid) {
+            throw new Error("Check this.");
+//            return mc_sid;
+        } else {
+            MCSId ret = new MCSId(var, type);
+            s_map_user.put(var, ret);
+            return ret;
+        }
+        
+       
+    }
+    
+    public SId getSId() {
+        if (m_id_prim instanceof SId) {
+            return (SId)m_id_prim;
+        } else {
+            return ((SIdUser)m_id_prim).getSId();
+        }
+    }
 
 	@Override
     public ICSType getType() {
 	    return m_type;
     }
+
 	
 //	public String toStringCS() {
 //	    return m_sid.toStringCS();

@@ -2,7 +2,7 @@
 staload "./sys_model.sats"
 
 
-stacst mwp: sidd
+stacst mwp: sid
 stacst mwi: sid
 stacst min_write: sid
 stacst mw_init: sid

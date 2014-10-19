@@ -1,12 +1,12 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 public class MCInsStore implements IMCInstruction {
-    public IMCValPrim m_localSrc;
-    public MCSId m_globalDest;
+    public IMCValPrim m_l_src;
+    public MCSId m_g_dst;
     
-    public MCInsStore(IMCValPrim localSrc, MCSId globalDest) {
-        m_localSrc = localSrc;
-        m_globalDest = globalDest;
+    public MCInsStore(IMCValPrim l_src, MCSId g_dst) {
+        m_l_src = l_src;
+        m_g_dst = g_dst;
         
     }
 
