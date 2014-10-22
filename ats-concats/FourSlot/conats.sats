@@ -1,18 +1,18 @@
 
 
-abstype global_variable_t
-typedef atomref = global_variable_t
+abstype global_variable_t (t@ype)
+typedef atomref (a: t@ype) = global_variable_t a
 
-fun atomref_create {a:t@ype} (data: a): atomref  // can only be called outside function
-fun atomref_update {a:t@ype} (gv: atomref, data: a): void
-fun atomref_get {a:t@ype} (gv: atomref): a
+fun atomref_create {a:t@ype} (data: a): atomref a  // can only be called outside function
+fun atomref_update {a:t@ype} (gv: atomref a, data: a): void
+fun atomref_get {a:t@ype} (gv: atomref a): a
 
-abstype global_array_t
-typedef atomarrayref = global_array_t
+abstype global_array_t (t@ype)
+typedef atomarrayref (a: t@ype) = global_array_t a
 
-fun atomarrayref_create {a:t@ype} (len: int, data: a): atomarrayref  // can only be called outside function
-fun atomarrayref_update {a:t@ype} (gv: atomarrayref, pos: int, data: a): void
-fun atomarrayref_get (gv: atomarrayref, pos: int): [x:int] int x
+fun atomarrayref_create {a:t@ype} (len: int, data: a): atomarrayref a // can only be called outside function
+fun atomarrayref_update {a:t@ype} (gv: atomarrayref a, pos: int, data: a): void
+fun atomarrayref_get {a:t@ype} (gv: atomarrayref a, pos: int): a
 
 
 (* ************* ************** *)
@@ -149,6 +149,17 @@ prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
 fun negation {x: bool} (x: bool x):<fun> bool (~x)
 
 (* ************* ************** *)
+
+absview mc_vlockview (int, int)
+
+prfun mc_vlockview_get {i: nat} {j: pos}
+  (i: int i, j: int j): mc_vlockview (i, j)
+prfun mc_vlockview_put {i: nat} {j: pos} 
+  ( v: mc_vlockview (i, j)
+  | i: int i
+  , j: int j
+  ): void
+
 
 
 
