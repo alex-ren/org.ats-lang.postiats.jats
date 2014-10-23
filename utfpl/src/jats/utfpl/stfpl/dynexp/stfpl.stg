@@ -124,8 +124,8 @@ lamMet. <d2exp>
 >>
 
 D2EannFunclo_st(funclo, d2exp) ::= <<
-\<<funclo>\>
-<d2exp>
+\<D2EannFunclo>\<<funclo>\>(
+  <d2exp>)
 >>
 
 Ifunclo_st(funclo) ::= <<
@@ -133,7 +133,8 @@ Ifunclo_st(funclo) ::= <<
 >>
 
 D2EannSeff_st(d2exp) ::= <<
-\<D2EannSeff>(<d2exp>)
+\<D2EannSeff>(
+  <d2exp>)
 >>
 
 D2EannType_st(d2exp, s2exp) ::= <<
@@ -154,11 +155,11 @@ D2Elist_st(knd, prfs, d2es) ::= <<
 >>
 
 LABP2ATomit_st() ::= <<
-LABP2ATomit
+\<LABP2ATomit>
 >>
 
 LABP2ATnorm_st(lab, pat) ::= <<
-LABP2ATnorm(<pat>)
+\<LABP2ATnorm>(<pat>)
 >>
 
 p2at_st(node) ::= <<
@@ -166,11 +167,11 @@ p2at_st(node) ::= <<
 >>
 
 P2Tann_st(pat, type) ::= <<
-P2Tann\<<pat>:<type>\>
+\<P2Tann>(<pat>:<type>)
 >>
 
 P2Trec_st(labpats) ::= <<
-P2Trec\<<labpats; separator=", ">\>
+\<P2Trec>(<labpats; separator=", ">)
 >>
 
 P2Tany_st() ::= <<
@@ -207,7 +208,7 @@ D2Eignored
 >>
 
 D2Esym_st(d2sym) ::= <<
-D2Esym\<<d2sym_st(d2sym)>\>
+\<D2Esym>(<d2sym_st(d2sym)>)
 >>
 
 D2Evar_st(var) ::= <<

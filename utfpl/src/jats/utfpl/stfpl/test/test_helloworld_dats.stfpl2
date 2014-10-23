@@ -82,22 +82,27 @@
   staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/checkast.dats"
 }
 
-fun foo1_3447 = lam (P2Tann<x_3448:@{0 = int, 1 = int}:t@ype>, P2Tann<y_3449:int:t@ype>) <fun> = 
-  <D2EannSeff>(3:int:t@ype)
+fun foo1_3447 = lam (<P2Tann>(x_3448:@{0 = int, 1 = int}:t@ype), <P2Tann>(y_3449:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    3:int:t@ype)
 
-fun foo2_3450 = lam (P2Tann<x_3451:@{0 = int, 1 = int}:t@ype>, P2Tann<y_3452:int:t@ype>) <fun> = 
-  <D2EannSeff>(y_3452:int:t@ype)
+fun foo2_3450 = lam (<P2Tann>(x_3451:@{0 = int, 1 = int}:t@ype), <P2Tann>(y_3452:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    y_3452:int:t@ype)
 
-fun foo3_3453 = lam (P2Tann<x_3454:int:t@ype>) <fun> = 
-  <D2EannSeff>(( | 3, 3):@{0 = int, 1 = int}:t@ype)
+fun foo3_3453 = lam (<P2Tann>(x_3454:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    ( | 3, 3):@{0 = int, 1 = int}:t@ype)
 
 fun foo4_3455 = lam () <fun> = 
-  <D2EannSeff>(D2Esym<+> (1, 2):int:t@ype)
+  <D2EannSeff>(
+    <D2Esym>(+) (1, 2):int:t@ype)
 
 implement main_void_0_56:(() -<fun> void):type = lam () <fun> = 
-  <fun>
-  <D2EannSeff>(let
-    val () = D2Esym<print> ("Helloworld")
-  in
-    ()
-  end:void:t@ype)
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val () = <D2Esym>(print) ("Helloworld")
+      in
+        ()
+      end:void:t@ype))

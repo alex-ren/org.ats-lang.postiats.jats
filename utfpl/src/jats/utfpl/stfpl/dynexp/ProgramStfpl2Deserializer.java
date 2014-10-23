@@ -11,7 +11,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class ProgramUtfplDeserializer implements JsonDeserializer<ProgramStfpl2> {
+public class ProgramStfpl2Deserializer implements JsonDeserializer<ProgramStfpl2> {
 
     @Override
     public ProgramStfpl2 deserialize(JsonElement json, Type typeOfT,

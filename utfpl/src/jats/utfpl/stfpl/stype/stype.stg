@@ -25,7 +25,7 @@ void
 >>
 
 FunType_st(paras, clo, ret) ::= <<
-(<paras; separator=", ">) -\<<clo>\> <ret>
+((<paras; separator=", ">) -\<<clo>\> <ret>)
 >>
 
 Cs2var_st(s2var) ::= <<

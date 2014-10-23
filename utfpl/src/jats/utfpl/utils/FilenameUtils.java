@@ -8,6 +8,7 @@ public class FilenameUtils {
 	static public final String cDATS = "dats";
 	static public final String cJSON = "json";
 	static public final String cUTFPL = "utfpl";
+	static public final String cSTFPL2 = "stfpl2";
 //	static public final String cMUTFPL = "mats";
 	static public final String cINS = "ins";
 	static public final String cCSHARP = "cs";

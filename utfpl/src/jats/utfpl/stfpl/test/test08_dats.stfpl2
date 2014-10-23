@@ -1,0 +1,15 @@
+"D2Cstacsts" prop1_t_722: prop
+
+"D2Cstacsts" prop2_t_723: (int) -\> prop
+
+datatype(0) dt_t_724: (int) -\> type
+
+"D2Cdcstdecs" gen_prop_2560:(() -<fun> prop):prop
+
+fun foo2_63 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      prval p_64 = D2Ecst<gen_prop_2560:(() -<fun> prop):prop> ()
+    in
+      (p_64, 3)
+    end:@{0 = prop, 1 = int}:t@ype)

@@ -1,16 +1,13 @@
-package jats.utfpl.stfpl;
+package jats.utfpl.stfpl.instructions;
 
-import jats.utfpl.csps.CSPSPrinter;
-import jats.utfpl.stfpl.csharpins.CSInstructionTransformer;
-import jats.utfpl.stfpl.csharpins.CSharpPrinter;
+
+import jats.utfpl.stfpl.StfplProgramParserJson;
+import jats.utfpl.stfpl.StfplTypeChecker;
 import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.stfpl.dynexp.ProgramStfpl2Printer;
-import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3Printer;
-import jats.utfpl.stfpl.instructions.InstructionPrinter;
-import jats.utfpl.stfpl.instructions.InstructionTransformer;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -20,7 +17,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -54,12 +50,12 @@ public class Test {
 //                "src/jats/utfpl/stfpl/csharpins/test/04_polymorphism.dats"
 //                "test/src_ats/53_demo_mc_dyn.dats"
                 "src/jats/utfpl/stfpl/test/test08.dats"
+        	  , "src/jats/utfpl/stfpl/test/test_helloworld.dats"
 
         };
 
-//        for (String strPath: paths) {
+        for (String strPath: paths) {
         	
-            String strPath = paths[0];
             System.out.println("==Processing file " + strPath + "==========");
             System.out.println("");
             
@@ -96,7 +92,7 @@ public class Test {
                     BufferedWriter bwSTFPL2 = new BufferedWriter(fwSTFPL2);
                     bwSTFPL2.write(outputSTFPL2);
                     bwSTFPL2.close();
-                    
+
                     /* ************* ************** */
                     
                     System.out.println("== Generating dynexp3 start ==========================");
@@ -108,7 +104,7 @@ public class Test {
                     String outputSTFPL3 = sPrinter3.print(prog3);
                     System.out.println("==stfpl's ast code (layer 03) is ==========================");
                     System.out.println(outputSTFPL3);
-
+                    
                     System.out.println("== Generating instruction start ==========================");
                     InstructionTransformer ins_cvt = new InstructionTransformer();
                     ins_cvt.transform_global(prog3);
@@ -123,48 +119,23 @@ public class Test {
                             ins_cvt.getMainInss());
                     System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
                     System.out.println(outputIns);
-                    
-                    
-                    System.out.println("== Generating CSP instruction start ==========================");
-                    CSInstructionTransformer csins_cvt = new CSInstructionTransformer();
-                    csins_cvt.transformProgram(ins_cvt.getDecs(), 
-					                    		ins_cvt.getExts(),
-					                    		ins_cvt.getDefs(), 
-					                    		ins_cvt.getMainInss());
-                    
-                    System.out.println("== Generating CSP instruction end ==========================");
-                    
-                    CSharpPrinter csprinter = new CSharpPrinter(
-                                              csins_cvt.getDecs(),
-                                              csins_cvt.getExts(),
-                                              csins_cvt.getDefs(),
-                                              csins_cvt.getMainInss(),
-                                              csins_cvt.getMainName(),
-                                              csins_cvt.getTrack());
-                    
-                    String cs_output = csprinter.printCSharp();
-                    System.out.println("==csharp code is ==========================");
-                    System.out.println(cs_output);
-                    FileWriter cs_filew = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cCSHARP));
-                    BufferedWriter cs_bw = new BufferedWriter(cs_filew);
-                    cs_bw.write(cs_output);
-                    cs_bw.close();
-                    
 
             	} else {
             		String line;
             		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
             		while ((line = reader.readLine()) != null) {
+            			System.err.println("Invalid ATS file.");
             			System.err.println(line);
             		}
             		return;            		
             	}
 
-//            }
+            }
 
-//            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
+            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
         }
 
     }
 
 }
+

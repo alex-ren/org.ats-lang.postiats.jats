@@ -198,7 +198,7 @@ public class StfplProgramParserJson {
 
         /* *********** all *********** */
         
-        gsonBuilder.registerTypeAdapter(ProgramStfpl2.class, new ProgramUtfplDeserializer());
+        gsonBuilder.registerTypeAdapter(ProgramStfpl2.class, new ProgramStfpl2Deserializer());
         
         m_gson = gsonBuilder.create();
     }

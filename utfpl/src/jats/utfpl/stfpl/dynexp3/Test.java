@@ -13,7 +13,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -40,7 +39,14 @@ public class Test {
 //                "src/jats/utfpl/stfpl/test/test05.dats"
 //                "src/jats/utfpl/stfpl/test/test06.dats"
 //                "src/jats/utfpl/stfpl/test/test07.dats"
-                "src/jats/utfpl/stfpl/test/test_helloworld.dats"
+//                "src/jats/utfpl/stfpl/test/test_helloworld.dats",
+//                "src/jats/utfpl/stfpl/csharpins/test/01_tuple_op.dats"
+//                "src/jats/utfpl/stfpl/csharpins/test/02_if_branch.dats"
+//                "src/jats/utfpl/stfpl/csharpins/test/03_closure.dats"
+//                "src/jats/utfpl/stfpl/csharpins/test/04_polymorphism.dats"
+//                "test/src_ats/53_demo_mc_dyn.dats"
+                "src/jats/utfpl/stfpl/test/test08.dats"
+        	  , "src/jats/utfpl/stfpl/test/test_helloworld.dats"
 
         };
 
@@ -63,38 +69,43 @@ public class Test {
             	if (0 == returnCode) {
                     FileReader fReader = new FileReader(path);
 
-                    StfplProgramParserJson utfplParser = new StfplProgramParserJson();
-                    ProgramStfpl2 prog2 = utfplParser.trans(fReader);
+                    System.out.println("== Parsing JSON start ==========================");
+                    StfplProgramParserJson stfplParser = new StfplProgramParserJson();
+                    ProgramStfpl2 prog2 = stfplParser.trans(fReader);
+                    System.out.println("== Parsing JSON end   ==========================");
                     
+                    System.out.println("== Type Checking start ==========================");
                     StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
                     tyChecker.typecheck();
+                    System.out.println("== Type Checking end   ==========================");
 
-                    ProgramStfpl2Printer uPrinter = new ProgramStfpl2Printer();
-                    String outputUTFPL = uPrinter.print(prog2);
+                    ProgramStfpl2Printer sPrinter2 = new ProgramStfpl2Printer();
+                    String outputSTFPL2 = sPrinter2.print(prog2);
                     
-                    System.out.println("==utfpl's ast code after type checking (dynexp2) is ==========================");
+                    System.out.println("==stfpl's ast code (layer 02) is ==========================");
+                    System.out.println(outputSTFPL2);
+                    FileWriter fwSTFPL2 = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cSTFPL2));
+                    BufferedWriter bwSTFPL2 = new BufferedWriter(fwSTFPL2);
+                    bwSTFPL2.write(outputSTFPL2);
+                    bwSTFPL2.close();
+
+                    /* ************* ************** */
                     
-                    System.out.println(outputUTFPL);
-                    
-                    DynExp3Transformer exp3_transformer = new DynExp3Transformer(prog2.m_d2ecs);
-                    ProgramStfpl3 prog3 = exp3_transformer.transform();
-                    
-//                    UtfplProgramProcessor processor = new UtfplProgramProcessor();
-//                    uProg = processor.removeProof(uProg);
-//                    outputUTFPL = uPrinter.print(uProg);
-//                    
-//                    System.out.println("==utfpl's ast code (layer 02) is ==========================");
-//                    
-//                    System.out.println(outputUTFPL);
-                    
-                    FileWriter fwUTFPL = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cUTFPL));
-                    BufferedWriter bwUTFPL = new BufferedWriter(fwUTFPL);
-                    bwUTFPL.write(outputUTFPL);
-                    bwUTFPL.close();
+                    System.out.println("== Generating dynexp3 start ==========================");
+                    DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
+                    ProgramStfpl3 prog3 = d3transformer.transform();
+                    System.out.println("== Generating dynexp3 end ==========================");
+
+                    ProgramStfpl3Printer sPrinter3 = new ProgramStfpl3Printer();
+                    String outputSTFPL3 = sPrinter3.print(prog3);
+                    System.out.println("==stfpl's ast code (layer 03) is ==========================");
+                    System.out.println(outputSTFPL3);
+
             	} else {
             		String line;
             		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
             		while ((line = reader.readLine()) != null) {
+            			System.err.println("Invalid ATS file.");
             			System.err.println(line);
             		}
             		return;            		
@@ -102,7 +113,7 @@ public class Test {
 
             }
 
-//            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
+            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
         }
 
     }
