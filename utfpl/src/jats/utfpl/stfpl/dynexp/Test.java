@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.dynexp;
 
+import jats.utfpl.stfpl.ModelGenerater;
 import jats.utfpl.stfpl.StfplProgramParserJson;
 import jats.utfpl.stfpl.StfplTypeChecker;
 import jats.utfpl.utils.FilenameUtils;
@@ -48,59 +49,8 @@ public class Test {
         };
 
         for (String strPath: paths) {
-        	
-            System.out.println("==Processing file " + strPath + "==========");
-            System.out.println("");
-            
-            File path = new File(strPath);
-//            ProgramTree prog = null;
-            
-            if (FilenameUtils.isATS(path)) {
-            	path = FilenameUtils.toJson(path);
-            	
-            	String cmd = "patsopt -o " + path.getPath() + " --jsonize-2 -d " + strPath + " 2>&1";
-            	System.out.println("cmd is " + cmd);
-            	Process child = Runtime.getRuntime().exec(cmd);
-            	int returnCode = child.waitFor();
-            	System.out.println("returnCode is " + returnCode);
-            	if (0 == returnCode) {
-                    FileReader fReader = new FileReader(path);
-
-                    System.out.println("== Parsing JSON start ==========================");
-                    StfplProgramParserJson stfplParser = new StfplProgramParserJson();
-                    ProgramStfpl2 prog2 = stfplParser.trans(fReader);
-                    System.out.println("== Parsing JSON end   ==========================");
-                    
-                    System.out.println("== Type Checking start ==========================");
-                    StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
-                    tyChecker.typecheck();
-                    System.out.println("== Type Checking end   ==========================");
-
-                    ProgramStfpl2Printer sPrinter2 = new ProgramStfpl2Printer();
-                    String outputSTFPL2 = sPrinter2.print(prog2);
-                    
-                    System.out.println("==stfpl's ast code (layer 02) is ==========================");
-                    System.out.println(outputSTFPL2);
-                    FileWriter fwSTFPL2 = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cSTFPL2));
-                    BufferedWriter bwSTFPL2 = new BufferedWriter(fwSTFPL2);
-                    bwSTFPL2.write(outputSTFPL2);
-                    bwSTFPL2.close();
-                    
-                    
-
-            	} else {
-            		String line;
-            		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
-            		while ((line = reader.readLine()) != null) {
-            			System.err.println("Invalid ATS file.");
-            			System.err.println(line);
-            		}
-            		return;            		
-            	}
-
-            }
-
-            System.out.println("\n" + "==" + strPath + " is O.K. " + " ==============================================================================\n");
+        	ModelGenerater mcGen = new ModelGenerater(strPath);
+        	mcGen.generate(2);
         }
 
     }
