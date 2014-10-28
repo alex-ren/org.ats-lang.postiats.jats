@@ -12,6 +12,7 @@ public class SIdUser implements IIdPrim {
     private SId m_sid;
     private boolean m_from_env;
     
+    // Used by factory.
     public SIdUser(SId sid, boolean from_env) {
         m_sid = sid;
         m_from_env = from_env;

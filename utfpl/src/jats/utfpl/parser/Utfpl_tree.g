@@ -30,11 +30,11 @@ exp returns [IExp node]
     | if_exp {node = $if_exp.node;}
     | app_exp {node = $app_exp.node;}
     | let_exp {node = $let_exp.node;}
-    | atom_exp {node = $atom_exp.node;}
+    | atom_exp {node = $atom_exp.node;} 
     | tuple_exp {node = $tuple_exp.node;}
     ;
     
-tuple_exp returns [ExpTuple node]
+tuple_exp returns [ExpTuple node] 
     : ^(TUPLE exp explst) {node = new ExpTuple(null, $exp.node, $explst.explst);}
     ;
 

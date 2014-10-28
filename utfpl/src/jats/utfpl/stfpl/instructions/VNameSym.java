@@ -3,9 +3,13 @@ package jats.utfpl.stfpl.instructions;
 import jats.utfpl.stfpl.dynexp3.Cd3sym;
 import jats.utfpl.stfpl.stype.ISType;
 
+/*
+ * I don't care much about the identity of the object.
+ */
 public class VNameSym implements IVarName {
     public Cd3sym m_sym;
     
+ // Should be used inside factory
     public VNameSym(Cd3sym sym) {
         m_sym = sym;
     }

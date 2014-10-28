@@ -5,6 +5,9 @@ import jats.utfpl.stfpl.dynexp.ProgramStfpl2Printer;
 import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3Printer;
+import jats.utfpl.stfpl.instructions.InstructionPrinter;
+import jats.utfpl.stfpl.instructions.InstructionTransformer;
+import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -93,6 +96,26 @@ public class ModelGenerater {
                 	return 0;
                 }
 
+                System.out.println("== Generating instruction start ==========================");
+                SIdFactory sid_factory = new SIdFactory();
+                InstructionTransformer ins_cvt = new InstructionTransformer(sid_factory);
+                ins_cvt.transform_global(prog3);
+                
+                System.out.println("== Generating instruction end ==========================");
+                
+                InstructionPrinter insPrinter = new InstructionPrinter();
+                String outputIns = insPrinter.print(
+                        ins_cvt.getDecs(), 
+                        ins_cvt.getExts(), 
+                        ins_cvt.getDefs(),
+                        ins_cvt.getMainInss());
+                System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
+                System.out.println(outputIns);
+                
+                if (level <= 4) {
+                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    return 0;
+                }
                 /* ************* ************** */
                 throw new Error("level " + level + " is not supported.");
 

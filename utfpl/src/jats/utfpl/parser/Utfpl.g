@@ -26,7 +26,7 @@ tokens {
   INDEX;
 }
 
-@header {
+@header { 
   package jats.utfpl.parser;
 }
 
