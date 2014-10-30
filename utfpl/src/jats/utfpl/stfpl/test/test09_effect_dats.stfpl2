@@ -1,0 +1,19 @@
+fun foo2_63 = lam () <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      ():void:t@ype))
+
+fun foo1_64 = lamMet. lam () <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+      in
+        ()
+      end:void:t@ype))
+
+fun foo3_65 = lamMet. lam (<P2Tann>(f_66:(() -<fun> void):type), <P2Tann>(g_67:(() -<fun> void):type)) <fun> = 
+  <D2EannSeff>(
+    let
+    in
+      g_67
+    end:(() -<fun> void):type)

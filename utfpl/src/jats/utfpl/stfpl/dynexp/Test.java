@@ -1,17 +1,7 @@
 package jats.utfpl.stfpl.dynexp;
 
 import jats.utfpl.stfpl.ModelGenerater;
-import jats.utfpl.stfpl.StfplProgramParserJson;
-import jats.utfpl.stfpl.StfplTypeChecker;
-import jats.utfpl.utils.FilenameUtils;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -45,6 +35,7 @@ public class Test {
 //                "test/src_ats/53_demo_mc_dyn.dats"
                 "src/jats/utfpl/stfpl/test/test08.dats"
         	  , "src/jats/utfpl/stfpl/test/test_helloworld.dats"
+        	  , "src/jats/utfpl/stfpl/test/test09_effect.dats"
 
         };
 
