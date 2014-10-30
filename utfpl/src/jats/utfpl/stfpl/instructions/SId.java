@@ -34,6 +34,7 @@ public class SId implements IIdPrim{
     	return m_cat;
     }
 
+    // Used by factory.
     public SId(IVarName name, SIdCategory cat) {
         m_name = name;
         m_cat = cat;

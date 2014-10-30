@@ -3,10 +3,10 @@ package jats.utfpl.stfpl.mcinstruction;
 import java.util.List;
 
 public class MCInsMCGet implements IMCInstruction {
-    public MCSId m_localHolder;
-    public List<MCSId> m_globalVars;
+    public MCSIdFun m_localHolder;
+    public List<MCSIdFun> m_globalVars;
 
-    public MCInsMCGet(MCSId localHolder, List<MCSId> globalVars) {
+    public MCInsMCGet(MCSIdFun localHolder, List<MCSIdFun> globalVars) {
         m_localHolder = localHolder;
         m_globalVars = globalVars;
     }

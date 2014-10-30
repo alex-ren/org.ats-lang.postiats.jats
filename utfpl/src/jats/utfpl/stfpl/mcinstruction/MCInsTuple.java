@@ -7,9 +7,9 @@ import org.stringtemplate.v4.STGroup;
 
 public class MCInsTuple implements IMCInstruction {
     public List<IMCValPrim> m_elements;
-    public MCSId m_holder;
+    public MCSIdFun m_holder;
     
-    public MCInsTuple(List<IMCValPrim> elements, MCSId holder) {
+    public MCInsTuple(List<IMCValPrim> elements, MCSIdFun holder) {
         m_elements = elements;
         m_holder = holder;
     }

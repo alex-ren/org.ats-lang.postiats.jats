@@ -1,20 +1,18 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.instructions.AtomValue;
+import jats.utfpl.stfpl.stype.ISType;
 
 public class MCAtomValue implements IMCValPrim {
 	public AtomValue m_v;
-	private ICSType m_type;
 	
-	public MCAtomValue(AtomValue v, ICSType type) {
+	public MCAtomValue(AtomValue v) {
 		m_v = v;
-		m_type = type;
 	}
 
 	@Override
-	public ICSType getType() {
-		return m_type;
+	public ISType getType() {
+		return m_v.getType();
 	}
 
 //    @Override

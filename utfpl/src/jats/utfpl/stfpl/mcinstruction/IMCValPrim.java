@@ -1,9 +1,9 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-import jats.utfpl.stfpl.csharptype.ICSType;
+import jats.utfpl.stfpl.stype.ISType;
 
 public interface IMCValPrim {
-    public ICSType getType();
+    public ISType getType();
     
 //    public String toStringCS();
 }

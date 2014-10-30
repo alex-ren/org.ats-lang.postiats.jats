@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MCInsMCSet implements IMCInstruction {
     public List<IMCValPrim> m_localValues;
-    public List<MCSId> m_globalVars;
+    public List<MCSIdFun> m_globalVars;
     
-    public MCInsMCSet(List<IMCValPrim> localValues, List<MCSId> globalVars) {
+    public MCInsMCSet(List<IMCValPrim> localValues, List<MCSIdFun> globalVars) {
         m_localValues = localValues;
         m_globalVars = globalVars;
         

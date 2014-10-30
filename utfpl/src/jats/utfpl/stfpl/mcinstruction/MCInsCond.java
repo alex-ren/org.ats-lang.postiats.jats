@@ -6,13 +6,13 @@ import java.util.List;
 //import org.stringtemplate.v4.STGroup;
 
 public class MCInsCond implements IMCInstruction {
-    public MCSId m_holder;
+    public MCSIdFun m_holder;
     public IMCValPrim m_cond;
     public List<IMCInstruction> m_btrue;
     public List<IMCInstruction> m_bfalse;  // can be null
     private Boolean m_has_effect;
     
-    public MCInsCond(MCSId holder, IMCValPrim cond,
+    public MCInsCond(MCSIdFun holder, IMCValPrim cond,
             List<IMCInstruction> btrue, List<IMCInstruction> bfalse,
             Boolean has_effect) {
         m_holder = holder;

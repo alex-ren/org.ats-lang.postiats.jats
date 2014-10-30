@@ -7,16 +7,17 @@ import java.util.List;
 
 public class MCDefFun {
     public Cloc_t m_loc;
-    public MCSId m_name;
+    public MCSIdFun m_name;
     public int m_lin;  // something to do with linear type?
-    public List<MCSId> m_paras;
+    public List<IMCIdPrim> m_paras;
+    public env;
     public List<IMCInstruction> m_inss;  // body of the function
 
     
     public MCDefFun(Cloc_t loc, 
-    	         	MCSId name, 
+    	         	MCSIdFun name, 
                      int lin,  // something to do with linear type?
-                     List<MCSId> paras,
+                     List<MCSIdFun> paras,
                      List<IMCInstruction> inss  // body of the function
                      ) {
         m_loc = loc;

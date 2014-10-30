@@ -9,11 +9,11 @@ import java.util.List;
 //import org.stringtemplate.v4.STGroup;
 
 public class MCInsCall implements IMCInstruction {
-    public MCSId m_holder;
-    public MCSId m_fun;
+    public MCSIdFun m_holder;
+    public MCSIdFun m_fun;
     public List<IMCValPrim> m_args;
     
-    public MCInsCall(MCSId holder, MCSId fun, List<IMCValPrim> args) {
+    public MCInsCall(MCSIdFun holder, MCSIdFun fun, List<IMCValPrim> args) {
         m_holder = holder;
         m_fun = fun;
         m_args = args;

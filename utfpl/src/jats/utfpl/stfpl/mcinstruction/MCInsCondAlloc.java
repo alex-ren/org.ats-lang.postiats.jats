@@ -1,9 +1,9 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 public class MCInsCondAlloc implements IMCInstruction {
-    public MCSId m_holder;
+    public MCSIdFun m_holder;
     
-    public MCInsCondAlloc(MCSId holder) {
+    public MCInsCondAlloc(MCSIdFun holder) {
         m_holder = holder;
     }
 

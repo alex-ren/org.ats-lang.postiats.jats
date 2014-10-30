@@ -39,13 +39,13 @@ public class MCInstructionTransformer {
     private List<MCGlobalExtCode> m_exts;
     private List<MCDecGroup> m_decs;  // global declaration  // including lambda
     
-    private List<MCDefFunGroup> m_defs;  // function definition
+    private List<MCDefFunGroup> m_defs;  // function definition  // including lambda
     private List<IMCInstruction> m_main_inss;  // global instructions
     private Set<ICSTypeBooking> m_track;  // type booking info
     private String m_main_name;
     
     public MCInstructionTransformer() {
-        m_g_eneities = new ArrayList<IMCGlobalEntity>(); 
+        m_g_eneities = new ArrayList<IMCGlobalEntity>(); // all the values defined at top level
         m_exts = new ArrayList<MCGlobalExtCode>(); 
         m_decs = new ArrayList<MCDecGroup>(); 
         m_defs = new ArrayList<MCDefFunGroup>(); 
@@ -83,7 +83,7 @@ public class MCInstructionTransformer {
     }
     
     private MCDecGroup transfrom(DecGroup dec) {
-        List<MCSId> mctids = new ArrayList<MCSId>();
+        List<MCSId> mctids = new ArrayList<IMCIdPrim>();
         for (SId sid: dec.m_names) {
             MCSId mctid = MCSId.fromSId(sid, sid.getType().toCSType(m_track).m_type);
             mctids.add(mctid);

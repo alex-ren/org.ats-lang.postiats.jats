@@ -2,9 +2,9 @@ package jats.utfpl.stfpl.mcinstruction;
 
 
 public class MCInsMutexAlloc implements IMCInstruction {
-    public MCSId m_holder;
+    public MCSIdFun m_holder;
     
-    public MCInsMutexAlloc(MCSId holder) {
+    public MCInsMutexAlloc(MCSIdFun holder) {
         m_holder = holder;
     }
 
