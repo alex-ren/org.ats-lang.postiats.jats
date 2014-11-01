@@ -3,10 +3,10 @@ package jats.utfpl.stfpl.mcinstruction;
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.stype.ISType;
 
-public class MCSIdAtom implements IMCIdPrim {
+public class MCSId implements IMCValPrim {
 	private SId m_sid;
 
-	public MCSIdAtom(SId sid) {
+	public MCSId(SId sid) {
 		m_sid = sid;
 	}
 	

@@ -29,6 +29,7 @@ public class FunType extends BoxedType {
     public List<ISType> m_args;
     public ISType m_res;
     private Ifunclo m_funclo;
+    private int m_effect;  // 0 means no effect.
     
     public Ifunclo getFunClo() {
         return m_funclo;
@@ -38,12 +39,17 @@ public class FunType extends BoxedType {
 //        m_funclo = clo;
 //    }
     
-    public FunType(int npf, List<ISType> args, ISType res, Ifunclo funclo) {
+    public FunType(int npf
+            , List<ISType> args
+            , ISType res
+            , Ifunclo funclo
+            , int effect) {
         m_npf = npf;
         m_args = args;
         m_res = res;
 
         m_funclo = funclo;
+        m_effect = effect;
     }
     
     public FunType(List<ISType> args, ISType res, Ifunclo funclo) {
@@ -113,7 +119,7 @@ public class FunType extends BoxedType {
         
          ISType res = m_res.instantiate(map);
         
-        return new FunType(m_npf, args, res, m_funclo);
+        return new FunType(m_npf, args, res, m_funclo, m_effect);
     }
 
     @Override
@@ -188,7 +194,7 @@ public class FunType extends BoxedType {
         List<ISType> args = m_args.subList(npf, m_args.size());
         ISType res = m_res.removeProof();
         
-        return new FunType(npf, args, res, m_funclo);
+        return new FunType(npf, args, res, m_funclo, m_effect);
     }
 
 }

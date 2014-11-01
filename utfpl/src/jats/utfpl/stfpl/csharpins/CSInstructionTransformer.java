@@ -4,7 +4,7 @@ import jats.utfpl.stfpl.Ilabel;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.instructions.AtomValue;
-import jats.utfpl.stfpl.instructions.DecGroup;
+import jats.utfpl.stfpl.instructions.DecFunGroup;
 import jats.utfpl.stfpl.instructions.DefFun;
 import jats.utfpl.stfpl.instructions.DefFunGroup;
 import jats.utfpl.stfpl.instructions.IFunDef;
@@ -69,12 +69,12 @@ public class CSInstructionTransformer {
         m_main_name = null;
     }
     
-    public void transformProgram(List<DecGroup> decs,
+    public void transformProgram(List<DecFunGroup> decs,
     		List<D3Cextcode> exts,
     		List<IFunDef> defs,
     		List<IStfplInstruction> main_inss) {
 
-    	for (DecGroup dec: decs) {
+    	for (DecFunGroup dec: decs) {
     		CSDecGroup csdec = transfrom(dec);
     		m_decs.add(csdec);
     	}
@@ -339,7 +339,7 @@ public class CSInstructionTransformer {
 		return csvps;
 	}
 
-	private CSDecGroup transfrom(DecGroup dec) {
+	private CSDecGroup transfrom(DecFunGroup dec) {
 		List<CSSId> cssids = new ArrayList<CSSId>();
 	    for (SId sid: dec.m_names) {
 	    	CSSId cssid = CSSId.fromSId(sid, sid.getType().toCSType(m_track).m_type);

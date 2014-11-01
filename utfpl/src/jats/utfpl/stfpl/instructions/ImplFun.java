@@ -11,23 +11,22 @@ public class ImplFun implements IFunDef {
     public List<SId> m_paras;
     public List<IStfplInstruction> m_inss;  // body of the function
     
-    public SId m_env_name;
-    public Set<SIdUser> m_env;  
+//    public SId m_env_name;
+//    public Set<SIdUser> m_env;  
     
     public ImplFun(Cloc_t loc, 
                      SId name, 
                      int lin,  // something to do with linear type?
                      List<SId> paras,
-                     List<IStfplInstruction> inss,
-                     SId env_name,
-                     Set<SIdUser> env) {
+                     List<IStfplInstruction> inss
+                     ) {
         m_loc = loc;
         m_name = name;
         m_lin = lin;
         m_paras = paras;
         m_inss = inss;      
         
-        m_env_name = env_name;
-        m_env = env;
+//        m_env_name = env_name;
+//        m_env = env;
     }
 }

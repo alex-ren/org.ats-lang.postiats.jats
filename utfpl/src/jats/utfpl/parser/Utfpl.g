@@ -22,7 +22,7 @@ tokens {
   APP;
   PROGRAM;
   TUPLE;
-  NULL;  
+  NULL;
   INDEX;
 }
 
@@ -32,11 +32,11 @@ tokens {
 
 @lexer::header {
   package jats.utfpl.parser;
-}
+} 
 
 @lexer::members {
 
-	private boolean mmode = false;
+	private boolean mmode = false; 
 	
 	String m_str;
   

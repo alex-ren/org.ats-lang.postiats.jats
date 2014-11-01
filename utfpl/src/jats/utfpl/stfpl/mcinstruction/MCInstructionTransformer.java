@@ -6,7 +6,8 @@ import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.instructions.AtomValue;
-import jats.utfpl.stfpl.instructions.DecGroup;
+import jats.utfpl.stfpl.instructions.DecAtomValGroup;
+import jats.utfpl.stfpl.instructions.DecFunGroup;
 import jats.utfpl.stfpl.instructions.DefFun;
 import jats.utfpl.stfpl.instructions.DefFunGroup;
 import jats.utfpl.stfpl.instructions.IFunDef;
@@ -32,38 +33,66 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/*
+ * 
+ * One major task to for processing closure.
+ */
 
 public class MCInstructionTransformer {    
-    private List<IMCGlobalEntity> m_g_eneities;  // global variable / value
+
+    // list of all the global values, some
+    // of which may not have implementation.
+    private List<MCDecAtomValGroup> m_global_v;  
+    
+    // Declarations of all the functions, some
+    // of which may not have implementation.
+    private List<MCDecFunGroup> m_decs;  
+
+    
+    // function definition and implementation
+    private List<MCDefFunGroup> m_defs;
     
     private List<MCGlobalExtCode> m_exts;
-    private List<MCDecGroup> m_decs;  // global declaration  // including lambda
     
-    private List<MCDefFunGroup> m_defs;  // function definition  // including lambda
-    private List<IMCInstruction> m_main_inss;  // global instructions
-    private Set<ICSTypeBooking> m_track;  // type booking info
+    // global instructions
+    private List<IMCInstruction> m_main_inss;  
+
     private String m_main_name;
     
-    public MCInstructionTransformer() {
-        m_g_eneities = new ArrayList<IMCGlobalEntity>(); // all the values defined at top level
+    /* ********** ************ */
+    
+    private MCSIdFactory m_sid_factory;
+    
+    public MCInstructionTransformer(MCSIdFactory factory) {
+        m_global_v = new ArrayList<MCDecAtomValGroup>();
+        m_decs = new ArrayList<MCDecFunGroup>();        
+        m_defs = new ArrayList<MCDefFunGroup>();
+        
         m_exts = new ArrayList<MCGlobalExtCode>(); 
-        m_decs = new ArrayList<MCDecGroup>(); 
-        m_defs = new ArrayList<MCDefFunGroup>(); 
+
         m_main_inss = new ArrayList<IMCInstruction>(); 
-        m_track = new HashSet<ICSTypeBooking>(); 
+//        m_track = new HashSet<ICSTypeBooking>(); 
         m_main_name = null;
         
-                
+        m_sid_factory = factory;
+    
     }
     
-    public ProgramMCIns transformProgram(List<DecGroup> decs,
-            List<D3Cextcode> exts,
+    public ProgramMCIns transformProgram(
+            List<DecAtomValGroup> gvs,
+            List<DecFunGroup> decs,
             List<IFunDef> defs,
+            List<D3Cextcode> exts,
             List<IStfplInstruction> main_inss) {
+        
+        for (DecAtomValGroup grp0: gvs) {
+            MCDecAtomValGroup grp = transform(grp0);
+            m_global_v.add(grp);
+        }
 
-        for (DecGroup dec: decs) {
-            MCDecGroup csdec = transfrom(dec);
-            m_decs.add(csdec);
+        for (DecFunGroup dec: decs) {
+            MCDecFunGroup grp = transfrom(dec);
+            m_decs.add(grp);
         }
         
         for (D3Cextcode ext_code: exts) {
@@ -78,18 +107,28 @@ public class MCInstructionTransformer {
         
         m_main_inss = transform(main_inss);
         
-        return new ProgramMCIns(m_g_eneities, m_exts, m_decs, m_defs, m_main_inss, m_track, m_main_name);
+        return new ProgramMCIns(m_global_v, m_decs, m_defs, m_exts, m_main_inss, m_main_name);
         
     }
     
-    private MCDecGroup transfrom(DecGroup dec) {
-        List<MCSId> mctids = new ArrayList<IMCIdPrim>();
-        for (SId sid: dec.m_names) {
-            MCSId mctid = MCSId.fromSId(sid, sid.getType().toCSType(m_track).m_type);
-            mctids.add(mctid);
+    private MCDecAtomValGroup transform(DecAtomValGroup grp) {
+        List<MCSId> names = new ArrayList<MCSId>();
+        for (SId sid: grp.m_names) {
+            MCSId name = m_sid_factory.fromSIdAtomVal(sid);
+            names.add(name);
         }
         
-        return new MCDecGroup(dec.m_knd, mctids);
+        return new MCDecAtomValGroup(grp.m_knd, names);
+    }
+
+    private MCDecFunGroup transfrom(DecFunGroup grp) {
+        List<MCSIdFun> names = new ArrayList<MCSIdFun>();
+        for (SId sid: grp.m_names) {
+            MCSIdFun name = m_sid_factory.fromSIdFun(sid);
+            names.add(name);
+        }
+        
+        return new MCDecFunGroup(grp.m_knd, names);
     }
     
 
@@ -104,23 +143,13 @@ public class MCInstructionTransformer {
     }
     
     private MCDefFunGroup transform(ImplFun node) {
-        
-        todo
-        
         if (node.m_name.toStringCS().startsWith("main")) {
             m_main_name = node.m_name.toStringCS();
         }
         // Each closure has the potential to create a new type.
         Set<SIdUser> env = node.m_env;
-        Set<MCSId> csenv = null;
-        
         if (null != env) {
             throw new Error("implemenatating a closure is not supported.");
-//            csenv = new HashSet<MCSId>();
-//            for (SIdUser sid_user: env) {
-//                MCSId cssid_user = StfplVP2MC(sid_user);
-//                csenv.add(cssid_user);
-//            }
         }
 
         MCSId cs_env_id = null;
@@ -184,7 +213,7 @@ public class MCInstructionTransformer {
     }
 
     private MCDefFun transform(DefFun fun_def) {
-        MCSId mcid = StfplVP2MC_second(fun_def.m_name);
+        MCSId fun_name = m_sid_factory.fromSId(fun_def.m_name);
         
         List<MCSId> mcparas = new ArrayList<MCSId>();
         for (SId sid: fun_def.m_paras) {
@@ -196,9 +225,6 @@ public class MCInstructionTransformer {
         return new MCDefFun(fun_def.m_loc, mcid, fun_def.m_lin, mcparas, mcinss);
     }
     
-    private MCSId StfplVP2MC_second(SId sid) {  // This sid has been touched.
-        return MCSId.fromSId2(sid);
-    }
 
     List<IMCInstruction> transform(List<IStfplInstruction> inss) {
         List<IMCInstruction> mcinss = new ArrayList<IMCInstruction>();
@@ -391,52 +417,52 @@ public class MCInstructionTransformer {
     }
     
 
-    private MCAtomValue StfplVP2MC(AtomValue v) {
-        return new MCAtomValue(v, v.getType().toCSType(m_track).m_type);
-    }
-    
-    private IMCValPrim StfplVP2MC(IValPrim vp) {
-        if (vp instanceof AtomValue) {
-            return StfplVP2MC((AtomValue)vp);
-        } else if (vp instanceof SId) {
-            return StfplVP2MC((SId)vp);
-        }
-        else if (vp instanceof SIdUser) {
-                return StfplVP2MC((SIdUser)vp);
-        } else {
-            throw new Error(vp + " is not supported.");
-        }
-    }
-    
-    private List<IMCValPrim> StfplVP2MC(List<IValPrim> vps) {
-        List<IMCValPrim> mcvps = new ArrayList<IMCValPrim>();
-        for (IValPrim vp: vps) {
-            IMCValPrim mcvp = StfplVP2MC(vp);
-            mcvps.add(mcvp);
-        }
-        return mcvps;
-    }
-    
-    private MCSId StfplVP2MC(SId sid) {
-//      System.out.println("sid is " + sid.toStringCS());
-        return MCSId.fromSId(sid,
-                sid.getType().toCSType(m_track).m_type);
-    }
-    
-
-    private MCSId StfplVP2MC(SIdUser sid_user) {
-        return MCSId.fromSIdUser(sid_user,
-                sid_user.getType().toCSType(m_track).m_type);
-    }
-
-    private Set<MCSId> StfplVP2MC(Set<SIdUser> vps) {
-        Set<MCSId> csvps = new HashSet<MCSId>();
-        for (SIdUser vp: vps) {
-            MCSId csvp = StfplVP2MC(vp);
-            csvps.add(csvp);
-        }
-        return csvps;
-    }
+//    private MCAtomValue StfplVP2MC(AtomValue v) {
+//        return new MCAtomValue(v, v.getType().toCSType(m_track).m_type);
+//    }
+//    
+//    private IMCValPrim StfplVP2MC(IValPrim vp) {
+//        if (vp instanceof AtomValue) {
+//            return StfplVP2MC((AtomValue)vp);
+//        } else if (vp instanceof SId) {
+//            return StfplVP2MC((SId)vp);
+//        }
+//        else if (vp instanceof SIdUser) {
+//                return StfplVP2MC((SIdUser)vp);
+//        } else {
+//            throw new Error(vp + " is not supported.");
+//        }
+//    }
+//    
+//    private List<IMCValPrim> StfplVP2MC(List<IValPrim> vps) {
+//        List<IMCValPrim> mcvps = new ArrayList<IMCValPrim>();
+//        for (IValPrim vp: vps) {
+//            IMCValPrim mcvp = StfplVP2MC(vp);
+//            mcvps.add(mcvp);
+//        }
+//        return mcvps;
+//    }
+//    
+//    private MCSId StfplVP2MC(SId sid) {
+////      System.out.println("sid is " + sid.toStringCS());
+//        return MCSId.fromSId(sid,
+//                sid.getType().toCSType(m_track).m_type);
+//    }
+//    
+//
+//    private MCSId StfplVP2MC(SIdUser sid_user) {
+//        return MCSId.fromSIdUser(sid_user,
+//                sid_user.getType().toCSType(m_track).m_type);
+//    }
+//
+//    private Set<MCSId> StfplVP2MC(Set<SIdUser> vps) {
+//        Set<MCSId> csvps = new HashSet<MCSId>();
+//        for (SIdUser vp: vps) {
+//            MCSId csvp = StfplVP2MC(vp);
+//            csvps.add(csvp);
+//        }
+//        return csvps;
+//    }
 
 
     

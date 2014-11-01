@@ -7,12 +7,10 @@ import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.stype.ISType;
 
 
-public class MCSIdFun implements IMCIdPrim {
-//	private IIdPrim m_id_prim;  todo
-//	private ICSType m_type;
+public class MCSIdFun implements IMCSId {
 	private SId m_sid;
 	private Aux.Address m_addr;
-	private Boolean m_has_effect;	
+	private Boolean m_has_effect;
 
 	// Used by factory.
 	public MCSIdFun(SId sid) {

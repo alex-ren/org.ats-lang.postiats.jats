@@ -37,7 +37,7 @@ public class InstructionPrinter {
     }
     
     
-    public String print(List<DecGroup> decs,
+    public String print(List<DecFunGroup> decs,
 	  		   List<D3Cextcode> exts,
 	  		   List<IFunDef> defs,
 	  		   List<IStfplInstruction> main_inss) {

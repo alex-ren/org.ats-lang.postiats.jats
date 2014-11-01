@@ -21,7 +21,8 @@ public class DefaultLibraryTypes {
                 -1/*no proof*/, 
                 new ArrayList<ISType>(), 
                 VoidType.cInstance,
-                FUNCLOfun.cInstance);
+                FUNCLOfun.cInstance,
+                1 /*has effect*/);
                 
         m_map.put("main_void_0", main_type);
 
