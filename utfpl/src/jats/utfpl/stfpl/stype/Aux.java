@@ -39,6 +39,15 @@ public class Aux {
     	}
     }
     
+    public static boolean isClosure(ISType type) {
+       	FunType fun_type = getFunctionType(type);
+    	if (null == fun_type) {
+    		return false;
+    	} else {
+    		return fun_type.getFunClo().isClosure();
+    	}
+    }
+    
     public static ISType getRetType(ISType type) {
     	FunType fun_type = getFunctionType(type);
     	if (null == fun_type) {

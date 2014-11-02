@@ -33,6 +33,10 @@ public class Cd3cst {
         m_stype = stype;
     }
     
+    public String toStringNoStamp() {
+    	return m_symbol.toString();
+    }
+    
     @Override
     public String toString() {
         return m_symbol.toString() + "_" + m_stamp.getData();

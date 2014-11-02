@@ -28,5 +28,10 @@ public class VNameSym implements IVarName {
     public String toStringIns() {
         return m_sym.toString();
     }
+    
+	@Override
+    public String toStringNoStamp() {
+		return m_sym.toString();
+    }
 
 }

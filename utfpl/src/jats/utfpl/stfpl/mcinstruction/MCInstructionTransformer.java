@@ -1,9 +1,12 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 import jats.utfpl.stfpl.ccomp.CCompUtils;
+import jats.utfpl.stfpl.Csymbol;
 import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.LABsym;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
+import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.instructions.AtomValue;
 import jats.utfpl.stfpl.instructions.DecAtomValGroup;
@@ -23,14 +26,20 @@ import jats.utfpl.stfpl.instructions.InsMove;
 import jats.utfpl.stfpl.instructions.InsPatLabDecompose;
 import jats.utfpl.stfpl.instructions.InsTuple;
 import jats.utfpl.stfpl.instructions.SId;
+import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.stfpl.instructions.SId.SIdCategory;
 import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.instructions.VNameCst;
+import jats.utfpl.stfpl.stype.ILabPat;
+import jats.utfpl.stfpl.stype.LabPatNorm;
+import jats.utfpl.stfpl.stype.RecType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /*
@@ -61,9 +70,11 @@ public class MCInstructionTransformer {
     
     /* ********** ************ */
     
-    private MCSIdFactory m_sid_factory;
+    private MCSIdFactory m_mcsid_factory;
+    private SIdFactory m_sid_factory;
     
-    public MCInstructionTransformer(MCSIdFactory factory) {
+    public MCInstructionTransformer(MCSIdFactory mcsid_factory
+    		                      , SIdFactory sid_factory) {
         m_global_v = new ArrayList<MCDecAtomValGroup>();
         m_decs = new ArrayList<MCDecFunGroup>();        
         m_defs = new ArrayList<MCDefFunGroup>();
@@ -74,7 +85,8 @@ public class MCInstructionTransformer {
 //        m_track = new HashSet<ICSTypeBooking>(); 
         m_main_name = null;
         
-        m_sid_factory = factory;
+        m_mcsid_factory = mcsid_factory;
+        m_sid_factory = sid_factory;
     
     }
     
@@ -122,9 +134,9 @@ public class MCInstructionTransformer {
     }
 
     private MCDecFunGroup transfrom(DecFunGroup grp) {
-        List<MCSIdFun> names = new ArrayList<MCSIdFun>();
+        List<MCSId> names = new ArrayList<MCSId>();
         for (SId sid: grp.m_names) {
-            MCSIdFun name = m_sid_factory.fromSIdFun(sid);
+        	MCSId name = m_sid_factory.fromSId(sid);
             names.add(name);
         }
         
@@ -179,54 +191,85 @@ public class MCInstructionTransformer {
     }
 
     private MCDefFunGroup transform(DefFunGroup node) {
-        // Each closure has the potential to create a new type.
-        Set<SIdUser> env = node.m_env;
-        Set<MCSId> mcenv = null;
-        
-        if (null != env) {
-            mcenv = new HashSet<MCSId>();
-            for (SIdUser sid_user: env) {
-                MCSId cssid_user = StfplVP2MC(sid_user);
-                mcenv.add(cssid_user);
+    	// all the functions in the same group
+        List<SId> grp_members = new ArrayList<SId>();
+        List<SId> env_members = new ArrayList<SId>();
+        if (node.isClosure()) {
+            for (DefFun fun: node.m_funs) {
+            	grp_members.add(fun.m_name);
             }
             
+            for (SIdUser su: node.m_env) {
+            	env_members.add(su.getSId());
+            }
         }
-
-        MCSId mc_env_id = null;
-        if (null != node.m_env_name) {
-            mc_env_id = StfplVP2MC(node.m_env_name);
-        }
-
-//        CSTBookingEnv env_book = null;
-//        if (!env.isEmpty()) {
-//            env_book = new CSTBookingEnv(cs_env_id, csenv);
-//            m_track.add(env_book);
-//        }
 
         List<MCDefFun> mcdefs = new ArrayList<MCDefFun>();
         for (DefFun def: node.m_funs) {
-            MCDefFun csdef = transform(def);
+            MCDefFun csdef = transform(def, grp_members, env_members, node.getEnvType());
             mcdefs.add(csdef);
         }
         
-        return new MCDefFunGroup(node.m_knd, mcdefs, mc_env_id, mcenv);
+        return new MCDefFunGroup(node.m_knd, mcdefs);
     }
 
-    private MCDefFun transform(DefFun fun_def) {
-        MCSId fun_name = m_sid_factory.fromSId(fun_def.m_name);
+    private MCDefFun transform(DefFun fun_def
+    		, List<SId> grp_members  // all the members in the same group
+    		, List<SId> env_members  // elements in environment
+    		, RecType env_type
+    		) {
+    	
+    	SId fun_name = fun_def.m_name;
+        MCSId mcfun_name = m_mcsid_factory.fromSId(fun_def.m_name);
         
+        SId env_name = m_sid_factory.createEnvForPara(
+        		fun_name.toStringNoStamp() + "_env", env_type);
+        MCSId mcenv_name = m_mcsid_factory.fromSId(env_name);
+
         List<MCSId> mcparas = new ArrayList<MCSId>();
         for (SId sid: fun_def.m_paras) {
-            MCSId mcsid = StfplVP2MC(sid);
+            MCSId mcsid = m_mcsid_factory.fromSId(sid);
             mcparas.add(mcsid);
         }
+        
+        // add instructions for creating closures for themselves
+        // as well as getting element from environment
+        List<IMCInstruction> ins_header = new ArrayList<IMCInstruction>();
+        Map<SId, MCSId> clo_name_map = new HashMap<SId, MCSId>();
+        Map<SId, MCSId> clo_env_map = new HashMap<SId, MCSId>();
+        
+        for (SId grp_member: grp_members) {
+        	clo_env_map.put(grp_member, mcenv_name);  // function name => env name
+        	
+        	MCSId mcgrp_member = m_mcsid_factory.fromSId(grp_member);
+        	SId clo_name = m_sid_factory.createLocalVar(
+        			grp_member.toStringNoStamp()
+        		  , grp_member.getType());
+        	MCSId mcclo_name = m_mcsid_factory.fromSId(clo_name);
+        	clo_name_map.put(grp_member, mcclo_name);  // function name => closure name
+        	
+        	MCInsClosure ins = new MCInsClosure(mcclo_name, mcenv_name);
+        	ins_header.add(ins);  // add to inss
+
+        }
+        
+        for (SId env_member: env_members) {
+        	SId new_env_member = m_sid_factory.createLocalVar(
+        			env_member.toStringNoStamp(), xxx)
+        }
+        
+        
 
         List<IMCInstruction> mcinss = transform(fun_def.m_inss);
         return new MCDefFun(fun_def.m_loc, mcid, fun_def.m_lin, mcparas, mcinss);
     }
     
 
-    List<IMCInstruction> transform(List<IStfplInstruction> inss) {
+    List<IMCInstruction> transform(List<IStfplInstruction> inss
+    		, Map<SId, MCSId> clo_name  // function name => closure name
+    		, Map<SId, MCSId> env_name  // function name => env name
+    		, Map<SId, MCSId> map_name  // name change caused by element of the environment
+    		) {
         List<IMCInstruction> mcinss = new ArrayList<IMCInstruction>();
         for (IStfplInstruction ins: inss) {
             IMCInstruction mcins = transform(ins);

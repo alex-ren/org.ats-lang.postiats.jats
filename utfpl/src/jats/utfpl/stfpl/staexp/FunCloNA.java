@@ -8,7 +8,7 @@ public class FunCloNA implements Ifunclo {
 
     @Override
     public boolean isClosure() {
-        return false;
+        return true;
     }
     
     @Override

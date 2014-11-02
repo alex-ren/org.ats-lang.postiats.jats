@@ -27,4 +27,9 @@ public class VNameVar implements IVarName {
         return m_var.toString();
     }
     
+	@Override
+    public String toStringNoStamp() {
+		return m_var.toString();
+    }
+    
 }

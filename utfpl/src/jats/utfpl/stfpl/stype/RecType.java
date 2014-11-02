@@ -179,56 +179,6 @@ public class RecType extends BoxedType {
     }
     
     
-
-
-//    @Override
-//    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
-//        boolean is_new = false;
-//        boolean is_escaped = false;
-//        
-//        for (ILabPat labtype: m_labtypes) {
-//            NamifyResult nret = labtype.namify(map, esc);
-//            if (nret.m_new) {
-//                is_new = true;
-//            }
-//            if (nret.m_escaped) {
-//                is_escaped = true;
-//            }
-//        }
-//        
-//        return Aux.namifySummary(is_escaped, is_new, this, "rec", map);
-//    }
-//
-//    @Override
-//    public boolean equalCSharp(ISType type, Map<PolyParaType, PolyParaType> env) {
-//        if (type instanceof NamedType) {
-//            type = ((NamedType)type).getContent();
-//        }
-//        
-//        if (!(type instanceof RecType)) {
-//            return false;
-//        }
-//        
-//        /* compare parameters */
-//        RecType rtype = (RecType)type;
-//        if (m_labtypes.size() != rtype.m_labtypes.size()) {
-//            return false;
-//        }
-//        
-//        ListIterator<ILabPat> liter = m_labtypes.listIterator();
-//        ListIterator<ILabPat> riter = rtype.m_labtypes.listIterator();
-//        
-//        while (liter.hasNext()) {
-//            if (!liter.next().equalCSharp(riter.next(), env)) {
-//                return false;
-//            }
-//        }
-//
-//        return true; 
-//    }
-    
-
-    
     
 
 }

@@ -4,12 +4,12 @@
 
 datatype(0) dt_t_724: (int) -\> type
 
-"D2Cdcstdecs" gen_prop_2560:(() -<fun> prop):prop
+"D2Cdcstdecs" gen_prop_2560:(() -<clo> prop):prop
 
-fun foo2_63 = lam () <fun> = 
+fun foo2_63 = lam () <clo> = 
   <D2EannSeff>(
     let
-      prval p_64 = D2Ecst<gen_prop_2560:(() -<fun> prop):prop> ()
+      prval p_64 = D2Ecst<gen_prop_2560:(() -<clo> prop):prop> ()
     in
       (p_64, 3)
     end:@{0 = prop, 1 = int}:t@ype)

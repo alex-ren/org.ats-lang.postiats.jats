@@ -56,9 +56,11 @@ import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 /*
@@ -85,6 +87,8 @@ public class InstructionTransformer {
     
     private SIdFactory m_sid_factory;
     
+    private Map<SId, IFunDef> m_fun_map;
+    
     public InstructionTransformer(SIdFactory sid_factory) {
         m_decs = new ArrayList<DecFunGroup>();
         m_global_v = new ArrayList<DecAtomValGroup>();
@@ -93,6 +97,8 @@ public class InstructionTransformer {
         m_main_inss = new ArrayList<IStfplInstruction>();
         
         m_sid_factory = sid_factory;
+        
+        m_fun_map = new HashMap<SId, IFunDef>();
         
     }
     
@@ -115,6 +121,55 @@ public class InstructionTransformer {
     
     public void transform_global(ProgramStfpl3 prog) {
         transform(prog.m_d3ecs, new HashSet<Cd3var>(), m_main_inss, true);
+        processClosureEnvType();  // create types for env
+    }
+    
+    private void processClosureEnvType() {
+    	for (IFunDef fun: m_defs) {
+    		if (fun instanceof DefFunGroup) {
+    			DefFunGroup fun_grp = (DefFunGroup)fun;
+    			if (fun_grp.isClosure()) {
+    				processClosureEnvTypeImpl(fun_grp);
+    			}
+    		}
+    	}
+    }
+    
+    /*
+     * Update the type for the environment of closure.
+     */
+    private RecType processClosureEnvTypeImpl(DefFunGroup fun_grp) {
+    	RecType env_type = fun_grp.getEnvType();
+    	if (null != env_type) {
+    		return env_type;
+    	}
+        List<ILabPat> labpats = new ArrayList<ILabPat>();
+        for (SIdUser env_ele: fun_grp.m_env) {
+        	SId ele = env_ele.getSId();
+        	Csymbol nsym = new Csymbol(ele.toStringIns());
+        	LABsym labsym = new LABsym(nsym);
+        	
+        	ISType ele_type = ele.getType();
+        	if (Aux.isClosure(ele_type)) {  // is closure
+        		IFunDef ifun = m_fun_map.get(ele);
+        		if (null != ifun) {  // is function name
+            		DefFunGroup clo_grp = (DefFunGroup)ifun;
+            		ele_type = processClosureEnvTypeImpl(clo_grp);
+            		
+            		if (false == ele.isUserFun()) {
+            			throw new Error("This should not happen.");
+            		}
+        		}
+
+        	}
+            
+            LabPatNorm labpat = new LabPatNorm(labsym, ele_type);
+            labpats.add(labpat);
+        }
+        
+        env_type = new RecType(labpats, -1/*no proof*/, 1/*boxed*/);
+        fun_grp.updateEnvType(env_type);
+    	return env_type;
     }
     
     /*
@@ -341,6 +396,8 @@ public class InstructionTransformer {
         
         ImplFun ret = new ImplFun(loc, name, lin, paras, inss2/*, env_name, form_env*/);
         
+        m_fun_map.put(name, ret);  // map name to definition
+        
         m_defs.add(ret);
         return ret;
     }
@@ -441,6 +498,10 @@ public class InstructionTransformer {
         m_decs.add(protos);
         
         DefFunGroup fungrp = new DefFunGroup(node0.m_knd, funs, env_name, form_env);
+        
+        for (SId name: names) {
+        	m_fun_map.put(name, fungrp);   // map name to definition
+        }
         m_defs.add(fungrp);
         
     }
@@ -652,6 +713,7 @@ public class InstructionTransformer {
         // add to global definition
         Efunkind fun_knd = Efunkind.FK_fn;  // Unnamed lambda is non-recursive.
         DefFunGroup fun_group = new DefFunGroup(fun_knd, fun_lst, env_name, form_env);
+        m_fun_map.put(name, fun_group);  // map name to definition
         m_defs.add(fun_group);
 
         // add to global declaration

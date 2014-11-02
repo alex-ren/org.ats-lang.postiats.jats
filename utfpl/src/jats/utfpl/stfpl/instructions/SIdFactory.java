@@ -120,6 +120,12 @@ public class SIdFactory {
         return ret;
     }
     
+    public SId createEnvForPara(String name, ISType stype) {
+        VNameId id = m_name_factory.createVNameId(name, stype);
+        SId ret = new SId(id, SIdCategory.ePara);
+        return ret;
+    }
+    
     
 }
 

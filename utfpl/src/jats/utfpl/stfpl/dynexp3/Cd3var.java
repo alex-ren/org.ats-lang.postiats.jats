@@ -27,5 +27,9 @@ public class Cd3var {
     public String toString() {
         return m_sym.toString() + "_" + m_stamp.getData();
     }
+    
+    public String toStringNoStamp() {
+    	return m_sym.toString();
+    }
 
 }

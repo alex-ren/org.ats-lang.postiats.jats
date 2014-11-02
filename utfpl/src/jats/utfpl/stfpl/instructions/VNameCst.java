@@ -26,4 +26,9 @@ public class VNameCst implements IVarName {
     public String toStringIns() {
         return m_cst.toString();
     }
+
+	@Override
+    public String toStringNoStamp() {
+	    return m_cst.toStringNoStamp();
+    }
 }

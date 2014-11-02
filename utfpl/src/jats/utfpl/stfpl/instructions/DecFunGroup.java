@@ -9,9 +9,12 @@ public class DecFunGroup {
                                // extern fun foo (): void
                                // fun foo (): void = ()
                                // val foo = lam () => ()
+
     
     public DecFunGroup(Edeckind knd, List<SId> names) {
         m_knd = knd;
         m_names = names;
+
     }
+
 }

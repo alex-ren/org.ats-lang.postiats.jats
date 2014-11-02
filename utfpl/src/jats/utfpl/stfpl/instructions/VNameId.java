@@ -35,6 +35,10 @@ public class VNameId implements IVarName {
     public String toString() {
         return m_name + m_stamp + "_id";
     }
-
+    
+	@Override
+    public String toStringNoStamp() {
+	    return m_name;
+    }
 
 }

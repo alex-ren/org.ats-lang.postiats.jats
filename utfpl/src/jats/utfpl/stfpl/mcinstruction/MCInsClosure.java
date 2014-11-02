@@ -6,10 +6,10 @@ package jats.utfpl.stfpl.mcinstruction;
 //import org.stringtemplate.v4.STGroup;
 
 public class MCInsClosure implements IMCInstruction {
-    public MCSIdFun m_name;  // This is actually the name of the function. It contains SId not SIdUser.
-    public MCSIdFun m_env;
+    public MCSId m_name;  // This is actually the name of the function. It contains SId not SIdUser.
+    public MCSId m_env;
     
-    public MCInsClosure(MCSIdFun name, MCSIdFun env) {
+    public MCInsClosure(MCSId name, MCSId env) {
         m_name = name;
         m_env = env;
     }
@@ -21,7 +21,7 @@ public class MCInsClosure implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return null;
+        return false;
     }
 
 //    @Override

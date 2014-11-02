@@ -176,7 +176,7 @@ public class FunType extends BoxedType {
     
     public String getCloInfo() {
         if (null == m_funclo) {
-            return "n/a";
+            throw new Error("Should not happen.");
         } else if (m_funclo.isClosure()) {
             return "clo";
         } else {
