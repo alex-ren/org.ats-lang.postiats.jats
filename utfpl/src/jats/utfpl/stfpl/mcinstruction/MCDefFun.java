@@ -13,8 +13,8 @@ public class MCDefFun {
     public MCSId m_name;
     public int m_lin;  // something to do with linear type?
     public List<MCSId> m_paras;
-    public MCSId m_env_name;  // name as the parameter
-    public Map<SId, MCSId> m_env_map;  // values stored in env
+    public MCSId m_env_name;  // name of the environment as the extra parameter
+    public Map<SId, MCSId> m_env_map;  // new name for the values stored in env
     public List<IMCInstruction> m_inss;  // body of the function
     
     private Aux.Address m_addr;
@@ -25,7 +25,7 @@ public class MCDefFun {
                     MCSId name, 
                     int lin,  // something to do with linear type?
                     List<MCSId> paras,
-                    MCSId env_name,
+                    MCSId env_name,  
                     Map<SId, MCSId> env_map,
                     List<IMCInstruction> inss  // body of the function
                      ) {

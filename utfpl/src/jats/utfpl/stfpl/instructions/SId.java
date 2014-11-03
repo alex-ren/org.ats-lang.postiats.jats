@@ -69,6 +69,10 @@ public class SId implements IIdPrim{
     	return m_name.toStringNoStamp();
     }
     
+    public String toStringWithStamp() {
+    	return m_name.toStringWithStamp();
+    }
+    
     public boolean isGlobal() {
     	return m_cat == SIdCategory.eGloVar || m_cat == SIdCategory.eGloValue;
     }

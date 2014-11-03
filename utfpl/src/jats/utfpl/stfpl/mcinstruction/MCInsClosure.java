@@ -6,11 +6,13 @@ package jats.utfpl.stfpl.mcinstruction;
 //import org.stringtemplate.v4.STGroup;
 
 public class MCInsClosure implements IMCInstruction {
-    public MCSId m_name;  // This is actually the name of the function. It contains SId not SIdUser.
+    public MCSId m_name;
+    public MCSId m_fun;
     public MCSId m_env;
     
-    public MCInsClosure(MCSId name, MCSId env) {
+    public MCInsClosure(MCSId name, MCSId fun, MCSId env) {
         m_name = name;
+        m_fun = fun;
         m_env = env;
     }
 

@@ -40,4 +40,6 @@ public interface IMCInsVisitor {
 
     public Object visit(MCInsMCSet insMCSet);
 
+	public Object visit(MCInsGetEleFromEnv mcInsGetEleFromEnv);
+
 }

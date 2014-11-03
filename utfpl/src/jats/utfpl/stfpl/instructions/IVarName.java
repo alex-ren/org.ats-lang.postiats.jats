@@ -13,4 +13,6 @@ public interface IVarName {
     
     public String toStringNoStamp();
     
+    public String toStringWithStamp();
+    
 }

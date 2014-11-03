@@ -5,10 +5,10 @@ import jats.utfpl.stfpl.Ilabel;
 
 public class MCInsPatLabDecompose implements IMCInstruction {
     public Ilabel m_lab;
-    public MCSIdFun m_holder;
+    public MCSId m_holder;
     public IMCValPrim m_vp;
     
-    public  MCInsPatLabDecompose(Ilabel lab,  MCSIdFun holder, IMCValPrim vp) {
+    public  MCInsPatLabDecompose(Ilabel lab,  MCSId holder, IMCValPrim vp) {
         m_lab = lab;
         m_holder = holder;
         m_vp = vp;

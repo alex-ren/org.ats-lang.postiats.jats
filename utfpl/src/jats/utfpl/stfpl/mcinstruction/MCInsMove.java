@@ -7,10 +7,10 @@ package jats.utfpl.stfpl.mcinstruction;
 //import org.stringtemplate.v4.STGroup;
 
 public class MCInsMove implements IMCInstruction {
-    public MCSIdFun m_holder;
+    public MCSId m_holder;
     public IMCValPrim m_vp;
     
-    public MCInsMove(IMCValPrim vp, MCSIdFun holder) {
+    public MCInsMove(IMCValPrim vp, MCSId holder) {
         m_holder = holder;
         m_vp = vp;
     }

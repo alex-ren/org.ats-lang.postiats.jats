@@ -146,7 +146,7 @@ public class InstructionTransformer {
         List<ILabPat> labpats = new ArrayList<ILabPat>();
         for (SIdUser env_ele: fun_grp.m_env) {
         	SId ele = env_ele.getSId();
-        	Csymbol nsym = new Csymbol(ele.toStringIns());
+        	Csymbol nsym = new Csymbol(ele.toStringWithStamp());
         	LABsym labsym = new LABsym(nsym);
         	
         	ISType ele_type = ele.getType();
@@ -160,7 +160,6 @@ public class InstructionTransformer {
             			throw new Error("This should not happen.");
             		}
         		}
-
         	}
             
             LabPatNorm labpat = new LabPatNorm(labsym, ele_type);
@@ -356,7 +355,7 @@ public class InstructionTransformer {
         
         // create the closure if necessary
         ISType clo_type = lambda.getType();
-        if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
+        if (Aux.isClosure(clo_type)) {  // closure
             if (inss != m_main_inss) {
                 throw new Error("Implementing closure is only allowed on the first level.");
             }
@@ -442,6 +441,7 @@ public class InstructionTransformer {
 
         Set<SIdUser> form_env = null;
         SId env_name = null;
+        InsFormEnv ins_env = null;
         
         // form environment if necessary
         if (node0.m_is_clo) {
@@ -469,7 +469,8 @@ public class InstructionTransformer {
             }
             RecType env_type = new RecType(labpats, -1/*no proof*/, 1/*boxed*/);
             env_name = m_sid_factory.createEnvForclosure("env", env_type);
-            InsFormEnv ins_env = new InsFormEnv(env_name, form_env);
+            
+            ins_env = new InsFormEnv(env_name, form_env);
             inss.add(ins_env);
             
         }
@@ -504,6 +505,11 @@ public class InstructionTransformer {
         }
         m_defs.add(fungrp);
         
+        // Update the group information for the use of next stage.
+        if (null != ins_env) {
+        	ins_env.setFunGroup(fungrp);
+
+        }
     }
 
     /*
@@ -536,7 +542,7 @@ public class InstructionTransformer {
 
         // create the closure if necessary
         ISType clo_type = f3undec.m_type;
-        if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
+        if (Aux.isClosure(clo_type)) {  // closure
             SIdUser env_name_user = new SIdUser(env_name, false);
             InsClosure ins_clo = new InsClosure(name, env_name_user);
             inss.add(ins_clo);
@@ -668,7 +674,7 @@ public class InstructionTransformer {
         
         // create the closure if necessary
         ISType clo_type = lambda.getType();
-        if (Aux.getClosureInfo(clo_type) != FUNCLOfun.cInstance) {  // closure
+        if (Aux.isClosure(clo_type)) {  // closure
             form_env = new HashSet<SIdUser>();
             
             for (Cd3var d3var: env2) {
@@ -682,7 +688,6 @@ public class InstructionTransformer {
                         form_env.add(env_member);
                     }
                 }
-
             }
             
             List<ILabPat> labpats = new ArrayList<ILabPat>();
@@ -705,7 +710,11 @@ public class InstructionTransformer {
 
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(lambda.m_d3exp, node0.m_env, inss2, m_sid_factory.createRetHolder("ret", Aux.getRetType(lambda.getType())), false);
+        transform(lambda.m_d3exp
+        		, node0.m_env
+        		, inss2
+        		, m_sid_factory.createRetHolder("ret", Aux.getRetType(lambda.getType()))
+        		, false);
         DefFun def_fun = new DefFun(loc, name, lin, paras, inss2);
         List<DefFun> fun_lst = new ArrayList<DefFun>();
         fun_lst.add(def_fun);

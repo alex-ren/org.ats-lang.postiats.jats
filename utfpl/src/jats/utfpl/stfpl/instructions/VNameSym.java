@@ -31,7 +31,12 @@ public class VNameSym implements IVarName {
     
 	@Override
     public String toStringNoStamp() {
-		return m_sym.toString();
+		throw new Error("Should not happen.");
+    }
+
+	@Override
+    public String toStringWithStamp() {
+	    throw new Error("Should not happen.");
     }
 
 }

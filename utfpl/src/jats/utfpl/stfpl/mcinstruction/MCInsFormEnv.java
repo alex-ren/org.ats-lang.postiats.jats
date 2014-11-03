@@ -4,10 +4,10 @@ import java.util.Set;
 
 
 public class MCInsFormEnv implements IMCInstruction {
-    public MCSIdFun m_holder;  // This is name of the env.
-    public Set<MCSIdFun> m_env;
+    public MCSId m_holder;  // This is name of the env.
+    public Set<MCSId> m_env;
     
-    public MCInsFormEnv(MCSIdFun holder, Set<MCSIdFun> env) {
+    public MCInsFormEnv(MCSId holder, Set<MCSId> env) {
         m_holder = holder;
         m_env = env;
     }

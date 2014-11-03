@@ -25,7 +25,7 @@ public class DefFunGroup implements IFunDef {
         m_env_name = env_name;
         m_env = env;
         
-        m_env_type = null;
+        m_env_type = null;  // has to be set later when all the DefFunGroup's have been created.
     }
 
     public boolean isClosure() {

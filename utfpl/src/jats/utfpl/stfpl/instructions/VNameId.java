@@ -41,4 +41,9 @@ public class VNameId implements IVarName {
 	    return m_name;
     }
 
+	@Override
+    public String toStringWithStamp() {
+		return toString();
+    }
+
 }
