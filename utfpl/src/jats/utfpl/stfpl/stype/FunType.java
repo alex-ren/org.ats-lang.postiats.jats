@@ -197,6 +197,9 @@ public class FunType extends BoxedType {
         return new FunType(npf, args, res, m_funclo, m_effect);
     }
 
+    public boolean hasEffect() {
+        return (m_effect != 0);
+    }
 }
 
 

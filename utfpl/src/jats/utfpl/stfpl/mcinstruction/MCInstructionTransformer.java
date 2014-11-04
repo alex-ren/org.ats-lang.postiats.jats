@@ -59,7 +59,6 @@ public class MCInstructionTransformer {
     // of which may not have implementation.
     private List<MCDecFunGroup> m_decs;  
 
-    
     // function definition and implementation
     private List<MCDefFunGroup> m_defs;
     
@@ -70,12 +69,17 @@ public class MCInstructionTransformer {
 
     private String m_main_name;
     
+    // names of functions which are used to create threads
+    private Set<MCSId> m_thread_names;
+    
     /* ********** ************ */
+    // Auxiliary members for transform.
     
     private MCSIdFactory m_mcsid_factory;
     private SIdFactory m_sid_factory;
-    
     private Map<SId, IFunDef> m_fun_map;
+    
+    /* *********** ********** */
     
     public MCInstructionTransformer(MCSIdFactory mcsid_factory
     		                      , SIdFactory sid_factory
@@ -86,9 +90,12 @@ public class MCInstructionTransformer {
         
         m_exts = new ArrayList<MCGlobalExtCode>(); 
 
-        m_main_inss = new ArrayList<IMCInstruction>(); 
-//        m_track = new HashSet<ICSTypeBooking>(); 
+        m_main_inss = new ArrayList<IMCInstruction>();
         m_main_name = null;
+        
+        m_thread_names = new HashSet<MCSId>();
+        
+        /* ********** ********** */
         
         m_mcsid_factory = mcsid_factory;
         m_sid_factory = sid_factory;
@@ -347,7 +354,9 @@ public class MCInstructionTransformer {
     		, Map<SId, MCSId> map_name  // name change caused by element of the environment
     		) {
         if (ins instanceof InsCall) {
-            return transform_ins((InsCall)ins);
+            return transform_ins((InsCall)ins, map_clo_name, map_env_name, map_name);
+        } else if (ins instanceof InsFormEnv) {
+            return transform_ins((InsFormEnv)ins, map_clo_name, map_env_name, map_name);
         } else if (ins instanceof InsClosure) {
             return transform_ins((InsClosure)ins, map_clo_name, map_env_name, map_name);
         } else if (ins instanceof InsCond) {
@@ -358,8 +367,6 @@ public class MCInstructionTransformer {
             return transform_ins((InsPatLabDecompose)ins, map_clo_name, map_env_name, map_name);
         } else if (ins instanceof InsTuple) {
             return transform_ins((InsTuple)ins, map_clo_name, map_env_name, map_name);
-          } else if (ins instanceof InsFormEnv) {
-            return transform_ins((InsFormEnv)ins, map_clo_name, map_env_name, map_name);
         } else {
             throw new Error(ins + " is not supported");
         }
@@ -488,113 +495,105 @@ public class MCInstructionTransformer {
         return new MCInsCond(holder, cond, btrue, bfalse, null);
     }
 
-    private IMCInstruction transform_ins(InsCall ins) {
+    private IMCInstruction transform_ins(InsCall ins
+            , Map<SId, MCSId> map_clo_name  // function name => closure name
+            , Map<SId, MCSId> map_env_name  // function name => env name
+            , Map<SId, MCSId> map_name  // name change caused by element of the environment
+            ) {
+//        List<IMCInstruction> inss = new ArrayList<IMCInstruction>();
+        
+        MCSId mcholder = m_mcsid_factory.fromSId(ins.m_holder);
+        
         IVarName name = ins.m_fun.getSId().m_name;
         if (name instanceof VNameCst) {
             Cd3cst fname = ((VNameCst)name).m_cst;
-            if (fname.compSymbolString(CCompUtils.cSysGvarCreate)) {
-                // val gdst = sys_gvar_create (src)
-                // initialize global variable
+            if (fname.compSymbolString(CCompUtils.cConATSSharedCreateCond)) {
+                // fun conats_shared_create_cond (): cond
                 
-                MCSId dst = StfplVP2MC(ins.m_holder);
-                // update category
-                ins.m_holder.updateCat(SIdCategory.eGloVar);
+                // This following is not necessary now.
+                // There is no concept of global variable.
+//                ins.m_holder.updateCat(SIdCategory.eGloVar);
+
+                return new MCInsSharedCreateCond(mcholder);
+
+            } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefCreate)) {
+                // fun conats_atomref_create {a:t@ype} (data: a): atomref a
+
+                return new MCInsAtomRefCreate(mcholder);
                 
-                IMCValPrim src = StfplVP2MC(ins.m_args.get(0));
+            } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefUpdate)) {
+                // fun conats_atomref_update {a:t@ype} (gv: atomref a, data: a): void
                 
-                return new MCInsStore(src, dst);
-                
-            } else if (fname.compSymbolString(CCompUtils.cSysGvarUpdate)) {
-                // val () = sys_gvar_update (gdst, src): void
-                MCSId dst = StfplVP2MC(ins.m_holder);
-                IMCValPrim src = StfplVP2MC(ins.m_args.get(0));
-                
-                return new MCInsStore(src, dst);
-            } else if (fname.compSymbolString(CCompUtils.cSysGvarGet)) {
-                // val dst = sys_gvar_get (gsrc)
-                MCSId dst = StfplVP2MC(ins.m_holder);
-                IMCValPrim src = StfplVP2MC(ins.m_args.get(0));
-                
-                return new MCInsLoad((MCSId)src, dst);
-            } else if (fname.compSymbolString(CCompUtils.cSysMCSetInt)) {
-                // prval () = mc_set_int (g1, local1, g2, local2)
-                List<MCSId> global_vars = new ArrayList<MCSId>();
-                List<IMCValPrim> local_values = new ArrayList<IMCValPrim>();
-                
-                Iterator<IValPrim> iter = ins.m_args.iterator();
-                while (iter.hasNext()) {
-                    IValPrim gv = iter.next();
-                    MCSId global_var = StfplVP2MC((SIdUser)gv);
-                                        
-                    // update category
-                    global_var.getSId().updateCat(SIdCategory.eGloVar);
-                    
-                    global_vars.add(global_var);
-                    
-                    IValPrim lv = iter.next();
-                    IMCValPrim local_value = StfplVP2MC(lv);
-                    local_values.add(local_value);
+                IValPrim ref = ins.m_args.get(0);
+                IMCValPrim mcref = m_mcsid_factory.fromIValPrim(ref, map_clo_name, map_name);
+                if (mcref instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
                 }
                 
-                return new MCInsMCSet(local_values, global_vars);
-            } else if (fname.compSymbolString(CCompUtils.cSysMCGetInt)) {
-                // prval local = mc_get_int (g1, g2)
-                MCSId local_value = StfplVP2MC(ins.m_holder);
+                MCSId mcsid_ref = (MCSId)mcref;
                 
-                List<MCSId> global_vars = new ArrayList<MCSId>();
+                IValPrim vp = ins.m_args.get(1);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
                 
-                Iterator<IValPrim> iter = ins.m_args.iterator();
-                while (iter.hasNext()) {
-                    IValPrim gv = iter.next();
-                    MCSId global_var = StfplVP2MC((SIdUser)gv);
-                                        
-                    // update category
-                    global_var.getSId().updateCat(SIdCategory.eGloVar);
-                    
-                    global_vars.add(global_var);
+                boolean isret = ins.m_holder.isRetHolder();
+
+                return new MCInsAtomRefUpdate(mcsid_ref, mcvp, isret);
+                
+            } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefGet)) {
+                // fun conats_atomref_get {a:t@ype} (gv: atomref a): a
+                
+                IValPrim ref = ins.m_args.get(0);
+                IMCValPrim mcref = m_mcsid_factory.fromIValPrim(ref, map_clo_name, map_name);
+                if (mcref instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
+                }
+
+                MCSId mcsid_ref = (MCSId)mcref;
+                return new MCInsAtomRefGet(mcsid_ref, mcholder);
+                
+            } else if (fname.compSymbolString(CCompUtils.cConATSThreadCreate)) {
+                // fun conats_thread_create {a:type} (tfun: thread_fun_t a, arg: a, tid: tid): void
+                
+                IValPrim tfun = ins.m_args.get(0);
+                if (tfun instanceof AtomValue) {
+                    throw new Error("This should not happen.");
                 }
                 
-                return new MCInsMCGet(local_value, global_vars);
-            } else if (fname.compSymbolString(CCompUtils.cSysMCAssert)) {
-                //   prval () = mc_assert (xx > 6)
-                IMCValPrim v = StfplVP2MC(ins.m_args.get(0));
+                if (tfun instanceof SIdUser) {
+                    throw new Error("It's not allowed to create thread by closure.");
+                }
+                
+                SId sid_tfun = (SId)tfun;
+                if (false == sid_tfun.isUserFun()) {
+                    throw new Error("Thread can be created by literal function name.");
+                }
+                
+                MCSId mcsid_tfun = m_mcsid_factory.fromSId(sid_tfun);
+                m_thread_names.add(mcsid_tfun);
+                
+                IValPrim arg = ins.m_args.get(1);
+                IMCValPrim mcarg = m_mcsid_factory.fromIValPrim(arg, map_clo_name, map_name);
+                
+                IValPrim tid = ins.m_args.get(2);
+                IMCValPrim mctid = m_mcsid_factory.fromIValPrim(tid, map_clo_name, map_name);
+                
+                boolean isret = ins.m_holder.isRetHolder();
 
-                return new MCInsMCAssert(v);
-            } else if (fname.compSymbolString(CCompUtils.cSysMutexAlloc)) {
-                // val holder = sys_mutex_allocate ()
-                MCSId holder = StfplVP2MC(ins.m_holder);
+                return new MCInsThreadCreate(mcsid_tfun, mcarg, mctid, isret);
 
-                return new MCInsMutexAlloc(holder);
-            } else if (fname.compSymbolString(CCompUtils.cSysMutexRelease)) {
-                // val () = sys_mutex_release (m)
-                IMCValPrim mutex = StfplVP2MC(ins.m_args.get(0));
-                return new MCInsMutexRelease(mutex);
-
-            } else if (fname.compSymbolString(CCompUtils.cSysCondAlloc)) {
-                // val holder = sys_mutex_allocate ()
-                MCSId holder = StfplVP2MC(ins.m_holder);
-
-                return new MCInsCondAlloc(holder);
-            } else if (fname.compSymbolString(CCompUtils.cSysCondRelease)) {
-                // val () = sys_mutex_release (m)
-                IMCValPrim mutex = StfplVP2MC(ins.m_args.get(0));
-                return new MCInsCondRelease(mutex);
-
-            } else if (fname.compSymbolString(CCompUtils.cSysThreadCreate)) {
-            	// val () = sys_thread_create (tid, funlab, arg)
-            	IMCValPrim tid = StfplVP2MC(ins.m_args.get(0));
-            	MCSId funlab = StfplVP2MC((SIdUser)ins.m_args.get(0));
-            	IMCValPrim arg = StfplVP2MC(ins.m_args.get(0));
-
-                return new MCInsThreadCreate(tid, funlab, arg);
+            } else if (fname.compSymbolString(CCompUtils.cMCSetInt)) {
+                // prfun mc_set_int {id: sid} (id: (mc_gv_t id), x: int): void
+                todo
+            } else if (fname.compSymbolString(CCompUtils.cMCAtomicStart)) {
+                todo
             } else {
-            	// do nothing
+            	throw new Error(fname.toStringNoStamp() + " is not supported.");
             }
         }
 
         MCSId holder = StfplVP2MC(ins.m_holder);
-        MCSId fun = StfplVP2MC(ins.m_fun);
-        List<IMCValPrim> args = StfplVP2MC(ins.m_args);
+        MCSId fun = m_mcsid(ins.m_fun);
+        List<IMCValPrim> mcargs = m_mcsid_factory.fromIValPrimList(ins.m_args, map_clo_name, map_name);
         
         return new MCInsCall(holder, fun, args);
     }

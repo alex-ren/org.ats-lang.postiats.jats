@@ -5,6 +5,9 @@ package jats.utfpl.stfpl.mcinstruction;
 //import org.stringtemplate.v4.ST;
 //import org.stringtemplate.v4.STGroup;
 
+/*
+ * Form a closure.
+ */
 public class MCInsClosure implements IMCInstruction {
     public MCSId m_name;
     public MCSId m_fun;

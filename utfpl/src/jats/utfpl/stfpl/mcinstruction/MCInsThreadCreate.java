@@ -1,17 +1,20 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-import jats.utfpl.patcsps.Aux;
 
 public class MCInsThreadCreate implements IMCInstruction {
-    public IMCValPrim m_tid;
-    public MCSIdFun m_funlab;
+    public MCSId m_funlab;
     public IMCValPrim m_arg;
+    public IMCValPrim m_tid;
+    public boolean m_isret;
     
-    public MCInsThreadCreate(IMCValPrim tid, MCSIdFun funlab, IMCValPrim arg) {
+    public MCInsThreadCreate(MCSId funlab
+                     , IMCValPrim arg
+                     , IMCValPrim tid
+                     , boolean isret) {
+        m_funlab = funlab;
+        m_arg = arg;
         m_tid = tid;
-    	m_funlab = funlab;
-        m_funlab.updateAddr(Aux.Address.createPointer());
-    	m_arg = arg;    	
+    	m_isret = isret;	
     }
 
 	@Override

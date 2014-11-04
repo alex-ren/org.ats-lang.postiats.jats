@@ -3,8 +3,8 @@ package jats.utfpl.stfpl.mcinstruction;
 
 public class MCInsLoad implements IMCInstruction {
 
-    public MCSIdFun m_l_holder;
-    public MCSIdFun m_g_src;
+    public MCSId m_l_holder;
+    public MCSId m_g_src;
 
     public MCInsLoad(MCSIdFun g_src, MCSIdFun l_holder) {
         

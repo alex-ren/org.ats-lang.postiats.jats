@@ -20,7 +20,7 @@ import jats.utfpl.stfpl.stype.ISType;
  */
 public class SId implements IIdPrim{
     
-    public static enum SIdCategory {/*eLibFun, */eGloVar, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
+    public static enum SIdCategory {/*eLibFun, */eGloVar/*obsolete*/, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
 
 
     public IVarName m_name;

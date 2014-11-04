@@ -2,7 +2,9 @@ package jats.utfpl.stfpl.mcinstruction;
 
 import java.util.Set;
 
-
+/*
+ * Form an environment.
+ */
 public class MCInsFormEnv implements IMCInstruction {
     public MCSId m_holder;  // This is name of the env.
     public Set<MCSId> m_env;

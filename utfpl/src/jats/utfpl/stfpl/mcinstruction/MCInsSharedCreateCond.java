@@ -1,15 +1,13 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-public class MCInsStore implements IMCInstruction {
-    public IMCValPrim m_l_src;
-    public MCSId m_g_dst;
-    
-    public MCInsStore(IMCValPrim l_src, MCSIdFun g_dst) {
-        m_l_src = l_src;
-        m_g_dst = g_dst;
-        
-    }
+public class MCInsSharedCreateCond implements IMCInstruction {
 
+    public MCSId m_holder;
+    
+    public MCInsSharedCreateCond(MCSId holder) {
+        m_holder = holder;
+    }
+    
     @Override
     public Object accept(IMCInsVisitor visitor) {
         return visitor.visit(this);

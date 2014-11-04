@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 public interface IMCInsVisitor {
-    public Object visit(MCInsFormEnv ins);
+    public Object visit(MCInsAtomRefCreate ins);
     
     public Object visit(MCInsTuple ins);
     
@@ -26,11 +26,6 @@ public interface IMCInsVisitor {
     
     public Object visit(MCInsMutexRelease ins);
     
-    public Object visit(MCInsCondAlloc ins);
-    
-    public Object visit(MCInsCondRelease ins);
-    
-
     
     public Object visit(MCInsThreadCreate ins);
     
@@ -41,5 +36,13 @@ public interface IMCInsVisitor {
     public Object visit(MCInsMCSet insMCSet);
 
 	public Object visit(MCInsGetEleFromEnv mcInsGetEleFromEnv);
+
+    public Object visit(MCInsAtomRefGet mcInsAtomRefGet);
+
+    public Object visit(MCInsAtomRefUpdate mcInsAtomRefUpdate);
+
+    public Object visit(MCInsSharedCreateCond mcInsSharedCreateCond);
+
+    public Object visit(MCInsFormEnv mcInsFormEnv);
 
 }

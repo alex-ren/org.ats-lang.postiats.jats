@@ -1,17 +1,17 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-public class MCInsMCSet implements IMCInstruction {
-    public IMCValPrim m_localv;
-    public MCSId m_globalv;
+public class MCInsAtomRefUpdate implements IMCInstruction {
+
+    public MCSId m_ref;
+    public IMCValPrim m_vp;
     public boolean m_isret;
     
-    public MCInsMCSet(IMCValPrim localv, MCSId globalv, boolean isret) {
-        m_localv = localv;
-        m_globalv = globalv;
+    public MCInsAtomRefUpdate(MCSId ref, IMCValPrim vp, boolean isret) {
+        m_ref = ref;
+        m_vp =vp;
         m_isret = isret;
-        
     }
-
+    
     @Override
     public Object accept(IMCInsVisitor visitor) {
         return visitor.visit(this);

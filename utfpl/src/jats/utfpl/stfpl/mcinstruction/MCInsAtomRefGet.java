@@ -1,15 +1,15 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-public class MCInsStore implements IMCInstruction {
-    public IMCValPrim m_l_src;
-    public MCSId m_g_dst;
-    
-    public MCInsStore(IMCValPrim l_src, MCSIdFun g_dst) {
-        m_l_src = l_src;
-        m_g_dst = g_dst;
-        
-    }
+public class MCInsAtomRefGet implements IMCInstruction {
 
+    public MCSId m_ref;
+    public MCSId m_holder;
+    
+    public MCInsAtomRefGet(MCSId ref, MCSId holder) {
+        m_ref = ref;
+        m_holder = holder;
+    }
+    
     @Override
     public Object accept(IMCInsVisitor visitor) {
         return visitor.visit(this);
