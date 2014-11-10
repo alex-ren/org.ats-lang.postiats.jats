@@ -1,86 +1,10 @@
-#include {
-  #include {
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-    D2Cnone
-  }
-}
+#include ...
 
-#include {
-  D2Cnone
-  D2Cnone
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/basics.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/pointer.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/integer.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/integer_fixed.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/char.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/bool.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/float.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/tuple.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/memory.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/string.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/strptr.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/reference.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/filebas.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/intrange.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/gorder.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/gnumber.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list_vt.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list_vt_mergesort.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list_vt_quicksort.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/option.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/option_vt.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/array.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/array_bsearch.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/array_quicksort.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/arrayptr.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/arrayref.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/matrix.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/matrixptr.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/matrixref.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/stream.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/stream_vt.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/gprint.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/unsafe.dats"
-  staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/checkast.dats"
-}
+#include ...
+
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/foo.sats"
+
+"D2Cdcstdecs" add_2892:((int, int) -<clo> int):type
 
 fun foo1_3447 = lam (<P2Tann>(x_3448:@{0 = int, 1 = int}:t@ype), <P2Tann>(y_3449:int:t@ype)) <clo> = 
   <D2EannSeff>(
@@ -96,7 +20,7 @@ fun foo3_3453 = lam (<P2Tann>(x_3454:int:t@ype)) <clo> =
 
 fun foo4_3455 = lam () <clo> = 
   <D2EannSeff>(
-    <D2Esym>(+) (1, 2):int:t@ype)
+    D2Ecst<add_2892:((int, int) -<clo> int):type> (1, 2):int:t@ype)
 
 implement main_void_0_56:(() -<clo> void):type = lam () <fun> = 
   <D2EannFunclo><fun>(

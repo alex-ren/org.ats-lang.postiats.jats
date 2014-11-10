@@ -64,5 +64,9 @@ public class VNameFactory {
         return new VNameSym(sym);
     }
     
+    public IVarName duplicate(IVarName vname) {
+        return new VNameId(vname.toStringNoStamp(), vname.getType(), ++m_stamp);
+    }
+    
 }
 

@@ -7,7 +7,12 @@ import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3Printer;
 import jats.utfpl.stfpl.instructions.InstructionPrinter;
 import jats.utfpl.stfpl.instructions.InstructionTransformer;
+import jats.utfpl.stfpl.instructions.ProgramIns;
 import jats.utfpl.stfpl.instructions.SIdFactory;
+import jats.utfpl.stfpl.mcinstruction.MCInstructionPrinter;
+import jats.utfpl.stfpl.mcinstruction.MCInstructionTransformer;
+import jats.utfpl.stfpl.mcinstruction.MCSIdFactory;
+import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -24,6 +29,7 @@ public class ModelGenerater {
 	private String m_dyn;
 	private String m_dyn3;
 	private String m_inss;
+	private String m_mcinss;
 	
 	
 	public ModelGenerater(String strPath) {
@@ -81,6 +87,7 @@ public class ModelGenerater {
                 /* ************* ************** */
                 
                 System.out.println("== Generating dynexp3 start ==========================");
+                
                 DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
                 ProgramStfpl3 prog3 = d3transformer.transform();
                 System.out.println("== Generating dynexp3 end ==========================");
@@ -96,26 +103,54 @@ public class ModelGenerater {
                 	return 0;
                 }
 
+                /* ************* ************** */
+                
                 System.out.println("== Generating instruction start ==========================");
+                
                 SIdFactory sid_factory = new SIdFactory();
-                InstructionTransformer ins_cvt = new InstructionTransformer(sid_factory);
-                ins_cvt.transform_global(prog3);
+                InstructionTransformer ins_cvt = new InstructionTransformer(sid_factory, prog3);
+                ProgramIns prog_in = ins_cvt.transform();
                 
                 System.out.println("== Generating instruction end ==========================");
                 
                 InstructionPrinter insPrinter = new InstructionPrinter();
-                String outputIns = insPrinter.print(
-                        ins_cvt.getDecs(), 
-                        ins_cvt.getExts(), 
-                        ins_cvt.getDefs(),
-                        ins_cvt.getMainInss());
+                String outputIns = insPrinter.print(prog_in);
                 System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
                 System.out.println(outputIns);
                 
+                m_inss = outputIns;
                 if (level <= 4) {
                     System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
+
+                /* ************* ************** */
+                
+                System.out.println("== Generating mcinstruction start ==========================");
+                
+                MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory);
+                MCInstructionTransformer mcins_cvt = new MCInstructionTransformer(
+                                         mcsid_factory
+                                       , ins_cvt.getFunMap()
+                                       , prog_in);
+
+                ProgramMCIns prog_mcins = mcins_cvt.transform();
+                
+                System.out.println("== Generating mcinstruction end ==========================");
+                
+                MCInstructionPrinter mcinsPrinter = new MCInstructionPrinter();
+                String outputMCIns = mcinsPrinter.print(prog_mcins);  // .print(prog_mcins); 
+                System.out.println("==stfpl's code (layer IStfplMCInstruction) is ==========================");
+                System.out.println(outputMCIns);
+
+                m_mcinss = outputMCIns;
+                if (level <= 5) {
+                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    return 0;
+                }
+
+                
+                
                 /* ************* ************** */
                 throw new Error("level " + level + " is not supported.");
 

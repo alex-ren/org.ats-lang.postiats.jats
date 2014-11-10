@@ -1,13 +1,13 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 public class MCInsMCSet implements IMCInstruction {
-    public IMCValPrim m_localv;
-    public MCSId m_globalv;
+    public IMCValPrim m_src;
+    public MCSId m_dst;
     public boolean m_isret;
     
-    public MCInsMCSet(IMCValPrim localv, MCSId globalv, boolean isret) {
-        m_localv = localv;
-        m_globalv = globalv;
+    public MCInsMCSet(IMCValPrim src, MCSId dst, boolean isret) {
+        m_src = src;
+        m_dst = dst;
         m_isret = isret;
         
     }

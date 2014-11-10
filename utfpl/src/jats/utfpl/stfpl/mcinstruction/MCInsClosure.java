@@ -9,12 +9,12 @@ package jats.utfpl.stfpl.mcinstruction;
  * Form a closure.
  */
 public class MCInsClosure implements IMCInstruction {
-    public MCSId m_name;
+    public MCSId m_holder;
     public MCSId m_fun;
     public MCSId m_env;
     
-    public MCInsClosure(MCSId name, MCSId fun, MCSId env) {
-        m_name = name;
+    public MCInsClosure(MCSId holder, MCSId fun, MCSId env) {
+        m_holder = holder;
         m_fun = fun;
         m_env = env;
     }

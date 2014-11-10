@@ -126,6 +126,14 @@ public class SIdFactory {
         return ret;
     }
     
+    public SId duplicate(SId sid) {
+        IVarName vname = m_name_factory.duplicate(sid.m_name);
+        SIdCategory cat = sid.getCategory();
+        
+        SId nsid = new SId(vname, cat);
+        m_map.put(vname, nsid);
+        return nsid; 
+    }
     
 }
 

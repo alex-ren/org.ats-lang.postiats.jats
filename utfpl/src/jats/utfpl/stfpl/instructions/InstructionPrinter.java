@@ -1,33 +1,19 @@
 package jats.utfpl.stfpl.instructions;
 
-import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.stype.Utils;
 
 import java.net.URL;
-import java.util.List;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
 public class InstructionPrinter {
-
-//    private List<DecGroup> m_decs;  // global declaration
-//    
-//    private List<D3Cextcode> m_exts;
-//    
-//    private List<IFunDef> m_defs;
-//    
-//    private List<IStfplInstruction> m_main_inss;  // global instructions
     
     private STGroup m_stg;
     private STGroup m_stg_type;
     
-    public  InstructionPrinter(){
-//    	m_decs = decs;
-//    	m_exts = exts;
-//    	m_defs = defs;
-//    	m_main_inss = main_inss;
+    public  InstructionPrinter() {
     	
         URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/instructions/instructions.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
@@ -37,17 +23,14 @@ public class InstructionPrinter {
     }
     
     
-    public String print(List<DecFunGroup> decs,
-	  		   List<D3Cextcode> exts,
-	  		   List<IFunDef> defs,
-	  		   List<IStfplInstruction> main_inss) {
+    public String print(ProgramIns prog) {
     	// prog_st(fun_defs, main_inss) ::= <<
     	ST st = m_stg.getInstanceOf("prog_st");
-    	for (IFunDef fun_def: defs) {
+    	for (IFunDef fun_def: prog.m_defs) {
     		st.add("fun_defs", printIFunDef(fun_def));
     	}
     	
-    	for (IStfplInstruction ins: main_inss) {
+    	for (IStfplInstruction ins: prog.m_main_inss) {
     		st.add("main_inss", printInstruction(ins));
     	}
     	

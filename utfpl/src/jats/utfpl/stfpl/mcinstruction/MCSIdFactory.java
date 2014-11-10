@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.mcinstruction;
 import jats.utfpl.stfpl.instructions.AtomValue;
 import jats.utfpl.stfpl.instructions.IValPrim;
 import jats.utfpl.stfpl.instructions.SId;
+import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.stype.Aux;
 import jats.utfpl.stfpl.stype.ISType;
@@ -13,10 +14,17 @@ import java.util.List;
 import java.util.Map;
 
 public class MCSIdFactory {
-	private static Map<SId, MCSId> m_map;
+	private Map<SId, MCSId> m_map;
+	private SIdFactory m_fac;
 	
-	public MCSIdFactory() {
+	public MCSIdFactory(SIdFactory fac) {
 		m_map  = new HashMap<SId, MCSId>();
+		
+		m_fac = fac;
+	}
+	
+	public SIdFactory getSIdFac() {
+	    return m_fac;
 	}
 	
 	public MCSId fromSId(SId sid) {
@@ -28,6 +36,19 @@ public class MCSIdFactory {
 	    return mcsid;
 	}
 	
+	public MCSId duplicate(MCSId mcsid) {
+	  
+	    SId sid = mcsid.getSId();
+	    Boolean has_effect = mcsid.hasEffect();
+	    
+	    SId nsid = m_fac.duplicate(sid);
+	    
+	    MCSId nmcsid = new MCSId(nsid);
+	    nmcsid.setEffect(has_effect);
+	    
+	    m_map.put(nsid, nmcsid);
+	    return nmcsid;
+	}
 	/*
 	 * Literal function name would be turned into closure.
 	 */
@@ -41,6 +62,7 @@ public class MCSIdFactory {
 			SId sid = sid_user.getSId();
 			ISType type = sid.getType();
 			if (Aux.isClosure(type) && sid.isUserFun()) {
+			    // turn function name into closure
 				MCSId closure = map_clo_name.get(sid);
 				return closure;
 			} else {
@@ -54,6 +76,7 @@ public class MCSIdFactory {
 			SId sid = (SId)vp;
 			ISType type = sid.getType();
 			if (Aux.isClosure(type) && sid.isUserFun()) {
+	            // turn function name into closure
 				MCSId closure = map_clo_name.get(sid);
 				return closure;
 			} else {
@@ -80,44 +103,6 @@ public class MCSIdFactory {
 		return mcvps;
 	}
 	
-//	public IMCSId createFromSId(SId sid) {
-//		IMCSId prim = m_map.get(sid);
-//		if (prim != null) {
-//			return prim;
-//		} else {
-//			if (Aux.getFunctionType(sid.getType()) != null) {
-//				MCSIdFun mcid = new MCSIdFun(sid);
-//				m_map.put(sid, mcid);
-//				return mcid;
-//			} else {
-//				MCSIdAtomVal mcid = new MCSIdAtomVal(sid);
-//				m_map.put(sid, mcid);
-//				return mcid;
-//			}
-//		}
-//	}
-	
-//	public MCSId fromSIdAtomVal(SId sid) {
-//        IMCSId prim = m_map.get(sid);
-//        if (prim != null) {
-//            return (MCSId)prim;
-//        } else {
-//            MCSId mcid = new MCSId(sid);
-//            m_map.put(sid, mcid);
-//            return mcid;
-//        }
-//    }
-//	
-//	   public MCSIdFun fromSIdFun(SId sid) {
-//	        IMCSId prim = m_map.get(sid);
-//	        if (prim != null) {
-//	            return (MCSIdFun)prim;
-//	        } else {
-//	            MCSIdFun mcid = new MCSIdFun(sid);
-//	            m_map.put(sid, mcid);
-//	            return mcid;
-//	        }
-//	    }
 }
 
 

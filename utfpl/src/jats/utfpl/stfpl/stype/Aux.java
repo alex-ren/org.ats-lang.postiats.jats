@@ -68,6 +68,15 @@ public class Aux {
             m_new = _new;
         }
     }
+    
+    static public boolean hasEffect(ISType type) {
+        FunType fun_type = getFunctionType(type);
+        if (null == fun_type) {
+            return false;
+        } else {
+            return fun_type.hasEffect();
+        }
+    }
 
 //    
 //    public static NamedType findType(Map<ITypeName, NamedType> map, ISType type) {

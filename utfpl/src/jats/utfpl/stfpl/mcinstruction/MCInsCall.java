@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.mcinstruction;
 
+//import jats.utfpl.stfpl.stype.Aux;
+
 import java.util.List;
 
 //import jats.utfpl.stfpl.csharptype.CSFunType;
@@ -18,7 +20,11 @@ public class MCInsCall implements IMCInstruction {
         m_holder = holder;
         m_fun = fun;
         m_args = args;
-        m_env = env;
+        m_env = env;  // If holder is not a closure, then env is null.
+        
+        if (!m_fun.getSId().isUserFun() && !m_fun.getSId().isConstant()) {
+            throw new Error("This is not allowed. id is " + m_fun.getSId().toStringIns());
+        }
     }
 
     @Override
@@ -28,6 +34,7 @@ public class MCInsCall implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
+        // return Aux.hasEffect(m_fun.getType());
         return m_fun.hasEffect();
     }
 }

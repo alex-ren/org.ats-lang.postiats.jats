@@ -1,7 +1,6 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-
-import jats.utfpl.stfpl.Ilabel;
+import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -15,15 +14,72 @@ import java.util.Set;
 
 public class MCInstructionProcessor {
     private ProgramMCIns m_prog;
+    private MCSIdFactory m_fac;
     
-    public MCInstructionProcessor(ProgramMCIns prog) {
+    public MCInstructionProcessor(ProgramMCIns prog, MCSIdFactory fac) {
         m_prog = prog;
+        m_fac = fac;
     }
     
     public void process() {
         
+        // ===========================================
+        
+        analyzeEffectTemporary();
+
+        // ============================================
+        
+        // Mark effects for if.
+        for (MCDefFunGroup grp: m_prog.m_defs) {
+            for (MCDefFun fun: grp.m_funs) {
+                analyzeEffectIF(fun.m_inss);
+            }
+        }
+        analyzeEffectIF(m_prog.m_main_inss);
+        
+        // ============================================
+        
+        // Substitution
+        
+        List<MCDefFunGroup> defs = new ArrayList<MCDefFunGroup>();
+        
+        for (MCDefFunGroup grp: m_prog.m_defs) {
+            List<MCDefFun> funs = new ArrayList<MCDefFun>();
+            
+            for (MCDefFun fun: grp.m_funs) {
+                MCDefFun nfun = processFunction(fun);
+                funs.add(nfun);
+            }
+            
+            MCDefFunGroup ngrp = new MCDefFunGroup(grp.m_knd, funs);
+            defs.add(ngrp);
+        }
+        
+        List<IMCInstruction> main_inss = processBranchIns(m_prog.m_main_inss, null);
+        
+        // ============================================
+
+        // Update self.
+        m_prog.m_defs = defs;
+        m_prog.m_main_inss = main_inss;
+
     }
     
+    private MCDefFun processFunction(MCDefFun fun) {
+        List<IMCInstruction> inss = processBranchIns(fun.m_inss, null);
+        
+        MCDefFun nfun = 
+                new MCDefFun(
+                        fun.m_loc
+                      , fun.m_name
+                      , fun.m_lin
+                      , fun.m_paras
+                      , inss
+                      );
+        
+        return nfun;
+
+    }
 
     // Effect analysis
     /*
@@ -33,29 +89,11 @@ public class MCInstructionProcessor {
     private void analyzeEffectTemporary() {
         for (MCDefFunGroup grp: m_prog.m_defs) {
             for (MCDefFun fun: grp.m_funs) {
-                fun.m_name.updateEffect(true);  
+                fun.m_name.setEffect(true);  
             }
         }
     }
-//
-//    private boolean analyzeEffect(MCDefFun fun, Set<MCDefFun> accu) {
-//        if (fun.m_name.hasEffect() != null) {
-//            
-//        } else {
-//            accu.add(fun);
-//            boolean ret = analyzeEffect(fun.m_lin, accu);
-//            accu.remove(fun);
-//            return ret;
-//        }
-//        
-//    }
-//
-//    private boolean analyzeEffect(int m_lin, Set<MCDefFun> accu) {
-//        // TODO Auto-generated method stub
-//        return false;
-//    }
     
-
     /*
      * Update the effect of "if" instruction.
      */
@@ -94,13 +132,13 @@ public class MCInstructionProcessor {
      * If it's null, then do thing.
      * 
      */
-    static private List<IMCInstruction> processBranchIns(
+    private List<IMCInstruction> processBranchIns(
             List<IMCInstruction> insLst, 
             Map<MCSId, MCSId> subMap) {
         List<IMCInstruction> nList = new ArrayList<IMCInstruction>();
         ListIterator<IMCInstruction> iter = insLst.listIterator();
         
-        MCInsSubstitutor processor = new MCInsSubstitutor(subMap);
+        MCInsSubstitutor processor = new MCInsSubstitutor(subMap, m_fac);
         
         while (iter.hasNext()) {
             IMCInstruction ins = iter.next();
@@ -211,32 +249,51 @@ public class MCInstructionProcessor {
     // This visitor is for changing the TID. It is used to support
     // the conversion of "if".
     private static class MCInsSubstitutor implements IMCInsVisitor {
-        Map<MCSId, MCSId> m_sub;
+        private Map<MCSId, MCSId> m_sub;
+        private MCSIdFactory m_fac;
         
-        public MCInsSubstitutor(Map<MCSId, MCSId> sub) {
+        public MCInsSubstitutor(Map<MCSId, MCSId> sub, MCSIdFactory fac) {
             m_sub = sub;
+            m_fac = fac;
         }
 
+        private MCSId subsHolder(MCSId holder) {
+            SId sid = holder.getSId();
+            if (sid.isGlobal()) {
+                return holder;  // no substitution for global value
+            }
+            
+            if (sid.isUserFun()) {
+                throw new Error("This should not happen. holder is " + holder);
+            }
+            if (sid.isConstant()) {
+                throw new Error("Check this.. holder is " + holder);
+            }
+
+            MCSId nholder = m_fac.duplicate(holder);
+            m_sub.put(nholder, holder);
+            return nholder;
+            
+        }
+        
         @Override
-        public Object visit(MCInsFormEnv ins) {
+        public MCInsFormEnv visit(MCInsFormEnv ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                MCSId holder = ins.m_holder.dup();
-                m_sub.put(ins.m_holder, holder);
-                Set<MCSId> env = subsVPSet(ins.m_env, m_sub);         
-                
+                MCSId holder = subsHolder(ins.m_holder);
+                Set<MCSId> env = subsVPSet(ins.m_env, m_sub);   
                 return new MCInsFormEnv(holder, env);
             }
         }
 
         @Override
-        public Object visit(MCInsTuple ins) {
+        public MCInsTuple visit(MCInsTuple ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                MCSId holder = ins.m_holder.dup();
-                m_sub.put(ins.m_holder, holder);
+                MCSId holder = subsHolder(ins.m_holder);
+                
                 List<IMCValPrim> elements = subsVPLst(ins.m_elements, m_sub);         
                 
                 return new MCInsTuple(elements, holder);
@@ -244,12 +301,12 @@ public class MCInstructionProcessor {
         }
 
         @Override
-        public Object visit(MCInsPatLabDecompose ins) {
+        public MCInsPatLabDecompose visit(MCInsPatLabDecompose ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                MCSId holder = ins.m_holder.dup();
-                m_sub.put(ins.m_holder, holder);
+                MCSId holder = subsHolder(ins.m_holder);
+                
                 IMCValPrim vp = subsVP(ins.m_vp, m_sub);
                 
                 return new MCInsPatLabDecompose(ins.m_lab, holder, vp);
@@ -257,143 +314,197 @@ public class MCInstructionProcessor {
         }
 
         @Override
-        public Object visit(MCInsCond ins) {
+        public MCInsCond visit(MCInsCond ins) {
             throw new Error("shall not happen");
         }
 
         @Override
-        public Object visit(MCInsClosure ins) {
+        public MCInsMove visit(MCInsMove ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                MCSId name = ins.m_name.dup();
-                m_sub.put(ins.m_name, name);
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                IMCValPrim vp = subsVP(ins.m_vp, m_sub);
+                return new MCInsMove(vp, holder);
+            }
+        }
+
+        @Override
+        public MCInsCall visit(MCInsCall ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                MCSId fun = subsVP(ins.m_fun, m_sub);
+                List<IMCValPrim> args = subsVPLst(ins.m_args, m_sub);
                 MCSId env = subsVP(ins.m_env, m_sub);
                 
-                return new MCInsClosure(name, env);
+                return new MCInsCall(holder, fun, args, env);
             }
         }
 
         @Override
-        public Object visit(MCInsMove ins) {
+        public MCInsGetEleFromEnv visit(MCInsGetEleFromEnv ins) {
             if (null == m_sub) {
                 return ins;
-            } else {                
-                MCSId holder = ins.m_holder.dup();
-                m_sub.put(ins.m_holder, holder);
+            } else {
+                
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                MCSId env = subsVP(ins.m_env, m_sub);
+                return new MCInsGetEleFromEnv(holder, env, ins.m_tag);
+            }
+        }
+
+        @Override
+        public MCInsClosure visit(MCInsClosure ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                MCSId fun = subsVP(ins.m_fun, m_sub);
+                MCSId env = subsVP(ins.m_env, m_sub);
+                
+                return new MCInsClosure(holder, fun, env);
+            }
+        }
+
+        @Override
+        public MCInsThreadCreate visit(MCInsThreadCreate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId funlab = subsVP(ins.m_funlab, m_sub);
+                IMCValPrim arg = subsVP(ins.m_arg, m_sub);
+                IMCValPrim tid = subsVP(ins.m_tid, m_sub);
+
+                return new MCInsThreadCreate(funlab, arg, tid, ins.m_isret);
+            }
+
+        }
+
+        @Override
+        public MCInsAtomRefCreate visit(MCInsAtomRefCreate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                return new MCInsAtomRefCreate(holder);
+            }
+        }
+
+        @Override
+        public MCInsAtomRefGet visit(MCInsAtomRefGet ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                MCSId ref = subsVP(ins.m_ref, m_sub);
+                
+                return new MCInsAtomRefGet(ref, holder);
+            }
+
+        }
+
+        @Override
+        public MCInsAtomRefUpdate visit(MCInsAtomRefUpdate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId ref = subsVP(ins.m_ref, m_sub);
                 IMCValPrim vp = subsVP(ins.m_vp, m_sub);
                 
-                return new MCInsMove(vp, holder);
+                return new MCInsAtomRefUpdate(ref, vp, ins.m_isret);
+            }
+            
+        }
+
+        @Override
+        public MCInsSharedCreateCond visit(MCInsSharedCreateCond ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
                 
+                return new MCInsSharedCreateCond(holder);
             }
         }
 
         @Override
-        public Object visit(MCInsCall ins) {
+        public MCInsMutexCreate visit(MCInsMutexCreate ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                MCSId holder = ins.m_holder.dup();
-                m_sub.put(ins.m_holder, holder);
-                List<IMCValPrim> args = subsVPLst(ins.m_args, m_sub);         
+                MCSId holder = subsHolder(ins.m_holder);
                 
-                return new MCInsCall(holder, ins.m_fun, args);
+                return new MCInsMutexCreate(holder);
             }
         }
 
         @Override
-        public Object visit(MCInsStore ins) {
+        public MCInsMCAtomicStart visit(MCInsMCAtomicStart ins) {
+            return ins;
+        }
+
+        @Override
+        public MCInsMCAssert visit(MCInsMCAssert ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                IMCValPrim l_src = subsVP(ins.m_l_src, m_sub);
-                MCSId g_dst = subsVP(ins.m_g_dst, m_sub);
+
+                IMCValPrim vp = subsVP(ins.m_vp, m_sub);
                 
-                return new MCInsStore(l_src, g_dst);
+                return new MCInsMCAssert(vp, ins.m_isret);
             }
         }
 
         @Override
-        public Object visit(MCInsLoad ins) {
+        public MCInsMCGet visit(MCInsMCGet ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                MCSId l_holder = ins.m_l_holder.dup();
-                m_sub.put(ins.m_l_holder, l_holder);
-                MCSId g_src = subsVP(ins.m_g_src, m_sub);
+                MCSId holder = subsHolder(ins.m_holder);
                 
-                return new MCInsLoad(g_src, l_holder);
+                MCSId src = subsVP(ins.m_src, m_sub);
+                
+                return new MCInsMCGet(holder, src);
             }
         }
 
         @Override
-        public Object visit(MCInsMutexAlloc ins) {
+        public MCInsMCSet visit(MCInsMCSet ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                x
+                IMCValPrim src = subsVP(ins.m_src, m_sub);
+                MCSId dst = subsVP(ins.m_dst, m_sub);
+                
+                return new MCInsMCSet(src, dst, ins.m_isret);
             }
         }
 
         @Override
-        public Object visit(MCInsMutexRelease ins) {
+        public MCInsMCVLockViewGet visit(MCInsMCVLockViewGet ins) {
             if (null == m_sub) {
                 return ins;
             } else {
-                xx
+
+                List<IMCValPrim> args = subsVPLst(ins.m_args, m_sub);
+                
+                return new MCInsMCVLockViewGet(args, ins.m_isret);
             }
+
         }
 
-        @Override
-        public Object visit(MCInsCondAlloc ins) {
-            // TODO Auto-generated method stub
-            return null;
-        }
 
-        @Override
-        public Object visit(MCInsCondRelease ins) {
-            if (null == m_sub) {
-                return ins;
-            } else {
-                xx
-            }
-        }
 
-        @Override
-        public Object visit(MCInsThreadCreate ins) {
-            if (null == m_sub) {
-                return ins;
-            } else {
-                xx
-            }
-        }
-
-        @Override
-        public Object visit(MCInsMCAssert ins) {
-            if (null == m_sub) {
-                return ins;
-            } else {
-                xx
-            }
-        }
-
-        @Override
-        public Object visit(MCInsMCGet insMCGet) {
-            if (null == m_sub) {
-                return ins;
-            } else {
-                xx
-            }
-        }
-
-        @Override
-        public Object visit(MCInsMCSet insMCSet) {
-            if (null == m_sub) {
-                return ins;
-            } else {
-                xx
-            }
-        }
     }
     
 

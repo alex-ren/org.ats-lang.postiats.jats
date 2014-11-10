@@ -1,14 +1,13 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-import java.util.List;
 
 public class MCInsMCGet implements IMCInstruction {
-    public MCSIdFun m_localHolder;
-    public List<MCSIdFun> m_globalVars;
+    public MCSId m_holder;
+    public MCSId m_src;
 
-    public MCInsMCGet(MCSIdFun localHolder, List<MCSIdFun> globalVars) {
-        m_localHolder = localHolder;
-        m_globalVars = globalVars;
+    public MCInsMCGet(MCSId holder, MCSId src) {
+        m_holder = holder;
+        m_src = src;
     }
     
     @Override

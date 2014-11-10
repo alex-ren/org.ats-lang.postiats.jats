@@ -1,7 +1,5 @@
 package jats.utfpl.stfpl.ccomp;
 
-import jats.utfpl.stfpl.mcinstruction.MCSId;
-
 /*
  * This file should be compatible with file ats-conats/conats.sats
  */
@@ -43,7 +41,7 @@ public class CCompUtils {
             
     /* ************* *************** */
     
-    public static final String cConATSTidAllocate = "conats_tid_allocate";
+//    public static final String cConATSTidAllocate = "conats_tid_allocate";
     public static final String cConATSThreadCreate = "conats_thread_create";
     
     /* ************* *************** */
@@ -89,10 +87,6 @@ public class CCompUtils {
 		}
 	}
 	
-	public static boolean hasEffect(MCSId fun) {
-	    
-	}
-
 }
 
 

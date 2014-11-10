@@ -1,12 +1,8 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 import jats.utfpl.stfpl.ccomp.CCompUtils;
-import jats.utfpl.stfpl.Csymbol;
 import jats.utfpl.stfpl.Ilabel;
-import jats.utfpl.stfpl.LABsym;
-import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.dynexp3.Cd3cst;
-import jats.utfpl.stfpl.dynexp3.Cd3var;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.instructions.AtomValue;
 import jats.utfpl.stfpl.instructions.DecAtomValGroup;
@@ -25,21 +21,17 @@ import jats.utfpl.stfpl.instructions.InsFormEnv;
 import jats.utfpl.stfpl.instructions.InsMove;
 import jats.utfpl.stfpl.instructions.InsPatLabDecompose;
 import jats.utfpl.stfpl.instructions.InsTuple;
+import jats.utfpl.stfpl.instructions.ProgramIns;
 import jats.utfpl.stfpl.instructions.SId;
-import jats.utfpl.stfpl.instructions.SIdFactory;
-import jats.utfpl.stfpl.instructions.SId.SIdCategory;
 import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.instructions.VNameCst;
 import jats.utfpl.stfpl.stype.Aux;
-import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
-import jats.utfpl.stfpl.stype.LabPatNorm;
 import jats.utfpl.stfpl.stype.RecType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,14 +68,18 @@ public class MCInstructionTransformer {
     // Auxiliary members for transform.
     
     private MCSIdFactory m_mcsid_factory;
-    private SIdFactory m_sid_factory;
+//    private SIdFactory m_sid_factory;
     private Map<SId, IFunDef> m_fun_map;
+    
+    public ProgramIns m_prog;
     
     /* *********** ********** */
     
-    public MCInstructionTransformer(MCSIdFactory mcsid_factory
-    		                      , SIdFactory sid_factory
-    		                      , Map<SId, IFunDef> fun_map) {
+    public MCInstructionTransformer(
+                                    MCSIdFactory mcsid_factory
+    		                      , Map<SId, IFunDef> fun_map
+    		                      , ProgramIns prog
+    		                      ) {
         m_global_v = new ArrayList<MCDecAtomValGroup>();
         m_decs = new ArrayList<MCDecFunGroup>();        
         m_defs = new ArrayList<MCDefFunGroup>();
@@ -98,34 +94,32 @@ public class MCInstructionTransformer {
         /* ********** ********** */
         
         m_mcsid_factory = mcsid_factory;
-        m_sid_factory = sid_factory;
         m_fun_map = fun_map;
+        
+        
+        m_prog = prog;
     
     }
     
-    public ProgramMCIns transformProgram(
-            List<DecAtomValGroup> gvs,
-            List<DecFunGroup> decs,
-            List<IFunDef> defs,
-            List<D3Cextcode> exts,
-            List<IStfplInstruction> main_inss) {
-        
-        for (DecAtomValGroup grp0: gvs) {
+    public ProgramMCIns transform(
+            ) {
+
+        for (DecAtomValGroup grp0: m_prog.m_gvs) {
             MCDecAtomValGroup grp = transform(grp0);
             m_global_v.add(grp);
         }
 
-        for (DecFunGroup dec: decs) {
+        for (DecFunGroup dec: m_prog.m_decs) {
             MCDecFunGroup grp = transfrom(dec);
             m_decs.add(grp);
         }
         
-        for (D3Cextcode ext_code: exts) {
+        for (D3Cextcode ext_code: m_prog.m_exts) {
             MCGlobalExtCode ext = new MCGlobalExtCode(ext_code.m_code);
             m_exts.add(ext);
         }
         
-        for (IFunDef def: defs) {
+        for (IFunDef def: m_prog.m_defs) {
             MCDefFunGroup mcdef = transform(def);
             m_defs.add(mcdef);
         }
@@ -133,7 +127,7 @@ public class MCInstructionTransformer {
         Map<SId, MCSId> map_clo_name = new HashMap<SId, MCSId>();
         Map<SId, MCSId> map_env_name = new HashMap<SId, MCSId>();
         Map<SId, MCSId> map_name = new HashMap<SId, MCSId>();
-        m_main_inss = transform(main_inss
+        m_main_inss = transform(m_prog.m_main_inss
         		, map_clo_name
                 , map_env_name
                 , map_name);
@@ -195,7 +189,13 @@ public class MCInstructionTransformer {
 						        		, map_clo_name
 						                , map_env_name
 						                , map_name);
-        MCDefFun mcdef = new MCDefFun(node.m_loc, mcid, node.m_lin, mcparas, null, null, mcinss);
+        MCDefFun mcdef = new MCDefFun(node.m_loc
+                , mcid
+                , node.m_lin
+                , mcparas
+//                , null
+//                , null
+                , mcinss);
         mcdefs.add(mcdef);
         
         return new MCDefFunGroup(null/*no info about kind*/, mcdefs);
@@ -237,7 +237,7 @@ public class MCInstructionTransformer {
         Map<SId, MCSId> map_env_name = new HashMap<SId, MCSId>();
         Map<SId, MCSId> map_name = new HashMap<SId, MCSId>();
         
-        Map<SId, MCSId> map_env_ele = new HashMap<SId, MCSId>();
+//        Map<SId, MCSId> map_env_ele = new HashMap<SId, MCSId>();
         
         // function name
     	SId fun_name = fun_def.m_name;
@@ -252,7 +252,7 @@ public class MCInstructionTransformer {
 
         
         // name for the environment of the function
-        SId env_name = m_sid_factory.createEnvForPara(
+        SId env_name = m_mcsid_factory.getSIdFac().createEnvForPara(
         		fun_name.toStringNoStamp() + "_env", env_type);
         MCSId mcenv_name = m_mcsid_factory.fromSId(env_name);
 
@@ -268,7 +268,7 @@ public class MCInstructionTransformer {
         	// Form closures for all the members in the group.
         	MCSId mcgrp_member = m_mcsid_factory.fromSId(grp_member);
         	
-        	SId clo_name = m_sid_factory.createLocalVar(
+        	SId clo_name = m_mcsid_factory.getSIdFac().createLocalVar(
         			grp_member.toStringNoStamp()
         		  , grp_member.getType());
         	MCSId mcclo_name = m_mcsid_factory.fromSId(clo_name);
@@ -285,11 +285,11 @@ public class MCInstructionTransformer {
         		DefFunGroup member_fun_grp = (DefFunGroup)m_fun_map.get(env_member);
         		member_type = member_fun_grp.getEnvType();  // The environment of the function.
 
-        		SId env_sid = m_sid_factory.createLocalVar(
+        		SId env_sid = m_mcsid_factory.getSIdFac().createLocalVar(
             			env_member.toStringWithStamp(), member_type);
         		MCSId mcenv_sid = m_mcsid_factory.fromSId(env_sid);
         		map_env_name.put(env_member, mcenv_sid);  // function name => env name
-        		map_env_ele.put(env_member, mcenv_sid);  // element in env => its new name
+//        		map_env_ele.put(env_member, mcenv_sid);  // element in env => its new name
 
         		ins = new MCInsGetEleFromEnv(
         				mcenv_sid  // new value
@@ -297,12 +297,12 @@ public class MCInstructionTransformer {
         				, env_member.toStringWithStamp()  // tag
         				);
         	} else {
-        		SId env_sid = m_sid_factory.createLocalVar(
+        		SId env_sid = m_mcsid_factory.getSIdFac().createLocalVar(
             			env_member.toStringWithStamp(), member_type);
         		MCSId mcenv_sid = m_mcsid_factory.fromSId(env_sid);
         		
         		map_name.put(env_member, mcenv_sid);  // name => name
-        		map_env_ele.put(env_member, mcenv_sid);  // element in env => its new name
+//        		map_env_ele.put(env_member, mcenv_sid);  // element in env => its new name
         		
         		ins = new MCInsGetEleFromEnv(
         				mcenv_sid  // new value
@@ -326,8 +326,8 @@ public class MCInstructionTransformer {
         		, mcfun_name
         		, fun_def.m_lin
         		, mcparas
-        		, mcenv_name
-        		, map_env_ele
+//        		, mcenv_name
+//        		, map_env_ele
         		, mcinss);
     }
     
@@ -381,7 +381,7 @@ public class MCInstructionTransformer {
     	// We build a new SId here.
     	SId old_name = ins.m_name;
     	RecType env_type = ins.getFunGroup().getEnvType();
-    	SId new_name = m_sid_factory.createEnvForclosure("env", env_type);
+    	SId new_name = m_mcsid_factory.getSIdFac().createEnvForclosure("env", env_type);
     	MCSId mcnew_name = m_mcsid_factory.fromSId(new_name);
     	
     	map_name.put(old_name, mcnew_name);  // name => name
@@ -419,7 +419,7 @@ public class MCInstructionTransformer {
     	MCSId mcfun_name = m_mcsid_factory.fromSId(fun_name);
     	
     	// name of the closure
-    	SId closure = m_sid_factory.createLocalVar(
+    	SId closure = m_mcsid_factory.getSIdFac().createLocalVar(
     			fun_name.toStringNoStamp() + "_env"
     		  , fun_name.getType());
     	MCSId mcclo_name = m_mcsid_factory.fromSId(closure);
@@ -515,7 +515,10 @@ public class MCInstructionTransformer {
 //                ins.m_holder.updateCat(SIdCategory.eGloVar);
 
                 return new MCInsSharedCreateCond(mcholder);
+            } else if (fname.compSymbolString(CCompUtils.cConATSMutexCreate)) {
+                // fun conats_mutex_create (): mutex
 
+                return new MCInsMutexCreate(mcholder);
             } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefCreate)) {
                 // fun conats_atomref_create {a:t@ype} (data: a): atomref a
 
@@ -583,19 +586,79 @@ public class MCInstructionTransformer {
 
             } else if (fname.compSymbolString(CCompUtils.cMCSetInt)) {
                 // prfun mc_set_int {id: sid} (id: (mc_gv_t id), x: int): void
-                todo
+
+                IValPrim gv = ins.m_args.get(0);
+                IMCValPrim mcgv = m_mcsid_factory.fromIValPrim(gv, map_clo_name, map_name);
+                if (mcgv instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
+                }
+                
+                MCSId mcsid_gv = (MCSId)mcgv;
+                
+                IValPrim vp = ins.m_args.get(1);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                
+                boolean isret = ins.m_holder.isRetHolder();
+
+                return new MCInsMCSet(mcvp, mcsid_gv, isret);
+                
+            } else if (fname.compSymbolString(CCompUtils.cMCGetInt)) {
+                // prfun mc_get_int {id1: sid} (id1: mc_gv_t id1): [x1: int] (int_value_of (id1, x1) | int x1)
+
+                IValPrim gv = ins.m_args.get(0);
+                IMCValPrim mcgv = m_mcsid_factory.fromIValPrim(gv, map_clo_name, map_name);
+                if (mcgv instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
+                }
+
+                MCSId mcsid_gv = (MCSId)mcgv;
+                return new MCInsMCGet(mcholder, mcsid_gv);
+
+                
             } else if (fname.compSymbolString(CCompUtils.cMCAtomicStart)) {
-                todo
+                // prfun mc_atomic_start (): void
+
+                return new MCInsMCAtomicStart();
+            } else if (fname.compSymbolString(CCompUtils.cMCAssert)) {
+                // prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
+                
+                IValPrim vp = ins.m_args.get(0);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                
+                boolean isret = ins.m_holder.isRetHolder();
+
+                return new MCInsMCAssert(mcvp, isret);
+            } else if (fname.compSymbolString(CCompUtils.cMCVLockViewGet)) {
+                // prfun mc_vlockview_get {i: nat} {j: pos} (i: int i, j: int j): mc_vlockview (i, j)
+
+                List<IMCValPrim> mcargs = m_mcsid_factory.fromIValPrimList(ins.m_args, map_clo_name, map_name);
+                boolean isret = ins.m_holder.isRetHolder();
+                
+                return new MCInsMCVLockViewGet(mcargs, isret); 
             } else {
-            	throw new Error(fname.toStringNoStamp() + " is not supported.");
+//            	throw new Error(fname.toStringNoStamp() + " is not supported.");
+                // do nothing for other extern functions
             }
         }
 
-        MCSId holder = StfplVP2MC(ins.m_holder);
-        MCSId fun = m_mcsid(ins.m_fun);
+        // Form normal function call.
+        
+        // We can only invoke a function by its name.
+        SId fun_name = ins.m_fun.getSId();
+        if (!fun_name.isUserFun() && !fun_name.isConstant()) {
+            throw new Error("Invocation by function pointer is not allowed. id is " + 
+                      fun_name.toStringIns() + " category is " + fun_name.getCategory());
+        }
+        MCSId mcfun = m_mcsid_factory.fromSId(fun_name);
+        
+        MCSId mcenv = null;
+        if (Aux.isClosure(fun_name.getType())) {
+            mcenv = map_env_name.get(fun_name);
+        }
+
         List<IMCValPrim> mcargs = m_mcsid_factory.fromIValPrimList(ins.m_args, map_clo_name, map_name);
         
-        return new MCInsCall(holder, fun, args);
+        return new MCInsCall(mcholder, mcfun, mcargs, mcenv);
     }
     
 

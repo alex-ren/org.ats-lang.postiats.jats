@@ -1,14 +1,16 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-public class MCInsMCAssert implements IMCInstruction {
-    public IMCValPrim m_vp;
+import java.util.List;
+
+public class MCInsMCVLockViewGet implements IMCInstruction {
+    public List<IMCValPrim> m_args;
     public boolean m_isret;
-    
-    public MCInsMCAssert(IMCValPrim vp, boolean isret) {
-        m_vp = vp;
+
+    public MCInsMCVLockViewGet(List<IMCValPrim> args, boolean isret) {
+        m_args = args;
         m_isret = isret;
     }
-
+    
     @Override
     public Object accept(IMCInsVisitor visitor) {
         return visitor.visit(this);
@@ -18,6 +20,5 @@ public class MCInsMCAssert implements IMCInstruction {
     public Boolean hasSideEffect() {
         return true;
     }
-
 
 }

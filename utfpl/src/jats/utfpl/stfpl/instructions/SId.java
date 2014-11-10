@@ -25,18 +25,19 @@ public class SId implements IIdPrim{
 
     public IVarName m_name;
     private SIdCategory m_cat;
-    
-    public void updateCat(SIdCategory cat) {
-        m_cat = cat;
-    }
-    
-    public SIdCategory getCat() {
-    	return m_cat;
-    }
 
     // Used by factory.
     public SId(IVarName name, SIdCategory cat) {
         m_name = name;
+        m_cat = cat;
+    }
+    
+    // Used by factory.
+    public SIdCategory getCategory() {
+        return m_cat;
+    }
+    
+    public void updateCat(SIdCategory cat) {
         m_cat = cat;
     }
 

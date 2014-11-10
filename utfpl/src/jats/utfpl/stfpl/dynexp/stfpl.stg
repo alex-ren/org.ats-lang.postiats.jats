@@ -50,10 +50,11 @@ D2Cfundecs_st(knd, f2ds) ::= <<
 >>
 
 D2Cinclude_st(knd, d2cs) ::= <<
-#include {
-  <d2cs; separator="\n">
-}
+#include ...
 >>
+// #include {
+//   <d2cs; separator="\n">
+// }
 
 D2Cstaload_st(filename) ::= <<
 staload "<filename>"

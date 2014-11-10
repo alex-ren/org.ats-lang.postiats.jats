@@ -73,7 +73,7 @@ import java.util.Set;
  */
 public class InstructionTransformer {
     
-    private List<DecAtomValGroup> m_global_v;  // list of all the global values, some
+    private List<DecAtomValGroup> m_gvs;  // list of all the global values, some
                                    // of which may not have implementation.
     
     private List<DecFunGroup> m_decs;  // Declarations of all the functions, some
@@ -89,9 +89,11 @@ public class InstructionTransformer {
     
     private Map<SId, IFunDef> m_fun_map;
     
-    public InstructionTransformer(SIdFactory sid_factory) {
+    private ProgramStfpl3 m_prog;  // program to be converted
+    
+    public InstructionTransformer(SIdFactory sid_factory, ProgramStfpl3 prog) {
         m_decs = new ArrayList<DecFunGroup>();
-        m_global_v = new ArrayList<DecAtomValGroup>();
+        m_gvs = new ArrayList<DecAtomValGroup>();
         m_exts = new ArrayList<D3Cextcode>();
         m_defs = new ArrayList<IFunDef>();
         m_main_inss = new ArrayList<IStfplInstruction>();
@@ -100,6 +102,13 @@ public class InstructionTransformer {
         
         m_fun_map = new HashMap<SId, IFunDef>();
         
+        
+        m_prog = prog;  // program to be converted
+        
+    }
+    
+    public Map<SId, IFunDef> getFunMap() {
+        return m_fun_map;
     }
     
     public List<DecFunGroup> getDecs() {
@@ -119,9 +128,11 @@ public class InstructionTransformer {
     }
     
     
-    public void transform_global(ProgramStfpl3 prog) {
-        transform(prog.m_d3ecs, new HashSet<Cd3var>(), m_main_inss, true);
+    public ProgramIns transform() {
+        transform(m_prog.m_d3ecs, new HashSet<Cd3var>(), m_main_inss, true);
         processClosureEnvType();  // create types for env
+        
+        return new ProgramIns(m_gvs, m_decs, m_defs, m_exts, m_main_inss);
     }
     
     private void processClosureEnvType() {
@@ -137,6 +148,7 @@ public class InstructionTransformer {
     
     /*
      * Update the type for the environment of closure.
+     * Turn function type into struct type if necessary.
      */
     private RecType processClosureEnvTypeImpl(DefFunGroup fun_grp) {
     	RecType env_type = fun_grp.getEnvType();
@@ -223,7 +235,7 @@ public class InstructionTransformer {
             if (sids.isEmpty() == false) {
                 Edeckind knd = Edeckind.fromEvalkind(node0.m_knd);
                 DecAtomValGroup grp = new DecAtomValGroup(knd, sids);
-                m_global_v.add(grp);
+                m_gvs.add(grp);
             }
         }
         
@@ -431,7 +443,7 @@ public class InstructionTransformer {
             if (is_top == false) {
                 throw new Error("This cannot happen.");
             }
-            m_global_v.add(new DecAtomValGroup(knd, names));
+            m_gvs.add(new DecAtomValGroup(knd, names));
         }
     }
 
