@@ -1,9 +1,9 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-public class CICondAlloc extends MyCspInstruction {
+public class CISharedCreateCond extends MyCspInstruction {
     public MyCspTempID m_holder;
     
-    public CICondAlloc(MyCspTempID holder, MyCspGroup blk) {
+    public CISharedCreateCond(MyCspTempID holder, MyCspGroup blk) {
         super(blk);
         m_holder = holder;
     }

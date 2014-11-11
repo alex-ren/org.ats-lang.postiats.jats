@@ -285,7 +285,7 @@ public class MyCspInsTransformer {
                 GrpProc cprocess = new GrpProc(ins.m_fun, ins.isTailCall());
                 m_cblkLst.add(cprocess);
                 
-                // No epilogue at all.
+                // No epilogue at all if is tail call.
                 if (!ins.m_holder.getSId().isRetHolder()) {
                     MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                     CIProcCallEpilog cCallEpi = new CIProcCallEpilog(m_cbEvt, ins.m_fun, ctHolder);
@@ -299,16 +299,8 @@ public class MyCspInsTransformer {
                 MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                 CIFunCall nIns = new CIFunCall(ins.m_fun, nLst, ctHolder, ins.isTailCall(), m_cbEvt);
 
-                m_cbEvt.add(nIns);
-
-                // Add return ins
-                if (ins.m_holder.getSId().isRetHolder()) {
-                    MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                    CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                    m_cbEvt.add(retIns);
-                    m_cblkLst.add(m_cbEvt);
-                    m_cbEvt = new GrpEvent();
-                }
+                handleReturnForNoEffect(nIns, ins.m_holder);
+                
                 return null;
             }
         }
@@ -328,6 +320,7 @@ public class MyCspInsTransformer {
 //            return null;            
 //        }
 
+
         @Override
         public Object visit(MCInsAtomRefUpdate ins) {
 
@@ -335,13 +328,11 @@ public class MyCspInsTransformer {
             MyCspTempID globalDest = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
             
             CIAtomRefUpdate nIns = new CIAtomRefUpdate(localSrc, globalDest, m_cbEvt);
-            m_cbEvt.add(nIns);
-            m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+
+            handleNoReturnForWithEffect(nIns);
             
             return null; 
         }
-        
 
         @Override
         public Object visit(MCInsAtomRefGet ins) {
@@ -350,32 +341,11 @@ public class MyCspInsTransformer {
             MyCspTempID localHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
             CIAtomRefGet nIns = new CIAtomRefGet(globalVar, localHolder, m_cbEvt);
-            m_cbEvt.add(nIns);
-            
-            // Add return ins
-            if (ins.m_holder.isRet()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-            }
-            
-            m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+
+            handleReturnForWithEffect(nIns, ins.m_holder);
             
             return null;
         }
-
-//        @Override
-//        public Object visit(InsRet ins) {
-//            IMyCspTemp v = ValPrim2CTemp(ins.m_v, m_subMap, m_funLab, m_cbEvt);
-//                    
-//            CIReturn nIns = new CIReturn(v, m_cbEvt);
-//            m_cbEvt.add(nIns);
-//            m_cblkLst.add(m_cbEvt);
-//            m_cbEvt = new GrpEvent();
-//
-//            return null;
-//        }
 
 //        @Override
 //        public Object visit(InsLoadArray ins) {
@@ -405,11 +375,7 @@ public class MyCspInsTransformer {
         @Override
         public Object visit(MCInsMove ins) {
             if (ins.m_holder.isRet()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
+            	addReturnIns(ins.m_holder);
             } else {
                 IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
                 MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
@@ -438,66 +404,39 @@ public class MyCspInsTransformer {
             return null;
         }
 
+
         @Override
-        public Object visit(MCInsMutexCreate ins) {
+        public MCInsAtomRefCreate visit(MCInsAtomRefCreate ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CIMutexAlloc nIns = new CIMutexAlloc(holder, m_cbEvt);
-            m_cbEvt.add(nIns);
+            CIMutexCreate nIns = new CIMutexCreate(holder, m_cbEvt);
             
-            // Add return ins
-            if (ins.m_holder.isRet()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-            }
-            
-            m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+            handleReturnForWithEffect(nIns, ins.m_holder);
             
             return null;
         }
         
-//		@Override
-//        public Object visit(InsMutexRelease ins) {
-//			IMyCspTemp mutex = ValPrim2CTemp(ins.m_mutex, m_subMap, m_funLab, m_cbEvt);
-//			CIMutexRelease nIns = new CIMutexRelease(m_cbEvt, mutex);
-//            m_cbEvt.add(nIns);
-//            m_cblkLst.add(m_cbEvt);
-//            m_cbEvt = new GrpEvent();
-//            return null;
-//        }
-		
+        @Override
+        public Object visit(MCInsMutexCreate ins) {
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            
+            CIMutexCreate nIns = new CIMutexCreate(holder, m_cbEvt);
+            
+            handleReturnForWithEffect(nIns, ins.m_holder);
+            
+            return null;
+        }
 
         @Override
         public Object visit(MCInsSharedCreateCond ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CICondAlloc nIns = new CICondAlloc(holder, m_cbEvt);
-            m_cbEvt.add(nIns);
+            CISharedCreateCond nIns = new CISharedCreateCond(holder, m_cbEvt);
             
-            // Add return ins
-            if (ins.m_holder.isRet()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-            }
-            
-            m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+            handleReturnForWithEffect(nIns, ins.m_holder);
             
             return null;
         }
-        
-//		@Override
-//        public Object visit(InsCondRelease ins) {
-//			IMyCspTemp cond = ValPrim2CTemp(ins.m_cond, m_subMap, m_funLab, m_cbEvt);
-//			CICondRelease nIns = new CICondRelease(m_cbEvt, cond);
-//            m_cbEvt.add(nIns);
-//            m_cblkLst.add(m_cbEvt);
-//            m_cbEvt = new GrpEvent();
-//            return null;
-//        }
 
         @Override
         public Object visit(MCInsMCAssert ins) {
@@ -505,6 +444,12 @@ public class MyCspInsTransformer {
             
             CIMCAssert nIns = new CIMCAssert(localSrc, m_cbEvt);
             m_cbEvt.add(nIns);
+            
+            // Add return ins
+            if (ins.m_isret) {
+                throw new Error("This should not happen.");
+            }
+            
             m_cblkLst.add(m_cbEvt);
             m_cbEvt = new GrpEvent();
             
@@ -536,10 +481,8 @@ public class MyCspInsTransformer {
             MyCspTempID globalDest = TID2CTempID(ins.m_dst, m_subMap, m_funLab, m_cbEvt);
             
             CIMCSet nIns = new CIMCSet(localSrc, globalDest, m_cbEvt);
-            m_cbEvt.add(nIns);
 
-            m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+            handleNoReturnForWithEffect(nIns);
             
             return null; 
         }
@@ -550,16 +493,8 @@ public class MyCspInsTransformer {
             MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             CIFormTuple nIns = new CIFormTuple(nLst, ctHolder, m_cbEvt);
 
-            m_cbEvt.add(nIns);
+            handleReturnForNoEffect(nIns, ins.m_holder);
 
-            // Add return ins
-            if (ins.m_holder.getSId().isRetHolder()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
-            }
             return null;
         }
 
@@ -568,17 +503,9 @@ public class MyCspInsTransformer {
             IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             CIPatLabDecompose nIns = new CIPatLabDecompose(holder, vp, ins.m_lab, m_cbEvt);
-            
-            m_cbEvt.add(nIns);
-            
-            // Add return ins
-            if (ins.m_holder.getSId().isRetHolder()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
-            }
+
+            handleReturnForNoEffect(nIns, ins.m_holder);
+
             return null;
         }
 
@@ -588,16 +515,8 @@ public class MyCspInsTransformer {
             MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             CIFormEnv nIns = new CIFormEnv(nLst, ctHolder, m_cbEvt);
 
-            m_cbEvt.add(nIns);
-
-            // Add return ins
-            if (ins.m_holder.getSId().isRetHolder()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
-            }
+            handleReturnForNoEffect(nIns, ins.m_holder);
+            
             return null;
         }
 
@@ -606,43 +525,94 @@ public class MyCspInsTransformer {
         	MyCspTempID env    = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             CIGetEleFromEnv nIns = new CIGetEleFromEnv(holder, env, ins.m_tag, m_cbEvt);
+
+            handleReturnForNoEffect(nIns, ins.m_holder);
             
-            m_cbEvt.add(nIns);
-            
-            // Add return ins
-            if (ins.m_holder.getSId().isRetHolder()) {
-                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-                m_cbEvt.add(retIns);
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
-            }
             return null;
         }
 
         @Override
         public Object visit(MCInsClosure ins) {
-            // TODO Auto-generated method stub
+        	MyCspTempID fun_name = TID2CTempID(ins.m_fun, m_subMap, m_funLab, m_cbEvt);
+        	MyCspTempID env_name = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID holder   = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            CIFormClosure nIns = new CIFormClosure(holder, fun_name, env_name, m_cbEvt);
+
+            handleReturnForNoEffect(nIns, ins.m_holder);
+            
             return null;
         }
 
-        @Override
-        public Object visit(MCInsAtomRefCreate ins) {
-            // TODO Auto-generated method stub
-            return null;
-        }
 
         @Override
-        public Object visit(MCInsMCAtomicStart ins) {
-            // TODO Auto-generated method stub
+        public MCInsMCAtomicStart visit(MCInsMCAtomicStart ins) {
+            GrpMCAtomicStart grp = new GrpMCAtomicStart();
+            if (0 != m_cbEvt.size()) {
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new GrpEvent();
+            }
+            m_cblkLst.add(grp);
             return null;
         }
 
         @Override
         public Object visit(MCInsMCVLockViewGet ins) {
-            // TODO Auto-generated method stub
+            List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
+            CIMCVLockViewGet nIns = new CIMCVLockViewGet(nLst, m_cbEvt);
+
+            handleNoReturnForWithEffect(nIns);
+
             return null;
         }
+        
+        /*
+         *  handleXXReturnForXXEffect
+         *  1. handle  No  ReturnFor  With  Effect
+         *  2. handle      ReturnFor  With  Effect
+         *  3. handle      ReturnFor  No    Effect
+         */ 
+        // Add instruction and start a new group.
+        private void handleNoReturnForWithEffect(MyCspInstruction ins) {
+	        m_cbEvt.add(ins);
+	        m_cblkLst.add(m_cbEvt);
+	        m_cbEvt = new GrpEvent();
+        }
+        
+        private void handleReturnForWithEffect(MyCspInstruction ins, MCSId holder) {
+        	m_cbEvt.add(ins);
+        	
+	        if (holder.isRet()) {
+	            MyCspTempID retCTempID = TID2CTempID(holder, m_subMap, m_funLab, m_cbEvt);
+	            CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+	            m_cbEvt.add(retIns);
+	        }
+	        
+	        // No matter whether it is return, we start a new group.
+	        m_cblkLst.add(m_cbEvt);
+	        m_cbEvt = new GrpEvent();
+        }
+        
+        /*
+         * Handle the return for instruction without effect.
+         */
+        private void handleReturnForNoEffect(MyCspInstruction ins, MCSId holder) {
+        	m_cbEvt.add(ins);
+        	
+            // Add return ins
+            if (holder.getSId().isRetHolder()) {
+            	addReturnIns(holder);
+            }
+        }
+        
+        private void addReturnIns(MCSId holder) {
+	        MyCspTempID retCTempID = TID2CTempID(holder, m_subMap, m_funLab, m_cbEvt);
+	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+	        m_cbEvt.add(retIns);
+	        m_cblkLst.add(m_cbEvt);
+	        m_cbEvt = new GrpEvent();
+        }
+        
+        /* ********** ********** *********** */
     }
 
     static private List<MyCspGroup> InsLst2CBlockLst2(List<IMCInstruction> insLst, Map<MCSId, VariableInfo> subMap, MCSId funLab)

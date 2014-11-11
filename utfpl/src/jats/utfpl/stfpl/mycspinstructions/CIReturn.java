@@ -10,7 +10,7 @@ public class CIReturn extends MyCspInstruction {
     }
 
     @Override
-    public Object accept(IMyCspVisitor visitor) {
+    public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
 

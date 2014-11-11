@@ -12,7 +12,7 @@ public class CIStoreArray extends MyCspInstruction {
         m_localIndex = localIndex;
     }
     @Override
-    public Object accept(IMyCspVisitor visitor) {
+    public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
     

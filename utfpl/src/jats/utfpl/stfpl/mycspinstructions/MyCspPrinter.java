@@ -324,7 +324,7 @@ public class MyCspPrinter implements IMyCspInsVisitor {
     }
 
     @Override
-    public Object visit(CIMutexAlloc node) {
+    public Object visit(CIMutexCreate node) {
         // mutex_alloc_ins_st(dst, escape) ::= <<
         ST st = m_stg.getInstanceOf("mutex_alloc_ins_st");
         st.add("dst", node.m_holder.accept(this));
@@ -343,7 +343,7 @@ public class MyCspPrinter implements IMyCspInsVisitor {
     }
 	
     @Override
-    public Object visit(CICondAlloc node) {
+    public Object visit(CISharedCreateCond node) {
         // cond_alloc_ins_st(dst, escape) ::= <<
         ST st = m_stg.getInstanceOf("cond_alloc_ins_st");
         st.add("dst", node.m_holder.accept(this));

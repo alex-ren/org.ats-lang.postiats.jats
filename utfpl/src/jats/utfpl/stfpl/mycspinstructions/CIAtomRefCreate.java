@@ -1,9 +1,9 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-public class CIMutexAlloc extends MyCspInstruction {
+public class CIAtomRefCreate extends MyCspInstruction {
     public MyCspTempID m_holder;
     
-    public CIMutexAlloc(MyCspTempID holder, MyCspGroup blk) {
+    public CIAtomRefCreate(MyCspTempID holder, MyCspGroup blk) {
         super(blk);
         m_holder = holder;
     }
@@ -18,5 +18,4 @@ public class CIMutexAlloc extends MyCspInstruction {
         offset = m_holder.processStack(offset);
         return offset;
     }
-
 }
