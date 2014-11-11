@@ -3,7 +3,7 @@ package jats.utfpl.stfpl.mycspinstructions;
 public abstract class MyCspGroup {
     static public enum Type{evt, proc};
     
-    public abstract Object accept(IMyCspVisitor visitor);
+    public abstract Object accept(IMyCspInsVisitor visitor);
     
     // The function is for detecting whether certain
     // variable can be used out of the current scope,

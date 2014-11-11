@@ -1,14 +1,14 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-public class CIStore extends MyCspInstruction {
+public class CIMCGet extends MyCspInstruction {
 
+    public MyCspTempID m_localHolder;
     public MyCspTempID m_globalVar;
-    public IMyCspTemp m_localSrc;
 
-    public CIStore(IMyCspTemp localSrc, MyCspTempID globalVar, MyCspGroup blk) {
+    public CIMCGet(MyCspTempID globalVar, MyCspTempID localHolder, MyCspGroup blk) {
         super(blk);
+        m_localHolder = localHolder;
         m_globalVar = globalVar;
-        m_localSrc = localSrc;
 
     }
     @Override
@@ -18,12 +18,8 @@ public class CIStore extends MyCspInstruction {
     
     @Override
     public int process(int offset) {
-        if (m_localSrc instanceof MyCspTempID) {
-            ((MyCspTempID)m_localSrc).updateForUsage();
-        }
-        
+        offset = m_localHolder.processStack(offset);
         return offset;
-        
     }
 
 }

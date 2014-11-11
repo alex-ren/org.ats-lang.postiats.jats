@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.instructions;
 
+import jats.utfpl.stfpl.stype.Aux;
 import jats.utfpl.stfpl.stype.ISType;
 
 /*
@@ -20,7 +21,13 @@ import jats.utfpl.stfpl.stype.ISType;
  */
 public class SId implements IIdPrim{
     
-    public static enum SIdCategory {/*eLibFun, */eGloVar/*obsolete*/, eGloValue, ePara, eUserFun, eLocalVar, eRetHolder, eConstant, eOther};
+    public static enum SIdCategory {eGloValue  // global entity but not of function format
+                                  , ePara      // parameters
+                                  , eUserFun   // function declaration, implementation, definition, lambda expression
+                                  , eLocalVar
+                                  , eRetHolder
+                                  , eConstant  // symbols from the internal of compiler (d2sym, d2cst)
+                                  };
 
 
     public IVarName m_name;
@@ -50,14 +57,50 @@ public class SId implements IIdPrim{
         return SIdCategory.eRetHolder == m_cat;
     }
     
+    public boolean isConstant() {
+        return SIdCategory.eConstant == m_cat;
+    }
+    
+    public boolean isLocal() {
+        return SIdCategory.eLocalVar == m_cat;
+    }
+    
+    public boolean isPara() {
+        return SIdCategory.ePara == m_cat;
+    }
+    
+    // functions inherent to the ATS compiler
+    public boolean isLibFun() {
+        if (Aux.getFunctionType(m_name.getType()) == null) {
+            return false;
+        } else {
+            return SIdCategory.eConstant == m_cat;
+        }
+    }
+    
     public boolean isUserFun() {
         return SIdCategory.eUserFun == m_cat;
     }
     
-    public boolean isConstant() {
-        return SIdCategory.eConstant == m_cat;
+    public boolean isFunName() {
+        if (Aux.getFunctionType(m_name.getType()) == null) {
+            return false;
+        } else {
+            if (SIdCategory.eUserFun == m_cat || SIdCategory.eConstant == m_cat) {
+                return true;
+            } else {
+                throw new Error("Check this. Should not happen.");
+            }
+        }
     }
-
+    
+    
+    public boolean isGlobalValue() {
+        return m_cat == SIdCategory.eGloValue;
+    }
+    
+    /* *************** ****************** */
+    
     public String toStringCS() {
         return m_name.toStringCS();
     }
@@ -73,10 +116,7 @@ public class SId implements IIdPrim{
     public String toStringWithStamp() {
     	return m_name.toStringWithStamp();
     }
-    
-    public boolean isGlobal() {
-    	return m_cat == SIdCategory.eGloVar || m_cat == SIdCategory.eGloValue;
-    }
+
     
 }
 

@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.mycspinstructions;
-import jats.utfpl.instruction.TID;
-import jats.utfpl.patcsps.type.PATTypeFunc;
-import jats.utfpl.patcsps.type.PATTypeSingleton;
+
+import jats.utfpl.stfpl.instructions.SId;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 /*
  * If m_tid is global variable or function parameter, 
@@ -20,8 +20,9 @@ public class MyCspTempID implements IMyCspTemp {
     private EntityLocation m_curLoc;  // The position of the current location of this entity of TID.
     
     public static MyCspTempID createAsDef(VariableInfo vi, EntityLocation curLoc) {
-        if (vi.getTID().isGlobalVariable()) {
-            throw new Error("Wrong usage. Only parameter and local varaible.");
+        SId sid = vi.getMCSId().getSId();
+        if (!(sid.isPara() || sid.isLocal() || sid.isRetHolder())) {
+            throw new Error("Wrong usage.");
         }
         
         MyCspTempID ret = new MyCspTempID(true, vi, curLoc);
@@ -33,8 +34,8 @@ public class MyCspTempID implements IMyCspTemp {
         return ret;
     }
     
-    public boolean isFunc() {
-        return m_vi.getTID().getType() instanceof PATTypeFunc;
+    public boolean isFunName() {
+        return m_vi.getMCSId().getSId().isFunName();
     }
     
     private MyCspTempID(boolean isDef, VariableInfo vi, EntityLocation curLoc) {
@@ -68,11 +69,7 @@ public class MyCspTempID implements IMyCspTemp {
     }
     
     public boolean isRet() {
-        return m_vi.getTID().isRet();
-    }
-    
-    public boolean equals(String name) {
-        return m_vi.getTID().equals(name);
+        return m_vi.getMCSId().getSId().isRetHolder();
     }
     
     public StackPosition getStackInfo() {
@@ -80,11 +77,11 @@ public class MyCspTempID implements IMyCspTemp {
     }
     
     public boolean isPara() {
-        return m_vi.getTID().isPara();
+        return m_vi.getMCSId().getSId().isPara();
     }
     
     public int processStackPrelogue(int offset) {
-        if (m_vi.getTID().isPara()) {
+        if (isPara()) {
         	if (m_isDef) {
                 updateEscaped();
 //                if (isEscaped()) { 
@@ -116,29 +113,11 @@ public class MyCspTempID implements IMyCspTemp {
     }
     
     /*
-     * If the caller specify "_" as the holder, then caller
-     * won't get the return value onto it own stack.
-     * 
-     * If this is tail call, then caller won't lay its hands on
-     * the return value at all.
+     * The current id is a holder for a function call.
      */
-    public int processStackProcCallEpilogue(int offset, boolean isVoid) {
-        if (isVoid) {
-            m_vi.getTID().updateType(PATTypeSingleton.cVoidType);
-        }
-        
-        // caller doesn't care about the return value at all.
-    	// caller will not get the return value onto its own stack.
-    	if (m_vi.getTID() == TID.ANONY) {
-    		updateEscaped();  // isEscaped would be false
-    		return offset;
-    	}
-    	
-    	updateEscaped();
-
-    	// If isRet() is true, then isEscaped must be false.
+    public int processStackProcCallEpilogue(int offset) {
         if (isEscaped()) {
-            offset =  updateForDef(offset);
+            offset =  updateForDef(offset);  // allocate from stack
         }
 
         return offset;
@@ -148,19 +127,6 @@ public class MyCspTempID implements IMyCspTemp {
     public boolean isDefinition() {
         return m_isDef;
     }
-//    
-//    private boolean isDefinedInside(CBlock grp) {
-//        if (m_vi.getDefLoc().getBlock() == grp) {
-//            return true;
-//        } else {
-//            // parameter in the same level (not in the inner function)
-//            if (m_vi.getTID().isPara() && m_vi.getDefLoc().getLevel() == grp.getLevel()) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-//    }
     
     private void updateEscaped() {
         m_vi.updateEscaped();
@@ -170,12 +136,12 @@ public class MyCspTempID implements IMyCspTemp {
         return m_vi.getEscaped();
     }
     
-    public String getID() {
-        return m_vi.getTID().getID();
-    }
+//    public String getID() {
+//        return m_vi.getMCSId().getID();
+//    }
     
     public String toString() {
-        return m_vi.getTID().toString();
+        return m_vi.getMCSId().toString();
     }
     
     @Override
@@ -183,8 +149,8 @@ public class MyCspTempID implements IMyCspTemp {
         return visitor.visit(this);
     }
     
-    public TID getTID() {
-        return m_vi.getTID();
+    public MCSId getMCSId() {
+        return m_vi.getMCSId();
     }
     
     public boolean isOutofScope() {

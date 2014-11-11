@@ -71,10 +71,6 @@ public class CTempID implements CTemp {
         return m_vi.getTID().isRet();
     }
     
-    public boolean equals(String name) {
-        return m_vi.getTID().equals(name);
-    }
-    
     public StackPosition getStackInfo() {
         return m_stackPos;
     }

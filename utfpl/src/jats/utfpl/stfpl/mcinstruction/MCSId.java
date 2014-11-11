@@ -32,5 +32,9 @@ public class MCSId implements IMCValPrim {
         m_has_effect = has_effect;
     }
 	
+    
+    public boolean isRet() {
+        return m_sid.isRetHolder();
+    }
 
 }

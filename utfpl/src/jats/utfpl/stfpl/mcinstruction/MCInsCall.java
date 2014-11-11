@@ -22,7 +22,7 @@ public class MCInsCall implements IMCInstruction {
         m_args = args;
         m_env = env;  // If holder is not a closure, then env is null.
         
-        if (!m_fun.getSId().isUserFun() && !m_fun.getSId().isConstant()) {
+        if (!m_fun.getSId().isFunName()) {
             throw new Error("This is not allowed. id is " + m_fun.getSId().toStringIns());
         }
     }
@@ -36,5 +36,9 @@ public class MCInsCall implements IMCInstruction {
     public Boolean hasSideEffect() {
         // return Aux.hasEffect(m_fun.getType());
         return m_fun.hasEffect();
+    }
+    
+    public boolean isTailCall() {
+        return m_holder.getSId().isRetHolder();
     }
 }

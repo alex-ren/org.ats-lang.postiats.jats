@@ -1,7 +1,5 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.instruction.GlobalExtCode;
-import jats.utfpl.instruction.TupleValue;
 import jats.utfpl.patcsps.type.PATType;
 import jats.utfpl.patcsps.type.PATTypeArray;
 
@@ -13,7 +11,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-public class MyCspPrinter implements IMyCspVisitor {
+public class MyCspPrinter implements IMyCspInsVisitor {
     private STGroup m_stg;
     
     public MyCspPrinter() {
@@ -54,17 +52,17 @@ public class MyCspPrinter implements IMyCspVisitor {
         // program_st(gvarlst, proclst, mainproc, mainlab, extcodelst) ::= <<
         ST st = m_stg.getInstanceOf("program_st");
         for (VariableInfo gv: prog.m_globalVars) {
-            PATType ty = gv.getTID().getType();
+            PATType ty = gv.getMCSId().getType();
             if (ty instanceof PATTypeArray) {
                 ST st_gv = m_stg.getInstanceOf("garray_def_st");
-                st_gv.add("gvar", gv.getTID());
+                st_gv.add("gvar", gv.getMCSId());
                 st_gv.add("sz", ((PATTypeArray)ty).getSize());
 
                 st.add("gvarlst", st_gv);
                 
             } else {
                 ST st_gv = m_stg.getInstanceOf("gvar_def_st");
-                st_gv.add("gvar", gv.getTID());
+                st_gv.add("gvar", gv.getMCSId());
 
                 st.add("gvarlst", st_gv);
             }

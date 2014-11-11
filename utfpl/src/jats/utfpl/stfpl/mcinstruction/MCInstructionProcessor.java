@@ -259,7 +259,7 @@ public class MCInstructionProcessor {
 
         private MCSId subsHolder(MCSId holder) {
             SId sid = holder.getSId();
-            if (sid.isGlobal()) {
+            if (sid.isGlobalValue()) {
                 return holder;  // no substitution for global value
             }
             

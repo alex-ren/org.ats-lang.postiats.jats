@@ -22,7 +22,7 @@ public class CIProcCallPrelogue extends MyCspInstruction {
         
         for (IMyCspTemp arg: m_args) {
             if (arg instanceof MyCspTempID) {
-                if (!((MyCspTempID)arg).isFunc()) {
+                if (!((MyCspTempID)arg).isFunName()) {
                     ((MyCspTempID)arg).updateForUsage();  // create a new CTempID
                 }
             } else {

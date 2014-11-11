@@ -1,13 +1,13 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 public class GrpThreadCreate extends MyCspGroup {
     public IMyCspTemp m_tid;
-    public TID m_funlab;
+    public MCSId m_funlab;  // Currently, we assume this is function name.
     public IMyCspTemp m_args;
     
-	public GrpThreadCreate(TID funlab) {
+	public GrpThreadCreate(MCSId funlab) {
 	    m_funlab = funlab;
     }
 	

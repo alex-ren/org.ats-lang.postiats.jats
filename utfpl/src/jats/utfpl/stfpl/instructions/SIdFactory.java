@@ -11,20 +11,20 @@ import jats.utfpl.stfpl.stype.ISType;
 
 public class SIdFactory {
     
-    private SId m_anony;
+//    private SId m_anony;
     
     private VNameFactory m_name_factory;
 
     private Map<IVarName, SId> m_map = new HashMap<IVarName, SId>(); 
     
-    
-    public SId getAnony() {
-        return m_anony;
-    }
+//    
+//    public SId getAnony() {
+//        return m_anony;
+//    }
     
     public SIdFactory() {
         m_name_factory = new VNameFactory();
-        m_anony = new SId(m_name_factory.getAnonyId(), SIdCategory.eOther);
+//        m_anony = new SId(m_name_factory.getAnonyId(), SIdCategory.eOther);
         m_map = new HashMap<IVarName, SId>();
     }
 

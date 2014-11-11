@@ -12,6 +12,8 @@ public interface IMCInsVisitor {
 
     public Object visit(MCInsCall ins);
 
+    /* ********* *********** */
+    
     public Object visit(MCInsFormEnv ins);
 
     public Object visit(MCInsGetEleFromEnv ins);
@@ -31,6 +33,8 @@ public interface IMCInsVisitor {
     public Object visit(MCInsSharedCreateCond ins);
 
     public Object visit(MCInsMutexCreate ins);
+
+    /* ********* *********** */
     
     public Object visit(MCInsMCAtomicStart ins);
 
@@ -41,6 +45,7 @@ public interface IMCInsVisitor {
     public Object visit(MCInsMCSet ins);
 
     public Object visit(MCInsMCVLockViewGet ins);
+    
     
 
 }

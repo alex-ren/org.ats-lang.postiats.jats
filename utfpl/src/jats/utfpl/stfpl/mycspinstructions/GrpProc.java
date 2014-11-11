@@ -1,16 +1,16 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
+import jats.utfpl.stfpl.mcinstruction.MCSId;
+
 import java.util.List;
 
-import jats.utfpl.instruction.TID;
-
 public class GrpProc extends MyCspGroup {
-    public TID m_funlab;  // Don't support function pointer.
+    public MCSId m_funlab;  // Currently we assume this is function name.
 //    public List<CTemp> m_args;
 //    public CTempID m_ret;  // The holder for the return value of the function call.
     public boolean m_isTail;
     
-    public GrpProc(TID funlab, List<IMyCspTemp> args, MyCspTempID ret, boolean isTail) {
+    public GrpProc(MCSId funlab, List<IMyCspTemp> args, MyCspTempID ret, boolean isTail) {
         m_funlab = funlab;
 //        m_args = args;
 //        m_ret = ret;
@@ -18,7 +18,7 @@ public class GrpProc extends MyCspGroup {
 
     }
     
-    public GrpProc(TID funlab, boolean isTail) {
+    public GrpProc(MCSId funlab, boolean isTail) {
         m_funlab = funlab;
 //        m_args = null;
 //        m_ret = null;
@@ -39,7 +39,7 @@ public class GrpProc extends MyCspGroup {
     }
     
     @Override
-    public Object accept(IMyCspVisitor visitor) {
+    public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
 

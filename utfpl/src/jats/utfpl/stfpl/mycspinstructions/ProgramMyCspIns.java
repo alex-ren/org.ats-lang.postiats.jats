@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.instruction.GlobalExtCode;
+import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
 
 import java.util.List;
 
@@ -9,12 +9,13 @@ public class ProgramMyCspIns {
     public List<MyCspGroup> m_main;
     public List<FunctionMyCsp> m_procLst;
     
-    public List<GlobalExtCode> m_extCodeLst;
+    public List<MCGlobalExtCode> m_extCodeLst;
     
-    public ProgramMyCspIns(List<VariableInfo> globalVars
+    public ProgramMyCspIns(
+              List<VariableInfo> globalVars
             , List<MyCspGroup> main
             , List<FunctionMyCsp> procLst
-            , List<GlobalExtCode> extCodeLst) {
+            , List<MCGlobalExtCode> extCodeLst) {
         m_globalVars = globalVars;
         m_main = main;
         m_procLst = procLst;

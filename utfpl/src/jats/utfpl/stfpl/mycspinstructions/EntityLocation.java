@@ -1,28 +1,23 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.instruction.TID;
-
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 /*
- * Use EntityLocation is functional data structure, which means
+ * Use EntityLocation as functional data structure, which means
  * it's immutable.
  */
 public class EntityLocation {
-    private TID m_funLab;
+    private MCSId m_funname;  // name of the function
     private MyCspGroup m_grp;
     
-    static EntityLocation create(TID funLab, MyCspGroup grp) {
-        return new EntityLocation(funLab, grp);
+    static EntityLocation create(MCSId mid, MyCspGroup grp) {
+        return new EntityLocation(mid, grp);
     }
     
     // For parameter and global value, the grp is actually null.
-    private EntityLocation(TID funLab, MyCspGroup grp) {
-        m_funLab = funLab;
+    private EntityLocation(MCSId mid, MyCspGroup grp) {
+        m_funname = mid;
         m_grp = grp;
-    }
-    
-    public TID getFunLab() {
-        return m_funLab;
     }
 
     public  MyCspGroup getBlock() {
@@ -37,7 +32,7 @@ public class EntityLocation {
             return false;
         } else {
             EntityLocation obj = (EntityLocation)o;
-            if (m_funLab == obj.m_funLab && m_grp == obj.m_grp) {
+            if (m_funname == obj.m_funname && m_grp == obj.m_grp) {
                 return true;
             } else {
                 return false;

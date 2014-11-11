@@ -3,6 +3,12 @@ package jats.utfpl.stfpl.mycspinstructions;
 /*
  * The existence of "CICond" cause the usage of this class.
  * This instruction only appears inside a CBEvent.
+ * var x;
+ * if ... {
+ *   x = 1;
+ * } else {
+ *   x = 2;
+ * }
  */
 public class CIVarDef extends MyCspInstruction {
     public MyCspTempID m_id;
@@ -13,7 +19,7 @@ public class CIVarDef extends MyCspInstruction {
     }
 
     @Override
-    public Object accept(IMyCspVisitor visitor) {
+    public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
 

@@ -19,5 +19,7 @@ public class MCInsAtomRefGet implements IMCInstruction {
     public Boolean hasSideEffect() {
         return true;
     }
+    
+
 
 }

@@ -376,7 +376,7 @@ public class InstructionTransformer {
             
             for (Cd3var d3var: env2) {
                 SId sid = m_sid_factory.getSIdFromCd3var(d3var);
-                if (!sid.isGlobal()) {  // ** global var will not be put into env.
+                if (!sid.isGlobalValue()) {  // ** global var will not be put into env.
                     throw new Error("implementation for closure is now allowed");
 //                    if (env.contains(d3var)) {
 //                        SIdUser env_member = m_sid_factory.createSIdUserByCd3var(d3var, true);
@@ -461,7 +461,7 @@ public class InstructionTransformer {
             
             for (Cd3var d3var: node0.m_env /*env of the current function*/) {
             	SId sid = m_sid_factory.getSIdFromCd3var(d3var);
-            	if (!sid.isGlobal()) {  // ** global var will not be put into env.
+            	if (!sid.isGlobalValue()) {  // ** global var will not be put into env.
                     if (env.contains(d3var)) {
                         SIdUser env_member = m_sid_factory.createSIdUserByCd3var(d3var, true);
                         form_env.add(env_member);
@@ -691,7 +691,7 @@ public class InstructionTransformer {
             
             for (Cd3var d3var: env2) {
                 SId sid = m_sid_factory.getSIdFromCd3var(d3var);
-                if (!sid.isGlobal()) {  // ** global var will not be put into env.
+                if (!sid.isGlobalValue()) {  // ** global var will not be put into env.
                     if (env.contains(d3var)) {
                         SIdUser env_member = m_sid_factory.createSIdUserByCd3var(d3var, true);
                         form_env.add(env_member);

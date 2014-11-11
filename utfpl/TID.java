@@ -41,7 +41,7 @@ public class TID implements ValPrim {
     }
     
     public boolean hasAddress() {
-        return null != m_addr;
+    	return null != m_addr;
     }
     
     public boolean isAnony() {
@@ -49,11 +49,11 @@ public class TID implements ValPrim {
     }
     
     public TID dup() {
-        if (this == ANONY) {
-            return this;
-        } else {
+    	if (this == ANONY) {
+    		return this;
+    	} else {
             return new TID(m_id, m_cat, m_type, m_trueName);
-        }
+    	}
     }
     
     public Aux.Address getAddr() {

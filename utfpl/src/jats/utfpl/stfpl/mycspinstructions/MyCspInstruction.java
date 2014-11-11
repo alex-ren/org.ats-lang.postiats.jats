@@ -11,6 +11,6 @@ public abstract class MyCspInstruction {
         return m_blk;
     }
 
-    abstract public Object accept(IMyCspVisitor visitor);
+    abstract public Object accept(IMyCspInsVisitor visitor);
     abstract public int process(int offset);
 }

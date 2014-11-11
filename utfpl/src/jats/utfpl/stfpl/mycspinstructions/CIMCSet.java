@@ -1,11 +1,11 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-public class CIStore extends MyCspInstruction {
+public class CIMCSet extends MyCspInstruction {
 
     public MyCspTempID m_globalVar;
     public IMyCspTemp m_localSrc;
 
-    public CIStore(IMyCspTemp localSrc, MyCspTempID globalVar, MyCspGroup blk) {
+    public CIMCSet(IMyCspTemp localSrc, MyCspTempID globalVar, MyCspGroup blk) {
         super(blk);
         m_globalVar = globalVar;
         m_localSrc = localSrc;

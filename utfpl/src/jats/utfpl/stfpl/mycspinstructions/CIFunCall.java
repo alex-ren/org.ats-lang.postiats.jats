@@ -1,17 +1,17 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 import java.util.List;
 
 public class CIFunCall extends MyCspInstruction {
-    public TID m_funlab;  // Don't support function pointer.
+    public MCSId m_funlab;  // Currently, we assume this is function name.
     public List<IMyCspTemp> m_args;
     public MyCspTempID m_ret;
     public boolean m_isTail;  // useless currently
 
     
-    public CIFunCall(TID funlab, List<IMyCspTemp> args, MyCspTempID ret, boolean isTail, MyCspGroup blk) {
+    public CIFunCall(MCSId funlab, List<IMyCspTemp> args, MyCspTempID ret, boolean isTail, MyCspGroup blk) {
         super(blk);
         m_funlab = funlab;
         m_args = args;
@@ -30,7 +30,7 @@ public class CIFunCall extends MyCspInstruction {
     
 
     @Override
-    public Object accept(IMyCspVisitor visitor) {
+    public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
 

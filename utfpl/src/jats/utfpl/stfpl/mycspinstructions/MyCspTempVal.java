@@ -1,35 +1,17 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.instruction.AtomValue;
-import jats.utfpl.instruction.TupleValue;
-import jats.utfpl.instruction.ValPrim;
+import jats.utfpl.stfpl.mcinstruction.MCAtomValue;
 
 public class MyCspTempVal implements IMyCspTemp {
-    public static enum type {atom, tuple};
-    
-    private ValPrim m_v;
-    public type m_type;
-    
-    public MyCspTempVal(AtomValue v) {
-        m_v = v;
-        m_type = type.atom;
-    }
-    
-    public MyCspTempVal(TupleValue v) {
-        m_v = v;
-        m_type = type.tuple;
-    }
-    
-    public AtomValue getAtomValue() {
-        return (AtomValue)m_v;
-    }
 
-    public TupleValue getTupleValue() {
-        return (TupleValue)m_v;
+    private MCAtomValue m_v;
+
+    public MyCspTempVal(MCAtomValue v) {
+        m_v = v;
     }
     
     @Override
-    public Object accept(IMyCspVisitor visitor) {
+    public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
 
