@@ -96,7 +96,7 @@ public class MyCspInsTransformer {
      * 3. Add the concept of stack location.
      * 4. Add return instruction
      */
-    public ProgramMyCspIns trans() {
+    public ProgramMyCspIns transform() {
         Map<MCSId, VariableInfo> subMap = new HashMap<MCSId, VariableInfo>();
         
         // ==== handle global variables

@@ -13,6 +13,9 @@ import jats.utfpl.stfpl.mcinstruction.MCInstructionPrinter;
 import jats.utfpl.stfpl.mcinstruction.MCInstructionTransformer;
 import jats.utfpl.stfpl.mcinstruction.MCSIdFactory;
 import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
+import jats.utfpl.stfpl.mycspinstructions.MyCspInsPrinter;
+import jats.utfpl.stfpl.mycspinstructions.MyCspInsTransformer;
+import jats.utfpl.stfpl.mycspinstructions.ProgramMyCspIns;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -30,6 +33,8 @@ public class ModelGenerater {
 	private String m_dyn3;
 	private String m_inss;
 	private String m_mcinss;
+    private String m_mycspinss;
+	
 	
 	
 	public ModelGenerater(String strPath) {
@@ -140,7 +145,7 @@ public class ModelGenerater {
                 
                 MCInstructionPrinter mcinsPrinter = new MCInstructionPrinter();
                 String outputMCIns = mcinsPrinter.print(prog_mcins);  // .print(prog_mcins); 
-                System.out.println("==stfpl's code (layer IStfplMCInstruction) is ==========================");
+                System.out.println("==stfpl's code (layer IMCInstruction) is ==========================");
                 System.out.println(outputMCIns);
 
                 m_mcinss = outputMCIns;
@@ -148,7 +153,27 @@ public class ModelGenerater {
                     System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
+                
+                /* ************* ************** */
+                
+                System.out.println("== Generating mycspinstruction start ==========================");
 
+                MyCspInsTransformer mycspins_cvt = new MyCspInsTransformer(prog_mcins);
+
+                ProgramMyCspIns prog_mycspins = mycspins_cvt.transform();
+                
+                System.out.println("== Generating mycspinstruction end ==========================");
+                
+                MyCspInsPrinter mycspinsPrinter = new MyCspInsPrinter();
+                String outputMyCspIns = mycspinsPrinter.print(prog_mycspins);  // .print(prog_mcins); 
+                System.out.println("==stfpl's code (layer MyCspInstruction) is ==========================");
+                System.out.println(outputMyCspIns);
+
+                m_mycspinss = outputMyCspIns;
+                if (level <= 6) {
+                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    return 0;
+                }
                 
                 
                 /* ************* ************** */
