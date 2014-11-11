@@ -1,18 +1,17 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.stfpl.Ilabel;
 
-public class CIPatLabDecompose extends MyCspInstruction {
-    public Ilabel m_lab;
+import java.util.Set;
+
+public class CIFormEnv extends MyCspInstruction {
+    public Set<MyCspTempID> m_eles;
     public MyCspTempID m_holder;
-    public IMyCspTemp m_vp;
     
-    public CIPatLabDecompose(MyCspTempID holder, IMyCspTemp vp, Ilabel lab, MyCspGroup blk) {
+    public CIFormEnv(Set<MyCspTempID> eles, MyCspTempID holder, MyCspGroup blk) {
         super(blk);
         
         m_holder = holder;
-        m_vp = vp;
-        m_lab = lab;
+        m_eles = eles;
     }
 
     @Override
@@ -23,8 +22,9 @@ public class CIPatLabDecompose extends MyCspInstruction {
     @Override
     public int process(int offset) {
         offset = m_holder.processStack(offset);
-        if (m_vp instanceof MyCspTempID) {
-            ((MyCspTempID)m_vp).updateForUsage();
+
+        for (MyCspTempID arg: m_eles) {
+        	arg.updateForUsage();
         }
         
         return offset;

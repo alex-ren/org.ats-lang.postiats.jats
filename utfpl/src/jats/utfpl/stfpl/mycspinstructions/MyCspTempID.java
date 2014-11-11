@@ -144,11 +144,6 @@ public class MyCspTempID implements IMyCspTemp {
         return m_vi.getMCSId().toString();
     }
     
-    @Override
-    public Object accept(IMyCspVisitor visitor) {
-        return visitor.visit(this);
-    }
-    
     public MCSId getMCSId() {
         return m_vi.getMCSId();
     }
@@ -156,6 +151,11 @@ public class MyCspTempID implements IMyCspTemp {
     public boolean isOutofScope() {
         return m_vi.isOutofScope(m_curLoc);
 
+    }
+
+	@Override
+    public Object accept(IMyCspInsVisitor visitor) {
+		return visitor.visit(this);
     }
 
 }

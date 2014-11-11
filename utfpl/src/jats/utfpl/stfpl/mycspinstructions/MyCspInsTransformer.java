@@ -2,9 +2,11 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import jats.utfpl.instruction.AtomValue;
 import jats.utfpl.instruction.FunctionInstruction;
@@ -92,6 +94,7 @@ public class MyCspInsTransformer {
      * 1. Group instructions into block. Prepare for the analysis of each values (def / use).
      * 2. Decide whether a value is used out of its visible scope.
      * 3. Add the concept of stack location.
+     * 4. Add return instruction
      */
     public ProgramMyCspIns trans() {
         Map<MCSId, VariableInfo> subMap = new HashMap<MCSId, VariableInfo>();
@@ -405,6 +408,8 @@ public class MyCspInsTransformer {
                 MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                 CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
                 m_cbEvt.add(retIns);
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new GrpEvent();
             } else {
                 IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
                 MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
@@ -560,19 +565,58 @@ public class MyCspInsTransformer {
 
         @Override
         public Object visit(MCInsPatLabDecompose ins) {
-            // TODO Auto-generated method stub
+            IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            CIPatLabDecompose nIns = new CIPatLabDecompose(holder, vp, ins.m_lab, m_cbEvt);
+            
+            m_cbEvt.add(nIns);
+            
+            // Add return ins
+            if (ins.m_holder.getSId().isRetHolder()) {
+                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+                m_cbEvt.add(retIns);
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new GrpEvent();
+            }
             return null;
         }
 
         @Override
         public Object visit(MCInsFormEnv ins) {
-            // TODO Auto-generated method stub
+            Set<MyCspTempID> nLst = ValPrimSet2CTempSet(ins.m_env, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            CIFormEnv nIns = new CIFormEnv(nLst, ctHolder, m_cbEvt);
+
+            m_cbEvt.add(nIns);
+
+            // Add return ins
+            if (ins.m_holder.getSId().isRetHolder()) {
+                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+                m_cbEvt.add(retIns);
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new GrpEvent();
+            }
             return null;
         }
 
         @Override
         public Object visit(MCInsGetEleFromEnv ins) {
-            // TODO Auto-generated method stub
+        	MyCspTempID env    = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            CIGetEleFromEnv nIns = new CIGetEleFromEnv(holder, env, ins.m_tag, m_cbEvt);
+            
+            m_cbEvt.add(nIns);
+            
+            // Add return ins
+            if (ins.m_holder.getSId().isRetHolder()) {
+                MyCspTempID retCTempID = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+                m_cbEvt.add(retIns);
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new GrpEvent();
+            }
             return null;
         }
 
@@ -650,6 +694,15 @@ public class MyCspInsTransformer {
     		nLst.add(newVp);
     	}
     	return nLst;
+    }
+    
+    static private Set<MyCspTempID> ValPrimSet2CTempSet(Set<MCSId> vpSet, Map<MCSId, VariableInfo> map, MCSId funLab, MyCspGroup grp) {
+    	Set<MyCspTempID> nSet = new HashSet<MyCspTempID>();
+    	for (MCSId vp: vpSet) {
+    		MyCspTempID newVp = TID2CTempID(vp, map, funLab, grp);
+    		nSet.add(newVp);
+    	}
+    	return nSet;
     }
     
     /*
