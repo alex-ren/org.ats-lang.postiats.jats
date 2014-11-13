@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.mcinstruction;
 
+import jats.utfpl.stfpl.stype.Aux;
+
 //import jats.utfpl.stfpl.csharptype.CSFunType;
 //
 //import org.stringtemplate.v4.ST;
@@ -17,6 +19,12 @@ public class MCInsClosure implements IMCInstruction {
         m_holder = holder;
         m_fun = fun;
         m_env = env;
+        
+        System.out.println("++++++++++++++ m_env is " + m_env.getSId().toStringWithStamp() + " cat is " + m_env.getSId().getCategory());
+        
+        if (Aux.getFunctionType(m_env.getType()) != null) {
+        	throw new Error("eeeeeeeeee");
+        }
     }
 
     @Override

@@ -158,7 +158,7 @@ public class ModelGenerater {
                 
                 System.out.println("== Generating mycspinstruction start ==========================");
 
-                MyCspInsTransformer mycspins_cvt = new MyCspInsTransformer(prog_mcins);
+                MyCspInsTransformer mycspins_cvt = new MyCspInsTransformer(prog_mcins, mcsid_factory);
 
                 ProgramMyCspIns prog_mycspins = mycspins_cvt.transform();
                 

@@ -142,7 +142,12 @@ public class InstructionPrinter {
 
 
     private Object printInsClosure(InsClosure node) {
-        return "InsClosure";
+    	// InsClosure_st(funname, envname) ::= <<
+    	ST st = m_stg.getInstanceOf("InsClosure_st");
+    	st.add("funname", node.m_name.toStringIns());
+    	st.add("envname", node.m_env.getSId().toStringIns());
+
+    	return st;
     }
 
 

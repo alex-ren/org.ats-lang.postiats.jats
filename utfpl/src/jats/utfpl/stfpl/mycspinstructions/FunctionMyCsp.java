@@ -1,17 +1,17 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.stfpl.mcinstruction.MCSId;
-
 import java.util.List;
 
 public class FunctionMyCsp {
-    public MCSId m_name;
+    public MyCspTempID m_name;
     public List<MyCspTempID> m_paras;
+    public MyCspTempID m_envname;
     public List<MyCspGroup> m_body;
     
-    public FunctionMyCsp(MCSId name, List<MyCspTempID> paras, List<MyCspGroup> body) {
+    public FunctionMyCsp(MyCspTempID name, List<MyCspTempID> paras, MyCspTempID envname, List<MyCspGroup> body) {
         m_name = name;
         m_paras = paras;
+        m_envname = envname;
         m_body = body;
     }
 //

@@ -84,8 +84,9 @@ public class MyCspInsTransformer {
     private ProgramMCIns m_prog;
     private MCSIdFactory m_mfac;
     
-    public MyCspInsTransformer(ProgramMCIns prog) {
+    public MyCspInsTransformer(ProgramMCIns prog, MCSIdFactory mfac) {
         m_prog = prog;
+        m_mfac = mfac;
         
     }
     
@@ -133,6 +134,8 @@ public class MyCspInsTransformer {
                 for (MyCspTempID para: funcCSP.m_paras) {
                     pos = para.processStackPrelogue(pos);
                 }
+                
+                pos = funcCSP.m_envname.processStackPrelogue(pos);
                 
                 // add the concept of stack
                 processBlockLstForStack(pos, funcCSP.m_body);
@@ -691,9 +694,6 @@ public class MyCspInsTransformer {
         
         VariableInfo vi = map.get(tid);
         if (null == vi) {
-//            if (tid.isGlobalVariable()) {
-//                throw new Error("Wong usage. Only for global value, parameter, and local variable");
-//            }
             vi = VariableInfo.create(tid, loc);
             map.put(tid, vi);  // This is important.
             ret = MyCspTempID.createAsDef(vi, loc);
@@ -707,18 +707,21 @@ public class MyCspInsTransformer {
     static private FunctionMyCsp FunDef2CProcess(
             MCDefFun funDef
             , Map<MCSId, VariableInfo> subMap) {
+    	
+    	MyCspTempID fun_name = TID2CTempID(funDef.m_name, subMap, funDef.m_name, null);
+    	
         List<MyCspTempID> paras = new ArrayList<MyCspTempID>();
         for (MCSId para: funDef.m_paras) {
             MyCspTempID cPara = TID2CTempID(para, subMap, funDef.m_name, null /* CBlock is null */);
             paras.add(cPara);
         }
-        for (MCSId para: funDef.m_paras) {
-            MyCspTempID cPara = TID2CTempID(para, subMap, funDef.m_name, null /* CBlock is null */);
-            paras.add(cPara);
-        }
+        
+        MyCspTempID envname = TID2CTempID(funDef.m_name, subMap, funDef.m_env_name, null);
         
         List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name);
-        FunctionMyCsp cProc = new FunctionMyCsp(funDef.m_name, paras, body);
+        
+        
+        FunctionMyCsp cProc = new FunctionMyCsp(fun_name, paras, envname, body);
         return cProc;
     }
 }

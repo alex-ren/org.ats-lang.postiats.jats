@@ -37,6 +37,10 @@ public class SId implements IIdPrim{
     public SId(IVarName name, SIdCategory cat) {
         m_name = name;
         m_cat = cat;
+        
+//    	if (toStringWithStamp().equals("foo2_env4_id")) {
+//    		throw new Error("ERRRRRRRRRRRRRR");
+//    	}
     }
     
     // Used by factory.
@@ -89,7 +93,8 @@ public class SId implements IIdPrim{
             if (SIdCategory.eUserFun == m_cat || SIdCategory.eConstant == m_cat) {
                 return true;
             } else {
-                throw new Error("Check this. Should not happen.");
+            	return false;
+//                throw new Error("Check this. Should not happen. id is " + toStringWithStamp() + " and cat is " + m_cat);
             }
         }
     }

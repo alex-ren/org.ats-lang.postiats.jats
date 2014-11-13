@@ -103,6 +103,9 @@ public class SIdFactory {
     // Give name to a local temporary value without a name
     public SId createLocalVar(String name, ISType stype) {
         VNameId id = m_name_factory.createVNameId(name, stype);
+//        if (id.toStringNoStamp().equals("foo2_env")) {
+//        	throw new Error("eeeeeeeeeeeeeeeeeeeee");
+//        }
         SId ret = new SId(id, SIdCategory.eLocalVar);
         return ret;
     }

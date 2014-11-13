@@ -8,14 +8,14 @@ options {
 
 
 @header {
-  package jats.utfpl.parser;
+  package jats.utfpl.parser; 
   
      
   import jats.utfpl.tree.*;
-  import jats.utfpl.tree.type.*;
-  
+  import jats.utfpl.tree.type.*; 
+    
   import java.util.Map;
-  import java.util.HashMap;
+  import java.util.HashMap; 
   import java.util.ArrayList; 
 
 }
@@ -31,7 +31,7 @@ exp returns [IExp node]
     | app_exp {node = $app_exp.node;}
     | let_exp {node = $let_exp.node;}
     | atom_exp {node = $atom_exp.node;} 
-    | tuple_exp {node = $tuple_exp.node;}
+    | tuple_exp {node = $tuple_exp.node;} 
     ;
     
 tuple_exp returns [ExpTuple node] 

@@ -14,7 +14,7 @@ tokens {
   FUNIMPL;
   FUNGROUP;
   PARALST;
-  EXPLST;
+  EXPLST; 
   DECLST;
   LET;
   IF;

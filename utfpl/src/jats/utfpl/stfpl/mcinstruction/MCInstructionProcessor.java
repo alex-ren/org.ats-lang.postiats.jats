@@ -74,6 +74,7 @@ public class MCInstructionProcessor {
                       , fun.m_name
                       , fun.m_lin
                       , fun.m_paras
+                      , fun.m_env_name
                       , inss
                       );
         

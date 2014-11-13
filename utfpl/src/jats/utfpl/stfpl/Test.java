@@ -1,16 +1,16 @@
 package jats.utfpl.stfpl;
 
-import jats.utfpl.csps.CSPSPrinter;
 import jats.utfpl.stfpl.csharpins.CSInstructionTransformer;
 import jats.utfpl.stfpl.csharpins.CSharpPrinter;
 import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.stfpl.dynexp.ProgramStfpl2Printer;
-import jats.utfpl.stfpl.dynexp3.Cd3ecl;
 import jats.utfpl.stfpl.dynexp3.DynExp3Transformer;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.dynexp3.ProgramStfpl3Printer;
 import jats.utfpl.stfpl.instructions.InstructionPrinter;
 import jats.utfpl.stfpl.instructions.InstructionTransformer;
+import jats.utfpl.stfpl.instructions.ProgramIns;
+import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -20,7 +20,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -110,17 +109,14 @@ public class Test {
                     System.out.println(outputSTFPL3);
 
                     System.out.println("== Generating instruction start ==========================");
-                    InstructionTransformer ins_cvt = new InstructionTransformer();
-                    ins_cvt.transform_global(prog3);
+                    SIdFactory sid_factory = new SIdFactory();
+                    InstructionTransformer ins_cvt = new InstructionTransformer(sid_factory, prog3);
+                    ProgramIns prog_in = ins_cvt.transform();
                     
                     System.out.println("== Generating instruction end ==========================");
                     
                     InstructionPrinter insPrinter = new InstructionPrinter();
-                    String outputIns = insPrinter.print(
-                            ins_cvt.getDecs(), 
-                            ins_cvt.getExts(), 
-                            ins_cvt.getDefs(),
-                            ins_cvt.getMainInss());
+                    String outputIns = insPrinter.print(prog_in);
                     System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
                     System.out.println(outputIns);
                     

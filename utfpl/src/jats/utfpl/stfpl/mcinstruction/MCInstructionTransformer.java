@@ -193,7 +193,7 @@ public class MCInstructionTransformer {
                 , mcid
                 , node.m_lin
                 , mcparas
-//                , null
+                , null
 //                , null
                 , mcinss);
         mcdefs.add(mcdef);
@@ -326,7 +326,7 @@ public class MCInstructionTransformer {
         		, mcfun_name
         		, fun_def.m_lin
         		, mcparas
-//        		, mcenv_name
+        		, mcenv_name
 //        		, map_env_ele
         		, mcinss);
     }
@@ -420,7 +420,7 @@ public class MCInstructionTransformer {
     	
     	// name of the closure
     	SId closure = m_mcsid_factory.getSIdFac().createLocalVar(
-    			fun_name.toStringNoStamp() + "_env"
+    			fun_name.toStringNoStamp() + "_closure"
     		  , fun_name.getType());
     	MCSId mcclo_name = m_mcsid_factory.fromSId(closure);
     	map_clo_name.put(fun_name, mcclo_name);  // function name => closure name

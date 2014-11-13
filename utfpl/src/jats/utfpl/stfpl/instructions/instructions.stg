@@ -20,3 +20,8 @@ ImplFun_st(name, paras, clo_info, ret_type, body) ::= <<
 implement <name> (<paras; separator=", ">):\<<clo_info>\> <ret_type> =
   <body; separator="\n">
 >>
+
+InsClosure_st(funname, envname) ::= <<
+<funname>.closure(<envname>)
+>>
+

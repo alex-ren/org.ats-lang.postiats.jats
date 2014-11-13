@@ -19,10 +19,11 @@ public class MyCspTempID implements IMyCspTemp {
     private VariableInfo m_vi;
     private EntityLocation m_curLoc;  // The position of the current location of this entity of TID.
     
+    
     public static MyCspTempID createAsDef(VariableInfo vi, EntityLocation curLoc) {
         SId sid = vi.getMCSId().getSId();
-        if (!(sid.isPara() || sid.isLocal() || sid.isRetHolder())) {
-            throw new Error("Wrong usage.");
+        if (!(sid.isPara() || sid.isLocal() || sid.isRetHolder() || sid.isFunName())) {
+            throw new Error("Wrong usage. sid is " + sid.toStringNoStamp());
         }
         
         MyCspTempID ret = new MyCspTempID(true, vi, curLoc);
@@ -94,7 +95,7 @@ public class MyCspTempID implements IMyCspTemp {
         		throw new Error("parameter is also definition");
         	}
         } else {
-        	throw new Error("has to be parameter");
+        	throw new Error("has to be parameter id is " + m_vi.getMCSId().getSId().toStringWithStamp());
         }
     }
     
