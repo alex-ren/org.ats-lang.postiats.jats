@@ -1,0 +1,40 @@
+
+if (node instance of MCInsTuple) {
+    return xxx;
+} else if (node instance of MCInsPatLabDecompose) {
+    return xxx;
+} else if (node instance of MCInsCond) {
+    return xxx;
+}
+
+MCInsMove
+
+MCInsCall
+
+MCInsFormEnv
+
+MCInsGetEleFromEnv
+
+MCInsClosure
+
+MCInsThreadCreate
+
+MCInsAtomRefCreate
+
+MCInsAtomRefGet
+
+MCInsAtomRefUpdate
+
+MCInsSharedCreateCond
+
+MCInsMutexCreate
+
+MCInsMCAtomicStart
+
+MCInsMCAssert
+
+MCInsMCGet
+
+MCInsMCSet
+
+MCInsMCVLockViewGet

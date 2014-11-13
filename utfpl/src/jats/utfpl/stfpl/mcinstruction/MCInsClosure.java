@@ -20,8 +20,6 @@ public class MCInsClosure implements IMCInstruction {
         m_fun = fun;
         m_env = env;
         
-        System.out.println("++++++++++++++ m_env is " + m_env.getSId().toStringWithStamp() + " cat is " + m_env.getSId().getCategory());
-        
         if (Aux.getFunctionType(m_env.getType()) != null) {
         	throw new Error("eeeeeeeeee");
         }

@@ -6,12 +6,12 @@ import jats.utfpl.stfpl.stype.ISType;
 public class MCSId implements IMCValPrim {
 	private SId m_sid;
     
-    private Boolean m_has_effect;
+    private boolean m_has_effect;
     
     // Used by factory.
 	public MCSId(SId sid) {
 		m_sid = sid;
-		m_has_effect = null;
+		m_has_effect = false;
 	}
 	
 	// Used by factory.
@@ -19,6 +19,11 @@ public class MCSId implements IMCValPrim {
 	    return m_sid;
 	}
 
+	@Override
+	public String toStringMCIns() {
+		return m_sid.toStringIns();
+	}
+	
 	@Override
     public ISType getType() {
 	    return m_sid.getType();

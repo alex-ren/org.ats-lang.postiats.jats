@@ -144,7 +144,7 @@ public class ModelGenerater {
                 System.out.println("== Generating mcinstruction end ==========================");
                 
                 MCInstructionPrinter mcinsPrinter = new MCInstructionPrinter();
-                String outputMCIns = mcinsPrinter.print(prog_mcins);  // .print(prog_mcins); 
+                String outputMCIns = mcinsPrinter.print(prog_mcins);
                 System.out.println("==stfpl's code (layer IMCInstruction) is ==========================");
                 System.out.println(outputMCIns);
 
@@ -165,7 +165,7 @@ public class ModelGenerater {
                 System.out.println("== Generating mycspinstruction end ==========================");
                 
                 MyCspInsPrinter mycspinsPrinter = new MyCspInsPrinter();
-                String outputMyCspIns = mycspinsPrinter.print(prog_mycspins);  // .print(prog_mcins); 
+                String outputMyCspIns = mycspinsPrinter.print(prog_mycspins);
                 System.out.println("==stfpl's code (layer MyCspInstruction) is ==========================");
                 System.out.println(outputMyCspIns);
 

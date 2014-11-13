@@ -1,0 +1,19 @@
+group mcinstructions;
+
+prog_st(fun_defs, main_inss) ::= <<
+<fun_defs; separator="\n\n">
+
+fun main0 () =
+  <main_inss; separator="\n">
+>>
+
+MCDefFunGroup_st(fun_defs, fun_lab) ::= <<
+<fun_lab> <fun_defs; separator="\nand\n">
+>>
+
+MCDefFun_st(name, paras, clo_info, ret_type, body) ::= <<
+<name> (<paras; separator=", ">):\<<clo_info>\> <ret_type> =
+  <body; separator="\n">
+>>
+
+

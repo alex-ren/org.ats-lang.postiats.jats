@@ -5,7 +5,7 @@ import java.util.List;
 public class FunctionMyCsp {
     public MyCspTempID m_name;
     public List<MyCspTempID> m_paras;
-    public MyCspTempID m_envname;
+    public MyCspTempID m_envname;  // This one can be null.
     public List<MyCspGroup> m_body;
     
     public FunctionMyCsp(MyCspTempID name, List<MyCspTempID> paras, MyCspTempID envname, List<MyCspGroup> body) {

@@ -134,8 +134,11 @@ public class MyCspInsTransformer {
                 for (MyCspTempID para: funcCSP.m_paras) {
                     pos = para.processStackPrelogue(pos);
                 }
-                
-                pos = funcCSP.m_envname.processStackPrelogue(pos);
+   
+                if (null != funcCSP.m_envname) {
+
+                    pos = funcCSP.m_envname.processStackPrelogue(pos);
+                }
                 
                 // add the concept of stack
                 processBlockLstForStack(pos, funcCSP.m_body);
@@ -378,7 +381,11 @@ public class MyCspInsTransformer {
         @Override
         public Object visit(MCInsMove ins) {
             if (ins.m_holder.isRet()) {
-            	addReturnIns(ins.m_holder);
+            	IMyCspTemp retCTempID = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+    	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+    	        m_cbEvt.add(retIns);
+    	        m_cblkLst.add(m_cbEvt);
+    	        m_cbEvt = new GrpEvent();
             } else {
                 IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
                 MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
@@ -647,7 +654,7 @@ public class MyCspInsTransformer {
      * "grp" is the group which holds the object of CTemp.
      */
     static private IMyCspTemp ValPrim2CTemp(IMCValPrim vp, Map<MCSId, VariableInfo> map, MCSId funLab, MyCspGroup grp) {
-        if (vp instanceof AtomValue) {
+        if (vp instanceof MCAtomValue) {
             return new MyCspTempVal((MCAtomValue) vp);
         } else if (vp instanceof MCSId) {
             MCSId tid = (MCSId)vp;
@@ -711,12 +718,16 @@ public class MyCspInsTransformer {
     	MyCspTempID fun_name = TID2CTempID(funDef.m_name, subMap, funDef.m_name, null);
     	
         List<MyCspTempID> paras = new ArrayList<MyCspTempID>();
+        
+        MyCspTempID envname = null;
         for (MCSId para: funDef.m_paras) {
             MyCspTempID cPara = TID2CTempID(para, subMap, funDef.m_name, null /* CBlock is null */);
             paras.add(cPara);
         }
         
-        MyCspTempID envname = TID2CTempID(funDef.m_name, subMap, funDef.m_env_name, null);
+        if (null != funDef.m_env_name) {
+        	envname = TID2CTempID(funDef.m_env_name, subMap, funDef.m_name, null);
+        }
         
         List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name);
         

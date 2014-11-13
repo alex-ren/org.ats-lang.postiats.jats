@@ -27,7 +27,7 @@ public class AtomValue implements IValPrim {
     @Override
     public String toString() {
         if (null == m_obj) {
-            return "empty";
+            return "None";
         } else {
             return m_obj;
         }

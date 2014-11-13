@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 import jats.utfpl.stfpl.Cloc_t;
-import jats.utfpl.stfpl.csharptype.CSFunType;
+import jats.utfpl.stfpl.stype.ISType;
 //import jats.utfpl.stfpl.instructions.SId;
 
 import java.util.List;
@@ -25,6 +25,7 @@ public class MCDefFun {
 //    private Boolean m_has_effect;
 
     public MCSId m_env_name;  // name of the environment as the extra parameter
+                              // This one can be null.
     
     public MCDefFun(Cloc_t loc, 
                     MCSId name, 
@@ -44,7 +45,7 @@ public class MCDefFun {
                 
     }
     
-    CSFunType getType() {
-        return (CSFunType)m_name.getType();
+    ISType getType() {
+        return m_name.getType();
     }
 }

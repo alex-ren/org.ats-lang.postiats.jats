@@ -29,7 +29,7 @@ public class VariableInfo {
         m_defLoc = defLoc;
         m_stackPos = null;
         m_usageLst = new ArrayList<EntityLocation>();
-        
+
         if (mid.getSId().isFunName()) {
         	m_isEscaped = false;
         } else {
@@ -55,7 +55,6 @@ public class VariableInfo {
     }
     
     public boolean getEscaped() {
-        System.out.println("========== mid is " + m_mid.getSId().toStringWithStamp()); //  + " in " + m_defLoc.getFunLab());
         return m_isEscaped;
     }
     
@@ -64,9 +63,9 @@ public class VariableInfo {
     }
 
     public void updateEscaped() {
-    	if (m_mid.getSId().toStringWithStamp().equals("foo2_env4_id")) {
-    		throw new Error("ERRRRRRRRRRRRRR");
-    	}
+//    	if (m_mid.getSId().toStringWithStamp().equals("foo2_env4_id")) {
+//    		throw new Error("ERRRRRRRRRRRRRR");
+//    	}
     	
         if (m_mid.getSId().isGlobalValue()) {
             m_isEscaped = false;

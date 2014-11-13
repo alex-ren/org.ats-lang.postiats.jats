@@ -15,6 +15,11 @@ public class MCAtomValue implements IMCValPrim {
 		return m_v.getType();
 	}
 
+	@Override
+    public String toStringMCIns() {
+	    return m_v.toString();
+    }
+
 //    @Override
 //    public String toStringCS() {
 //        return m_v.toString();

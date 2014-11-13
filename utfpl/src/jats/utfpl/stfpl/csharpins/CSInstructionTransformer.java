@@ -104,23 +104,23 @@ public class CSInstructionTransformer {
         if (node.m_name.toStringCS().startsWith("main")) {
             m_main_name = node.m_name.toStringCS();
         }
-        // Each closure has the potential to create a new type.
-        Set<SIdUser> env = node.m_env;
+//        // Each closure has the potential to create a new type.
+//        Set<SIdUser> env = node.m_env;
         Set<CSSIdUser> csenv = null;
-        
-        if (null != env) {
-            csenv = new HashSet<CSSIdUser>();
-            for (SIdUser sid_user: env) {
-                CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
-                        sid_user, sid_user.getType().toCSType(m_track).m_type);
-                csenv.add(cssid_user);
-            }
-        }
-
+//        
+//        if (null != env) {
+//            csenv = new HashSet<CSSIdUser>();
+//            for (SIdUser sid_user: env) {
+//                CSSIdUser cssid_user = CSSIdUser.fromSIdUser(
+//                        sid_user, sid_user.getType().toCSType(m_track).m_type);
+//                csenv.add(cssid_user);
+//            }
+//        }
+//
         CSSId cs_env_id = null;
-        if (null != node.m_env_name) {
-            cs_env_id = StfplVP2CS(node.m_env_name);
-        }
+//        if (null != node.m_env_name) {
+//            cs_env_id = StfplVP2CS(node.m_env_name);
+//        }
         
 //        CSTBookingEnv env_book = null;
 //        if (!env.isEmpty()) {
