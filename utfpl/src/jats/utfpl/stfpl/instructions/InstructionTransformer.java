@@ -47,7 +47,7 @@ import jats.utfpl.stfpl.dynexp3.ProgramStfpl3;
 import jats.utfpl.stfpl.instructions.InsCall.ECallType;
 import jats.utfpl.stfpl.instructions.SId.SIdCategory;
 import jats.utfpl.stfpl.staexp.FUNCLOfun; 
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ILabPat;
 import jats.utfpl.stfpl.stype.ISType;
@@ -162,7 +162,7 @@ public class InstructionTransformer {
         	LABsym labsym = new LABsym(nsym);
         	
         	ISType ele_type = ele.getType();
-        	if (Aux.isClosure(ele_type)) {  // is closure
+        	if (AuxSType.isClosure(ele_type)) {  // is closure
         		IFunDef ifun = m_fun_map.get(ele);
         		if (null != ifun) {  // is function name
             		DefFunGroup clo_grp = (DefFunGroup)ifun;
@@ -289,6 +289,7 @@ public class InstructionTransformer {
 
     private void transform(P3Trec node, IValPrim vp,
             List<IStfplInstruction> inss, boolean is_top, List<SId> sids) {
+    	int index = 0;
         for (LABP3ATnorm lab_pat : node.m_labpats) {
             Ip3at_node node0 = lab_pat.m_pat.m_node;
             if (node0 instanceof P3Tany 
@@ -306,19 +307,20 @@ public class InstructionTransformer {
                     
                     sids.add(holder);  // new name for value
                     
-                    InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab,
-                            holder, vp);
+                    InsPatLabDecompose ins = 
+                    		new InsPatLabDecompose(lab_pat.m_lab, index, holder, vp);
                     inss.add(ins);
                 }
 
             } else { // P3Tcon P3Trec
                 SId holder = m_sid_factory.createLocalVar("pat",
                         lab_pat.m_pat.m_node.getType());
-                InsPatLabDecompose ins = new InsPatLabDecompose(lab_pat.m_lab,
-                        holder, vp);
+                InsPatLabDecompose ins = 
+                		new InsPatLabDecompose(lab_pat.m_lab, index, holder, vp);
                 inss.add(ins);
                 transform(lab_pat.m_pat, holder, inss, is_top, sids);
             }
+            ++index;
         }
     }
     
@@ -360,14 +362,14 @@ public class InstructionTransformer {
         
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(lambda.m_d3exp, env2, inss2, m_sid_factory.createRetHolder("ret", Aux.getRetType(lambda.getType())), false);
+        transform(lambda.m_d3exp, env2, inss2, m_sid_factory.createRetHolder("ret", AuxSType.getRetType(lambda.getType())), false);
   
 //        SId env_name = null;
 //        Set<SIdUser> form_env = null;
         
         // create the closure if necessary
         ISType clo_type = lambda.getType();
-        if (Aux.isClosure(clo_type)) {  // closure
+        if (AuxSType.isClosure(clo_type)) {  // closure
             if (inss != m_main_inss) {
                 throw new Error("Implementing closure is only allowed on the first level.");
             }
@@ -451,13 +453,13 @@ public class InstructionTransformer {
     private void transform(Cloc_t loc, D3Cfundecs node0, Set<Cd3var> env, // env of the outer function
             List<IStfplInstruction> inss, boolean is_top) {
 
-        Set<SIdUser> form_env = null;
+    	List<SIdUser> form_env = null;
         SId env_name = null;
         InsFormEnv ins_env = null;
         
         // form environment if necessary
         if (node0.m_is_clo) {
-            form_env = new HashSet<SIdUser>();
+            form_env = new ArrayList<SIdUser>();
             
             for (Cd3var d3var: node0.m_env /*env of the current function*/) {
             	SId sid = m_sid_factory.getSIdFromCd3var(d3var);
@@ -549,12 +551,12 @@ public class InstructionTransformer {
 
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(body, env, inss2, m_sid_factory.createRetHolder("ret", Aux.getRetType(f3undec.m_type)), false);
+        transform(body, env, inss2, m_sid_factory.createRetHolder("ret", AuxSType.getRetType(f3undec.m_type)), false);
         DefFun def_fun = new DefFun(loc, name, lin, paras, inss2);
 
         // create the closure if necessary
         ISType clo_type = f3undec.m_type;
-        if (Aux.isClosure(clo_type)) {  // closure
+        if (AuxSType.isClosure(clo_type)) {  // closure
             SIdUser env_name_user = new SIdUser(env_name, false);
             InsClosure ins_clo = new InsClosure(name, env_name_user);
             inss.add(ins_clo);
@@ -682,12 +684,12 @@ public class InstructionTransformer {
         SId name = m_sid_factory.createLambdaFunction("lam", lambda.getType());
         
         SId env_name = null;
-        Set<SIdUser> form_env = null;
+        List<SIdUser> form_env = null;
         
         // create the closure if necessary
         ISType clo_type = lambda.getType();
-        if (Aux.isClosure(clo_type)) {  // closure
-            form_env = new HashSet<SIdUser>();
+        if (AuxSType.isClosure(clo_type)) {  // closure
+            form_env = new ArrayList<SIdUser>();
             
             for (Cd3var d3var: env2) {
                 SId sid = m_sid_factory.getSIdFromCd3var(d3var);
@@ -725,7 +727,7 @@ public class InstructionTransformer {
         transform(lambda.m_d3exp
         		, node0.m_env
         		, inss2
-        		, m_sid_factory.createRetHolder("ret", Aux.getRetType(lambda.getType()))
+        		, m_sid_factory.createRetHolder("ret", AuxSType.getRetType(lambda.getType()))
         		, false);
         DefFun def_fun = new DefFun(loc, name, lin, paras, inss2);
         List<DefFun> fun_lst = new ArrayList<DefFun>();

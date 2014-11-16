@@ -1,16 +1,14 @@
 package jats.utfpl.stfpl.pats;
 
-import java.util.List;
-
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PExpFuncCall implements PExp {
+public class PExpFormClosure implements PExp {
     public MCSId m_funLab;
-    public List<PExp> m_argLst;
+    public PExp m_env;
     
-    public PExpFuncCall(MCSId funLab, List<PExp> argLst) {
+    public PExpFormClosure(MCSId funLab, PExp env) {
         m_funLab = funLab;
-        m_argLst = argLst;
+        m_env = env;
     }
 
     @Override

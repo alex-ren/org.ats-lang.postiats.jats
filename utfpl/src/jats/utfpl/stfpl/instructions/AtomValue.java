@@ -1,6 +1,8 @@
 package jats.utfpl.stfpl.instructions;
 
+import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.IntType;
 import jats.utfpl.stfpl.stype.VoidType;
 
 public class AtomValue implements IValPrim {
@@ -32,6 +34,14 @@ public class AtomValue implements IValPrim {
             return m_obj;
         }
 
+    }
+    
+    public static AtomValue createFromInt(int x) {
+    	return new AtomValue(IntType.cInstance, Integer.toString(x));
+    }
+    
+    public static AtomValue createFromBoolean(boolean x) {
+        return new AtomValue(BoolType.cInstance, Boolean.toString(x));
     }
 
 }

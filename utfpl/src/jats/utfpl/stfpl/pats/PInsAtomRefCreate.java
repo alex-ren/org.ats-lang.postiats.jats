@@ -1,12 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsCondAlloc implements PIns {
+public class PInsAtomRefCreate implements PIns {
     
-    public TID m_holder;
+    public MCSId m_holder;
     
-    public PInsCondAlloc(TID holder) {
+    public PInsAtomRefCreate(MCSId holder) {
         m_holder = holder;
     }
 

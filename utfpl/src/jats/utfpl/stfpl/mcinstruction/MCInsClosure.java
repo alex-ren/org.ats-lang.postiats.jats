@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.AuxSType;
 
 //import jats.utfpl.stfpl.csharptype.CSFunType;
 //
@@ -20,7 +20,7 @@ public class MCInsClosure implements IMCInstruction {
         m_fun = fun;
         m_env = env;
         
-        if (Aux.getFunctionType(m_env.getType()) != null) {
+        if (AuxSType.getFunctionType(m_env.getType()) != null) {
         	throw new Error("eeeeeeeeee");
         }
     }

@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.instructions;
 
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 
 /*
@@ -75,7 +75,7 @@ public class SId implements IIdPrim{
     
     // functions inherent to the ATS compiler
     public boolean isLibFun() {
-        if (Aux.getFunctionType(m_name.getType()) == null) {
+        if (AuxSType.getFunctionType(m_name.getType()) == null) {
             return false;
         } else {
             return SIdCategory.eConstant == m_cat;
@@ -87,7 +87,7 @@ public class SId implements IIdPrim{
     }
     
     public boolean isFunName() {
-        if (Aux.getFunctionType(m_name.getType()) == null) {
+        if (AuxSType.getFunctionType(m_name.getType()) == null) {
             return false;
         } else {
             if (SIdCategory.eUserFun == m_cat || SIdCategory.eConstant == m_cat) {

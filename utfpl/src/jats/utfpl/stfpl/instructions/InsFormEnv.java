@@ -1,15 +1,15 @@
 package jats.utfpl.stfpl.instructions;
 
-import java.util.Set;
+import java.util.List;
 
 public class InsFormEnv implements IStfplInstruction {
     public SId m_name;  // This is name of the env.
-    public Set<SIdUser> m_env;
+    public List<SIdUser> m_env;
     
     private DefFunGroup m_grp;  // group of functions
                                 // used in next stage
     
-    public InsFormEnv(SId name, Set<SIdUser> env) {
+    public InsFormEnv(SId name, List<SIdUser> env) {
         m_name = name;
         m_env = env;
         m_grp = null;

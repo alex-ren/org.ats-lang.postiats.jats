@@ -145,7 +145,7 @@ public class CSInstructionTransformer {
 
     private CSDefFunGroup transform(DefFunGroup node) {
         // Each closure has the potential to create a new type.
-        Set<SIdUser> env = node.m_env;
+    	List<SIdUser> env = node.m_env;
         Set<CSSIdUser> csenv = null;
         
         if (null != env) {
@@ -226,7 +226,7 @@ public class CSInstructionTransformer {
 
 	private CSInsFormEnv transform_ins(InsFormEnv ins) {
 	    CSSId name = StfplVP2CS_second(ins.m_name);
-	    Set<CSSIdUser> env = StfplVP2CS(ins.m_env);
+	    List<CSSIdUser> env = StfplVPList2CSList(ins.m_env);
 	    return new CSInsFormEnv(name, env);
     }
 
@@ -289,12 +289,12 @@ public class CSInstructionTransformer {
 		return CSSId.fromSId(sid,
 				sid.getType().toCSType(m_track).m_type);
 	}
-	
-	   private CSSIdUser StfplVP2CS(SIdUser sid_user) {
-	        return CSSIdUser.fromSIdUser(sid_user,
-	                sid_user.getType().toCSType(m_track).m_type);
-	    }
-	
+
+	private CSSIdUser StfplVP2CS(SIdUser sid_user) {
+		return CSSIdUser.fromSIdUser(sid_user,
+				sid_user.getType().toCSType(m_track).m_type);
+	}
+
 	private CSAtomValue StfplVP2CS(AtomValue v) {
 		return new CSAtomValue(v, v.getType().toCSType(m_track).m_type);
 	}
@@ -330,8 +330,8 @@ public class CSInstructionTransformer {
 //		return csvps;
 //	}
 	
-	private Set<CSSIdUser> StfplVP2CS(Set<SIdUser> vps) {
-		Set<CSSIdUser> csvps = new HashSet<CSSIdUser>();
+	private List<CSSIdUser> StfplVPList2CSList(List<SIdUser> vps) {
+		List<CSSIdUser> csvps = new ArrayList<CSSIdUser>();
 		for (SIdUser vp: vps) {
 		    CSSIdUser csvp = StfplVP2CS(vp);
 			csvps.add(csvp);

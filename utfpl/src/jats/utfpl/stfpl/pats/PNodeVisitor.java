@@ -1,12 +1,14 @@
 package jats.utfpl.stfpl.pats;
 
 public interface PNodeVisitor {
-    public Object visit(PModel node);
+	
+
+	public Object visit(PModel node);
     
     public Object visit(PGDecVar node);
     public Object visit(PGDecProc node);
     public Object visit(PGDecChan node);
-    public Object visit(PGDecArray node);
+//    public Object visit(PGDecArray node);
     
     public Object visit(PProcAtom node);
     public Object visit(PProcCall node);
@@ -38,21 +40,27 @@ public interface PNodeVisitor {
     public Object visit(PExpStackGet node);
     public Object visit(PStatStackPush node);
     public Object visit(PExpOpr node);
-    public Object visit(PExpTuple node);
+	public Object visit(PExpPatLabDecompose node);
+	public Object visit(PExpFormClosure node);
+    public Object visit(PExpTupleCreate node);
     
     public Object visit(PInsCond node);
-    public Object visit(PInsLoad node);
-    public Object visit(PInsLoadArray node);
-    public Object visit(PInsStore node);
-    public Object visit(PInsStoreArray node);
-    
-    public Object visit(PInsMutexAlloc node);
-    public Object visit(PInsMutexRelease node);
-    
-    public Object visit(PInsCondAlloc node);
-    public Object visit(PInsCondRelease node);
-
+    public Object visit(PInsAtomRefGet node);
+//    public Object visit(PInsLoadArray node);
+    public Object visit(PInsAtomRefUpdate node);
+//    public Object visit(PInsStoreArray node);
+    public Object visit(PInsMutexCreate node);
+//    public Object visit(PInsMutexRelease node);
+    public Object visit(PInsSharedCreateCond node);
+//    public Object visit(PInsCondRelease node);
     public Object visit(PInsMCAssert node);
+	public Object visit(PProcGrpMCAtomicStart node);
+	public Object visit(PInsMCGet node);
+	public Object visit(PInsMCSet node);
+	public Object visit(PInsTupleAdd node);
+	public Object visit(PInsAtomRefCreate node);
+	public Object visit(PInsMCVLockViewGet node);
+
     
 
     

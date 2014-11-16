@@ -7,14 +7,16 @@ import java.util.List;
 public class CIFunCall extends MyCspInstruction {
     public MCSId m_funlab;  // Currently, we assume this is function name.
     public List<IMyCspTemp> m_args;
+//    public MyCspTempID m_envname;
     public MyCspTempID m_ret;
     public boolean m_isTail;  // useless currently
 
     
-    public CIFunCall(MCSId funlab, List<IMyCspTemp> args, MyCspTempID ret, boolean isTail, MyCspGroup blk) {
+    public CIFunCall(MCSId funlab, List<IMyCspTemp> args, /* MyCspTempID envname, */MyCspTempID ret, boolean isTail, MyCspGroup blk) {
         super(blk);
         m_funlab = funlab;
         m_args = args;
+//        m_envname = envname;
         m_ret = ret;
         m_isTail = isTail;
 

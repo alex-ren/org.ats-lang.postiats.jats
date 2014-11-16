@@ -1,12 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsLoad implements PIns {
-    public TID m_localHolder;
-    public TID m_globalVar;
+public class PInsAtomRefGet implements PIns {
+    public MCSId m_localHolder;
+    public PExp m_globalVar;
     
-    public PInsLoad(TID globalVar, TID localHolder) {
+    public PInsAtomRefGet(PExp globalVar, MCSId localHolder) {
         m_localHolder = localHolder;
         m_globalVar = globalVar;
     }

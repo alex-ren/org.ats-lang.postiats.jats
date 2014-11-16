@@ -24,14 +24,14 @@ public class MCDefFun {
 //    private Aux.Address m_addr;
 //    private Boolean m_has_effect;
 
-    public MCSId m_env_name;  // name of the environment as the extra parameter
-                              // This one can be null.
+//    public MCSId m_env_name;  // name of the environment as the extra parameter
+//                              // This one can be null.
     
     public MCDefFun(Cloc_t loc, 
                     MCSId name, 
                     int lin,  // something to do with linear type?
                     List<MCSId> paras,
-                    MCSId env_name,  
+//                    MCSId env_name,  
 //                    Map<SId, MCSId> env_map,
                     List<IMCInstruction> inss  // body of the function
                      ) {
@@ -39,7 +39,7 @@ public class MCDefFun {
         m_name = name;
         m_lin = lin;
         m_paras = paras;
-        m_env_name = env_name;
+//        m_env_name = env_name;
 //        m_env_map = env_map;
         m_inss = inss;
                 

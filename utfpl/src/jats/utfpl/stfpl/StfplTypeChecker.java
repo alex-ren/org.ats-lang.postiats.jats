@@ -235,48 +235,68 @@ public class StfplTypeChecker {
         Cloc_t loc = d2exp.d2exp_loc;
         if (node instanceof D2EannFunclo) {
             return oftype((D2EannFunclo)node, loc);
+            
         } else if (node instanceof D2EannSeff) {
             return oftype((D2EannSeff)node, loc);
+            
         } else if (node instanceof D2EannType) {
             return oftype((D2EannType)node, loc);
+            
         } else if (node instanceof D2Eapplst) {
             return oftype((D2Eapplst)node, loc);
+            
         } else if (node instanceof D2Ecst) {
             return oftype((D2Ecst)node, loc);
+            
         } else if (node instanceof D2Eempty) {
             ((D2Eempty)node).updateType(VoidType.cInstance);
             return ((D2Eempty)node).getSType();
+            
         } else if (node instanceof D2Eexp) {
             return oftype(((D2Eexp)node).m_d2exp);
+            
         } else if (node instanceof D2Ef0loat) {
             ((D2Ef0loat)node).updateType(FloatType.cInstance);
             return ((D2Ef0loat)node).getSType();
+            
         } else if (node instanceof D2Ei0nt) {
             ((D2Ei0nt)node).updateType(IntType.cInstance);
             return ((D2Ei0nt)node).getSType();
+            
         } else if (node instanceof D2Eifopt) {
             return oftype((D2Eifopt)node, loc);
+            
         } else if (node instanceof D2Eignored) {
             throw new Error("Check this");
+            
         } else if (node instanceof D2ElamDyn) {
             return oftype((D2ElamDyn)node, loc);
+            
         } else if (node instanceof D2ElamMet) {
             return oftype((D2ElamMet)node, loc);
+            
         } else if (node instanceof D2ElamSta) {
             return oftype((D2ElamSta)node, loc);
+            
         } else if (node instanceof D2Elet) {
             return oftype((D2Elet)node, loc);
+            
         } else if (node instanceof D2Es0tring) {
             ((D2Es0tring)node).updateType(StringType.cInstance);
             return ((D2Es0tring)node).getSType();
+            
         } else if (node instanceof D2Esym) {
             return oftype((D2Esym)node, loc);
+            
         } else if (node instanceof D2Etup) {
             return oftype((D2Etup)node, loc);
+            
         } else if (node instanceof D2Elist) {
-            return oftype((D2Elist)node, loc);            
+            return oftype((D2Elist)node, loc); 
+            
         } else if (node instanceof D2Evar) {
             return oftype((D2Evar)node, loc);
+            
         } else {
             throw new Error(d2exp + " is not supported");
         }

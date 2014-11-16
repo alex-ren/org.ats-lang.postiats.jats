@@ -1,8 +1,5 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.stfpl.mcinstruction.MCSId;
-
-import java.util.List;
 
 public class GrpMCAtomicStart extends MyCspGroup {
   

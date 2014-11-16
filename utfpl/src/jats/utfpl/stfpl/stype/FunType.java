@@ -10,7 +10,7 @@ import jats.utfpl.stfpl.csharptype.ICSTypeName;
 import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FunCloNA;
 import jats.utfpl.stfpl.staexp.Ifunclo;
-import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
+import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class FunType extends BoxedType {
             return new TypeCheckResult();
         } else if (right0 instanceof FunType) {
             FunType right = (FunType)right0;
-            jats.utfpl.stfpl.stype.Aux.matchTypeList(left.m_args, right.m_args);
+            jats.utfpl.stfpl.stype.AuxSType.matchTypeList(left.m_args, right.m_args);
             m_res.match(right.m_res);
             
             if (-999 == m_npf) {

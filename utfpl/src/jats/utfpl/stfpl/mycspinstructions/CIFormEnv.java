@@ -1,13 +1,13 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
 
-import java.util.Set;
+import java.util.List;
 
 public class CIFormEnv extends MyCspInstruction {
-    public Set<MyCspTempID> m_eles;
+    public List<MyCspTempID> m_eles;
     public MyCspTempID m_holder;
     
-    public CIFormEnv(Set<MyCspTempID> eles, MyCspTempID holder, MyCspGroup blk) {
+    public CIFormEnv(List<MyCspTempID> eles, MyCspTempID holder, MyCspGroup blk) {
         super(blk);
         
         m_holder = holder;

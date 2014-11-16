@@ -1,13 +1,13 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 public class PStatAssignment implements PStat {
-    public TID m_name;
+    public MCSId m_name;
     public PExp m_val;
     
     // for global variable
-    public PStatAssignment(TID name, PExp val) {
+    public PStatAssignment(MCSId name, PExp val) {
         m_name = name;
         m_val = val;
     }

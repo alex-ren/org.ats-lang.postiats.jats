@@ -3,14 +3,12 @@ package jats.utfpl.stfpl.pats;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 
-public class PExpStackGet implements PExp {
+public class PInsSharedCreateCond implements PIns {
     
-    public int m_pos;
-    public MCSId m_tid;
+    public MCSId m_holder;
     
-    public PExpStackGet(int pos, MCSId tid) {
-        m_pos = pos;
-        m_tid = tid;
+    public PInsSharedCreateCond(MCSId holder) {
+        m_holder = holder;
     }
 
     @Override

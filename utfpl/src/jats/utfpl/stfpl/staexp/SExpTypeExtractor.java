@@ -137,7 +137,7 @@ public class SExpTypeExtractor {
         List<ISType> args = extractTypeList(node.m_arg);
         ISType res = extractType(node.m_res);
         
-        return new FunType(npf, args, res, FunCloNA.cInstance, /*todo always has effect*/1);
+        return new FunType(npf, args, res, FUNCLOfun.cInstance /*extern function cannot be closure*/, /*todo always has effect*/1);
     }
 
     public static ISType extractType(S2Eexi node) {

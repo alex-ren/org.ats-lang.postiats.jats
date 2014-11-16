@@ -2,7 +2,6 @@ package jats.utfpl.stfpl.instructions;
 
 import jats.utfpl.stfpl.Cloc_t;
 import java.util.List;
-import java.util.Set;
 
 public class ImplFun implements IFunDef {
     public Cloc_t m_loc;

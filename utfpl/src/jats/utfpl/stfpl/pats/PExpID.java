@@ -1,11 +1,11 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 public class PExpID implements PExp {
-    public TID m_tid;
+    public MCSId m_tid;
     
-    public PExpID(TID tid) {
+    public PExpID(MCSId tid) {
         m_tid = tid;
     }
     

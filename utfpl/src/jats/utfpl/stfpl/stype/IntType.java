@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.stype;
 
 import jats.utfpl.stfpl.csharptype.CSIntType;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
-import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
+import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
 
 import java.util.Set;
 

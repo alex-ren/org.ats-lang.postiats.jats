@@ -1,13 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
 
-public class PInsStore implements PIns {
+public class PInsAtomRefUpdate implements PIns {
     
-    public TID m_globalVar;
+    public PExp m_globalVar;
     public PExp m_localSrc;
     
-    public PInsStore(PExp localSrc, TID globalVar) {
+    public PInsAtomRefUpdate(PExp localSrc, PExp globalVar) {
         m_localSrc = localSrc;
         m_globalVar = globalVar;
     }

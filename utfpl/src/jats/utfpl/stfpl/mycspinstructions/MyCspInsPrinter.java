@@ -1,16 +1,5 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.patcsps.type.PATType;
-import jats.utfpl.patcsps.type.PATTypeArray;
-import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
-
-import java.net.URL;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 public class MyCspInsPrinter {
     public String print(ProgramMyCspIns prog) {

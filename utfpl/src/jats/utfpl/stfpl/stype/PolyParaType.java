@@ -9,7 +9,7 @@ import org.stringtemplate.v4.STGroup;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.csharptype.CSObjectType;
 import jats.utfpl.stfpl.staexp.Cs2var;
-import jats.utfpl.stfpl.stype.Aux.ToCSTypeResult;
+import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
 public class PolyParaType extends BoxedType {

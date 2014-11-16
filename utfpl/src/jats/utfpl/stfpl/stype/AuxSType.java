@@ -6,7 +6,7 @@ import jats.utfpl.stfpl.staexp.Ifunclo;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Aux {
+public class AuxSType {
     public static void matchTypeList(List<ISType> left, List<ISType> right) {
         if (left.size() != right.size()) {
             throw new Error("Type mismatch.");
@@ -18,6 +18,14 @@ public class Aux {
         while (iter0.hasNext()) {
             iter0.next().match(iter1.next());
         }
+    }
+    
+    public static boolean isBool(ISType type) {
+    	return type == BoolType.cInstance;
+    }
+    
+    public static boolean isInt(ISType type) {
+    	return type == IntType.cInstance;
     }
     
     public static boolean isVoid(ISType type) {

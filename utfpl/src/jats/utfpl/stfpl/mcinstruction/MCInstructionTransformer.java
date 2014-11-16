@@ -25,7 +25,8 @@ import jats.utfpl.stfpl.instructions.ProgramIns;
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.instructions.VNameCst;
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.mcinstruction.AuxMCIns.AddressAllocator;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.RecType;
 
@@ -71,12 +72,15 @@ public class MCInstructionTransformer {
 //    private SIdFactory m_sid_factory;
     private Map<SId, IFunDef> m_fun_map;
     
+    private AddressAllocator m_addr_allocator;
+    
     public ProgramIns m_prog;
     
     /* *********** ********** */
     
     public MCInstructionTransformer(
                                     MCSIdFactory mcsid_factory
+                                  , AddressAllocator allocator
     		                      , Map<SId, IFunDef> fun_map
     		                      , ProgramIns prog
     		                      ) {
@@ -94,6 +98,7 @@ public class MCInstructionTransformer {
         /* ********** ********** */
         
         m_mcsid_factory = mcsid_factory;
+        m_addr_allocator = allocator;
         m_fun_map = fun_map;
         
         
@@ -193,7 +198,7 @@ public class MCInstructionTransformer {
                 , mcid
                 , node.m_lin
                 , mcparas
-                , null
+//                , null
 //                , null
                 , mcinss);
         mcdefs.add(mcdef);
@@ -255,6 +260,7 @@ public class MCInstructionTransformer {
         SId env_name = m_mcsid_factory.getSIdFac().createEnvForPara(
         		fun_name.toStringNoStamp() + "_env", env_type);
         MCSId mcenv_name = m_mcsid_factory.fromSId(env_name);
+        mcparas.add(mcenv_name);  // Turn env into a normal parameter.
 
         // This is done below in the loop for group members.
 //        map_env_name.put(fun_name, mcenv_name);  
@@ -278,10 +284,11 @@ public class MCInstructionTransformer {
         	mcinss.add(ins);  // add to inss
         }
         
+        int index = 0;
         for (SId env_member: env_members) {
         	ISType member_type = env_member.getType();
         	MCInsGetEleFromEnv ins = null;
-        	if (Aux.isClosure(member_type) && env_member.isUserFun()) {
+        	if (AuxSType.isClosure(member_type) && env_member.isUserFun()) {
         		DefFunGroup member_fun_grp = (DefFunGroup)m_fun_map.get(env_member);
         		member_type = member_fun_grp.getEnvType();  // The environment of the function.
 
@@ -295,6 +302,7 @@ public class MCInstructionTransformer {
         				mcenv_sid  // new value
         				, mcenv_name  // environment of the function
         				, env_member.toStringWithStamp()  // tag
+        				, index
         				);
         	} else {
         		SId env_sid = m_mcsid_factory.getSIdFac().createLocalVar(
@@ -308,8 +316,10 @@ public class MCInstructionTransformer {
         				mcenv_sid  // new value
         				, mcenv_name  // environment of the function
         				, env_member.toStringWithStamp()  // tag
+        				, index
         				);
         	}
+        	++index;
         	
         	mcinss.add(ins);  // add to inss
 
@@ -326,7 +336,7 @@ public class MCInstructionTransformer {
         		, mcfun_name
         		, fun_def.m_lin
         		, mcparas
-        		, mcenv_name
+//        		, mcenv_name
 //        		, map_env_ele
         		, mcinss);
     }
@@ -390,12 +400,12 @@ public class MCInstructionTransformer {
     		map_env_name.put(fun_def.m_name, mcnew_name);  // map: function name => env_name
     	}
     	
-    	Set<MCSId> env_eles = new HashSet<MCSId>();
+    	List<MCSId> env_eles = new ArrayList<MCSId>();
     	for (SIdUser ele_user: ins.m_env) {
     		SId ele = ele_user.getSId();
     		ISType ele_type = ele.getType();
     		MCSId mcele = null;
-    		if (Aux.isClosure(ele_type) && ele.isUserFun()) {
+    		if (AuxSType.isClosure(ele_type) && ele.isUserFun()) {
     			mcele = map_env_name.get(ele); 
     		} else {
     			mcele = m_mcsid_factory.fromSId(ele);
@@ -458,7 +468,7 @@ public class MCInstructionTransformer {
         Ilabel lab = ins.m_lab;
         MCSId holder = m_mcsid_factory.fromSId(ins.m_holder);
         IMCValPrim vp = m_mcsid_factory.fromIValPrim(ins.m_vp, map_clo_name, map_name);
-        return new MCInsPatLabDecompose(lab, holder, vp);
+        return new MCInsPatLabDecompose(lab, ins.m_index, holder, vp);
     }
 
     private MCInsMove transform_ins(InsMove ins
@@ -582,6 +592,7 @@ public class MCInstructionTransformer {
                 
                 boolean isret = ins.m_holder.isRetHolder();
 
+                mcsid_tfun.updateAddr(m_addr_allocator.createPointer());
                 return new MCInsThreadCreate(mcsid_tfun, mcarg, mctid, isret);
 
             } else if (fname.compSymbolString(CCompUtils.cMCSetInt)) {
@@ -650,15 +661,18 @@ public class MCInstructionTransformer {
                       fun_name.toStringIns() + " category is " + fun_name.getCategory());
         }
         MCSId mcfun = m_mcsid_factory.fromSId(fun_name);
-        
-        MCSId mcenv = null;
-        if (Aux.isClosure(fun_name.getType())) {
-            mcenv = map_env_name.get(fun_name);
-        }
 
         List<IMCValPrim> mcargs = m_mcsid_factory.fromIValPrimList(ins.m_args, map_clo_name, map_name);
+
+        if (AuxSType.isClosure(fun_name.getType())) {
+        	MCSId mcenv = map_env_name.get(fun_name);
+        	if (null == mcenv) {
+        		throw new Error("Check this. fun_name is " + fun_name.toStringWithStamp());
+        	}
+            mcargs.add(mcenv);  // Turn env into a normal argument.
+        }
         
-        return new MCInsCall(mcholder, mcfun, mcargs, mcenv);
+        return new MCInsCall(mcholder, mcfun, mcargs);
     }
     
 

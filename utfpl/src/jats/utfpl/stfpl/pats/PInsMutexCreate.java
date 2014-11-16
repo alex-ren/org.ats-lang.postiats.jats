@@ -1,12 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsMutexAlloc implements PIns {
+public class PInsMutexCreate implements PIns {
     
-    public TID m_holder;
+    public MCSId m_holder;
     
-    public PInsMutexAlloc(TID holder) {
+    public PInsMutexCreate(MCSId holder) {
         m_holder = holder;
     }
 

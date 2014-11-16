@@ -1,12 +1,18 @@
 package jats.utfpl.stfpl.pats;
 
-public class PExpTuple implements PExp {
+
+public class PExpTupleCreate implements PExp {
+
+    public int m_len;
     
-    public static final PExpTuple cNone = new PExpTuple();
+    public PExpTupleCreate(int len) {
+        m_len = len;
+    }
 
     @Override
     public Object accept(PNodeVisitor visitor) {
         return visitor.visit(this);
     }
 
+	
 }

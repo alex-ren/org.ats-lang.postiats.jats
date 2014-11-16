@@ -5,11 +5,9 @@ import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Set;
 
 
 public class MCInstructionProcessor {
@@ -74,7 +72,7 @@ public class MCInstructionProcessor {
                       , fun.m_name
                       , fun.m_lin
                       , fun.m_paras
-                      , fun.m_env_name
+//                      , fun.m_env_name
                       , inss
                       );
         
@@ -238,8 +236,8 @@ public class MCInstructionProcessor {
         return newVpLst;
     }
     
-    static private Set<MCSId> subsVPSet(Set<MCSId> vpSet, Map<MCSId, MCSId> subMap) {
-        Set<MCSId> newVpSet = new HashSet<MCSId>();
+    static private List<MCSId> subsIdLst(List<MCSId> vpSet, Map<MCSId, MCSId> subMap) {
+    	List<MCSId> newVpSet = new ArrayList<MCSId>();
         for (MCSId vp: vpSet) {
             MCSId newVp = subsVP(vp, subMap);
             newVpSet.add(newVp);
@@ -283,7 +281,7 @@ public class MCInstructionProcessor {
                 return ins;
             } else {
                 MCSId holder = subsHolder(ins.m_holder);
-                Set<MCSId> env = subsVPSet(ins.m_env, m_sub);   
+                List<MCSId> env = subsIdLst(ins.m_env, m_sub);   
                 return new MCInsFormEnv(holder, env);
             }
         }
@@ -310,7 +308,7 @@ public class MCInstructionProcessor {
                 
                 IMCValPrim vp = subsVP(ins.m_vp, m_sub);
                 
-                return new MCInsPatLabDecompose(ins.m_lab, holder, vp);
+                return new MCInsPatLabDecompose(ins.m_lab, ins.m_index, holder, vp);
             }
         }
 
@@ -341,9 +339,9 @@ public class MCInstructionProcessor {
                 
                 MCSId fun = subsVP(ins.m_fun, m_sub);
                 List<IMCValPrim> args = subsVPLst(ins.m_args, m_sub);
-                MCSId env = subsVP(ins.m_env, m_sub);
+//                MCSId env = subsVP(ins.m_env, m_sub);
                 
-                return new MCInsCall(holder, fun, args, env);
+                return new MCInsCall(holder, fun, args);
             }
         }
 
@@ -356,7 +354,7 @@ public class MCInstructionProcessor {
                 MCSId holder = subsHolder(ins.m_holder);
                 
                 MCSId env = subsVP(ins.m_env, m_sub);
-                return new MCInsGetEleFromEnv(holder, env, ins.m_tag);
+                return new MCInsGetEleFromEnv(holder, env, ins.m_tag, ins.m_index);
             }
         }
 

@@ -1,13 +1,13 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 public class PStatProcCallEpilogue implements PStat {
 
-    public TID m_funlab;  // Don't support function pointer.
-    public TID m_ret;  // The holder for the return value of the function call.
+    public MCSId m_funlab;  // Don't support function pointer.
+    public MCSId m_ret;  // The holder for the return value of the function call.
     
-    public PStatProcCallEpilogue(TID funlab, TID ret) {
+    public PStatProcCallEpilogue(MCSId funlab, MCSId ret) {
         m_funlab = funlab;
         m_ret = ret;
     }

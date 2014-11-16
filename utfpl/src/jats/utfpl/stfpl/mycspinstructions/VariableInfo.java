@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.AuxSType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class VariableInfo {
 //        } else if (m_mid == TID.ANONY){  todo
 //            m_isEscaped = false;
 //            return;
-        } else if (Aux.isVoid(m_mid.getType())) {
+        } else if (AuxSType.isVoid(m_mid.getType())) {
 //            m_isEscaped = false;
             throw new Error("should not happen: mid is " + m_mid);
         } else {

@@ -10,6 +10,10 @@ public class MyCspTempVal implements IMyCspTemp {
         m_v = v;
     }
     
+    public MCAtomValue getMCAtomValue() {
+    	return m_v;
+    }
+    
     @Override
     public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);

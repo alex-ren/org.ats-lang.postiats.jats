@@ -12,6 +12,9 @@ public class MCInsThreadCreate implements IMCInstruction {
                      , IMCValPrim tid
                      , boolean isret) {
         m_funlab = funlab;
+        if (m_funlab.getAddr() == null) {
+        	throw new Error("Effective function should have a pointer.");
+        }
         m_arg = arg;
         m_tid = tid;
     	m_isret = isret;	

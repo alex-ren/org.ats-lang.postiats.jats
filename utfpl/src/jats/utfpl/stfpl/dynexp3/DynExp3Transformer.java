@@ -62,7 +62,7 @@ import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.FunType; 
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyParaType;
@@ -530,14 +530,14 @@ public class DynExp3Transformer {
             Cf2undec f2undec0 = node0.m_f2ds.get(0);
             boolean isFun = true;
             
-            if (Aux.getClosureInfo(f2undec0.f2undec_var.getSType()) instanceof FUNCLOfun) {
+            if (AuxSType.getClosureInfo(f2undec0.f2undec_var.getSType()) instanceof FUNCLOfun) {
                 isFun = true;
             } else {
                 isFun = false;
             }
             
             for (Cf2undec f2undec: node0.m_f2ds) {
-                if (Aux.getClosureInfo(f2undec.f2undec_var.getSType()) instanceof FUNCLOfun) {
+                if (AuxSType.getClosureInfo(f2undec.f2undec_var.getSType()) instanceof FUNCLOfun) {
                     if (false == isFun) {
                         throw new Error("not allowed");
                     }
@@ -727,7 +727,7 @@ public class DynExp3Transformer {
         
         if (!scope.contains(d3var)) {
             if (type instanceof FunType || type instanceof PolyType) {
-                if (!(Aux.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
+                if (!(AuxSType.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
                     // global function is always accessible
                     needed.add(d3var);
                 }

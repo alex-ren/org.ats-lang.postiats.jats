@@ -5,7 +5,7 @@ import jats.utfpl.stfpl.instructions.IValPrim;
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.stfpl.instructions.SIdUser;
-import jats.utfpl.stfpl.stype.Aux;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class MCSIdFactory {
 			SIdUser sid_user = (SIdUser)vp;
 			SId sid = sid_user.getSId();
 			ISType type = sid.getType();
-			if (Aux.isClosure(type) && sid.isUserFun()) {
+			if (AuxSType.isClosure(type) && sid.isUserFun()) {
 			    // turn function name into closure
 				MCSId closure = map_clo_name.get(sid);
 				return closure;
@@ -75,7 +75,7 @@ public class MCSIdFactory {
 		} else if (vp instanceof SId) {
 			SId sid = (SId)vp;
 			ISType type = sid.getType();
-			if (Aux.isClosure(type) && sid.isUserFun()) {
+			if (AuxSType.isClosure(type) && sid.isUserFun()) {
 	            // turn function name into closure
 				MCSId closure = map_clo_name.get(sid);
 				return closure;
@@ -102,6 +102,7 @@ public class MCSIdFactory {
 		
 		return mcvps;
 	}
+
 	
 }
 

@@ -14,13 +14,13 @@ public class MCInsCall implements IMCInstruction {
     public MCSId m_holder;
     public MCSId m_fun;
     public List<IMCValPrim> m_args;
-    public MCSId m_env;
+//    public MCSId m_env;  // If holder is not a closure, then env is null.
     
-    public MCInsCall(MCSId holder, MCSId fun, List<IMCValPrim> args, MCSId env) {
+    public MCInsCall(MCSId holder, MCSId fun, List<IMCValPrim> args) {
         m_holder = holder;
         m_fun = fun;
         m_args = args;
-        m_env = env;  // If holder is not a closure, then env is null.
+//        m_env = env;
         
         if (!m_fun.getSId().isFunName()) {
             throw new Error("This is not allowed. id is " + m_fun.getSId().toStringIns());

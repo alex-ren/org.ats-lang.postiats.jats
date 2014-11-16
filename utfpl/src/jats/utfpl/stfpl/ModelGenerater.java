@@ -13,9 +13,13 @@ import jats.utfpl.stfpl.mcinstruction.MCInstructionPrinter;
 import jats.utfpl.stfpl.mcinstruction.MCInstructionTransformer;
 import jats.utfpl.stfpl.mcinstruction.MCSIdFactory;
 import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
+import jats.utfpl.stfpl.mcinstruction.AuxMCIns.AddressAllocator;
 import jats.utfpl.stfpl.mycspinstructions.MyCspInsPrinter;
 import jats.utfpl.stfpl.mycspinstructions.MyCspInsTransformer;
 import jats.utfpl.stfpl.mycspinstructions.ProgramMyCspIns;
+import jats.utfpl.stfpl.pats.PATCSPSPrinter;
+import jats.utfpl.stfpl.pats.PModel;
+import jats.utfpl.stfpl.pats.PatCspsTransformer;
 import jats.utfpl.utils.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -34,6 +38,7 @@ public class ModelGenerater {
 	private String m_inss;
 	private String m_mcinss;
     private String m_mycspinss;
+    private String m_patsinss;
 	
 	
 	
@@ -134,8 +139,10 @@ public class ModelGenerater {
                 System.out.println("== Generating mcinstruction start ==========================");
                 
                 MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory);
+                AddressAllocator addr_allocator = new AddressAllocator();
                 MCInstructionTransformer mcins_cvt = new MCInstructionTransformer(
                                          mcsid_factory
+                                       , addr_allocator
                                        , ins_cvt.getFunMap()
                                        , prog_in);
 
@@ -175,7 +182,32 @@ public class ModelGenerater {
                     return 0;
                 }
                 
+                /* ************* ************** */
                 
+                System.out.println("== Generating patsinstruction start ==========================");
+
+                PatCspsTransformer patsins_cvt = new PatCspsTransformer(prog_mycspins);
+
+                PModel prog_patsins = patsins_cvt.transform();
+                
+                System.out.println("== Generating patsinstruction end ==========================");
+                
+                PATCSPSPrinter patsinsPrinter = new PATCSPSPrinter();
+                String outputPatsIns = patsinsPrinter.print(prog_patsins);
+                
+                System.out.println("==stfpl's code (layer PatsInstructions) is ==========================");
+                System.out.println(outputPatsIns);
+                
+                FileWriter fwPats = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cPATCSPS));
+                BufferedWriter bwPats = new BufferedWriter(fwPats);
+                bwPats.write(outputPatsIns);
+                bwPats.close();
+
+                m_patsinss = outputPatsIns;
+                if (level <= 7) {
+                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    return 0;
+                }
                 /* ************* ************** */
                 throw new Error("level " + level + " is not supported.");
 

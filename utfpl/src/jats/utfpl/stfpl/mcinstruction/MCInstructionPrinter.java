@@ -1,7 +1,5 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-
-import jats.utfpl.stfpl.stype.Aux;
 import jats.utfpl.stfpl.stype.Utils;
 
 import java.net.URL;
@@ -14,15 +12,15 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	  
     private STGroup m_stg;
-    private STGroup m_stg_type;
+//    private STGroup m_stg_type;
     
     public  MCInstructionPrinter() {
     	
         URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/mcinstruction/mcinstructions.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
         
-        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
-        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
+//        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
+//        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
     }
     
     
@@ -69,12 +67,7 @@ public class MCInstructionPrinter implements IMCInsVisitor {
         for (MCSId para: node.m_paras) {
         	st.add("paras", para.getSId().toStringIns());
         }
-        
-        if (Aux.isClosure(node.getType())) {
-        	if (null != node.m_env_name) {
-            	st.add("paras", node.m_env_name.getSId().toStringIns());
-        	}
-        }
+
         st.add("clo_info", Utils.getCloInfo(node.m_name.getType()).toString());
         
         for (IMCInstruction ins: node.m_inss) {

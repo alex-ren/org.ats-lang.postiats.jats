@@ -3,13 +3,15 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 public class CIGetEleFromEnv extends MyCspInstruction {
     public String m_lab;
+    public int m_index;
     public MyCspTempID m_holder;
     public MyCspTempID m_env;
     
-    public CIGetEleFromEnv(MyCspTempID holder, MyCspTempID env, String lab, MyCspGroup blk) {
+    public CIGetEleFromEnv(MyCspTempID holder, MyCspTempID env, String lab, int index, MyCspGroup blk) {
         super(blk);
         
         m_lab = lab;
+        m_index = index;
         m_holder = holder;
         m_env = env;
     }

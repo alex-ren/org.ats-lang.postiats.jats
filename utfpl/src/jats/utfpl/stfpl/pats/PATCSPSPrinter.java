@@ -1,7 +1,9 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.GlobalExtCode;
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.AuxMCIns.Address;
+import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
+import jats.utfpl.stfpl.stype.AuxSType;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -41,7 +43,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
             st.add("proc_lst", proc.accept(this));
         }
         
-        for (GlobalExtCode extCode: node.m_extCodeLst) {
+        for (MCGlobalExtCode extCode: node.m_extCodeLst) {
             st.add("ext_code_lst", extCode.m_content);
         }
         
@@ -66,10 +68,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PGDecVar node) {
         // pgdecvar_st
         ST st = m_stg.getInstanceOf("pgdecvar_st");
-        st.add("id", node.m_tid);
-        if (node.m_exp != null) {
-            st.add("init", node.m_exp.accept(this));
-        }
+        st.add("id", node.m_mid.toStringMCIns());
+//        if (node.m_exp != null) {
+//            st.add("init", node.m_exp.accept(this));
+//        }
         
         return st;
     }
@@ -123,7 +125,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
         ST st = m_stg.getInstanceOf("pstatlocalvardec_st");
         st.add("name", node.m_name);
         st.add("val", node.m_val.accept(this));
-        st.add("is_global", node.m_name.isGlobalValue());
+        st.add("is_global", node.m_name.getSId().isGlobalValue());
         return st;
     }
 
@@ -137,7 +139,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PExpAtom node) {
-        return node.toString();
+        return node.toStringMCIns();
     }
 
     @Override
@@ -149,19 +151,19 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PProcCall node) {
         ST st = m_stg.getInstanceOf("pproccall_st");
-        st.add("name", node.m_name.toString());
+        st.add("name", node.m_name.toStringMCIns());
         return st;
         
     }
 
     @Override
     public Object visit(PExpID node) {
-        Aux.Address addr = node.m_tid.getAddr();
+        Address addr = node.m_tid.getAddr();
         
         if (null != addr) {
-            return addr.toString();
+            return addr.toStringMCIns();
         } else {
-            return node.m_tid.toString();
+            return node.m_tid.toStringMCIns();
         }
         
     }
@@ -169,9 +171,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PGDecProc node) {
         ST st = m_stg.getInstanceOf("pgdecproc_st");
-        st.add("name", node.m_name.toString());
+        st.add("name", node.m_name.toStringMCIns());
 //        for (TID para: node.m_paraLst) {
-//            st.add("para_lst", para.toString());
+//            st.add("para_lst", para.toStringMCIns());
 //        }
         
         st.add("body", node.m_body.accept(this));
@@ -190,9 +192,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PExpStackGet node) {
         ST st = null;
-        if (node.m_tid.isBool()) {
+        if (AuxSType.isBool(node.m_tid.getType())) {
             st = m_stg.getInstanceOf("pexpstackopr_bool_t");
-        } else if (node.m_tid.isInt()) {
+        } else if (AuxSType.isInt(node.m_tid.getType())) {
             st = m_stg.getInstanceOf("pexpstackopr_int_t");
         }  else {
             st = m_stg.getInstanceOf("pexpstackopr_default_t");
@@ -233,9 +235,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PChannelRecv node) {
         ST st = m_stg.getInstanceOf("pchannelrecv_st");
-        st.add("name", node.m_name.toString());
-        for (TID ele: node.m_eleLst) {
-            st.add("ele_lst", ele.toString());
+        st.add("name", node.m_name.toStringMCIns());
+        for (MCSId ele: node.m_eleLst) {
+            st.add("ele_lst", ele.toStringMCIns());
         }
         
         return st;
@@ -244,7 +246,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PChannelSend node) {
         ST st = m_stg.getInstanceOf("pchannelsend_st");
-        st.add("name", node.m_name.toString());
+        st.add("name", node.m_name.toStringMCIns());
         for (PExp ele: node.m_msgLst) {
             st.add("msg_lst", ele.accept(this));
         }
@@ -294,25 +296,25 @@ public class PATCSPSPrinter implements PNodeVisitor {
     }
 
 
-    @Override
-    public Object visit(PExpTuple node) {
-        if (node != PExpTuple.cNone) {
-            throw new Error("not supported");
-        }
-        ST st = m_stg.getInstanceOf("pnone_st");
-        return st;
-        
-    }
+//    @Override
+//    public Object visit(PExpTuple node) {
+//        if (node != PExpTuple.cNone) {
+//            throw new Error("not supported");
+//        }
+//        ST st = m_stg.getInstanceOf("pnone_st");
+//        return st;
+//        
+//    }
 
-    @Override
-    public Object visit(PGDecArray node) {
-        // pgdecarray_st(id, sz) ::= <<
-        ST st = m_stg.getInstanceOf("pgdecarray_st");
-        st.add("id", node.m_tid);
-        st.add("sz", node.m_sz);
-        
-        return st;
-    }
+//    @Override
+//    public Object visit(PGDecArray node) {
+//        // pgdecarray_st(id, sz) ::= <<
+//        ST st = m_stg.getInstanceOf("pgdecarray_st");
+//        st.add("id", node.m_tid);
+//        st.add("sz", node.m_sz);
+//        
+//        return st;
+//    }
 
 
     @Override
@@ -334,7 +336,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     // check here todo
 
     @Override
-    public Object visit(PInsLoad node) {
+    public Object visit(PInsAtomRefGet node) {
         // pinsload_st(src, dst) ::= <<
         ST st = m_stg.getInstanceOf("pinsload_st");
         st.add("src", node.m_globalVar);
@@ -344,26 +346,26 @@ public class PATCSPSPrinter implements PNodeVisitor {
     }
 
 
-    @Override
-    public Object visit(PInsLoadArray node) {
-        // pinsloadarray_st(src, index, dst, is_global) ::= <<
-        ST st = m_stg.getInstanceOf("pinsloadarray_st");
-        st.add("src", node.m_globalVar);
-        st.add("dst", node.m_localHolder);
-        st.add("index", node.m_localIndex.accept(this));
-        
-        if (node.m_localHolder.isGlobal()) {  // assign to a global value
-            st.add("is_global", true);
-        } else {
-            st.add("is_global", false);
-        }
-        
-        return st;
-    }
+//    @Override
+//    public Object visit(PInsLoadArray node) {
+//        // pinsloadarray_st(src, index, dst, is_global) ::= <<
+//        ST st = m_stg.getInstanceOf("pinsloadarray_st");
+//        st.add("src", node.m_globalVar);
+//        st.add("dst", node.m_localHolder);
+//        st.add("index", node.m_localIndex.accept(this));
+//        
+//        if (node.m_localHolder.isGlobal()) {  // assign to a global value
+//            st.add("is_global", true);
+//        } else {
+//            st.add("is_global", false);
+//        }
+//        
+//        return st;
+//    }
 
 
     @Override
-    public Object visit(PInsStore node) {
+    public Object visit(PInsAtomRefUpdate node) {
         // pinsstore_st(src, dst) ::= <<
         ST st = m_stg.getInstanceOf("pinsstore_st");
         st.add("dst", node.m_globalVar);
@@ -373,16 +375,16 @@ public class PATCSPSPrinter implements PNodeVisitor {
     }
 
 
-    @Override
-    public Object visit(PInsStoreArray node) {
-        // pinsstorearray_st(src, dst, index) ::= <<
-    	ST st = m_stg.getInstanceOf("pinsstorearray_st");
-    	st.add("src", node.m_localSrc.accept(this));
-    	st.add("dst", node.m_globalVar);
-    	st.add("index", node.m_localIndex.accept(this));
-    	
-    	return st;
-    }
+//    @Override
+//    public Object visit(PInsStoreArray node) {
+//        // pinsstorearray_st(src, dst, index) ::= <<
+//    	ST st = m_stg.getInstanceOf("pinsstorearray_st");
+//    	st.add("src", node.m_localSrc.accept(this));
+//    	st.add("dst", node.m_globalVar);
+//    	st.add("index", node.m_localIndex.accept(this));
+//    	
+//    	return st;
+//    }
 
 
     @Override
@@ -402,9 +404,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PStatProcCallEpilogue node) {
         // pstatproccallepilogue_st(ret, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pstatproccallepilogue_st");
-    	if (!node.m_ret.isAnony()) {
+    	if (!AuxSType.isVoid(node.m_ret.getType())) {
     		st.add("ret", node.m_ret);
-    		st.add("is_global", node.m_ret.isGlobal());
+    		st.add("is_global", node.m_ret.getSId().isGlobalValue());
     	}
     	
     	return st;
@@ -425,11 +427,11 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
     @Override
-    public Object visit(PInsMutexAlloc node) {
+    public Object visit(PInsMutexCreate node) {
         // pinsmutexalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
     	st.add("holder", node.m_holder);
-    	if (node.m_holder.isGlobal()) {
+    	if (node.m_holder.getSId().isGlobalValue()) {
     		st.add("is_global", true);
     	} else {
     		st.add("is_global", false);
@@ -438,22 +440,22 @@ public class PATCSPSPrinter implements PNodeVisitor {
     	return st;
     }
 
-	@Override
-    public Object visit(PInsMutexRelease node) {
-        // pinsmutexrelease_st(mutex) ::= <<
-    	ST st = m_stg.getInstanceOf("pinsmutexrelease_st");
-    	st.add("mutex", node.m_mutex.accept(this));
-    	
-    	return st;
-    }
+//	@Override
+//    public Object visit(PInsMutexRelease node) {
+//        // pinsmutexrelease_st(mutex) ::= <<
+//    	ST st = m_stg.getInstanceOf("pinsmutexrelease_st");
+//    	st.add("mutex", node.m_mutex.accept(this));
+//    	
+//    	return st;
+//    }
 
 
     @Override
-    public Object visit(PInsCondAlloc node) {
+    public Object visit(PInsSharedCreateCond node) {
         // pinscondalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinscondalloc_st");
     	st.add("holder", node.m_holder);
-    	if (node.m_holder.isGlobal()) {
+    	if (node.m_holder.getSId().isGlobalValue()) {
     		st.add("is_global", true);
     	} else {
     		st.add("is_global", false);
@@ -462,14 +464,14 @@ public class PATCSPSPrinter implements PNodeVisitor {
     	return st;
     }
 
-	@Override
-    public Object visit(PInsCondRelease node) {
-        // pinscondrelease_st(cond) ::= <<
-    	ST st = m_stg.getInstanceOf("pinscondrelease_st");
-    	st.add("cond", node.m_cond.accept(this));
-    	
-    	return st;
-    }
+//	@Override
+//    public Object visit(PInsCondRelease node) {
+//        // pinscondrelease_st(cond) ::= <<
+//    	ST st = m_stg.getInstanceOf("pinscondrelease_st");
+//    	st.add("cond", node.m_cond.accept(this));
+//    	
+//    	return st;
+//    }
 
 
     @Override
@@ -480,6 +482,60 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
         return st;
     }
+
+
+	@Override
+	public Object visit(PExpPatLabDecompose node) {
+		return "PExpPatLabDecompose";
+	}
+
+
+	@Override
+	public Object visit(PExpFormClosure node) {
+		return "PExpFormClosure";
+	}
+
+
+	@Override
+	public Object visit(PExpTupleCreate node) {
+		return "PExpTupleCreate";
+	}
+
+
+	@Override
+	public Object visit(PProcGrpMCAtomicStart node) {
+		return "PProcGrpMCAtomicStart";
+	}
+
+
+	@Override
+	public Object visit(PInsMCGet node) {
+		return "PInsMCGet";
+	}
+
+
+	@Override
+	public Object visit(PInsMCSet node) {
+		return "PInsMCSet";
+	}
+
+
+	@Override
+	public Object visit(PInsTupleAdd node) {
+		return "PInsAtomRefCreate";
+	}
+
+
+	@Override
+	public Object visit(PInsAtomRefCreate node) {
+		return "PInsAtomRefCreate";
+	}
+
+
+	@Override
+	public Object visit(PInsMCVLockViewGet node) {
+		return "PInsMCVLockViewGet";
+	}
 
 }
 

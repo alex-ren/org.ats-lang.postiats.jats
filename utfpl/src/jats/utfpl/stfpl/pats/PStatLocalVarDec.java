@@ -1,12 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 public class PStatLocalVarDec implements PStat {
-    public TID m_name;
-    public PExp m_val;
+    public MCSId m_name;
+    public PExp m_val;  // Can be null.
     
-    public PStatLocalVarDec(TID name, PExp val) {
+    public PStatLocalVarDec(MCSId name, PExp val) {
         m_name = name;
         m_val = val;
     }

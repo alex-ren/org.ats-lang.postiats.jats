@@ -1,10 +1,10 @@
 package jats.utfpl.stfpl.pats;
 
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 public class PProcCall implements PProc {
-    public TID m_name;
+    public MCSId m_name;
     public boolean m_isTailCall;
 //    public List<PExp> m_paraLst;
 //    public boolean m_reuseStack;
@@ -16,7 +16,7 @@ public class PProcCall implements PProc {
 //
 //    }
 
-    public PProcCall(TID name, boolean isTailCall) {
+    public PProcCall(MCSId name, boolean isTailCall) {
         m_name = name;
         m_isTailCall = isTailCall;
     }

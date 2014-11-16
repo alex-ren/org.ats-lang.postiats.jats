@@ -2,40 +2,9 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import jats.utfpl.instruction.AtomValue;
-import jats.utfpl.instruction.FunctionInstruction;
-import jats.utfpl.instruction.GlobalEntity;
-import jats.utfpl.instruction.GlobalValue;
-import jats.utfpl.instruction.InsCondAlloc;
-import jats.utfpl.instruction.InsCondRelease;
-import jats.utfpl.instruction.InsMCAssert;
-import jats.utfpl.instruction.InsMCGet;
-import jats.utfpl.instruction.InsMCSet;
-import jats.utfpl.instruction.InsMutexAlloc;
-import jats.utfpl.instruction.InsCall;
-import jats.utfpl.instruction.InsCond;
-import jats.utfpl.instruction.InsFuncDef;
-import jats.utfpl.instruction.InsFuncGroup;
-import jats.utfpl.instruction.InsLoad;
-import jats.utfpl.instruction.InsLoadArray;
-import jats.utfpl.instruction.InsMove;
-import jats.utfpl.instruction.InsMutexRelease;
-import jats.utfpl.instruction.InsRet;
-import jats.utfpl.instruction.InsStore;
-import jats.utfpl.instruction.InsStoreArray;
-import jats.utfpl.instruction.InsThreadCreate;
-import jats.utfpl.instruction.InsVisitor;
-import jats.utfpl.instruction.ProgramInstruction;
-import jats.utfpl.instruction.TID;
-import jats.utfpl.instruction.TupleValue;
-import jats.utfpl.instruction.UtfplInstruction;
-import jats.utfpl.instruction.ValPrim;
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.stfpl.mcinstruction.IMCInsVisitor;
@@ -135,10 +104,9 @@ public class MyCspInsTransformer {
                     pos = para.processStackPrelogue(pos);
                 }
    
-                if (null != funcCSP.m_envname) {
-
-                    pos = funcCSP.m_envname.processStackPrelogue(pos);
-                }
+//                if (null != funcCSP.m_envname) {
+//                    pos = funcCSP.m_envname.processStackPrelogue(pos);
+//                }
                 
                 // add the concept of stack
                 processBlockLstForStack(pos, funcCSP.m_body);
@@ -281,8 +249,12 @@ public class MyCspInsTransformer {
             if (!ins.m_fun.getSId().isFunName()) {
                 throw new Error("Currently, function is not first order value.");
             }
+            
+//            MyCspTempID envname = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
+            List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
+            
             if (ins.hasSideEffect()) {
-                List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
+                
                 CIProcCallPrelogue cCallPre = new CIProcCallPrelogue(m_cbEvt, nLst, ins.isTailCall());
                 m_cbEvt.add(cCallPre);
                 m_cblkLst.add(m_cbEvt);
@@ -301,7 +273,7 @@ public class MyCspInsTransformer {
                 return null;
 
             } else {
-                List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
+                
                 MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                 CIFunCall nIns = new CIFunCall(ins.m_fun, nLst, ctHolder, ins.isTailCall(), m_cbEvt);
 
@@ -512,7 +484,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsPatLabDecompose ins) {
             IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIPatLabDecompose nIns = new CIPatLabDecompose(holder, vp, ins.m_lab, m_cbEvt);
+            CIPatLabDecompose nIns = new CIPatLabDecompose(holder, vp, ins.m_lab, ins.m_index, m_cbEvt);
 
             handleReturnForNoEffect(nIns, ins.m_holder);
 
@@ -521,7 +493,7 @@ public class MyCspInsTransformer {
 
         @Override
         public Object visit(MCInsFormEnv ins) {
-            Set<MyCspTempID> nLst = ValPrimSet2CTempSet(ins.m_env, m_subMap, m_funLab, m_cbEvt);
+        	List<MyCspTempID> nLst = MCSIdList2CTempIdList(ins.m_env, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             CIFormEnv nIns = new CIFormEnv(nLst, ctHolder, m_cbEvt);
 
@@ -534,7 +506,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsGetEleFromEnv ins) {
         	MyCspTempID env    = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIGetEleFromEnv nIns = new CIGetEleFromEnv(holder, env, ins.m_tag, m_cbEvt);
+            CIGetEleFromEnv nIns = new CIGetEleFromEnv(holder, env, ins.m_tag, ins.m_index, m_cbEvt);
 
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -660,7 +632,7 @@ public class MyCspInsTransformer {
             MCSId tid = (MCSId)vp;
             return TID2CTempID(tid, map, funLab, grp);
         } else {
-            throw new Error("shall not happen");
+            throw new Error("shall not happen vp is " + vp);
         }
     }
     
@@ -676,9 +648,9 @@ public class MyCspInsTransformer {
     	return nLst;
     }
     
-    static private Set<MyCspTempID> ValPrimSet2CTempSet(Set<MCSId> vpSet, Map<MCSId, VariableInfo> map, MCSId funLab, MyCspGroup grp) {
-    	Set<MyCspTempID> nSet = new HashSet<MyCspTempID>();
-    	for (MCSId vp: vpSet) {
+    static private List<MyCspTempID> MCSIdList2CTempIdList(List<MCSId> vpList, Map<MCSId, VariableInfo> map, MCSId funLab, MyCspGroup grp) {
+    	List<MyCspTempID> nSet = new ArrayList<MyCspTempID>();
+    	for (MCSId vp: vpList) {
     		MyCspTempID newVp = TID2CTempID(vp, map, funLab, grp);
     		nSet.add(newVp);
     	}
@@ -715,24 +687,23 @@ public class MyCspInsTransformer {
             MCDefFun funDef
             , Map<MCSId, VariableInfo> subMap) {
     	
-    	MyCspTempID fun_name = TID2CTempID(funDef.m_name, subMap, funDef.m_name, null);
     	
         List<MyCspTempID> paras = new ArrayList<MyCspTempID>();
         
-        MyCspTempID envname = null;
+//        MyCspTempID envname = null;
         for (MCSId para: funDef.m_paras) {
             MyCspTempID cPara = TID2CTempID(para, subMap, funDef.m_name, null /* CBlock is null */);
             paras.add(cPara);
         }
         
-        if (null != funDef.m_env_name) {
-        	envname = TID2CTempID(funDef.m_env_name, subMap, funDef.m_name, null);
-        }
+//        if (null != funDef.m_env_name) {
+//        	envname = TID2CTempID(funDef.m_env_name, subMap, funDef.m_name, null);
+//        }
         
         List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name);
         
         
-        FunctionMyCsp cProc = new FunctionMyCsp(fun_name, paras, envname, body);
+        FunctionMyCsp cProc = new FunctionMyCsp(funDef.m_name, paras, body);
         return cProc;
     }
 }

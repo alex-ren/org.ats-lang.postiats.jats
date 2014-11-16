@@ -11,15 +11,15 @@ import org.stringtemplate.v4.STGroupFile;
 public class InstructionPrinter {
     
     private STGroup m_stg;
-    private STGroup m_stg_type;
+//    private STGroup m_stg_type;
     
     public  InstructionPrinter() {
     	
         URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/instructions/instructions.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
         
-        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
-        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
+//        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
+//        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
     }
     
     

@@ -19,6 +19,14 @@ public class MCAtomValue implements IMCValPrim {
     public String toStringMCIns() {
 	    return m_v.toString();
     }
+	
+    public static MCAtomValue createFromInt(int x) {
+    	return new MCAtomValue(AtomValue.createFromInt(x));
+    }
+    
+    public static MCAtomValue createFromBoolean(boolean x) {
+        return new MCAtomValue(AtomValue.createFromBoolean(x));
+    }
 
 //    @Override
 //    public String toStringCS() {

@@ -1,15 +1,15 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.mcinstruction.MCSId;
 
 import java.util.List;
 
 public class PChannelRecv implements PChannelTransfer {
 
-	public TID m_name;
-	public List<TID> m_eleLst;
+	public MCSId m_name;
+	public List<MCSId> m_eleLst;
 	
-	public PChannelRecv(TID name, List<TID> eleLst) {
+	public PChannelRecv(MCSId name, List<MCSId> eleLst) {
 		m_name = name;
 		m_eleLst = eleLst;
 	}
