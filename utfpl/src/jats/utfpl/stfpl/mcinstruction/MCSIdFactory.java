@@ -30,12 +30,17 @@ public class MCSIdFactory {
 	public MCSId fromSId(SId sid) {
 	    MCSId mcsid = m_map.get(sid);
 	    if (null == mcsid) {
-	        mcsid = new MCSId(sid);
+	    	if (null == AuxSType.getFunctionType(sid.getType())) {
+	    		mcsid = new MCSId(sid, null);
+	    	} else {
+	    		mcsid = new MCSId(sid, m_addr_allocator.createPointer());
+	    	}
+	        
 	        m_map.put(sid, mcsid);
 	    }
 	    return mcsid;
 	}
-	
+
 	public MCSId duplicate(MCSId mcsid) {
 	  
 	    SId sid = mcsid.getSId();

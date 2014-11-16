@@ -123,7 +123,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PStatLocalVarDec node) {
         // pstatlocalvardec_st(name, val, is_global) ::= <<
         ST st = m_stg.getInstanceOf("pstatlocalvardec_st");
-        st.add("name", node.m_name);
+        st.add("name", node.m_name.toStringMCIns());
         st.add("val", node.m_val.accept(this));
         st.add("is_global", node.m_name.getSId().isGlobalValue());
         return st;
@@ -522,7 +522,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PInsTupleAdd node) {
-		return "PInsAtomRefCreate";
+		return "PInsTupleAdd";
 	}
 
 

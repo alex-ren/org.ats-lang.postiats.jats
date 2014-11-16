@@ -2,9 +2,9 @@
 
 #include ...
 
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/foo.sats"
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/foo.sats"
 
-"D2Cdcstdecs" add_2892:((int, int) -<clo> int):type
+"D2Cdcstdecs" add_2892:((int, int) -<fun> int):type
 
 fun foo1_3447 = lam (<P2Tann>(x_3448:@{0 = int, 1 = int}:t@ype), <P2Tann>(y_3449:int:t@ype)) <clo> = 
   <D2EannSeff>(
@@ -20,9 +20,9 @@ fun foo3_3453 = lam (<P2Tann>(x_3454:int:t@ype)) <clo> =
 
 fun foo4_3455 = lam () <clo> = 
   <D2EannSeff>(
-    D2Ecst<add_2892:((int, int) -<clo> int):type> (1, 2):int:t@ype)
+    D2Ecst<add_2892:((int, int) -<fun> int):type> (1, 2):int:t@ype)
 
-implement main_void_0_56:(() -<clo> void):type = lam () <fun> = 
+implement main_void_0_56:(() -<fun> void):type = lam () <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let

@@ -26,17 +26,17 @@ public class VNameSym implements IVarName {
 
     @Override
     public String toStringIns() {
-        return m_sym.toString();
+    	return m_sym.toString();
     }
     
 	@Override
     public String toStringNoStamp() {
-		throw new Error("Should not happen.");
+		return m_sym.toString();
     }
 
 	@Override
     public String toStringWithStamp() {
-	    throw new Error("Should not happen.");
+		return m_sym.toString();
     }
 
 }

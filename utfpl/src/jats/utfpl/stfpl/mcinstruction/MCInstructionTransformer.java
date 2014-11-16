@@ -592,7 +592,7 @@ public class MCInstructionTransformer {
                 
                 boolean isret = ins.m_holder.isRetHolder();
 
-                mcsid_tfun.updateAddr(m_addr_allocator.createPointer());
+                mcsid_tfun.setAsThread();
                 return new MCInsThreadCreate(mcsid_tfun, mcarg, mctid, isret);
 
             } else if (fname.compSymbolString(CCompUtils.cMCSetInt)) {

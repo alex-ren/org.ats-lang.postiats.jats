@@ -471,6 +471,8 @@ public class StfplTypeChecker {
         argsLst = argsLst.subList(1, argsLst.size());
         
         if (args0 instanceof D2EXPARGsta) {
+        	// static argument is neglected.
+        	// This may cause problem if it's of sort type.
             inner_ty.add(funType0);
             if (argsLst.isEmpty()) {
                 return funType0;
@@ -486,7 +488,9 @@ public class StfplTypeChecker {
                 argsType.add(argType);
             }
             VarType retType = new VarType();
-            FunType funType = new FunType(argsType, retType, FunCloNA.cInstance);
+            
+            // No information, assume it's normal function.
+            FunType funType = new FunType(argsType, retType, FUNCLOfun.cInstance);
             funType0.setType(funType);
             
             inner_ty.add(retType);

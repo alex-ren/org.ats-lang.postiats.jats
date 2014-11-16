@@ -113,9 +113,41 @@ var sys_assert_var = true;
 // =====================
 
 
-foo2_63(sys_tid) =
-  {  var foo25_id = PExpFormClosure;
+foo1_3447(sys_tid) =
+  {  var foo113_id = PExpFormClosure;
   sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+foo2_3450(sys_tid) =
+  {  var foo215_id = PExpFormClosure;
+  sys_gstack.frame_push(sys_tid, sys_gstack.frame_get_int(sys_tid, 0, 1));
+  } ->
+  Skip
+  ;
+
+foo3_3453(sys_tid) =
+  {  var foo317_id = PExpFormClosure;
+  var ret7_id = PExpTupleCreate;
+  PInsTupleAdd
+  PInsTupleAdd
+  sys_gstack.frame_push(sys_tid, ret7_id);
+  } ->
+  Skip
+  ;
+
+foo4_3455(sys_tid) =
+  {  var foo419_id = PExpFormClosure;
+  var ret9_id = call(jats.utfpl.stfpl.mcinstruction.MCSId@43bf9dec, 1, 2);
+  sys_gstack.frame_push(sys_tid, ret9_id);
+  } ->
+  Skip
+  ;
+
+main_void_0_56(sys_tid) =
+  {  var temp11_id = call(jats.utfpl.stfpl.mcinstruction.MCSId@591913b3, "Helloworld");
+  sys_gstack.frame_push(sys_tid, None);
   } ->
   Skip
   ;
@@ -126,8 +158,14 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_list_manager.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  var env6_id = PExpTupleCreate;
-  var foo2_closure7_id = PExpFormClosure;
+  {  var env20_id = PExpTupleCreate;
+  var foo1_closure21_id = PExpFormClosure;
+  var env22_id = PExpTupleCreate;
+  var foo2_closure23_id = PExpFormClosure;
+  var env24_id = PExpTupleCreate;
+  var foo3_closure25_id = PExpFormClosure;
+  var env26_id = PExpTupleCreate;
+  var foo4_closure27_id = PExpFormClosure;
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

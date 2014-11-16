@@ -5,16 +5,20 @@ import jats.utfpl.stfpl.stype.ISType;
 
 public class MCSId implements IMCValPrim {
 	private SId m_sid;
-    
-    private boolean m_has_effect;
-    
+	
+	// The following three properties are related to functions.
     private AuxMCIns.Address m_addr;
+    private boolean m_has_effect;
+    private boolean m_isthread;
     
     // Used by factory.
-	public MCSId(SId sid) {
+	public MCSId(SId sid, AuxMCIns.Address addr) {
 		m_sid = sid;
+		m_addr = addr;
+		
+		
 		m_has_effect = false;
-		m_addr = null;
+		m_isthread = false;
 	}
 	
 	// Used by factory.
@@ -30,8 +34,12 @@ public class MCSId implements IMCValPrim {
         return m_addr;
     }
     
-    public void updateAddr(AuxMCIns.Address addr) {
-        m_addr = addr;
+    public void setAsThread() {
+        m_isthread = true;
+    }
+    
+    public boolean isThread() {
+    	return m_isthread;
     }
     
 
