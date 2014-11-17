@@ -17,7 +17,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     private STGroup m_stg;
 
     public PATCSPSPrinter() {
-        URL fileURL = this.getClass().getResource("/jats/utfpl/patcsps/patcsps.stg");
+        URL fileURL = this.getClass().getResource("/jats/utfpl/stfpl/pats/pats.stg");
         m_stg = new STGroupFile(fileURL, "ascii", '<', '>');
     }
     
@@ -160,7 +160,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PExpID node) {
         Address addr = node.m_tid.getAddr();
         
-        if (null != addr) {
+        if (node.m_tid.isThread()) {
             return addr.toStringMCIns();
         } else {
             return node.m_tid.toStringMCIns();
@@ -389,8 +389,8 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PStatProcCallPrelogue node) {
-        // pstatproccallprelogue_st(args, is_tail_call) ::= <<
-        ST st = m_stg.getInstanceOf("pstatproccallprelogue_st");
+        // PStatProcCallPrelogue_st(args, is_tail_call) ::= <<
+        ST st = m_stg.getInstanceOf("PStatProcCallPrelogue_st");
         for (PExp exp: node.m_args) {
             st.add("args", exp.accept(this));
         }
@@ -486,13 +486,22 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PExpPatLabDecompose node) {
-		return "PExpPatLabDecompose";
+		// PExpPatLabDecompose_st(tup, index) ::= <<
+		ST st = m_stg.getInstanceOf("PExpPatLabDecompose_st");
+		st.add("tup", node.m_tup.accept(this));
+		st.add("index", node.m_index);
+		return st;
 	}
 
 
 	@Override
 	public Object visit(PExpFormClosure node) {
-		return "PExpFormClosure";
+		// PExpFormClosure_st(funaddr, envname) ::= <<
+		ST st = m_stg.getInstanceOf("PExpFormClosure_st");
+		 
+		st.add("funaddr", node.m_funLab.getAddr().toStringMCIns());
+		st.add("envname", node.m_env.accept(this));
+		return st;
 	}
 
 

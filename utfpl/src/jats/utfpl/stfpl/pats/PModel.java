@@ -26,7 +26,7 @@ public class PModel implements PNode {
         
         m_threadLst = new ArrayList<PGDecProc>();
         for (PGDecProc proc: procLst) {
-        	if (proc.m_name.hasAddress()) {
+        	if (proc.m_name.isThread()) {
         		m_threadLst.add(proc);
         	}
         }

@@ -105,7 +105,15 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsCall ins) {
-		return "MCInsCall";
+		// MCInsCall_st(ret, funname, args) ::= <<
+		ST st = m_stg.getInstanceOf("MCInsCall_st");
+		st.add("ret", ins.m_holder.toStringMCIns());
+		st.add("funname", ins.m_fun.toStringMCIns());
+		for (IMCValPrim arg: ins.m_args) {
+			st.add("args", arg.toStringMCIns());
+		}
+		
+		return st;
     }
 
 
@@ -117,7 +125,12 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsGetEleFromEnv ins) {
-		return "MCInsGetEleFromEnv";
+		// MCInsGetEleFromEnv(ret, envname, index) ::= <<
+		ST st = m_stg.getInstanceOf("MCInsGetEleFromEnv");
+		st.add("ret", ins.m_holder.toStringMCIns());
+		st.add("envname", ins.m_env.toStringMCIns());
+		st.add("index", ins.m_index);
+		return st;
     }
 
 

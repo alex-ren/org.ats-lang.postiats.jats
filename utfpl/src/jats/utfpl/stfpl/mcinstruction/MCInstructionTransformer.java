@@ -137,7 +137,9 @@ public class MCInstructionTransformer {
                 , map_env_name
                 , map_name);
         
-        return new ProgramMCIns(m_global_v, m_decs, m_defs, m_exts, m_main_inss, m_main_name);
+        ProgramMCIns prog = new ProgramMCIns(m_global_v, m_decs, m_defs, m_exts, m_main_inss, m_main_name);
+        MCInstructionProcessor processor = new MCInstructionProcessor(prog, m_mcsid_factory);
+        return processor.process();
         
     }
     
@@ -275,7 +277,7 @@ public class MCInstructionTransformer {
         	MCSId mcgrp_member = m_mcsid_factory.fromSId(grp_member);
         	
         	SId clo_name = m_mcsid_factory.getSIdFac().createLocalVar(
-        			grp_member.toStringNoStamp()
+        			grp_member.toStringNoStamp() + "_clo"
         		  , grp_member.getType());
         	MCSId mcclo_name = m_mcsid_factory.fromSId(clo_name);
         	map_clo_name.put(grp_member, mcclo_name);  // function name => closure name
@@ -293,7 +295,7 @@ public class MCInstructionTransformer {
         		member_type = member_fun_grp.getEnvType();  // The environment of the function.
 
         		SId env_sid = m_mcsid_factory.getSIdFac().createLocalVar(
-            			env_member.toStringWithStamp(), member_type);
+            			env_member.toStringWithStamp() + "_ele", member_type);
         		MCSId mcenv_sid = m_mcsid_factory.fromSId(env_sid);
         		map_env_name.put(env_member, mcenv_sid);  // function name => env name
 //        		map_env_ele.put(env_member, mcenv_sid);  // element in env => its new name

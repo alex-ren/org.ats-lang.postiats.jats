@@ -16,4 +16,11 @@ MCDefFun_st(name, paras, clo_info, ret_type, body) ::= <<
   <body; separator="\n">
 >>
 
+MCInsCall_st(ret, funname, args) ::= <<
+<ret> = <funname>(<args; separator=", ">);
+>>
+
+MCInsGetEleFromEnv(ret, envname, index) ::= <<
+<ret> = sys_get_element(<envname>, <index>);
+>>
 

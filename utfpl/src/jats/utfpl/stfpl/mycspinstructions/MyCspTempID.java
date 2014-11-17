@@ -103,6 +103,10 @@ public class MyCspTempID implements IMyCspTemp {
      * This function is called when an object of CTempID allocated at first time.
      */
     public int processStack(int offset) {
+    	
+    	if (m_vi.getMCSId().toStringMCIns().equals("temp6_id")) {
+    		
+    	}
     	if (m_isDef) {
             updateEscaped();
             if (isEscaped()) {
@@ -116,7 +120,9 @@ public class MyCspTempID implements IMyCspTemp {
     /*
      * The current id is a holder for a function call.
      */
-    public int processStackProcCallEpilogue(int offset) {
+    public int processStackProcCallEpilogue(int offset) {    	
+    	updateEscaped();
+    	
         if (isEscaped()) {
             offset =  updateForDef(offset);  // allocate from stack
         }

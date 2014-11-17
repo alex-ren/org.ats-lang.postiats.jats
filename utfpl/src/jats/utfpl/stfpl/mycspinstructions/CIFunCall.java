@@ -39,7 +39,6 @@ public class CIFunCall extends MyCspInstruction {
     @Override
     public int process(int offset) {
         offset = m_ret.processStack(offset);
-
         for (IMyCspTemp arg: m_args) {
             if (arg instanceof MyCspTempID) {
                 ((MyCspTempID)arg).updateForUsage();

@@ -1,6 +1,8 @@
 package jats.utfpl.stfpl.mcinstruction;
 
 import jats.utfpl.stfpl.instructions.SId;
+import jats.utfpl.stfpl.instructions.SIdFactory;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 
 public class MCSId implements IMCValPrim {
@@ -13,12 +15,31 @@ public class MCSId implements IMCValPrim {
     
     // Used by factory.
 	public MCSId(SId sid, AuxMCIns.Address addr) {
+		
 		m_sid = sid;
 		m_addr = addr;
+		
+		if (null == addr && null != AuxSType.getFunctionType(sid.getType())) {
+			throw new Error("Function must have address.");
+		}
 		
 		
 		m_has_effect = false;
 		m_isthread = false;
+	}
+	
+	private MCSId(SId sid, AuxMCIns.Address addr, 
+			boolean has_effect, boolean isthread) {
+		m_sid = sid;
+		m_addr = addr;
+		m_has_effect = has_effect;
+		m_isthread = isthread;
+	}
+		
+	// Used by factory
+	public MCSId duplicate(SIdFactory fac) {
+		SId nsid = fac.duplicate(m_sid);
+		return new MCSId(nsid, m_addr, m_has_effect, m_isthread);
 	}
 	
 	// Used by factory.

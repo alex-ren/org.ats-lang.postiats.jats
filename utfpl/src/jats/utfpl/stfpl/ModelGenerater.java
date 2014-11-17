@@ -137,8 +137,8 @@ public class ModelGenerater {
                 /* ************* ************** */
                 
                 System.out.println("== Generating mcinstruction start ==========================");
-                
-                MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory);
+                AddressAllocator addr_alloc = new AddressAllocator();
+                MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory, addr_alloc);
                 AddressAllocator addr_allocator = new AddressAllocator();
                 MCInstructionTransformer mcins_cvt = new MCInstructionTransformer(
                                          mcsid_factory
@@ -196,7 +196,7 @@ public class ModelGenerater {
                 String outputPatsIns = patsinsPrinter.print(prog_patsins);
                 
                 System.out.println("==stfpl's code (layer PatsInstructions) is ==========================");
-                System.out.println(outputPatsIns);
+//                System.out.println(outputPatsIns);
                 
                 FileWriter fwPats = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cPATCSPS));
                 BufferedWriter bwPats = new BufferedWriter(fwPats);

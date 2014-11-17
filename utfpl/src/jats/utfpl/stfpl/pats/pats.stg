@@ -348,7 +348,7 @@ pprocthreadcreate_st(tid, funaddr, args) ::= <<
 sys_thread_create(<tid>, <funaddr>, <args>)
 >>
 
-pstatproccallprelogue_st(args, is_tail_call) ::= <<
+PStatProcCallPrelogue_st(args, is_tail_call) ::= <<
 var <local_temp_list()> = <sys_list_manager()>.list_nil ();
 <args:{arg|<local_temp_list()> = <sys_list_manager()>.list_cons (<arg>, <local_temp_list()>);}; separator="\n">
 <if(is_tail_call)><sys_gstack()>.reload_frame(<sys_tid()>, <local_temp_list()>);<else><sys_gstack()>.add_frame(<sys_tid()>, <local_temp_list()>);<endif>
@@ -365,6 +365,16 @@ sys_gstack() ::= <<sys_gstack>>
 sys_tid() ::= <<sys_tid>>
 
 sys_list_manager() ::= <<sys_list_manager>>
+
+// ===================================================
+
+PExpFormClosure_st(funaddr, envname) ::= <<
+sys_tuple2_form(<funaddr>, <envname>)
+>>
+
+PExpPatLabDecompose_st(tup, index) ::= <<
+sys_tuple_get(<tup>, <index>)
+>>
 
 
 

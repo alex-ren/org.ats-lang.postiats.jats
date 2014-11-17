@@ -19,7 +19,7 @@ public class MCInstructionProcessor {
         m_fac = fac;
     }
     
-    public void process() {
+    public ProgramMCIns process() {
         
         // ===========================================
         
@@ -61,6 +61,7 @@ public class MCInstructionProcessor {
         m_prog.m_defs = defs;
         m_prog.m_main_inss = main_inss;
 
+        return m_prog;
     }
     
     private MCDefFun processFunction(MCDefFun fun) {
@@ -89,6 +90,7 @@ public class MCInstructionProcessor {
         for (MCDefFunGroup grp: m_prog.m_defs) {
             for (MCDefFun fun: grp.m_funs) {
                 fun.m_name.setEffect(true);  
+//                System.out.println("++++++++++ name is " + fun.m_name.toStringMCIns());
             }
         }
     }

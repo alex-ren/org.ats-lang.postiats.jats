@@ -5,6 +5,7 @@ import jats.utfpl.stfpl.instructions.IValPrim;
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdFactory;
 import jats.utfpl.stfpl.instructions.SIdUser;
+import jats.utfpl.stfpl.mcinstruction.AuxMCIns.AddressAllocator;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 
@@ -16,11 +17,13 @@ import java.util.Map;
 public class MCSIdFactory {
 	private Map<SId, MCSId> m_map;
 	private SIdFactory m_fac;
+	private AddressAllocator m_addr_allocator;
 	
-	public MCSIdFactory(SIdFactory fac) {
+	public MCSIdFactory(SIdFactory fac, AddressAllocator alloc) {
 		m_map  = new HashMap<SId, MCSId>();
 		
 		m_fac = fac;
+		m_addr_allocator = alloc;
 	}
 	
 	public SIdFactory getSIdFac() {
@@ -42,16 +45,10 @@ public class MCSIdFactory {
 	}
 
 	public MCSId duplicate(MCSId mcsid) {
-	  
-	    SId sid = mcsid.getSId();
-	    Boolean has_effect = mcsid.hasEffect();
-	    
-	    SId nsid = m_fac.duplicate(sid);
-	    
-	    MCSId nmcsid = new MCSId(nsid);
-	    nmcsid.setEffect(has_effect);
-	    
-	    m_map.put(nsid, nmcsid);
+
+	    MCSId nmcsid = mcsid.duplicate(m_fac);
+    
+	    m_map.put(nmcsid.getSId(), nmcsid);
 	    return nmcsid;
 	}
 	/*

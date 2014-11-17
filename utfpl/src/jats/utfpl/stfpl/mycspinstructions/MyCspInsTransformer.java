@@ -274,6 +274,7 @@ public class MyCspInsTransformer {
 
             } else {
                 
+            	System.out.println("========== name is " + ins.m_fun.toStringMCIns());
                 MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                 CIFunCall nIns = new CIFunCall(ins.m_fun, nLst, ctHolder, ins.isTailCall(), m_cbEvt);
 

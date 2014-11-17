@@ -114,7 +114,7 @@ var sys_assert_var = true;
 
 
 foo2_63(sys_tid) =
-  {  var foo25_id = PExpFormClosure;
+  {  var foo2_clo5_id = sys_tuple2_form(1, sys_gstack.frame_get(sys_tid, 0, 0));
   sys_gstack.frame_push(sys_tid, 3);
   } ->
   Skip
@@ -127,7 +127,7 @@ main_s(sys_tid) =
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
   {  var env6_id = PExpTupleCreate;
-  var foo2_closure7_id = PExpFormClosure;
+  var foo2_closure7_id = sys_tuple2_form(1, env6_id);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

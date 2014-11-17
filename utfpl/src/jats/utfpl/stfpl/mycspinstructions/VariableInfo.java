@@ -55,6 +55,9 @@ public class VariableInfo {
     }
     
     public boolean getEscaped() {
+    	if (null == m_isEscaped) {
+    		throw new Error("This should not happen. id is " + m_mid.toStringMCIns());
+    	}
         return m_isEscaped;
     }
     
