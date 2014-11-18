@@ -23,7 +23,15 @@ namespace PAT.Lib
     {
         public static Boolean negation(Boolean x)
         {
+            // String [] lines = {"eee"};
+            // System.IO.File.WriteAllLines("/home/grad2/aren/patlog.txt", lines);
+            // System.Console.WriteLine("lalalala");
             return !x;
+        }
+
+
+        public static int getInt() {
+            return 43;
         }
 
         public static int neg(int x)

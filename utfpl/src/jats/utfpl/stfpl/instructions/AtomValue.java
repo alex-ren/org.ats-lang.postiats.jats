@@ -19,6 +19,9 @@ public class AtomValue implements IValPrim {
     public AtomValue(ISType ty, String obj) {
         m_ty = ty;
         m_obj = obj;
+        if (null == obj) {
+        	throw new Error("This is not allowed.");
+        }
     }
     
     @Override
@@ -29,7 +32,7 @@ public class AtomValue implements IValPrim {
     @Override
     public String toString() {
         if (null == m_obj) {
-            return "None";
+            return "AtomValue.None";
         } else {
             return m_obj;
         }

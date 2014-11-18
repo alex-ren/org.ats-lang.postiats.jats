@@ -11,6 +11,10 @@ pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= 
 
 // =====================
 
+var\<MyLibObj> <sys_mylib()> = new MyLibObj();
+
+// =====================
+
 var\<PStack> <sys_gstack()> = new PStack();
 var\<Allocator> <sys_tid_allocator()> = new Allocator();  // todo: improve
 
@@ -100,13 +104,12 @@ sys_signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> sys_signaln(c, n-1)}
                 ;
 
 // ===============================
-var\<LinkedList> sys_list_manager = new LinkedList();
 
-#define sys_list_nil  sys_list_manager.list_nil ();
-#define sys_list_cons(x, xs) sys_list_manager.list_cons (x, xs);
-#define sys_list_get_header(xs) sys_list_manager.list_get_header (xs);
-#define sys_list_get_tail(xs) sys_list_manager.list_get_tail (xs);
-#define sys_list_is_nil(xs) sys_list_manager.list_is_nil (xs);
+// #define sys_list_nil  sys_list_manager.list_nil ();
+// #define sys_list_cons(x, xs) sys_list_manager.list_cons (x, xs);
+// #define sys_list_get_header(xs) sys_list_manager.list_get_header (xs);
+// #define sys_list_get_tail(xs) sys_list_manager.list_get_tail (xs);
+// #define sys_list_is_nil(xs) sys_list_manager.list_is_nil (xs);
 
 // ===============================
 // global variable for assertion
@@ -121,7 +124,7 @@ var <sys_assert_var()> = true;
 // =====================
 
 main_s(<sys_tid()>) = 
-  main_init{var <local_temp_list()> = <sys_list_manager()>.list_nil ();
+  main_init{var <local_temp_list()> = <sys_mylib()>.list_nil ();
             <sys_gstack()>.add_frame(0, <local_temp_list()>); 
             } ->
   <main_proc_body>; 
@@ -131,6 +134,7 @@ main = main_s(0) ||| Scheduler;
 
 #define sys_assertion <sys_assert_var()> == true;
 
+#assert main deadlockfree;
 
 <ext_code_lst; separator="\n\n">
 
@@ -202,16 +206,16 @@ pevent_st(stat_lst) ::= <<
 }
 >>
 
-pexpfunccall_st(fun_lab, arg_lst) ::= <<
-<if(arg_lst)>call(<[fun_lab, arg_lst]; separator=", ">)<else><fun_lab><endif>
+PExpFuncCall_st(is_sym, fun_lab, arg_lst) ::= <<
+<if(is_sym)>call(<[fun_lab, arg_lst]; separator=", ">)<else><sys_mylib()>.<fun_lab>(<arg_lst; separator=", ">)<endif>
 >>
 
-pstatlocalvardec_st(name, val, is_global) ::= <<
-<if(is_global)><else>var <endif><name> = <val>;
+PStatLocalVarDec_st(name, val, is_global) ::= <<
+<if(name)><if(is_global)><else>var <endif><name><if(val)> = <endif><endif><if(val)><val><endif>;
 >>
 
-pstatassignment_st(name, val) ::= <<
-<name> = <val>;
+PStatAssignment_st(name, val) ::= <<
+<if(name)><name> = <endif><val>;
 >>
 
 pprocatom_st() ::= <<
@@ -239,11 +243,11 @@ pexpstackopr_default_t(frame, pos) ::= <<
 >>
 
 pexpstackopr_bool_t(frame, pos) ::= <<
-<sys_gstack()>.frame_get_bool(<sys_tid()>, <frame>, <pos>)
+<sys_gstack()>.frame_get(<sys_tid()>, <frame>, <pos>)
 >>
 
 pexpstackopr_int_t(frame, pos) ::= <<
-<sys_gstack()>.frame_get_int(<sys_tid()>, <frame>, <pos>)
+<sys_gstack()>.frame_get(<sys_tid()>, <frame>, <pos>)
 >>
 
 pprocevent_st(evt, proc) ::= <<
@@ -349,13 +353,13 @@ sys_thread_create(<tid>, <funaddr>, <args>)
 >>
 
 PStatProcCallPrelogue_st(args, is_tail_call) ::= <<
-var <local_temp_list()> = <sys_list_manager()>.list_nil ();
-<args:{arg|<local_temp_list()> = <sys_list_manager()>.list_cons (<arg>, <local_temp_list()>);}; separator="\n">
+var <local_temp_list()> = <sys_mylib()>.list_nil ();
+<args:{arg|<local_temp_list()> = <sys_mylib()>.list_cons (<arg>, <local_temp_list()>);}; separator="\n">
 <if(is_tail_call)><sys_gstack()>.reload_frame(<sys_tid()>, <local_temp_list()>);<else><sys_gstack()>.add_frame(<sys_tid()>, <local_temp_list()>);<endif>
 >>
 
-pstatproccallepilogue_st(ret, is_global) ::= <<
-<if(ret)><if(is_global)><else>var <endif><ret> = <endif><sys_gstack()>.retopr_frame(<sys_tid()>);
+PStatProcCallEpilogue_st(is_void, ret, is_global) ::= <<
+<if(is_void)><sys_gstack()>.delete_frame(<sys_tid()>);<else><if(ret)><if(is_global)><else>var <endif><ret> = <endif><sys_gstack()>.retopr_frame(<sys_tid()>);<endif>
 >>
 
 local_temp_list() ::= <<__temp_list_args>>
@@ -364,18 +368,25 @@ sys_gstack() ::= <<sys_gstack>>
 
 sys_tid() ::= <<sys_tid>>
 
-sys_list_manager() ::= <<sys_list_manager>>
+sys_mylib() ::= <<sys_mylib_obj>>
 
 // ===================================================
 
 PExpFormClosure_st(funaddr, envname) ::= <<
-sys_tuple2_form(<funaddr>, <envname>)
+<sys_mylib()>.createTuple2(<funaddr>, <envname>)
 >>
 
 PExpPatLabDecompose_st(tup, index) ::= <<
-sys_tuple_get(<tup>, <index>)
+<sys_mylib()>.getTupleElement(<tup>, <index>);
 >>
 
+PExpTupleCreate_st(len) ::= <<
+<sys_mylib()>.createTuple(<len>)
+>>
+
+PInsTupleAdd_st(tupname, index, e) ::= <<
+<sys_mylib()>.setTupleElement(<tupname>, <index>, <e>);
+>>
 
 
 

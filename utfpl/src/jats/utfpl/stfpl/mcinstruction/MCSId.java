@@ -2,6 +2,7 @@ package jats.utfpl.stfpl.mcinstruction;
 
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdFactory;
+import jats.utfpl.stfpl.instructions.VNameSym;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 
@@ -45,6 +46,10 @@ public class MCSId implements IMCValPrim {
 	// Used by factory.
 	public SId getSId() {
 	    return m_sid;
+	}
+	
+	public boolean isSym() {
+		return (m_sid.m_name instanceof VNameSym);
 	}
 	
     public boolean hasAddress() {

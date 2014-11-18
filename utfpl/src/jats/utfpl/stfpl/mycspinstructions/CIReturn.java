@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
+import jats.utfpl.stfpl.stype.AuxSType;
+
 public class CIReturn extends MyCspInstruction {
     
     public IMyCspTemp m_v;
@@ -7,6 +9,10 @@ public class CIReturn extends MyCspInstruction {
     public CIReturn(IMyCspTemp v, MyCspGroup blk) {
         super(blk);
         m_v = v;
+        
+        if (AuxSType.isVoid(v.getType())) {
+        	throw new Error("This is not allowed.");
+        }
     }
 
     @Override

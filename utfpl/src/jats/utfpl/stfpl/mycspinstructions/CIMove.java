@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
+import jats.utfpl.stfpl.stype.AuxSType;
+
 public class CIMove extends MyCspInstruction {
     public MyCspTempID m_holder;
     public IMyCspTemp m_vp;
@@ -9,6 +11,9 @@ public class CIMove extends MyCspInstruction {
         super(blk);
         m_holder = holder;
         m_vp = vp;
+        if (AuxSType.isVoid(vp.getType())) {
+        	throw new Error("This is not allowed.");
+        }
     }
     
     public boolean needStack() {

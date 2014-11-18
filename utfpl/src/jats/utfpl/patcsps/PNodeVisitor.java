@@ -37,7 +37,7 @@ public interface PNodeVisitor {
     public Object visit(PExpAtom node);
     public Object visit(PExpStackGet node);
     public Object visit(PStatStackPush node);
-    public Object visit(PExpOpr node);
+//    public Object visit(PExpOpr node);
     public Object visit(PExpTuple node);
     
     public Object visit(PInsCond node);

@@ -102,13 +102,12 @@ sys_signaln(c, n) = if (n > 0) {cond_chan[c]!1 -> sys_signaln(c, n-1)}
                 ;
 
 // ===============================
-var<LinkedList> sys_list_manager = new LinkedList();
 
-#define sys_list_nil  sys_list_manager.list_nil ();
-#define sys_list_cons(x, xs) sys_list_manager.list_cons (x, xs);
-#define sys_list_get_header(xs) sys_list_manager.list_get_header (xs);
-#define sys_list_get_tail(xs) sys_list_manager.list_get_tail (xs);
-#define sys_list_is_nil(xs) sys_list_manager.list_is_nil (xs);
+// #define sys_list_nil  sys_list_manager.list_nil ();
+// #define sys_list_cons(x, xs) sys_list_manager.list_cons (x, xs);
+// #define sys_list_get_header(xs) sys_list_manager.list_get_header (xs);
+// #define sys_list_get_tail(xs) sys_list_manager.list_get_tail (xs);
+// #define sys_list_is_nil(xs) sys_list_manager.list_is_nil (xs);
 
 // ===============================
 // global variable for assertion
@@ -117,9 +116,16 @@ var sys_assert_var = true;
 // =====================
 
 
-foo2_63(sys_tid) =
-  {  var foo2_clo5_id = sys_tuple2_form(1, sys_gstack.frame_get(sys_tid, 0, 0));
-  sys_gstack.frame_push(sys_tid, 3);
+foo1_63(sys_tid) =
+  {  var foo1_clo6_id = sys_mylib_obj.createTuple2(1, sys_gstack.frame_get(sys_tid, 0, 0));
+  var temp4_id = call(gt, 1, 2);
+  var x_64;
+  if (temp4_id) {
+      x_64 = 1;
+  } else {
+      x_64 = 2;
+  }
+  sys_gstack.frame_push(sys_tid, x_64);
   } ->
   Skip
   ;
@@ -127,11 +133,11 @@ foo2_63(sys_tid) =
 // =====================
 
 main_s(sys_tid) = 
-  main_init{var __temp_list_args = sys_list_manager.list_nil ();
+  main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  var env6_id = PExpTupleCreate;
-  var foo2_closure7_id = sys_tuple2_form(1, env6_id);
+  {  var env7_id = sys_mylib_obj.createTuple(0);
+  var foo1_closure8_id = sys_mylib_obj.createTuple2(1, env7_id);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

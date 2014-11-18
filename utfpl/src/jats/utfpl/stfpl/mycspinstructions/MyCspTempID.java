@@ -2,6 +2,7 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
+import jats.utfpl.stfpl.stype.ISType;
 
 /*
  * If m_tid is global variable or function parameter, 
@@ -164,6 +165,11 @@ public class MyCspTempID implements IMyCspTemp {
     public Object accept(IMyCspInsVisitor visitor) {
 		return visitor.visit(this);
     }
+
+	@Override
+	public ISType getType() {
+		return m_vi.getMCSId().getType();
+	}
 
 }
 

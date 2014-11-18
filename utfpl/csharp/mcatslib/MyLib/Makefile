@@ -3,8 +3,19 @@ RM = rm -rf
 
 PATHOME = $(HOME)/programs/tempPAT
 
-SOURCE = Allocator.cs FrameStackUtil.cs LinkedList.cs MyLib.cs SysLinkedNode.cs ValueArray.cs \
-       FLenStack.cs FStackNode.cs MemHolder.cs PStack.cs ThreadAllocator.cs
+SOURCE = Allocator.cs \
+	 FrameStackUtil.cs \
+         FLenStack.cs \
+	 FStackNode.cs \
+	 PStack.cs \
+	 ThreadAllocator.cs \
+         \
+	 MyLib.cs \
+	 SysLinkedNode.cs \
+	 MyLibObj.cs \
+         Tuple.cs \
+	 ValueArray.cs \
+	 MemHolder.cs
 
 TARGET = MyLib.dll
 

@@ -38,6 +38,7 @@ import jats.utfpl.stfpl.mcinstruction.MCSId;
 import jats.utfpl.stfpl.mcinstruction.MCSIdFactory;
 import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.VoidType;
@@ -274,7 +275,7 @@ public class MyCspInsTransformer {
 
             } else {
                 
-            	System.out.println("========== name is " + ins.m_fun.toStringMCIns());
+//            	System.out.println("========== name is " + ins.m_fun.toStringMCIns());
                 MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
                 CIFunCall nIns = new CIFunCall(ins.m_fun, nLst, ctHolder, ins.isTailCall(), m_cbEvt);
 
@@ -353,18 +354,22 @@ public class MyCspInsTransformer {
 
         @Override
         public Object visit(MCInsMove ins) {
-            if (ins.m_holder.isRet()) {
-            	IMyCspTemp retCTempID = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
-    	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-    	        m_cbEvt.add(retIns);
-    	        m_cblkLst.add(m_cbEvt);
-    	        m_cbEvt = new GrpEvent();
-            } else {
-                IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
-                MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIMove nIns = new CIMove(v, holder, m_cbEvt);
-                m_cbEvt.add(nIns);
-            }
+	        // No return for void
+	        if (false == AuxSType.isVoid(ins.m_holder.getType())) {
+	            if (ins.m_holder.isRet()) {
+	            	IMyCspTemp retCTempID = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+	    	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+	    	        m_cbEvt.add(retIns);
+	    	        m_cblkLst.add(m_cbEvt);
+	    	        m_cbEvt = new GrpEvent();
+	            } else {
+	                IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+	                MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+	                CIMove nIns = new CIMove(v, holder, m_cbEvt);
+	                m_cbEvt.add(nIns);
+	            }
+	        }
+
 
 
             return null;
@@ -566,8 +571,11 @@ public class MyCspInsTransformer {
         	
 	        if (holder.isRet()) {
 	            MyCspTempID retCTempID = TID2CTempID(holder, m_subMap, m_funLab, m_cbEvt);
-	            CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-	            m_cbEvt.add(retIns);
+		        // No return for void
+		        if (false == AuxSType.isVoid(holder.getType())) {
+			        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+			        m_cbEvt.add(retIns);
+		        }
 	        }
 	        
 	        // No matter whether it is return, we start a new group.
@@ -589,8 +597,11 @@ public class MyCspInsTransformer {
         
         private void addReturnIns(MCSId holder) {
 	        MyCspTempID retCTempID = TID2CTempID(holder, m_subMap, m_funLab, m_cbEvt);
-	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-	        m_cbEvt.add(retIns);
+	        // No return for void
+	        if (false == AuxSType.isVoid(holder.getType())) {
+		        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+		        m_cbEvt.add(retIns);
+	        }
 	        m_cblkLst.add(m_cbEvt);
 	        m_cbEvt = new GrpEvent();
         }

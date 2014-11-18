@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
 import jats.utfpl.stfpl.mcinstruction.MCAtomValue;
+import jats.utfpl.stfpl.stype.ISType;
 
 public class MyCspTempVal implements IMyCspTemp {
 
@@ -18,5 +19,10 @@ public class MyCspTempVal implements IMyCspTemp {
     public Object accept(IMyCspInsVisitor visitor) {
         return visitor.visit(this);
     }
+
+	@Override
+	public ISType getType() {
+		return m_v.getType();
+	}
 
 }

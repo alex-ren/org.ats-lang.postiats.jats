@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.pats;
 
+import jats.utfpl.stfpl.instructions.IVarName;
+import jats.utfpl.stfpl.instructions.VNameSym;
 import jats.utfpl.stfpl.mcinstruction.AuxMCIns.Address;
 import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
@@ -110,8 +112,19 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PExpFuncCall node) {
-        ST st = m_stg.getInstanceOf("pexpfunccall_st");
-        st.add("fun_lab", node.m_funLab);
+    	// PExpFuncCall_st(is_sym, fun_lab, arg_lst) ::= <<
+        ST st = m_stg.getInstanceOf("PExpFuncCall_st");
+        
+        String fname = node.m_funLab.toStringMCIns();
+        if (node.m_funLab.isSym()) {
+        	st.add("is_sym", true);
+        	fname = AuxPats.sym2name(fname);
+        } else {
+        	st.add("is_sym", false);
+        }
+        
+        st.add("fun_lab", fname);
+    	
         for (PExp arg: node.m_argLst) {
             st.add("arg_lst", arg.accept(this));
         }
@@ -121,18 +134,27 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PStatLocalVarDec node) {
-        // pstatlocalvardec_st(name, val, is_global) ::= <<
-        ST st = m_stg.getInstanceOf("pstatlocalvardec_st");
-        st.add("name", node.m_name.toStringMCIns());
-        st.add("val", node.m_val.accept(this));
+        // PStatLocalVarDec_st(name, val, is_global) ::= <<
+        ST st = m_stg.getInstanceOf("PStatLocalVarDec_st");
+        if (!AuxSType.isVoid(node.m_name.getType())) {
+            st.add("name", node.m_name.toStringMCIns());
+        }
+
+        if (null != node.m_val) {
+            st.add("val", node.m_val.accept(this));
+        }
+
         st.add("is_global", node.m_name.getSId().isGlobalValue());
         return st;
     }
 
     @Override
     public Object visit(PStatAssignment node) {
-        ST st = m_stg.getInstanceOf("pstatassignment_st");
-        st.add("name", node.m_name);
+    	// PStatAssignment_st(name, val) ::= <<
+        ST st = m_stg.getInstanceOf("PStatAssignment_st");
+        if (!AuxSType.isVoid(node.m_name.getType())) {
+        	st.add("name", node.m_name.toStringMCIns());
+        }
         st.add("val", node.m_val.accept(this));
         return st;
     }
@@ -253,22 +275,22 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
         return st;
     }
-// {plus, minus, mul, div, gt, gte, lt, lte, eq, inc, dec};
-    @Override
-    public Object visit(PExpOpr node) {
-        ST st = null;
-        if (PExpOpr.isUnary(node.m_type)) {
-            st = m_stg.getInstanceOf("pexpopr_unary_st");
-            st.add("exp", node.m_opr1.accept(this));
-        } else {
-            st = m_stg.getInstanceOf("pexpopr_binary_st");
-            st.add("exp1", node.m_opr1.accept(this));
-            st.add("exp2", node.m_opr2.accept(this));
-        }
-        
-        st.add("opr", PExpOpr.stringType(node.m_type));
-        return st;
-    }
+//// {plus, minus, mul, div, gt, gte, lt, lte, eq, inc, dec};
+//    @Override
+//    public Object visit(PExpOpr node) {
+//        ST st = null;
+//        if (PExpOpr.isUnary(node.m_type)) {
+//            st = m_stg.getInstanceOf("pexpopr_unary_st");
+//            st.add("exp", node.m_opr1.accept(this));
+//        } else {
+//            st = m_stg.getInstanceOf("pexpopr_binary_st");
+//            st.add("exp1", node.m_opr1.accept(this));
+//            st.add("exp2", node.m_opr2.accept(this));
+//        }
+//        
+//        st.add("opr", PExpOpr.stringType(node.m_type));
+//        return st;
+//    }
 
     @Override
     public Object visit(PProcParallel node) {
@@ -400,14 +422,15 @@ public class PATCSPSPrinter implements PNodeVisitor {
     }
 
 
+    // Tail call has no epilogue. (See MyCspInsTransformer.java.)
+    // Therefore this cannot be a tail call.
     @Override
     public Object visit(PStatProcCallEpilogue node) {
-        // pstatproccallepilogue_st(ret, is_global) ::= <<
-    	ST st = m_stg.getInstanceOf("pstatproccallepilogue_st");
-    	if (!AuxSType.isVoid(node.m_ret.getType())) {
-    		st.add("ret", node.m_ret);
-    		st.add("is_global", node.m_ret.getSId().isGlobalValue());
-    	}
+        // PStatProcCallEpilogue_st(is_void, ret, is_global) ::= <<
+		ST st = m_stg.getInstanceOf("PStatProcCallEpilogue_st");
+		st.add("is_void", AuxSType.isVoid(node.m_ret.getType()));
+		st.add("ret", node.m_ret.toStringMCIns());
+		st.add("is_global", node.m_ret.getSId().isGlobalValue());
     	
     	return st;
     }
@@ -507,7 +530,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PExpTupleCreate node) {
-		return "PExpTupleCreate";
+		// PExpTupleCreate_st(len) ::= <<
+		ST st = m_stg.getInstanceOf("PExpTupleCreate_st");
+		st.add("len", node.m_len);
+		return st;
 	}
 
 
@@ -531,7 +557,12 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PInsTupleAdd node) {
-		return "PInsTupleAdd";
+		// PInsTupleAdd_st(tupname, index, e) ::= <<
+		ST st = m_stg.getInstanceOf("PInsTupleAdd_st");
+		st.add("tupname", node.m_tupname.toStringMCIns());
+		st.add("index", node.m_ind);
+		st.add("e", node.m_v.accept(this));
+		return st;
 	}
 
 

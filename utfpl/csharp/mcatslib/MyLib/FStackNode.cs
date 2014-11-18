@@ -5,6 +5,12 @@ using System.Text;
 
 using PAT.Lib;
 
+/*
+ * FStackNode is a parametric polymorphic funcitona linked list.
+ *
+ *
+ */
+
 namespace PAT.Lib
 {
 

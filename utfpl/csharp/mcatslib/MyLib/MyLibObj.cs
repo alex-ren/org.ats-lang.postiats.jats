@@ -1,19 +1,65 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using PAT.Common.Classes.Expressions.ExpressionClass;
 
 using PAT.Lib;
 
+/*
+ *
+ */
+
 namespace PAT.Lib
 {
-    public class LinkedList : ExpressionValue
+    public class MyString : ExpressionValue {
+        public String m_str;
+
+        public MyString(String str) {
+            m_str = str;
+        }
+
+    }
+
+    public class MyLibObj : ExpressionValue
     {
 
-        public LinkedList()
+        public MyLibObj()
         {
         }
 
+        // String Operation
+        //
+        public MyString newString() {
+            return new MyString("abc");
+        }
+
+        public void showString(MyString str) {
+            System.Console.WriteLine(str.m_str);
+        }
+
+        // Tuple Operation
+        //
+        public Tuple createTuple(int len) {
+            return new Tuple(len);
+        }
+
+        public void setTupleElement(Tuple tup, int index, Object ele)
+        {
+            tup.setElement(index, ele);
+        }
+
+        public Tuple createTuple2(Object e1, Object e2) {
+            Object [] arr = {e1, e2};
+            return new Tuple(arr);
+        }
+
+        public Object getTupleElement(Tuple tup, int index)
+        {
+            return tup.getElement(index);
+        }
+
+        // List Operation
+        //
         public SysLinkedNode list_nil()
         {
             return null;
@@ -46,7 +92,7 @@ namespace PAT.Lib
         ///        
         public override string ToString()
         {
-            return "LinkedList";
+            return "MyLibObj";
         }
 
         /// <summary>

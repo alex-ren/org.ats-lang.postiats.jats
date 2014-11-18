@@ -40,6 +40,7 @@ import jats.utfpl.stfpl.mycspinstructions.MyCspTempID;
 import jats.utfpl.stfpl.mycspinstructions.MyCspTempVal;
 import jats.utfpl.stfpl.mycspinstructions.ProgramMyCspIns;
 import jats.utfpl.stfpl.mycspinstructions.VariableInfo;
+import jats.utfpl.stfpl.stype.AuxSType;
 
 /*
  * Handle:
@@ -127,6 +128,9 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         if (holder.isDefinition()) {
         	stats.add(new PStatLocalVarDec(holder.getMCSId(), exp));
             if (holder.isEscaped()) {
+            	if (false == AuxSType.isVoid(holder.getType())) {
+            		throw new Error("This is not allowed.");
+            	}
             	stats.add(new PStatStackPush(new PExpID(holder.getMCSId())));
             }          
         } else {

@@ -251,22 +251,22 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
         return st;
     }
-// {plus, minus, mul, div, gt, gte, lt, lte, eq, inc, dec};
-    @Override
-    public Object visit(PExpOpr node) {
-        ST st = null;
-        if (PExpOpr.isUnary(node.m_type)) {
-            st = m_stg.getInstanceOf("pexpopr_unary_st");
-            st.add("exp", node.m_opr1.accept(this));
-        } else {
-            st = m_stg.getInstanceOf("pexpopr_binary_st");
-            st.add("exp1", node.m_opr1.accept(this));
-            st.add("exp2", node.m_opr2.accept(this));
-        }
-        
-        st.add("opr", PExpOpr.stringType(node.m_type));
-        return st;
-    }
+//// {plus, minus, mul, div, gt, gte, lt, lte, eq, inc, dec};
+//    @Override
+//    public Object visit(PExpOpr node) {
+//        ST st = null;
+//        if (PExpOpr.isUnary(node.m_type)) {
+//            st = m_stg.getInstanceOf("pexpopr_unary_st");
+//            st.add("exp", node.m_opr1.accept(this));
+//        } else {
+//            st = m_stg.getInstanceOf("pexpopr_binary_st");
+//            st.add("exp1", node.m_opr1.accept(this));
+//            st.add("exp2", node.m_opr2.accept(this));
+//        }
+//        
+//        st.add("opr", PExpOpr.stringType(node.m_type));
+//        return st;
+//    }
 
     @Override
     public Object visit(PProcParallel node) {

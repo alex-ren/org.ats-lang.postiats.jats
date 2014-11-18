@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using PAT.Common.Classes.Expressions.ExpressionClass;
@@ -6,49 +6,43 @@ using PAT.Common.Classes.Expressions.ExpressionClass;
 using PAT.Lib;
 
 /*
- * SysLinkedNode is a functional style linked list.
- *
+ * Tuple is immutable object.
  *
  */
 
 namespace PAT.Lib
 {
-    public class SysLinkedNode : ExpressionValue
+    public class Tuple : ExpressionValue
     {
-        private Object m_v;
-        private SysLinkedNode m_next;
-        private Guid m_id;
+        private Object [] m_members;
 
-        public SysLinkedNode getTail() {
-            return m_next;
-        }
-        
-        public Object getValue() {
-            return m_v;
-        }
+        public Tuple(int len) {
+           m_members = new Object[len];
+        } 
 
-        public static SysLinkedNode nil()
+        public Tuple(Object [] members) {
+           m_members = members;
+        } 
+
+        public void setElement(int index, Object ele)
         {
-            return null;
+            m_members[index] = ele;
         }
 
-        public SysLinkedNode(Object v, SysLinkedNode next)
+        public Object getElement(int index)
         {
-            m_v = v;
-            m_next = next;
-            m_id = Guid.NewGuid();
+            return m_members[index];
         }
 
         private string getContent()
         {
-            string ret = "";
-            SysLinkedNode link = this;
-            while (null != link)
+            string ret = "[";
+            foreach (Object ele in m_members)
             {
-                ret += link.m_v.ToString();
+                ret += ele.ToString();
                 ret += "-";
-                link = link.m_next;
             }
+            ret += "]";
             return ret;
         }
 

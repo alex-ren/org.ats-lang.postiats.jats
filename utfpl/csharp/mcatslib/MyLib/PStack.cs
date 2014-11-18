@@ -5,6 +5,13 @@ using PAT.Common.Classes.Expressions.ExpressionClass;
 
 using PAT.Lib;
 //the namespace must be PAT.Lib, the class and method names can be arbitrary
+//
+
+/*
+ * PStack contains the stacks for all the threads.
+ *
+ *
+ */
 namespace PAT.Lib
 {
     using Frame = FLenStack<Object>;
@@ -27,6 +34,7 @@ namespace PAT.Lib
     public class PStack : ExpressionValue
     {
 
+        // Stacks for all the threads
         private List<FrameStack> m_stacks;
 
         public PStack()
@@ -39,6 +47,7 @@ namespace PAT.Lib
             m_stacks = ss;
         }
 
+        // frame: SysLinkedNode
         public void add_frame(int tid, Object frame)
         {
             int len = m_stacks.Count;

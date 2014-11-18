@@ -12,6 +12,7 @@ public class FilenameUtils {
 //	static public final String cMUTFPL = "mats";
 	static public final String cINS = "ins";
 	static public final String cCSHARP = "cs";
+	static public final String cTxt = "txt";
 	
 	
 	private static String removeExtension2String(File path) {

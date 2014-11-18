@@ -58,15 +58,15 @@ public class ModelGenerater {
 //        ProgramTree prog = null;
         
         if (FilenameUtils.isATS(path)) {
-        	path = FilenameUtils.toJson(path);
+        	File path_json = FilenameUtils.toJson(path);
         	
-        	String cmd = "patsopt -o " + path.getPath() + " --jsonize-2 -d " + m_path + " 2>&1";
+        	String cmd = "patsopt -o " + path_json.getPath() + " --jsonize-2 -d " + m_path + " 2>&1";
         	System.out.println("cmd is " + cmd);
         	Process child = Runtime.getRuntime().exec(cmd);
         	int returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 == returnCode) {
-                FileReader fReader = new FileReader(path);
+                FileReader fReader = new FileReader(path_json);
 
                 System.out.println("== Parsing JSON start ==========================");
                 StfplProgramParserJson stfplParser = new StfplProgramParserJson();
@@ -83,7 +83,7 @@ public class ModelGenerater {
                 
                 System.out.println("==stfpl's ast code (layer 02) is ==========================");
                 System.out.println(outputSTFPL2);
-                FileWriter fwSTFPL2 = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cSTFPL2));
+                FileWriter fwSTFPL2 = new FileWriter(FilenameUtils.changeExt(path_json, FilenameUtils.cSTFPL2));
                 BufferedWriter bwSTFPL2 = new BufferedWriter(fwSTFPL2);
                 bwSTFPL2.write(outputSTFPL2);
                 bwSTFPL2.close();
@@ -198,7 +198,7 @@ public class ModelGenerater {
                 System.out.println("==stfpl's code (layer PatsInstructions) is ==========================");
 //                System.out.println(outputPatsIns);
                 
-                FileWriter fwPats = new FileWriter(FilenameUtils.changeExt(path, FilenameUtils.cPATCSPS));
+                FileWriter fwPats = new FileWriter(FilenameUtils.changeExt(path_json, FilenameUtils.cPATCSPS));
                 BufferedWriter bwPats = new BufferedWriter(fwPats);
                 bwPats.write(outputPatsIns);
                 bwPats.close();
@@ -208,6 +208,41 @@ public class ModelGenerater {
                     System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
+                
+                /* ************* ************** */
+                
+                File abs_path_json = new File(path_json.getAbsolutePath());  // /home/aren/xxx/xxx_dats.json
+                File abs_path_csp = FilenameUtils.changeExt(abs_path_json, FilenameUtils.cPATCSPS);
+                File abs_path_txt = FilenameUtils.changeExt(abs_path_json, FilenameUtils.cTxt);
+                
+            	String cmdpat = "mono /home/grad2/aren/programs/tempPAT/PAT3.Console.exe -csp " + abs_path_csp.getAbsolutePath() + " " + abs_path_txt;
+            	System.out.println("cmdpat is " + cmdpat);
+            	Process childpat = Runtime.getRuntime().exec(cmdpat);
+            	int returnCodePat = childpat.waitFor();
+            	System.out.println("returnCode is " + returnCodePat);
+            	if (0 == returnCodePat) {
+                    System.out.println("== Model Checking succeeded.");
+            		String line;
+            		BufferedReader reader = new BufferedReader(new InputStreamReader(childpat.getInputStream()));
+            		while ((line = reader.readLine()) != null) {
+            			System.out.println(line);
+            		}
+            	} else {
+            		String line;
+            		BufferedReader reader = new BufferedReader(new InputStreamReader(childpat.getErrorStream()));
+            		while ((line = reader.readLine()) != null) {
+            			System.err.println("Model Checking failed.");
+            			System.err.println(line);
+            		}
+            		return returnCode;            		
+            	}
+                    
+            	
+                if (level <= 8) {
+                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    return 0;
+                }
+                
                 /* ************* ************** */
                 throw new Error("level " + level + " is not supported.");
 
