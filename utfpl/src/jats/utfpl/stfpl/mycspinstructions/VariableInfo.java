@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
 
+import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 import jats.utfpl.stfpl.stype.AuxSType;
 
@@ -31,6 +32,10 @@ public class VariableInfo {
         m_usageLst = new ArrayList<EntityLocation>();
 
         if (mid.getSId().isFunName()) {
+        	m_isEscaped = false;
+        } else if (mid.getSId().isGlobalValue()) {
+        	m_isEscaped = false;
+        } else if (mid.getSId().isConstant()) {
         	m_isEscaped = false;
         } else {
         	m_isEscaped = null;
@@ -70,10 +75,12 @@ public class VariableInfo {
 //    		throw new Error("ERRRRRRRRRRRRRR");
 //    	}
     	
-        if (m_mid.getSId().isGlobalValue()) {
-            m_isEscaped = false;
+    	SId sid = m_mid.getSId();
+        if (sid.isGlobalValue()) {
             return;
-        } else if (m_mid.getSId().isPara() || m_mid.getSId().isLocal() || m_mid.getSId().isRetHolder()) {
+        } else if (sid.isConstant()) {
+        	throw new Error("Check this. This should not happen. updateEscaped is only called on definition.");
+        } else if (sid.isPara() || sid.isLocal() || sid.isRetHolder()) {
             for (EntityLocation loc: m_usageLst) {
                 if (!loc.equals(m_defLoc)) {
                     m_isEscaped = true;

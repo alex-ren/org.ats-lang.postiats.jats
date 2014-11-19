@@ -250,9 +250,6 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
     public List<PStat> visit(CIVarDef node) {  // no effect
         List<PStat> ret = new ArrayList<PStat>();
         ret.add(new PStatLocalVarDec(node.m_id.getMCSId(), null));
-        if (node.m_id.isEscaped()) {
-            throw new Error("This should not happen.");
-        }
         
         return ret;
     }

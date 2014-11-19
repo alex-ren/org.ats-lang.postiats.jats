@@ -26,11 +26,11 @@ public class CICond extends MyCspInstruction {
 
     @Override
     public int process(int offset) {
-        // This one should be done first so that
-        // holder can be recognized as a definition.
-    	if (null != m_holder) {
-            offset = m_holder.processStack(offset);
-    	}
+        // No need to do this any more.
+    	// There is an CIVarDef for the condition.
+//    	if (null != m_holder) {
+//            offset = m_holder.processStack(offset);
+//    	}
         
         if (m_cond instanceof MyCspTempID) {
             ((MyCspTempID)m_cond).updateForUsage();

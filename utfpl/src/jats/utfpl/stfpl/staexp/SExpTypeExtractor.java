@@ -65,8 +65,8 @@ public class SExpTypeExtractor {
 
         if (name.equals(DefaultAppTypeStore.ats_void_t0ype)) {
             return VoidType.cInstance;
-//        } else if (name.equals(DefaultAppTypeStore.ats_bool_t0ype)) {
-//            return BoolType.cInstance;
+        } else if (name.equals(DefaultAppTypeStore.ats_bool_t0ype)) {
+            return BoolType.cInstance;
 //            
             // ....
             // Add more checking here.
@@ -81,7 +81,7 @@ public class SExpTypeExtractor {
             }
             case type:
             case t0ype:
-            	Log.log4j.error("Type parameter detected. name is " + name);
+            	Log.log4j.warn("Type parameter detected. name is " + name);
                 return new Abstype(node.m_s2cst, sort);
             default:
                 throw new Error("srt " + srt + " is not supported, sort is " + sort);

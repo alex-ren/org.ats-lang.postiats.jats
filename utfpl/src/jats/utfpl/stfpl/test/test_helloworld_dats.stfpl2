@@ -2,7 +2,7 @@
 
 #include ...
 
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/foo.sats"
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/foo.sats"
 
 "D2Cdcstdecs" add_2892:((int, int) -<fun> int):type
 

@@ -27,6 +27,16 @@ public class AuxPats {
 			throw new Error("sym " + sym + " is not supported.");
 		}
 	}
+	
+	public static String convertConst(String c) {
+		if (c.equals("true_bool")) {
+			return "True";
+		} else if (c.equals("false_bool")) {
+			return "False";
+		} else {
+			return c;
+		}
+	}
 
 }
 

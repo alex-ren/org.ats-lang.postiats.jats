@@ -1,7 +1,6 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.stfpl.instructions.IVarName;
-import jats.utfpl.stfpl.instructions.VNameSym;
+import jats.utfpl.stfpl.instructions.VNameCst;
 import jats.utfpl.stfpl.mcinstruction.AuxMCIns.Address;
 import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
@@ -182,6 +181,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PExpID node) {
         Address addr = node.m_tid.getAddr();
         
+        if (node.m_tid.getSId().isConstant()) {
+        	String id = node.m_tid.toStringMCIns();
+        	return AuxPats.convertConst(id);
+        }
         if (node.m_tid.isThread()) {
             return addr.toStringMCIns();
         } else {

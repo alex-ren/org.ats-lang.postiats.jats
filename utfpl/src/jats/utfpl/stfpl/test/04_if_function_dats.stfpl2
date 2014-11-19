@@ -1,3 +1,35 @@
-fun foo0_63 = lam () <clo> = 
+fun foo0_63 = lam () <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val x_64 = D2Ecst<true_bool_0:bool:t@ype>
+        val y_65 = D2Ecst<false_bool_1:bool:t@ype>
+      in
+        x_64
+      end:bool:t@ype))
+
+fun foo1_66 = lam (<P2Tann>(a_67:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val x_68 = if (<D2Esym>(>) (1, 2)) then
+          1
+        else
+          2
+        val y_69 = if (foo0_63 ()) then
+          3
+        else
+          4
+        val z_70 = foo0_63 ()
+        val r_71 = <D2Esym>(+) (x_68, y_69):int:t@ype
+      in
+        y_69
+      end:int:t@ype))
+
+fun foox_72 = lam () <clo> = 
   <D2EannSeff>(
-    D2Ecst<true_bool_0:bool:t@ype>:bool:t@ype)
+    let
+      val z_73 = foo1_66 (0)
+    in
+      ()
+    end:void:t@ype)

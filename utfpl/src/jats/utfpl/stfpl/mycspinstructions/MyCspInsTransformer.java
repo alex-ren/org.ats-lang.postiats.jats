@@ -102,7 +102,7 @@ public class MyCspInsTransformer {
                 int pos = 0;
                 FunctionMyCsp funcCSP = FunDef2CProcess(fundef, subMap);
                 for (MyCspTempID para: funcCSP.m_paras) {
-                    pos = para.processStackPrelogue(pos);
+                    pos = para.processFunPara(pos);
                 }
    
 //                if (null != funcCSP.m_envname) {

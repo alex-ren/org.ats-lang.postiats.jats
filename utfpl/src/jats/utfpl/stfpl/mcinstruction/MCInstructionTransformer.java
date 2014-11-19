@@ -256,13 +256,16 @@ public class MCInstructionTransformer {
             MCSId mcsid = m_mcsid_factory.fromSId(sid);
             mcparas.add(mcsid);
         }
-
         
         // name for the environment of the function
         SId env_name = m_mcsid_factory.getSIdFac().createEnvForPara(
         		fun_name.toStringNoStamp() + "_env", env_type);
         MCSId mcenv_name = m_mcsid_factory.fromSId(env_name);
-        mcparas.add(mcenv_name);  // Turn env into a normal parameter.
+
+        if (AuxSType.isClosure(mcfun_name.getType())) {
+            mcparas.add(mcenv_name);  // Turn env into a normal parameter.
+        }
+
 
         // This is done below in the loop for group members.
 //        map_env_name.put(fun_name, mcenv_name);  
@@ -270,20 +273,21 @@ public class MCInstructionTransformer {
         // process all the function names of the current group
         // including current function itself.
         for (SId grp_member: grp_members) {
-        	
-        	map_env_name.put(grp_member, mcenv_name);  // function name => env name
-        	
-        	// Form closures for all the members in the group.
-        	MCSId mcgrp_member = m_mcsid_factory.fromSId(grp_member);
-        	
-        	SId clo_name = m_mcsid_factory.getSIdFac().createLocalVar(
-        			grp_member.toStringNoStamp() + "_clo"
-        		  , grp_member.getType());
-        	MCSId mcclo_name = m_mcsid_factory.fromSId(clo_name);
-        	map_clo_name.put(grp_member, mcclo_name);  // function name => closure name
-        	
-        	MCInsClosure ins = new MCInsClosure(mcclo_name, mcgrp_member, mcenv_name);
-        	mcinss.add(ins);  // add to inss
+        	if (AuxSType.isClosure(grp_member.getType())) {
+            	map_env_name.put(grp_member, mcenv_name);  // function name => env name
+            	
+            	// Form closures for all the members in the group.
+            	MCSId mcgrp_member = m_mcsid_factory.fromSId(grp_member);
+            	
+            	SId clo_name = m_mcsid_factory.getSIdFac().createLocalVar(
+            			grp_member.toStringNoStamp() + "_clo"
+            		  , grp_member.getType());
+            	MCSId mcclo_name = m_mcsid_factory.fromSId(clo_name);
+            	map_clo_name.put(grp_member, mcclo_name);  // function name => closure name
+            	
+            	MCInsClosure ins = new MCInsClosure(mcclo_name, mcgrp_member, mcenv_name);
+            	mcinss.add(ins);  // add to inss
+        	}
         }
         
         int index = 0;

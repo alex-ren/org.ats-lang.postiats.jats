@@ -39,7 +39,8 @@ public class Cd3cst {
     
     @Override
     public String toString() {
-        return m_symbol.toString() + "_" + m_stamp.getData();
+    	// Constant has no use of symbol.
+        return m_symbol.toString(); //  + "_" + m_stamp.getData();
     }
     
     public boolean compSymbolString(String x) {

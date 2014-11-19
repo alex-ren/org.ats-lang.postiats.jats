@@ -23,7 +23,7 @@ public class MyCspTempID implements IMyCspTemp {
     
     public static MyCspTempID createAsDef(VariableInfo vi, EntityLocation curLoc) {
         SId sid = vi.getMCSId().getSId();
-        if (!(sid.isPara() || sid.isLocal() || sid.isRetHolder() || sid.isFunName())) {
+        if (!(sid.isPara() || sid.isLocal() || sid.isRetHolder() || sid.isFunName() || sid.isConstant())) {
             throw new Error("Wrong usage. sid is " + sid.toStringNoStamp());
         }
         
@@ -61,11 +61,15 @@ public class MyCspTempID implements IMyCspTemp {
 
     }   
 
+    static int x = 1;
     private int updateForDef(int offset) {
         if (!m_isDef) {
             throw new Error("Should only call on the definition." + this);
         }
-        m_stackPos = StackPosition.createDef(offset);
+        if (m_vi.getMCSId().toStringMCIns().equals("foo0_env8_id")) {
+        	throw new Error("eeeeeeeeeeeee");
+        }
+        m_stackPos = StackPosition.createDef(m_vi.getMCSId().toStringMCIns(), m_vi.getMCSId().toString(), offset);
         m_vi.setStackPos(m_stackPos);  // set the stack position
         return offset + 1;
     }
@@ -82,7 +86,7 @@ public class MyCspTempID implements IMyCspTemp {
         return m_vi.getMCSId().getSId().isPara();
     }
     
-    public int processStackPrelogue(int offset) {
+    public int processFunPara(int offset) {
         if (isPara()) {
         	if (m_isDef) {
                 updateEscaped();
@@ -105,9 +109,6 @@ public class MyCspTempID implements IMyCspTemp {
      */
     public int processStack(int offset) {
     	
-    	if (m_vi.getMCSId().toStringMCIns().equals("temp6_id")) {
-    		
-    	}
     	if (m_isDef) {
             updateEscaped();
             if (isEscaped()) {
@@ -136,6 +137,8 @@ public class MyCspTempID implements IMyCspTemp {
         return m_isDef;
     }
     
+    // This method gets called for those MyCspTempID, 
+    // which are def, parameter, function return.
     private void updateEscaped() {
         m_vi.updateEscaped();
     }

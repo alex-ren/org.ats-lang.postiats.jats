@@ -23,7 +23,8 @@ public class StackPosition {
 //        return m_frame;
 //    }
     
-    public static StackPosition createDef(int offset) {
+    public static StackPosition createDef(String name, String id, int offset) {
+    	System.out.println("allocate stack for " + name + ", id is " + id + ", offset is " + offset);
         return new StackPosition(0, offset);
     }
     
