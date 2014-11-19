@@ -116,16 +116,9 @@ var sys_assert_var = true;
 // =====================
 
 
-foo1_63(sys_tid) =
-  {  var foo1_clo6_id = sys_mylib_obj.createTuple2(1, sys_gstack.frame_get(sys_tid, 0, 0));
-  var temp4_id = call(gt, 1, 2);
-  var x_64;
-  if (temp4_id) {
-      x_64 = 1;
-  } else {
-      x_64 = 2;
-  }
-  sys_gstack.frame_push(sys_tid, x_64);
+foo0_63(sys_tid) =
+  {  var foo0_clo5_id = sys_mylib_obj.createTuple2(1, sys_gstack.frame_get(sys_tid, 0, 0));
+  sys_gstack.frame_push(sys_tid, 1);
   } ->
   Skip
   ;
@@ -136,8 +129,8 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  var env7_id = sys_mylib_obj.createTuple(0);
-  var foo1_closure8_id = sys_mylib_obj.createTuple2(1, env7_id);
+  {  var env6_id = sys_mylib_obj.createTuple(0);
+  var foo0_closure7_id = sys_mylib_obj.createTuple2(1, env6_id);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

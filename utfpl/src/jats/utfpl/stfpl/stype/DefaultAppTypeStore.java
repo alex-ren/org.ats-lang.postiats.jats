@@ -9,8 +9,12 @@ public class DefaultAppTypeStore {
     static public String con_g1int_int_t0ype = "g1int_int_t0ype";  // sort of g1int_int_t0ype is ((atstype_int: tkind, y: int) -> t0ype)
     
     static public String con_bool_bool_t0ype = "bool_bool_t0ype";
+    
+    /* ********** *********** */
 
-    static public String ats_void_t0ype = "atsvoid_t0ype";
+    static public String ats_void_t0ype = "atsvoid_t0ype";  // sort of atsvoid_t0ype is t@ype
+    
+    static public String ats_bool_t0ype = "bool_t0ype";  // sort of atsvoid_t0ype is t@ype
     
     
     static public String con_mc_sid_t0ype = "mc_gv_t";  // sort of mc_gv_t is (sid -> t@ype)

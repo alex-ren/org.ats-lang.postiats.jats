@@ -15,6 +15,7 @@ import jats.utfpl.stfpl.stype.PolyType;
 import jats.utfpl.stfpl.stype.PropType;
 import jats.utfpl.stfpl.stype.RecType;
 import jats.utfpl.stfpl.stype.VoidType;
+import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,11 @@ public class SExpTypeExtractor {
 
         if (name.equals(DefaultAppTypeStore.ats_void_t0ype)) {
             return VoidType.cInstance;
+//        } else if (name.equals(DefaultAppTypeStore.ats_bool_t0ype)) {
+//            return BoolType.cInstance;
+//            
+            // ....
+            // Add more checking here.
         } else {
             Is2rt srt = node.m_s2cst.m_srt;
             ESort sort = srt.simplify();
@@ -75,9 +81,10 @@ public class SExpTypeExtractor {
             }
             case type:
             case t0ype:
+            	Log.log4j.error("Type parameter detected. name is " + name);
                 return new Abstype(node.m_s2cst, sort);
             default:
-                throw new Error("srt " + srt + " is not supported");
+                throw new Error("srt " + srt + " is not supported, sort is " + sort);
             }
         }
     }
