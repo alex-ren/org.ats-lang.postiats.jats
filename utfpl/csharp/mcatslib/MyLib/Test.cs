@@ -20,7 +20,8 @@ namespace PAT.Lib
         {
             Console.WriteLine("begin");
             AtomRefManager man = new AtomRefManager(10);
-            man.setElement(0, 3);
+            int index = man.allocate();
+            man.setElement(index, 3);
             Console.WriteLine("end");
         }
     }

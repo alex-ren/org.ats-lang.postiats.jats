@@ -45,8 +45,15 @@ namespace PAT.Lib
             m_array = array;
         }
 
-        public int allocate() {
+        public void initialize(int len, Object init) {
+            for (int i = 0; i < len; ++i) {
+                m_array.Add(init);
+            }
+        }
+
+        public int allocate(Object init) {
             int ret = m_index;
+            m_array.Add(init);
             ++m_index;
             return ret;
         }
@@ -56,11 +63,11 @@ namespace PAT.Lib
         }
 
         public void setElement(int index, int v) {
-            System.Console.WriteLine("size is " + m_array.Count);
+            // System.Console.WriteLine("size is " + m_array.Count);
 
-            System.Console.WriteLine("eeeeeeeeee" + index);
-            m_array[index] = "ddd";
-            System.Console.WriteLine("fffffffffffff");
+            // System.Console.WriteLine("eeeeeeeeee" + index);
+            m_array[index] = v;
+            // System.Console.WriteLine("fffffffffffff");
             return;
         }
 

@@ -45,9 +45,13 @@ namespace PAT.Lib
             m_array = array;
         }
 
-        public int allocate(int n) {
-            m_array[n] = new AtomRefManager(n);
+        public int allocate(int n, Object init) {
+            AtomRefManager arr = new AtomRefManager(n);
+            arr.initialize(n, init);
+
             int ret = m_index;
+            m_array.Add(arr);
+            
             ++m_index;
             return ret;
         }
