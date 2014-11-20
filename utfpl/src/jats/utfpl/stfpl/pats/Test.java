@@ -34,13 +34,13 @@ public class Test {
 //                "test/src_ats/53_demo_mc_dyn.dats"
 //                "src/jats/utfpl/stfpl/test/test08.dats"
 //              , "src/jats/utfpl/stfpl/test/test_helloworld.dats"
-//        		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
-//        		, "src/jats/utfpl/stfpl/test/02_closure_call.dats"
-//        		, "src/jats/utfpl/stfpl/test/03_symbol_opr.dats"
-//        		"src/jats/utfpl/stfpl/test/04_if_function.dats"
-//        		"src/jats/utfpl/stfpl/test/05_use_ref.dats"
-//        		"src/jats/utfpl/stfpl/test/06_mc_assert.dats"
-        		"src/jats/utfpl/stfpl/test/07_user_array.dats"
+        		  "src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
+        		, "src/jats/utfpl/stfpl/test/02_closure_call.dats"
+        		, "src/jats/utfpl/stfpl/test/03_symbol_opr.dats"
+        		, "src/jats/utfpl/stfpl/test/04_if_function.dats"
+        		, "src/jats/utfpl/stfpl/test/05_use_ref.dats"
+        		, "src/jats/utfpl/stfpl/test/06_mc_assert.dats"
+        		, "src/jats/utfpl/stfpl/test/07_use_array.dats"
         		
         };
 

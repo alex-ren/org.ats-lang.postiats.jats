@@ -135,13 +135,13 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  g_63 = atom_ref_manager.allocate(0);
+  {  g_63 = array_ref_manager.allocate(2, 0);
   } ->
-  {  atom_ref_manager.setElement(g_63, 3)
+  {  array_ref_manager.setElement(g_63, 1, 3)
   } ->
-  {  x_64 = atom_ref_manager.getElement(g_63);
+  {  x_64 = array_ref_manager.getElement(g_63, 1);
   } ->
-  {  var temp3_id = call(eq, x_64, 4);
+  {  var temp3_id = call(eq, x_64, 3);
   sys_assert_var = temp3_id;
   } ->
   Skip; 

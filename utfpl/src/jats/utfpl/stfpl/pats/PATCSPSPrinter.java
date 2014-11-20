@@ -615,7 +615,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 	@Override
 	public Object visit(PInsArrayRefGet node) {
         // PInsArrayRefGet_st(holder, ref, pos, is_global) ::= <<
-        ST st = m_stg.getInstanceOf("PInsAtomRefGet_st");
+        ST st = m_stg.getInstanceOf("PInsArrayRefGet_st");
         st.add("ref", node.m_ref.accept(this));
         st.add("pos", node.m_pos.accept(this));
       

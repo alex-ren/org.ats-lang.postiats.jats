@@ -125,9 +125,26 @@ var sys_assert_var = true;
 
 // =====================
 
-var g_63;
-var x_64;
 
+foo1_63(sys_tid) =
+  {  var ret2_id = call(add, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+  sys_gstack.frame_push(sys_tid, ret2_id);
+  } ->
+  Skip
+  ;
+
+foo2_66(sys_tid) =
+  {  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (1, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_63(sys_tid);
+  {  var z_68 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, z_68);
+  } ->
+  Skip
+  ;
 
 // =====================
 
@@ -135,15 +152,6 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  g_63 = atom_ref_manager.allocate(0);
-  } ->
-  {  atom_ref_manager.setElement(g_63, 3)
-  } ->
-  {  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  {  var temp3_id = call(eq, x_64, 4);
-  sys_assert_var = temp3_id;
-  } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 

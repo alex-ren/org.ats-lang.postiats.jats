@@ -7,8 +7,11 @@
 // library data structure (e.g. tuple, list)
 var<MyLibObj> sys_mylib_obj = new MyLibObj();
 
-// Currently we set up 10 references.
+// Set the initial capacity to 10.
 var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
+
+// Set the initial capacity to 10.
+var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 
 // =====================
 

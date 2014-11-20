@@ -62,7 +62,7 @@ namespace PAT.Lib
             return m_array[index];
         }
 
-        public void setElement(int index, int v) {
+        public void setElement(int index, Object v) {
             // System.Console.WriteLine("size is " + m_array.Count);
 
             // System.Console.WriteLine("eeeeeeeeee" + index);

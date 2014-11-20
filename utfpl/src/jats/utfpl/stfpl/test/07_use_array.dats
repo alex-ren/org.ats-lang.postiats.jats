@@ -8,7 +8,7 @@ val () = conats_atomarrayref_update(g, 1, 3)
 
 val x:int = conats_atomarrayref_get(g, 1)
 
-val () = mc_assert (x = 4)
+val () = mc_assert (x = 3)
 
 
 

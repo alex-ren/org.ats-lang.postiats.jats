@@ -46,22 +46,29 @@ namespace PAT.Lib
         }
 
         public int allocate(int n, Object init) {
+            // System.Console.WriteLine("allocate 001");
             AtomRefManager arr = new AtomRefManager(n);
+            // System.Console.WriteLine("allocate 002");
             arr.initialize(n, init);
+            // System.Console.WriteLine("allocate 003");
 
             int ret = m_index;
+            // System.Console.WriteLine("allocate 004");
             m_array.Add(arr);
+            // System.Console.WriteLine("allocate 005");
             
             ++m_index;
             return ret;
         }
 
         public Object getElement(int row, int col) {
-            return ((ArrayList)m_array[row])[col];
+            Object ret = ((AtomRefManager)m_array[row]).getElement(col);
+            return ret;
+
         }
 
         public void setElement(int row, int col, Object v) {
-            ((ArrayList)m_array[row])[col] = v;
+            ((AtomRefManager)m_array[row]).setElement(col, v);
             return;
         }
 
@@ -101,7 +108,7 @@ namespace PAT.Lib
             int len = m_array.Count;
             for (int i = 0; i < len; ++i)
             {
-                new_array[i] = ((AtomRefManager)m_array[i]).GetClone();
+                new_array.Add(((AtomRefManager)m_array[i]).GetClone());
             }
 
             ArrayRefManager ret = new ArrayRefManager(m_index, new_array);
