@@ -357,8 +357,19 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
         return st;
     }
+    
+    
+	@Override
+	public Object visit(PInsAtomRefCreate node) {
+		// PInsAtomRefCreate_st(holder, init, is_global) ::= <<
+		ST st = m_stg.getInstanceOf("PInsAtomRefCreate_st");
+		st.add("holder", node.m_holder.toStringMCIns());
+		st.add("init", node.m_v.accept(this));
+		st.add("is_global", node.m_holder.getSId().isGlobalValue());
+		return st;
+	}
 
-    // check here todo
+
 
     @Override
     public Object visit(PInsAtomRefGet node) {
@@ -368,8 +379,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
       
         st.add("holder", node.m_localHolder.toStringMCIns());
         st.add("is_global", node.m_localHolder.getSId().isGlobalValue()); 
-        return st;
-        
+        return st;        
         
     }
 
@@ -573,18 +583,45 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
 	@Override
-	public Object visit(PInsAtomRefCreate node) {
-		// PInsAtomRefCreate_st(holder, is_global) ::= <<
-		ST st = m_stg.getInstanceOf("PInsAtomRefCreate_st");
+	public Object visit(PInsMCVLockViewGet node) {
+		return "PInsMCVLockViewGet";
+	}
+
+
+	@Override
+	public Object visit(PInsArrayRefUpdate node) {
+        // PInsArrayRefUpdate_st(ref, pos, exp) ::= <<
+        ST st = m_stg.getInstanceOf("PInsArrayRefUpdate_st");
+        st.add("ref", node.m_ref.accept(this));
+        st.add("pos", node.m_pos.accept(this));
+        st.add("exp", node.m_v.accept(this));
+        
+        return st;
+	}
+
+
+	@Override
+	public Object visit(PInsArrayRefCreate node) {
+		// PInsArrayRefCreate_st(holder, len, init, is_global) ::= <<
+		ST st = m_stg.getInstanceOf("PInsArrayRefCreate_st");
 		st.add("holder", node.m_holder.toStringMCIns());
+		st.add("len", node.m_len.accept(this));
+		st.add("init", node.m_v.accept(this));
 		st.add("is_global", node.m_holder.getSId().isGlobalValue());
 		return st;
 	}
 
 
 	@Override
-	public Object visit(PInsMCVLockViewGet node) {
-		return "PInsMCVLockViewGet";
+	public Object visit(PInsArrayRefGet node) {
+        // PInsArrayRefGet_st(holder, ref, pos, is_global) ::= <<
+        ST st = m_stg.getInstanceOf("PInsAtomRefGet_st");
+        st.add("ref", node.m_ref.accept(this));
+        st.add("pos", node.m_pos.accept(this));
+      
+        st.add("holder", node.m_holder.toStringMCIns());
+        st.add("is_global", node.m_holder.getSId().isGlobalValue()); 
+        return st;
 	}
 
 }

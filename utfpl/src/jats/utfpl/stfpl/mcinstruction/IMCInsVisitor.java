@@ -45,6 +45,12 @@ public interface IMCInsVisitor {
     public Object visit(MCInsMCSet ins);
 
     public Object visit(MCInsMCVLockViewGet ins);
+
+	public Object visit(MCInsArrayRefCreate ins);
+
+	public Object visit(MCInsArrayRefUpdate ins);
+
+	public Object visit(MCInsArrayRefGet ins);
     
     
 

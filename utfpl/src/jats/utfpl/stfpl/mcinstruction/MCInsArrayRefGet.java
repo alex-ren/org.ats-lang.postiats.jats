@@ -1,13 +1,16 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-public class MCInsAtomRefCreate implements IMCInstruction {
+public class MCInsArrayRefGet implements IMCInstruction {
 
+    public MCSId m_ref;
+    public IMCValPrim m_pos;
     public MCSId m_holder;
-    public IMCValPrim m_vp;
     
-    public MCInsAtomRefCreate(MCSId holder, IMCValPrim vp) {
+    
+    public MCInsArrayRefGet(MCSId ref, IMCValPrim pos, MCSId holder) {
+        m_ref = ref;
+        m_pos = pos;
         m_holder = holder;
-        m_vp = vp;
     }
     
     @Override
@@ -19,6 +22,7 @@ public class MCInsAtomRefCreate implements IMCInstruction {
     public Boolean hasSideEffect() {
         return true;
     }
+    
 
 
 }

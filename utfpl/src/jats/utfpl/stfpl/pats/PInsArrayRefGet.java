@@ -2,16 +2,17 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsAtomRefCreate implements PIns {
-    
+public class PInsArrayRefGet implements PIns {
     public MCSId m_holder;
-    public PExp m_v;  // initial value
+    public PExp m_ref;
+    public PExp m_pos;
     
-    public PInsAtomRefCreate(MCSId holder, PExp v) {
+    public PInsArrayRefGet(PExp ref, PExp pos, MCSId holder) {
+        m_ref = ref;
+        m_pos = pos;
         m_holder = holder;
-        m_v = v;
     }
-
+    
     @Override
     public Object accept(PNodeVisitor visitor) {
         return visitor.visit(this);

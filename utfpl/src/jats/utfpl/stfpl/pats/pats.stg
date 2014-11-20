@@ -12,6 +12,8 @@ sys_mylib() ::= <<sys_mylib_obj>>
 
 atom_ref_manager() ::= <<atom_ref_manager>>
 
+array_ref_manager() ::= <<array_ref_manager>>
+
 // ===============================
 
 pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= <<
@@ -26,8 +28,11 @@ pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= 
 // library data structure (e.g. tuple, list)
 var\<MyLibObj> <sys_mylib()> = new MyLibObj();
 
-// Currently we set up 10 references.
+// Set the initial capacity to 10.
 var\<AtomRefManager> <atom_ref_manager()> = new AtomRefManager(10);
+
+// Set the initial capacity to 10.
+var\<ArrayRefManager> <array_ref_manager()> = new ArrayRefManager(10);
 
 // =====================
 
@@ -156,6 +161,8 @@ main = main_s(0) ||| Scheduler;
 #define sys_assertion <sys_assert_var()> == true;
 
 #assert main deadlockfree;
+
+#assert main |= G sys_assertion;
 
 <ext_code_lst; separator="\n\n">
 
@@ -401,8 +408,8 @@ PInsTupleAdd_st(tupname, index, e) ::= <<
 <sys_mylib()>.setTupleElement(<tupname>, <index>, <e>);
 >>
 
-PInsAtomRefCreate_st(holder, is_global) ::= <<
-<if(is_global)><else>var <endif><holder> = <atom_ref_manager()>.allocate();
+PInsAtomRefCreate_st(holder, init, is_global) ::= <<
+<if(is_global)><else>var <endif><holder> = <atom_ref_manager()>.allocate(<init>);
 >>
 
 PInsAtomRefGet_st(holder, ref, is_global) ::= <<
@@ -414,6 +421,17 @@ PInsAtomRefUpdate_st(ref, exp) ::= <<
 >>
 
 
+PInsArrayRefCreate_st(holder, len, init, is_global) ::= <<
+<if(is_global)><else>var <endif><holder> = <array_ref_manager()>.allocate(<len>, <init>);
+>>
+
+PInsArrayRefGet_st(holder, ref, pos, is_global) ::= <<
+<if(is_global)><else>var <endif><holder> = <array_ref_manager()>.getElement(<ref>, <pos>);
+>>
+
+PInsArrayRefUpdate_st(ref, pos, exp) ::= <<
+<array_ref_manager()>.setElement(<ref>, <pos>, <exp>)
+>>
 
 
 

@@ -139,10 +139,8 @@ public class ModelGenerater {
                 System.out.println("== Generating mcinstruction start ==========================");
                 AddressAllocator addr_alloc = new AddressAllocator();
                 MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory, addr_alloc);
-                AddressAllocator addr_allocator = new AddressAllocator();
                 MCInstructionTransformer mcins_cvt = new MCInstructionTransformer(
                                          mcsid_factory
-                                       , addr_allocator
                                        , ins_cvt.getFunMap()
                                        , prog_in);
 
@@ -215,7 +213,7 @@ public class ModelGenerater {
                 File abs_path_csp = FilenameUtils.changeExt(abs_path_json, FilenameUtils.cPATCSPS);
                 File abs_path_txt = FilenameUtils.changeExt(abs_path_json, FilenameUtils.cTxt);
                 
-            	String cmdpat = "mono /home/alex/programs/tempPAT/PAT3.Console.exe -csp " + abs_path_csp.getAbsolutePath() + " " + abs_path_txt;
+            	String cmdpat = "mono /home/grad2/aren/programs/tempPAT/PAT3.Console.exe -csp " + abs_path_csp.getAbsolutePath() + " " + abs_path_txt;
             	System.out.println("cmdpat is " + cmdpat);
             	Process childpat = Runtime.getRuntime().exec(cmdpat);
             	int returnCodePat = childpat.waitFor();

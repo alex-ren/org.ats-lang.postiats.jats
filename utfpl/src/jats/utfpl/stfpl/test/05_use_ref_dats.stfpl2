@@ -1,7 +1,9 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 val g_63 = D2Ecst<conats_atomref_create_2569:{a_3842}(((a_3842) -<fun> atomref_728)):type> (0)
 
 val () = D2Ecst<conats_atomref_update_2570:{a_3843}(((atomref_728, a_3843) -<fun> void)):type> (g_63, 3)
 
 val <P2Tann>(x_64:int:t@ype) = D2Ecst<conats_atomref_get_2571:{a_3844}(((atomref_728) -<fun> a_3844)):type> (g_63)
+
+val () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (<D2Esym>(=) (x_64, 4))

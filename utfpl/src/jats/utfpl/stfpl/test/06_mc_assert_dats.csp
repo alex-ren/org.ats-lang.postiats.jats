@@ -123,7 +123,6 @@ var sys_assert_var = true;
 // =====================
 
 var g_63;
-var x_64;
 
 
 // =====================
@@ -132,14 +131,9 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  g_63 = atom_ref_manager.allocate(0);
-  } ->
-  {  atom_ref_manager.setElement(g_63, 3)
-  } ->
-  {  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  {  var temp3_id = call(eq, x_64, 4);
-  sys_assert_var = temp3_id;
+  {  g_63 = 3;
+  var temp2_id = call(gt, g_63, 4);
+  sys_assert_var = temp2_id;
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

@@ -15,6 +15,9 @@ import jats.utfpl.stfpl.mcinstruction.MCDecAtomValGroup;
 import jats.utfpl.stfpl.mcinstruction.MCDefFun;
 import jats.utfpl.stfpl.mcinstruction.MCDefFunGroup;
 import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
+import jats.utfpl.stfpl.mcinstruction.MCInsArrayRefCreate;
+import jats.utfpl.stfpl.mcinstruction.MCInsArrayRefGet;
+import jats.utfpl.stfpl.mcinstruction.MCInsArrayRefUpdate;
 import jats.utfpl.stfpl.mcinstruction.MCInsAtomRefCreate;
 import jats.utfpl.stfpl.mcinstruction.MCInsAtomRefGet;
 import jats.utfpl.stfpl.mcinstruction.MCInsAtomRefUpdate;
@@ -299,34 +302,6 @@ public class MyCspInsTransformer {
 //            
 //            return null;            
 //        }
-
-
-        @Override
-        public Object visit(MCInsAtomRefUpdate ins) {
-
-            IMyCspTemp localSrc = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
-            MyCspTempID globalDest = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
-            
-            CIAtomRefUpdate nIns = new CIAtomRefUpdate(localSrc, globalDest, m_cbEvt);
-
-            handleNoReturnForWithEffect(nIns);
-            
-            return null; 
-        }
-
-        @Override
-        public Object visit(MCInsAtomRefGet ins) {
-            
-            MyCspTempID globalVar = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
-            MyCspTempID localHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            
-            CIAtomRefGet nIns = new CIAtomRefGet(globalVar, localHolder, m_cbEvt);
-
-            handleReturnForWithEffect(nIns, ins.m_holder);
-            
-            return null;
-        }
-
 //        @Override
 //        public Object visit(InsLoadArray ins) {
 //
@@ -396,14 +371,42 @@ public class MyCspInsTransformer {
         @Override
         public Object visit(MCInsAtomRefCreate ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             
-            CIAtomRefCreate nIns = new CIAtomRefCreate(holder, m_cbEvt);
+            CIAtomRefCreate nIns = new CIAtomRefCreate(holder, vp, m_cbEvt);
             
             handleReturnForWithEffect(nIns, ins.m_holder);
             
             return null;
         }
-        
+
+
+        @Override
+        public Object visit(MCInsAtomRefUpdate ins) {
+
+            IMyCspTemp localSrc = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID globalDest = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
+            
+            CIAtomRefUpdate nIns = new CIAtomRefUpdate(localSrc, globalDest, m_cbEvt);
+
+            handleNoReturnForWithEffect(nIns);
+            
+            return null; 
+        }
+
+        @Override
+        public Object visit(MCInsAtomRefGet ins) {
+            
+            MyCspTempID globalVar = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID localHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            
+            CIAtomRefGet nIns = new CIAtomRefGet(globalVar, localHolder, m_cbEvt);
+
+            handleReturnForWithEffect(nIns, ins.m_holder);
+            
+            return null;
+        }
+
         @Override
         public Object visit(MCInsMutexCreate ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
@@ -605,6 +608,46 @@ public class MyCspInsTransformer {
 	        m_cblkLst.add(m_cbEvt);
 	        m_cbEvt = new GrpEvent();
         }
+
+		@Override
+		public Object visit(MCInsArrayRefCreate ins) {
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            IMyCspTemp len = ValPrim2CTemp(ins.m_len, m_subMap, m_funLab, m_cbEvt);
+            IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+            
+            CIArrayRefCreate nIns = new CIArrayRefCreate(holder, len, vp, m_cbEvt);
+            
+            handleReturnForWithEffect(nIns, ins.m_holder);
+            
+            return null;
+		}
+
+		@Override
+		public Object visit(MCInsArrayRefUpdate ins) {
+            IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+            IMyCspTemp pos = ValPrim2CTemp(ins.m_pos, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID ref = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
+            
+            
+            CIArrayRefUpdate nIns = new CIArrayRefUpdate(ref, pos, v, m_cbEvt);
+
+            handleNoReturnForWithEffect(nIns);
+            
+            return null; 
+		}
+
+		@Override
+		public Object visit(MCInsArrayRefGet ins) {
+            MyCspTempID ref = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
+            IMyCspTemp pos = ValPrim2CTemp(ins.m_pos, m_subMap, m_funLab, m_cbEvt);
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            
+            CIArrayRefGet nIns = new CIArrayRefGet(ref, pos, holder, m_cbEvt);
+
+            handleReturnForWithEffect(nIns, ins.m_holder);
+            
+            return null;
+		}
         
         /* ********** ********** *********** */
     }

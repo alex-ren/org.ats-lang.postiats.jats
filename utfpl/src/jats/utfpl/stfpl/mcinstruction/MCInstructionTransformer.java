@@ -25,7 +25,6 @@ import jats.utfpl.stfpl.instructions.ProgramIns;
 import jats.utfpl.stfpl.instructions.SId;
 import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.instructions.VNameCst;
-import jats.utfpl.stfpl.mcinstruction.AuxMCIns.AddressAllocator;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.RecType;
@@ -72,15 +71,12 @@ public class MCInstructionTransformer {
 //    private SIdFactory m_sid_factory;
     private Map<SId, IFunDef> m_fun_map;
     
-    private AddressAllocator m_addr_allocator;
-    
     public ProgramIns m_prog;
     
     /* *********** ********** */
     
     public MCInstructionTransformer(
                                     MCSIdFactory mcsid_factory
-                                  , AddressAllocator allocator
     		                      , Map<SId, IFunDef> fun_map
     		                      , ProgramIns prog
     		                      ) {
@@ -98,7 +94,6 @@ public class MCInstructionTransformer {
         /* ********** ********** */
         
         m_mcsid_factory = mcsid_factory;
-        m_addr_allocator = allocator;
         m_fun_map = fun_map;
         
         
@@ -537,7 +532,9 @@ public class MCInstructionTransformer {
                 return new MCInsMutexCreate(mcholder);
             } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefCreate)) {
                 // fun conats_atomref_create {a:t@ype} (data: a): atomref a
-                return new MCInsAtomRefCreate(mcholder);
+                IValPrim vp = ins.m_args.get(0);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                return new MCInsAtomRefCreate(mcholder, mcvp);
                 
             } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefUpdate)) {
                 // fun conats_atomref_update {a:t@ype} (gv: atomref a, data: a): void
@@ -568,7 +565,49 @@ public class MCInstructionTransformer {
 
                 MCSId mcsid_ref = (MCSId)mcref;
                 return new MCInsAtomRefGet(mcsid_ref, mcholder);
+            } else if (fname.compSymbolString(CCompUtils.cConATSAtomArrayRefCreate)) {
+                // fun conats_atomarrayref_create {a:t@ype} (len: int, data: a): atomarrayref a
+                IValPrim len = ins.m_args.get(0);
+                IMCValPrim mclen = m_mcsid_factory.fromIValPrim(len, map_clo_name, map_name);
                 
+                IValPrim vp = ins.m_args.get(1);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                return new MCInsArrayRefCreate(mcholder, mclen, mcvp);
+                
+            } else if (fname.compSymbolString(CCompUtils.cConATSAtomArrayRefUpdate)) {
+                // fun conats_atomarrayref_update {a:t@ype} (gv: atomarrayref a, pos: int, data: a): void
+                
+                IValPrim ref = ins.m_args.get(0);
+                IMCValPrim mcref = m_mcsid_factory.fromIValPrim(ref, map_clo_name, map_name);
+                if (mcref instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
+                }
+                MCSId mcsid_ref = (MCSId)mcref;
+                
+                IValPrim pos = ins.m_args.get(1);
+                IMCValPrim mcpos = m_mcsid_factory.fromIValPrim(pos, map_clo_name, map_name);
+                
+                IValPrim vp = ins.m_args.get(2);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                
+                boolean isret = ins.m_holder.isRetHolder();
+
+                return new MCInsArrayRefUpdate(mcsid_ref, mcpos, mcvp, isret);
+                
+            } else if (fname.compSymbolString(CCompUtils.cConATSAtomArrayRefGet)) {
+                // fun conats_atomarrayref_get {a:t@ype} (gv: atomarrayref a, pos: int): a
+                
+                IValPrim ref = ins.m_args.get(0);
+                IMCValPrim mcref = m_mcsid_factory.fromIValPrim(ref, map_clo_name, map_name);
+                if (mcref instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
+                }
+                MCSId mcsid_ref = (MCSId)mcref;
+                
+                IValPrim pos = ins.m_args.get(1);
+                IMCValPrim mcpos = m_mcsid_factory.fromIValPrim(pos, map_clo_name, map_name);
+                
+                return new MCInsArrayRefGet(mcsid_ref, mcpos, mcholder);
             } else if (fname.compSymbolString(CCompUtils.cConATSThreadCreate)) {
                 // fun conats_thread_create {a:type} (tfun: thread_fun_t a, arg: a, tid: tid): void
                 

@@ -38,7 +38,10 @@ public class Test {
 //        		, "src/jats/utfpl/stfpl/test/02_closure_call.dats"
 //        		, "src/jats/utfpl/stfpl/test/03_symbol_opr.dats"
 //        		"src/jats/utfpl/stfpl/test/04_if_function.dats"
-        		"src/jats/utfpl/stfpl/test/05_use_ref.dats"
+//        		"src/jats/utfpl/stfpl/test/05_use_ref.dats"
+//        		"src/jats/utfpl/stfpl/test/06_mc_assert.dats"
+        		"src/jats/utfpl/stfpl/test/07_user_array.dats"
+        		
         };
 
         for (String strPath : paths) {

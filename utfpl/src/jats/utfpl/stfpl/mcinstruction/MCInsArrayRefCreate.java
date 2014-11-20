@@ -1,12 +1,14 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-public class MCInsAtomRefCreate implements IMCInstruction {
+public class MCInsArrayRefCreate implements IMCInstruction {
 
     public MCSId m_holder;
+    public IMCValPrim m_len;
     public IMCValPrim m_vp;
     
-    public MCInsAtomRefCreate(MCSId holder, IMCValPrim vp) {
+    public MCInsArrayRefCreate(MCSId holder, IMCValPrim len, IMCValPrim vp) {
         m_holder = holder;
+        m_len = len;
         m_vp = vp;
     }
     

@@ -2,10 +2,12 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 public class CIAtomRefCreate extends MyCspInstruction {
     public MyCspTempID m_holder;
+    public IMyCspTemp m_vp;
     
-    public CIAtomRefCreate(MyCspTempID holder, MyCspGroup blk) {
+    public CIAtomRefCreate(MyCspTempID holder, IMyCspTemp vp, MyCspGroup blk) {
         super(blk);
         m_holder = holder;
+        m_vp = vp;
     }
 
     @Override
@@ -16,6 +18,9 @@ public class CIAtomRefCreate extends MyCspInstruction {
     @Override
     public int process(int offset) {
         offset = m_holder.processStack(offset);
+        if (m_vp instanceof MyCspTempID) {
+            ((MyCspTempID)m_vp).updateForUsage();
+        }
         return offset;
     }
 }

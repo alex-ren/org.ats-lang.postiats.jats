@@ -395,8 +395,9 @@ public class MCInstructionProcessor {
                 return ins;
             } else {
                 MCSId holder = subsHolder(ins.m_holder);
+                IMCValPrim vp = subsVP(ins.m_vp, m_sub);
                 
-                return new MCInsAtomRefCreate(holder);
+                return new MCInsAtomRefCreate(holder, vp);
             }
         }
 
@@ -503,6 +504,45 @@ public class MCInstructionProcessor {
             }
 
         }
+
+		@Override
+		public MCInsArrayRefCreate visit(MCInsArrayRefCreate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
+                IMCValPrim len = subsVP(ins.m_len, m_sub);
+                IMCValPrim vp = subsVP(ins.m_vp, m_sub);
+                
+                return new MCInsArrayRefCreate(holder, len, vp);
+            }
+		}
+
+		@Override
+		public MCInsArrayRefUpdate visit(MCInsArrayRefUpdate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId ref = subsVP(ins.m_ref, m_sub);
+                IMCValPrim pos = subsVP(ins.m_pos, m_sub);
+                IMCValPrim vp = subsVP(ins.m_vp, m_sub);
+                
+                return new MCInsArrayRefUpdate(ref, pos, vp, ins.m_isret);
+            }
+		}
+
+		@Override
+		public MCInsArrayRefGet visit(MCInsArrayRefGet ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
+                IMCValPrim pos = subsVP(ins.m_pos, m_sub);
+                MCSId ref = subsVP(ins.m_ref, m_sub);
+                
+                return new MCInsArrayRefGet(ref, pos, holder);
+            }
+		}
 
 
 

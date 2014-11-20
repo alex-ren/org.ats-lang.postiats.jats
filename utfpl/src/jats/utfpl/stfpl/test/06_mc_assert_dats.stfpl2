@@ -1,0 +1,5 @@
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+val g_63 = 3
+
+val () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (<D2Esym>(>) (g_63, 4))

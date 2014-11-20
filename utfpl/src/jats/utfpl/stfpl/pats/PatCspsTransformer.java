@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
+import jats.utfpl.stfpl.mycspinstructions.CIArrayRefCreate;
+import jats.utfpl.stfpl.mycspinstructions.CIArrayRefGet;
+import jats.utfpl.stfpl.mycspinstructions.CIArrayRefUpdate;
 import jats.utfpl.stfpl.mycspinstructions.CIAtomRefCreate;
 import jats.utfpl.stfpl.mycspinstructions.CIAtomRefGet;
 import jats.utfpl.stfpl.mycspinstructions.CIAtomRefUpdate;
@@ -254,6 +257,23 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         return ret;
     }
 
+
+	
+	@Override
+	public Object visit(CIAtomRefCreate node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        MCSId holder = node.m_holder.getMCSId();
+        
+        PExp vp  = CTemp2PExp(node.m_vp);
+        
+        ret.add(new PInsAtomRefCreate(holder, vp));
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
+        }
+
+        return ret;
+	}
+	
     @Override
     public List<PStat> visit(CIAtomRefGet node) {  // has effect
         List<PStat> ret = new ArrayList<PStat>();
@@ -530,19 +550,6 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 	}
 
 
-	
-	@Override
-	public Object visit(CIAtomRefCreate node) {
-        List<PStat> ret = new ArrayList<PStat>();
-        MCSId holder = node.m_holder.getMCSId();
-        
-        ret.add(new PInsAtomRefCreate(holder));
-        if (node.m_holder.isEscaped()) {
-            ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
-        }
-
-        return ret;
-	}
 
 	@Override
 	public Object visit(CIMCVLockViewGet node) {
@@ -552,6 +559,51 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         
         ret.add(new PInsMCVLockViewGet(args));
         
+        return ret;
+	}
+
+	@Override
+	public Object visit(CIArrayRefUpdate node) {
+        List<PStat> ret = new ArrayList<PStat>();
+      
+      PExp ref = CTemp2PExp(node.m_ref);
+      PExp pos = CTemp2PExp(node.m_pos);
+      PExp v   = CTemp2PExp(node.m_v);
+      
+      ret.add(new PInsArrayRefUpdate(ref, pos, v));
+      
+      return ret;
+	}
+
+	@Override
+	public Object visit(CIArrayRefCreate node) {
+        List<PStat> ret = new ArrayList<PStat>();
+        MCSId holder = node.m_holder.getMCSId();
+        
+        PExp len  = CTemp2PExp(node.m_len);
+        PExp v  = CTemp2PExp(node.m_v);
+        
+        ret.add(new PInsArrayRefCreate(holder, len, v));
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
+        }
+
+        return ret;
+	}
+
+	@Override
+	public Object visit(CIArrayRefGet node) {
+        List<PStat> ret = new ArrayList<PStat>();
+
+        PExp ref = CTemp2PExp(node.m_ref);
+        PExp pos = CTemp2PExp(node.m_pos);
+        MCSId holder = node.m_holder.getMCSId();
+        
+        ret.add(new PInsArrayRefGet(ref, pos, holder));
+        
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
+        }
         return ret;
 	}
 	

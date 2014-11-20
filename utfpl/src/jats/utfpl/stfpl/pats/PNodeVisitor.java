@@ -43,23 +43,30 @@ public interface PNodeVisitor {
 	public Object visit(PExpPatLabDecompose node);
 	public Object visit(PExpFormClosure node);
     public Object visit(PExpTupleCreate node);
+	public Object visit(PInsTupleAdd node);
+	
     
     public Object visit(PInsCond node);
-    public Object visit(PInsAtomRefGet node);
-//    public Object visit(PInsLoadArray node);
-    public Object visit(PInsAtomRefUpdate node);
-//    public Object visit(PInsStoreArray node);
+    
     public Object visit(PInsMutexCreate node);
 //    public Object visit(PInsMutexRelease node);
     public Object visit(PInsSharedCreateCond node);
 //    public Object visit(PInsCondRelease node);
-    public Object visit(PInsMCAssert node);
+
 	public Object visit(PProcGrpMCAtomicStart node);
 	public Object visit(PInsMCGet node);
 	public Object visit(PInsMCSet node);
-	public Object visit(PInsTupleAdd node);
-	public Object visit(PInsAtomRefCreate node);
+    public Object visit(PInsMCAssert node);
 	public Object visit(PInsMCVLockViewGet node);
+	
+	
+	public Object visit(PInsAtomRefCreate node);
+    public Object visit(PInsAtomRefGet node);
+    public Object visit(PInsAtomRefUpdate node);
+
+	public Object visit(PInsArrayRefUpdate node);
+	public Object visit(PInsArrayRefCreate node);
+	public Object visit(PInsArrayRefGet node);
 
     
 
