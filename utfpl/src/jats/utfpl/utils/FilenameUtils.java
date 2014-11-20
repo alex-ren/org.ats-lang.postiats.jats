@@ -4,7 +4,7 @@ import java.io.File;
 
 public class FilenameUtils {
 	static public final String cCSPS = "mycsps";
-	static public final String cPATCSPS = "csps";
+	static public final String cPATCSPS = "csp";
 	static public final String cDATS = "dats";
 	static public final String cJSON = "json";
 	static public final String cUTFPL = "utfpl";

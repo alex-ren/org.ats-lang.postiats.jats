@@ -106,10 +106,12 @@ public class VariableInfo {
     // Check whether the curLoc is with the same group as where the 
     // id is defined.
     public boolean isOutofScope(EntityLocation curLoc) {
-        if (m_defLoc.equals(curLoc)) {
+
+        if (m_mid.getSId().isGlobalValue()) {
             return false;
         }
-        if (m_mid.getSId().isGlobalValue()) {
+        
+        if (m_defLoc.equals(curLoc)) {
             return false;
         } else if (m_mid.getSId().isFunName()) {
             return false;

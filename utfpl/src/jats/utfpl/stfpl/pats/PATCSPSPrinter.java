@@ -362,12 +362,15 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsAtomRefGet node) {
-        // pinsload_st(src, dst) ::= <<
-        ST st = m_stg.getInstanceOf("pinsload_st");
-        st.add("src", node.m_globalVar);
-        st.add("dst", node.m_localHolder);
-        
+        // PInsAtomRefGet_st(holder, ref, is_global) ::= <<
+        ST st = m_stg.getInstanceOf("PInsAtomRefGet_st");
+        st.add("ref", node.m_globalVar.accept(this));
+      
+        st.add("holder", node.m_localHolder.toStringMCIns());
+        st.add("is_global", node.m_localHolder.getSId().isGlobalValue()); 
         return st;
+        
+        
     }
 
 
@@ -391,10 +394,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsAtomRefUpdate node) {
-        // pinsstore_st(src, dst) ::= <<
-        ST st = m_stg.getInstanceOf("pinsstore_st");
-        st.add("dst", node.m_globalVar);
-        st.add("src", node.m_localSrc.accept(this));
+        // PInsAtomRefUpdate_st(ref, exp) ::= <<
+        ST st = m_stg.getInstanceOf("PInsAtomRefUpdate_st");
+        st.add("ref", node.m_globalVar.accept(this));
+        st.add("exp", node.m_localSrc.accept(this));
         
         return st;
     }
@@ -571,7 +574,11 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PInsAtomRefCreate node) {
-		return "PInsAtomRefCreate";
+		// PInsAtomRefCreate_st(holder, is_global) ::= <<
+		ST st = m_stg.getInstanceOf("PInsAtomRefCreate_st");
+		st.add("holder", node.m_holder.toStringMCIns());
+		st.add("is_global", node.m_holder.getSId().isGlobalValue());
+		return st;
 	}
 
 

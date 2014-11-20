@@ -1,22 +1,43 @@
 group patcsps;
 
+// ===============================
+
+local_temp_list() ::= <<__temp_list_args>>
+
+sys_gstack() ::= <<sys_gstack>>
+
+sys_tid() ::= <<sys_tid>>
+
+sys_mylib() ::= <<sys_mylib_obj>>
+
+atom_ref_manager() ::= <<atom_ref_manager>>
+
+// ===============================
+
 pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= <<
 
 // ===============================
 
-
 <!#import "PStack";!>
-
-#import "MyLib";
+#import "MyLib";  // import the library
 
 // =====================
 
+// library data structure (e.g. tuple, list)
 var\<MyLibObj> <sys_mylib()> = new MyLibObj();
 
+// Currently we set up 10 references.
+var\<AtomRefManager> <atom_ref_manager()> = new AtomRefManager(10);
+
 // =====================
 
+// Stack Operation
 var\<PStack> <sys_gstack()> = new PStack();
+
+// thread id allocator
 var\<Allocator> <sys_tid_allocator()> = new Allocator();  // todo: improve
+
+// =====================
 
 var sys_thread_num = 1;
 
@@ -362,14 +383,6 @@ PStatProcCallEpilogue_st(is_void, ret, is_global) ::= <<
 <if(is_void)><sys_gstack()>.delete_frame(<sys_tid()>);<else><if(ret)><if(is_global)><else>var <endif><ret> = <endif><sys_gstack()>.retopr_frame(<sys_tid()>);<endif>
 >>
 
-local_temp_list() ::= <<__temp_list_args>>
-
-sys_gstack() ::= <<sys_gstack>>
-
-sys_tid() ::= <<sys_tid>>
-
-sys_mylib() ::= <<sys_mylib_obj>>
-
 // ===================================================
 
 PExpFormClosure_st(funaddr, envname) ::= <<
@@ -388,10 +401,17 @@ PInsTupleAdd_st(tupname, index, e) ::= <<
 <sys_mylib()>.setTupleElement(<tupname>, <index>, <e>);
 >>
 
-PInsAtomRefCreate_st(
+PInsAtomRefCreate_st(holder, is_global) ::= <<
+<if(is_global)><else>var <endif><holder> = <atom_ref_manager()>.allocate();
+>>
 
+PInsAtomRefGet_st(holder, ref, is_global) ::= <<
+<if(is_global)><else>var <endif><holder> = <atom_ref_manager()>.getElement(<ref>);
+>>
 
-
+PInsAtomRefUpdate_st(ref, exp) ::= <<
+<atom_ref_manager()>.setElement(<ref>, <exp>)
+>>
 
 
 
