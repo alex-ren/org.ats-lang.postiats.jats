@@ -37,8 +37,8 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
 //        		, "src/jats/utfpl/stfpl/test/02_closure_call.dats"
 //        		, "src/jats/utfpl/stfpl/test/03_symbol_opr.dats"
-        		"src/jats/utfpl/stfpl/test/04_if_function.dats"
-
+//        		"src/jats/utfpl/stfpl/test/04_if_function.dats"
+        		"src/jats/utfpl/stfpl/test/05_use_ref.dats"
         };
 
         for (String strPath : paths) {

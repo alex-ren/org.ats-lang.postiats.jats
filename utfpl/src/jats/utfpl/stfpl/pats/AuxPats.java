@@ -30,9 +30,9 @@ public class AuxPats {
 	
 	public static String convertConst(String c) {
 		if (c.equals("true_bool")) {
-			return "True";
+			return "true";
 		} else if (c.equals("false_bool")) {
-			return "False";
+			return "false";
 		} else {
 			return c;
 		}

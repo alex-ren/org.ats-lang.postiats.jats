@@ -537,7 +537,6 @@ public class MCInstructionTransformer {
                 return new MCInsMutexCreate(mcholder);
             } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefCreate)) {
                 // fun conats_atomref_create {a:t@ype} (data: a): atomref a
-
                 return new MCInsAtomRefCreate(mcholder);
                 
             } else if (fname.compSymbolString(CCompUtils.cConATSAtomRefUpdate)) {

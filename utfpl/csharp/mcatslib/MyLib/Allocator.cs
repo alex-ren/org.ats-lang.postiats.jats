@@ -58,6 +58,7 @@ namespace PAT.Lib
                 }
             }
             return -1;
+            // throw new PAT.Common.Classes.Expressions.ExpressionClass.RuntimeException("Cannot allocate resource.");
         }
 
         public void release(int i)

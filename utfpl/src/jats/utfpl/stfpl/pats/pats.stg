@@ -388,6 +388,7 @@ PInsTupleAdd_st(tupname, index, e) ::= <<
 <sys_mylib()>.setTupleElement(<tupname>, <index>, <e>);
 >>
 
+PInsAtomRefCreate_st(
 
 
 

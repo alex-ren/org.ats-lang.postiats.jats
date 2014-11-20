@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
+import jats.utfpl.utils.Log;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -19,7 +20,7 @@ public class DataType extends BoxedType {
     public DataType(Cs2cst name, List<ISType> tyLst) {
         m_tyLst = tyLst;
         m_name = name;
-        throw new Error("not allowed to use now");
+//        throw new Error("not allowed to use now, name is " + name.toStringNoStamp());
     }
 
     @Override
@@ -74,7 +75,8 @@ public class DataType extends BoxedType {
 
     @Override
     public ISType removeProof() {
-        throw new Error("Not supported");
+    	Log.log4j.warn("removeProof for datatype " + m_name.toStringNoStamp());
+        return this;
     }
 
 //    @Override

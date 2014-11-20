@@ -60,7 +60,7 @@ public class ModelGenerater {
         if (FilenameUtils.isATS(path)) {
         	File path_json = FilenameUtils.toJson(path);
         	
-        	String cmd = "patsopt -o " + path_json.getPath() + " --jsonize-2 -d " + m_path + " 2>&1";
+        	String cmd = "patsopt -o " + path_json.getPath() + " --jsonize-2 -d " + m_path;
         	System.out.println("cmd is " + cmd);
         	Process child = Runtime.getRuntime().exec(cmd);
         	int returnCode = child.waitFor();

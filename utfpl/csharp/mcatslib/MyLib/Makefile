@@ -15,7 +15,9 @@ SOURCE = Allocator.cs \
 	 MyLibObj.cs \
          Tuple.cs \
 	 ValueArray.cs \
-	 MemHolder.cs
+	 MemHolder.cs \
+	 AtomRefManager.cs \
+	 ArrayRefManager.cs \
 
 TARGET = MyLib.dll
 

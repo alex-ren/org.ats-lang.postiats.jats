@@ -1,0 +1,3 @@
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+val g_63 = D2Ecst<conats_atomref_create_2569:{a_3842}(((a_3842) -<fun> atomref_728)):type> (0)

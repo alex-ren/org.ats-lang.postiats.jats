@@ -394,10 +394,10 @@ public class MyCspInsTransformer {
 
 
         @Override
-        public MCInsAtomRefCreate visit(MCInsAtomRefCreate ins) {
+        public Object visit(MCInsAtomRefCreate ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CIMutexCreate nIns = new CIMutexCreate(holder, m_cbEvt);
+            CIAtomRefCreate nIns = new CIAtomRefCreate(holder, m_cbEvt);
             
             handleReturnForWithEffect(nIns, ins.m_holder);
             

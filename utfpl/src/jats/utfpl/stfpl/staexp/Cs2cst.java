@@ -30,8 +30,12 @@ public class Cs2cst {
         m_srt = srt;
     }
     
-    public String toString() {
+    public String toStringWithStamp() {
         return m_symbol.toString() + m_stamp.getData();
+    }
+    
+    public String toStringNoStamp() {
+        return m_symbol.toString();
     }
     
 }

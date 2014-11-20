@@ -842,7 +842,7 @@ public class InstructionTransformer {
             List<IStfplInstruction> inss) {
         InsCall aIns = null;
         
-        if (((FunType)fun.getType()).getFunClo() != FUNCLOfun.cInstance) {
+        if (AuxSType.isClosure(fun.getType())) {
             // Call a closure
             aIns = new InsCall(holder, fun, args, ECallType.eCloObj);
         } else {
