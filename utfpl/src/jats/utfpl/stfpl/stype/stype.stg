@@ -56,6 +56,10 @@ DataType_st(cst_name) ::= <<
 <s2cst_st(cst_name)>
 >>
 
+AbsType_st(cst_name) ::= <<
+<s2cst_st(cst_name)>
+>>
+
 s2cst_st(s2cst) ::= <<
 <symbol_st(s2cst.symbol)>_<stamp_st(s2cst.stamp)>
 >>

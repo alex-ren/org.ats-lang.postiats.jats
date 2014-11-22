@@ -24,15 +24,11 @@ public interface IMCInsVisitor {
     
     public Object visit(MCInsThreadCreate ins);
 
-    public Object visit(MCInsAtomRefCreate ins);
-    
-    public Object visit(MCInsAtomRefGet ins);
 
-    public Object visit(MCInsAtomRefUpdate ins);
 
     public Object visit(MCInsSharedCreateCond ins);
 
-    public Object visit(MCInsMutexCreate ins);
+	public Object visit(MCInsMutexCreate ins);
 
     /* ********* *********** */
     
@@ -46,11 +42,21 @@ public interface IMCInsVisitor {
 
     public Object visit(MCInsMCVLockViewGet ins);
 
+    /* ********* *********** */
+    
+    public Object visit(MCInsAtomRefCreate ins);
+    
+    public Object visit(MCInsAtomRefGet ins);
+
+    public Object visit(MCInsAtomRefUpdate ins);
+    
 	public Object visit(MCInsArrayRefCreate ins);
 
 	public Object visit(MCInsArrayRefUpdate ins);
 
 	public Object visit(MCInsArrayRefGet ins);
+
+
     
     
 

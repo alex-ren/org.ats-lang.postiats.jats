@@ -24,7 +24,7 @@ public abstract class EleType extends FlatType {
             return new TypeCheckResult();
         } else if (right0 instanceof EleType) {
             if (right0 != this) {
-                return new TypeCheckResult("Type mismatch: " + "type mismatch: " + 
+                return new TypeCheckResult("Type mismatch: " +
                   Log.getFilePos() + " 01. left is " + left + ", right is " + right0);
             } else {
                 return new TypeCheckResult();

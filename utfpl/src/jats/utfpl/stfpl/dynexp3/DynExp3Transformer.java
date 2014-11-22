@@ -816,6 +816,7 @@ public class DynExp3Transformer {
     }
 
     private Cd3sym transform(Cd2sym d2sym, Cloc_t loc) {
+//    	System.out.println("sym is " + d2sym.m_d2sym_name.toString() + " addr is " + d2sym);
         ISType type = d2sym.getSType().removeProof();
         return new Cd3sym(d2sym.m_d2sym_name, type);
     }
@@ -1040,7 +1041,7 @@ public class DynExp3Transformer {
     private Cd3ecl transform(Cloc_t loc, D2Cdcstdecs node0, Set<Cd3var> scope) {
         switch (node0.m_dck) {
         case DCK_prfun: // extern prfun
-        case DCK_prval:  // extern prval
+        case DCK_prval: // extern prval
         case DCK_fun:  // extern fun
         case DCK_val:  // extern val
         {

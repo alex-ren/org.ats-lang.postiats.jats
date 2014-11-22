@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl;
 
+import jats.utfpl.stfpl.ccomp.DefaultLibraryTypes;
 import jats.utfpl.stfpl.dynexp.*;
 import jats.utfpl.stfpl.staexp.Clabs2exp;
 import jats.utfpl.stfpl.staexp.Clabs2expDeserializer;
@@ -72,6 +73,7 @@ public class StfplProgramParserJson {
     public StfplProgramParserJson() {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
+        DefaultLibraryTypes type_fac = new DefaultLibraryTypes();
         
         /* *********** common *********** */
         
@@ -83,10 +85,10 @@ public class StfplProgramParserJson {
 
         /* *********** dynamics *********** */
         
-        gsonBuilder.registerTypeAdapter(Cd2cst.class, new Cd2cstDeserializer());
+        gsonBuilder.registerTypeAdapter(Cd2cst.class, new Cd2cstDeserializer(type_fac));
         gsonBuilder.registerTypeAdapter(Cd2var.class, new Cd2varDeserializer());
         gsonBuilder.registerTypeAdapter(Cd2con.class, new Cd2conDeserializer());
-        gsonBuilder.registerTypeAdapter(Cd2sym.class, new Cd2symDeserializer());
+        gsonBuilder.registerTypeAdapter(Cd2sym.class, new Cd2symDeserializer(type_fac));
 
         
         gsonBuilder.registerTypeAdapter(Id2ecl_node.class, new Id2ecl_nodeDeserializer());

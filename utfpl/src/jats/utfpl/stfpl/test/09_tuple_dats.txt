@@ -1,0 +1,38 @@
+=======================================================
+Assertion: main() deadlockfree
+********Verification Result********
+The Assertion (main() deadlockfree) is VALID.
+
+********Verification Setting********
+Admissible Behavior: All
+Search Engine: First Witness Trace using Depth First Search
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:8
+Total Transitions:8
+Time Used:0.0342337s
+Estimated Memory Used:8699.904KB
+
+
+=======================================================
+Assertion: main() |= G sys_assertion
+********Verification Result********
+The Assertion (main() |= G sys_assertion) is NOT valid.
+A counterexample is presented as follows.
+<init -> main_init -> τ -> τ -> τ -> τ>
+
+********Verification Setting********
+Admissible Behavior: All
+Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:5
+Total Transitions:5
+Time Used:0.005284s
+Estimated Memory Used:8548.352KB
+
+

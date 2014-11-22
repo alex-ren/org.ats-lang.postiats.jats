@@ -13,6 +13,7 @@ import java.util.Set;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
+// abstype atomref (a: t@ype)
 public class DataType extends BoxedType {
     public List<ISType> m_tyLst;
     public Cs2cst m_name;

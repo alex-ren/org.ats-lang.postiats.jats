@@ -42,7 +42,7 @@ public class Test {
         };
 
 		for (String strPath : paths) {
-			ModelGenerater mcGen = new ModelGenerater(strPath);
+			ModelGenerater mcGen = new ModelGenerater(strPath, null);
 			mcGen.generate(3);
 		}
 

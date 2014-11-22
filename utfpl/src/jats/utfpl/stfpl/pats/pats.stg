@@ -82,11 +82,11 @@ var mutex[10];  // 10 mutex
 
 var\<Allocator> <sys_mutex_manager()> = new Allocator();
 
-sys_mutex_lock(<sys_tid()>) = sys_mutex_lock_impl (<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
+conats_mutex_acquire(<sys_tid()>) = sys_mutex_lock_impl (<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
 
 sys_mutex_lock_impl(<sys_tid()>, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
 
-sys_mutex_unlock(<sys_tid()>) = sys_mutex_unlock_impl (<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
+conats_mutex_release(<sys_tid()>) = sys_mutex_unlock_impl (<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
 
 sys_mutex_unlock_impl(<sys_tid()>, m) = sys_munlock{mutex[m] = 0} -> Skip;
 // ======================

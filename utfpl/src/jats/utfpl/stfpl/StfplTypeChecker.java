@@ -61,7 +61,6 @@ import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
 import jats.utfpl.stfpl.dynexp.ProgramStfpl2;
 import jats.utfpl.stfpl.staexp.Cs2var;
-import jats.utfpl.stfpl.staexp.FUNCLOclo;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.FunCloNA;
 import jats.utfpl.stfpl.staexp.Ifunclo;
@@ -867,6 +866,9 @@ public class StfplTypeChecker {
             throw new Error(d2exp + " is not supported");
         }
 
+        if (node.getSType() instanceof VarType) {
+        	throw new Error("Cannot infer the type for " + loc);
+        }
     }
 
     private void normalizeType(D2Evar node, Cloc_t loc) {

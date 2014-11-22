@@ -1,0 +1,11 @@
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+val g_63 = D2Ecst<conats_mutex_create_2566:(() -<fun> mutex_t_726):type> ()
+
+val () = D2Ecst<conats_mutex_acquire_2567:((mutex_t_726) -<fun> void):type> (g_63)
+
+val () = D2Ecst<conats_mutex_release_2568:((mutex_t_726) -<fun> void):type> (g_63)
+
+val () = D2Ecst<conats_mutex_acquire_2567:((mutex_t_726) -<fun> void):type> (g_63)
+
+val () = D2Ecst<conats_mutex_acquire_2567:((mutex_t_726) -<fun> void):type> (g_63)

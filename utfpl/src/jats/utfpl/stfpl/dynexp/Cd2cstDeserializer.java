@@ -20,9 +20,11 @@ import com.google.gson.JsonParseException;
 public class Cd2cstDeserializer implements JsonDeserializer<Cd2cst> {
     
     private Map<Cstamp, Cd2cst> m_map;
+    private DefaultLibraryTypes m_fac;
     
-    public Cd2cstDeserializer() {
+    public Cd2cstDeserializer(DefaultLibraryTypes fac) {
         m_map = new HashMap<Cstamp, Cd2cst>();
+        m_fac = fac;
     }
 
     @Override
@@ -47,14 +49,13 @@ public class Cd2cstDeserializer implements JsonDeserializer<Cd2cst> {
 
             ISType stype = SExpTypeExtractor.extractType(type);
             if (null == stype) {
-                stype = DefaultLibraryTypes.queryType(symbol);
+                stype = m_fac.queryType(symbol);
             }
             
             d2cst = new Cd2cst(stamp, type, symbol, stype);
             m_map.put(stamp, d2cst);
             return d2cst;
-        }
-        
+        } 
     }
     
 

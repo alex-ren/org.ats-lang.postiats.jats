@@ -520,10 +520,6 @@ public class MCInstructionTransformer {
             Cd3cst fname = ((VNameCst)name).m_cst;
             if (fname.compSymbolString(CCompUtils.cConATSSharedCreateCond)) {
                 // fun conats_shared_create_cond (): cond
-                
-                // This following is not necessary now.
-                // There is no concept of global variable.
-//                ins.m_holder.updateCat(SIdCategory.eGloVar);
 
                 return new MCInsSharedCreateCond(mcholder);
             } else if (fname.compSymbolString(CCompUtils.cConATSMutexCreate)) {

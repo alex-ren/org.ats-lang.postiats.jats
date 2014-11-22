@@ -51,7 +51,7 @@ import jats.utfpl.stfpl.stype.AuxSType;
  * 2. PUsh to stack
  */
 public class PatCspsTransformer implements IMyCspInsVisitor {
-	
+	 
 	private ProgramMyCspIns m_prog;
 	
 	public PatCspsTransformer(ProgramMyCspIns prog) {

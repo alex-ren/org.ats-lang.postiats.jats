@@ -12,7 +12,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:3
 Total Transitions:3
-Time Used:0.0213425s
+Time Used:0.0218372s
 Estimated Memory Used:8568.832KB
 
 
@@ -30,7 +30,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:4
 Total Transitions:3
-Time Used:0.0046864s
+Time Used:0.0057291s
 Estimated Memory Used:8548.352KB
 
 

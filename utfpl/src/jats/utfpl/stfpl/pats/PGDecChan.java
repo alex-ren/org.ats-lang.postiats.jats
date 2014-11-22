@@ -1,13 +1,13 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.instruction.TID;
+import jats.utfpl.stfpl.instructions.SId;
 
 public class PGDecChan implements PGDec {
 	
-	public TID m_tid;
+	public SId m_tid;
 	public int m_cap;
 	
-	public PGDecChan(TID tid, int cap) {
+	public PGDecChan(SId tid, int cap) {
 	    m_tid = tid;
 	    m_cap = cap;
 	}

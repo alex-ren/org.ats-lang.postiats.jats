@@ -648,7 +648,7 @@ public class MyCspInsTransformer {
             
             return null;
 		}
-        
+
         /* ********** ********** *********** */
     }
 
@@ -663,7 +663,7 @@ public class MyCspInsTransformer {
         return cvt.getCBlockLst();
     }
     
-    /*
+    /* 
      * The processing includes the following.
      * 1. Decide whether a value is used out of its visible scope.
      * 2. Add the concept of stack location according to the analysis result of 1.

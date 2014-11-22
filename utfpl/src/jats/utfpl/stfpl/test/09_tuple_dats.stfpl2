@@ -1,0 +1,23 @@
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+fun foo_63 = lamMet. lam (<P2Tann>(x_64:@{0 = int, 1 = @{0 = int, 1 = int}}:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val <P2Trec>(<LABP2ATnorm>(a_65), <LABP2ATnorm>(<P2Trec>(<LABP2ATnorm>(b_66), <LABP2ATnorm>(c_67)))) = x_64
+      in
+        <D2Esym>(+) (a_65, <D2Esym>(*) (b_66, c_67))
+      end:int:t@ype))
+
+fun main_68 = lam () <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val x_69 = foo_63 ((1, ( | 2, 3)))
+        prval <P2Tann>(b_70:int:t@ype) = <D2Esym>(=) (x_69, 8)
+        prval () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (b_70)
+      in
+        ()
+      end:void:t@ype))
+
+val () = main_68 ()

@@ -1,6 +1,5 @@
 package jats.utfpl.stfpl.pats;
 
-import jats.utfpl.stfpl.instructions.VNameCst;
 import jats.utfpl.stfpl.mcinstruction.AuxMCIns.Address;
 import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
@@ -469,7 +468,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PInsMutexCreate node) {
         // pinsmutexalloc_st(holder, is_global) ::= <<
     	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
-    	st.add("holder", node.m_holder);
+    	st.add("holder", node.m_holder.toStringMCIns());
     	if (node.m_holder.getSId().isGlobalValue()) {
     		st.add("is_global", true);
     	} else {

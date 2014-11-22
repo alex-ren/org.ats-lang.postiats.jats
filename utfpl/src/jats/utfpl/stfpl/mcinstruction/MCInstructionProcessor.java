@@ -9,7 +9,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-
+/*
+ * Effect analysis.
+ * Processing "if" branch with effect.
+ * 
+ */
 public class MCInstructionProcessor {
     private ProgramMCIns m_prog;
     private MCSIdFactory m_fac;
@@ -543,7 +547,6 @@ public class MCInstructionProcessor {
                 return new MCInsArrayRefGet(ref, pos, holder);
             }
 		}
-
 
 
     }

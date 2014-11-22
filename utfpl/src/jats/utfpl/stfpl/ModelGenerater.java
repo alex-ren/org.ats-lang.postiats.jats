@@ -31,7 +31,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ModelGenerater {
-	private String m_path;
+	private String m_inputpath;
+	private String m_outputpath;
 	
 	private String m_dyn;
 	private String m_dyn3;
@@ -42,8 +43,9 @@ public class ModelGenerater {
 	
 	
 	
-	public ModelGenerater(String strPath) {
-        m_path = strPath;
+	public ModelGenerater(String inputpath, String outputpath) {
+		m_inputpath = inputpath;
+        m_outputpath = outputpath;
     	m_dyn = null;
     	m_dyn3 = null;
     	m_inss = null;
@@ -51,16 +53,15 @@ public class ModelGenerater {
 	
 	public int generate(int level) throws IOException, InterruptedException {
 
-        System.out.println("==Processing file " + m_path + "==========");
+        System.out.println("==Processing file " + m_inputpath + "==========");
         System.out.println("");
         
-        File path = new File(m_path);
-//        ProgramTree prog = null;
+        File finput = new File(m_inputpath);
         
-        if (FilenameUtils.isATS(path)) {
-        	File path_json = FilenameUtils.toJson(path);
+        if (FilenameUtils.isATS(finput)) {
+        	File path_json = FilenameUtils.toJson(finput);
         	
-        	String cmd = "patsopt -o " + path_json.getPath() + " --jsonize-2 -d " + m_path;
+        	String cmd = "patsopt -o " + path_json.getAbsolutePath() + " --jsonize-2 -d " + finput.getAbsolutePath();
         	System.out.println("cmd is " + cmd);
         	Process child = Runtime.getRuntime().exec(cmd);
         	int returnCode = child.waitFor();
@@ -90,7 +91,7 @@ public class ModelGenerater {
                 
                 m_dyn = outputSTFPL2;
                 if (level <= 2) {
-                	System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                	System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                 	return 0;
                 }
 
@@ -109,7 +110,7 @@ public class ModelGenerater {
                 
                 m_dyn3 = outputSTFPL3;
                 if (level <= 3) {
-                	System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                	System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                 	return 0;
                 }
 
@@ -130,7 +131,7 @@ public class ModelGenerater {
                 
                 m_inss = outputIns;
                 if (level <= 4) {
-                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
 
@@ -155,7 +156,7 @@ public class ModelGenerater {
 
                 m_mcinss = outputMCIns;
                 if (level <= 5) {
-                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
                 
@@ -176,7 +177,7 @@ public class ModelGenerater {
 
                 m_mycspinss = outputMyCspIns;
                 if (level <= 6) {
-                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
                 
@@ -203,17 +204,23 @@ public class ModelGenerater {
 
                 m_patsinss = outputPatsIns;
                 if (level <= 7) {
-                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
                 
                 /* ************* ************** */
                 
-                File abs_path_json = new File(path_json.getAbsolutePath());  // /home/aren/xxx/xxx_dats.json
-                File abs_path_csp = FilenameUtils.changeExt(abs_path_json, FilenameUtils.cPATCSPS);
-                File abs_path_txt = FilenameUtils.changeExt(abs_path_json, FilenameUtils.cTxt);
+                File path_csp = FilenameUtils.changeExt(path_json, FilenameUtils.cPATCSPS);
+                File path_result = null;
                 
-            	String cmdpat = "mono /home/grad2/aren/programs/tempPAT/PAT3.Console.exe -csp " + abs_path_csp.getAbsolutePath() + " " + abs_path_txt;
+                if (null == m_outputpath) {
+                	path_result = FilenameUtils.changeExt(path_json, FilenameUtils.cTxt);
+                } else {
+                	path_result = new File(m_outputpath);
+                }
+                
+            	String cmdpat = "mono /home/grad2/aren/programs/tempPAT/PAT3.Console.exe -csp " + 
+            			path_csp.getAbsolutePath() + " " + path_result.getAbsolutePath();
             	System.out.println("cmdpat is " + cmdpat);
             	Process childpat = Runtime.getRuntime().exec(cmdpat);
             	int returnCodePat = childpat.waitFor();
@@ -237,7 +244,7 @@ public class ModelGenerater {
                     
             	
                 if (level <= 8) {
-                    System.out.println("\n" + "==" + m_path + " is O.K. " + " ==============================================================================\n");
+                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
                     return 0;
                 }
                 

@@ -27,6 +27,7 @@ public class Cd2var {
     }
     
     public void updateSType(ISType stype) {
+    	System.out.println("+++++++++++++++++++ updateSType for " + m_sym + " addr is " + this);
         if (null != m_stype) {
             m_stype.match(stype);
         } else {

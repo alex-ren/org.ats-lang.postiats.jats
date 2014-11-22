@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
+import jats.utfpl.utils.Log;
 
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
+// abstype mutex_t
 public class Abstype extends SortType {
 //    private ITypeName m_name;
     public Cs2cst m_name;
@@ -25,17 +27,33 @@ public class Abstype extends SortType {
 
     @Override
     public ISType normalize() {
-        throw new Error("check this");
+    	return this;
+//        throw new Error("check this id is " + m_name.toStringNoStamp());
     }
 
     @Override
     public ISType instantiate(Map<PolyParaType, ISType> map) {
-        throw new Error("check this");
+        return this;
     }
 
     @Override
     public TypeCheckResult match(ISType ty) {
-        throw new Error("check this");
+        ISType right0 = ty.normalize();
+        
+        if (right0 instanceof VarType) {
+            ((VarType)right0).setType(this);
+            return new TypeCheckResult();
+        } else if (right0 instanceof Abstype) {
+            if (right0 != this && m_name != ((Abstype)right0).m_name) {
+                return new TypeCheckResult("Type mismatch: " +
+                  Log.getFilePos() + " 01. left is " + this + ", right is " + right0);
+            } else {
+                return new TypeCheckResult();
+            }
+        } else {
+            return new TypeCheckResult("Type mismatch: " + 
+                    Log.getFilePos() + " 01. left is " + this + ", right is " + right0);
+        }
     }
 
     @Override
@@ -45,7 +63,10 @@ public class Abstype extends SortType {
 
     @Override
     public ST toSTStfpl3(STGroup stg) {
-        throw new Error("not supported");
+        // AbsType_st(cst_name) ::= <<
+        ST st = stg.getInstanceOf("AbsType_st");
+        st.add("cst_name", m_name);
+        return st;
     }
 
     @Override

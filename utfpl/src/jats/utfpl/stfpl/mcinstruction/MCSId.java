@@ -15,7 +15,7 @@ public class MCSId implements IMCValPrim {
     private boolean m_isthread;
     
     // Used by factory.
-	public MCSId(SId sid, AuxMCIns.Address addr) {
+	public MCSId(SId sid, AuxMCIns.Address addr, boolean has_effect) {
 		
 		m_sid = sid;
 		m_addr = addr;
@@ -23,9 +23,8 @@ public class MCSId implements IMCValPrim {
 		if (null == addr && null != AuxSType.getFunctionType(sid.getType())) {
 			throw new Error("Function must have address.");
 		}
-		
-		
-		m_has_effect = false;
+
+		m_has_effect = has_effect;
 		m_isthread = false;
 	}
 	

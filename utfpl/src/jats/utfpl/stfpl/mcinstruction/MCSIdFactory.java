@@ -1,5 +1,6 @@
 package jats.utfpl.stfpl.mcinstruction;
 
+import jats.utfpl.stfpl.ccomp.CCompUtils;
 import jats.utfpl.stfpl.instructions.AtomValue;
 import jats.utfpl.stfpl.instructions.IValPrim;
 import jats.utfpl.stfpl.instructions.SId;
@@ -34,9 +35,19 @@ public class MCSIdFactory {
 	    MCSId mcsid = m_map.get(sid);
 	    if (null == mcsid) {
 	    	if (null == AuxSType.getFunctionType(sid.getType())) {
-	    		mcsid = new MCSId(sid, null);
+	    		mcsid = new MCSId(sid, null, false);
 	    	} else {
-	    		mcsid = new MCSId(sid, m_addr_allocator.createPointer());
+	    		boolean has_effect = false;
+	    		// Check Function Name
+	    		if (sid.isConstant()) {
+	    			if (sid.toStringNoStamp().equals(CCompUtils.cConATSMutexAcquire) || 
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSMutexRelease)
+                    ) {
+	    				has_effect = true;
+	    			}
+	    		}
+	    		
+	    		mcsid = new MCSId(sid, m_addr_allocator.createPointer(), has_effect);
 	    	}
 	        
 	        m_map.put(sid, mcsid);

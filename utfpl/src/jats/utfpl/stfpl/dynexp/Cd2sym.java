@@ -1,7 +1,6 @@
 package jats.utfpl.stfpl.dynexp;
 
 import jats.utfpl.stfpl.Csymbol;
-import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 
@@ -15,9 +14,9 @@ public class Cd2sym {
         return m_d2sym_name;
     }
     
-    public Cd2sym(Csymbol sym_name) {
+    public Cd2sym(Csymbol sym_name, ISType type) {
         m_d2sym_name = sym_name;
-        m_stype = null;
+        m_stype = type;
     }
     
     public void updateSType(ISType stype) {
