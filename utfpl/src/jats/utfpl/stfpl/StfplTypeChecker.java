@@ -1,7 +1,11 @@
 package jats.utfpl.stfpl;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import jats.utfpl.stfpl.dynexp.Cd2cst;
 import jats.utfpl.stfpl.dynexp.Cd2ecl;
@@ -84,10 +88,16 @@ import jats.utfpl.utils.Log;
 
 public class StfplTypeChecker {
     private ProgramStfpl2 m_prog;
+
+    private STGroup m_stg_type;
+    
 //    private Map<Cd2cst, ISType> m_tymap;
 
     public StfplTypeChecker(ProgramStfpl2 prog) {
         m_prog = prog;
+        
+        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
+        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
     }
     
     public void typecheck() {
@@ -222,6 +232,11 @@ public class StfplTypeChecker {
 
     private void typecheck(Cd2exp d2exp, ISType ty) {
         ISType ty0 = oftype(d2exp);
+//        System.out.println("=== 0010 ty0 is " + ty0);
+        
+//        System.out.println("========= d2exp is " + d2exp.d2exp_loc);
+//        System.out.println("d2exp.type is " + ty0.toSTStfpl3(m_stg_type).render());
+//        System.out.println("ty is " + ty.toSTStfpl3(m_stg_type).render());
         TypeCheckResult res = ty0.match(ty);
         if (!res.isGood()) {
             throw new Error("Type mismatch Cd2exp: " + 
@@ -326,6 +341,7 @@ public class StfplTypeChecker {
 
     private VarType oftype(D2Evar node, Cloc_t loc) {
         VarType ret = new VarType();
+//        System.out.println("==== 0011 ty ret is " + ret);
         node.m_d2var.updateSType(ret);
         return ret;
     }
@@ -515,8 +531,17 @@ public class StfplTypeChecker {
         if (argsType.size() != argsExp.size()) {
             throw new Error("Type mismatched: " + loc);
         }
+//        System.out.println("===========oftype_applst loc is " + loc);
         for (int j = 0; j < argsType.size(); ++j) {
+//        	System.out.println("arg is " + argsExp.get(j).d2exp_node);
+//        	if (argsExp.get(j).d2exp_node instanceof D2Evar) {
+//        		D2Evar x = (D2Evar)argsExp.get(j).d2exp_node;
+//        		System.out.println("arg is " + x.m_d2var.toString()) ;
+//        	}
+//        	System.out.println("type before  update is " + argsExp.get(j).d2exp_node.getSType() + " " + argsExp.get(j).d2exp_node.getSType().toSTStfpl3(m_stg_type).render());
             typecheck(argsExp.get(j), argsType.get(j));
+//            System.out.println("type after update is " + argsExp.get(j).d2exp_node.getSType() + " " + argsExp.get(j).d2exp_node.getSType().toSTStfpl3(m_stg_type).render());
+//            System.out.println("===========end");
         }
         
         ISType retType = funType.m_res;

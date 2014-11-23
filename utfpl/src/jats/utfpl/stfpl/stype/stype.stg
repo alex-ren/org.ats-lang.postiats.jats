@@ -74,6 +74,8 @@ stamp_st(stamp) ::= <<
 <stamp.data>
 >>
 
-
+VarType_st(ty) ::= <<
+VarType(<if(ty)><ty><else>null<endif>)
+>>
 
 

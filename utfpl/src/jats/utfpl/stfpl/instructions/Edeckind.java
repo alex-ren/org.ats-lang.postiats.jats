@@ -41,12 +41,14 @@ public enum Edeckind {
         {
         case DCK_fun:
             return DEC_fun;
+        case DCK_prfun:
+            return DEC_fun;
         case DCK_val:
             return DEC_val;
         case DCK_castfn:
             return DEC_castfn;
         default:
-            throw new Error("not supported");
+            throw new Error("not supported " + cstknd);
         }
 
     }

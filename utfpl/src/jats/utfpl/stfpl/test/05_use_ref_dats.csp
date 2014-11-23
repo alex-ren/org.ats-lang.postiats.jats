@@ -7,11 +7,8 @@
 // library data structure (e.g. tuple, list)
 var<MyLibObj> sys_mylib_obj = new MyLibObj();
 
-// Set the initial capacity to 10.
+// Currently we set up 10 references.
 var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
-
-// Set the initial capacity to 10.
-var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 
 // =====================
 
@@ -135,7 +132,7 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  g_63 = atom_ref_manager.allocate(0);
+  {  g_63 = atom_ref_manager.allocate();
   } ->
   {  atom_ref_manager.setElement(g_63, 3)
   } ->
@@ -152,7 +149,5 @@ main = main_s(0) ||| Scheduler;
 #define sys_assertion sys_assert_var == true;
 
 #assert main deadlockfree;
-
-#assert main |= G sys_assertion;
 
 

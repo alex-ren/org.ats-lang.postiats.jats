@@ -219,7 +219,7 @@ public class ModelGenerater {
                 	path_result = new File(m_outputpath);
                 }
                 
-            	String cmdpat = "mono /home/grad2/aren/programs/tempPAT/PAT3.Console.exe -csp " + 
+            	String cmdpat = "mono /home/alex/programs/tempPAT/PAT3.Console.exe -csp " + 
             			path_csp.getAbsolutePath() + " " + path_result.getAbsolutePath();
             	System.out.println("cmdpat is " + cmdpat);
             	Process childpat = Runtime.getRuntime().exec(cmdpat);

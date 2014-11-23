@@ -71,8 +71,9 @@ public class VarType extends SortType {
 
     @Override
     public TypeCheckResult match(ISType ty) {
-        ISType left = this.normalize();
+        ISType left0 = this.normalize();
         ISType right0 = ty.normalize();
+//        System.out.println("===0013 left type is " + left0);
         
         if (right0 instanceof VarType) {
             VarType right = (VarType)right0;
@@ -84,13 +85,26 @@ public class VarType extends SortType {
             } else {
                 // do nothing
             }
-        } else if (left instanceof VarType) {
+        } else if (left0 instanceof VarType) {
+        	VarType left = (VarType)left0;
             if (!(right0 instanceof SortType)) {
                 return new TypeCheckResult("non-sort type not allowed");
             }
-            m_ty = (SortType)right0;
+            if (left.m_ty != null) {
+                return new TypeCheckResult("check this, should not happen");
+            }
+            // left can be an indented VarType, we want to update the innermost VarType.
+            if (left != this) {
+            	left.match(right0);
+            	m_ty = (SortType)right0;  // This is not essential. I add it here just for efficiency.
+            } else {
+            	m_ty = (SortType)right0;
+            }
         } else {
-            left.match(right0);
+        	TypeCheckResult ret = left0.match(right0);
+        	if (!ret.isGood()) {
+        		return ret;
+        	}
         }
         
         if (null != m_ty) {
@@ -107,7 +121,14 @@ public class VarType extends SortType {
 
     @Override
     public ST toSTStfpl3(STGroup stg) {
-        throw new Error("should not happen");
+    	// VarType_st(ty) ::= <<
+        ST st = stg.getInstanceOf("VarType_st");
+        if (m_ty != null) {
+        	st.add("ty", m_ty.toSTStfpl3(stg));
+        }
+        
+        return st;
+        
     }
 
     @Override
