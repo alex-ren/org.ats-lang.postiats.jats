@@ -30,6 +30,10 @@ public enum Edeckind {
             return DEC_fun;
         case FK_castfn:
             return DEC_castfn;
+        case FK_prfn:  // accept prfun
+        	return DEC_fn;
+        case FK_prfun:  // accept prfun
+        	return DEC_fun;
         default:
             throw new Error("not supported");
         }

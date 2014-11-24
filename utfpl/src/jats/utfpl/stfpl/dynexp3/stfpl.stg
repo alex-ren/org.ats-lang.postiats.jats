@@ -126,7 +126,7 @@ D3Esym_st(d3sym) ::= <<
 
 // handle Cd3sym
 d3sym_st (d3sym) ::= <<
-<symbol_st(d3sym.symbol)>
+<symbol_st(d3sym.m_name)>
 >>
 
 // handle Cstamp

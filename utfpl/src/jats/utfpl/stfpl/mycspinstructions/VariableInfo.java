@@ -26,6 +26,9 @@ public class VariableInfo {
     }
 
     private VariableInfo(MCSId mid, EntityLocation defLoc) {
+//    	if (mid.getSId().toStringWithStamp().equals("temp4_id")) {
+//    		throw new Error("ERRRRRRRRRRRRRR");
+//    	}
         m_mid = mid;
         m_defLoc = defLoc;
         m_stackPos = null;
@@ -71,9 +74,6 @@ public class VariableInfo {
     }
 
     public void updateEscaped() {
-//    	if (m_mid.getSId().toStringWithStamp().equals("foo2_env4_id")) {
-//    		throw new Error("ERRRRRRRRRRRRRR");
-//    	}
     	
     	SId sid = m_mid.getSId();
         if (sid.isGlobalValue()) {

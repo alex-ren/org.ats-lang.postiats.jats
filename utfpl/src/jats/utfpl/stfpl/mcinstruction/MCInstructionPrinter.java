@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.mcinstruction;
 
-import jats.utfpl.stfpl.stype.Utils;
+
+import jats.utfpl.stfpl.stype.AuxSType;
 
 import java.net.URL;
 
@@ -68,7 +69,7 @@ public class MCInstructionPrinter implements IMCInsVisitor {
         	st.add("paras", para.getSId().toStringIns());
         }
 
-        st.add("clo_info", Utils.getCloInfo(node.m_name.getType()).toString());
+        st.add("clo_info", AuxSType.getClosureInfo(node.m_name.getType()).toString());
         
         for (IMCInstruction ins: node.m_inss) {
             st.add("body", ins.accept(this));
@@ -92,7 +93,23 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsCond ins) {
-		return "MCInsCond";
+		// MCInsCond_st(holder, cond, tb, fb) ::= <<
+		
+		ST st = m_stg.getInstanceOf("MCInsCond_st");
+		if (null != ins.m_holder) {
+			st.add("holder", ins.m_holder.toStringMCIns());
+		}
+
+		st.add("cond", ins.m_cond.toStringMCIns());
+		for (IMCInstruction ains: ins.m_btrue) {
+			st.add("tb", ains.accept(this));
+		}
+		
+		for (IMCInstruction ains: ins.m_bfalse) {
+			st.add("fb", ains.accept(this));
+		}
+		
+		return st;
     }
 
 
@@ -119,7 +136,14 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsFormEnv ins) {
-		return "MCInsFormEnv";
+		// MCInsFormEnv_st(holder, eles) ::= <<
+		ST st = m_stg.getInstanceOf("MCInsFormEnv_st");
+		st.add("holder", ins.m_holder.toStringMCIns());
+		for (MCSId id: ins.m_env) {
+			st.add("eles", id.toStringMCIns());
+		}
+		
+		return st;
     }
 
 
@@ -136,7 +160,12 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsClosure ins) {
-		return "MCInsClosure";
+		// MCInsClosure_st(holder, fun, env) ::= <<
+		ST st = m_stg.getInstanceOf("MCInsClosure_st");
+		st.add("holder", ins.m_holder.toStringMCIns());
+		st.add("fun", ins.m_fun.toStringMCIns());
+		st.add("env", ins.m_env.toStringMCIns());
+		return st;
     }
 
 

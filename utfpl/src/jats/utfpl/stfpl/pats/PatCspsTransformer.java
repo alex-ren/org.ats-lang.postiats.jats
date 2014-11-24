@@ -131,7 +131,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         if (holder.isDefinition()) {
         	stats.add(new PStatLocalVarDec(holder.getMCSId(), exp));
             if (holder.isEscaped()) {
-            	if (false == AuxSType.isVoid(holder.getType())) {
+            	if (true == AuxSType.isVoid(holder.getType())) {
             		throw new Error("This is not allowed.");
             	}
             	stats.add(new PStatStackPush(new PExpID(holder.getMCSId())));
@@ -232,6 +232,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 
     @Override
     public List<PStat> visit(CIFunCall ins) {  // no effect
+//    	System.out.println("===== PatCspsTransformer CIFunCall fun is " + ins.m_funlab.toStringMCIns());
         List<PExp> argLst = CTempList2PExpList(ins.m_args);
         PExpFuncCall exp = new PExpFuncCall(ins.m_funlab, argLst);
         

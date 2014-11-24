@@ -231,6 +231,9 @@ public class MCInstructionTransformer {
     		, List<SId> env_members  // elements in environment
     		, RecType env_type
     		) {
+    	
+    	System.out.println("MCInstructionTransform DefFun fun is " + fun_def.m_name.toStringIns() +
+    			"funtype is " + AuxSType.getClosureInfo(fun_def.m_name.getType()).toString());
         
         // add instructions for creating closures for themselves
         // as well as getting element from environment
@@ -269,6 +272,7 @@ public class MCInstructionTransformer {
         // including current function itself.
         for (SId grp_member: grp_members) {
         	if (AuxSType.isClosure(grp_member.getType())) {
+        		
             	map_env_name.put(grp_member, mcenv_name);  // function name => env name
             	
             	// Form closures for all the members in the group.

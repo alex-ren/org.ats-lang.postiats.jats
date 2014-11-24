@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.instructions;
 
-import jats.utfpl.stfpl.stype.Utils;
+import jats.utfpl.stfpl.stype.AuxSType;
 
 import java.net.URL;
 
@@ -53,7 +53,7 @@ public class InstructionPrinter {
         // ImplFun_st(name, paras, clo_info, ret_type, body) ::= <<
         ST st = m_stg.getInstanceOf("ImplFun_st");
         st.add("name", node.m_name.toStringIns());
-        st.add("clo_info", Utils.getCloInfo(node.m_name.getType()).toString());
+        st.add("clo_info", AuxSType.getClosureInfo(node.m_name.getType()).toString());
         
         for (IStfplInstruction ins: node.m_inss) {
             st.add("body", printInstruction(ins));
@@ -82,9 +82,14 @@ public class InstructionPrinter {
         st.add("name", node.m_name.toStringIns());
         
         if (null == node.m_name.getType()) {
-            throw new Error("eeeeeeee");
+            throw new Error("Should not happen.");
         }
-        st.add("clo_info", Utils.getCloInfo(node.m_name.getType()).toString());
+        
+        for (SId para: node.m_paras) {
+        	st.add("paras", para.toStringIns());
+        }
+        
+        st.add("clo_info", AuxSType.getClosureInfo(node.m_name.getType()).toString());
         
         for (IStfplInstruction ins: node.m_inss) {
             st.add("body", printInstruction(ins));
@@ -127,7 +132,11 @@ public class InstructionPrinter {
 
 
     private Object printInsMove(InsMove node) {
-        return "InsMove";
+        // InsMove_st(holder, from) ::= <<
+    	ST st = m_stg.getInstanceOf("InsMove_st");
+    	st.add("holder", node.m_holder.toStringIns());
+    	st.add("from", printIValPrim(node.m_vp));
+    	return st;
     }
 
 
@@ -137,11 +146,50 @@ public class InstructionPrinter {
 
 
     private Object printInsCond(InsCond node) {
-        return "InsCond";
+        // InsCond_st(holder, cond, tb, fb) ::= <<
+    	ST st = m_stg.getInstanceOf("InsCond_st");
+    	st.add("holder", node.m_holder.toStringIns());
+    	st.add("cond", printIValPrim(node.m_cond));
+        for (IStfplInstruction ins: node.m_btrue) {
+            st.add("tb", printInstruction(ins));
+        }
+        for (IStfplInstruction ins: node.m_bfalse) {
+            st.add("fb", printInstruction(ins));
+        }
+        
+        return st;
     }
 
 
-    private Object printInsClosure(InsClosure node) {
+    private Object printIValPrim(IValPrim vp) {
+	    if (vp instanceof AtomValue) {
+	    	return printAtomValue((AtomValue)vp);
+	    } else if (vp instanceof AtomValue) {
+	    	return printSId((SId)vp);
+	    } else if (vp instanceof SIdUser) {
+	    	return printSIdUser((SIdUser)vp);
+	    } else {
+	    	throw new Error(vp + " is not supported");
+	    }
+    }
+
+
+	private Object printSIdUser(SIdUser vp) {
+	    return vp.getSId().toStringIns();
+    }
+
+
+	private Object printSId(SId vp) {
+	    return vp.toStringIns();
+    }
+
+
+	private Object printAtomValue(AtomValue vp) {
+	    return vp.toString();
+    }
+
+
+	private Object printInsClosure(InsClosure node) {
     	// InsClosure_st(funname, envname) ::= <<
     	ST st = m_stg.getInstanceOf("InsClosure_st");
     	st.add("funname", node.m_name.toStringIns());
@@ -152,7 +200,14 @@ public class InstructionPrinter {
 
 
     private Object printInsCall(InsCall node) {
-        return "InsCall";
+    	// InsCall_st(holder, fun, args) ::= <<
+    	ST st = m_stg.getInstanceOf("InsCall_st");
+    	st.add("holder", node.m_holder.toStringIns());
+    	st.add("fun", node.m_fun.getSId().toStringIns());
+    	for (IValPrim vp: node.m_args) {
+    		st.add("args", printIValPrim(vp));
+    	}
+    	return st;
     }
     
 

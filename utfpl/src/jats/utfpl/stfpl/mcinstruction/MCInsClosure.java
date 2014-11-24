@@ -21,7 +21,7 @@ public class MCInsClosure implements IMCInstruction {
         m_env = env;
         
         if (AuxSType.getFunctionType(m_env.getType()) != null) {
-        	throw new Error("eeeeeeeeee");
+        	throw new Error("Should not happen.");
         }
     }
 

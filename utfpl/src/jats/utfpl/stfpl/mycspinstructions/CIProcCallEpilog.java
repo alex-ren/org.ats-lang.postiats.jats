@@ -21,6 +21,9 @@ public class CIProcCallEpilog extends MyCspInstruction {
 
     @Override
     public int process(int offset) {
+       	if (m_holder.getMCSId().getSId().toStringWithStamp().equals("temp4_id")) {
+    		throw new Error("eeeeeeeeeeeee1");
+    	}
         offset = m_holder.processStackProcCallEpilogue(offset);
         return offset;        
     }

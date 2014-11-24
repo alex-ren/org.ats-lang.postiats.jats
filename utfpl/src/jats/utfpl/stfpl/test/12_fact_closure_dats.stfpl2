@@ -1,0 +1,32 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+fun fact1_63 = lam (<P2Tann>(x_64:int:t@ype)) <clo> = 
+  <D2EannSeff>(
+    if (<D2Esym>(<=) (x_64, 1)) then
+      1
+    else
+      let
+        val y_65 = fact1_63 (<D2Esym>(-) (x_64, 1))
+      in
+        <D2Esym>(*) (x_64, y_65)
+      end:int:t@ype)
+
+prfun mc_fact2_66 = lamMet. lam (<P2Tann>(x_67:int:t@ype), <P2Tann>(accu_68:int:t@ype)) <clo> = 
+  <D2EannSeff>(
+    if (<D2Esym>(<=) (x_67, 1)) then
+      accu_68
+    else
+      mc_fact2_66 (<D2Esym>(-) (x_67, 1), <D2Esym>(*) (x_67, accu_68)):int:t@ype)
+
+fun main_69 = lam () <clo> = 
+  <D2EannSeff>(
+    let
+      val x_70 = fact1_63 (4)
+      prval y_71 = mc_fact2_66 (4, 1)
+      prval () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (<D2Esym>(=) (x_70, y_71))
+      prval () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (<D2Esym>(=) (x_70, 23))
+    in
+      ()
+    end:void:t@ype)
+
+val () = main_69 ()

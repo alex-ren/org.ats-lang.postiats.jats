@@ -212,7 +212,7 @@ public class MCInstructionProcessor {
     static private MCSId subsVP(MCSId vp, Map<MCSId, MCSId> subMap) {
         MCSId nid = subMap.get((MCSId)vp);
         if (null == nid) {
-            return nid;  // no need to substitute
+            return vp;  // no need to substitute
         } else {
             return nid;
         }
@@ -224,7 +224,7 @@ public class MCInstructionProcessor {
         } else if (vp instanceof MCSId) {
             MCSId nid = subMap.get((MCSId)vp);
             if (null == nid) {
-                return nid;  // no need to substitute
+                return vp;  // no need to substitute
             } else {
                 return nid;
             }
@@ -276,7 +276,7 @@ public class MCInstructionProcessor {
             }
 
             MCSId nholder = m_fac.duplicate(holder);
-            m_sub.put(nholder, holder);
+            m_sub.put(holder, nholder);
             return nholder;
             
         }

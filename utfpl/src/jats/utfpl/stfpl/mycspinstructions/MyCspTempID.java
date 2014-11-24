@@ -108,7 +108,7 @@ public class MyCspTempID implements IMyCspTemp {
      * This function is called when an object of CTempID allocated at first time.
      */
     public int processStack(int offset) {
-    	
+
     	if (m_isDef) {
             updateEscaped();
             if (isEscaped()) {

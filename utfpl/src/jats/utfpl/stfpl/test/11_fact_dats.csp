@@ -126,36 +126,6 @@ var sys_assert_var = true;
 // =====================
 
 
-foo_63(sys_tid) =
-  {  var a_65 = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
-  var pat3_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 1);;
-  var b_66 = sys_mylib_obj.getTupleElement(pat3_id, 0);;
-  var c_67 = sys_mylib_obj.getTupleElement(pat3_id, 1);;
-  var temp4_id = call(mul, b_66, c_67);
-  var ret2_id = call(add, a_65, temp4_id);
-  sys_gstack.frame_push(sys_tid, ret2_id);
-  } ->
-  Skip
-  ;
-
-main_68(sys_tid) =
-  {  var tup6_id = sys_mylib_obj.createTuple(2);
-  sys_mylib_obj.setTupleElement(tup6_id, 0, 2);
-  sys_mylib_obj.setTupleElement(tup6_id, 1, 3);
-  var tup7_id = sys_mylib_obj.createTuple(2);
-  sys_mylib_obj.setTupleElement(tup7_id, 0, 1);
-  sys_mylib_obj.setTupleElement(tup7_id, 1, tup6_id);
-  var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (tup7_id, __temp_list_args);
-  sys_gstack.add_frame(sys_tid, __temp_list_args);
-  } ->
-  foo_63(sys_tid);
-  {  var x_69 = sys_gstack.retopr_frame(sys_tid);
-  var b_70 = call(eq, x_69, 7);
-  sys_assert_var = b_70;
-  } ->
-  Skip
-  ;
 
 // =====================
 
@@ -163,12 +133,6 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  var __temp_list_args = sys_mylib_obj.list_nil ();
-  sys_gstack.add_frame(sys_tid, __temp_list_args);
-  } ->
-  main_68(sys_tid);
-  {  sys_gstack.delete_frame(sys_tid);
-  } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 

@@ -22,6 +22,10 @@ public class MCInsCall implements IMCInstruction {
         m_args = args;
 //        m_env = env;
         
+        if (null == m_fun) {
+        	throw new Error("Shoud not happen.");
+        }
+        
         if (!m_fun.getSId().isFunName()) {
             throw new Error("This is not allowed. id is " + m_fun.getSId().toStringIns());
         }

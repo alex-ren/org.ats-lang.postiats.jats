@@ -271,7 +271,7 @@ pexpstackopr_default_t(frame, pos) ::= <<
 >>
 
 pexpstackopr_bool_t(frame, pos) ::= <<
-<sys_gstack()>.frame_get(<sys_tid()>, <frame>, <pos>)
+<sys_gstack()>.frame_get_bool(<sys_tid()>, <frame>, <pos>)
 >>
 
 pexpstackopr_int_t(frame, pos) ::= <<

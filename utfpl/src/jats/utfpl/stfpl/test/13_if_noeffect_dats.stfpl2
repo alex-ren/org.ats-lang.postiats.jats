@@ -1,0 +1,23 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+val x_63 = if (<D2Esym>(>) (1, 2)) then
+  3
+else
+  4
+
+prval () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (<D2Esym>(=) (x_63, 3))
+
+fun foo_64 = lam () <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val x_65 = if (<D2Esym>(>) (1, 2)) then
+          3
+        else
+          4
+        prval () = D2Ecst<mc_assert_2581:((bool) -<fun> void):prop> (<D2Esym>(=) (x_65, 3))
+      in
+        ()
+      end:void:t@ype))
+
+val () = foo_64 ()

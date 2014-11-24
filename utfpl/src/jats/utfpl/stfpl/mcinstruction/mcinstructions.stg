@@ -24,3 +24,36 @@ MCInsGetEleFromEnv(ret, envname, index) ::= <<
 <ret> = sys_get_element(<envname>, <index>);
 >>
 
+MCInsCond_st(holder, cond, tb, fb) ::= <<
+<if(holder)><holder> = <endif>if (<cond>) then
+    <tb; separator = "\n">
+  else
+    <fb; separator = "\n">
+>>
+
+MCInsClosure_st(holder, fun, env) ::= <<
+<holder> = form_closure(<fun>, <env>)
+>>
+
+MCInsFormEnv_st(holder, eles) ::= <<
+<holder> = form_env(<eles; separator=", ">)
+>>
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

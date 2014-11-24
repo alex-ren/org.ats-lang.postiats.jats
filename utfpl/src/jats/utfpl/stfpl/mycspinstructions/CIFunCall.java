@@ -38,6 +38,9 @@ public class CIFunCall extends MyCspInstruction {
 
     @Override
     public int process(int offset) {
+//    	System.out.println("===== CIFunCall.process, funname is " + m_funlab.toStringMCIns() +
+//    			  "ret is " + m_ret.getMCSId().toStringMCIns());
+       	
         offset = m_ret.processStack(offset);
         for (IMyCspTemp arg: m_args) {
             if (arg instanceof MyCspTempID) {

@@ -24,7 +24,7 @@ public class StackPosition {
 //    }
     
     public static StackPosition createDef(String name, String id, int offset) {
-    	System.out.println("allocate stack for " + name + ", id is " + id + ", offset is " + offset);
+//    	System.out.println("allocate stack for " + name + ", id is " + id + ", offset is " + offset);
         return new StackPosition(0, offset);
     }
     

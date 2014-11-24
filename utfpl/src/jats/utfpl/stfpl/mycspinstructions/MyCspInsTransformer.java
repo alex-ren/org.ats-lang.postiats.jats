@@ -259,7 +259,7 @@ public class MyCspInsTransformer {
             
             if (ins.hasSideEffect()) {
                 
-                CIProcCallPrelogue cCallPre = new CIProcCallPrelogue(m_cbEvt, nLst, ins.isTailCall());
+                CIProcCallPrelogue cCallPre = new CIProcCallPrelogue(ins.m_fun, m_cbEvt, nLst, ins.isTailCall());
                 m_cbEvt.add(cCallPre);
                 m_cblkLst.add(m_cbEvt);
                 m_cbEvt = new GrpEvent();
