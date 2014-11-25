@@ -1,0 +1,13 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+val s_63 = D2Ecst<conats_shared_create_2560:{a_3836}(((a_3836) -<fun> shared_t_722)):type> (0)
+
+val <P2Trec>(<LABP2ATnorm>(x_64), <LABP2ATnorm>(y_65)) = ( | 1, 2)
+
+val <P2Tann>(a_66:int:t@ype) = D2Ecst<conats_shared_acquire_2561:{a_3837}(((shared_t_722) -<fun> a_3837)):type> (s_63)
+
+val a_67 = D2Ecst<conats_shared_signal_2563:{a_3839}(((shared_t_722, a_3839) -<fun> a_3839)):type> (s_63, a_66)
+
+val () = D2Ecst<conats_shared_release_2562:{a_3838}(((shared_t_722, a_3838) -<fun> void)):type> (s_63, a_67)
+
+val a_68 = D2Ecst<conats_shared_condwait_2564:{a_3840}(((shared_t_722, a_3840) -<fun> a_3840)):type> (s_63, a_67)

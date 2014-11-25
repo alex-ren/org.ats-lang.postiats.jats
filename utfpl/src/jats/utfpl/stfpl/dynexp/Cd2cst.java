@@ -29,13 +29,13 @@ public class Cd2cst {
         return m_type;
     }
     
-    public void updateSType(ISType stype) {
-        if (null != m_stype) {
-            m_stype.match(stype);
-        } else {
-            m_stype = stype;
-        }
-    }
+//    public void updateSType(ISType stype) {
+//        if (null != m_stype) {
+//            m_stype.match(stype);
+//        } else {
+//            m_stype = stype;
+//        }
+//    }
     
     public void normalizeType() {
         m_stype = m_stype.normalize();

@@ -449,6 +449,7 @@ public class StfplTypeChecker {
     private ISType oftype(D2Eapplst node, Cloc_t loc) {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
+        System.out.println("name is " + ((D2Ecst)node.m_d2e_fun.d2exp_node).m_d2cst.toString());
         ty = ty.normalize();
 
         List<ISType> inner_ty = new ArrayList<ISType>();
@@ -529,7 +530,7 @@ public class StfplTypeChecker {
         List<ISType> argsType = funType.m_args;
         List<Cd2exp> argsExp = args.m_d2expLst;
         if (argsType.size() != argsExp.size()) {
-            throw new Error("Type mismatched: " + loc + " argsType.size() is " + argsType.size() + "argsExp.size() is " + argsExp.size());
+            throw new Error("Type mismatched: " + loc + " argsType.size() is " + argsType.size() + " argsExp.size() is " + argsExp.size());
         }
 //        System.out.println("===========oftype_applst loc is " + loc);
         for (int j = 0; j < argsType.size(); ++j) {
@@ -771,10 +772,7 @@ public class StfplTypeChecker {
     }
 
 	private ISType typecheck_dec(Cd2cst d2cst) {
-	    ISType stype = SExpTypeExtractor.extractType(d2cst.m_type);
-	    d2cst.updateSType(stype);
-
-	    return stype;
+	    return d2cst.getSType();
     }
     
 	/* ************* ************** */

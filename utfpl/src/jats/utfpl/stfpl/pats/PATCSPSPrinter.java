@@ -639,7 +639,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 	public Object visit(PInsCondCreate node) {
 	    // pinscondalloc_st(holder, is_global) ::= <<
 		ST st = m_stg.getInstanceOf("pinscondalloc_st");
-		st.add("holder", node.m_holder);
+		st.add("holder", node.m_holder.toStringMCIns());
 		if (node.m_holder.getSId().isGlobalValue()) {
 			st.add("is_global", true);
 		} else {

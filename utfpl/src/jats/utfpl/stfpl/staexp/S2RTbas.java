@@ -27,6 +27,8 @@ public class S2RTbas implements Is2rt {
         {
         case type:
         case t0ype:
+        case vtype:
+        case vt0ype:
             return true;
         default:
             return false;

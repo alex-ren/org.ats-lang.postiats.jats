@@ -46,7 +46,11 @@ public class MCSIdFactory {
 	    		// Check Function Name
 	    		if (sid.isConstant()) {
 	    			if (sid.toStringNoStamp().equals(CCompUtils.cConATSMutexAcquire) || 
-	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSMutexRelease)
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSMutexRelease) ||
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedAcquire) ||
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedRelease) ||
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedSignal) ||
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedCondwait)
                     ) {
 	    				has_effect = true;
 	    			}
