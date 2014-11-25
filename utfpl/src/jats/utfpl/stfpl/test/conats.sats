@@ -14,8 +14,8 @@ fun conats_shared_create {a: viewt@ype} (ele: a): shared (a)
 
 fun conats_shared_acquire {a: viewt@ype} (s: shared (a)): a
 fun conats_shared_release {a: viewt@ype} (s: shared (a), ele: a): void
-fun conats_shared_signal {a: viewt@ype} (s: shared (a), ele: !a): void
-fun conats_shared_condwait {a: viewt@ype} (s: shared (a), ele: !a): void
+fun conats_shared_signal {a: viewt@ype} (s: shared (a), ele: a): a
+fun conats_shared_condwait {a: viewt@ype} (s: shared (a), ele: a): a
 
 //absviewtype null_vt
 //typedef cond = shared (null_vt)

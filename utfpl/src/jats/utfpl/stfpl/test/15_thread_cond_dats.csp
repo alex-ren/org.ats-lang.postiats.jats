@@ -69,10 +69,11 @@ var mutex[10];  // 10 mutex
 
 var<Allocator> sys_mutex_manager = new Allocator();
 
+// ====================
 conats_mutex_acquire(sys_tid) = sys_mutex_lock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
 sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
-
+// ====================
 conats_mutex_release(sys_tid) = sys_mutex_unlock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
 sys_mutex_unlock_impl(sys_tid, m) = sys_munlock{mutex[m] = 0} -> Skip;
@@ -85,28 +86,30 @@ var<Allocator> sys_cond_manager = new Allocator();
 channel cond_chan[10] 0;
 var cond_count = 0;
 
+// ====================
+
 conats_shared_acquire(sys_tid) = conats_shared_acquire_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 //  tup = sys_gstack.frame_get(sys_tid, 0, 0)
-//  a = sys_mylib_obj.getTupleElement(tup, 0);;
-//  mutex = sys_mylib_obj.getTupleElement(tup, 1);;
-//  cond = sys_mylib_obj.getTupleElement(tup, 2);;
-conats_shared_acquire_impl(sys_tid, tup) = atomic{{sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
-                                            sys_mutex_lock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1))};
+//  a = sys_mylib_obj.getTupleElement(tup, 0);
+//  mutex = sys_mylib_obj.getTupleElement(tup, 1);
+//  cond = sys_mylib_obj.getTupleElement(tup, 2);
+conats_shared_acquire_impl(sys_tid, tup) = atomic{
+    {sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
+    sys_mutex_lock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1))
+    };
+// ====================
+conats_shared_release(sys_tid) = conats_shared_release_impl(sys_tid, 
+                                          sys_gstack.frame_get(sys_tid, 0, 0),
+                                          sys_gstack.frame_get(sys_tid, 0, 1)
+                                          );
 
-
+conats_shared_release_impl(sys_tid, tup, a) = 
+    sys_mutex_unlock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1));
+// ====================
 conats_shared_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-conats_shared_signal_impl(sys_tid, tup) = sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 2));
-
-
-sys_cond_wait(sys_tid, tup) = sys_cond_wait_impl(sys_tid, 
-                                  sys_mylib_obj.getTupleElement(tup, 2), 
-                                  sys_mylib_obj.getTupleElement(tup, 1),
-                                  sys_mylib_obj.getTupleElement(tup, 0));
-
-sys_cond_wait_impl(sys_tid, c, m, a) = atomic{cadd{cond_holder[c]++;} -> 
-                                    sys_mutex_unlock_impl(sys_tid, m); 
-                                    cond_chan[c]?_ -> sys_mutex_lock_impl(sys_tid, m)};
+conats_shared_signal_impl(sys_tid, tup) = 
+    sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 2));
 
 sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 
@@ -116,9 +119,24 @@ sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 
           -> Skip
 
-        }};
+        }};    
+// ====================
 
+conats_shared_condwait(sys_tid) = 
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
+conats_shared_condwait_impl(sys_tid, tup) = sys_cond_wait_impl(sys_tid, 
+                                  sys_mylib_obj.getTupleElement(tup, 2),  // cond
+                                  sys_mylib_obj.getTupleElement(tup, 1));  // mutex
+
+sys_cond_wait_impl(sys_tid, c, m) = atomic{
+  cadd{cond_holder[c]++;} -> 
+  sys_mutex_unlock_impl(sys_tid, m); 
+  cond_chan[c]?_ -> 
+  sys_mutex_lock_impl(sys_tid, m)
+  };
+
+// ====================
 sys_cond_broadcast(sys_tid) = sys_cond_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
 sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {
