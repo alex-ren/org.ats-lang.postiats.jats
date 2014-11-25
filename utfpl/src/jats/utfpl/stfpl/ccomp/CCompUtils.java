@@ -16,7 +16,7 @@ public class CCompUtils {
     public static final String cConATSSharedSignal   = "conats_shared_signal";
     public static final String cConATSSharedCondwait = "conats_shared_condwait";
     
-    public static final String cConATSSharedCreateCond = "conats_shared_create_cond";
+//    public static final String cConATSSharedCreateCond = "conats_shared_create_cond";
     
     /* ************* *************** */
 
@@ -41,7 +41,7 @@ public class CCompUtils {
             
     /* ************* *************** */
     
-//    public static final String cConATSTidAllocate = "conats_tid_allocate";
+    public static final String cConATSTidAllocate = "conats_tid_allocate";
     public static final String cConATSThreadCreate = "conats_thread_create";
     
     /* ************* *************** */

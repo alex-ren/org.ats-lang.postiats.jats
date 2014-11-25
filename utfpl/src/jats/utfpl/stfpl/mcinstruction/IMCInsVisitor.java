@@ -25,9 +25,6 @@ public interface IMCInsVisitor {
     public Object visit(MCInsThreadCreate ins);
 
 
-
-    public Object visit(MCInsSharedCreateCond ins);
-
 	public Object visit(MCInsMutexCreate ins);
 
     /* ********* *********** */
@@ -55,6 +52,10 @@ public interface IMCInsVisitor {
 	public Object visit(MCInsArrayRefUpdate ins);
 
 	public Object visit(MCInsArrayRefGet ins);
+
+	public Object visit(MCInsTIdAllocate ins);
+
+	public Object visit(MCInsSharedCreate ins);
 
 
     

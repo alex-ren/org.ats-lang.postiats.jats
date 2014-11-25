@@ -6,20 +6,20 @@
 
 // shared value
 
-abstype shared_t (viewtype)
-typedef shared (a:viewtype) = shared_t a
+abstype shared_t (viewt@ype)
+typedef shared (a:viewt@ype) = shared_t a
 
-fun conats_shared_create {a: viewtype} (ele: a): shared (a)
-// fun conats_shared_finalize {a: viewtype} (s: shared a): a
+fun conats_shared_create {a: viewt@ype} (ele: a): shared (a)
+// fun conats_shared_finalize {a: viewt@ype} (s: shared a): a
 
-fun conats_shared_acquire {a: viewtype} (s: shared (a)): a
-fun conats_shared_release {a: viewtype} (s: shared (a), ele: a): void
-fun conats_shared_signal {a: viewtype} (s: shared (a)): void
-fun conats_shared_condwait {a: viewtype} (s: shared (a), ele: a): void
+fun conats_shared_acquire {a: viewt@ype} (s: shared (a)): a
+fun conats_shared_release {a: viewt@ype} (s: shared (a), ele: a): void
+fun conats_shared_signal {a: viewt@ype} (s: shared (a)): void
+fun conats_shared_condwait {a: viewt@ype} (s: shared (a), ele: a): void
 
-absviewtype null_vt
-typedef cond = shared (null_vt)
-fun conats_shared_create_cond (): cond
+//absviewtype null_vt
+//typedef cond = shared (null_vt)
+//fun conats_shared_create_cond (): cond
 
 (* ************* ************** *)
 
@@ -55,8 +55,8 @@ abst@ype thread_id_t = int
 typedef tid = thread_id_t
 
 fun conats_tid_allocate (): tid
-typedef thread_fun_t (a: type) = (a -> void)
-fun conats_thread_create {a:type} (tfun: thread_fun_t a, arg: a, tid: tid): void
+typedef thread_fun_t (a: t@ype) = (a -> void)
+fun conats_thread_create {a:t@ype} (tfun: thread_fun_t a, arg: a, tid: tid): void
 
 (* ************* ************** *)
 

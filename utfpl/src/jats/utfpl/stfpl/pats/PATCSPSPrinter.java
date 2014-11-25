@@ -47,15 +47,24 @@ public class PATCSPSPrinter implements PNodeVisitor {
             st.add("ext_code_lst", extCode.m_content);
         }
         
-        // scheduler_body_st(proc1, proc_lst) ::= <<
+        // scheduler_body_st(proc1_name, proc1_addr, else_procs) ::= <<
         ST stSch = m_stg.getInstanceOf("scheduler_body_st");
         
         Iterator<PGDecProc> iter = node.m_threadLst.iterator();
         if (iter.hasNext()) {
-            stSch.add("proc1", iter.next().m_name);
+        	PGDecProc proc1 = iter.next();
+            stSch.add("proc1_name", proc1.m_name.toStringMCIns());
+            stSch.add("proc1_addr", proc1.m_name.getAddr().toStringMCIns());
             
             while (iter.hasNext()) {
-            	stSch.add("proc_lst", iter.next().m_name);
+            	PGDecProc proc_else = iter.next();
+            	
+            	// schedule_else_if(proc_name, proc_addr) ::= <<
+            	ST st_else = m_stg.getInstanceOf("schedule_else_if");
+            	st_else.add("proc_name", proc_else.m_name.toStringMCIns());
+            	st_else.add("proc_addr", proc_else.m_name.getAddr().toStringMCIns());
+            	
+            	st.add("else_procs", st_else);
             }
         }
         
@@ -456,7 +465,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 	    // pprocthreadcreate_st(tid, funaddr, args) ::= <<
 		ST st = m_stg.getInstanceOf("pprocthreadcreate_st");
 		st.add("tid", node.m_tid.accept(this));
-		st.add("funaddr", node.m_funlab.getAddr());
+		st.add("funaddr", node.m_funlab.getAddr().toStringMCIns());
 		st.add("args", node.m_args.accept(this));
 		
 		return st;
@@ -488,19 +497,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
 //    }
 
 
-    @Override
-    public Object visit(PInsSharedCreateCond node) {
-        // pinscondalloc_st(holder, is_global) ::= <<
-    	ST st = m_stg.getInstanceOf("pinscondalloc_st");
-    	st.add("holder", node.m_holder);
-    	if (node.m_holder.getSId().isGlobalValue()) {
-    		st.add("is_global", true);
-    	} else {
-    		st.add("is_global", false);
-    	}
-    	
-    	return st;
-    }
 
 //	@Override
 //    public Object visit(PInsCondRelease node) {
@@ -623,10 +619,37 @@ public class PATCSPSPrinter implements PNodeVisitor {
         return st;
 	}
 
+
+	@Override
+	public Object visit(PInsTIdAllocate node) {
+        // PInsTIdAllocate_st(holder, is_global) ::= <<
+    	ST st = m_stg.getInstanceOf("PInsTIdAllocate_st");
+    	st.add("holder", node.m_holder.toStringMCIns());
+    	if (node.m_holder.getSId().isGlobalValue()) {
+    		st.add("is_global", true);
+    	} else {
+    		st.add("is_global", false);
+    	}
+    	
+    	return st;
+	}
+
+
+	@Override
+	public Object visit(PInsCondCreate node) {
+	    // pinscondalloc_st(holder, is_global) ::= <<
+		ST st = m_stg.getInstanceOf("pinscondalloc_st");
+		st.add("holder", node.m_holder);
+		if (node.m_holder.getSId().isGlobalValue()) {
+			st.add("is_global", true);
+		} else {
+			st.add("is_global", false);
+		}
+		
+		return st;
+	}
+
 }
-
-
-
 
 
 

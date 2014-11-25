@@ -522,10 +522,12 @@ public class MCInstructionTransformer {
         IVarName name = ins.m_fun.getSId().m_name;
         if (name instanceof VNameCst) {
             Cd3cst fname = ((VNameCst)name).m_cst;
-            if (fname.compSymbolString(CCompUtils.cConATSSharedCreateCond)) {
-                // fun conats_shared_create_cond (): cond
-
-                return new MCInsSharedCreateCond(mcholder);
+            if (fname.compSymbolString(CCompUtils.cConATSSharedCreate)) {
+                // fun conats_shared_create {a: viewtype} (ele: a): shared (a)
+                IValPrim vp = ins.m_args.get(0);
+                IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                return new MCInsSharedCreate(mcholder, mcvp);
+       
             } else if (fname.compSymbolString(CCompUtils.cConATSMutexCreate)) {
                 // fun conats_mutex_create (): mutex
 
@@ -616,11 +618,14 @@ public class MCInstructionTransformer {
                     throw new Error("This should not happen.");
                 }
                 
+                SId sid_tfun = null;
                 if (tfun instanceof SIdUser) {
-                    throw new Error("It's not allowed to create thread by closure.");
+                	sid_tfun = ((SIdUser)tfun).getSId();
+//                    throw new Error("It's not allowed to create thread by closure.");
+                } else {
+                	 sid_tfun = (SId)tfun;
                 }
-                
-                SId sid_tfun = (SId)tfun;
+
                 if (false == sid_tfun.isUserFun()) {
                     throw new Error("Thread can be created by literal function name.");
                 }
@@ -690,6 +695,10 @@ public class MCInstructionTransformer {
                 boolean isret = ins.m_holder.isRetHolder();
                 
                 return new MCInsMCVLockViewGet(mcargs, isret); 
+            } else if (fname.compSymbolString(CCompUtils.cConATSTidAllocate)) {
+                // fun conats_tid_allocate (): tid
+                return new MCInsTIdAllocate(mcholder);
+            	
             } else {
 //            	throw new Error(fname.toStringNoStamp() + " is not supported.");
                 // do nothing for other extern functions
@@ -718,11 +727,7 @@ public class MCInstructionTransformer {
         
         return new MCInsCall(mcholder, mcfun, mcargs);
     }
-    
 
-
-
-    
 }
 
 

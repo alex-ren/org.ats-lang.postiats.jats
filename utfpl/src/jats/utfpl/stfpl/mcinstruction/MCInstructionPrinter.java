@@ -194,12 +194,6 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 
 	@Override
-    public Object visit(MCInsSharedCreateCond ins) {
-		return "MCInsSharedCreateCond";
-    }
-
-
-	@Override
     public Object visit(MCInsMutexCreate ins) {
 		return "MCInsMutexCreate";
     }
@@ -250,6 +244,18 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 	@Override
 	public Object visit(MCInsArrayRefGet ins) {
 		return "MCInsArrayRefGet";
+	}
+
+
+	@Override
+	public Object visit(MCInsTIdAllocate ins) {
+		return "MCInsTIdAllocate";
+	}
+
+
+	@Override
+	public Object visit(MCInsSharedCreate ins) {
+		return "MCInsSharedCreate";
 	}
 
     

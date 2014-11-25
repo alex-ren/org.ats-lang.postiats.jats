@@ -34,7 +34,8 @@ import jats.utfpl.stfpl.mcinstruction.MCInsMCVLockViewGet;
 import jats.utfpl.stfpl.mcinstruction.MCInsMove;
 import jats.utfpl.stfpl.mcinstruction.MCInsMutexCreate;
 import jats.utfpl.stfpl.mcinstruction.MCInsPatLabDecompose;
-import jats.utfpl.stfpl.mcinstruction.MCInsSharedCreateCond;
+import jats.utfpl.stfpl.mcinstruction.MCInsSharedCreate;
+import jats.utfpl.stfpl.mcinstruction.MCInsTIdAllocate;
 import jats.utfpl.stfpl.mcinstruction.MCInsThreadCreate;
 import jats.utfpl.stfpl.mcinstruction.MCInsTuple;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
@@ -42,6 +43,7 @@ import jats.utfpl.stfpl.mcinstruction.MCSIdFactory;
 import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.stype.AuxSType;
+import jats.utfpl.stfpl.stype.BlankType;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.VoidType;
@@ -94,7 +96,7 @@ public class MyCspInsTransformer {
         SId main_sid = sfac.createLambdaFunction("main", main_type);
         MCSId main_mcsid = m_mfac.fromSId(main_sid);
         
-        List<MyCspGroup> main_body = InsLst2CBlockLst2(m_prog.m_main_inss, subMap, main_mcsid);
+        List<MyCspGroup> main_body = InsLst2CBlockLst2(m_prog.m_main_inss, subMap, main_mcsid, m_mfac);
         // add the concept of stack
         processBlockLstForStack(0, main_body);
 
@@ -103,7 +105,7 @@ public class MyCspInsTransformer {
         for (MCDefFunGroup fungrp : m_prog.m_defs) {
             for (MCDefFun fundef: fungrp.m_funs) {
                 int pos = 0;
-                FunctionMyCsp funcCSP = FunDef2CProcess(fundef, subMap);
+                FunctionMyCsp funcCSP = FunDef2CProcess(fundef, subMap, m_mfac);
                 for (MyCspTempID para: funcCSP.m_paras) {
                     pos = para.processFunPara(pos);
                 }
@@ -132,12 +134,15 @@ public class MyCspInsTransformer {
         private GrpEvent m_cbEvt;
         private Map<MCSId, VariableInfo> m_subMap;
         private MCSId m_funLab;
+        private MCSIdFactory m_fac;
         
-        public InsLst2CBlockLstConverter(Map<MCSId, VariableInfo> subMap, MCSId funLab) {
+        public InsLst2CBlockLstConverter(Map<MCSId, VariableInfo> subMap, MCSId funLab, MCSIdFactory fac) {
             m_cblkLst = new ArrayList<MyCspGroup>();
             m_cbEvt = new GrpEvent();
             m_subMap = subMap;
             m_funLab = funLab;
+            
+            m_fac = fac;
         }
         
         public List<MyCspGroup> getCBlockLst() {
@@ -161,8 +166,8 @@ public class MyCspInsTransformer {
                 Map<MCSId, VariableInfo> subMapFalse = 
                         new HashMap<MCSId, VariableInfo>(m_subMap);
 
-                List<MyCspGroup> btrue = InsLst2CBlockLst2(ins.m_btrue, subMapTrue, m_funLab);
-                List<MyCspGroup> bfalse = InsLst2CBlockLst2(ins.m_bfalse, subMapFalse, m_funLab);
+                List<MyCspGroup> btrue = InsLst2CBlockLst2(ins.m_btrue, subMapTrue, m_funLab, m_fac);
+                List<MyCspGroup> bfalse = InsLst2CBlockLst2(ins.m_bfalse, subMapFalse, m_funLab, m_fac);
 
                 // connect all the links
                 ccond.reset(ctCond, btrue, bfalse);
@@ -419,17 +424,6 @@ public class MyCspInsTransformer {
         }
 
         @Override
-        public Object visit(MCInsSharedCreateCond ins) {
-            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            
-            CISharedCreateCond nIns = new CISharedCreateCond(holder, m_cbEvt);
-            
-            handleReturnForWithEffect(nIns, ins.m_holder);
-            
-            return null;
-        }
-
-        @Override
         public Object visit(MCInsMCAssert ins) {
             IMyCspTemp localSrc = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             
@@ -649,12 +643,53 @@ public class MyCspInsTransformer {
             return null;
 		}
 
+		@Override
+		public Object visit(MCInsTIdAllocate ins) {
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            
+            CITIdAllocate nIns = new CITIdAllocate(holder, m_cbEvt);
+            
+            handleReturnForWithEffect(nIns, ins.m_holder);
+            
+            return null;
+		}
+
+		@Override
+		public Object visit(MCInsSharedCreate ins) {
+			
+			// CIMutexCreate
+			MCSId m = m_fac.createLocalVar("mutex", BlankType.cInstance);
+			MyCspTempID mholder = TID2CTempID(m, m_subMap, m_funLab, m_cbEvt);
+            CIMutexCreate ins_mutex = new CIMutexCreate(mholder, m_cbEvt);
+            m_cbEvt.add(ins_mutex);
+            
+			// CICondCreate
+			MCSId cond = m_fac.createLocalVar("cond", BlankType.cInstance);
+			MyCspTempID condholder = TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt);
+			CICondCreate ins_cond = new CICondCreate(condholder, m_cbEvt);
+			m_cbEvt.add(ins_cond);
+			
+			// CIFormTuple  (vp, m, cond)  // may be better to use a list type. Anyway, use tuple currently.
+            List<IMyCspTemp> nLst = new ArrayList<IMyCspTemp>();
+            nLst.add(ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt));
+            nLst.add(TID2CTempID(m, m_subMap, m_funLab, m_cbEvt));
+            nLst.add(TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt));
+            MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            CIFormTuple ins_tuple = new CIFormTuple(nLst, ctHolder, m_cbEvt);
+            m_cbEvt.add(ins_tuple);
+            
+            return null;
+		}
+
         /* ********** ********** *********** */
     }
 
-    static private List<MyCspGroup> InsLst2CBlockLst2(List<IMCInstruction> insLst, Map<MCSId, VariableInfo> subMap, MCSId funLab)
+    static private List<MyCspGroup> InsLst2CBlockLst2(List<IMCInstruction> insLst
+    		, Map<MCSId, VariableInfo> subMap
+    		, MCSId funLab
+    		, MCSIdFactory fac)
     {
-        InsLst2CBlockLstConverter cvt = new InsLst2CBlockLstConverter(subMap, funLab);
+        InsLst2CBlockLstConverter cvt = new InsLst2CBlockLstConverter(subMap, funLab, fac);
         for (IMCInstruction ins: insLst) {
             ins.accept(cvt);
         }
@@ -740,7 +775,8 @@ public class MyCspInsTransformer {
         
     static private FunctionMyCsp FunDef2CProcess(
             MCDefFun funDef
-            , Map<MCSId, VariableInfo> subMap) {
+            , Map<MCSId, VariableInfo> subMap
+            , MCSIdFactory fac) {
     	
     	
         List<MyCspTempID> paras = new ArrayList<MyCspTempID>();
@@ -755,7 +791,7 @@ public class MyCspInsTransformer {
 //        	envname = TID2CTempID(funDef.m_env_name, subMap, funDef.m_name, null);
 //        }
         
-        List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name);
+        List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name, fac);
         
         
         FunctionMyCsp cProc = new FunctionMyCsp(funDef.m_name, paras, body);

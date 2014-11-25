@@ -67,6 +67,7 @@ namespace PAT.Lib
 
         public SysLinkedNode list_cons(Object header, SysLinkedNode tail)
         {
+            // System.Console.WriteLine("eeeeeeeeeeeeeee header is " + header);
             return new SysLinkedNode(header, tail);
         }
 

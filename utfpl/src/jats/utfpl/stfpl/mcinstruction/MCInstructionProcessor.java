@@ -433,17 +433,6 @@ public class MCInstructionProcessor {
         }
 
         @Override
-        public MCInsSharedCreateCond visit(MCInsSharedCreateCond ins) {
-            if (null == m_sub) {
-                return ins;
-            } else {
-                MCSId holder = subsHolder(ins.m_holder);
-                
-                return new MCInsSharedCreateCond(holder);
-            }
-        }
-
-        @Override
         public MCInsMutexCreate visit(MCInsMutexCreate ins) {
             if (null == m_sub) {
                 return ins;
@@ -545,6 +534,29 @@ public class MCInstructionProcessor {
                 MCSId ref = subsVP(ins.m_ref, m_sub);
                 
                 return new MCInsArrayRefGet(ref, pos, holder);
+            }
+		}
+
+		@Override
+		public Object visit(MCInsTIdAllocate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
+                
+                return new MCInsTIdAllocate(holder);
+            }
+		}
+
+		@Override
+		public Object visit(MCInsSharedCreate ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+                MCSId holder = subsHolder(ins.m_holder);
+                IMCValPrim vp = subsVP(ins.m_vp, m_sub);
+                
+                return new MCInsSharedCreate(holder, vp);
             }
 		}
 

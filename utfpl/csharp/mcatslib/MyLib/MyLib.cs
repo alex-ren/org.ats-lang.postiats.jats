@@ -84,6 +84,10 @@ namespace PAT.Lib
             return x == y;
         }
 
+        public static bool neq(int x, int y)
+        {
+            return x != y;
+        }
         //==========================================================
         //the following sections are the functions used by Mailbox 
         //==========================================================

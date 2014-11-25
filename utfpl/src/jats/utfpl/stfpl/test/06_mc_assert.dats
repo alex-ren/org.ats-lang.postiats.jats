@@ -4,7 +4,7 @@ staload "./conats.sats"
 
 val g = 3
 
-val () = mc_assert (g > 4)
+prval () = mc_assert (g > 4)
 
 
 

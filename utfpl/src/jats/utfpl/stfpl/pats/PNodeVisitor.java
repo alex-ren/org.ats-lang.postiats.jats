@@ -50,7 +50,7 @@ public interface PNodeVisitor {
     
     public Object visit(PInsMutexCreate node);
 //    public Object visit(PInsMutexRelease node);
-    public Object visit(PInsSharedCreateCond node);
+
 //    public Object visit(PInsCondRelease node);
 
 	public Object visit(PProcGrpMCAtomicStart node);
@@ -67,6 +67,10 @@ public interface PNodeVisitor {
 	public Object visit(PInsArrayRefUpdate node);
 	public Object visit(PInsArrayRefCreate node);
 	public Object visit(PInsArrayRefGet node);
+
+	public Object visit(PInsTIdAllocate node);
+
+	public Object visit(PInsCondCreate node);
 
     
 

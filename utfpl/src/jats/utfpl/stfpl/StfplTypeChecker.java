@@ -529,7 +529,7 @@ public class StfplTypeChecker {
         List<ISType> argsType = funType.m_args;
         List<Cd2exp> argsExp = args.m_d2expLst;
         if (argsType.size() != argsExp.size()) {
-            throw new Error("Type mismatched: " + loc);
+            throw new Error("Type mismatched: " + loc + " argsType.size() is " + argsType.size() + "argsExp.size() is " + argsExp.size());
         }
 //        System.out.println("===========oftype_applst loc is " + loc);
         for (int j = 0; j < argsType.size(); ++j) {

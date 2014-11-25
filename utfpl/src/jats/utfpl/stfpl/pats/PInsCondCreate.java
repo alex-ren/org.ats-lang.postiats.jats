@@ -2,12 +2,11 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-
-public class PInsSharedCreateCond implements PIns {
+public class PInsCondCreate implements PIns {
     
     public MCSId m_holder;
     
-    public PInsSharedCreateCond(MCSId holder) {
+    public PInsCondCreate(MCSId holder) {
         m_holder = holder;
     }
 

@@ -14,6 +14,23 @@ atom_ref_manager() ::= <<atom_ref_manager>>
 
 array_ref_manager() ::= <<array_ref_manager>>
 
+sys_mutex_manager() ::= <<
+sys_mutex_manager
+>>
+
+sys_cond_manager() ::= <<
+sys_cond_manager
+>>
+
+sys_assert_var() ::= <<
+sys_assert_var
+>>
+
+sys_tid_allocator() ::= <<
+sys_tid_allocator
+>>
+
+
 // ===============================
 
 pmodel_st(scheduler_body, gvar_lst, proc_lst, main_proc_body, ext_code_lst) ::= <<
@@ -82,11 +99,11 @@ var mutex[10];  // 10 mutex
 
 var\<Allocator> <sys_mutex_manager()> = new Allocator();
 
-conats_mutex_acquire(<sys_tid()>) = sys_mutex_lock_impl (<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
+conats_mutex_acquire(<sys_tid()>) = sys_mutex_lock_impl (<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
 sys_mutex_lock_impl(<sys_tid()>, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
 
-conats_mutex_release(<sys_tid()>) = sys_mutex_unlock_impl (<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
+conats_mutex_release(<sys_tid()>) = sys_mutex_unlock_impl (<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
 sys_mutex_unlock_impl(<sys_tid()>, m) = sys_munlock{mutex[m] = 0} -> Skip;
 // ======================
@@ -98,13 +115,13 @@ var\<Allocator> <sys_cond_manager()> = new Allocator();
 channel cond_chan[10] 0;
 var cond_count = 0;
 
-sys_cond_wait(<sys_tid()>) = sys_cond_wait_impl(<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0), sys_gstack.frame_get(<sys_tid()>, 0, 1));
+sys_cond_wait(<sys_tid()>) = sys_cond_wait_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), <sys_gstack()>.frame_get(<sys_tid()>, 0, 1));
 
 sys_cond_wait_impl(<sys_tid()>, c, m) = atomic{cadd{cond_holder[c]++;} -> 
                                     sys_mutex_unlock_impl(<sys_tid()>, m); 
                                     cond_chan[c]?_ -> sys_mutex_lock_impl(<sys_tid()>, m)};
 
-sys_cond_signal(<sys_tid()>) = sys_cond_signal_impl(<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
+sys_cond_signal(<sys_tid()>) = sys_cond_signal_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
 sys_cond_signal_impl(<sys_tid()>, c) = atomic {if (cond_holder[c] > 0) {
 
@@ -117,7 +134,7 @@ sys_cond_signal_impl(<sys_tid()>, c) = atomic {if (cond_holder[c] > 0) {
         }};
 
         
-sys_cond_broadcast(<sys_tid()>) = sys_cond_broadcast_impl(<sys_tid()>, sys_gstack.frame_get(<sys_tid()>, 0, 0));
+sys_cond_broadcast(<sys_tid()>) = sys_cond_broadcast_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
 sys_cond_broadcast_impl(<sys_tid()>, c) = atomic{if (cond_holder[c] > 0) {
 
@@ -156,7 +173,7 @@ main_s(<sys_tid()>) =
   <main_proc_body>; 
   proc_thread_finalize(<sys_tid()>);
 
-main = main_s(0) ||| Scheduler;
+main = main_s(<sys_tid_allocator()>.allocate()) ||| Scheduler;
 
 #define sys_assertion <sys_assert_var()> == true;
 
@@ -169,33 +186,35 @@ main = main_s(0) ||| Scheduler;
 
 >>
 
-scheduler_body_st(proc1, proc_lst) ::= <<
+scheduler_body_st(proc1_name, proc1_addr, else_procs) ::= <<
 sch_thread_starter(<sys_tid()>, fn, args) =
-  thread_init{<sys_gstack()>.add_frame(<sys_tid()>, args);} ->
-<if(proc1)>
-  if (fn == <proc1.Addr>) {
-    <proc1>(<sys_tid()>); proc_thread_finalize(<sys_tid()>)
+thread_init{
+  // Create a list with one element.
+  var <local_temp_list()> = sys_mylib_obj.list_nil ();
+  <local_temp_list()> = sys_mylib_obj.list_cons (args, <local_temp_list()>);
+  <sys_gstack()>.add_frame(sys_tid, <local_temp_list()>);
+} ->
+<if(proc1_name)>
+  if (fn == <proc1_addr>) {
+    <proc1_name>(<sys_tid()>); proc_thread_finalize(<sys_tid()>)
     |||
     Scheduler()
   }
-  <proc_lst:{x| <schedule_else_if(x)>}; separator="\n">
+  <else_procs; separator="\n">
   else {Skip}
 <else>
   Skip
 <endif>
 >>
 
-schedule_else_if(proc) ::= <<
-else if (fn == <proc.Addr>) {
-  <proc>(<sys_tid()>); proc_thread_finalize(<sys_tid()>)
+schedule_else_if(proc_name, proc_addr) ::= <<
+else if (fn == <proc_addr>) {
+  <proc_name>(<sys_tid()>); proc_thread_finalize(<sys_tid()>)
   |||
   Scheduler()
 }
 >>
 
-sys_tid_allocator() ::= <<
-sys_tid_allocator
->>
 
 pgdecvar_st(id, init) ::= <<
 var <id><if(init)> = <init><endif>;
@@ -364,18 +383,6 @@ pinscondrelease_st(cond) ::= <<
 <sys_cond_manager()>.release(<cond>);
 >>
 
-sys_mutex_manager() ::= <<
-sys_mutex_manager
->>
-
-sys_cond_manager() ::= <<
-sys_cond_manager
->>
-
-sys_assert_var() ::= <<
-sys_assert_var
->>
-
 pprocthreadcreate_st(tid, funaddr, args) ::= <<
 sys_thread_create(<tid>, <funaddr>, <args>)
 >>
@@ -433,7 +440,9 @@ PInsArrayRefUpdate_st(ref, pos, exp) ::= <<
 <array_ref_manager()>.setElement(<ref>, <pos>, <exp>)
 >>
 
-
+PInsTIdAllocate_st(holder, is_global) ::= <<
+<if(is_global)><else>var <endif><holder> = <sys_tid_allocator()>.allocate();
+>>
 
 
 

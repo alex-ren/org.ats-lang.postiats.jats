@@ -50,7 +50,9 @@ namespace PAT.Lib
         // frame: SysLinkedNode
         public void add_frame(int tid, Object frame)
         {
+            // System.Console.WriteLine("add_frame begin tid is " + tid);
             int len = m_stacks.Count;
+            // System.Console.WriteLine("add_frame begin len is " + len);
             while (tid >= len)
             {
                 m_stacks.Add(FrameStackUtil.create());
@@ -61,6 +63,7 @@ namespace PAT.Lib
             SysLinkedNode aFrame = (SysLinkedNode)frame;
             sf = FrameStackUtil.addFrame(sf, aFrame);
             m_stacks[tid] = sf;
+            // System.Console.WriteLine("add_frame end tid is " + tid);
         }
 
         public Object retopr_frame(int tid)
@@ -120,7 +123,10 @@ namespace PAT.Lib
 
         public Object frame_get(int tid, int frame, int index)
         {
+
+            // System.Console.WriteLine("eeee1");
             Object ret = get(tid, frame, index);
+            // System.Console.WriteLine("eeee2");
             return ret;
         }
 

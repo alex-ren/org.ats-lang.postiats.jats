@@ -31,6 +31,11 @@ public class MCSIdFactory {
 	    return m_fac;
 	}
 	
+	public MCSId createLocalVar(String name, ISType stype) {
+		SId sid = m_fac.createLocalVar(name, stype);
+		return fromSId(sid);
+	}
+	
 	public MCSId fromSId(SId sid) {
 	    MCSId mcsid = m_map.get(sid);
 	    if (null == mcsid) {

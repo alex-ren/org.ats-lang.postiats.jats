@@ -21,8 +21,11 @@ public class AuxPats {
 			return "lte";
 		} else if (sym.equals("=")) {
 			return "eq";
+        } else if (sym.equals("<>")) {
+            return "neq";  
         } else if (sym.equals("~")) {
             return "neg";
+          
 		} else {
 			throw new Error("sym " + sym + " is not supported.");
 		}

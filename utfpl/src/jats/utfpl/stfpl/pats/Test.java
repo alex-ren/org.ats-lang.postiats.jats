@@ -23,12 +23,14 @@ public class Test {
 //        		, "src/jats/utfpl/stfpl/test/05_use_ref.dats"
 //        		, "src/jats/utfpl/stfpl/test/06_mc_assert.dats"
 //        		, "src/jats/utfpl/stfpl/test/07_use_array.dats"
-//        		, "src/jats/utfpl/stfpl/test/08_use_mutex.dats"
+//        		"src/jats/utfpl/stfpl/test/08_use_mutex.dats"
 //        		 "src/jats/utfpl/stfpl/test/09_tuple.dats"
 //        		, "src/jats/utfpl/stfpl/test/10_create_thread.dats"
 //        		"src/jats/utfpl/stfpl/test/11_fact_fun.dats"
 //        		, "src/jats/utfpl/stfpl/test/12_fact_closure.dats"
-        		"src/jats/utfpl/stfpl/test/13_if_noeffect.dats"
+//        		"src/jats/utfpl/stfpl/test/13_if_noeffect.dats"
+//        		"src/jats/utfpl/stfpl/test/14_create_threads.dats"
+        		"src/jats/utfpl/stfpl/test/15_thread_cond.dats"
 
         		
         };
