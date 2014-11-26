@@ -33,6 +33,9 @@ public class MyCspTempID implements IMyCspTemp {
     
     public static MyCspTempID createAsUsage(VariableInfo vi, EntityLocation curLoc) {
         MyCspTempID ret = new MyCspTempID(false, vi, curLoc);
+//        if (ret.getMCSId().toStringMCIns().equals("gref_63")) {
+//        	throw new Error("eeeeeefefe");
+//        }
         return ret;
     }
     
@@ -66,9 +69,7 @@ public class MyCspTempID implements IMyCspTemp {
         if (!m_isDef) {
             throw new Error("Should only call on the definition." + this);
         }
-        if (m_vi.getMCSId().toStringMCIns().equals("foo0_env8_id")) {
-        	throw new Error("eeeeeeeeeeeee");
-        }
+
         m_stackPos = StackPosition.createDef(m_vi.getMCSId().toStringMCIns(), m_vi.getMCSId().toString(), offset);
         m_vi.setStackPos(m_stackPos);  // set the stack position
         return offset + 1;

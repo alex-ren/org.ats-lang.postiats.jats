@@ -22,6 +22,8 @@ public class CIArrayRefGet extends MyCspInstruction {
     public int process(int offset) {
         offset = m_holder.processStack(offset);
         
+        m_ref.updateForUsage();
+        
         if (m_pos instanceof MyCspTempID) {
             ((MyCspTempID)m_pos).updateForUsage();
         }

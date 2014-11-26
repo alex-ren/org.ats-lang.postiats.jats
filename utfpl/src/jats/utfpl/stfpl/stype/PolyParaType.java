@@ -45,11 +45,6 @@ public class PolyParaType extends BoxedType {
     }
 
     @Override
-    public String toString() {
-        return m_var.toString();
-    }
-
-    @Override
     public PolyParaType normalize() {
         return this;
     }

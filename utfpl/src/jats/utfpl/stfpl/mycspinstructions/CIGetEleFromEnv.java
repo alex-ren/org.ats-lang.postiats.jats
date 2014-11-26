@@ -1,5 +1,7 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
+import jats.utfpl.utils.Log;
+
 
 public class CIGetEleFromEnv extends MyCspInstruction {
     public String m_lab;
@@ -23,6 +25,8 @@ public class CIGetEleFromEnv extends MyCspInstruction {
 
     @Override
     public int process(int offset) {
+//    	Log.log4j.info("holder is " + m_holder.getMCSId().toStringMCIns() + " @ " + m_holder);
+
         offset = m_holder.processStack(offset);
         m_env.updateForUsage();
         

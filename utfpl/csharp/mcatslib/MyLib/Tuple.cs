@@ -39,8 +39,10 @@ namespace PAT.Lib
             string ret = "[";
             foreach (Object ele in m_members)
             {
-                ret += ele.ToString();
-                ret += "-";
+                if (ele != null) {
+                    ret += ele.ToString();
+                    ret += "-";
+                }
             }
             ret += "]";
             return ret;

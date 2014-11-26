@@ -449,7 +449,6 @@ public class StfplTypeChecker {
     private ISType oftype(D2Eapplst node, Cloc_t loc) {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
-        System.out.println("name is " + ((D2Ecst)node.m_d2e_fun.d2exp_node).m_d2cst.toString());
         ty = ty.normalize();
 
         List<ISType> inner_ty = new ArrayList<ISType>();
@@ -890,6 +889,7 @@ public class StfplTypeChecker {
         }
 
         if (node.getSType() instanceof VarType) {
+        	System.out.println(((VarType)node.getSType()).getType());
         	throw new Error("Cannot infer the type for " + loc);
         }
     }

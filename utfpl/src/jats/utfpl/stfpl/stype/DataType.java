@@ -5,6 +5,7 @@ import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
 import jats.utfpl.utils.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -36,13 +37,21 @@ public class DataType extends BoxedType {
 
     @Override
     public ISType instantiate(Map<PolyParaType, ISType> map) {
-        return this;
+    	List<ISType> nlst = new ArrayList<ISType>();
+    	for (ISType ty: m_tyLst) {
+    		nlst.add(ty.instantiate(map));
+    	}
+    	
+        return new DataType(m_name, nlst);
     }
 
     @Override
     public TypeCheckResult match(ISType ty) {
         this.normalize();
+//        Log.log4j.info("type is " + this.toSTStfpl3(AuxSType.cStg).render());
+//        throw new Error("eeeeeeeee");
         ISType right = ty.normalize();
+//        Log.log4j.info("right is " + right.toSTStfpl3(AuxSType.cStg).render());
         if (right instanceof VarType) {
             ((VarType) right).setType(this);
             return new TypeCheckResult();
@@ -52,8 +61,16 @@ public class DataType extends BoxedType {
                 throw new Error("type mismatch");
             }
             for (int i = 0; i < m_tyLst.size(); ++i) {
-                m_tyLst.get(i).match(right1.m_tyLst.get(i));
+            	TypeCheckResult tyret = m_tyLst.get(i).match(right1.m_tyLst.get(i));
+            	if (!tyret.isGood()) {
+            		throw new Error("type error at " + tyret.getMsg());
+            	}
             }
+            
+//            Log.log4j.info("after type is " + this.toSTStfpl3(AuxSType.cStg).render());
+//          throw new Error("eeeeeeeee");
+//          Log.log4j.info("after right is " + right.toSTStfpl3(AuxSType.cStg).render());
+          
             return new TypeCheckResult();
         } else {
             return new TypeCheckResult("not expecting " + ty);
@@ -67,16 +84,19 @@ public class DataType extends BoxedType {
 
     @Override
     public ST toSTStfpl3(STGroup stg) {
-        // DataType_st(cst_name) ::= <<
+        // DataType_st(cst_name, tys) ::= <<
         ST st = stg.getInstanceOf("DataType_st");
         st.add("cst_name", m_name);
+        for (ISType ty: m_tyLst) {
+        	st.add("tys", ty.toSTStfpl3(stg));
+        }
         return st;
         
     }
 
     @Override
     public ISType removeProof() {
-    	Log.log4j.warn("removeProof for datatype " + m_name.toStringNoStamp());
+//    	Log.log4j.warn("removeProof for datatype " + m_name.toStringNoStamp());
         return this;
     }
 

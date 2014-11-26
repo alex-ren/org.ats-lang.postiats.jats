@@ -3,12 +3,12 @@ package jats.utfpl.stfpl.mycspinstructions;
 public class CIAtomRefGet extends MyCspInstruction {
 
     public MyCspTempID m_localHolder;
-    public MyCspTempID m_globalVar;
+    public MyCspTempID m_ref;
 
-    public CIAtomRefGet(MyCspTempID globalVar, MyCspTempID localHolder, MyCspGroup blk) {
+    public CIAtomRefGet(MyCspTempID ref, MyCspTempID localHolder, MyCspGroup blk) {
         super(blk);
         m_localHolder = localHolder;
-        m_globalVar = globalVar;
+        m_ref = ref;
 
     }
     @Override
@@ -19,6 +19,7 @@ public class CIAtomRefGet extends MyCspInstruction {
     @Override
     public int process(int offset) {
         offset = m_localHolder.processStack(offset);
+        m_ref.updateForUsage();
         return offset;
     }
 

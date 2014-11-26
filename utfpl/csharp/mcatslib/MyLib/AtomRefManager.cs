@@ -52,9 +52,11 @@ namespace PAT.Lib
         }
 
         public int allocate(Object init) {
+            // System.Console.WriteLine("aaaaaaaaaa");
             int ret = m_index;
             m_array.Add(init);
             ++m_index;
+            // System.Console.WriteLine("bbbbbbbbbbb");
             return ret;
         }
 

@@ -1,3 +1,22 @@
+"D2Cdcstdecs" x_2560:int:t@ype
+and y_2561:int:t@ype
+
 val x_63 = 3
 
 prval y_64 = 4
+
+val x1_65 = lam () <clo> = 
+  <D2EannFunclo><clo_ref>(
+    <D2EannSeff>(
+      3:int:t@ype))
+
+"D2Cdcstdecs" foo_2562:(() -<fun> void):type
+and goo_2563:(() -<fun> void):type
+
+fun foo1_66 = lam () <clo> = 
+  <D2EannSeff>(
+    let
+      "D2Cdcstdecs" foo2_2564:(() -<fun> void):type
+    in
+      ()
+    end:void:t@ype)

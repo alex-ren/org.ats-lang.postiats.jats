@@ -40,7 +40,11 @@ namespace PAT.Lib
         // Tuple Operation
         //
         public Tuple createTuple(int len) {
-            return new Tuple(len);
+            // System.Console.WriteLine("aaaaaaaaaa");
+            Tuple ret = new Tuple(len);
+            // System.Console.WriteLine("bbbbbbbbbb");
+
+            return ret;
         }
 
         public void setTupleElement(Tuple tup, int index, Object ele)

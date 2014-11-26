@@ -3,10 +3,17 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.stfpl.csharptype.ICSType;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 
+import java.net.URL;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.stringtemplate.v4.STGroupFile;
+
 public class AuxSType {
+	
+    static public URL cFileURL = AuxSType.class.getResource("/jats/utfpl/stfpl/stype/stype.stg");
+    static public STGroupFile cStg = new STGroupFile(cFileURL, "ascii", '<', '>');
+    
     public static void matchTypeList(List<ISType> left, List<ISType> right) {
         if (left.size() != right.size()) {
             throw new Error("Type mismatch.");

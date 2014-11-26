@@ -20,6 +20,8 @@ public class CIArrayRefUpdate extends MyCspInstruction {
     
     @Override
     public int process(int offset) {
+    	m_ref.updateForUsage();
+    	
         if (m_pos instanceof MyCspTempID) {
             ((MyCspTempID)m_pos).updateForUsage();
         }

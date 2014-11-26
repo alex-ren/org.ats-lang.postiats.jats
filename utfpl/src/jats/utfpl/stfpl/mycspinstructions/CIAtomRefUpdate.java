@@ -2,12 +2,12 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 public class CIAtomRefUpdate extends MyCspInstruction {
 
-    public MyCspTempID m_globalVar;
+    public MyCspTempID m_ref;
     public IMyCspTemp m_localSrc;
 
-    public CIAtomRefUpdate(IMyCspTemp localSrc, MyCspTempID globalVar, MyCspGroup blk) {
+    public CIAtomRefUpdate(IMyCspTemp localSrc, MyCspTempID ref, MyCspGroup blk) {
         super(blk);
-        m_globalVar = globalVar;
+        m_ref = ref;
         m_localSrc = localSrc;
 
     }
@@ -18,6 +18,7 @@ public class CIAtomRefUpdate extends MyCspInstruction {
     
     @Override
     public int process(int offset) {
+    	m_ref.updateForUsage();
         if (m_localSrc instanceof MyCspTempID) {
             ((MyCspTempID)m_localSrc).updateForUsage();
         }

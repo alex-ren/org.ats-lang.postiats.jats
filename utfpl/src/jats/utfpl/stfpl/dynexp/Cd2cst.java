@@ -3,7 +3,9 @@ package jats.utfpl.stfpl.dynexp;
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
 import jats.utfpl.stfpl.staexp.Cs2exp;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.utils.Log;
 
 public class Cd2cst {
 	// What is constant? True, False?
@@ -39,6 +41,7 @@ public class Cd2cst {
     
     public void normalizeType() {
         m_stype = m_stype.normalize();
+//        Log.log4j.info(m_symbol + " has type" + m_stype.toSTStfpl3(AuxSType.cStg).render());
     }
     
     public ISType getSType() {

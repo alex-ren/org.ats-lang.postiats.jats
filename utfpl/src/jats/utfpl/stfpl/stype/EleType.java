@@ -31,7 +31,7 @@ public abstract class EleType extends FlatType {
             }
         } else {
             return new TypeCheckResult("Type mismatch: " + "type mismatch: " + 
-                    Log.getFilePos() + " 01. left is " + left + ", right is " + right0);
+                    Log.getFilePos() + " 01. left is " + left.toSTStfpl3(AuxSType.cStg).render() + ", right is " + right0.toSTStfpl3(AuxSType.cStg).render());
         }
         
     }

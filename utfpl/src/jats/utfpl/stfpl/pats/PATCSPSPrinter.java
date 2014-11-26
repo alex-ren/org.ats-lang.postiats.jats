@@ -64,7 +64,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
             	st_else.add("proc_name", proc_else.m_name.toStringMCIns());
             	st_else.add("proc_addr", proc_else.m_name.getAddr().toStringMCIns());
             	
-            	st.add("else_procs", st_else);
+            	stSch.add("else_procs", st_else);
             }
         }
         

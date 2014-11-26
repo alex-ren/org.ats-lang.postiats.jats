@@ -45,6 +45,7 @@ import jats.utfpl.stfpl.mycspinstructions.MyCspTempVal;
 import jats.utfpl.stfpl.mycspinstructions.ProgramMyCspIns;
 import jats.utfpl.stfpl.mycspinstructions.VariableInfo;
 import jats.utfpl.stfpl.stype.AuxSType;
+import jats.utfpl.utils.Log;
 
 /*
  * Handle:
@@ -173,7 +174,12 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
     
     @Override
     public PExp visit(MyCspTempID v) {
+
         if (v.isOutofScope()) {
+        	if (v.getStackInfo() == null) {
+        		Log.log4j.info("v is " + v.getMCSId().toStringMCIns() + " @ " + v);
+        		throw new Error("Should not happen. check process function");
+        	}
             return new PExpStackGet(v.getStackInfo().getOffset(), v.getMCSId());
         } else {
             return new PExpID(v.getMCSId());
@@ -280,10 +286,10 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
     public List<PStat> visit(CIAtomRefGet node) {  // has effect
         List<PStat> ret = new ArrayList<PStat>();
 
-        PExp globalVar = CTemp2PExp(node.m_globalVar);
+        PExp ref = CTemp2PExp(node.m_ref);
         MCSId localHolder = node.m_localHolder.getMCSId();
         
-        ret.add(new PInsAtomRefGet(globalVar, localHolder));
+        ret.add(new PInsAtomRefGet(ref, localHolder));
         
         if (node.m_localHolder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_localHolder.getMCSId())));
@@ -314,10 +320,10 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         List<PStat> ret = new ArrayList<PStat>();
 //        MCSId globalVar = node.m_globalVar.getMCSId();
         
-        PExp globalVar = CTemp2PExp(node.m_globalVar);
+        PExp ref = CTemp2PExp(node.m_ref);
         PExp localSrc  = CTemp2PExp(node.m_localSrc);
         
-        ret.add(new PInsAtomRefUpdate(localSrc, globalVar));
+        ret.add(new PInsAtomRefUpdate(localSrc, ref));
         
         return ret;
     }

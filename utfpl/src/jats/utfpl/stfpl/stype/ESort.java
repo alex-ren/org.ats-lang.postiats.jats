@@ -20,11 +20,11 @@ public enum ESort {
     static public ESort fromString(String name) {
         if (name.equals("type")) {
             return type;            
-        } else if (name.equals("t0ype")) {
+        } else if (name.equals("t0ype") || name.equals("t@ype")) {
             return t0ype;      
         } else if (name.equals("viewtype")) {
             return vtype;    
-        } else if (name.equals("viewt0ype")) {
+        } else if (name.equals("viewt0ype") || name.equals("viewt@ype")) {
             return vt0ype;    
         } else if (name.equals("prop")) {
             return prop;            

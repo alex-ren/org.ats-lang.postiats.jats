@@ -33,7 +33,7 @@ Cs2var_st(s2var) ::= <<
 >>
 
 PolyParaType_st(s2var) ::= <<
-<Cs2var_st(s2var)>
+para:<Cs2var_st(s2var)>
 >>
 
 PolyType_st(paras, body) ::= <<
@@ -52,8 +52,8 @@ labpat_st(lab, type) ::= <<
 <lab> = <type>
 >>
 
-DataType_st(cst_name) ::= <<
-<s2cst_st(cst_name)>
+DataType_st(cst_name, tys) ::= <<
+<s2cst_st(cst_name)>(<tys; separator=", ">)
 >>
 
 AbsType_st(cst_name) ::= <<

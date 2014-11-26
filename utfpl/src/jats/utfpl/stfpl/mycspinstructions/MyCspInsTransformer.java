@@ -47,6 +47,7 @@ import jats.utfpl.stfpl.stype.BlankType;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.VoidType;
+import jats.utfpl.utils.Log;
 
 public class MyCspInsTransformer {
     
@@ -676,6 +677,7 @@ public class MyCspInsTransformer {
 			// CIFormTuple  (vp, m, cond)  // may be better to use a list type. Anyway, use tuple currently.
             List<IMyCspTemp> nLst = new ArrayList<IMyCspTemp>();
             nLst.add(ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt));
+//            Log.log4j.info("formtuple vp is " + ins.m_vp.toStringMCIns());
             nLst.add(TID2CTempID(m, m_subMap, m_funLab, m_cbEvt));
             nLst.add(TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt));
             MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
