@@ -34,12 +34,12 @@ fun conats_mutex_release (m: mutex): void
 
 (* ************* ************** *)
 
-abstype atomref (a: t@ype)
+absviewtype atomref (a: t@ype)
 
 fun conats_atomref_create {a:t@ype} (data: a): atomref a
 // fun conats_atomref_finalize {a:t@ype} (gv: atomref a): void
-fun conats_atomref_update {a:t@ype} (gv: atomref a, data: a): void
-fun conats_atomref_get {a:t@ype} (gv: atomref a): a
+fun conats_atomref_update {a:t@ype} (gv: atomref a, data: a): atomref a
+fun conats_atomref_get {a:t@ype} (gv: atomref a): (atomref a, a)
 
 abstype atomarrayref (a: t@ype)
 
