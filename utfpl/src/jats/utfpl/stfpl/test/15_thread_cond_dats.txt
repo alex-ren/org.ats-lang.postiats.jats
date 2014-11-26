@@ -3,7 +3,7 @@ Assertion: main() deadlockfree
 ********Verification Result********
 The Assertion (main() deadlockfree) is NOT valid.
 The following trace leads to a deadlock situation.
-<init -> main_init -> τ -> τ -> mlock -> τ -> [if!((cond_holder[0] > 0))] -> τ -> sys_munlock -> τ -> cadd -> sys_munlock>
+<init -> main_init -> main4_id__1 -> τ -> mlock -> main4_id__2 -> [if!((cond_holder[0] > 0))] -> main4_id__3 -> sys_munlock -> main4_id__4 -> cadd -> sys_munlock>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -14,8 +14,8 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:12
 Total Transitions:11
-Time Used:0.0391766s
-Estimated Memory Used:8736.768KB
+Time Used:0.03761s
+Estimated Memory Used:8740.864KB
 
 
 =======================================================
@@ -32,7 +32,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:12
 Total Transitions:11
-Time Used:0.0038465s
-Estimated Memory Used:8556.544KB
+Time Used:0.0057032s
+Estimated Memory Used:8560.64KB
 
 

@@ -282,8 +282,8 @@ if (<cond>) {
 }<endif>
 >>
   
-pevent_st(stat_lst) ::= <<
-{  <stat_lst; separator="\n">
+pevent_st(tag, stat_lst) ::= <<
+<tag>{  <stat_lst; separator="\n">
 }
 >>
 

@@ -135,14 +135,18 @@ public class MyCspInsTransformer {
         private Map<MCSId, VariableInfo> m_subMap;
         private MCSId m_funLab;
         private MCSIdFactory m_fac;
+        private int m_no;
         
         public InsLst2CBlockLstConverter(Map<MCSId, VariableInfo> subMap, MCSId funLab, MCSIdFactory fac) {
+            m_no = 0;
+            
             m_cblkLst = new ArrayList<MyCspGroup>();
-            m_cbEvt = new GrpEvent();
+            m_cbEvt = new GrpEvent(funLab, ++m_no);
             m_subMap = subMap;
             m_funLab = funLab;
             
             m_fac = fac;
+   
         }
         
         public List<MyCspGroup> getCBlockLst() {
@@ -174,7 +178,7 @@ public class MyCspInsTransformer {
 
                 if (0 != m_cbEvt.size()) {
                     m_cblkLst.add(m_cbEvt);
-                    m_cbEvt = new GrpEvent();
+                    m_cbEvt = new GrpEvent(m_funLab, ++m_no);
                 }
                 m_cblkLst.add(ccond);
                 return null;
@@ -247,7 +251,7 @@ public class MyCspInsTransformer {
 
                 if (ins.m_holder.getSId().isRetHolder()) {
                     m_cblkLst.add(m_cbEvt);
-                    m_cbEvt = new GrpEvent();
+                    m_cbEvt = new GrpEvent(m_funLab, ++m_no);
                 }
                 return null;
             }
@@ -267,7 +271,7 @@ public class MyCspInsTransformer {
                 CIProcCallPrelogue cCallPre = new CIProcCallPrelogue(ins.m_fun, m_cbEvt, nLst, ins.isTailCall());
                 m_cbEvt.add(cCallPre);
                 m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
+                m_cbEvt = new GrpEvent(m_funLab, ++m_no);
                 
                 GrpProc cprocess = new GrpProc(ins.m_fun, ins.isTailCall());
                 m_cblkLst.add(cprocess);
@@ -341,7 +345,7 @@ public class MyCspInsTransformer {
 	    	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
 	    	        m_cbEvt.add(retIns);
 	    	        m_cblkLst.add(m_cbEvt);
-	    	        m_cbEvt = new GrpEvent();
+	    	        m_cbEvt = new GrpEvent(m_funLab, ++m_no);
 	            } else {
 	                IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
 	                MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
@@ -366,7 +370,7 @@ public class MyCspInsTransformer {
 	        
             if (0 != m_cbEvt.size()) {
                 m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
+                m_cbEvt = new GrpEvent(m_funLab, ++m_no);
             }
             m_cblkLst.add(nBlk);
             return null;
@@ -436,7 +440,7 @@ public class MyCspInsTransformer {
             }
             
             m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+            m_cbEvt = new GrpEvent(m_funLab, ++m_no);
             
             return null; 
         }
@@ -455,7 +459,7 @@ public class MyCspInsTransformer {
             }
             
             m_cblkLst.add(m_cbEvt);
-            m_cbEvt = new GrpEvent();
+            m_cbEvt = new GrpEvent(m_funLab, ++m_no);
             
             return null; 
         }
@@ -534,7 +538,7 @@ public class MyCspInsTransformer {
             GrpMCAtomicStart grp = new GrpMCAtomicStart();
             if (0 != m_cbEvt.size()) {
                 m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent();
+                m_cbEvt = new GrpEvent(m_funLab, ++m_no);
             }
             m_cblkLst.add(grp);
             return null;
@@ -560,7 +564,7 @@ public class MyCspInsTransformer {
         private void handleNoReturnForWithEffect(MyCspInstruction ins) {
 	        m_cbEvt.add(ins);
 	        m_cblkLst.add(m_cbEvt);
-	        m_cbEvt = new GrpEvent();
+	        m_cbEvt = new GrpEvent(m_funLab, ++m_no);
         }
         
         private void handleReturnForWithEffect(MyCspInstruction ins, MCSId holder) {
@@ -577,7 +581,7 @@ public class MyCspInsTransformer {
 	        
 	        // No matter whether it is return, we start a new group.
 	        m_cblkLst.add(m_cbEvt);
-	        m_cbEvt = new GrpEvent();
+	        m_cbEvt = new GrpEvent(m_funLab, ++m_no);
         }
         
         /*
@@ -600,7 +604,7 @@ public class MyCspInsTransformer {
 		        m_cbEvt.add(retIns);
 	        }
 	        m_cblkLst.add(m_cbEvt);
-	        m_cbEvt = new GrpEvent();
+	        m_cbEvt = new GrpEvent(m_funLab, ++m_no);
         }
 
 		@Override

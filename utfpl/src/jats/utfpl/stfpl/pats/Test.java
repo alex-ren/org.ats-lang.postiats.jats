@@ -30,7 +30,8 @@ public class Test {
 //        		, "src/jats/utfpl/stfpl/test/12_fact_closure.dats"
 //        		"src/jats/utfpl/stfpl/test/13_if_noeffect.dats"
 //        		"src/jats/utfpl/stfpl/test/14_create_threads.dats"
-        		"src/jats/utfpl/stfpl/test/15_thread_cond.dats"
+//        		"src/jats/utfpl/stfpl/test/15_thread_cond.dats"
+        		"src/jats/utfpl/stfpl/test/16_reader_writer.dats"
 
         		
         };

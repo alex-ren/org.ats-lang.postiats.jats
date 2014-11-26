@@ -201,7 +201,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
     public PEvent visit(GrpEvent blk) {
         List<PStat> statLst =  CInsLst2PStatLst(blk.m_inslst);
 
-        return new PEvent(statLst);
+        return new PEvent(statLst, blk.m_funname, blk.m_no);
     }
 
     @Override

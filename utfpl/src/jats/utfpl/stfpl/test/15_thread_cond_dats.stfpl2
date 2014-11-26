@@ -1,4 +1,4 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 val s_63 = D2Ecst<conats_shared_create_2560:{a_3836}(((a_3836) -<fun> shared_t_722)):type> (0)
 

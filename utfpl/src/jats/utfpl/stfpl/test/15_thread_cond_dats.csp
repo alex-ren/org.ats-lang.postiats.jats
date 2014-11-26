@@ -177,7 +177,7 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  var mutex5_id = sys_mutex_manager.allocate();
+  main4_id__1{  var mutex5_id = sys_mutex_manager.allocate();
   var cond6_id = sys_cond_manager.allocate();
   s_63 = sys_mylib_obj.createTuple(3);
   sys_mylib_obj.setTupleElement(s_63, 0, 0);
@@ -193,28 +193,28 @@ main_s(sys_tid) =
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_shared_acquire(sys_tid);
-  {  a_66 = sys_gstack.retopr_frame(sys_tid);
+  main4_id__2{  a_66 = sys_gstack.retopr_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (s_63, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (a_66, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_shared_signal(sys_tid);
-  {  a_67 = sys_gstack.retopr_frame(sys_tid);
+  main4_id__3{  a_67 = sys_gstack.retopr_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (s_63, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (a_67, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_shared_release(sys_tid);
-  {  sys_gstack.delete_frame(sys_tid);
+  main4_id__4{  sys_gstack.delete_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (s_63, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (a_67, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_shared_condwait(sys_tid);
-  {  a_68 = sys_gstack.retopr_frame(sys_tid);
+  main4_id__5{  a_68 = sys_gstack.retopr_frame(sys_tid);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

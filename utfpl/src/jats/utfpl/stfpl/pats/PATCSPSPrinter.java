@@ -110,7 +110,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PEvent node) {
+    	// pevent_st(tag, stat_lst) ::= <<
         ST st = m_stg.getInstanceOf("pevent_st");
+        st.add("tag", node.m_funname.toStringMCIns() + "__" + node.m_no);
         for (PStat stat: node.m_statLst) {
             st.add("stat_lst", stat.accept(this));
         }
