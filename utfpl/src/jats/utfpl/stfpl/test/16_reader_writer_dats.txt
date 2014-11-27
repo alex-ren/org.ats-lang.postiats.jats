@@ -1,9 +1,7 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is NOT valid.
-The following trace leads to a deadlock situation.
-<init -> main_init -> main45_id__1 -> main45_id__2 -> main45_id__3 -> sys_ch_sch.1.2.0 -> τ -> thread_init -> [if((2 == 2))] -> sys_ch_sch.2.4.0 -> τ -> thread_init -> [if!((4 == 2))] -> [if((4 == 4))] -> consumer_71__1 -> τ -> mlock -> consumer_71__2 -> loop_74__1 -> loop_74__2 -> [if(sys_gstack.frame_get_bool(2, 0, 4))] -> loop_74__1 -> cadd -> sys_munlock -> producer_65__1 -> τ -> mlock -> producer_65__2 -> loop_68__1 -> loop_68__2 -> [if!(sys_gstack.frame_get_bool(1, 0, 4))] -> loop_68__1 -> loop_68__2 -> loop_68__3 -> [if((cond_holder[0] > 0))] -> csub -> cond_chan[0].1 -> loop_68__4 -> sys_munlock -> mlock -> loop_74__2 -> loop_74__1 -> loop_74__2 -> [if!(sys_gstack.frame_get_bool(2, 0, 4))] -> loop_74__1 -> loop_74__2 -> loop_74__3 -> sys_munlock -> loop_68__5 -> producer_65__1 -> τ -> mlock -> loop_74__4 -> producer_65__2 -> loop_68__1 -> loop_68__2 -> [if!(sys_gstack.frame_get_bool(1, 0, 4))] -> loop_68__1 -> loop_68__2 -> loop_68__3 -> [if!((cond_holder[0] > 0))] -> loop_68__4 -> sys_munlock -> loop_68__5 -> producer_65__1 -> τ -> mlock -> consumer_71__1 -> τ -> producer_65__2 -> loop_68__1 -> loop_68__2 -> [if(sys_gstack.frame_get_bool(1, 0, 4))] -> loop_68__1 -> cadd -> sys_munlock -> mlock -> consumer_71__2 -> loop_74__1 -> loop_74__2 -> [if!(sys_gstack.frame_get_bool(2, 0, 4))] -> loop_74__1 -> loop_74__2 -> loop_74__3 -> sys_munlock -> loop_74__4 -> consumer_71__1 -> τ -> mlock -> consumer_71__2 -> loop_74__1 -> loop_74__2 -> [if(sys_gstack.frame_get_bool(2, 0, 4))] -> loop_74__1 -> cadd -> sys_munlock -> thread_finalize>
+The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,10 +10,10 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:271
-Total Transitions:332
-Time Used:0.0530991s
-Estimated Memory Used:11907.072KB
+Visited States:552
+Total Transitions:964
+Time Used:0.124637s
+Estimated Memory Used:21258.24KB
 
 
 =======================================================
@@ -30,9 +28,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:926
-Total Transitions:1694
-Time Used:0.0967735s
-Estimated Memory Used:14143.488KB
+Visited States:941
+Total Transitions:1733
+Time Used:0.1499789s
+Estimated Memory Used:14602.24KB
 
 

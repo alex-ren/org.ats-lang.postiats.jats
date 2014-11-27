@@ -172,12 +172,15 @@ public class SExpTypeExtractor {
                 {
                     case type:
                     case t0ype:
+                    case vtype:
+                    case vt0ype:
                     {
                         List<ISType> tys = extractTypeList(node.m_arglst);
                         DataType ret = new DataType(snode.m_s2cst, tys);
                         return ret;
                     }
                     case prop:
+                    case vprop:
                         return PropType.cInstance;
                     default:
 //                        return null;

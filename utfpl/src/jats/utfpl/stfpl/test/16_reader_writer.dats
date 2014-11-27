@@ -29,7 +29,7 @@ in
 end
 
 fun consumer (x: int):<fun1> void = let
-  val ref = conats_shared_acquire (s) x
+  val ref = conats_shared_acquire (s)
 
   fun loop ():<cloref1> void = 
     if conats_atomref_get (ref) = 0 then let

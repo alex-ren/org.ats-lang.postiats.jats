@@ -1,6 +1,4 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
-
-staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 val gref_63 = D2Ecst<conats_atomref_create_2568:{para:a_3842}(((para:a_3842) -<fun> atomref_726(para:a_3842))):type> (0)
 
@@ -47,7 +45,8 @@ fun consumer_71 = lam (<P2Tann>(x_72:int:t@ype)) <fun> =
             else
               let
                 val () = D2Ecst<conats_atomref_update_2569:{para:a_3843}(((atomref_726(para:a_3843), para:a_3843) -<fun> void)):type> (ref_73, <D2Esym>(-) (D2Ecst<conats_atomref_get_2570:{para:a_3844}(((atomref_726(para:a_3844)) -<fun> para:a_3844)):type> (ref_73), 1))
-                val () = D2Ecst<conats_shared_release_2562:{para:a_3838}(((shared_t_722(para:a_3838), para:a_3838) -<fun> void)):type> (s_64, ref_73)
+                val ref_76 = D2Ecst<conats_shared_signal_2563:{para:a_3839}(((shared_t_722(para:a_3839), para:a_3839) -<fun> para:a_3839)):type> (s_64, ref_73)
+                val () = D2Ecst<conats_shared_release_2562:{para:a_3838}(((shared_t_722(para:a_3838), para:a_3838) -<fun> void)):type> (s_64, ref_76)
               in
                 consumer_71 (x_72)
               end)
@@ -55,10 +54,10 @@ fun consumer_71 = lam (<P2Tann>(x_72:int:t@ype)) <fun> =
         loop_74 ()
       end:void:t@ype))
 
-val tid1_76 = D2Ecst<conats_tid_allocate_2574:(() -<fun> thread_id_t_728):type> ()
+val tid1_77 = D2Ecst<conats_tid_allocate_2574:(() -<fun> thread_id_t_728):type> ()
 
-val tid2_77 = D2Ecst<conats_tid_allocate_2574:(() -<fun> thread_id_t_728):type> ()
+val tid2_78 = D2Ecst<conats_tid_allocate_2574:(() -<fun> thread_id_t_728):type> ()
 
-val () = D2Ecst<conats_thread_create_2575:{para:a_3850}(((((para:a_3850) -<fun> void), para:a_3850, thread_id_t_728) -<fun> void)):type> (producer_65, 0, tid1_76)
+val () = D2Ecst<conats_thread_create_2575:{para:a_3850}(((((para:a_3850) -<fun> void), para:a_3850, thread_id_t_728) -<fun> void)):type> (producer_65, 0, tid1_77)
 
-val () = D2Ecst<conats_thread_create_2575:{para:a_3850}(((((para:a_3850) -<fun> void), para:a_3850, thread_id_t_728) -<fun> void)):type> (consumer_71, 0, tid2_77)
+val () = D2Ecst<conats_thread_create_2575:{para:a_3850}(((((para:a_3850) -<fun> void), para:a_3850, thread_id_t_728) -<fun> void)):type> (consumer_71, 0, tid2_78)
