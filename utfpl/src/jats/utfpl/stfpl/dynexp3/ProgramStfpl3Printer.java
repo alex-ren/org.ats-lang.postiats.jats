@@ -8,6 +8,7 @@ import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyType;
+import jats.utfpl.utils.Log;
 
 import java.net.URL;
 
@@ -126,10 +127,13 @@ public class ProgramStfpl3Printer {
     }
 
     private ST printD3Cfundecs(D3Cfundecs node) {
-        // D3Cfundecs_st(knd, f3ds) ::= <<
+        // D3Cfundecs_st(knd, env, f3ds) ::= <<
         ST st = m_stg.getInstanceOf("D3Cfundecs_st");
         ST st1 = printEfunkind(node.m_knd);
         st.add("knd", st1);
+        for (Cd3var var: node.m_env) {
+        	st.add("env", var.toString());
+        }
         
         for (Cf3undec f3undec: node.m_f3ds) {
             st.add("f3ds", printCf3undec(f3undec));
@@ -386,6 +390,9 @@ public class ProgramStfpl3Printer {
         // D3Evar_st(var, type) ::= <<
         ST st = m_stg.getInstanceOf("D3Evar_st");
         st.add("var", node.m_d3var);
+        if (node.m_d3var.toStringNoStamp().equals("producer")) {
+        	Log.log4j.info("eeeeeeeeeeeeee type is " + node.getType().toSTStfpl3(m_stg_type).render());
+        }
         st.add("type", node.getType().toSTStfpl3(m_stg_type));
         return st;
     }

@@ -163,9 +163,38 @@ var sys_assert_var = true;
 
 // =====================
 
-var g_63;
-var x_64;
 
+foo1_63(sys_tid) =
+  foo1_63__1{  var foo1_clo9_id = sys_mylib_obj.createTuple2(1, sys_gstack.frame_get(sys_tid, 0, 0));
+  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+loop_65(sys_tid) =
+  loop_65__1{  var loop_clo11_id = sys_mylib_obj.createTuple2(2, sys_gstack.frame_get(sys_tid, 0, 0));
+  var foo1_63_ele12_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (foo1_63_ele12_id, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_63(sys_tid);
+  loop_65__2{  var y_66 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, y_66);
+  } ->
+  Skip
+  ;
+
+foo2_64(sys_tid) =
+  foo2_64__1{  var foo2_clo14_id = sys_mylib_obj.createTuple2(3, sys_gstack.frame_get(sys_tid, 0, 0));
+  var foo1_63_ele15_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  var env16_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env16_id, 0, foo1_63_ele15_id);
+  var loop_closure17_id = sys_mylib_obj.createTuple2(2, env16_id);
+  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
 
 // =====================
 
@@ -173,14 +202,11 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main5_id__1{  g_63 = atom_ref_manager.allocate(0);
-  } ->
-  main5_id__2{  atom_ref_manager.setElement(g_63, 3)
-  } ->
-  main5_id__3{  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  main5_id__4{  var temp3_id = call(eq, x_64, 4);
-  sys_assert_var = temp3_id;
+  main22_id__1{  var env18_id = sys_mylib_obj.createTuple(0);
+  var foo1_closure19_id = sys_mylib_obj.createTuple2(1, env18_id);
+  var env20_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env20_id, 0, env18_id);
+  var foo2_closure21_id = sys_mylib_obj.createTuple2(3, env20_id);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

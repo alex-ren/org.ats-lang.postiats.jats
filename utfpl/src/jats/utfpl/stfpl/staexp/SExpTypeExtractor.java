@@ -54,13 +54,19 @@ public class SExpTypeExtractor {
             return extractType((S2Evar)node);
         } else if (node instanceof S2Etyrec) {
             return extractType((S2Etyrec)node);
+        } else if (node instanceof S2Einvar) {
+            return extractType((S2Einvar)node);            
         } else {
             throw new Error(node + " is not supported");
         }
         
     }
 
-    private static ISType extractType(S2Ecst node) {
+    private static ISType extractType(S2Einvar node) {
+	    return extractType(node.m_exp);
+    }
+
+	private static ISType extractType(S2Ecst node) {
         String name = node.getName();
 
         if (name.equals(DefaultAppTypeStore.ats_void_t0ype)) {
@@ -144,7 +150,11 @@ public class SExpTypeExtractor {
         List<ISType> args = extractTypeList(node.m_arg);
         ISType res = extractType(node.m_res);
         
-        return new FunType(npf, args, res, FUNCLOfun.cInstance /*extern function cannot be closure*/, /*todo always has effect*/1);
+        return new FunType(npf, 
+        		args, 
+        		res, 
+        		FUNCLOfun.cInstance /*todo: Current, there is no info for closure.*/, 
+        		/*todo always has effect*/1);
     }
 
     public static ISType extractType(S2Eexi node) {

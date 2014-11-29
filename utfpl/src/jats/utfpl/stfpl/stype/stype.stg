@@ -71,7 +71,7 @@ symbol_st(symbol) ::= <<
 
 // handle Cstamp
 stamp_st(stamp) ::= <<
-<stamp.data>
+<stamp.data>_<stamp.mydata>
 >>
 
 VarType_st(ty) ::= <<

@@ -13,6 +13,9 @@ public class MCInsMove implements IMCInstruction {
     public MCInsMove(IMCValPrim vp, MCSId holder) {
         m_holder = holder;
         m_vp = vp;
+        if (vp == null) {
+        	throw new Error("eeeeeeeeeeeeeeee3");
+        }
     }
 
     @Override

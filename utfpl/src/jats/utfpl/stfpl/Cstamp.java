@@ -8,13 +8,18 @@ public class Cstamp {
         return m_id;
     }
     
+    public int getMydata() {
+        return m_myid;
+    }
+    
     public Cstamp(int id) {
         m_id = id;
         m_myid = 0;
     }
     
     public Cstamp(int id, int myid) {
-    	
+        m_id = id;
+        m_myid = myid;
     }
     
     @Override

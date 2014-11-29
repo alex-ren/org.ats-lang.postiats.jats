@@ -96,8 +96,13 @@ public class FunType extends BoxedType {
             } else {
                 right.m_npf = m_npf;
             }
-            
-            if ( m_funclo instanceof FunCloNA) {
+
+            if (!m_funclo.match(right.m_funclo)) {
+            	throw new Error("closure information not match." + 
+                "left is " + this.toSTStfpl3(AuxSType.cStg).render() + 
+                " right is " + right.toSTStfpl3(AuxSType.cStg).render());
+            }
+            if (m_funclo instanceof FunCloNA || m_funclo == null) {
                 m_funclo = right.m_funclo;
             } else {
                 right.m_funclo = m_funclo;

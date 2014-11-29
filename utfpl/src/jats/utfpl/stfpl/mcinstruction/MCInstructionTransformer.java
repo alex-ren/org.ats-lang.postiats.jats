@@ -28,10 +28,12 @@ import jats.utfpl.stfpl.instructions.VNameCst;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.RecType;
+import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -127,7 +129,7 @@ public class MCInstructionTransformer {
         Map<SId, MCSId> map_clo_name = new HashMap<SId, MCSId>();
         Map<SId, MCSId> map_env_name = new HashMap<SId, MCSId>();
         Map<SId, MCSId> map_name = new HashMap<SId, MCSId>();
-        m_main_inss = transform(m_prog.m_main_inss
+        m_main_inss = transform(null, m_prog.m_main_inss
         		, map_clo_name
                 , map_env_name
                 , map_name);
@@ -187,7 +189,7 @@ public class MCInstructionTransformer {
         Map<SId, MCSId> map_env_name = new HashMap<SId, MCSId>();
         Map<SId, MCSId> map_name = new HashMap<SId, MCSId>();
         
-        List<IMCInstruction> mcinss = transform(node.m_inss
+        List<IMCInstruction> mcinss = transform(node.m_name, node.m_inss
 						        		, map_clo_name
 						                , map_env_name
 						                , map_name);
@@ -209,12 +211,14 @@ public class MCInstructionTransformer {
         List<SId> env_members = new ArrayList<SId>();
         if (node.isClosure()) {
             for (DefFun fun: node.m_funs) {
+                
+                for (SIdUser su: node.m_env) {
+                	env_members.add(su.getSId());
+                }
             	grp_members.add(fun.m_name);
             }
             
-            for (SIdUser su: node.m_env) {
-            	env_members.add(su.getSId());
-            }
+
         }
 
         List<MCDefFun> mcdefs = new ArrayList<MCDefFun>();
@@ -232,8 +236,8 @@ public class MCInstructionTransformer {
     		, RecType env_type
     		) {
     	
-    	System.out.println("MCInstructionTransform DefFun fun is " + fun_def.m_name.toStringIns() +
-    			"funtype is " + AuxSType.getClosureInfo(fun_def.m_name.getType()).toString());
+//    	Log.log4j.info("MCInstructionTransform DefFun fun is " + fun_def.m_name.toStringIns() +
+//    			" funtype is " + AuxSType.getClosureInfo(fun_def.m_name.getType()).toString());
         
         // add instructions for creating closures for themselves
         // as well as getting element from environment
@@ -294,11 +298,16 @@ public class MCInstructionTransformer {
         	ISType member_type = env_member.getType();
         	MCInsGetEleFromEnv ins = null;
         	if (AuxSType.isClosure(member_type) && env_member.isUserFun()) {
+        		/* ******** *********** */
+        		// To get type.
         		DefFunGroup member_fun_grp = (DefFunGroup)m_fun_map.get(env_member);
         		member_type = member_fun_grp.getEnvType();  // The environment of the function.
 
+        		/* ******** *********** */
+        		
+        		// get the env for a closure from the environment
         		SId env_sid = m_mcsid_factory.getSIdFac().createLocalVar(
-            			env_member.toStringWithStamp() + "_ele", member_type);
+            			env_member.toStringWithStamp() + "_env", member_type);
         		MCSId mcenv_sid = m_mcsid_factory.fromSId(env_sid);
         		map_env_name.put(env_member, mcenv_sid);  // function name => env name
 //        		map_env_ele.put(env_member, mcenv_sid);  // element in env => its new name
@@ -309,6 +318,23 @@ public class MCInstructionTransformer {
         				, env_member.toStringWithStamp()  // tag
         				, index
         				);
+        		mcinss.add(ins);  // add to inss
+        		
+        		/* ******** *********** */
+        		
+        		// create a closure        		
+        		SId closure_sid = m_mcsid_factory.getSIdFac().createLocalVar(
+            			env_member.toStringWithStamp() + "_closure", member_type);
+        		MCSId mcclosure_sid = m_mcsid_factory.fromSId(closure_sid);
+        		map_clo_name.put(env_member, mcclosure_sid);  // function name => closure name
+        		MCInsClosure ins2 = new MCInsClosure(
+        				mcclosure_sid
+        				, mcfun_name
+        				, mcenv_sid  // environment of the function
+        				);
+        		mcinss.add(ins2);  // add to inss
+        		
+        		
         	} else {
         		SId env_sid = m_mcsid_factory.getSIdFac().createLocalVar(
             			env_member.toStringWithStamp(), member_type);
@@ -323,15 +349,16 @@ public class MCInstructionTransformer {
         				, env_member.toStringWithStamp()  // tag
         				, index
         				);
+        		mcinss.add(ins);  // add to inss        		
         	}
         	++index;
         	
-        	mcinss.add(ins);  // add to inss
+        	
 
         }
 
         // process the body of the function
-        List<IMCInstruction> mcinss_tail = transform(fun_def.m_inss
+        List<IMCInstruction> mcinss_tail = transform(fun_def.m_name, fun_def.m_inss
         		                      , map_clo_name
         		                      , map_env_name
         		                      , map_name);
@@ -347,11 +374,12 @@ public class MCInstructionTransformer {
     }
     
 
-    List<IMCInstruction> transform(List<IStfplInstruction> inss
+    List<IMCInstruction> transform(SId funname, List<IStfplInstruction> inss
     		, Map<SId, MCSId> map_clo_name  // function name => closure name
     		, Map<SId, MCSId> map_env_name  // function name => env name
     		, Map<SId, MCSId> map_name  // name change caused by element of the environment
     		) {
+
         List<IMCInstruction> mcinss = new ArrayList<IMCInstruction>();
         for (IStfplInstruction ins: inss) {
             IMCInstruction mcins = transform(ins
@@ -395,6 +423,7 @@ public class MCInstructionTransformer {
         // The SId (ins.m_name) may be of inappropriate type (using closure, not env).
     	// We build a new SId here.
     	SId old_name = ins.m_name;
+//    	Log.log4j.info("form env " + old_name.toStringIns());
     	RecType env_type = ins.getFunGroup().getEnvType();
     	SId new_name = m_mcsid_factory.getSIdFac().createEnvForclosure("env", env_type);
     	MCSId mcnew_name = m_mcsid_factory.fromSId(new_name);
@@ -412,10 +441,15 @@ public class MCInstructionTransformer {
     		MCSId mcele = null;
     		if (AuxSType.isClosure(ele_type) && ele.isUserFun()) {
     			mcele = map_env_name.get(ele); 
+        		if (mcele == null) {
+        			throw new Error("This should not happen. " + "ele is " + ele.toStringIns() +
+        		    ". Maybe you specify the enclosing function as a closure or change ele to a function.");
+        		}
     		} else {
     			mcele = m_mcsid_factory.fromSId(ele);
     		}
     		
+
     		env_eles.add(mcele);
     		
     	}
@@ -484,6 +518,14 @@ public class MCInstructionTransformer {
 
         MCSId holder = m_mcsid_factory.fromSId(ins.m_holder);
         IMCValPrim vp = m_mcsid_factory.fromIValPrim(ins.m_vp, map_clo_name, map_name);
+        if (null == vp) {
+        	if (ins.m_vp instanceof SId) {
+        		throw new Error("SId vp is null for " + ((SId)ins.m_vp).toStringIns());
+        	} else {
+        		throw new Error("SIdUser vp is null for " + ((SIdUser)ins.m_vp).getSId().toStringIns());
+        	}
+        	
+        }
         return new MCInsMove(vp, holder);
     }
 
@@ -495,13 +537,13 @@ public class MCInstructionTransformer {
 
         MCSId holder = m_mcsid_factory.fromSId(ins.m_holder);
         IMCValPrim cond = m_mcsid_factory.fromIValPrim(ins.m_cond, map_clo_name, map_name);
-        List<IMCInstruction> btrue = transform(ins.m_btrue
+        List<IMCInstruction> btrue = transform(null, ins.m_btrue
 								        		, map_clo_name
 								                , map_env_name
 								                , map_name);
         List<IMCInstruction> bfalse = null;
         if (null != ins.m_bfalse) {
-            bfalse = transform(ins.m_bfalse
+            bfalse = transform(null, ins.m_bfalse
 	        		, map_clo_name
 	                , map_env_name
 	                , map_name);
@@ -720,9 +762,11 @@ public class MCInstructionTransformer {
         if (AuxSType.isClosure(fun_name.getType())) {
         	MCSId mcenv = map_env_name.get(fun_name);
         	if (null == mcenv) {
-        		throw new Error("Check this. fun_name is " + fun_name.toStringWithStamp());
+        		Log.log4j.error("Check this. Cannot find the env for fun_name: " + fun_name.toStringWithStamp());
+        	} else {
+        		mcargs.add(mcenv);  // Turn env into a normal argument.
         	}
-            mcargs.add(mcenv);  // Turn env into a normal argument.
+            
         }
         
         return new MCInsCall(mcholder, mcfun, mcargs);

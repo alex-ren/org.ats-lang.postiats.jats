@@ -18,9 +18,11 @@ public class Test {
 
 //        		  "src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
 //        		, "src/jats/utfpl/stfpl/test/02_closure_call.dats"
+//        		"src/jats/utfpl/stfpl/test/02_2_closure_level.dats"
+//        		"src/jats/utfpl/stfpl/test/02_3_closure_return.dats"        		
 //        		, "src/jats/utfpl/stfpl/test/03_symbol_opr.dats"
 //        		, "src/jats/utfpl/stfpl/test/04_if_function.dats"
-//        		, "src/jats/utfpl/stfpl/test/05_use_ref.dats"
+//        		"src/jats/utfpl/stfpl/test/05_use_ref.dats"
 //        		, "src/jats/utfpl/stfpl/test/06_mc_assert.dats"
 //        		, "src/jats/utfpl/stfpl/test/07_use_array.dats"
 //        		"src/jats/utfpl/stfpl/test/08_use_mutex.dats"
@@ -32,6 +34,7 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/14_create_threads.dats"
 //        		"src/jats/utfpl/stfpl/test/15_thread_cond.dats"
         		"src/jats/utfpl/stfpl/test/16_reader_writer.dats"
+
 
         		
         };

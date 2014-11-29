@@ -40,4 +40,20 @@ public class FUNCLOclo implements Ifunclo {
         }
     }
 
+	@Override
+    public boolean match(Ifunclo right) {
+	    if (null == right) {
+	    	throw new Error("This should not happen.");
+//	    	return true;
+	    } else if (right instanceof FUNCLOclo) {
+	    	return true;
+	    } else if (right instanceof FunCloNA) {
+	    	return false;
+	    } else if (right instanceof FUNCLOfun) {
+	    	return false;
+	    } else {
+	    	throw new Error("Ifunclo " + right + " is not supported.");
+	    }
+    }
+
 }

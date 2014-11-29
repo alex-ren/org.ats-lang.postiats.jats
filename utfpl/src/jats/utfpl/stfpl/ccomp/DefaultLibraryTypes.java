@@ -82,6 +82,31 @@ public class DefaultLibraryTypes {
 
     }
     
+
+	private ISType getCastVwtp1() {
+    	List<ISType> paras = new ArrayList<ISType>();
+    	PolyParaType from = createPolyParaType();
+    	paras.add(from);
+    	
+    	PolyParaType to = createPolyParaType();
+    	FunType fun_type = new FunType(
+                -1/*no proof*/, 
+                paras, 
+                to,
+                FUNCLOfun.cInstance,
+                0 /*has no effect*/);
+    	
+    	List<PolyParaType> polys1 = new ArrayList<PolyParaType>();
+    	polys1.add(from);
+        PolyType poly_type1 = new PolyType(polys1, fun_type);
+
+    	List<PolyParaType> polys2 = new ArrayList<PolyParaType>();
+    	polys2.add(to);
+    	PolyType poly_type2 = new PolyType(polys2, poly_type1);
+    	return poly_type2;    	
+    	
+    }
+    
     // Return value can be null.
     public ISType queryType(Csymbol sym) {
     	ISType type = m_map.get(sym.m_str);
@@ -94,10 +119,14 @@ public class DefaultLibraryTypes {
     		sym.equals("*") ||
     		sym.equals("/")) {
     		return getType1p1();
-    	}
+    	} 
+//    	else if (sym.equals("castvwtp1")) {
+//    		return getCastVwtp1();
+//    	}
     	
     	return null;
     }
+
 }
 
 

@@ -36,6 +36,8 @@ import jats.utfpl.stfpl.staexp.S2Eint;
 import jats.utfpl.stfpl.staexp.S2EintDeserializer;
 import jats.utfpl.stfpl.staexp.S2Eintinf;
 import jats.utfpl.stfpl.staexp.S2EintinfDeserializer;
+import jats.utfpl.stfpl.staexp.S2Einvar;
+import jats.utfpl.stfpl.staexp.S2EinvarDeserializer;
 import jats.utfpl.stfpl.staexp.S2Esizeof;
 import jats.utfpl.stfpl.staexp.S2EsizeofDeserializer;
 import jats.utfpl.stfpl.staexp.S2Etyrec;
@@ -195,6 +197,7 @@ public class StfplProgramParserJson {
         gsonBuilder.registerTypeAdapter(S2Eexi.class, new S2EexiDeserializer());
         gsonBuilder.registerTypeAdapter(S2Euni.class, new S2EuniDeserializer());
         gsonBuilder.registerTypeAdapter(S2Evar.class, new S2EvarDeserializer());
+        gsonBuilder.registerTypeAdapter(S2Einvar.class, new S2EinvarDeserializer());
         gsonBuilder.registerTypeAdapter(S2Etyrec.class, new S2EtyrecDeserializer());
         
 

@@ -2,7 +2,9 @@ package jats.utfpl.stfpl.dynexp3;
 
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.utils.Log;
 
 public class Cd3var {
     public Csymbol m_sym;
@@ -21,6 +23,10 @@ public class Cd3var {
         m_sym = sym;
         m_stamp = stamp;
         m_stype = stype;
+        
+        if (sym.m_str.equals("producer")) {
+        	Log.log4j.info("===============producer is " + m_stype.toSTStfpl3(AuxSType.cStg).render());
+        }
     }
 
     @Override

@@ -10,18 +10,16 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:7
-Total Transitions:7
-Time Used:0.0169323s
+Visited States:4
+Total Transitions:4
+Time Used:0.0159296s
 Estimated Memory Used:8564.736KB
 
 
 =======================================================
 Assertion: main() |= G sys_assertion
 ********Verification Result********
-The Assertion (main() |= G sys_assertion) is NOT valid.
-A counterexample is presented as follows.
-<init -> main_init -> main5_id__1 -> main5_id__2 -> main5_id__3 -> main5_id__4>
+The Assertion (main() |= G sys_assertion) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -31,8 +29,8 @@ System Abstraction: False
 
 ********Verification Statistics********
 Visited States:5
-Total Transitions:5
-Time Used:0.0043109s
+Total Transitions:4
+Time Used:0.0044918s
 Estimated Memory Used:8548.352KB
 
 

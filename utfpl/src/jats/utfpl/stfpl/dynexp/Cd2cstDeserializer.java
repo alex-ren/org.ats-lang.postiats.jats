@@ -47,6 +47,14 @@ public class Cd2cstDeserializer implements JsonDeserializer<Cd2cst> {
                 type = context.deserialize(je3, Cs2exp.class);
             }
 
+//            // todo: This is just a hack now.
+//            if (symbol.getData().equals("castvwtp1")) {
+//            	ISType stype = m_fac.queryType(symbol);
+//                d2cst = new Cd2cst(stamp, type, symbol, stype);
+//                m_map.put(stamp, d2cst);
+//                return d2cst;
+//            	
+//            }
             ISType stype = SExpTypeExtractor.extractType(type);
             if (null == stype) {
                 stype = m_fac.queryType(symbol);

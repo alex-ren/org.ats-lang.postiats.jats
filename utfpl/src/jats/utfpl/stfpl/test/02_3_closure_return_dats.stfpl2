@@ -1,0 +1,19 @@
+val y_63 = 0
+
+fun foo1_64 = lam () <clo> = 
+  <D2EannFunclo><clo_ref>(
+    <D2EannSeff>(
+      let
+        val a_65 = 3
+        fun foo2_66 = lam () <clo> = 
+          <D2EannFunclo><clo_ref>(
+            <D2EannSeff>(
+              let
+                val b_67 = a_65
+              in
+                foo1_64
+              end:(() -<clo> int):type))
+        val x_68 = <D2Esym>(+) (y_63, 1)
+      in
+        x_68
+      end:int:t@ype))

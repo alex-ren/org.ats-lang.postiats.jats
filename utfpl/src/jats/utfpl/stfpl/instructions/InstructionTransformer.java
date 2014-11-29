@@ -551,7 +551,11 @@ public class InstructionTransformer {
 
         // transform the body of the function
         List<IStfplInstruction> inss2 = new ArrayList<IStfplInstruction>();
-        transform(body, env, inss2, m_sid_factory.createRetHolder("ret", AuxSType.getRetType(f3undec.m_type)), false);
+        transform(body, 
+        		env, 
+        		inss2, 
+        		m_sid_factory.createRetHolder("ret", AuxSType.getRetType(f3undec.m_type)), 
+        		false);
         DefFun def_fun = new DefFun(loc, name, lin, paras, inss2);
 
         // create the closure if necessary

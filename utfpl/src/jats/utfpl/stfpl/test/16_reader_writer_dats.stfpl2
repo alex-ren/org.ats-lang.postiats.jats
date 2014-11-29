@@ -1,63 +1,101 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
-val gref_63 = D2Ecst<conats_atomref_create_2568:{para:a_3842}(((para:a_3842) -<fun> atomref_726(para:a_3842))):type> (0)
+staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
 
-val s_64 = D2Ecst<conats_shared_create_2560:{para:a_3836}(((para:a_3836) -<fun> shared_t_722(para:a_3836))):type> (gref_63)
+val gref_63 = D2Ecst<{para:a_3842_0}(((para:a_3842_0) -<fun> atomref_726_0(para:a_3842_0)))> (0)
 
-fun producer_65 = lam (<P2Tann>(x_66:int:t@ype)) <fun> = 
+"D2Cstacsts" lin_atomref_736: (t@ype) -\> viewtype
+
+val <P2Tann>(lin_ref_64:lin_atomref_736_0(int):viewtype) = D2Ecst<{para:to_3869_0}({para:from_3870_0}(((para:from_3870_0) -<fun> para:to_3869_0)))> (gref_63)
+
+val s_65 = D2Ecst<{para:a_3836_0}(((para:a_3836_0) -<fun> shared_t_722_0(para:a_3836_0)))> (lin_ref_64)
+
+fun lin_atomref_update_66 = lamSta. lam (<P2Tann>(lref_67:lin_atomref_736_0(para:a_3942_0):viewtype), <P2Tann>(data_68:para:a_3942_0:t@ype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val ref_69 = D2Ecst<{para:to_3869_0}({para:from_3870_0}(((para:from_3870_0) -<fun> para:to_3869_0)))> (lref_67)
+      val () = D2Ecst<{para:a_3843_0}(((atomref_726_0(para:a_3843_0), para:a_3843_0) -<fun> void))> (ref_69, data_68)
+      val lref_70 = D2Ecst<{para:to_3869_0}({para:from_3870_0}(((para:from_3870_0) -<fun> para:to_3869_0)))> (ref_69)
+    in
+      lref_70
+    end:lin_atomref_736_0(para:a_3942_0):viewtype)
+
+fun lin_atomref_get_71 = lamSta. lam (<P2Tann>(lref_72:lin_atomref_736_0(para:a_3943_0):viewtype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val ref_73 = D2Ecst<{para:to_3869_0}({para:from_3870_0}(((para:from_3870_0) -<fun> para:to_3869_0)))> (lref_72)
+      val v_74 = D2Ecst<{para:a_3844_0}(((atomref_726_0(para:a_3844_0)) -<fun> para:a_3844_0))> (ref_73)
+      val lref_75 = D2Ecst<{para:to_3869_0}({para:from_3870_0}(((para:from_3870_0) -<fun> para:to_3869_0)))> (ref_73)
+    in
+      ( | lref_75, v_74)
+    end:@{0 = lin_atomref_736_0(para:a_3943_0), 1 = para:a_3943_0}:viewt0ype)
+
+fun producer_76 = lam (<P2Tann>(x_77:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let
-        val ref_67 = D2Ecst<conats_shared_acquire_2561:{para:a_3837}(((shared_t_722(para:a_3837)) -<fun> para:a_3837)):type> (s_64)
-        fun loop_68 = lam () <clo> = 
-          <D2EannSeff>(
-            if (<D2Esym>(=) (D2Ecst<conats_atomref_get_2570:{para:a_3844}(((atomref_726(para:a_3844)) -<fun> para:a_3844)):type> (ref_67), 1)) then
+        val ref_78 = D2Ecst<{para:a_3837_0}(((shared_t_722_0(para:a_3837_0)) -<fun> para:a_3837_0))> (s_65)
+        fun loop_79 = lam (<P2Tann>(ref_80:lin_atomref_736_0(int):viewtype)) <clo> = 
+          <D2EannFunclo><clo_ref>(
+            <D2EannSeff>(
               let
-                val ref_69 = D2Ecst<conats_shared_condwait_2564:{para:a_3840}(((shared_t_722(para:a_3840), para:a_3840) -<fun> para:a_3840)):type> (s_64, ref_67)
+                val <P2Trec>(<LABP2ATnorm>(ref_81), <LABP2ATnorm>(v_82)) = lin_atomref_get_71 (ref_80)
               in
-                loop_68 ()
-              end
-            else
-              let
-                val () = D2Ecst<conats_atomref_update_2569:{para:a_3843}(((atomref_726(para:a_3843), para:a_3843) -<fun> void)):type> (ref_67, <D2Esym>(+) (D2Ecst<conats_atomref_get_2570:{para:a_3844}(((atomref_726(para:a_3844)) -<fun> para:a_3844)):type> (ref_67), 1))
-                val ref_70 = D2Ecst<conats_shared_signal_2563:{para:a_3839}(((shared_t_722(para:a_3839), para:a_3839) -<fun> para:a_3839)):type> (s_64, ref_67)
-                val () = D2Ecst<conats_shared_release_2562:{para:a_3838}(((shared_t_722(para:a_3838), para:a_3838) -<fun> void)):type> (s_64, ref_70)
-              in
-                producer_65 (x_66)
-              end)
+                if (<D2Esym>(=) (v_82, 1)) then
+                  let
+                    val ref_83 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0), para:a_3840_0) -<fun> para:a_3840_0))> (s_65, ref_81)
+                  in
+                    loop_79 (ref_83)
+                  end
+                else
+                  let
+                    val <P2Trec>(<LABP2ATnorm>(ref_84), <LABP2ATnorm>(v_85)) = lin_atomref_get_71 (ref_81)
+                    val ref_86 = lin_atomref_update_66 (ref_84, <D2Esym>(+) (v_85, 1))
+                    val ref_87 = D2Ecst<{para:a_3839_0}(((shared_t_722_0(para:a_3839_0), para:a_3839_0) -<fun> para:a_3839_0))> (s_65, ref_86)
+                    val () = D2Ecst<{para:a_3838_0}(((shared_t_722_0(para:a_3838_0), para:a_3838_0) -<fun> void))> (s_65, ref_87)
+                  in
+                    producer_76 (x_77)
+                  end
+              end:void:t@ype))
       in
-        loop_68 ()
+        loop_79 (ref_78)
       end:void:t@ype))
 
-fun consumer_71 = lam (<P2Tann>(x_72:int:t@ype)) <fun> = 
+fun consumer_88 = lam (<P2Tann>(x_89:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let
-        val ref_73 = D2Ecst<conats_shared_acquire_2561:{para:a_3837}(((shared_t_722(para:a_3837)) -<fun> para:a_3837)):type> (s_64)
-        fun loop_74 = lam () <clo> = 
-          <D2EannSeff>(
-            if (<D2Esym>(=) (D2Ecst<conats_atomref_get_2570:{para:a_3844}(((atomref_726(para:a_3844)) -<fun> para:a_3844)):type> (ref_73), 0)) then
+        val ref_90 = D2Ecst<{para:a_3837_0}(((shared_t_722_0(para:a_3837_0)) -<fun> para:a_3837_0))> (s_65)
+        fun loop_91 = lam (<P2Tann>(ref_92:lin_atomref_736_0(int):viewtype)) <clo> = 
+          <D2EannFunclo><clo_ref>(
+            <D2EannSeff>(
               let
-                val ref_75 = D2Ecst<conats_shared_condwait_2564:{para:a_3840}(((shared_t_722(para:a_3840), para:a_3840) -<fun> para:a_3840)):type> (s_64, ref_73)
+                val <P2Trec>(<LABP2ATnorm>(ref_93), <LABP2ATnorm>(v_94)) = lin_atomref_get_71 (ref_92)
               in
-                loop_74 ()
-              end
-            else
-              let
-                val () = D2Ecst<conats_atomref_update_2569:{para:a_3843}(((atomref_726(para:a_3843), para:a_3843) -<fun> void)):type> (ref_73, <D2Esym>(-) (D2Ecst<conats_atomref_get_2570:{para:a_3844}(((atomref_726(para:a_3844)) -<fun> para:a_3844)):type> (ref_73), 1))
-                val ref_76 = D2Ecst<conats_shared_signal_2563:{para:a_3839}(((shared_t_722(para:a_3839), para:a_3839) -<fun> para:a_3839)):type> (s_64, ref_73)
-                val () = D2Ecst<conats_shared_release_2562:{para:a_3838}(((shared_t_722(para:a_3838), para:a_3838) -<fun> void)):type> (s_64, ref_76)
-              in
-                consumer_71 (x_72)
-              end)
+                if (<D2Esym>(=) (v_94, 0)) then
+                  let
+                    val ref_95 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0), para:a_3840_0) -<fun> para:a_3840_0))> (s_65, ref_93)
+                  in
+                    loop_91 (ref_95)
+                  end
+                else
+                  let
+                    val <P2Trec>(<LABP2ATnorm>(ref_96), <LABP2ATnorm>(v_97)) = lin_atomref_get_71 (ref_93)
+                    val ref_98 = lin_atomref_update_66 (ref_96, <D2Esym>(-) (v_97, 1))
+                    val ref_99 = D2Ecst<{para:a_3839_0}(((shared_t_722_0(para:a_3839_0), para:a_3839_0) -<fun> para:a_3839_0))> (s_65, ref_98)
+                    val () = D2Ecst<{para:a_3838_0}(((shared_t_722_0(para:a_3838_0), para:a_3838_0) -<fun> void))> (s_65, ref_99)
+                  in
+                    consumer_88 (x_89)
+                  end
+              end:void:t@ype))
       in
-        loop_74 ()
+        loop_91 (ref_90)
       end:void:t@ype))
 
-val tid1_77 = D2Ecst<conats_tid_allocate_2574:(() -<fun> thread_id_t_728):type> ()
+val tid1_100 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
 
-val tid2_78 = D2Ecst<conats_tid_allocate_2574:(() -<fun> thread_id_t_728):type> ()
+val tid2_101 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
 
-val () = D2Ecst<conats_thread_create_2575:{para:a_3850}(((((para:a_3850) -<fun> void), para:a_3850, thread_id_t_728) -<fun> void)):type> (producer_65, 0, tid1_77)
+val () = D2Ecst<{para:a_3850_0}(((((para:a_3850_0) -<fun> void), para:a_3850_0, thread_id_t_728_0) -<fun> void))> (producer_76, 0, tid1_100)
 
-val () = D2Ecst<conats_thread_create_2575:{para:a_3850}(((((para:a_3850) -<fun> void), para:a_3850, thread_id_t_728) -<fun> void)):type> (consumer_71, 0, tid2_78)
+val () = D2Ecst<{para:a_3850_0}(((((para:a_3850_0) -<fun> void), para:a_3850_0, thread_id_t_728_0) -<fun> void))> (consumer_88, 0, tid2_101)

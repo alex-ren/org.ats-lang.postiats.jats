@@ -573,8 +573,7 @@ public class DynExp3Transformer {
                     // Just curious whether this would be triggered. 
                     TypeCheckResult res = name.m_stype.match(d3elam.getType());
                     if (!res.isGood()) {
-                        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
-                        STGroup stg = new STGroupFile(fileURL_stype, "ascii", '<', '>');
+                        STGroup stg = AuxSType.cStg;
                         System.out.println("left is " + name.m_stype.toSTStfpl3(stg).render());
                         System.out.println("right is " + d3elam.getType().toSTStfpl3(stg).render());
 
@@ -593,6 +592,11 @@ public class DynExp3Transformer {
                 total_needed.remove(f3un.m_var);  // due to mutually recursive, we
                                                     // may have put sibling closures into "needed".
             }
+            
+            Set<Cd3var> temp_needed = new HashSet<Cd3var>(total_needed);
+            temp_needed.removeAll(scope);
+            needed.addAll(temp_needed);
+            
             if (f3uns.isEmpty()) {
                 return null;
             } else {
@@ -1023,9 +1027,8 @@ public class DynExp3Transformer {
         if (null != d3var) {
             return d3var;
         } else {
-//            System.out.println("==========" + d2var.m_sym);
+//        	Log.log4j.info("=============0 ==producer is " + d2var.getSType().toSTStfpl3(AuxSType.cStg).render());
             d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType().removeProof());
-//            System.out.println("==========");
             m_varMap.put(d2var.m_stamp, d3var);
             return d3var;
         }

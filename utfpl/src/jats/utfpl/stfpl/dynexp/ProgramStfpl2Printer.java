@@ -327,6 +327,11 @@ public class ProgramStfpl2Printer {
     	ST st = m_stg.getInstanceOf("d2cst_st");
     	st.add("sym", node.m_symbol);
     	st.add("stamp", node.m_stamp);
+    	
+    	if (null != node.getSType()) {
+    		return node.getSType().toSTStfpl3(m_stg_type);
+    	}
+    	
     	if (null != node.m_type) {
     	    st.add("s2exp", printCs2exp(node.m_type));
     	}

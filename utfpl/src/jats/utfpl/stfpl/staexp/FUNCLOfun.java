@@ -13,5 +13,20 @@ public class FUNCLOfun implements Ifunclo {
     public String toString() {
         return "fun";
     }
-
+    
+	@Override
+    public boolean match(Ifunclo right) {
+	    if (null == right) {
+	    	throw new Error("This should not happen.");
+//	    	return false;
+	    } else if (right instanceof FUNCLOclo) {
+	    	return false;
+	    } else if (right instanceof FunCloNA) {
+	    	return true;
+	    } else if (right instanceof FUNCLOfun) {
+	    	return true;
+	    } else {
+	    	throw new Error("Ifunclo " + right + " is not supported.");
+	    }
+    }
 }

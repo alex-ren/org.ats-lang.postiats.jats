@@ -141,7 +141,14 @@ public class InstructionPrinter {
 
 
     private Object printInsFormEnv(InsFormEnv node) {
-        return "InsFormEnv";
+    	// InsFormEnv_st(holder, eles) ::= <<
+        ST st = m_stg.getInstanceOf("InsFormEnv_st");
+        st.add("holder", node.m_name.toStringIns());
+        for (SIdUser su: node.m_env) {
+        	st.add("eles", su.getSId().toStringIns());
+        	
+        }
+        return st;
     }
 
 

@@ -163,9 +163,31 @@ var sys_assert_var = true;
 
 // =====================
 
-var g_63;
-var x_64;
+var y_63;
 
+foo2_66(sys_tid) =
+  foo2_66__1{  var foo2_clo7_id = sys_mylib_obj.createTuple2(1, sys_gstack.frame_get(sys_tid, 0, 0));
+  var foo1_64_env8_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  var foo1_64_closure9_id = sys_mylib_obj.createTuple2(1, foo1_64_env8_id);
+  var a_6510_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 1);;
+  var b_67 = a_6510_id;
+  sys_gstack.frame_push(sys_tid, foo1_64_closure9_id);
+  } ->
+  Skip
+  ;
+
+foo1_64(sys_tid) =
+  foo1_64__1{  var foo1_clo12_id = sys_mylib_obj.createTuple2(2, sys_gstack.frame_get(sys_tid, 0, 0));
+  var a_65 = 3;
+  var env13_id = sys_mylib_obj.createTuple(2);
+  sys_mylib_obj.setTupleElement(env13_id, 0, sys_gstack.frame_get(sys_tid, 0, 0));
+  sys_mylib_obj.setTupleElement(env13_id, 1, a_65);
+  var foo2_closure14_id = sys_mylib_obj.createTuple2(1, env13_id);
+  var x_68 = call(add, y_63, 1);
+  sys_gstack.frame_push(sys_tid, x_68);
+  } ->
+  Skip
+  ;
 
 // =====================
 
@@ -173,14 +195,9 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main5_id__1{  g_63 = atom_ref_manager.allocate(0);
-  } ->
-  main5_id__2{  atom_ref_manager.setElement(g_63, 3)
-  } ->
-  main5_id__3{  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  main5_id__4{  var temp3_id = call(eq, x_64, 4);
-  sys_assert_var = temp3_id;
+  main17_id__1{  y_63 = 0;
+  var env15_id = sys_mylib_obj.createTuple(0);
+  var foo1_closure16_id = sys_mylib_obj.createTuple2(2, env15_id);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

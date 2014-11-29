@@ -19,6 +19,10 @@ public class EntityLocation {
         m_funname = mid;
         m_grp = grp;
     }
+    
+    public MCSId getFunname() {
+    	return m_funname;
+    }
 
     public  MyCspGroup getBlock() {
         return m_grp;

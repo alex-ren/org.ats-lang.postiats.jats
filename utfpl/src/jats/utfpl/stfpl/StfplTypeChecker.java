@@ -69,6 +69,7 @@ import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.FunCloNA;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
+import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.FloatType;
 import jats.utfpl.stfpl.stype.FunType;
@@ -232,9 +233,7 @@ public class StfplTypeChecker {
 
     private void typecheck(Cd2exp d2exp, ISType ty) {
         ISType ty0 = oftype(d2exp);
-//        System.out.println("=== 0010 ty0 is " + ty0);
-        
-//        System.out.println("========= d2exp is " + d2exp.d2exp_loc);
+
 //        System.out.println("d2exp.type is " + ty0.toSTStfpl3(m_stg_type).render());
 //        System.out.println("ty is " + ty.toSTStfpl3(m_stg_type).render());
         TypeCheckResult res = ty0.match(ty);
@@ -450,6 +449,7 @@ public class StfplTypeChecker {
         List<Id2exparg> argsLst = node.m_d2as_arg;
         ISType ty = oftype(node.m_d2e_fun);
         ty = ty.normalize();
+//        Log.log4j.info("ty is " + ty.toSTStfpl3(AuxSType.cStg).render());
 
         List<ISType> inner_ty = new ArrayList<ISType>();
         

@@ -40,4 +40,10 @@ InsCall_st(holder, fun, args) ::= <<
 <holder> = <fun>(<args; separator=", ">)
 >>
 
+InsFormEnv_st(holder, eles) ::= <<
+<holder> = {<eles; separator=", ">}
+>>
+
+
+
 

@@ -26,9 +26,7 @@ public class VariableInfo {
     }
 
     private VariableInfo(MCSId mid, EntityLocation defLoc) {
-//    	if (mid.getSId().toStringWithStamp().equals("temp4_id")) {
-//    		throw new Error("ERRRRRRRRRRRRRR");
-//    	}
+
         m_mid = mid;
         m_defLoc = defLoc;
         m_stackPos = null;
@@ -64,7 +62,9 @@ public class VariableInfo {
     
     public boolean getEscaped() {
     	if (null == m_isEscaped) {
-    		throw new Error("This should not happen. id is " + m_mid.toStringMCIns());
+    		throw new Error("This should not happen. id is " + m_mid.toStringMCIns() +
+    		" Maybe the enclosed function " + m_defLoc.getFunname().toStringMCIns() + 
+    		" should be declared as closure.");
     	}
         return m_isEscaped;
     }

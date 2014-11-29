@@ -30,8 +30,8 @@ D3Cextcode_st(extcode) ::= <<
 %{<extcode>%}
 >>
 
-D3Cfundecs_st(knd, f3ds) ::= <<
-<knd> <f3ds; separator="\nand ">
+D3Cfundecs_st(knd, env, f3ds) ::= <<
+<knd> {env: <env;separator=", ">} <f3ds; separator="\nand ">
 >>
 
 funkind_st(knd) ::= <<

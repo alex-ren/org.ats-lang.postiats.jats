@@ -34,12 +34,12 @@ fun conats_mutex_release (m: mutex): void
 
 (* ************* ************** *)
 
-absviewtype atomref (a: t@ype)
+abstype atomref (a: t@ype)
 
 fun conats_atomref_create {a:t@ype} (data: a): atomref a
 // fun conats_atomref_finalize {a:t@ype} (gv: atomref a): void
-fun conats_atomref_update {a:t@ype} (gv: atomref a, data: a): atomref a
-fun conats_atomref_get {a:t@ype} (gv: atomref a): (atomref a, a)
+fun conats_atomref_update {a:t@ype} (gv: atomref a, data: a): void
+fun conats_atomref_get {a:t@ype} (gv: atomref a): a
 
 abstype atomarrayref (a: t@ype)
 
@@ -55,7 +55,7 @@ abst@ype thread_id_t = int
 typedef tid = thread_id_t
 
 fun conats_tid_allocate (): tid
-typedef thread_fun_t (a: t@ype) = (a -> void)
+typedef thread_fun_t (a: t@ype) = (a -<fun1> void)
 fun conats_thread_create {a:t@ype} (tfun: thread_fun_t a, arg: a, tid: tid): void
 
 (* ************* ************** *)

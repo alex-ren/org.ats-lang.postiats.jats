@@ -1,0 +1,20 @@
+fun foo1_63 = lam () <clo> = 
+  <D2EannFunclo><clo_ref>(
+    <D2EannSeff>(
+      3:int:t@ype))
+
+fun foo2_64 = lam () <clo> = 
+  <D2EannFunclo><clo_ref>(
+    <D2EannSeff>(
+      let
+        fun loop_65 = lam () <clo> = 
+          <D2EannFunclo><clo_ref>(
+            <D2EannSeff>(
+              let
+                val y_66 = foo1_63 ()
+              in
+                y_66
+              end:int:t@ype))
+      in
+        3
+      end:int:t@ype))

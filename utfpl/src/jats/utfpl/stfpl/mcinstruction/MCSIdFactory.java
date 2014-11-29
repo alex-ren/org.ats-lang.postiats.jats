@@ -9,6 +9,7 @@ import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.mcinstruction.AuxMCIns.AddressAllocator;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +84,7 @@ public class MCSIdFactory {
 			SIdUser sid_user = (SIdUser)vp;
 			SId sid = sid_user.getSId();
 			ISType type = sid.getType();
+
 			if (AuxSType.isClosure(type) && sid.isUserFun()) {
 			    // turn function name into closure
 				MCSId closure = map_clo_name.get(sid);

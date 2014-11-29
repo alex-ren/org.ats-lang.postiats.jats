@@ -59,8 +59,8 @@ public class VarType extends SortType {
 
     @Override
     public ISType instantiate(Map<PolyParaType, ISType> map) {
-        // I simply disallow this to ease the implementation.
-        throw new Error("should not happen");
+        // todo: Think about this. Is this the correct way?
+    	return this;
     }
     
     @Override

@@ -115,6 +115,12 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsMove ins) {
+		if (ins.m_holder == null) {
+			throw new Error("eeeeeeeeee1");
+		}
+		if (ins.m_vp == null) {
+			throw new Error("eeeeeeeeee2");
+		}
 		return "MCInsMove " + ins.m_vp.toStringMCIns() + 
 				" " + ins.m_holder.toStringMCIns();
     }
@@ -140,6 +146,9 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 		ST st = m_stg.getInstanceOf("MCInsFormEnv_st");
 		st.add("holder", ins.m_holder.toStringMCIns());
 		for (MCSId id: ins.m_env) {
+			if (id == null) {
+				throw new Error("xxxxxxxxxxxxxxxxxxx");
+			}
 			st.add("eles", id.toStringMCIns());
 		}
 		
