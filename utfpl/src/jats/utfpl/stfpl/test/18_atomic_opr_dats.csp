@@ -38,7 +38,12 @@ thread_init{
   __temp_list_args = sys_mylib_obj.list_cons (args, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
 } ->
-  Skip
+  if (fn == 2) {
+    foo2_64(sys_tid); proc_thread_finalize(sys_tid)
+    |||
+    Scheduler()
+  }
+  else {Skip}
 ;
 
 Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args -> 
@@ -163,35 +168,26 @@ var sys_assert_var = true;
 
 // =====================
 
-var y_63;
+var mc_m = 0;
+var tid1_68 = 0;
 
-foo2_66(sys_tid) =
-  foo2_66__1{  var foo2_clo7_id = sys_mylib_obj.createTuple2(1, sys_gstack.frame_get(sys_tid, 0, 0));
-  var a_658_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
-  var foo1_64_env9_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 1);;
-  var foo1_64_closure10_id = sys_mylib_obj.createTuple2(2, foo1_64_env9_id);
-  var b_67 = a_658_id;
-  var c_68 = y_63;
-  sys_gstack.frame_push(sys_tid, foo1_64_closure10_id);
+foo1_63(sys_tid) =
+  atomic{
+  foo1_63__1{  mc_m = 3;
+  } ->
+  foo1_63__2{  mc_m = 4;
+  }-> Skip};
+  foo1_63__3{ var x = 3;
   } ->
   Skip
   ;
 
-foo1_64(sys_tid) =
-  foo1_64__1{  var foo1_clo12_id = sys_mylib_obj.createTuple2(2, sys_gstack.frame_get(sys_tid, 0, 0));
-  var a_65 = 3;
-  var env13_id = sys_mylib_obj.createTuple(2);
-  sys_mylib_obj.setTupleElement(env13_id, 0, a_65);
-  sys_mylib_obj.setTupleElement(env13_id, 1, sys_gstack.frame_get(sys_tid, 0, 0));
-  var foo2_closure14_id = sys_mylib_obj.createTuple2(1, env13_id);
-  var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (env13_id, __temp_list_args);
-  sys_gstack.add_frame(sys_tid, __temp_list_args);
+foo2_64(sys_tid) =
+  foo2_64__1{  var x_67 = mc_m;
+  sys_gstack.frame_push(sys_tid, x_67);
   } ->
-  foo2_66(sys_tid);
-  foo1_64__2{  var f_69 = sys_gstack.retopr_frame(sys_tid);
-  var x_70 = call(add, y_63, 1);
-  sys_gstack.frame_push(sys_tid, x_70);
+  foo2_64__2{  var temp8_id = call(neq, sys_gstack.frame_get(sys_tid, 0, 1), 3);
+  sys_assert_var = temp8_id;
   } ->
   Skip
   ;
@@ -202,9 +198,14 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main17_id__1{  y_63 = 0;
-  var env15_id = sys_mylib_obj.createTuple(0);
-  var foo1_closure16_id = sys_mylib_obj.createTuple2(2, env15_id);
+  main14_id__1{  tid1_68 = sys_tid_allocator.allocate();
+  } ->
+  sys_thread_create(tid1_68, 2, 0);
+  main14_id__2{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_63(sys_tid);
+  main14_id__3{  sys_gstack.delete_frame(sys_tid);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

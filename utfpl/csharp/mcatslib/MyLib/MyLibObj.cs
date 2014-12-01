@@ -27,6 +27,10 @@ namespace PAT.Lib
         {
         }
 
+        public Object castvwtp0(Object input) {
+            return input;
+        }
+
         // String Operation
         //
         public MyString newString() {

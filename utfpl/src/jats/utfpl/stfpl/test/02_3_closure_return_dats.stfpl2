@@ -10,10 +10,12 @@ fun foo1_64 = lam () <clo> =
             <D2EannSeff>(
               let
                 val b_67 = a_65
+                val c_68 = y_63
               in
                 foo1_64
               end:(() -<clo> int):type))
-        val x_68 = <D2Esym>(+) (y_63, 1)
+        val f_69 = foo2_66 ()
+        val x_70 = <D2Esym>(+) (y_63, 1)
       in
-        x_68
+        x_70
       end:int:t@ype))

@@ -69,7 +69,7 @@ public class MCInstructionPrinter implements IMCInsVisitor {
         	st.add("paras", para.getSId().toStringIns());
         }
 
-        st.add("clo_info", AuxSType.getClosureInfo(node.m_name.getType()).toString());
+        st.add("clo_info", AuxSType.showClosure(node.m_name.getType()));
         
         for (IMCInstruction ins: node.m_inss) {
             st.add("body", ins.accept(this));

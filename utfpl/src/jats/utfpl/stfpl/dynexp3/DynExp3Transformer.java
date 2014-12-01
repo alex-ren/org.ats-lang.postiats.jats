@@ -528,24 +528,12 @@ public class DynExp3Transformer {
         {
 
             Cf2undec f2undec0 = node0.m_f2ds.get(0);
-            boolean isFun = true;
-            
-            if (AuxSType.getClosureInfo(f2undec0.f2undec_var.getSType()) instanceof FUNCLOfun) {
-                isFun = true;
-            } else {
-                isFun = false;
-            }
-            
+            boolean isClosure = AuxSType.isClosure(f2undec0.f2undec_var.getSType());
+
             for (Cf2undec f2undec: node0.m_f2ds) {
-                if (AuxSType.getClosureInfo(f2undec.f2undec_var.getSType()) instanceof FUNCLOfun) {
-                    if (false == isFun) {
-                        throw new Error("not allowed");
-                    }
-                } else {
-                    if (true == isFun) {
-                        throw new Error("not allowed");
-                    }
-                }
+            	if (AuxSType.isClosure(f2undec.f2undec_var.getSType()) != isClosure) {
+            		throw new Error("not allowed");
+            	}
             }
             
             List<Cf3undec> f3uns = new ArrayList<Cf3undec>();
@@ -600,7 +588,7 @@ public class DynExp3Transformer {
             if (f3uns.isEmpty()) {
                 return null;
             } else {
-                D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, !isFun);
+                D3Cfundecs node = new D3Cfundecs(node0.m_knd, f3uns, total_needed, isClosure);
                 return new Cd3ecl(loc, node);
             }
 
@@ -731,7 +719,7 @@ public class DynExp3Transformer {
         
         if (!scope.contains(d3var)) {
             if (type instanceof FunType || type instanceof PolyType) {
-                if (!(AuxSType.getClosureInfo(node0.m_d2var.getSType()) instanceof FUNCLOfun)) {
+                if (AuxSType.isClosure(node0.m_d2var.getSType())) {
                     // global function is always accessible
                     needed.add(d3var);
                 }

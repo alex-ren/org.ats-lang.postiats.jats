@@ -197,31 +197,29 @@ lin_atomref_get_71(sys_tid) =
   sys_gstack.frame_push(sys_tid, v_74);
   } ->
   lin_atomref_get_71__2{  var lref_75 = sys_mylib_obj.castvwtp0(sys_gstack.frame_get(sys_tid, 0, 1));
-  var ret6_id = sys_mylib_obj.createTuple(2);
-  sys_mylib_obj.setTupleElement(ret6_id, 0, lref_75);
-  sys_mylib_obj.setTupleElement(ret6_id, 1, sys_gstack.frame_get(sys_tid, 0, 2));
-  sys_gstack.frame_push(sys_tid, ret6_id);
+  var ret4_id = sys_mylib_obj.createTuple(2);
+  sys_mylib_obj.setTupleElement(ret4_id, 0, lref_75);
+  sys_mylib_obj.setTupleElement(ret4_id, 1, sys_gstack.frame_get(sys_tid, 0, 2));
+  sys_gstack.frame_push(sys_tid, ret4_id);
   } ->
   Skip
   ;
 
 loop_79(sys_tid) =
-  loop_79__1{  var loop_clo28_id = sys_mylib_obj.createTuple2(3, sys_gstack.frame_get(sys_tid, 0, 1));
-  var lin_atomref_get_7129_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 0);;
-  var lin_atomref_update_6630_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 1);;
-  var x_7731_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 2);;
-  sys_gstack.frame_push(sys_tid, x_7731_id);
+  loop_79__1{  var loop_clo26_id = sys_mylib_obj.createTuple2(3, sys_gstack.frame_get(sys_tid, 0, 1));
+  var x_7727_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 0);;
+  sys_gstack.frame_push(sys_tid, x_7727_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   lin_atomref_get_71(sys_tid);
-  loop_79__2{  var temp10_id = sys_gstack.retopr_frame(sys_tid);
-  var ref_81 = sys_mylib_obj.getTupleElement(temp10_id, 0);;
+  loop_79__2{  var temp8_id = sys_gstack.retopr_frame(sys_tid);
+  var ref_81 = sys_mylib_obj.getTupleElement(temp8_id, 0);;
   sys_gstack.frame_push(sys_tid, ref_81);
-  var v_82 = sys_mylib_obj.getTupleElement(temp10_id, 1);;
-  var temp11_id = call(eq, v_82, 1);
-  sys_gstack.frame_push(sys_tid, temp11_id);
+  var v_82 = sys_mylib_obj.getTupleElement(temp8_id, 1);;
+  var temp9_id = call(eq, v_82, 1);
+  sys_gstack.frame_push(sys_tid, temp9_id);
   } ->
   if (sys_gstack.frame_get_bool(sys_tid, 0, 4)) {
     loop_79__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
@@ -243,27 +241,27 @@ loop_79(sys_tid) =
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     lin_atomref_get_71(sys_tid);
-    loop_79__2{  var temp45_id = sys_gstack.retopr_frame(sys_tid);
-    var ref46_id = sys_mylib_obj.getTupleElement(temp45_id, 0);;
-    var v47_id = sys_mylib_obj.getTupleElement(temp45_id, 1);;
-    var temp48_id = call(add, v47_id, 1);
+    loop_79__2{  var temp37_id = sys_gstack.retopr_frame(sys_tid);
+    var ref38_id = sys_mylib_obj.getTupleElement(temp37_id, 0);;
+    var v39_id = sys_mylib_obj.getTupleElement(temp37_id, 1);;
+    var temp40_id = call(add, v39_id, 1);
     var __temp_list_args = sys_mylib_obj.list_nil ();
-    __temp_list_args = sys_mylib_obj.list_cons (ref46_id, __temp_list_args);
-    __temp_list_args = sys_mylib_obj.list_cons (temp48_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (ref38_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (temp40_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     lin_atomref_update_66(sys_tid);
-    loop_79__3{  var ref49_id = sys_gstack.retopr_frame(sys_tid);
+    loop_79__3{  var ref41_id = sys_gstack.retopr_frame(sys_tid);
     var __temp_list_args = sys_mylib_obj.list_nil ();
     __temp_list_args = sys_mylib_obj.list_cons (s_65, __temp_list_args);
-    __temp_list_args = sys_mylib_obj.list_cons (ref49_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (ref41_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     conats_shared_signal(sys_tid);
-    loop_79__4{  var ref50_id = sys_gstack.retopr_frame(sys_tid);
+    loop_79__4{  var ref42_id = sys_gstack.retopr_frame(sys_tid);
     var __temp_list_args = sys_mylib_obj.list_nil ();
     __temp_list_args = sys_mylib_obj.list_cons (s_65, __temp_list_args);
-    __temp_list_args = sys_mylib_obj.list_cons (ref50_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (ref42_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     conats_shared_release(sys_tid);
@@ -283,36 +281,32 @@ producer_76(sys_tid) =
   } ->
   conats_shared_acquire(sys_tid);
   producer_76__2{  var ref_78 = sys_gstack.retopr_frame(sys_tid);
-  var env33_id = sys_mylib_obj.createTuple(3);
-  sys_mylib_obj.setTupleElement(env33_id, 0, lin_atomref_get_71);
-  sys_mylib_obj.setTupleElement(env33_id, 1, lin_atomref_update_66);
-  sys_mylib_obj.setTupleElement(env33_id, 2, sys_gstack.frame_get(sys_tid, 0, 0));
-  var loop_closure34_id = sys_mylib_obj.createTuple2(3, env33_id);
+  var env29_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env29_id, 0, sys_gstack.frame_get(sys_tid, 0, 0));
+  var loop_closure30_id = sys_mylib_obj.createTuple2(3, env29_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (ref_78, __temp_list_args);
-  __temp_list_args = sys_mylib_obj.list_cons (env33_id, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (env29_id, __temp_list_args);
   sys_gstack.reload_frame(sys_tid, __temp_list_args);
   } ->
   loop_79(sys_tid)
   ;
 
 loop_91(sys_tid) =
-  loop_91__1{  var loop_clo36_id = sys_mylib_obj.createTuple2(5, sys_gstack.frame_get(sys_tid, 0, 1));
-  var x_8937_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 0);;
-  sys_gstack.frame_push(sys_tid, x_8937_id);
-  var lin_atomref_get_7138_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 1);;
-  var lin_atomref_update_6639_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 2);;
+  loop_91__1{  var loop_clo32_id = sys_mylib_obj.createTuple2(5, sys_gstack.frame_get(sys_tid, 0, 1));
+  var x_8933_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 1), 0);;
+  sys_gstack.frame_push(sys_tid, x_8933_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   lin_atomref_get_71(sys_tid);
-  loop_91__2{  var temp18_id = sys_gstack.retopr_frame(sys_tid);
-  var ref_93 = sys_mylib_obj.getTupleElement(temp18_id, 0);;
+  loop_91__2{  var temp16_id = sys_gstack.retopr_frame(sys_tid);
+  var ref_93 = sys_mylib_obj.getTupleElement(temp16_id, 0);;
   sys_gstack.frame_push(sys_tid, ref_93);
-  var v_94 = sys_mylib_obj.getTupleElement(temp18_id, 1);;
-  var temp19_id = call(eq, v_94, 0);
-  sys_gstack.frame_push(sys_tid, temp19_id);
+  var v_94 = sys_mylib_obj.getTupleElement(temp16_id, 1);;
+  var temp17_id = call(eq, v_94, 0);
+  sys_gstack.frame_push(sys_tid, temp17_id);
   } ->
   if (sys_gstack.frame_get_bool(sys_tid, 0, 4)) {
     loop_91__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
@@ -334,27 +328,27 @@ loop_91(sys_tid) =
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     lin_atomref_get_71(sys_tid);
-    loop_91__2{  var temp53_id = sys_gstack.retopr_frame(sys_tid);
-    var ref54_id = sys_mylib_obj.getTupleElement(temp53_id, 0);;
-    var v55_id = sys_mylib_obj.getTupleElement(temp53_id, 1);;
-    var temp56_id = call(sub, v55_id, 1);
+    loop_91__2{  var temp45_id = sys_gstack.retopr_frame(sys_tid);
+    var ref46_id = sys_mylib_obj.getTupleElement(temp45_id, 0);;
+    var v47_id = sys_mylib_obj.getTupleElement(temp45_id, 1);;
+    var temp48_id = call(sub, v47_id, 1);
     var __temp_list_args = sys_mylib_obj.list_nil ();
-    __temp_list_args = sys_mylib_obj.list_cons (ref54_id, __temp_list_args);
-    __temp_list_args = sys_mylib_obj.list_cons (temp56_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (ref46_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (temp48_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     lin_atomref_update_66(sys_tid);
-    loop_91__3{  var ref57_id = sys_gstack.retopr_frame(sys_tid);
+    loop_91__3{  var ref49_id = sys_gstack.retopr_frame(sys_tid);
     var __temp_list_args = sys_mylib_obj.list_nil ();
     __temp_list_args = sys_mylib_obj.list_cons (s_65, __temp_list_args);
-    __temp_list_args = sys_mylib_obj.list_cons (ref57_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (ref49_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     conats_shared_signal(sys_tid);
-    loop_91__4{  var ref58_id = sys_gstack.retopr_frame(sys_tid);
+    loop_91__4{  var ref50_id = sys_gstack.retopr_frame(sys_tid);
     var __temp_list_args = sys_mylib_obj.list_nil ();
     __temp_list_args = sys_mylib_obj.list_cons (s_65, __temp_list_args);
-    __temp_list_args = sys_mylib_obj.list_cons (ref58_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (ref50_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     conats_shared_release(sys_tid);
@@ -374,14 +368,12 @@ consumer_88(sys_tid) =
   } ->
   conats_shared_acquire(sys_tid);
   consumer_88__2{  var ref_90 = sys_gstack.retopr_frame(sys_tid);
-  var env41_id = sys_mylib_obj.createTuple(3);
-  sys_mylib_obj.setTupleElement(env41_id, 0, sys_gstack.frame_get(sys_tid, 0, 0));
-  sys_mylib_obj.setTupleElement(env41_id, 1, lin_atomref_get_71);
-  sys_mylib_obj.setTupleElement(env41_id, 2, lin_atomref_update_66);
-  var loop_closure42_id = sys_mylib_obj.createTuple2(5, env41_id);
+  var env35_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env35_id, 0, sys_gstack.frame_get(sys_tid, 0, 0));
+  var loop_closure36_id = sys_mylib_obj.createTuple2(5, env35_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (ref_90, __temp_list_args);
-  __temp_list_args = sys_mylib_obj.list_cons (env41_id, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (env35_id, __temp_list_args);
   sys_gstack.reload_frame(sys_tid, __temp_list_args);
   } ->
   loop_91(sys_tid)
@@ -393,20 +385,18 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main61_id__1{  gref_63 = atom_ref_manager.allocate(0);
+  main53_id__1{  gref_63 = atom_ref_manager.allocate(0);
   } ->
-  main61_id__2{  lin_ref_64 = sys_mylib_obj.castvwtp0(gref_63);
-  var mutex62_id = sys_mutex_manager.allocate();
-  var cond63_id = sys_cond_manager.allocate();
+  main53_id__2{  lin_ref_64 = sys_mylib_obj.castvwtp0(gref_63);
+  var mutex54_id = sys_mutex_manager.allocate();
+  var cond55_id = sys_cond_manager.allocate();
   s_65 = sys_mylib_obj.createTuple(3);
   sys_mylib_obj.setTupleElement(s_65, 0, lin_ref_64);
-  sys_mylib_obj.setTupleElement(s_65, 1, mutex62_id);
-  sys_mylib_obj.setTupleElement(s_65, 2, cond63_id);
-  var env43_id = sys_mylib_obj.createTuple(0);
-  var env44_id = sys_mylib_obj.createTuple(0);
+  sys_mylib_obj.setTupleElement(s_65, 1, mutex54_id);
+  sys_mylib_obj.setTupleElement(s_65, 2, cond55_id);
   tid1_100 = sys_tid_allocator.allocate();
   } ->
-  main61_id__3{  tid2_101 = sys_tid_allocator.allocate();
+  main53_id__3{  tid2_101 = sys_tid_allocator.allocate();
   } ->
   sys_thread_create(tid1_100, 4, 0);
   sys_thread_create(tid2_101, 6, 0); 

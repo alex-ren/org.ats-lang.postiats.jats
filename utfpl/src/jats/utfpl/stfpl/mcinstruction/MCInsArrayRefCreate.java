@@ -19,7 +19,7 @@ public class MCInsArrayRefCreate implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return true;
+        return false;
     }
 
 

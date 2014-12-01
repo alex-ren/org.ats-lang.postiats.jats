@@ -7,10 +7,13 @@ fun foo1 ():<cloref1> int = let
 
   fun foo2 ():<cloref1> (() -<cloref1> int) = let
     val b = a
+    val c = y
     
   in
     foo1
   end
+  
+  val f = foo2 ()
  
   val x = y + 1
 in

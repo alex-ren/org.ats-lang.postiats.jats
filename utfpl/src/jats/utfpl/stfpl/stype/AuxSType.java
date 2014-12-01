@@ -49,13 +49,18 @@ public class AuxSType {
         }  
     }
     
-    public static Ifunclo getClosureInfo(ISType type) {
+    private static Ifunclo getClosureInfo(ISType type) {
     	FunType fun_type = getFunctionType(type);
     	if (null == fun_type) {
     		throw new Error(type + " is not supported.");
     	} else {
     		return fun_type.getFunClo();
     	}
+    }
+    
+    public static String showClosure(ISType type) {
+    	Ifunclo clo = getClosureInfo(type);
+    	return clo.toString();
     }
     
     public static boolean isClosure(ISType type) {

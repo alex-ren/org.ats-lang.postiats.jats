@@ -15,7 +15,7 @@ public class MCInsMutexCreate implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return true;
+        return false;
     }
 
 }

@@ -250,7 +250,7 @@ else if (fn == <proc_addr>) {
 >>
 
 
-pgdecvar_st(id, init) ::= <<
+PGDecVar_st(id, init) ::= <<
 var <id><if(init)> = <init><endif>;
 >>
 
@@ -478,6 +478,13 @@ PInsTIdAllocate_st(holder, is_global) ::= <<
 <if(is_global)><else>var <endif><holder> = <sys_tid_allocator()>.allocate();
 >>
 
+PInsMCSet_st(gv, v) ::= <<
+<gv> = <v>;
+>>
+
+PInsMCGet_st(holder, gv) ::= <<
+var <holder> = <gv>;
+>>
 
 
 

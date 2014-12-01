@@ -75,9 +75,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PGDecVar node) {
-        // pgdecvar_st
-        ST st = m_stg.getInstanceOf("pgdecvar_st");
+        // PGDecVar_st(id, init) ::= <<
+        ST st = m_stg.getInstanceOf("PGDecVar_st");
         st.add("id", node.m_mid.toStringMCIns());
+        st.add("init", 0);
 //        if (node.m_exp != null) {
 //            st.add("init", node.m_exp.accept(this));
 //        }
@@ -558,13 +559,21 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PInsMCGet node) {
-		return "PInsMCGet";
+		// PInsMCGet_st(holder, gv) ::= <<
+		ST st = m_stg.getInstanceOf("PInsMCGet_st");
+		st.add("holder", node.m_holder.toStringMCIns());
+		st.add("gv", node.m_gv.toStringMCIns());
+		return st;
 	}
 
 
 	@Override
 	public Object visit(PInsMCSet node) {
-		return "PInsMCSet";
+		// PInsMCSet_st(gv, v) ::= <<
+		ST st = m_stg.getInstanceOf("PInsMCSet_st");
+		st.add("gv", node.m_gname.toStringMCIns());
+		st.add("v", node.m_v.accept(this));
+		return st;
 	}
 
 

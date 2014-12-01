@@ -1,0 +1,17 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+"D2Cstacsts" mid_736: int
+
+"D2Cdcstdecs" int
+
+fun foo_63 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 3)
+      prval <P2Trec>(<LABP2ATnorm>(pf_64), <LABP2ATnorm>(x_65)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
+      prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(=) (x_65, 3))
+    in
+      D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 3)
+    end:void:t@ype)
+
+val () = foo_63 ()

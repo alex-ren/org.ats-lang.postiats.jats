@@ -1,0 +1,31 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+"D2Cstacsts" mid_736: int
+
+"D2Cdcstdecs" int
+
+fun foo1_63 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      prval () = D2Ecst<(() -<fun> void)> ()
+      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 3)
+      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 4)
+      prval () = D2Ecst<(() -<fun> void)> ()
+    in
+      ()
+    end:void:t@ype)
+
+fun foo2_64 = lam (<P2Tann>(x_65:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    let
+      prval <P2Trec>(<LABP2ATnorm>(pf_66), <LABP2ATnorm>(x_67)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
+      prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(<>) (x_67, 3))
+    in
+      ()
+    end:void:t@ype)
+
+val tid1_68 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+
+val () = D2Ecst<{para:a_3850_0}(((((para:a_3850_0) -<fun> void), para:a_3850_0, thread_id_t_728_0) -<fun> void))> (foo2_64, 0, tid1_68)
+
+val () = foo1_63 ()

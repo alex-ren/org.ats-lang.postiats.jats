@@ -9,7 +9,6 @@ import jats.utfpl.stfpl.instructions.SIdUser;
 import jats.utfpl.stfpl.mcinstruction.AuxMCIns.AddressAllocator;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
-import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;

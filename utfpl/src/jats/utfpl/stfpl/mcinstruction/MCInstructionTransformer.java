@@ -33,7 +33,6 @@ import jats.utfpl.utils.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -327,9 +326,11 @@ public class MCInstructionTransformer {
             			env_member.toStringWithStamp() + "_closure", member_type);
         		MCSId mcclosure_sid = m_mcsid_factory.fromSId(closure_sid);
         		map_clo_name.put(env_member, mcclosure_sid);  // function name => closure name
+        		
+        		MCSId env_fun_name = m_mcsid_factory.fromSId(env_member);  // function name
         		MCInsClosure ins2 = new MCInsClosure(
         				mcclosure_sid
-        				, mcfun_name
+        				, env_fun_name
         				, mcenv_sid  // environment of the function
         				);
         		mcinss.add(ins2);  // add to inss

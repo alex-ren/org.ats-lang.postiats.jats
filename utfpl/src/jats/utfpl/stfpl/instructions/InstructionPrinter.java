@@ -53,8 +53,7 @@ public class InstructionPrinter {
         // ImplFun_st(name, paras, clo_info, ret_type, body) ::= <<
         ST st = m_stg.getInstanceOf("ImplFun_st");
         st.add("name", node.m_name.toStringIns());
-        st.add("clo_info", AuxSType.getClosureInfo(node.m_name.getType()).toString());
-        
+        st.add("clo_info", AuxSType.showClosure(node.m_name.getType()));
         for (IStfplInstruction ins: node.m_inss) {
             st.add("body", printInstruction(ins));
         }
@@ -89,7 +88,7 @@ public class InstructionPrinter {
         	st.add("paras", para.toStringIns());
         }
         
-        st.add("clo_info", AuxSType.getClosureInfo(node.m_name.getType()).toString());
+        st.add("clo_info", AuxSType.showClosure(node.m_name.getType()));
         
         for (IStfplInstruction ins: node.m_inss) {
             st.add("body", printInstruction(ins));

@@ -17,7 +17,7 @@ public class MCInsSharedCreate implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return true;
+        return false;
     }
 
 

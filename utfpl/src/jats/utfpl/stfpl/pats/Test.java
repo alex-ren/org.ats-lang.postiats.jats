@@ -17,7 +17,7 @@ public class Test {
         String[] paths = { 
 
 //        		  "src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
-//        		, "src/jats/utfpl/stfpl/test/02_closure_call.dats"
+//        		"src/jats/utfpl/stfpl/test/02_closure_call.dats"
 //        		"src/jats/utfpl/stfpl/test/02_2_closure_level.dats"
 //        		"src/jats/utfpl/stfpl/test/02_3_closure_return.dats"        		
 //        		, "src/jats/utfpl/stfpl/test/03_symbol_opr.dats"
@@ -33,7 +33,9 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/13_if_noeffect.dats"
 //        		"src/jats/utfpl/stfpl/test/14_create_threads.dats"
 //        		"src/jats/utfpl/stfpl/test/15_thread_cond.dats"
-        		"src/jats/utfpl/stfpl/test/16_reader_writer.dats"
+//        		"src/jats/utfpl/stfpl/test/16_reader_writer.dats"
+//         		"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats"
+        		"src/jats/utfpl/stfpl/test/18_atomic_opr.dats"
 
 
         		
