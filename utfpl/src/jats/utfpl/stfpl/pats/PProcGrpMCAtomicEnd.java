@@ -1,11 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
-public class PProcGrpMCAtomicStart implements PProc {
+public class PProcGrpMCAtomicEnd implements PProc {
 	public PProc m_proc;
 	
-	public PProcGrpMCAtomicStart(PProc proc) {
+	public PProcGrpMCAtomicEnd(PProc proc) {
 		m_proc = proc;
 	}
+	
 	
 	@Override
 	public Object accept(PNodeVisitor visitor) {

@@ -57,6 +57,8 @@ public interface IMCInsVisitor {
 
 	public Object visit(MCInsSharedCreate ins);
 
+	public Object visit(MCInsMCAtomicEnd ins);
+
 
     
     

@@ -110,7 +110,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     }
 
     @Override
-    public Object visit(PEvent node) {
+    public Object visit(PNodeEvent node) {
     	// pevent_st(tag, stat_lst) ::= <<
         ST st = m_stg.getInstanceOf("pevent_st");
         st.add("tag", node.m_funname.toStringMCIns() + "__" + node.m_no);
@@ -553,7 +553,23 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PProcGrpMCAtomicStart node) {
-		return "PProcGrpMCAtomicStart";
+		// PProcGrpMCAtomicStart_st(proc) ::= <<
+        ST st = m_stg.getInstanceOf("PProcGrpMCAtomicStart_st");
+        st.add("proc", node.m_proc.accept(this));
+        return st;
+	}
+	
+	@Override
+	public Object visit(PProcGrpMCAtomicEnd node) {
+		// PProcGrpMCAtomicEnd_st(proc) ::= <<
+        ST st = m_stg.getInstanceOf("PProcGrpMCAtomicEnd_st");
+        if (node.m_proc == PProcAtom.SKIP) {
+        	
+        } else {
+        	st.add("proc", node.m_proc.accept(this));
+        }
+        
+        return st;
 	}
 
 
@@ -658,6 +674,18 @@ public class PATCSPSPrinter implements PNodeVisitor {
 		}
 		
 		return st;
+	}
+
+
+	@Override
+	public Object visit(PNodeMCAtomicStart node) {
+		throw new Error("Should not happen.");
+	}
+
+
+	@Override
+	public Object visit(PNodeMCAtomicEnd node) {
+		throw new Error("Should not happen.");
 	}
 
 }

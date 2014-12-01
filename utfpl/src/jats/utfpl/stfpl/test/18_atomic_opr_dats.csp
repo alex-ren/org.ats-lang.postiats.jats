@@ -14,6 +14,10 @@ var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
 var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 
 // =====================
+// For global exclusion.
+var glb = 0;
+
+// =====================
 
 // Stack Operation
 var<PStack> sys_gstack = new PStack();
@@ -172,14 +176,12 @@ var mc_m = 0;
 var tid1_68 = 0;
 
 foo1_63(sys_tid) =
-  atomic{
+  ifa (glb == 0) {atomic { {glb = 1;} ->
   foo1_63__1{  mc_m = 3;
   } ->
   foo1_63__2{  mc_m = 4;
-  }-> Skip};
-  foo1_63__3{ var x = 3;
   } ->
-  Skip
+  {glb = 0;} -> Skip } }
   ;
 
 foo2_64(sys_tid) =

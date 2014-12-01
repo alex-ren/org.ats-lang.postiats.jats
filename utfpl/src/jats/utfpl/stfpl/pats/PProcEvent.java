@@ -1,10 +1,10 @@
 package jats.utfpl.stfpl.pats;
 
 public class PProcEvent implements PProc {
-    public PEvent m_evt;
+    public PNodeEvent m_evt;
     public PProc m_proc;
     
-    public PProcEvent(PEvent evt, PProc proc) {
+    public PProcEvent(PNodeEvent evt, PProc proc) {
         m_evt = evt;
         m_proc = proc;
     }

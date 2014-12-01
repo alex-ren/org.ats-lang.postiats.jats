@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PProcThreadCreate implements PProc {
+public class PProcThreadCreate implements PProcNode {
 	public PExp m_tid;
 	public MCSId m_funlab;
 	public PExp m_args;

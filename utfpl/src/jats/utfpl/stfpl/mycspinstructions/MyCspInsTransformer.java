@@ -27,6 +27,7 @@ import jats.utfpl.stfpl.mcinstruction.MCInsCond;
 import jats.utfpl.stfpl.mcinstruction.MCInsFormEnv;
 import jats.utfpl.stfpl.mcinstruction.MCInsGetEleFromEnv;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCAssert;
+import jats.utfpl.stfpl.mcinstruction.MCInsMCAtomicEnd;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCAtomicStart;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCGet;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCSet;
@@ -47,7 +48,6 @@ import jats.utfpl.stfpl.stype.BlankType;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.VoidType;
-import jats.utfpl.utils.Log;
 
 public class MyCspInsTransformer {
     
@@ -535,8 +535,19 @@ public class MyCspInsTransformer {
 
 
         @Override
-        public MCInsMCAtomicStart visit(MCInsMCAtomicStart ins) {
+        public Object visit(MCInsMCAtomicStart ins) {
             GrpMCAtomicStart grp = new GrpMCAtomicStart();
+            if (0 != m_cbEvt.size()) {
+                m_cblkLst.add(m_cbEvt);
+                m_cbEvt = new GrpEvent(m_funLab, ++m_no);
+            }
+            m_cblkLst.add(grp);
+            return null;
+        }
+        
+        @Override
+        public Object visit(MCInsMCAtomicEnd ins) {
+            GrpMCAtomicEnd grp = new GrpMCAtomicEnd();
             if (0 != m_cbEvt.size()) {
                 m_cblkLst.add(m_cbEvt);
                 m_cbEvt = new GrpEvent(m_funLab, ++m_no);

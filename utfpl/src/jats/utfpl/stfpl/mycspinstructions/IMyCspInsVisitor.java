@@ -45,8 +45,11 @@ public interface IMyCspInsVisitor {
     public Object visit(CIMCSet node);
     
 	public Object visit(GrpMCAtomicStart node);
+	public Object visit(GrpMCAtomicEnd node);
+
 
 	public Object visit(CIMCVLockViewGet node);
+	
 	public Object visit(CITIdAllocate node);
 	public Object visit(CICondCreate node);
 

@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.pats;
 
-public class PProcAtom implements PProc {
+public class PProcAtom implements PProcNode {
     
     private PProcAtom() {}
     

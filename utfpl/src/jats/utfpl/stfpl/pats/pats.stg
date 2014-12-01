@@ -30,6 +30,10 @@ sys_tid_allocator() ::= <<
 sys_tid_allocator
 >>
 
+sys_glb() ::= <<
+glb
+>>
+
 
 // ===============================
 
@@ -50,6 +54,10 @@ var\<AtomRefManager> <atom_ref_manager()> = new AtomRefManager(10);
 
 // Set the initial capacity to 10.
 var\<ArrayRefManager> <array_ref_manager()> = new ArrayRefManager(10);
+
+// =====================
+// For global exclusion.
+var <sys_glb()> = 0;
 
 // =====================
 
@@ -486,6 +494,14 @@ PInsMCGet_st(holder, gv) ::= <<
 var <holder> = <gv>;
 >>
 
+PProcGrpMCAtomicStart_st(proc) ::= <<
+ifa (<sys_glb()> == 0) {atomic { {<sys_glb()> = 1;} ->
+<proc>
+>>
 
+PProcGrpMCAtomicEnd_st(proc) ::= <<
+{<sys_glb()> = 0;} -> Skip } }<if(proc)>;<endif><if(proc)>
+<proc><endif>
+>>
 
 

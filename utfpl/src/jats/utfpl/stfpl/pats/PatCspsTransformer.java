@@ -33,6 +33,7 @@ import jats.utfpl.stfpl.mycspinstructions.CIVarDef;
 import jats.utfpl.stfpl.mycspinstructions.FunctionMyCsp;
 import jats.utfpl.stfpl.mycspinstructions.GrpCond;
 import jats.utfpl.stfpl.mycspinstructions.GrpEvent;
+import jats.utfpl.stfpl.mycspinstructions.GrpMCAtomicEnd;
 import jats.utfpl.stfpl.mycspinstructions.GrpMCAtomicStart;
 import jats.utfpl.stfpl.mycspinstructions.GrpProc;
 import jats.utfpl.stfpl.mycspinstructions.GrpThreadCreate;
@@ -109,8 +110,14 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
             Object evt_proc = cb.accept(this);
             if (evt_proc instanceof PProc) {
                 retProc = (PProc) evt_proc;
+            } else if (evt_proc instanceof PNodeMCAtomicStart) {
+            	throw new Error("Should not happen.");
+            } else if (evt_proc instanceof PNodeMCAtomicEnd) {
+                retProc = new PProcGrpMCAtomicEnd(retProc);                
+            } else if (evt_proc instanceof PNodeEvent){
+                retProc = new PProcEvent((PNodeEvent)evt_proc, PProcAtom.SKIP);
             } else {
-                retProc = new PProcEvent((PEvent)evt_proc, PProcAtom.SKIP);
+            	throw new Error(evt_proc + " is not supported.");
             }
         }
         for (; iterator.hasPrevious();) {
@@ -118,8 +125,14 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
             Object evt_proc = cb.accept(this);
             if (evt_proc instanceof PProc) {
                 retProc = new PProcSeq((PProc)evt_proc, retProc);
+            } else if (evt_proc instanceof PNodeMCAtomicStart) {
+            	retProc = new PProcGrpMCAtomicStart(retProc);
+            } else if (evt_proc instanceof PNodeMCAtomicEnd) {
+                retProc = new PProcGrpMCAtomicEnd(retProc);
+            } else if (evt_proc instanceof PNodeEvent) {
+                retProc = new PProcEvent((PNodeEvent)evt_proc, retProc);
             } else {
-                retProc = new PProcEvent((PEvent)evt_proc, retProc);
+            	throw new Error(evt_proc + " is not supported.");
             }
         }
         
@@ -204,10 +217,10 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
     }
     
     @Override
-    public PEvent visit(GrpEvent blk) {
+    public PNodeEvent visit(GrpEvent blk) {
         List<PStat> statLst =  CInsLst2PStatLst(blk.m_inslst);
 
-        return new PEvent(statLst, blk.m_funname, blk.m_no);
+        return new PNodeEvent(statLst, blk.m_funname, blk.m_no);
     }
 
     @Override
@@ -435,8 +448,16 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
     }
 
 	@Override
-	public Object visit(GrpMCAtomicStart node) {
-		PProcGrpMCAtomicStart proc = new PProcGrpMCAtomicStart();
+	public PNodeMCAtomicStart visit(GrpMCAtomicStart node) {
+		PNodeMCAtomicStart proc = new PNodeMCAtomicStart();
+		
+		return proc;
+	}
+	
+
+	@Override
+	public PNodeMCAtomicEnd visit(GrpMCAtomicEnd node) {
+		PNodeMCAtomicEnd proc = new PNodeMCAtomicEnd();
 		
 		return proc;
 	}

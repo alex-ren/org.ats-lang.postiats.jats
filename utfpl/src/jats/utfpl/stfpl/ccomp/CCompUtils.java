@@ -35,7 +35,7 @@ public class CCompUtils {
     /* ************* *************** */
     
     public static final String cConATSAtomArrayRefCreate   = "conats_atomarrayref_create";
-    public static final String cConATSAtomArrayRefFinalize = "conats_atomarrayref_finalize";
+//    public static final String cConATSAtomArrayRefFinalize = "conats_atomarrayref_finalize";
     public static final String cConATSAtomArrayRefUpdate   = "conats_atomarrayref_update";
     public static final String cConATSAtomArrayRefGet      = "conats_atomarrayref_get";
             

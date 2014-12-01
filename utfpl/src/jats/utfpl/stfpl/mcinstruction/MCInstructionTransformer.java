@@ -722,6 +722,10 @@ public class MCInstructionTransformer {
                 // prfun mc_atomic_start (): void
 
                 return new MCInsMCAtomicStart();
+            } else if (fname.compSymbolString(CCompUtils.cMCAtomicEnd)) {
+                // prfun mc_atomic_end (): void
+
+                return new MCInsMCAtomicEnd();
             } else if (fname.compSymbolString(CCompUtils.cMCAssert)) {
                 // prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
                 

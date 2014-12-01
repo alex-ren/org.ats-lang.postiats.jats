@@ -17,10 +17,15 @@ public interface PNodeVisitor {
     public Object visit(PProcEvent node);
     public Object visit(PProcChannel node);
     public Object visit(PProcParallel node);
+	public Object visit(PProcGrpMCAtomicStart node);
+	public Object visit(PProcGrpMCAtomicEnd node);
     
     public Object visit(PProcThreadCreate node);
     
-    public Object visit(PEvent node);
+    public Object visit(PNodeEvent node);
+    
+	public Object visit(PNodeMCAtomicStart node);
+	public Object visit(PNodeMCAtomicEnd node);
     
     public Object visit(PInclude node);
     
@@ -53,7 +58,9 @@ public interface PNodeVisitor {
 
 //    public Object visit(PInsCondRelease node);
 
-	public Object visit(PProcGrpMCAtomicStart node);
+
+
+	
 	public Object visit(PInsMCGet node);
 	public Object visit(PInsMCSet node);
     public Object visit(PInsMCAssert node);
@@ -71,6 +78,9 @@ public interface PNodeVisitor {
 	public Object visit(PInsTIdAllocate node);
 
 	public Object visit(PInsCondCreate node);
+
+
+
 
     
 

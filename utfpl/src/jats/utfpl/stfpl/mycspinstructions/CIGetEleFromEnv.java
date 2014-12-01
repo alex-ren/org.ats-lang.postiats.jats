@@ -1,7 +1,5 @@
 package jats.utfpl.stfpl.mycspinstructions;
 
-import jats.utfpl.utils.Log;
-
 
 public class CIGetEleFromEnv extends MyCspInstruction {
     public String m_lab;

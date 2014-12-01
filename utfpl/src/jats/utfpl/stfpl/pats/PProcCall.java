@@ -3,7 +3,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PProcCall implements PProc {
+public class PProcCall implements PProcNode {
     public MCSId m_name;
     public boolean m_isTailCall;
 //    public List<PExp> m_paraLst;

@@ -147,7 +147,7 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 		st.add("holder", ins.m_holder.toStringMCIns());
 		for (MCSId id: ins.m_env) {
 			if (id == null) {
-				throw new Error("xxxxxxxxxxxxxxxxxxx");
+				throw new Error("This should not happen.");
 			}
 			st.add("eles", id.toStringMCIns());
 		}
@@ -211,6 +211,11 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 	@Override
     public Object visit(MCInsMCAtomicStart ins) {
 		return "MCInsMCAtomicStart";
+    }
+
+	@Override
+    public Object visit(MCInsMCAtomicEnd ins) {
+		return "MCInsMCAtomicEnd";
     }
 
 

@@ -447,6 +447,13 @@ public class MCInstructionProcessor {
         public MCInsMCAtomicStart visit(MCInsMCAtomicStart ins) {
             return ins;
         }
+        
+
+		@Override
+		public Object visit(MCInsMCAtomicEnd ins) {
+            return ins;
+		}
+
 
         @Override
         public MCInsMCAssert visit(MCInsMCAssert ins) {
