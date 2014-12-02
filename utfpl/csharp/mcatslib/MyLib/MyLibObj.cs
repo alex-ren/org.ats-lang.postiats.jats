@@ -94,6 +94,18 @@ namespace PAT.Lib
             return xs.getTail();
         }
 
+        /* *************** ***************** */
+
+        public bool is_none(Maybe m) {
+            return Maybe.is_none(m);
+        }
+
+        static public ExpressionValue unsome(Maybe m) {
+            return Maybe.unsome(m);
+        }
+
+        /* *************** ***************** */
+
         /// <summary>
         /// Please implement this method to provide the string representation of the datatype
         /// </summary>

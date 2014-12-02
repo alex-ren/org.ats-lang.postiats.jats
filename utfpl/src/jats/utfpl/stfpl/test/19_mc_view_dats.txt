@@ -1,7 +1,7 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is NEITHER PROVED NOR DISPROVED.
+The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -10,16 +10,18 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:0
-Total Transitions:2
-Time Used:0.0285049s
-Estimated Memory Used:8613.888KB
+Visited States:9
+Total Transitions:9
+Time Used:0.0189595s
+Estimated Memory Used:8564.736KB
 
 
 =======================================================
 Assertion: main() |= G sys_assertion
 ********Verification Result********
-The Assertion (main() |= G sys_assertion) is NEITHER PROVED NOR DISPROVED.
+The Assertion (main() |= G sys_assertion) is NOT valid.
+A counterexample is presented as follows.
+<init -> main_init -> main7_id__1 -> foo_63__1 -> foo_63__2>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -28,9 +30,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:0
-Total Transitions:2
-Time Used:0.0055059s
-Estimated Memory Used:8556.544KB
+Visited States:4
+Total Transitions:4
+Time Used:0.0042609s
+Estimated Memory Used:8548.352KB
 
 

@@ -36,6 +36,10 @@ namespace PAT.Lib
             return m.m_is_none;
         }
 
+        static public ExpressionValue unsome(Maybe m) {
+            return m.m_v;
+        }
+
         static public Maybe none() {
             return new Maybe();
         }

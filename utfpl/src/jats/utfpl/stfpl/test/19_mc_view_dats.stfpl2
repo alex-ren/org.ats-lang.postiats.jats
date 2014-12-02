@@ -1,10 +1,12 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 fun foo_63 = lam () <fun> = 
   <D2EannSeff>(
     let
       prval mc_v_64 = D2Ecst<((int, int, int, int) -<fun> mc_vlockview_733_0())> (0, 0, 1, 1)
+      prval mc_v2_65 = D2Ecst<((int, int, int, int) -<fun> mc_vlockview_733_0())> (0, 0, 1, 2)
       prval () = D2Ecst<((mc_vlockview_733_0()) -<fun> void)> (mc_v_64)
+      prval () = D2Ecst<((mc_vlockview_733_0()) -<fun> void)> (mc_v2_65)
     in
       ()
     end:void:t@ype)

@@ -26,7 +26,8 @@ TARGET = MyLib.dll
 all: $(TARGET)
 
 $(TARGET): $(SOURCE)
-	mcs $(SOURCE) -lib:$(PATHOME) -r:PAT.Common.dll -target:library -out:$(TARGET)
+	mcs $(SOURCE) -lib:$(PATHOME) -r:PAT.Common.dll -r:System.Drawing.dll \
+	    -target:library -out:$(TARGET)
 
 test: test11.exe
 

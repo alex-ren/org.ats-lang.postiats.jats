@@ -511,6 +511,7 @@ PProcGrpMCAtomicEnd_st(proc) ::= <<
 
 PInsMCVLockViewGet_st(args, holder) ::= <<
 var <holder> = <view_manager()>.get(<args; separator=", ">);
+sys_assert_var = !<sys_mylib()>.is_none(<holder>);
 >>
 
 PInsMCVLockViewPut_st(v) ::= <<

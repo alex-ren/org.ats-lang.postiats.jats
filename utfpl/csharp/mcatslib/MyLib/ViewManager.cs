@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 using PAT.Common.Classes.Expressions.ExpressionClass;
 
 using PAT.Lib;
@@ -16,71 +17,88 @@ using PAT.Lib;
  */
 namespace PAT.Lib
 {
-
-    /// <summary>
-    /// The math library that can be used in your model.
-    /// all methods should be declared as public static.
-    /// 
-    /// The parameters must be of type "int", or "int array"
-    /// The number of parameters can be 0 or many
-    /// 
-    /// The return type can be bool, int or int[] only.
-    /// 
-    /// The method name will be used directly in your model.
-    /// e.g. call(max, 10, 2), call(dominate, 3, 2), call(amax, [1,3,5]),
-    /// 
-    /// Note: method names are case sensetive
-    /// </summary>
-    public class ViewManager : ExpressionValue
+    public class MyRec: ExpressionValue
     {
-        private List<Tuple> m_views;
+        private Rectangle m_rec;
 
-        public ViewManager() {
-            m_views = new List<Tuple>();
+        public MyRec(Rectangle rec)
+        {
+            m_rec = rec;
         }
 
-        public ViewManager(List<Tuple> views) {
+        public Rectangle getRec()
+        {
+            return m_rec;
+        }
+
+        /// <summary>
+        /// Please implement this method to provide the string representation of the datatype
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+ 
+            return m_rec.ToString();
+        }
+ 
+        /// <summary>
+        /// Please implement this method to return a deep clone of the current object
+        /// </summary>
+        /// <returns></returns>
+        public override ExpressionValue GetClone()
+        {
+            return this;
+        }
+ 
+        /// <summary>
+        /// Please implement this method to provide the compact string representation of the datatype
+        /// </summary>
+        /// <returns></returns>
+        public override string ExpressionID
+        {
+            get
+            {
+                string returnString = "(" + m_rec.Left + "," +
+                                          m_rec.Top  + "," +
+                                          m_rec.Width + "," +
+                                          m_rec.Height + ")";
+ 
+                return returnString;
+            }
+        }
+    }
+
+    public class ViewManager : ExpressionValue
+    {
+        private List<Rectangle> m_views;
+
+        public ViewManager() {
+            m_views = new List<Rectangle>();
+        }
+
+        public ViewManager(List<Rectangle> views) {
             m_views = views;
         }
 
-        public Maybe get(int x, int y, int xi, int yi) {
-            foreach (Tuple t in m_views) {
-                int tx = (int)t.getElement(0);
-                int ty = (int)t.getElement(1);
-                int txi = (int)t.getElement(2);
-                int tyi = (int)t.getElement(3);
-                bool cmp = include(x, y, xi, yi, tx, ty, txi, tyi);
-                if (true == cmp) {
+        public Maybe get(int x, int y, int width, int height) {
+            Rectangle rec = new Rectangle(x, y, width, height);
+            foreach (Rectangle t in m_views) {
+                if (rec.IntersectsWith(t)) {
                     return Maybe.none();
                 } 
             }
 
-            Tuple t0 = new Tuple(4);
-            t0.setElement(0, x);
-            t0.setElement(1, y);
-            t0.setElement(2, xi);
-            t0.setElement(3, yi);
+            m_views.Add(rec);
 
-            m_views.Add(t0);
-
-            return Maybe.some(t0);
+            return Maybe.some(new MyRec(rec));
         }
 
 
-        // Check 1 is included in 2.
-        private bool include(int x1
-                           , int y1
-                           , int xi1
-                           , int yi1
-                           , int x2
-                           , int y2
-                           , int xi2
-                           , int yi2
-                ) {
-            return true;
-        }
-        
-        public void put(Tuple t) {
+        public void put(Maybe m) {
+            if (Maybe.is_none(m)) {
+                return;
+            }
+            Rectangle t = ((MyRec)Maybe.unsome(m)).getRec();
             bool ret = m_views.Remove(t);
             if (false == ret) {
                 throw new PAT.Common.Classes.Expressions.ExpressionClass.RuntimeException(
@@ -97,7 +115,7 @@ namespace PAT.Lib
          {
  
              String returnString = "";
-             foreach (Tuple t in m_views)
+             foreach (Rectangle t in m_views)
              {
                  returnString += t.ToString() + ", ";
              }
@@ -118,7 +136,7 @@ namespace PAT.Lib
          /// <returns></returns>
          public override ExpressionValue GetClone()
          {
-             List<Tuple> nlst = new List<Tuple>(m_views);
+             List<Rectangle> nlst = new List<Rectangle>(m_views);
              return new ViewManager(nlst);
          }
  
@@ -131,9 +149,13 @@ namespace PAT.Lib
              get
              {
                  String returnString = "";
-                 foreach (Tuple t in m_views)
+                 foreach (Rectangle t in m_views)
                  {
-                     returnString += t.ExpressionID + ", ";
+                     returnString += "(" + t.Left + "," +
+                                           t.Top  + "," +
+                                           t.Width + "," +
+                                           t.Height + ")";
+                          
                  }
  
                  if (returnString.Length > 0)

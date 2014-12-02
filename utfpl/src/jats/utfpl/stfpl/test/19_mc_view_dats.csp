@@ -173,9 +173,16 @@ var sys_assert_var = true;
 
 foo_63(sys_tid) =
   foo_63__1{  var mc_v_64 = view_manager.get(0, 0, 1, 1);
+  sys_assert_var = !sys_mylib_obj.is_none(mc_v_64);
   sys_gstack.frame_push(sys_tid, mc_v_64);
   } ->
-  foo_63__2{  view_manager.put(sys_gstack.frame_get(sys_tid, 0, 0));
+  foo_63__2{  var mc_v2_65 = view_manager.get(0, 0, 1, 2);
+  sys_assert_var = !sys_mylib_obj.is_none(mc_v2_65);
+  sys_gstack.frame_push(sys_tid, mc_v2_65);
+  } ->
+  foo_63__3{  view_manager.put(sys_gstack.frame_get(sys_tid, 0, 0));
+  } ->
+  foo_63__4{  view_manager.put(sys_gstack.frame_get(sys_tid, 0, 1));
   } ->
   Skip
   ;
@@ -186,11 +193,11 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main6_id__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  main7_id__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   foo_63(sys_tid);
-  main6_id__2{  sys_gstack.delete_frame(sys_tid);
+  main7_id__2{  sys_gstack.delete_frame(sys_tid);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);
