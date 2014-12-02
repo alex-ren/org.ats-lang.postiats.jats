@@ -14,10 +14,12 @@ SOURCE = Allocator.cs \
 	 SysLinkedNode.cs \
 	 MyLibObj.cs \
          Tuple.cs \
+         Maybe.cs \
 	 ValueArray.cs \
 	 MemHolder.cs \
 	 AtomRefManager.cs \
 	 ArrayRefManager.cs \
+	 ViewManager.cs \
 
 TARGET = MyLib.dll
 

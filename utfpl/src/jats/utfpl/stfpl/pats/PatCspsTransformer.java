@@ -22,6 +22,7 @@ import jats.utfpl.stfpl.mycspinstructions.CIMCAssert;
 import jats.utfpl.stfpl.mycspinstructions.CIMCGet;
 import jats.utfpl.stfpl.mycspinstructions.CIMCSet;
 import jats.utfpl.stfpl.mycspinstructions.CIMCVLockViewGet;
+import jats.utfpl.stfpl.mycspinstructions.CIMCVLockViewPut;
 import jats.utfpl.stfpl.mycspinstructions.CIMove;
 import jats.utfpl.stfpl.mycspinstructions.CIMutexCreate;
 import jats.utfpl.stfpl.mycspinstructions.CIPatLabDecompose;
@@ -572,11 +573,26 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         List<PStat> ret = new ArrayList<PStat>();
         
         List<PExp> args = CTempList2PExpList(node.m_args);
+        MCSId holder = node.m_holder.getMCSId();
+        ret.add(new PInsMCVLockViewGet(args, holder));
         
-        ret.add(new PInsMCVLockViewGet(args));
-        
+        if (node.m_holder.isEscaped()) {
+            ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
+        }
+
         return ret;
 	}
+	
+	@Override
+	public Object visit(CIMCVLockViewPut node) {
+		List<PStat> ret = new ArrayList<PStat>();
+		
+		PExp v = CTemp2PExp(node.m_v);
+		ret.add(new PInsMCVLockViewPut(v));
+
+        return ret;
+	}
+	
 
 	@Override
 	public Object visit(CIArrayRefUpdate node) {

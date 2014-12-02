@@ -5,10 +5,12 @@ import java.util.List;
 public class CIMCVLockViewGet extends MyCspInstruction {
 
     public List<IMyCspTemp> m_args;
+    public MyCspTempID m_holder;
 
-    public CIMCVLockViewGet(List<IMyCspTemp> args, MyCspGroup blk) {
+    public CIMCVLockViewGet(List<IMyCspTemp> args, MyCspTempID holder, MyCspGroup blk) {
         super(blk);
         m_args = args;
+        m_holder = holder;
 
     }
     @Override
@@ -23,7 +25,7 @@ public class CIMCVLockViewGet extends MyCspInstruction {
                 ((MyCspTempID)arg).updateForUsage();
             }
         }
-        
+        offset = m_holder.processStack(offset);
         return offset;
         
     }

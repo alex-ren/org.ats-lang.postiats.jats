@@ -241,6 +241,11 @@ public class MCInstructionPrinter implements IMCInsVisitor {
     public Object visit(MCInsMCVLockViewGet ins) {
 		return "MCInsMCVLockViewGet";
     }
+	
+	@Override
+    public Object visit(MCInsMCVLockViewPut ins) {
+		return "MCInsMCVLockViewPut";
+    }
 
 
 	@Override

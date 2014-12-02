@@ -65,6 +65,7 @@ public interface PNodeVisitor {
 	public Object visit(PInsMCSet node);
     public Object visit(PInsMCAssert node);
 	public Object visit(PInsMCVLockViewGet node);
+	public Object visit(PInsMCVLockViewPut node);
 	
 	
 	public Object visit(PInsAtomRefCreate node);
@@ -78,6 +79,7 @@ public interface PNodeVisitor {
 	public Object visit(PInsTIdAllocate node);
 
 	public Object visit(PInsCondCreate node);
+
 
 
 

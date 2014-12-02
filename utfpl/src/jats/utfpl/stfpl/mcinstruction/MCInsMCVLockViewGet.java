@@ -4,11 +4,11 @@ import java.util.List;
 
 public class MCInsMCVLockViewGet implements IMCInstruction {
     public List<IMCValPrim> m_args;
-    public boolean m_isret;
+    public MCSId m_holder;
 
-    public MCInsMCVLockViewGet(List<IMCValPrim> args, boolean isret) {
+    public MCInsMCVLockViewGet(List<IMCValPrim> args, MCSId holder) {
         m_args = args;
-        m_isret = isret;
+        m_holder = holder;
     }
     
     @Override

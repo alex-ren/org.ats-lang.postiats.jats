@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,40 +13,31 @@ using PAT.Lib;
 
 namespace PAT.Lib
 {
-    public class Tuple : ExpressionValue
+    public class Maybe : ExpressionValue
     {
-        private Object [] m_members;
+        private ExpressionValue m_v;
+        private bool m_is_none;
 
-        public Tuple(int len) {
-           m_members = new Object[len];
+        private Maybe(ExpressionValue v) {
+            m_v = v;
+            m_is_none = false;
         } 
 
-        public Tuple(Object [] members) {
-           m_members = members;
+        private Maybe() {
+            m_v = null;
+            m_is_none = true;
         } 
 
-        public void setElement(int index, Object ele)
-        {
-            m_members[index] = ele;
+        static public Maybe some(ExpressionValue v) {
+            return new Maybe(v);
         }
 
-        public Object getElement(int index)
-        {
-            return m_members[index];
+        static public bool is_none(Maybe m) {
+            return m.m_is_none;
         }
 
-        private string getContent()
-        {
-            string ret = "(";
-            foreach (Object ele in m_members)
-            {
-                if (ele != null) {
-                    ret += ele.ToString();
-                    ret += ",";
-                }
-            }
-            ret += ")";
-            return ret;
+        static public Maybe none() {
+            return new Maybe();
         }
 
         /// <summary>
@@ -55,7 +47,11 @@ namespace PAT.Lib
         ///        
         public override string ToString()
         {
-            return getContent();
+            if (m_is_none) {
+                return "none";
+            } else {
+                return "some:" + m_v.ToString();
+            }
         }
 
         /// <summary>
@@ -73,8 +69,18 @@ namespace PAT.Lib
         /// <returns></returns>
         public override string ExpressionID
         {
-            get { return getContent(); }
+            get { 
+                if (m_is_none) {
+                    return "n";
+                } else {
+                    return "s:" + m_v.ExpressionID;
+                }
+            }
         }
     }
 }
+
+
+
+
 

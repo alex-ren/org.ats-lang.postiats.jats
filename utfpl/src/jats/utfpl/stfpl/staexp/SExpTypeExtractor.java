@@ -178,7 +178,8 @@ public class SExpTypeExtractor {
             } else if (con.equals(DefaultAppTypeStore.con_mc_sid_t0ype)) {
                 return IntType.cInstance;
             } else {
-                switch (sort.m_res.simplify())
+            	ESort s = sort.m_res.simplify();
+                switch (s)
                 {
                     case type:
                     case t0ype:
@@ -190,11 +191,11 @@ public class SExpTypeExtractor {
                         return ret;
                     }
                     case prop:
-                    case vprop:
+                    case view:
                         return PropType.cInstance;
                     default:
 //                        return null;
-                        throw new Error("Not supported");
+                        throw new Error(s + " is not supported");
                 }
             }
 

@@ -736,12 +736,22 @@ public class MCInstructionTransformer {
 
                 return new MCInsMCAssert(mcvp, isret);
             } else if (fname.compSymbolString(CCompUtils.cMCVLockViewGet)) {
-                // prfun mc_vlockview_get {i: nat} {j: pos} (i: int i, j: int j): mc_vlockview (i, j)
+                // prfun mc_vlockview_get {x,y: nat} {xi,yi: pos} ( x: int x, y: int y, xi: int xi, yi: int yi): mc_vlockview (x, y, xi, yi)
 
                 List<IMCValPrim> mcargs = m_mcsid_factory.fromIValPrimList(ins.m_args, map_clo_name, map_name);
+                
+                return new MCInsMCVLockViewGet(mcargs, mcholder); 
+            } else if (fname.compSymbolString(CCompUtils.cMCVLockViewPut)) {
+                // prfun mc_vlockview_put {x,y: nat} {xi,yi: pos} (v: mc_vlockview (x, y, xi, yi): void
+                IValPrim v = ins.m_args.get(0);
+                IMCValPrim mcv = m_mcsid_factory.fromIValPrim(v, map_clo_name, map_name);
+                if (mcv instanceof MCAtomValue) {
+                    throw new Error("This should not happen.");
+                }
                 boolean isret = ins.m_holder.isRetHolder();
                 
-                return new MCInsMCVLockViewGet(mcargs, isret); 
+                return new MCInsMCVLockViewPut((MCSId)mcv, isret); 
+            
             } else if (fname.compSymbolString(CCompUtils.cConATSTidAllocate)) {
                 // fun conats_tid_allocate (): tid
                 return new MCInsTIdAllocate(mcholder);

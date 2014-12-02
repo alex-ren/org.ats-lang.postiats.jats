@@ -49,9 +49,11 @@ public interface IMyCspInsVisitor {
 
 
 	public Object visit(CIMCVLockViewGet node);
+	public Object visit(CIMCVLockViewPut node);
 	
 	public Object visit(CITIdAllocate node);
 	public Object visit(CICondCreate node);
+	
 
 
     

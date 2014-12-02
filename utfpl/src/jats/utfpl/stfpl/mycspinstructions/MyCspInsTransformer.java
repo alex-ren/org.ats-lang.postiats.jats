@@ -32,6 +32,7 @@ import jats.utfpl.stfpl.mcinstruction.MCInsMCAtomicStart;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCGet;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCSet;
 import jats.utfpl.stfpl.mcinstruction.MCInsMCVLockViewGet;
+import jats.utfpl.stfpl.mcinstruction.MCInsMCVLockViewPut;
 import jats.utfpl.stfpl.mcinstruction.MCInsMove;
 import jats.utfpl.stfpl.mcinstruction.MCInsMutexCreate;
 import jats.utfpl.stfpl.mcinstruction.MCInsPatLabDecompose;
@@ -559,9 +560,21 @@ public class MyCspInsTransformer {
         @Override
         public Object visit(MCInsMCVLockViewGet ins) {
             List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
-            CIMCVLockViewGet nIns = new CIMCVLockViewGet(nLst, m_cbEvt);
+            MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+            CIMCVLockViewGet nIns = new CIMCVLockViewGet(nLst, holder, m_cbEvt);
 
-            handleNoReturnForWithEffect(nIns);
+            handleReturnForWithEffect(nIns, ins.m_holder);
+
+            return null;
+        }
+        
+        @Override
+        public Object visit(MCInsMCVLockViewPut ins) {
+        	MyCspTempID v = TID2CTempID(ins.m_v, m_subMap, m_funLab, m_cbEvt);
+
+        	CIMCVLockViewPut nIns = new CIMCVLockViewPut(v, m_cbEvt);
+
+        	handleNoReturnForWithEffect(nIns);
 
             return null;
         }

@@ -606,7 +606,22 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PInsMCVLockViewGet node) {
-		return "PInsMCVLockViewGet";
+		// PInsMCVLockViewGet_st(args, holder) ::= <<
+		ST st = m_stg.getInstanceOf("PInsMCVLockViewGet_st");
+		for (PExp arg: node.m_args) {
+			st.add("args", arg.accept(this));
+		}
+		st.add("holder", node.m_holder.toStringMCIns());
+		return st;
+	}
+	
+
+	@Override
+	public Object visit(PInsMCVLockViewPut node) {
+		// PInsMCVLockViewPut_st(v) ::= <<
+		ST st = m_stg.getInstanceOf("PInsMCVLockViewPut_st");
+		st.add("v", node.m_v.accept(this));
+		return st;
 	}
 
 

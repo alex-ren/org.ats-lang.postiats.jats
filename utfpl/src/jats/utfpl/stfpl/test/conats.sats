@@ -166,15 +166,21 @@ fun negation {x: bool} (x: bool x):<fun0> bool (~x)
 
 (* ************* ************** *)
 
-absview mc_vlockview (int, int)
+absviewtype mc_vlockview (int, int, int, int)
 
-prfun mc_vlockview_get {i: nat} {j: pos}
-  (i: int i, j: int j): mc_vlockview (i, j)
+prfun mc_vlockview_get {x,y: nat} {xi,yi: pos}
+  ( x: int x
+  , y: int y
+  , xi: int xi
+  , yi: int yi
+  ): mc_vlockview (x, y, xi, yi)
 
-prfun mc_vlockview_put {i: nat} {j: pos} 
-  ( v: mc_vlockview (i, j)
-  | i: int i
-  , j: int j
+prfun mc_vlockview_put {x,y: nat} {xi,yi: pos}
+  (v: mc_vlockview (x, y, xi, yi)
+//  | x: int x
+//  , y: int y
+//  , xi: int xi
+//  , yi: int yi
   ): void
 
 (* ************* ************** *)

@@ -499,10 +499,23 @@ public class MCInstructionProcessor {
             } else {
 
                 List<IMCValPrim> args = subsVPLst(ins.m_args, m_sub);
+                MCSId holder = subsHolder(ins.m_holder);
                 
-                return new MCInsMCVLockViewGet(args, ins.m_isret);
+                return new MCInsMCVLockViewGet(args, holder);
             }
 
+        }
+        
+        @Override
+        public MCInsMCVLockViewPut visit(MCInsMCVLockViewPut ins) {
+            if (null == m_sub) {
+                return ins;
+            } else {
+
+            	MCSId v = subsVP(ins.m_v, m_sub);
+                
+                return new MCInsMCVLockViewPut(v, ins.m_isret);
+            }
         }
 
 		@Override

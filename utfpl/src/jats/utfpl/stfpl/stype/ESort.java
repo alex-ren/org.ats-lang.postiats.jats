@@ -8,7 +8,8 @@ public enum ESort {
     vtype("viewtype"),
     vt0ype("viewt0ype"),
     prop("prop"),
-    vprop("viewprop"),
+//    vprop("viewprop"),
+    view("view"),
     advance("advance");
     
     private String m_str;
@@ -28,8 +29,10 @@ public enum ESort {
             return vt0ype;    
         } else if (name.equals("prop")) {
             return prop;            
-        } else if (name.equals("viewprop")) {
-            return vprop;          
+//        } else if (name.equals("viewprop")) {
+//            return vprop;      
+        } else if (name.equals("view")) {
+            return view;                    
         } else {
         	Log.log4j.error("unknown sort name " + name);
             return advance;

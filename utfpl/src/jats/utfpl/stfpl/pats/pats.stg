@@ -14,6 +14,8 @@ atom_ref_manager() ::= <<atom_ref_manager>>
 
 array_ref_manager() ::= <<array_ref_manager>>
 
+view_manager() ::= <<view_manager>>
+
 sys_mutex_manager() ::= <<
 sys_mutex_manager
 >>
@@ -54,6 +56,9 @@ var\<AtomRefManager> <atom_ref_manager()> = new AtomRefManager(10);
 
 // Set the initial capacity to 10.
 var\<ArrayRefManager> <array_ref_manager()> = new ArrayRefManager(10);
+
+//
+var\<ViewManager> <view_manager()> = new ViewManager();
 
 // =====================
 // For global exclusion.
@@ -503,5 +508,25 @@ PProcGrpMCAtomicEnd_st(proc) ::= <<
 {<sys_glb()> = 0;} -> Skip } }<if(proc)>;<endif><if(proc)>
 <proc><endif>
 >>
+
+PInsMCVLockViewGet_st(args, holder) ::= <<
+var <holder> = <view_manager()>.get(<args; separator=", ">);
+>>
+
+PInsMCVLockViewPut_st(v) ::= <<
+<view_manager()>.put(<v>);
+>>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
