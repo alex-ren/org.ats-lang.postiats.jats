@@ -61,7 +61,6 @@ import jats.utfpl.stfpl.dynexp.P2Tignored;
 import jats.utfpl.stfpl.dynexp.P2Tpat;
 import jats.utfpl.stfpl.dynexp.P2Trec;
 import jats.utfpl.stfpl.dynexp.P2Tvar;
-import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.FunType; 
 import jats.utfpl.stfpl.stype.ISType;
@@ -73,7 +72,6 @@ import jats.utfpl.stfpl.stype.TypeCheckResult;
 import jats.utfpl.stfpl.stype.VoidType;
 import jats.utfpl.utils.Log;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,7 +81,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 /*
  * Some explanation about needed and scope.

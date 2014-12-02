@@ -26,6 +26,6 @@ fun foo2_64 = lam (<P2Tann>(x_65:int:t@ype)) <fun> =
 
 val tid1_68 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
 
-val () = D2Ecst<{para:a_3850_0}(((((para:a_3850_0) -<fun> void), para:a_3850_0, thread_id_t_728_0) -<fun> void))> (foo2_64, 0, tid1_68)
+val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (foo2_64, 0, tid1_68)
 
 val () = foo1_63 ()

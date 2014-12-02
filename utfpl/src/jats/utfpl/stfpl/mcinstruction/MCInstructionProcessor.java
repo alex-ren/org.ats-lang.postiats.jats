@@ -575,8 +575,9 @@ public class MCInstructionProcessor {
             } else {
                 MCSId holder = subsHolder(ins.m_holder);
                 IMCValPrim vp = subsVP(ins.m_vp, m_sub);
+                IMCValPrim n = subsVP(ins.m_n, m_sub);
                 
-                return new MCInsSharedCreate(holder, vp);
+                return new MCInsSharedCreate(holder, vp, n);
             }
 		}
 

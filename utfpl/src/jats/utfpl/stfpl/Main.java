@@ -15,6 +15,7 @@ public class Main {
     private ModelType m_type;
     private String m_input;
     private String m_output;
+    private String m_pat;
     
     public void options(PrintStream stm) {
         stm.println("usage: java -jar mcatscc.jar <command> ... <command>");
@@ -23,10 +24,12 @@ public class Main {
         stm.println();
         stm.println("  -c, --csps");
         stm.println("               Generate model in CSP#.");
-        stm.println("  -i, --input filenames");
+        stm.println("  -i, --input filename");
         stm.println("               Specify the name of the input file.");
-        stm.println("  -o, --output filenames");
+        stm.println("  -o, --output filename");
         stm.println("               Specify the name of the output file.");
+        stm.println("  -p, --pat path");
+        stm.println("               Specify the path of the executable (PAT3.Console.exe) of PAT.");        
         stm.println();
 
     }
@@ -35,6 +38,8 @@ public class Main {
         m_type = null;
         m_input = null;
         m_output = null;
+        m_pat = null;
+        
     }
 
     public int parseArgv(String argv[]) {
@@ -63,6 +68,16 @@ public class Main {
                     m_output = argv[i + 1];
                     i = i + 1;
                 }
+            } else if (arg.equals("-p") || arg.equals("--pat")) {
+                if ((i + 1) >= argv.length) {
+                    System.err
+                            .println("Error: Please specify the path of the executable (PAT3.Console.exe) of PAT file.\n");
+                    options(System.err);
+                    return -1;
+                } else {
+                    m_pat = argv[i + 1];
+                    i = i + 1;
+                }                
             } else {
                 System.err.println("unknow options");
                 options(System.err);
@@ -87,7 +102,7 @@ public class Main {
                 System.err.println("Input file doesn't exist.");
                 return -1;
             }
-            ModelGenerater mcGen = new ModelGenerater(path.getAbsolutePath(), m_output);
+            ModelGenerater mcGen = new ModelGenerater(path.getAbsolutePath(), m_output, m_pat);
             mcGen.generate(8);
                         
             /* ******** ******** */

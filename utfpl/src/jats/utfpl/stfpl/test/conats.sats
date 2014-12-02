@@ -6,16 +6,21 @@
 
 // shared value
 
-abstype shared_t (viewt@ype)
-typedef shared (a:viewt@ype) = shared_t a
+abstype shared_t (viewt@ype, int)
+typedef shared (a:viewt@ype) = shared_t (a, 1)
 
 fun conats_shared_create {a: viewt@ype} (ele: a): shared (a)
+fun conats_sharedn_create {a: viewt@ype} {n:pos} (ele: a, n: int n): shared_t (a, n)
 // fun conats_shared_finalize {a: viewt@ype} (s: shared a): a
 
-fun conats_shared_acquire {a: viewt@ype} (s: shared (a)): a
-fun conats_shared_release {a: viewt@ype} (s: shared (a), ele: a): void
+fun conats_shared_acquire {a: viewt@ype} {n:pos} (s: shared_t (a, n)): a
+fun conats_shared_release {a: viewt@ype} {n:pos} (s: shared_t (a, n), ele: a): void
+
 fun conats_shared_signal {a: viewt@ype} (s: shared (a), ele: a): a
+fun conats_sharedn_signal {a: viewt@ype} {i,n:nat | i < n} (s: shared_t (a, n), i: int i, ele: a): a
+
 fun conats_shared_condwait {a: viewt@ype} (s: shared (a), ele: a): a
+fun conats_sharedn_condwait {a: viewt@ype} {i,n:nat | i < n} (s: shared_t (a, n), i: int i, ele: a): a
 
 //absviewtype null_vt
 //typedef cond = shared (null_vt)

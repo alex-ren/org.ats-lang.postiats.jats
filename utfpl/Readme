@@ -1,0 +1,6 @@
+
+
+Usage of atspat.jar
+
+>> java -jar atspat.jar -i 10_create_thread.dats -p /home/grad2/aren/programs/tempPAT/PAT3.Console.exe -c
+

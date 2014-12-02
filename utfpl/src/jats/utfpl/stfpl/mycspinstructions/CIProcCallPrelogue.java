@@ -5,14 +5,14 @@ import jats.utfpl.stfpl.mcinstruction.MCSId;
 import java.util.List;
 
 public class CIProcCallPrelogue extends MyCspInstruction {
-	private MCSId m_fun;
+//	private MCSId m_fun;
 	public List<IMyCspTemp> m_args;
 //	public MyCspTempID m_envname;
 	public boolean m_isTail;
 
     public CIProcCallPrelogue(MCSId fun, MyCspGroup blk, List<IMyCspTemp> args, /*MyCspTempID envname, */boolean isTail) {
         super(blk);
-        m_fun = fun;
+//        m_fun = fun;
         m_args = args;
 //        m_envname = envname;
         m_isTail = isTail;

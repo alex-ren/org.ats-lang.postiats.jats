@@ -45,7 +45,6 @@ import jats.utfpl.stfpl.mcinstruction.MCSIdFactory;
 import jats.utfpl.stfpl.mcinstruction.ProgramMCIns;
 import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.stype.AuxSType;
-import jats.utfpl.stfpl.stype.BlankType;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.VoidType;
@@ -299,45 +298,6 @@ public class MyCspInsTransformer {
             }
         }
 
-//        @Override
-//        public Object visit(InsStoreArray ins) {
-//
-//            IMyCspTemp localValue = ValPrim2CTemp(ins.m_localValue, m_subMap, m_funLab, m_cbEvt);
-//            MyCspTempID globalVar = TID2CTempID(ins.m_globalVar, m_subMap, m_funLab, m_cbEvt);
-//            IMyCspTemp localIndex = ValPrim2CTemp(ins.m_localIndex, m_subMap, m_funLab, m_cbEvt);
-//            
-//            CIStoreArray nIns = new CIStoreArray(localValue, globalVar, localIndex, m_cbEvt);
-//            m_cbEvt.add(nIns);
-//            m_cblkLst.add(m_cbEvt);
-//            m_cbEvt = new GrpEvent();
-//            
-//            return null;            
-//        }
-//        @Override
-//        public Object visit(InsLoadArray ins) {
-//
-//            MyCspTempID localHolder = TID2CTempID(ins.m_localHolder, m_subMap, m_funLab, m_cbEvt);
-//            MyCspTempID globalVar = TID2CTempID(ins.m_globalVar, m_subMap, m_funLab, m_cbEvt);
-//            IMyCspTemp localIndex = ValPrim2CTemp(ins.m_localIndex, m_subMap, m_funLab, m_cbEvt);
-//            
-//            CILoadArray nIns = new CILoadArray(globalVar, localIndex, localHolder, m_cbEvt);
-//            m_cbEvt.add(nIns);
-//            
-//            // Add return ins
-//            if (ins.m_localHolder.isRet()) {
-//                MyCspTempID retCTempID = TID2CTempID(ins.m_localHolder, m_subMap, m_funLab, m_cbEvt);
-//                CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
-//                m_cbEvt.add(retIns);
-//            }
-//            
-//            m_cblkLst.add(m_cbEvt);
-//            m_cbEvt = new GrpEvent();
-//            
-//            return null;    
-//            
-//        }
-
-
         @Override
         public Object visit(MCInsMove ins) {
 	        // No return for void
@@ -386,7 +346,7 @@ public class MyCspInsTransformer {
             
             CIAtomRefCreate nIns = new CIAtomRefCreate(holder, vp, m_cbEvt);
             
-            handleReturnForWithEffect(nIns, ins.m_holder);
+            handleReturnForNoEffect(nIns, ins.m_holder);
             
             return null;
         }
@@ -424,7 +384,7 @@ public class MyCspInsTransformer {
             
             CIMutexCreate nIns = new CIMutexCreate(holder, m_cbEvt);
             
-            handleReturnForWithEffect(nIns, ins.m_holder);
+            handleReturnForNoEffect(nIns, ins.m_holder);
             
             return null;
         }
@@ -640,7 +600,7 @@ public class MyCspInsTransformer {
             
             CIArrayRefCreate nIns = new CIArrayRefCreate(holder, len, vp, m_cbEvt);
             
-            handleReturnForWithEffect(nIns, ins.m_holder);
+            handleReturnForNoEffect(nIns, ins.m_holder);
             
             return null;
 		}
@@ -678,35 +638,40 @@ public class MyCspInsTransformer {
             
             CITIdAllocate nIns = new CITIdAllocate(holder, m_cbEvt);
             
-            handleReturnForWithEffect(nIns, ins.m_holder);
+            handleReturnForNoEffect(nIns, ins.m_holder);
             
             return null;
 		}
 
 		@Override
 		public Object visit(MCInsSharedCreate ins) {
+			MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+			IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
+			IMyCspTemp n = ValPrim2CTemp(ins.m_n, m_subMap, m_funLab, m_cbEvt);
 			
-			// CIMutexCreate
-			MCSId m = m_fac.createLocalVar("mutex", BlankType.cInstance);
-			MyCspTempID mholder = TID2CTempID(m, m_subMap, m_funLab, m_cbEvt);
-            CIMutexCreate ins_mutex = new CIMutexCreate(mholder, m_cbEvt);
-            m_cbEvt.add(ins_mutex);
-            
-			// CICondCreate
-			MCSId cond = m_fac.createLocalVar("cond", BlankType.cInstance);
-			MyCspTempID condholder = TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt);
-			CICondCreate ins_cond = new CICondCreate(condholder, m_cbEvt);
-			m_cbEvt.add(ins_cond);
+			CISharedCreate nins = new CISharedCreate(holder, v, n, m_cbEvt);
+			m_cbEvt.add(nins);
 			
-			// CIFormTuple  (vp, m, cond)  // may be better to use a list type. Anyway, use tuple currently.
-            List<IMyCspTemp> nLst = new ArrayList<IMyCspTemp>();
-            nLst.add(ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt));
-//            Log.log4j.info("formtuple vp is " + ins.m_vp.toStringMCIns());
-            nLst.add(TID2CTempID(m, m_subMap, m_funLab, m_cbEvt));
-            nLst.add(TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt));
-            MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIFormTuple ins_tuple = new CIFormTuple(nLst, ctHolder, m_cbEvt);
-            m_cbEvt.add(ins_tuple);
+//			MCSId m = m_fac.createLocalVar("mutex", BlankType.cInstance);
+//			MyCspTempID mholder = TID2CTempID(m, m_subMap, m_funLab, m_cbEvt);
+//            CIMutexCreate ins_mutex = new CIMutexCreate(mholder, m_cbEvt);
+//            m_cbEvt.add(ins_mutex);
+//            
+//			// CICondCreate
+//			MCSId cond = m_fac.createLocalVar("cond", BlankType.cInstance);
+//			MyCspTempID condholder = TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt);
+//			CICondCreate ins_cond = new CICondCreate(condholder, m_cbEvt);
+//			m_cbEvt.add(ins_cond);
+//			
+//			// CIFormTuple  (vp, m, cond)  // may be better to use a list type. Anyway, use tuple currently.
+//            List<IMyCspTemp> nLst = new ArrayList<IMyCspTemp>();
+//            nLst.add(ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt));
+//            nLst.add(TID2CTempID(m, m_subMap, m_funLab, m_cbEvt));
+//            nLst.add(TID2CTempID(cond, m_subMap, m_funLab, m_cbEvt));
+//            
+//            MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
+//            CIFormTuple ins_tuple = new CIFormTuple(nLst, ctHolder, m_cbEvt);
+//            m_cbEvt.add(ins_tuple);
             
             return null;
 		}

@@ -15,7 +15,7 @@ public class MCInsTIdAllocate implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return true;
+        return false;
     }
 
 }

@@ -3,7 +3,6 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
-import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;

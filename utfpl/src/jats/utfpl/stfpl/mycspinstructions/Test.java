@@ -39,7 +39,7 @@ public class Test {
         };
 
         for (String strPath : paths) {
-            ModelGenerater mcGen = new ModelGenerater(strPath, null);
+        	ModelGenerater mcGen = new ModelGenerater(strPath, null, "/home/grad2/aren/programs/tempPAT/PAT3.Console.exe");
             mcGen.generate(6);
         }
 

@@ -12,8 +12,8 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:4
 Total Transitions:4
-Time Used:0.0212372s
-Estimated Memory Used:8564.736KB
+Time Used:0.0235021s
+Estimated Memory Used:8560.64KB
 
 
 =======================================================
@@ -21,7 +21,7 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init -> τ>
+<init -> main_init -> main4_id__1>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -32,7 +32,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:2
 Total Transitions:2
-Time Used:0.0056202s
+Time Used:0.0049927s
 Estimated Memory Used:8552.448KB
 
 

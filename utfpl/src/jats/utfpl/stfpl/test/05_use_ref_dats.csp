@@ -13,6 +13,13 @@ var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
 // Set the initial capacity to 10.
 var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 
+//
+var<ViewManager> view_manager = new ViewManager();
+
+// =====================
+// For global exclusion.
+var glb = 0;
+
 // =====================
 
 // Stack Operation
@@ -106,10 +113,11 @@ conats_shared_release(sys_tid) = conats_shared_release_impl(sys_tid,
 conats_shared_release_impl(sys_tid, tup, a) = 
     sys_mutex_unlock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1));
 // ====================
-conats_shared_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+conats_shared_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+conats_sharedn_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
 
-conats_shared_signal_impl(sys_tid, tup) = 
-    sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 2));
+conats_shared_signal_impl(sys_tid, tup, index) = 
+    sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
 
 sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 
@@ -123,10 +131,13 @@ sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 // ====================
 
 conats_shared_condwait(sys_tid) = 
-    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
 
-conats_shared_condwait_impl(sys_tid, tup) = sys_cond_wait_impl(sys_tid, 
-                                  sys_mylib_obj.getTupleElement(tup, 2),  // cond
+conats_sharedn_condwait(sys_tid) = 
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_condwait_impl(sys_tid, tup, index) = sys_cond_wait_impl(sys_tid, 
+                                  sys_mylib_obj.getTupleElement(tup, index + 2),  // cond
                                   sys_mylib_obj.getTupleElement(tup, 1));  // mutex
 
 sys_cond_wait_impl(sys_tid, c, m) = atomic{
@@ -163,8 +174,8 @@ var sys_assert_var = true;
 
 // =====================
 
-var g_63;
-var x_64;
+var g_63 = 0;
+var x_64 = 0;
 
 
 // =====================
@@ -174,12 +185,11 @@ main_s(sys_tid) =
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
   main5_id__1{  g_63 = atom_ref_manager.allocate(0);
+  atom_ref_manager.setElement(g_63, 3)
   } ->
-  main5_id__2{  atom_ref_manager.setElement(g_63, 3)
+  main5_id__2{  x_64 = atom_ref_manager.getElement(g_63);
   } ->
-  main5_id__3{  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  main5_id__4{  var temp3_id = call(eq, x_64, 4);
+  main5_id__3{  var temp3_id = call(eq, x_64, 4);
   sys_assert_var = temp3_id;
   } ->
   Skip; 

@@ -1,11 +1,8 @@
 package jats.utfpl.stfpl;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 import jats.utfpl.stfpl.dynexp.Cd2cst;
 import jats.utfpl.stfpl.dynexp.Cd2ecl;
@@ -69,7 +66,6 @@ import jats.utfpl.stfpl.staexp.FUNCLOfun;
 import jats.utfpl.stfpl.staexp.FunCloNA;
 import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.staexp.SExpTypeExtractor;
-import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.FloatType;
 import jats.utfpl.stfpl.stype.FunType;
@@ -89,16 +85,11 @@ import jats.utfpl.utils.Log;
 
 public class StfplTypeChecker {
     private ProgramStfpl2 m_prog;
-
-    private STGroup m_stg_type;
     
 //    private Map<Cd2cst, ISType> m_tymap;
 
     public StfplTypeChecker(ProgramStfpl2 prog) {
         m_prog = prog;
-        
-        URL fileURL_stype = this.getClass().getResource("/jats/utfpl/stfpl/stype/stype.stg");
-        m_stg_type = new STGroupFile(fileURL_stype, "ascii", '<', '>');
     }
     
     public void typecheck() {

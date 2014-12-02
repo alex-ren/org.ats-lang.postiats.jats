@@ -1,13 +1,11 @@
 staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
-val s_63 = D2Ecst<conats_shared_create_2560:{a_3836}(((a_3836) -<fun> shared_t_722)):type> (0)
+val s_63 = D2Ecst<{para:a_3837_0}(((para:a_3837_0) -<fun> shared_t_722_0(para:a_3837_0)))> (0)
 
-val <P2Trec>(<LABP2ATnorm>(x_64), <LABP2ATnorm>(y_65)) = ( | 1, 2)
+val a_64 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0)) -<fun> para:a_3840_0))> (s_63)
 
-val <P2Tann>(a_66:int:t@ype) = D2Ecst<conats_shared_acquire_2561:{a_3837}(((shared_t_722) -<fun> a_3837)):type> (s_63)
+val a_65 = D2Ecst<{para:a_3844_0}(((shared_t_722_0(para:a_3844_0), para:a_3844_0) -<fun> para:a_3844_0))> (s_63, a_64)
 
-val a_67 = D2Ecst<conats_shared_signal_2563:{a_3839}(((shared_t_722, a_3839) -<fun> a_3839)):type> (s_63, a_66)
+val a_66 = D2Ecst<{para:a_3848_0}(((shared_t_722_0(para:a_3848_0), para:a_3848_0) -<fun> para:a_3848_0))> (s_63, a_65)
 
-val () = D2Ecst<conats_shared_release_2562:{a_3838}(((shared_t_722, a_3838) -<fun> void)):type> (s_63, a_67)
-
-val a_68 = D2Ecst<conats_shared_condwait_2564:{a_3840}(((shared_t_722, a_3840) -<fun> a_3840)):type> (s_63, a_67)
+val () = D2Ecst<{para:a_3842_0}(((shared_t_722_0(para:a_3842_0), para:a_3842_0) -<fun> void))> (s_63, a_66)

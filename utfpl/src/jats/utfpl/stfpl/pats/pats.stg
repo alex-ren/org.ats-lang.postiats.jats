@@ -149,10 +149,11 @@ conats_shared_release(<sys_tid()>) = conats_shared_release_impl(<sys_tid()>,
 conats_shared_release_impl(<sys_tid()>, tup, a) = 
     sys_mutex_unlock_impl(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, 1));
 // ====================
-conats_shared_signal(<sys_tid()>) = conats_shared_signal_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
+conats_shared_signal(<sys_tid()>) = conats_shared_signal_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), 0);
+conats_sharedn_signal(<sys_tid()>) = conats_shared_signal_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), <sys_gstack()>.frame_get(<sys_tid()>, 0, 1));
 
-conats_shared_signal_impl(<sys_tid()>, tup) = 
-    sys_cond_signal_impl(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, 2));
+conats_shared_signal_impl(<sys_tid()>, tup, index) = 
+    sys_cond_signal_impl(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, index + 2));
     
 
 sys_cond_signal_impl(<sys_tid()>, c) = atomic {if (cond_holder[c] > 0) {
@@ -167,10 +168,13 @@ sys_cond_signal_impl(<sys_tid()>, c) = atomic {if (cond_holder[c] > 0) {
 // ====================
 
 conats_shared_condwait(<sys_tid()>) = 
-    conats_shared_condwait_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
+    conats_shared_condwait_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), 0);
 
-conats_shared_condwait_impl(<sys_tid()>, tup) = sys_cond_wait_impl(<sys_tid()>, 
-                                  sys_mylib_obj.getTupleElement(tup, 2),  // cond
+conats_sharedn_condwait(<sys_tid()>) = 
+    conats_shared_condwait_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), <sys_gstack()>.frame_get(<sys_tid()>, 0, 1));
+    
+conats_shared_condwait_impl(<sys_tid()>, tup, index) = sys_cond_wait_impl(<sys_tid()>, 
+                                  sys_mylib_obj.getTupleElement(tup, index + 2),  // cond
                                   sys_mylib_obj.getTupleElement(tup, 1));  // mutex
 
 sys_cond_wait_impl(<sys_tid()>, c, m) = atomic{
@@ -518,7 +522,17 @@ PInsMCVLockViewPut_st(v) ::= <<
 <view_manager()>.put(<v>);
 >>
 
-
+PInsSharedCreate_st(holder, v, n, is_global) ::= <<
+var bound = <n> + 2;
+<if(is_global)><else>var <endif><holder> = <sys_mylib()>.createTuple(bound);
+<sys_mylib()>.setTupleElement(<holder>, 0, <v>);  // value
+<sys_mylib()>.setTupleElement(<holder>, 1, <sys_mutex_manager()>.allocate());  // mutex
+var index = 2;
+while (index \< bound) {
+    <sys_mylib()>.setTupleElement(<holder>, index, <sys_cond_manager()>.allocate());
+    index = index + 1;
+};
+>>
 
 
 

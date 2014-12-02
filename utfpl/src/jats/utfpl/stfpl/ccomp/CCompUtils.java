@@ -10,11 +10,14 @@ public class CCompUtils {
     /* ************* *************** */
     
     public static final String cConATSSharedCreate   = "conats_shared_create";
+    public static final String cConATSSharednCreate   = "conats_sharedn_create";
 //    public static final String cConATSSharedFinalize = "conats_shared_finalize";
     public static final String cConATSSharedAcquire  = "conats_shared_acquire";
     public static final String cConATSSharedRelease  = "conats_shared_release";
     public static final String cConATSSharedSignal   = "conats_shared_signal";
+    public static final String cConATSSharednSignal   = "conats_sharedn_signal";
     public static final String cConATSSharedCondwait = "conats_shared_condwait";
+    public static final String cConATSSharednCondwait = "conats_sharedn_condwait";
     
 //    public static final String cConATSSharedCreateCond = "conats_shared_create_cond";
     

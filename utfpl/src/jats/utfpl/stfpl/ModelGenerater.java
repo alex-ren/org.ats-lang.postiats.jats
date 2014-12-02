@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 public class ModelGenerater {
 	private String m_inputpath;
 	private String m_outputpath;
+	private String m_patpath;
 	
 	private String m_dyn;
 	private String m_dyn3;
@@ -43,9 +44,10 @@ public class ModelGenerater {
 	
 	
 	
-	public ModelGenerater(String inputpath, String outputpath) {
+	public ModelGenerater(String inputpath, String outputpath, String patpath) {
 		m_inputpath = inputpath;
         m_outputpath = outputpath;
+        m_patpath = patpath;
     	m_dyn = null;
     	m_dyn3 = null;
     	m_inss = null;
@@ -218,8 +220,7 @@ public class ModelGenerater {
                 } else {
                 	path_result = new File(m_outputpath);
                 }
-                
-            	String cmdpat = "mono /home/alex/programs/tempPAT/PAT3.Console.exe -csp " + 
+                String cmdpat = "mono " + m_patpath + " -csp " + 
             			path_csp.getAbsolutePath() + " " + path_result.getAbsolutePath();
             	System.out.println("cmdpat is " + cmdpat);
             	Process childpat = Runtime.getRuntime().exec(cmdpat);

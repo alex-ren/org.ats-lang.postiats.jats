@@ -1,9 +1,9 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
-val g_63 = D2Ecst<conats_atomref_create_2568:{para:a_3842}(((para:a_3842) -<fun> atomref_726(para:a_3842))):type> (0)
+val g_63 = D2Ecst<{para:a_3853_0}(((para:a_3853_0) -<fun> atomref_726_0(para:a_3853_0)))> (0)
 
-val () = D2Ecst<conats_atomref_update_2569:{para:a_3843}(((atomref_726(para:a_3843), para:a_3843) -<fun> void)):type> (g_63, 3)
+val () = D2Ecst<{para:a_3854_0}(((atomref_726_0(para:a_3854_0), para:a_3854_0) -<fun> void))> (g_63, 3)
 
-val x_64 = D2Ecst<conats_atomref_get_2570:{para:a_3844}(((atomref_726(para:a_3844)) -<fun> para:a_3844)):type> (g_63)
+val x_64 = D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_3855_0))> (g_63)
 
-val () = D2Ecst<mc_assert_2580:((bool) -<fun> void):prop> (<D2Esym>(=) (x_64, 4))
+val () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(=) (x_64, 4))

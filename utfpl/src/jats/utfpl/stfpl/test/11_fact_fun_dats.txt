@@ -12,8 +12,8 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:36
 Total Transitions:36
-Time Used:0.0240428s
-Estimated Memory Used:8728.576KB
+Time Used:0.0365433s
+Estimated Memory Used:8712.192KB
 
 
 =======================================================
@@ -21,7 +21,7 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init -> τ -> τ -> τ -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> τ -> τ -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> τ -> τ -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> τ -> τ -> [if(sys_gstack.frame_get_bool(0, 0, 1))] -> τ -> τ -> τ -> τ -> τ -> τ -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> τ -> τ -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> τ -> τ -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> τ -> τ -> [if(sys_gstack.frame_get_bool(0, 0, 2))] -> τ -> τ -> τ>
+<init -> main_init -> main24_id__1 -> main_69__1 -> fact1_63__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__1 -> [if(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__2 -> fact1_63__2 -> fact1_63__2 -> main_69__2 -> mc_fact2_66__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> mc_fact2_66__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> mc_fact2_66__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> mc_fact2_66__1 -> [if(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> main_69__3 -> main_69__4>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -32,7 +32,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:33
 Total Transitions:33
-Time Used:0.0051776s
+Time Used:0.0061688s
 Estimated Memory Used:8552.448KB
 
 

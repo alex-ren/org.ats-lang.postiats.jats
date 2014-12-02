@@ -29,6 +29,8 @@ public interface IMyCspInsVisitor {
 	
     public Object visit(CIMutexCreate node);
     
+	public Object visit(CISharedCreate node);
+    
     public Object visit(GrpThreadCreate node);
     
     public Object visit(CIAtomRefUpdate node);
@@ -52,7 +54,8 @@ public interface IMyCspInsVisitor {
 	public Object visit(CIMCVLockViewPut node);
 	
 	public Object visit(CITIdAllocate node);
-	public Object visit(CICondCreate node);
+
+
 	
 
 

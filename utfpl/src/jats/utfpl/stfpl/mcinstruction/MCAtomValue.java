@@ -27,6 +27,8 @@ public class MCAtomValue implements IMCValPrim {
     public static MCAtomValue createFromBoolean(boolean x) {
         return new MCAtomValue(AtomValue.createFromBoolean(x));
     }
+    
+    
 
 //    @Override
 //    public String toStringCS() {

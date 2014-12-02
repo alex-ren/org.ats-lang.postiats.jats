@@ -13,6 +13,13 @@ var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
 // Set the initial capacity to 10.
 var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 
+//
+var<ViewManager> view_manager = new ViewManager();
+
+// =====================
+// For global exclusion.
+var glb = 0;
+
 // =====================
 
 // Stack Operation
@@ -106,10 +113,11 @@ conats_shared_release(sys_tid) = conats_shared_release_impl(sys_tid,
 conats_shared_release_impl(sys_tid, tup, a) = 
     sys_mutex_unlock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1));
 // ====================
-conats_shared_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+conats_shared_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+conats_sharedn_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
 
-conats_shared_signal_impl(sys_tid, tup) = 
-    sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 2));
+conats_shared_signal_impl(sys_tid, tup, index) = 
+    sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
 
 sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 
@@ -123,10 +131,13 @@ sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 // ====================
 
 conats_shared_condwait(sys_tid) = 
-    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
 
-conats_shared_condwait_impl(sys_tid, tup) = sys_cond_wait_impl(sys_tid, 
-                                  sys_mylib_obj.getTupleElement(tup, 2),  // cond
+conats_sharedn_condwait(sys_tid) = 
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_condwait_impl(sys_tid, tup, index) = sys_cond_wait_impl(sys_tid, 
+                                  sys_mylib_obj.getTupleElement(tup, index + 2),  // cond
                                   sys_mylib_obj.getTupleElement(tup, 1));  // mutex
 
 sys_cond_wait_impl(sys_tid, c, m) = atomic{
@@ -173,9 +184,10 @@ foo1_63(sys_tid) =
 
 loop_65(sys_tid) =
   loop_65__1{  var loop_clo11_id = sys_mylib_obj.createTuple2(2, sys_gstack.frame_get(sys_tid, 0, 0));
-  var foo1_63_ele12_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  var foo1_63_env12_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  var foo1_63_closure13_id = sys_mylib_obj.createTuple2(1, foo1_63_env12_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (foo1_63_ele12_id, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (foo1_63_env12_id, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   foo1_63(sys_tid);
@@ -186,11 +198,12 @@ loop_65(sys_tid) =
   ;
 
 foo2_64(sys_tid) =
-  foo2_64__1{  var foo2_clo14_id = sys_mylib_obj.createTuple2(3, sys_gstack.frame_get(sys_tid, 0, 0));
-  var foo1_63_ele15_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
-  var env16_id = sys_mylib_obj.createTuple(1);
-  sys_mylib_obj.setTupleElement(env16_id, 0, foo1_63_ele15_id);
-  var loop_closure17_id = sys_mylib_obj.createTuple2(2, env16_id);
+  foo2_64__1{  var foo2_clo15_id = sys_mylib_obj.createTuple2(3, sys_gstack.frame_get(sys_tid, 0, 0));
+  var foo1_63_env16_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  var foo1_63_closure17_id = sys_mylib_obj.createTuple2(1, foo1_63_env16_id);
+  var env18_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env18_id, 0, foo1_63_env16_id);
+  var loop_closure19_id = sys_mylib_obj.createTuple2(2, env18_id);
   sys_gstack.frame_push(sys_tid, 3);
   } ->
   Skip
@@ -202,11 +215,11 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main22_id__1{  var env18_id = sys_mylib_obj.createTuple(0);
-  var foo1_closure19_id = sys_mylib_obj.createTuple2(1, env18_id);
-  var env20_id = sys_mylib_obj.createTuple(1);
-  sys_mylib_obj.setTupleElement(env20_id, 0, env18_id);
-  var foo2_closure21_id = sys_mylib_obj.createTuple2(3, env20_id);
+  main24_id__1{  var env20_id = sys_mylib_obj.createTuple(0);
+  var foo1_closure21_id = sys_mylib_obj.createTuple2(1, env20_id);
+  var env22_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env22_id, 0, env20_id);
+  var foo2_closure23_id = sys_mylib_obj.createTuple2(3, env22_id);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);

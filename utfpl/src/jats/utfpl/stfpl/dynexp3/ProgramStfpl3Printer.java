@@ -4,7 +4,6 @@ import jats.utfpl.stfpl.dynexp.Edcstkind;
 import jats.utfpl.stfpl.dynexp.Efunkind;
 import jats.utfpl.stfpl.dynexp.Evalkind;
 import jats.utfpl.stfpl.staexp.Cs2cst;
-import jats.utfpl.stfpl.staexp.Ifunclo;
 import jats.utfpl.stfpl.stype.FunType;
 import jats.utfpl.stfpl.stype.ISType;
 import jats.utfpl.stfpl.stype.PolyType;

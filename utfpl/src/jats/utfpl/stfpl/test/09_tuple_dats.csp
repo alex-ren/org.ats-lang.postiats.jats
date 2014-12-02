@@ -13,6 +13,13 @@ var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
 // Set the initial capacity to 10.
 var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 
+//
+var<ViewManager> view_manager = new ViewManager();
+
+// =====================
+// For global exclusion.
+var glb = 0;
+
 // =====================
 
 // Stack Operation
@@ -32,7 +39,12 @@ var sch_fn;
 var sch_args;
 
 sch_thread_starter(sys_tid, fn, args) =
-  thread_init{sys_gstack.add_frame(sys_tid, args);} ->
+thread_init{
+  // Create a list with one element.
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (args, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+} ->
   Skip
 ;
 
@@ -64,10 +76,11 @@ var mutex[10];  // 10 mutex
 
 var<Allocator> sys_mutex_manager = new Allocator();
 
+// ====================
 conats_mutex_acquire(sys_tid) = sys_mutex_lock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
 sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
-
+// ====================
 conats_mutex_release(sys_tid) = sys_mutex_unlock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
 sys_mutex_unlock_impl(sys_tid, m) = sys_munlock{mutex[m] = 0} -> Skip;
@@ -80,13 +93,31 @@ var<Allocator> sys_cond_manager = new Allocator();
 channel cond_chan[10] 0;
 var cond_count = 0;
 
-sys_cond_wait(sys_tid) = sys_cond_wait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+// ====================
 
-sys_cond_wait_impl(sys_tid, c, m) = atomic{cadd{cond_holder[c]++;} -> 
-                                    sys_mutex_unlock_impl(sys_tid, m); 
-                                    cond_chan[c]?_ -> sys_mutex_lock_impl(sys_tid, m)};
+conats_shared_acquire(sys_tid) = conats_shared_acquire_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+//  tup = sys_gstack.frame_get(sys_tid, 0, 0)
+//  a = sys_mylib_obj.getTupleElement(tup, 0);
+//  mutex = sys_mylib_obj.getTupleElement(tup, 1);
+//  cond = sys_mylib_obj.getTupleElement(tup, 2);
+conats_shared_acquire_impl(sys_tid, tup) = atomic{
+    {sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
+    sys_mutex_lock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1))
+    };
+// ====================
+conats_shared_release(sys_tid) = conats_shared_release_impl(sys_tid, 
+                                          sys_gstack.frame_get(sys_tid, 0, 0),
+                                          sys_gstack.frame_get(sys_tid, 0, 1)
+                                          );
 
-sys_cond_signal(sys_tid) = sys_cond_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+conats_shared_release_impl(sys_tid, tup, a) = 
+    sys_mutex_unlock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1));
+// ====================
+conats_shared_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+conats_sharedn_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_signal_impl(sys_tid, tup, index) = 
+    sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
 
 sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 
@@ -96,9 +127,27 @@ sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
 
           -> Skip
 
-        }};
+        }};    
+// ====================
 
+conats_shared_condwait(sys_tid) = 
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
 
+conats_sharedn_condwait(sys_tid) = 
+    conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_condwait_impl(sys_tid, tup, index) = sys_cond_wait_impl(sys_tid, 
+                                  sys_mylib_obj.getTupleElement(tup, index + 2),  // cond
+                                  sys_mylib_obj.getTupleElement(tup, 1));  // mutex
+
+sys_cond_wait_impl(sys_tid, c, m) = atomic{
+  cadd{cond_holder[c]++;} -> 
+  sys_mutex_unlock_impl(sys_tid, m); 
+  cond_chan[c]?_ -> 
+  sys_mutex_lock_impl(sys_tid, m)
+  };
+
+// ====================
 sys_cond_broadcast(sys_tid) = sys_cond_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
 sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {
@@ -127,7 +176,7 @@ var sys_assert_var = true;
 
 
 foo_63(sys_tid) =
-  {  var a_65 = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
+  foo_63__1{  var a_65 = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);;
   var pat3_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 1);;
   var b_66 = sys_mylib_obj.getTupleElement(pat3_id, 0);;
   var c_67 = sys_mylib_obj.getTupleElement(pat3_id, 1);;
@@ -139,7 +188,7 @@ foo_63(sys_tid) =
   ;
 
 main_68(sys_tid) =
-  {  var tup6_id = sys_mylib_obj.createTuple(2);
+  main_68__1{  var tup6_id = sys_mylib_obj.createTuple(2);
   sys_mylib_obj.setTupleElement(tup6_id, 0, 2);
   sys_mylib_obj.setTupleElement(tup6_id, 1, 3);
   var tup7_id = sys_mylib_obj.createTuple(2);
@@ -150,7 +199,7 @@ main_68(sys_tid) =
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   foo_63(sys_tid);
-  {  var x_69 = sys_gstack.retopr_frame(sys_tid);
+  main_68__2{  var x_69 = sys_gstack.retopr_frame(sys_tid);
   var b_70 = call(eq, x_69, 7);
   sys_assert_var = b_70;
   } ->
@@ -163,16 +212,16 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  {  var __temp_list_args = sys_mylib_obj.list_nil ();
+  main12_id__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   main_68(sys_tid);
-  {  sys_gstack.delete_frame(sys_tid);
+  main12_id__2{  sys_gstack.delete_frame(sys_tid);
   } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 
-main = main_s(0) ||| Scheduler;
+main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
 
 #define sys_assertion sys_assert_var == true;
 

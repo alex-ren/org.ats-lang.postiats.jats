@@ -569,8 +569,16 @@ public class MCInstructionTransformer {
                 // fun conats_shared_create {a: viewtype} (ele: a): shared (a)
                 IValPrim vp = ins.m_args.get(0);
                 IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
-                return new MCInsSharedCreate(mcholder, mcvp);
-       
+                return new MCInsSharedCreate(mcholder, mcvp, MCAtomValue.createFromInt(1));
+            }
+            else if (fname.compSymbolString(CCompUtils.cConATSSharednCreate)) {
+                    // fun conats_sharedn_create {a: viewt@ype} {n:pos} (ele: a, n: int n): shared_t (a, n)
+                    IValPrim vp = ins.m_args.get(0);
+                    IMCValPrim mcvp = m_mcsid_factory.fromIValPrim(vp, map_clo_name, map_name);
+                    IValPrim n = ins.m_args.get(1);
+                    IMCValPrim mcn = m_mcsid_factory.fromIValPrim(n, map_clo_name, map_name);                    
+                    return new MCInsSharedCreate(mcholder, mcvp, mcn);
+                           
             } else if (fname.compSymbolString(CCompUtils.cConATSMutexCreate)) {
                 // fun conats_mutex_create (): mutex
 

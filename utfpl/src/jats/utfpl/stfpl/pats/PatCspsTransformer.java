@@ -12,7 +12,6 @@ import jats.utfpl.stfpl.mycspinstructions.CIAtomRefCreate;
 import jats.utfpl.stfpl.mycspinstructions.CIAtomRefGet;
 import jats.utfpl.stfpl.mycspinstructions.CIAtomRefUpdate;
 import jats.utfpl.stfpl.mycspinstructions.CICond;
-import jats.utfpl.stfpl.mycspinstructions.CICondCreate;
 import jats.utfpl.stfpl.mycspinstructions.CIFormClosure;
 import jats.utfpl.stfpl.mycspinstructions.CIFormEnv;
 import jats.utfpl.stfpl.mycspinstructions.CIFormTuple;
@@ -29,6 +28,7 @@ import jats.utfpl.stfpl.mycspinstructions.CIPatLabDecompose;
 import jats.utfpl.stfpl.mycspinstructions.CIProcCallEpilog;
 import jats.utfpl.stfpl.mycspinstructions.CIProcCallPrelogue;
 import jats.utfpl.stfpl.mycspinstructions.CIReturn;
+import jats.utfpl.stfpl.mycspinstructions.CISharedCreate;
 import jats.utfpl.stfpl.mycspinstructions.CITIdAllocate;
 import jats.utfpl.stfpl.mycspinstructions.CIVarDef;
 import jats.utfpl.stfpl.mycspinstructions.FunctionMyCsp;
@@ -653,11 +653,14 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 	} 
 
 	@Override
-	public Object visit(CICondCreate node) {
+	public Object visit(CISharedCreate node) {
+		
         List<PStat> ret = new ArrayList<PStat>();
         MCSId holder = node.m_holder.getMCSId();
+        PExp v = CTemp2PExp(node.m_vp);
+        PExp n = CTemp2PExp(node.m_n_cond);
         
-        ret.add(new PInsCondCreate(holder));
+        ret.add(new PInsSharedCreate(holder, v, n));
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }

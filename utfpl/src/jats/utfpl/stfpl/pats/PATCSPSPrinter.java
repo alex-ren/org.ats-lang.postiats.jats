@@ -678,10 +678,12 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
 	@Override
-	public Object visit(PInsCondCreate node) {
-	    // pinscondalloc_st(holder, is_global) ::= <<
-		ST st = m_stg.getInstanceOf("pinscondalloc_st");
+	public Object visit(PInsSharedCreate node) {
+	    // PInsSharedCreate_st(holder, v, n, is_global) ::= <<
+		ST st = m_stg.getInstanceOf("PInsSharedCreate_st");
 		st.add("holder", node.m_holder.toStringMCIns());
+		st.add("v", node.m_v.accept(this));
+		st.add("n", node.m_n.accept(this));
 		if (node.m_holder.getSId().isGlobalValue()) {
 			st.add("is_global", true);
 		} else {

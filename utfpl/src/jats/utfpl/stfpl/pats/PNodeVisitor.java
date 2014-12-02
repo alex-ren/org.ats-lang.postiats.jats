@@ -78,7 +78,7 @@ public interface PNodeVisitor {
 
 	public Object visit(PInsTIdAllocate node);
 
-	public Object visit(PInsCondCreate node);
+	public Object visit(PInsSharedCreate node);
 
 
 

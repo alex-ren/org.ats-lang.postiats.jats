@@ -3,9 +3,7 @@ package jats.utfpl.stfpl.dynexp;
 import jats.utfpl.stfpl.Cstamp;
 import jats.utfpl.stfpl.Csymbol;
 import jats.utfpl.stfpl.staexp.Cs2exp;
-import jats.utfpl.stfpl.stype.AuxSType;
 import jats.utfpl.stfpl.stype.ISType;
-import jats.utfpl.utils.Log;
 
 public class Cd2cst {
 	// What is constant? True, False?
