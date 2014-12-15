@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.dynexp3;
 import java.io.IOException;
 
 import jats.utfpl.stfpl.ModelGenerater;
+import jats.utfpl.utils.SystemEnv;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -42,7 +43,7 @@ public class Test {
         };
 
 		for (String strPath : paths) {
-			ModelGenerater mcGen = new ModelGenerater(strPath, null, "/home/grad2/aren/programs/tempPAT/PAT3.Console.exe");
+			ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath());
 			mcGen.generate(3);
 		}
 

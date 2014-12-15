@@ -63,32 +63,6 @@ public class CCompUtils {
     public static final String cMCVLockViewPut = "mc_vlockview_put";
     
     /* ************* *************** */
-    
-	public static String sym2name(String sym) {
-		if (sym.equals("+")) {
-			return "add";
-		} else if (sym.equals("-")) {
-			return "sub";
-		} else if (sym.equals("*")) {
-			return "mul";
-		} else if (sym.equals("/")) {
-			return "div";
-		} else if (sym.equals(">")) {
-			return "gt";
-		} else if (sym.equals(">=")) {
-			return "gte";
-		} else if (sym.equals("<")) {
-			return "lt";
-		} else if (sym.equals("<=")) {
-			return "lte";
-		} else if (sym.equals("=")) {
-			return "eq";
-        } else if (sym.equals("~")) {
-            return "neg";
-        } else {
-			throw new Error("sym " + sym + " is not supported.");
-		}
-	}
 	
 }
 

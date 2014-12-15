@@ -18,6 +18,7 @@ import jats.utfpl.stfpl.dynexp.D2Cfundecs;
 import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
 import jats.utfpl.stfpl.dynexp.D2Cinclude;
+import jats.utfpl.stfpl.dynexp.D2Cnone;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cstaload;
 import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
@@ -172,6 +173,9 @@ public class DynExp3Transformer {
         } else if (node0 instanceof D2Cstaload) {
             Log.log4j.warn("D2Cstaload encountered in generating dynexp3.");
             return null;
+        } else if (node0 instanceof D2Cnone) {
+            Log.log4j.warn("D2Cnone encountered in generating dynexp3.");
+            return null;            
         } else {
             throw new Error(node0 + " is not supported.");
         }
@@ -416,6 +420,9 @@ public class DynExp3Transformer {
     
 
     private Cp3at transform(P2Tvar node0, Cloc_t loc, Set<Cd3var> scope) {
+    	if (node0.m_var.getSType() instanceof PropType) {
+    		return null;
+    	}
         Cd3var d3var = transform(node0.m_var, loc);
         scope.add(d3var);
         P3Tvar node = new P3Tvar(d3var);
@@ -709,6 +716,9 @@ public class DynExp3Transformer {
 
     private Cd3exp transform(D2Evar node0, Cloc_t loc, Set<Cd3var> scope,
             Set<Cd3var> needed) {
+    	if (node0.m_d2var.getSType() instanceof PropType) {
+    		return null;
+    	}
         Cd3var d3var = transform(node0.m_d2var, loc);
         
         // not a normal function // treat no annotation as closure
@@ -888,7 +898,10 @@ public class DynExp3Transformer {
         
         while (iter.hasNext()) {
             Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
-            d3es.add(d3e);    
+            if (null != d3e) {
+            	d3es.add(d3e);   
+            }
+             
         }
         
         D3EXPARGdyn dyn = new D3EXPARGdyn(node0.m_loc, d3es);
@@ -988,10 +1001,10 @@ public class DynExp3Transformer {
         List<Cp3at> p3ats = new ArrayList<Cp3at>();
         for (Cp2at p2at: p2ts) {
             Cp3at p3at = transform(0, p2at, scope);
-            if (null == p3at) {
-                throw new Error("This is not supported.");
+            if (null != p3at) {
+            	p3ats.add(p3at);
             }
-            p3ats.add(p3at);
+            
         }
         return p3ats;
     }
@@ -1012,7 +1025,7 @@ public class DynExp3Transformer {
         if (null != d3var) {
             return d3var;
         } else {
-//        	Log.log4j.info("=============0 ==producer is " + d2var.getSType().toSTStfpl3(AuxSType.cStg).render());
+        	Log.log4j.info("var is " + d2var.toString() + " " + d2var.getSType().toSTStfpl3(AuxSType.cStg).render());
             d3var = new Cd3var(d2var.m_sym, d2var.m_stamp, d2var.getSType().removeProof());
             m_varMap.put(d2var.m_stamp, d3var);
             return d3var;

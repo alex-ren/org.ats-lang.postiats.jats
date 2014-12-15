@@ -11,5 +11,10 @@ end
 fun foo3 ():<fun1> void = foo1 ()
 
 
+%{$
+#assert main deadlockfree;
 
+#assert main |= G sys_assertion;
+
+%}
 

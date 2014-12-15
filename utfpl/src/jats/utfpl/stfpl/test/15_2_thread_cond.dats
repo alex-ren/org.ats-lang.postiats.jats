@@ -10,3 +10,9 @@ val a = conats_sharedn_signal (s, 1, a)
 //val a = conats_sharedn_condwait (s, 0, a)
 val () = conats_shared_release (s, a)
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

@@ -73,7 +73,7 @@ absprop int_value_of (sid, int)
 
 abst@ype mc_gv_t (sid)
 
-prfun mc_set_int {id: sid} (id: (mc_gv_t id), x: int): void
+prfun mc_set_int {id: sid} {x: int} (id: (mc_gv_t id), x: int x): void
 
 // symintr mc_set_int
 // prfun mc_set_int1 {id: sid} (id: (mc_gv_t id), x: int): void
@@ -166,8 +166,6 @@ prfun mc_atomic_end (): void
 prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
 
 (* ************* ************** *)
-
-fun negation {x: bool} (x: bool x):<fun0> bool (~x)
 
 (* ************* ************** *)
 

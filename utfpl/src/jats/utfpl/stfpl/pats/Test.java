@@ -1,6 +1,7 @@
 package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.ModelGenerater;
+import jats.utfpl.utils.SystemEnv;
 
 import java.io.IOException;
 
@@ -27,7 +28,7 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/07_use_array.dats",
 //				"src/jats/utfpl/stfpl/test/08_use_mutex.dats",
 //				"src/jats/utfpl/stfpl/test/09_tuple.dats",
-				"src/jats/utfpl/stfpl/test/10_create_thread.dats"
+//				"src/jats/utfpl/stfpl/test/10_create_thread.dats"
 //				"src/jats/utfpl/stfpl/test/11_fact_fun.dats",
 //				"src/jats/utfpl/stfpl/test/12_fact_closure.dats",
 //				"src/jats/utfpl/stfpl/test/13_if_noeffect.dats",
@@ -37,14 +38,15 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/16_reader_writer.dats",
 //				"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats",
 //				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats",
-//				"src/jats/utfpl/stfpl/test/19_mc_view.dats",
+//				"src/jats/utfpl/stfpl/test/19_mc_view.dats"
+        		"src/jats/utfpl/stfpl/test/20_four_slot.dats"
 
 
         		
         };
 
         for (String strPath : paths) {
-        	ModelGenerater mcGen = new ModelGenerater(strPath, null, "/home/grad2/aren/programs/tempPAT/PAT3.Console.exe");
+        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath());
             mcGen.generate(8);
         }
 

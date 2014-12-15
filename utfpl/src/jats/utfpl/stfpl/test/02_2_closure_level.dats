@@ -11,3 +11,9 @@ in
   3
 end
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

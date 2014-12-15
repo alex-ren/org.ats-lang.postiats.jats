@@ -8,3 +8,9 @@ val () = conats_mutex_release (g)
 val () = conats_mutex_acquire (g)
 val () = conats_mutex_acquire (g)
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

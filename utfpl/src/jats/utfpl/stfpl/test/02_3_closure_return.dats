@@ -20,3 +20,9 @@ in
   x
 end
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

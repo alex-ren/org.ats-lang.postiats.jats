@@ -70,7 +70,7 @@ namespace PAT.Lib
         //
         public SysLinkedNode list_nil()
         {
-            return null;
+            return SysLinkedNode.nil();
         }
 
         public SysLinkedNode list_cons(Object header, SysLinkedNode tail)

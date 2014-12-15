@@ -53,6 +53,10 @@ public class ModelGenerater {
     	m_inss = null;
 	}
 	
+	public String getPATModel() {
+		return m_patsinss;
+	}
+	
 	public int generate(int level) throws IOException, InterruptedException {
 
         System.out.println("==Processing file " + m_inputpath + "==========");
@@ -62,10 +66,14 @@ public class ModelGenerater {
         
         if (FilenameUtils.isATS(finput)) {
         	File path_json = FilenameUtils.toJson(finput);
+        	ProcessBuilder pb = new ProcessBuilder("patsopt", "-o", path_json.getAbsolutePath(),
+                    "--jsonize-2", "-d", finput.getAbsolutePath());
+        	pb.redirectErrorStream(true);
+        	Process child = pb.start();
         	
         	String cmd = "patsopt -o " + path_json.getAbsolutePath() + " --jsonize-2 -d " + finput.getAbsolutePath();
         	System.out.println("cmd is " + cmd);
-        	Process child = Runtime.getRuntime().exec(cmd);
+//        	Process child = Runtime.getRuntime().exec(cmd);
         	int returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 == returnCode) {
@@ -220,10 +228,15 @@ public class ModelGenerater {
                 } else {
                 	path_result = new File(m_outputpath);
                 }
+
+            	ProcessBuilder pbpat3 = new ProcessBuilder("mono", m_patpath, "-csp", path_csp.getAbsolutePath(), path_result.getAbsolutePath());
+            	pbpat3.redirectErrorStream(true);
+            	Process childpat = pbpat3.start();
+            	
                 String cmdpat = "mono " + m_patpath + " -csp " + 
             			path_csp.getAbsolutePath() + " " + path_result.getAbsolutePath();
             	System.out.println("cmdpat is " + cmdpat);
-            	Process childpat = Runtime.getRuntime().exec(cmdpat);
+
             	int returnCodePat = childpat.waitFor();
             	System.out.println("returnCode is " + returnCodePat);
             	if (0 == returnCodePat) {

@@ -12,5 +12,10 @@ end
 
 fun foo3 ():<cloref1> void = foo1 ()
 
+%{$
+#assert main deadlockfree;
 
+#assert main |= G sys_assertion;
+
+%}
 

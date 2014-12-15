@@ -228,9 +228,9 @@ main = main_s(<sys_tid_allocator()>.allocate()) ||| Scheduler;
 
 #define sys_assertion <sys_assert_var()> == true;
 
-#assert main deadlockfree;
+// #assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 <ext_code_lst; separator="\n\n">
 

@@ -11,5 +11,10 @@ val x = conats_atomref_get(g)
 val () = mc_assert (x = 4)
 
 
+%{$
+#assert main deadlockfree;
 
+#assert main |= G sys_assertion;
+
+%}
 

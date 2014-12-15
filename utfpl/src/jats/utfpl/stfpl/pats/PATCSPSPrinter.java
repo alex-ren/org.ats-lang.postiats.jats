@@ -4,6 +4,7 @@ import jats.utfpl.stfpl.mcinstruction.AuxMCIns.Address;
 import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 import jats.utfpl.stfpl.stype.AuxSType;
+import jats.utfpl.stfpl.stype.IntType;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -128,7 +129,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
         String fname = node.m_funLab.toStringMCIns();
         if (node.m_funLab.isSym()) {
         	st.add("is_sym", true);
-        	fname = AuxPats.sym2name(fname);
+        	fname = AuxPats.sym2name(fname, AuxSType.getRetType(AuxSType.getFunctionType(node.m_funLab.getType())));
         } else {
         	st.add("is_sym", false);
         }

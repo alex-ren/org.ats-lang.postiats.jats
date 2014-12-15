@@ -12,3 +12,10 @@ fun foo_63 = lam () <fun> =
     end:void:t@ype)
 
 val () = foo_63 ()
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

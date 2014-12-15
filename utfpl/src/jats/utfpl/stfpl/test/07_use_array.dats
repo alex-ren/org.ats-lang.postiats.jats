@@ -11,5 +11,10 @@ val x:int = conats_atomarrayref_get(g, 1)
 val () = mc_assert (x = 3)
 
 
+%{$
+#assert main deadlockfree;
 
+#assert main |= G sys_assertion;
+
+%}
 

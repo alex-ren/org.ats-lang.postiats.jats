@@ -20,6 +20,7 @@ import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
 import jats.utfpl.stfpl.dynexp.D2Cinclude;
 import jats.utfpl.stfpl.dynexp.D2Clist;
+import jats.utfpl.stfpl.dynexp.D2Cnone;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cstaload;
 import jats.utfpl.stfpl.dynexp.D2Cvaldecs;
@@ -124,8 +125,10 @@ public class StfplTypeChecker {
     	    Log.log4j.warn("D2Cinclude encountered");
         } else if (d2ecl instanceof D2Cstaload) {
             Log.log4j.warn("D2Cstaload encountered");
+        } else if (d2ecl instanceof D2Cnone) {
+        	Log.log4j.warn("D2Cnone encountered");
     	} else {
-    		throw new Error(dec + " is not supported.");
+    		throw new Error(d2ecl + " is not supported.");
     	}
     }
 
@@ -793,8 +796,9 @@ public class StfplTypeChecker {
         } else if (d2ecl instanceof D2Clist) {
         } else if (d2ecl instanceof D2Cinclude) {
         } else if (d2ecl instanceof D2Cstaload) {
+        } else if (d2ecl instanceof D2Cnone) {
         } else {
-            throw new Error(dec + " is not supported.");
+            throw new Error(d2ecl + " is not supported.");
         }
     }
 

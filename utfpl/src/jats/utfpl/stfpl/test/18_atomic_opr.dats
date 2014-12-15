@@ -25,3 +25,9 @@ val () = conats_thread_create(foo2, 0, tid1)
 
 val () = foo1 ()
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

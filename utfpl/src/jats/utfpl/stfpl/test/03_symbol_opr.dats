@@ -7,3 +7,9 @@ fun foo2 (x: int):<fun1> int = let
 in
   z
 end
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

@@ -11,3 +11,9 @@ in end
 
 val () = foo ()
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

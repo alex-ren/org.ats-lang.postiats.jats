@@ -21,5 +21,8 @@ val y_67 = D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_
 prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(=) (y_67, 0))
 
 %{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
 
 %}

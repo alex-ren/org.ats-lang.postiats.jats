@@ -16,3 +16,9 @@ end
 
 val () = main()
 
+%{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

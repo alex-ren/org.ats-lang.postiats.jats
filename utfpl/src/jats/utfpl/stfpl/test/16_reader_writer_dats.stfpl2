@@ -2,100 +2,105 @@ staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl
 
 staload "/home/grad2/aren/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
 
-val gref_63 = D2Ecst<{para:a_3853_0}(((para:a_3853_0) -<fun> atomref_726_0(para:a_3853_0)))> (0)
+"D2Cstacsts" lin_buffer_736: (t@ype) -\> viewtype
 
-"D2Cstacsts" lin_atomref_736: (t@ype) -\> viewtype
-
-val <P2Tann>(lin_ref_64:lin_atomref_736_0(int):viewtype) = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (gref_63)
-
-val s_65 = D2Ecst<{para:a_3837_0}(((para:a_3837_0) -<fun> shared_t_722_0(para:a_3837_0)))> (lin_ref_64)
-
-fun lin_atomref_update_66 = lamSta. lam (<P2Tann>(lref_67:lin_atomref_736_0(para:a_3959_0):viewtype), <P2Tann>(data_68:para:a_3959_0:t@ype)) <fun> = 
+fun lin_buffer_create_63 = lamSta. lam (<P2Tann>(data_64:para:a_3959_0:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      val ref_69 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (lref_67)
-      val () = D2Ecst<{para:a_3854_0}(((atomref_726_0(para:a_3854_0), para:a_3854_0) -<fun> void))> (ref_69, data_68)
-      val lref_70 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (ref_69)
+      val ref_65 = D2Ecst<{para:a_3853_0}(((para:a_3853_0) -<fun> atomref_726_0(para:a_3853_0)))> (data_64)
+      val lref_66 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (ref_65)
     in
-      lref_70
-    end:lin_atomref_736_0(para:a_3959_0):viewtype)
+      lref_66
+    end:lin_buffer_736_0(para:a_3959_0):viewtype)
 
-fun lin_atomref_get_71 = lamSta. lam (<P2Tann>(lref_72:lin_atomref_736_0(para:a_3960_0):viewtype)) <fun> = 
+fun lin_buffer_update_67 = lamSta. lam (<P2Tann>(lref_68:lin_buffer_736_0(para:a_3960_0):viewtype), <P2Tann>(data_69:para:a_3960_0:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      val ref_73 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (lref_72)
-      val v_74 = D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_3855_0))> (ref_73)
-      val lref_75 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (ref_73)
+      val ref_70 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (lref_68)
+      val () = D2Ecst<{para:a_3854_0}(((atomref_726_0(para:a_3854_0), para:a_3854_0) -<fun> void))> (ref_70, data_69)
+      val lref_71 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (ref_70)
     in
-      ( | lref_75, v_74)
-    end:@{0 = lin_atomref_736_0(para:a_3960_0), 1 = para:a_3960_0}:viewt0ype)
+      lref_71
+    end:lin_buffer_736_0(para:a_3960_0):viewtype)
 
-fun producer_76 = lam (<P2Tann>(x_77:int:t@ype)) <fun> = 
+fun lin_buffer_get_72 = lamSta. lam (<P2Tann>(lref_73:lin_buffer_736_0(para:a_3961_0):viewtype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val ref_74 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (lref_73)
+      val v_75 = D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_3855_0))> (ref_74)
+      val lref_76 = D2Ecst<{para:to_3886_0}({para:from_3887_0}(((para:from_3887_0) -<fun> para:to_3886_0)))> (ref_74)
+    in
+      ( | lref_76, v_75)
+    end:@{0 = lin_buffer_736_0(para:a_3961_0), 1 = para:a_3961_0}:viewt0ype)
+
+val <P2Tann>(lin_ref_77:lin_buffer_736_0(int):viewtype) = lin_buffer_create_63 (0)
+
+val s_78 = D2Ecst<{para:a_3837_0}(((para:a_3837_0) -<fun> shared_t_722_0(para:a_3837_0)))> (lin_ref_77)
+
+fun producer_79 = lam (<P2Tann>(x_80:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let
-        val ref_78 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0)) -<fun> para:a_3840_0))> (s_65)
-        fun loop_79 = lam (<P2Tann>(ref_80:lin_atomref_736_0(int):viewtype)) <clo> = 
+        val ref_81 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0)) -<fun> para:a_3840_0))> (s_78)
+        fun loop_82 = lam (<P2Tann>(ref_83:lin_buffer_736_0(int):viewtype)) <clo> = 
           <D2EannFunclo><clo_ref>(
             <D2EannSeff>(
               let
-                val <P2Trec>(<LABP2ATnorm>(ref_81), <LABP2ATnorm>(v_82)) = lin_atomref_get_71 (ref_80)
+                val <P2Trec>(<LABP2ATnorm>(ref_84), <LABP2ATnorm>(v_85)) = lin_buffer_get_72 (ref_83)
               in
-                if (<D2Esym>(=) (v_82, 1)) then
+                if (<D2Esym>(=) (v_85, 2)) then
                   let
-                    val ref_83 = D2Ecst<{para:a_3848_0}(((shared_t_722_0(para:a_3848_0), para:a_3848_0) -<fun> para:a_3848_0))> (s_65, ref_81)
+                    val ref_86 = D2Ecst<{para:a_3848_0}(((shared_t_722_0(para:a_3848_0), para:a_3848_0) -<fun> para:a_3848_0))> (s_78, ref_84)
                   in
-                    loop_79 (ref_83)
+                    loop_82 (ref_86)
                   end
                 else
                   let
-                    val <P2Trec>(<LABP2ATnorm>(ref_84), <LABP2ATnorm>(v_85)) = lin_atomref_get_71 (ref_81)
-                    val ref_86 = lin_atomref_update_66 (ref_84, <D2Esym>(+) (v_85, 1))
-                    val ref_87 = D2Ecst<{para:a_3844_0}(((shared_t_722_0(para:a_3844_0), para:a_3844_0) -<fun> para:a_3844_0))> (s_65, ref_86)
-                    val () = D2Ecst<{para:a_3842_0}(((shared_t_722_0(para:a_3842_0), para:a_3842_0) -<fun> void))> (s_65, ref_87)
+                    val <P2Trec>(<LABP2ATnorm>(ref_87), <LABP2ATnorm>(v_88)) = lin_buffer_get_72 (ref_84)
+                    val ref_89 = lin_buffer_update_67 (ref_87, <D2Esym>(+) (v_88, 1))
+                    val ref_90 = D2Ecst<{para:a_3844_0}(((shared_t_722_0(para:a_3844_0), para:a_3844_0) -<fun> para:a_3844_0))> (s_78, ref_89)
                   in
-                    producer_76 (x_77)
+                    loop_82 (ref_90)
                   end
               end:void:t@ype))
       in
-        loop_79 (ref_78)
+        loop_82 (ref_81)
       end:void:t@ype))
 
-fun consumer_88 = lam (<P2Tann>(x_89:int:t@ype)) <fun> = 
+fun consumer_91 = lam (<P2Tann>(x_92:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let
-        val ref_90 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0)) -<fun> para:a_3840_0))> (s_65)
-        fun loop_91 = lam (<P2Tann>(ref_92:lin_atomref_736_0(int):viewtype)) <clo> = 
+        val ref_93 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0)) -<fun> para:a_3840_0))> (s_78)
+        fun loop_94 = lam (<P2Tann>(ref_95:lin_buffer_736_0(int):viewtype)) <clo> = 
           <D2EannFunclo><clo_ref>(
             <D2EannSeff>(
               let
-                val <P2Trec>(<LABP2ATnorm>(ref_93), <LABP2ATnorm>(v_94)) = lin_atomref_get_71 (ref_92)
+                val <P2Trec>(<LABP2ATnorm>(ref_96), <LABP2ATnorm>(v_97)) = lin_buffer_get_72 (ref_95)
               in
-                if (<D2Esym>(=) (v_94, 0)) then
+                if (<D2Esym>(=) (v_97, 0)) then
                   let
-                    val ref_95 = D2Ecst<{para:a_3848_0}(((shared_t_722_0(para:a_3848_0), para:a_3848_0) -<fun> para:a_3848_0))> (s_65, ref_93)
+                    val ref_98 = D2Ecst<{para:a_3848_0}(((shared_t_722_0(para:a_3848_0), para:a_3848_0) -<fun> para:a_3848_0))> (s_78, ref_96)
                   in
-                    loop_91 (ref_95)
+                    loop_94 (ref_98)
                   end
                 else
                   let
-                    val <P2Trec>(<LABP2ATnorm>(ref_96), <LABP2ATnorm>(v_97)) = lin_atomref_get_71 (ref_93)
-                    val ref_98 = lin_atomref_update_66 (ref_96, <D2Esym>(-) (v_97, 1))
-                    val ref_99 = D2Ecst<{para:a_3844_0}(((shared_t_722_0(para:a_3844_0), para:a_3844_0) -<fun> para:a_3844_0))> (s_65, ref_98)
-                    val () = D2Ecst<{para:a_3842_0}(((shared_t_722_0(para:a_3842_0), para:a_3842_0) -<fun> void))> (s_65, ref_99)
+                    val <P2Trec>(<LABP2ATnorm>(ref_99), <LABP2ATnorm>(v_100)) = lin_buffer_get_72 (ref_96)
+                    val ref_101 = lin_buffer_update_67 (ref_99, <D2Esym>(-) (v_100, 1))
+                    val ref_102 = D2Ecst<{para:a_3844_0}(((shared_t_722_0(para:a_3844_0), para:a_3844_0) -<fun> para:a_3844_0))> (s_78, ref_101)
                   in
-                    consumer_88 (x_89)
+                    loop_94 (ref_102)
                   end
               end:void:t@ype))
       in
-        loop_91 (ref_90)
+        loop_94 (ref_93)
       end:void:t@ype))
 
-val tid1_100 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+val tid1_103 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
 
-val tid2_101 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+val tid2_104 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
 
-val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (producer_76, 0, tid1_100)
+val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (producer_79, 0, tid1_103)
 
-val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (consumer_88, 0, tid2_101)
+val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (consumer_91, 0, tid2_104)

@@ -50,7 +50,9 @@ namespace PAT.Lib
         // frame: SysLinkedNode
         public void add_frame(int tid, Object frame)
         {
-            // System.Console.WriteLine("add_frame begin tid is " + tid);
+            // if (frame == SysLinkedNode.nil()) {
+            //     System.Console.WriteLine("add_frame null");
+            // }
             int len = m_stacks.Count;
             // System.Console.WriteLine("add_frame begin len is " + len);
             while (tid >= len)

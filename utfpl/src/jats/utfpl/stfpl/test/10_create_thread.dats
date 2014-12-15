@@ -19,6 +19,9 @@ prval () = mc_assert (y = 0)
 
 
 %{$
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
 
 %}
 

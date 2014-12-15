@@ -79,6 +79,7 @@ namespace PAT.Lib
 
         private string encode()
         {
+            // System.Console.WriteLine("FLenStack.encode begin");
             String returnString = "";
             FStackNode<T> s = m_node;
             while (null != s)
@@ -99,6 +100,7 @@ namespace PAT.Lib
             {
                 returnString = returnString.Substring(0, returnString.Length - 2);
             }
+            // System.Console.WriteLine("FLenStack.encode end");
 
             return returnString;
         }

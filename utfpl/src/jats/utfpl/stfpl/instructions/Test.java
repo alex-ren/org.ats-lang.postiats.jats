@@ -2,6 +2,7 @@ package jats.utfpl.stfpl.instructions;
 
 
 import jats.utfpl.stfpl.ModelGenerater;
+import jats.utfpl.utils.SystemEnv;
 
 import java.io.IOException;
 
@@ -42,7 +43,7 @@ public class Test {
         };
 
         for (String strPath : paths) {
-        	ModelGenerater mcGen = new ModelGenerater(strPath, null, "/home/grad2/aren/programs/tempPAT/PAT3.Console.exe");
+        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath());
             mcGen.generate(4);
         }
 

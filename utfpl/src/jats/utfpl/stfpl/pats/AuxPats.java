@@ -1,8 +1,12 @@
 package jats.utfpl.stfpl.pats;
 
+import jats.utfpl.stfpl.stype.BoolType;
+import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.IntType;
+
 public class AuxPats {
 	
-	public static String sym2name(String sym) {
+	public static String sym2name(String sym, ISType ty) {
 		if (sym.equals("+")) {
 			return "add";
 		} else if (sym.equals("-")) {
@@ -24,7 +28,14 @@ public class AuxPats {
         } else if (sym.equals("<>")) {
             return "neq";  
         } else if (sym.equals("~")) {
-            return "neg";
+        	if (ty instanceof BoolType) {
+        		return "negation";
+        	} else if (ty instanceof IntType) {
+        		return "neg";
+        	} else {
+        		throw new Error("no match for symbol ~");
+        	}
+            
           
 		} else {
 			throw new Error("sym " + sym + " is not supported.");
