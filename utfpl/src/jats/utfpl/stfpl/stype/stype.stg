@@ -29,11 +29,11 @@ FunType_st(paras, clo, ret) ::= <<
 >>
 
 Cs2var_st(s2var) ::= <<
-<symbol_st(s2var.m_sym)>_<stamp_st(s2var.m_stamp)>
+<symbol_st(s2var.m_sym)>_<stamp_st(s2var.m_stamp)>:<s2var.m_srt>
 >>
 
 PolyParaType_st(s2var) ::= <<
-para:<Cs2var_st(s2var)>
+<Cs2var_st(s2var)>
 >>
 
 PolyType_st(paras, body) ::= <<

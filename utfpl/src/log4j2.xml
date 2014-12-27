@@ -6,7 +6,7 @@
     </Console> 
   </Appenders> 
   <Loggers> 
-    <Logger name="jats.utfpl" level="trace" additivity="false">
+    <Logger name="jats.utfpl" level="warn" additivity="false">
     <AppenderRef ref="Console"/>
     </Logger>
     <Root level="error"> 

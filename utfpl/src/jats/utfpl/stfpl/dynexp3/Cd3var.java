@@ -23,10 +23,7 @@ public class Cd3var {
         m_sym = sym;
         m_stamp = stamp;
         m_stype = stype;
-        
-        if (sym.m_str.equals("producer")) {
-        	Log.log4j.info("===============producer is " + m_stype.toSTStfpl3(AuxSType.cStg).render());
-        }
+     
     }
 
     @Override

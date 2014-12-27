@@ -2,6 +2,9 @@
 staload "./conats.sats"
 staload UN = "prelude/SATS/unsafe.sats"
 
+(* ************* ************* *)
+
+// Define linear buffer to prevent resource leak.
 absviewtype lin_buffer (a:t@ype)
 
 fun lin_buffer_create {a:t@ype} (
@@ -30,53 +33,102 @@ in
   (lref, v)
 end
 
-val lin_ref: lin_buffer int = lin_buffer_create (0)
+(* ************* ************* *)
 
-val s = conats_shared_create {lin_buffer (int)}(lin_ref)
+// Define linear integer buffer for demonstration.
+viewtypedef demo_buffer = lin_buffer int
 
+fun demo_buffer_isful (buf: demo_buffer): (demo_buffer, bool) = let
+  val (buf, len) = lin_buffer_get (buf)
+in
+  (buf, len > 2)  // Assume the buffer can only hold 2 elements.
+end
+
+fun demo_buffer_isnil (buf: demo_buffer): (demo_buffer, bool) = let
+  val (buf, len) = lin_buffer_get (buf)
+in
+  (buf, len <= 0)
+end
+
+fun demo_buffer_insert (buf: demo_buffer): demo_buffer = let
+  val (buf, len) = lin_buffer_get (buf)
+  val buf = lin_buffer_update (buf, len + 1)
+in 
+  buf
+end
+
+fun demo_buffer_takeout (buf: demo_buffer): demo_buffer = let
+  val (buf, len) = lin_buffer_get (buf)
+  val buf = lin_buffer_update (buf, len - 1)
+in 
+  buf
+end
+
+(* ************* ************* *)
+
+// Create a buffer for model construction.
+val db: demo_buffer = lin_buffer_create (0)
+
+// Turn a linear buffer into a shared buffer.
+val s = conats_shared_create {demo_buffer}(db)
+
+// Keep adding elements into buffer.
 fun producer (x: int):<fun1> void = let
-  val ref = conats_shared_acquire (s)
+  val db = conats_shared_acquire (s)
 
-  fun loop (ref: lin_buffer int):<cloref1> void = let
-    val (ref, v) = lin_buffer_get (ref)
+  fun insert (db: demo_buffer):<cloref1> demo_buffer = let
+    val (db, isful) = demo_buffer_isful (db)
   in
-    if v = 2 then let
-      val ref = conats_shared_condwait (s, ref)
+    if isful then let
+      val db = conats_shared_condwait (s, db)
     in
-      loop (ref)
+      insert (db)
     end else let 
-      val (ref, v) = lin_buffer_get (ref)
-      val ref = lin_buffer_update (ref, v + 1)
-      val ref = conats_shared_signal (s, ref)
+      val (db, isnil) = demo_buffer_isnil (db)
+      val db = demo_buffer_insert (db)
     in
-      loop (ref)
+      if isnil then let
+        val db = conats_shared_signal (s, db)
+      in db end
+      else db
     end
   end
+  
+  val db = insert (db)
+  val () = conats_shared_release (s, db); 
 in
-  loop (ref)
+  producer (x)
 end
 
+// Keep removing elements into buffer.
 fun consumer (x: int):<fun1> void = let
-  val ref = conats_shared_acquire (s)
+  val db = conats_shared_acquire (s)
 
-  fun loop (ref: lin_buffer int):<cloref1> void = let
-    val (ref, v) = lin_buffer_get (ref)
+  fun takeout (db: demo_buffer):<cloref1> demo_buffer = let
+    val (db, isnil) = demo_buffer_isnil (db)
   in
-    if v = 0 then let
-      val ref = conats_shared_condwait (s, ref)
+    if isnil then let
+      val db = conats_shared_condwait (s, db)
     in
-      loop (ref)
+      takeout (db)
     end else let
-      val (ref, v) = lin_buffer_get (ref)
-      val ref = lin_buffer_update (ref, v - 1)
-      val ref = conats_shared_signal (s, ref)
+      val (db, isful) = demo_buffer_isful (db)
+      val db = demo_buffer_takeout (db)
     in
-      loop (ref)
+      if isful then let
+        // val db = conats_shared_signal (s, db)
+      in db end
+      else db
     end
   end
+
+  val db = takeout (db)
+  val () = conats_shared_release (s, db); 
 in
-  loop (ref)
+  consumer (x)
 end
+
+// Construct the model of whole system.
 
 val tid1 = conats_tid_allocate ()
 val tid2 = conats_tid_allocate ()
@@ -84,9 +136,15 @@ val tid2 = conats_tid_allocate ()
 val () = conats_thread_create(producer, 0, tid1)
 val () = conats_thread_create(consumer, 0, tid2)
 
+// List the properties for model checking.
+
 %{$
 #assert main deadlockfree;
 
 #assert main |= G sys_assertion;
 
 %}
+
+
+
+

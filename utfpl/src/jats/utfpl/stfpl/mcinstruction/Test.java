@@ -17,25 +17,30 @@ public class Test {
      */
     public static void main(String[] args) throws IOException, InterruptedException, RecognitionException {
         String[] paths = { 
-//                "test/ats2utfpl/test01.dats"
-//                , "test/ats2utfpl/test02.dats"
-//                "test/src_ats/51_2_4_slots.dats"
-//                "test/src_ats/54_peterson.dats"
-//                "src/jats/utfpl/utfpl/test/test01.dats",
-//                "src/jats/utfpl/utfpl/test/test02.dats",
-//                "src/jats/utfpl/utfpl/test/test03.dats"
-//                "src/jats/utfpl/utfpl/test/test04.dats"
-//                "src/jats/utfpl/stfpl/test/test05.dats"
-//                "src/jats/utfpl/stfpl/test/test06.dats"
-//                "src/jats/utfpl/stfpl/test/test07.dats"
-//                "src/jats/utfpl/stfpl/test/test_helloworld.dats",
-//                "src/jats/utfpl/stfpl/csharpins/test/01_tuple_op.dats"
-//                "src/jats/utfpl/stfpl/csharpins/test/02_if_branch.dats"
-//                "src/jats/utfpl/stfpl/csharpins/test/03_closure.dats"
-//                "src/jats/utfpl/stfpl/csharpins/test/04_polymorphism.dats"
-//                "test/src_ats/53_demo_mc_dyn.dats"
-                "src/jats/utfpl/stfpl/test/test08.dats"
-              , "src/jats/utfpl/stfpl/test/test_helloworld.dats"
+
+//        		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats",
+//        				"src/jats/utfpl/stfpl/test/02_closure_call.dats",
+//        				"src/jats/utfpl/stfpl/test/02_2_closure_level.dats",
+////        				"src/jats/utfpl/stfpl/test/02_3_closure_return.dats", // This is not working, since S2EFun has no info of closure.
+//        				"src/jats/utfpl/stfpl/test/03_symbol_opr.dats",
+//        				"src/jats/utfpl/stfpl/test/04_if_function.dats",
+//        				"src/jats/utfpl/stfpl/test/05_use_ref.dats"
+//        				"src/jats/utfpl/stfpl/test/06_mc_assert.dats",
+//        				"src/jats/utfpl/stfpl/test/07_use_array.dats",
+//        				"src/jats/utfpl/stfpl/test/08_use_mutex.dats",
+//        				"src/jats/utfpl/stfpl/test/09_tuple.dats",
+//        				"src/jats/utfpl/stfpl/test/10_create_thread.dats"
+//        				"src/jats/utfpl/stfpl/test/11_fact_fun.dats",
+//        				"src/jats/utfpl/stfpl/test/12_fact_closure.dats",
+//        				"src/jats/utfpl/stfpl/test/13_if_noeffect.dats",
+//        				"src/jats/utfpl/stfpl/test/14_create_threads.dats",
+//        				"src/jats/utfpl/stfpl/test/15_thread_cond.dats",
+//        				"src/jats/utfpl/stfpl/test/15_2_thread_cond.dats",
+        				"src/jats/utfpl/stfpl/test/16_reader_writer.dats"
+//        				"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats",
+//        				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats",
+//        				"src/jats/utfpl/stfpl/test/19_mc_view.dats"
+//                		"src/jats/utfpl/stfpl/test/20_four_slot.dats"
 
         };
 

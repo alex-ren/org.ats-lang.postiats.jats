@@ -87,7 +87,7 @@ public class SExpTypeExtractor {
             }
             case type:
             case t0ype:
-            	Log.log4j.warn("Type parameter detected. name is " + name);
+            	Log.log4j.warn("Type detected. name is " + name);
                 return new Abstype(node.m_s2cst, sort);
             default:
                 throw new Error("srt " + srt + " is not supported, sort is " + sort);

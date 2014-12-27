@@ -389,9 +389,6 @@ public class ProgramStfpl3Printer {
         // D3Evar_st(var, type) ::= <<
         ST st = m_stg.getInstanceOf("D3Evar_st");
         st.add("var", node.m_d3var);
-        if (node.m_d3var.toStringNoStamp().equals("producer")) {
-        	Log.log4j.info("eeeeeeeeeeeeee type is " + node.getType().toSTStfpl3(m_stg_type).render());
-        }
         st.add("type", node.getType().toSTStfpl3(m_stg_type));
         return st;
     }

@@ -27,7 +27,7 @@ MCInsGetEleFromEnv(ret, envname, index) ::= <<
 MCInsCond_st(holder, cond, tb, fb) ::= <<
 <if(holder)><holder> = <endif>if (<cond>) then
     <tb; separator = "\n">
-  else
+else
     <fb; separator = "\n">
 >>
 
@@ -39,7 +39,9 @@ MCInsFormEnv_st(holder, eles) ::= <<
 <holder> = form_env(<eles; separator=", ">)
 >>
 
-
+MCInsPatLabDecompose_st(holder, v, index) ::= <<
+<holder> = pattern_get_index (<v>, <index>);
+>>
 
 
   

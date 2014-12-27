@@ -5,7 +5,7 @@ import jats.utfpl.stfpl.Ilabel;
 
 public class MCInsPatLabDecompose implements IMCInstruction {
     public Ilabel m_lab;
-    public int m_index;
+    public int m_index;  // The index after proof erasure.
     public MCSId m_holder;
     public IMCValPrim m_vp;
     

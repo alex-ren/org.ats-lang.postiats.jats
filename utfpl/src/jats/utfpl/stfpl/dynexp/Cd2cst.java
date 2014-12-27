@@ -50,6 +50,9 @@ public class Cd2cst {
         m_stamp = stamp;
         m_type = type;
         m_symbol = symbol;
+        if (null == stype) {
+        	throw new Error("This is not allowed.");
+        }
         m_stype = stype;
     }
     

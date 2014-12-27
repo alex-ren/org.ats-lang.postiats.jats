@@ -323,13 +323,13 @@ public class ProgramStfpl2Printer {
     }
 
     private ST printCd2cst(Cd2cst node) {
-    	// d2cst_st(sym, stamp, s2exp) ::= <<
+    	// d2cst_st(sym, stamp, s2exp, stype) ::= <<
     	ST st = m_stg.getInstanceOf("d2cst_st");
     	st.add("sym", node.m_symbol);
     	st.add("stamp", node.m_stamp);
     	
     	if (null != node.getSType()) {
-    		return node.getSType().toSTStfpl3(m_stg_type);
+    		st.add("stype", node.getSType().toSTStfpl3(m_stg_type));
     	}
     	
     	if (null != node.m_type) {

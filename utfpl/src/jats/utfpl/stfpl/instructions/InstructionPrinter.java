@@ -126,7 +126,13 @@ public class InstructionPrinter {
 
 
     private Object printInsPatLabDecompose(InsPatLabDecompose node) {
-        return "InsPatLabDecompose";
+        // InsPatLabDecompose_st(holder, v, index) ::= <<
+    	ST st = m_stg.getInstanceOf("InsPatLabDecompose_st");
+    	st.add("holder", node.m_holder.toStringIns());
+    	st.add("v", printIValPrim(node.m_vp));
+    	st.add("index", node.m_index);
+    	
+    	return st;
     }
 
 

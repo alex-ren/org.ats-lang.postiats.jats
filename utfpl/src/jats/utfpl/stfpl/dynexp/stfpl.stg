@@ -2,8 +2,8 @@ group stfpl;
 
 
 // handle Cd2cst
-d2cst_st(sym, stamp, s2exp) ::= <<
-<symbol_st(sym)>_<stamp_st(stamp)>:<s2exp>
+d2cst_st(sym, stamp, s2exp, stype) ::= <<
+<symbol_st(sym)>_<stamp_st(stamp)>:<stype>
 >>
 
 // handle Cs2cst

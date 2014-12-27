@@ -87,7 +87,13 @@ public class MCInstructionPrinter implements IMCInsVisitor {
 
 	@Override
     public Object visit(MCInsPatLabDecompose ins) {
-		return "MCInsPatLabDecompose";
+		// MCInsPatLabDecompose_st(holder, v, index) ::= <<
+		
+		ST st = m_stg.getInstanceOf("MCInsPatLabDecompose_st");
+		st.add("holder", ins.m_holder.toStringMCIns());
+		st.add("v", ins.m_vp.toStringMCIns());
+		st.add("index", ins.m_index);
+		return st;
     }
 
 

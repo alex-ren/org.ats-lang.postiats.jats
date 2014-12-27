@@ -28,7 +28,7 @@ InsClosure_st(funname, envname) ::= <<
 InsCond_st(holder, cond, tb, fb) ::= <<
 <holder> = if (<cond>) then
     <tb; separator="\n">
-  else
+else
     <fb; separator="\n">
 >>
 
@@ -44,6 +44,9 @@ InsFormEnv_st(holder, eles) ::= <<
 <holder> = {<eles; separator=", ">}
 >>
 
+InsPatLabDecompose_st(holder, v, index) ::= <<
+<holder> = pattern_get (<v>, <index>)
+>>
 
 
 

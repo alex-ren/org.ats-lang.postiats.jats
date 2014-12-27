@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /*
  * Effect analysis.
@@ -188,10 +189,12 @@ public class MCInstructionProcessor {
                         MCInsCond nCondIns = new MCInsCond(cIns.m_holder, cIns.m_cond, trueBranch, falseBranch, cIns.hasSideEffect());
                         nList.add(nCondIns);
                     } else {
+                    	
+                    	IMCValPrim nCond = subsVP(cIns.m_cond, subMap);
                         Map<MCSId, MCSId> subMap2 = new HashMap<MCSId, MCSId>(subMap);
                         List<IMCInstruction> trueBranch = processBranchIns(cIns.m_btrue, subMap2);
                         List<IMCInstruction> falseBranch = processBranchIns(cIns.m_bfalse, subMap2);
-                        MCInsCond nCondIns = new MCInsCond(cIns.m_holder, cIns.m_cond, trueBranch, falseBranch, cIns.hasSideEffect());
+                        MCInsCond nCondIns = new MCInsCond(cIns.m_holder, nCond, trueBranch, falseBranch, cIns.hasSideEffect());
                         nList.add(nCondIns);
                     }
                 }
@@ -310,7 +313,9 @@ public class MCInstructionProcessor {
             if (null == m_sub) {
                 return ins;
             } else {
+            	Log.log4j.warn("MCInsPatLabDecompose holder is " + ins.m_holder.toStringMCIns());
                 MCSId holder = subsHolder(ins.m_holder);
+                Log.log4j.warn("MCInsPatLabDecompose holder new is " + holder.toStringMCIns());
                 
                 IMCValPrim vp = subsVP(ins.m_vp, m_sub);
                 
