@@ -300,7 +300,7 @@ if (<cond>) {
 >>
   
 pevent_st(tag, stat_lst) ::= <<
-<tag>{  <stat_lst; separator="\n">
+<tag>.<sys_tid()>{  <stat_lst; separator="\n">
 }
 >>
 

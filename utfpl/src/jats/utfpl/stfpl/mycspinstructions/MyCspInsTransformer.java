@@ -97,7 +97,7 @@ public class MyCspInsTransformer {
         SId main_sid = sfac.createLambdaFunction("main", main_type);
         MCSId main_mcsid = m_mfac.fromSId(main_sid);
         
-        List<MyCspGroup> main_body = InsLst2CBlockLst2(m_prog.m_main_inss, subMap, main_mcsid, m_mfac);
+        List<MyCspGroup> main_body = InsLst2CBlockLst2(m_prog.m_main_inss, subMap, main_mcsid, new int[]{0}, m_mfac);
         // add the concept of stack
         processBlockLstForStack(0, main_body);
 
@@ -138,8 +138,8 @@ public class MyCspInsTransformer {
         private MCSIdFactory m_fac;
         private int m_no;
         
-        public InsLst2CBlockLstConverter(Map<MCSId, VariableInfo> subMap, MCSId funLab, MCSIdFactory fac) {
-            m_no = 0;
+        public InsLst2CBlockLstConverter(Map<MCSId, VariableInfo> subMap, MCSId funLab, int no, MCSIdFactory fac) {
+            m_no = no;
             
             m_cblkLst = new ArrayList<MyCspGroup>();
             m_cbEvt = new GrpEvent(funLab, ++m_no);
@@ -152,6 +152,10 @@ public class MyCspInsTransformer {
         
         public List<MyCspGroup> getCBlockLst() {
             return m_cblkLst;
+        }
+        
+        public int getNo() {
+        	return m_no;
         }
         
         public void finalize() {
@@ -171,9 +175,12 @@ public class MyCspInsTransformer {
                 Map<MCSId, VariableInfo> subMapFalse = 
                         new HashMap<MCSId, VariableInfo>(m_subMap);
 
-                List<MyCspGroup> btrue = InsLst2CBlockLst2(ins.m_btrue, subMapTrue, m_funLab, m_fac);
-                List<MyCspGroup> bfalse = InsLst2CBlockLst2(ins.m_bfalse, subMapFalse, m_funLab, m_fac);
+                int [] noarr = new int [] {m_no};
+                List<MyCspGroup> btrue = InsLst2CBlockLst2(ins.m_btrue, subMapTrue, m_funLab, noarr, m_fac);
+                List<MyCspGroup> bfalse = InsLst2CBlockLst2(ins.m_bfalse, subMapFalse, m_funLab, noarr, m_fac);
 
+                m_no = noarr[0];
+                
                 // connect all the links
                 ccond.reset(ctCond, btrue, bfalse);
 
@@ -685,14 +692,16 @@ public class MyCspInsTransformer {
     static private List<MyCspGroup> InsLst2CBlockLst2(List<IMCInstruction> insLst
     		, Map<MCSId, VariableInfo> subMap
     		, MCSId funLab
+    		, int[] no
     		, MCSIdFactory fac)
     {
-        InsLst2CBlockLstConverter cvt = new InsLst2CBlockLstConverter(subMap, funLab, fac);
+        InsLst2CBlockLstConverter cvt = new InsLst2CBlockLstConverter(subMap, funLab, no[0], fac);
         for (IMCInstruction ins: insLst) {
             ins.accept(cvt);
         }
         
         cvt.finalize();
+        no[0] = cvt.getNo();
         return cvt.getCBlockLst();
     }
     
@@ -789,7 +798,7 @@ public class MyCspInsTransformer {
 //        	envname = TID2CTempID(funDef.m_env_name, subMap, funDef.m_name, null);
 //        }
         
-        List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name, fac);
+        List<MyCspGroup> body = InsLst2CBlockLst2(funDef.m_inss, subMap, funDef.m_name, new int[]{0}, fac);
         
         
         FunctionMyCsp cProc = new FunctionMyCsp(funDef.m_name, paras, body);

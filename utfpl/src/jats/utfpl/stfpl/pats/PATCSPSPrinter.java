@@ -4,7 +4,6 @@ import jats.utfpl.stfpl.mcinstruction.AuxMCIns.Address;
 import jats.utfpl.stfpl.mcinstruction.MCGlobalExtCode;
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 import jats.utfpl.stfpl.stype.AuxSType;
-import jats.utfpl.stfpl.stype.IntType;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -114,7 +113,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     public Object visit(PNodeEvent node) {
     	// pevent_st(tag, stat_lst) ::= <<
         ST st = m_stg.getInstanceOf("pevent_st");
-        st.add("tag", node.m_funname.toStringMCIns() + "__" + node.m_no);
+        st.add("tag", node.m_funname.toStringMCIns() + "_s" + node.m_no);
         for (PStat stat: node.m_statLst) {
             st.add("stat_lst", stat.accept(this));
         }

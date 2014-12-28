@@ -1,0 +1,22 @@
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+val ref_63 = D2Ecst<conats_atomref_create_2571:{a_3853_0:t@ype}(((a_3853_0:t@ype) -<fun> atomref_726_0(a_3853_0:t@ype)))> (0)
+
+fun foo0_64 = lam () <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val x_65 = D2Ecst<true_bool_0:bool>
+      in
+        if (x_65) then
+          D2Ecst<conats_atomref_update_2572:{a_3854_0:t@ype}(((atomref_726_0(a_3854_0:t@ype), a_3854_0:t@ype) -<fun> void))> (ref_63, 1)
+        else
+          D2Ecst<conats_atomref_update_2572:{a_3854_0:t@ype}(((atomref_726_0(a_3854_0:t@ype), a_3854_0:t@ype) -<fun> void))> (ref_63, 2)
+      end:void:t@ype))
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}
