@@ -87,9 +87,7 @@ fun producer (x: int):<fun1> void = let
       val (db, isnil) = demo_buffer_isnil (db)
       val db = demo_buffer_insert (db)
     in
-      if isnil then let
-        val db = conats_shared_signal (s, db)
-      in db end
+      if isnil then conats_shared_signal (s, db)
       else db
     end
   end
@@ -116,7 +114,7 @@ fun consumer (x: int):<fun1> void = let
       val db = demo_buffer_takeout (db)
     in
       if isful then let
-        // val db = conats_shared_signal (s, db)
+//        val db = conats_shared_signal (s, db)
       in db end
       else db
     end

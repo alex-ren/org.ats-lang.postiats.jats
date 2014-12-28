@@ -218,6 +218,7 @@ public class MyCspInsTransformer {
                 if (trueBranch.size() < 1) {
                 	GrpEvent cbEvt = (GrpEvent)m_cblkLst.get(0);
                 	trueBranch = cbEvt.m_inslst;
+                	m_cbEvt = cbEvt;  // This is to make two branches into one group.
                 }
                 
                 m_cblkLst = new ArrayList<MyCspGroup>();
@@ -234,6 +235,7 @@ public class MyCspInsTransformer {
                 if (falseBranch.size() < 1) {
                 	GrpEvent cbEvt = (GrpEvent)m_cblkLst.get(0);
                 	falseBranch = cbEvt.m_inslst;
+                	m_cbEvt = cbEvt;  // This is to make two branches into one group.
                 }
                 
                 // recover the environment
@@ -250,6 +252,7 @@ public class MyCspInsTransformer {
                 
                 m_cbEvt.add(nIns);
 
+                // todo: Is this really necessary?
                 if (ins.m_holder.getSId().isRetHolder()) {
                     m_cblkLst.add(m_cbEvt);
                     m_cbEvt = new GrpEvent(m_funLab, ++m_no);
