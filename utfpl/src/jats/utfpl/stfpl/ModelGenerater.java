@@ -21,6 +21,7 @@ import jats.utfpl.stfpl.pats.PATCSPSPrinter;
 import jats.utfpl.stfpl.pats.PModel;
 import jats.utfpl.stfpl.pats.PatCspsTransformer;
 import jats.utfpl.utils.FilenameUtils;
+import jats.utfpl.utils.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,6 +30,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class ModelGenerater {
 	private String m_inputpath;
@@ -57,6 +59,16 @@ public class ModelGenerater {
 		return m_patsinss;
 	}
 	
+	static String getProcessCommand(ProcessBuilder pb) {
+		List<String> coms = pb.command();
+		String command = "";
+		for (String com: coms) {
+			command += com + " ";
+		}
+		
+		return command;
+	}
+	
 	public int generate(int level) throws IOException, InterruptedException {
 
         System.out.println("==Processing file " + m_inputpath + "==========");
@@ -65,16 +77,61 @@ public class ModelGenerater {
         File finput = new File(m_inputpath);
         
         if (FilenameUtils.isATS(finput)) {
-        	File path_json = FilenameUtils.toJson(finput);
-        	ProcessBuilder pb = new ProcessBuilder("patsopt", "-o", path_json.getAbsolutePath(),
-                    "--jsonize-2", "-d", finput.getAbsolutePath());
+        	// Create temporary directory.
+        	File tempDir = new File(System.getProperty("java.io.tmpdir", null), "conats" + Long.toString(System.nanoTime()));
+            if (!tempDir.exists() && !tempDir.mkdir())
+                throw new IOException("Failed to create temporary directory " + tempDir);
+            Log.log4j.info("tempDir is " + tempDir.getAbsolutePath());
+            
+            // Generate list for remote files.
+            File list_file = new File(tempDir.getAbsolutePath(), "pdgreloc.json");
+        	ProcessBuilder pb = new ProcessBuilder("patsopt", 
+        			"--pkgreloc", "-DATS", "ATSPKGRELOCROOT=\"" + tempDir.getAbsolutePath() + "\"",
+        			"--output-w", list_file.getAbsolutePath(),
+        			"-d", finput.getAbsolutePath());
+        	
+        	System.out.println("cmd is " + getProcessCommand(pb));
         	pb.redirectErrorStream(true);
         	Process child = pb.start();
+        	int returnCode = child.waitFor();
+        	System.out.println("returnCode is " + returnCode);
+        	if (0 != returnCode) {
+        		String line;
+        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
+        		while ((line = reader.readLine()) != null) {
+        			System.err.println(line);
+        		}
+        		return returnCode;
+        	}
+        	
+        	// Download remote files.
+        	pb = new ProcessBuilder("atspkgreloc_curl", list_file.getAbsolutePath());
+        	System.out.println("cmd is " + getProcessCommand(pb));
+        	pb.redirectErrorStream(true);
+        	child = pb.start();
+        	returnCode = child.waitFor();
+        	System.out.println("returnCode is " + returnCode);
+        	if (0 != returnCode) {
+        		String line;
+        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
+        		while ((line = reader.readLine()) != null) {
+        			System.err.println(line);
+        		}
+        		return returnCode;
+        	}
+        	
+        	// ...
+        	
+        	File path_json = FilenameUtils.toJson(finput);
+        	pb = new ProcessBuilder("patsopt", "-o", path_json.getAbsolutePath(),
+                    "--jsonize-2", "-d", finput.getAbsolutePath());
+        	pb.redirectErrorStream(true);
+        	child = pb.start();
         	
         	String cmd = "patsopt -o " + path_json.getAbsolutePath() + " --jsonize-2 -d " + finput.getAbsolutePath();
         	System.out.println("cmd is " + cmd);
 //        	Process child = Runtime.getRuntime().exec(cmd);
-        	int returnCode = child.waitFor();
+        	returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 == returnCode) {
                 FileReader fReader = new FileReader(path_json);
@@ -267,9 +324,9 @@ public class ModelGenerater {
 
         	} else {
         		String line;
-        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getErrorStream()));
+        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
+        		System.err.println("\"patsopt --jsonize-2\" failed.");
         		while ((line = reader.readLine()) != null) {
-        			System.err.println("Invalid ATS file.");
         			System.err.println(line);
         		}
         		return returnCode;            		

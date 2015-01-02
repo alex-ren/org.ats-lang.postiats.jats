@@ -1,6 +1,6 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
-staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
+staload "/home/grad2/aren/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
 
 "D2Cstacsts" lin_buffer_736: (t@ype) -\> viewtype
 

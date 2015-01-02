@@ -15,11 +15,11 @@ ATS_PACKNAME "atspkgreloc_test"
 // CONATSCONTRIB "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
 //
 
-#define CONATSCONTRIB "http://cs-people.bu.edu/aren/tmp"
+// #define CONATSCONTRIB "http://cs-people.bu.edu/aren/tmp"
+#define CONATSCONTRIB
+"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
 (* ****** ****** *)
 //
-require
-"{$CONATSCONTRIB}/conats.sats"
 //
 (* ****** ****** *)
 //
