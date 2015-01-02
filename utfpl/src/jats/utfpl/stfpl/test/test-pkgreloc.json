@@ -1,0 +1,516 @@
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "share/atspre_staload.hats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/basics.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/basics.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/pointer.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/pointer.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/integer.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/integer.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/integer_fixed.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/integer_fixed.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/char.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/char.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/bool.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/bool.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/float.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/float.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/tuple.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/tuple.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/memory.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/memory.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/string.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/string.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/strptr.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/strptr.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/DATS/integer.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/reference.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/reference.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/filebas.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/filebas.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/DATS/integer.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "libc/SATS/stdio.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "libc/sys/SATS/types.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "libc/sys/SATS/stat.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "libc/sys/SATS/types.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "libc/SATS/stdio.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/intrange.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/intrange.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/gorder.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/gorder.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gorder_int.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gorder_uint.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gorder_bool.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gorder_char.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gorder_float.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gorder_string.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/gnumber.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/gnumber.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gnumber_int.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gnumber_uint.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/DATS/gnumber_float.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/list.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/DATS/unsafe.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list_vt.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/list_vt.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list_vt_mergesort.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/list_vt_mergesort.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/list_vt_quicksort.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/list_vt_quicksort.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/option.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/option.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/option_vt.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/option_vt.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/array.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/array.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/giterator.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/array_bsearch.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/array_bsearch.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/array_quicksort.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/array_quicksort.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/arrayptr.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/arrayptr.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/arrayref.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/arrayref.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/matrix.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/matrix.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/matrixptr.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/matrixptr.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/matrixref.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/matrixref.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/stream.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/stream.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/stream_vt.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/stream_vt.dats"
+}
+{
+"pkgreloc_kind": "include"
+,
+"pkgreloc_given": "prelude/params.hats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/gprint.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/gprint.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
+,
+"pkgreloc_source": "$PATSPRE/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/unsafe.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/unsafe.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": "/home/alex/workspace/Postiats/ATS-Postiats/prelude/DATS/checkast.dats"
+,
+"pkgreloc_source": "$PATSPRE/DATS/checkast.dats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_given": "prelude/SATS/unsafe.sats"
+}
+{
+"pkgreloc_kind": "require"
+,
+"pkgreloc_target": ".TEST/conats.sats"
+,
+"pkgreloc_source": "http://cs-people.bu.edu/aren/tmp/conats.sats"
+}
+{
+"pkgreloc_kind": "staload"
+,
+"pkgreloc_target": ".TEST/conats.sats"
+,
+"pkgreloc_source": "http://cs-people.bu.edu/aren/tmp/conats.sats"
+}

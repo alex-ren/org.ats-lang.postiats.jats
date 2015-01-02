@@ -14,25 +14,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:1124
 Total Transitions:1323
-Time Used:0.1667009s
-Estimated Memory Used:17854.464KB
-
-
-=======================================================
-Assertion: main() |= G sys_assertion
-********Verification Result********
-The Assertion (main() |= G sys_assertion) is VALID.
-
-********Verification Setting********
-Admissible Behavior: All
-Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
-System Abstraction: False
-
-
-********Verification Statistics********
-Visited States:4529
-Total Transitions:8845
-Time Used:0.7429699s
-Estimated Memory Used:14528.512KB
+Time Used:0.1101624s
+Estimated Memory Used:17940.48KB
 
 

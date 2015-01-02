@@ -515,7 +515,7 @@ main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
 
 #assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 
 

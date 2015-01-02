@@ -98,7 +98,7 @@ in
   producer (x)
 end
 
-// Keep removing elements into buffer.
+// Keep removing elements from buffer.
 fun consumer (x: int):<fun1> void = let
   val db = conats_shared_acquire (s)
 
@@ -139,7 +139,7 @@ val () = conats_thread_create(consumer, 0, tid2)
 %{$
 #assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 %}
 

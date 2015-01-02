@@ -1,6 +1,6 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
-staload "/home/grad2/aren/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
+staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
 
 "D2Cstacsts" lin_buffer_736: (t@ype) -\> viewtype
 
@@ -155,6 +155,6 @@ val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -
 %{
 #assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 %}
