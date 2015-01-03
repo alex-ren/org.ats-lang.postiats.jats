@@ -96,6 +96,7 @@ public class ModelGenerater {
         	int returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 != returnCode) {
+        		System.err.println("\"patsopt --pkgreloc\" failed.");
         		String line;
         		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
         		while ((line = reader.readLine()) != null) {
@@ -112,6 +113,7 @@ public class ModelGenerater {
         	returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 != returnCode) {
+        		System.err.println("\"atspkgreloc_curl\" failed.");
         		String line;
         		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
         		while ((line = reader.readLine()) != null) {
@@ -120,217 +122,214 @@ public class ModelGenerater {
         		return returnCode;
         	}
         	
-        	// ...
-        	
+        	// Parse the input file.        	
         	File path_json = FilenameUtils.toJson(finput);
-        	pb = new ProcessBuilder("patsopt", "-o", path_json.getAbsolutePath(),
+        	pb = new ProcessBuilder("patsopt", 
+        			"-DATS", "ATSPKGRELOCROOT=\"" + tempDir.getAbsolutePath() + "\"",
+        			"-o", path_json.getAbsolutePath(),
                     "--jsonize-2", "-d", finput.getAbsolutePath());
+        	System.out.println("cmd is " + getProcessCommand(pb));
         	pb.redirectErrorStream(true);
         	child = pb.start();
-        	
-        	String cmd = "patsopt -o " + path_json.getAbsolutePath() + " --jsonize-2 -d " + finput.getAbsolutePath();
-        	System.out.println("cmd is " + cmd);
-//        	Process child = Runtime.getRuntime().exec(cmd);
         	returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
-        	if (0 == returnCode) {
-                FileReader fReader = new FileReader(path_json);
-
-                System.out.println("== Parsing JSON start ==========================");
-                StfplProgramParserJson stfplParser = new StfplProgramParserJson();
-                ProgramStfpl2 prog2 = stfplParser.trans(fReader);
-                System.out.println("== Parsing JSON end   ==========================");
-                
-                System.out.println("== Type Checking start ==========================");
-                StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
-                tyChecker.typecheck();
-                System.out.println("== Type Checking end   ==========================");
-
-                ProgramStfpl2Printer sPrinter2 = new ProgramStfpl2Printer();
-                String outputSTFPL2 = sPrinter2.print(prog2);
-                
-                System.out.println("==stfpl's ast code (layer 02) is ==========================");
-                System.out.println(outputSTFPL2);
-                FileWriter fwSTFPL2 = new FileWriter(FilenameUtils.changeExt(path_json, FilenameUtils.cSTFPL2));
-                BufferedWriter bwSTFPL2 = new BufferedWriter(fwSTFPL2);
-                bwSTFPL2.write(outputSTFPL2);
-                bwSTFPL2.close();
-                
-                m_dyn = outputSTFPL2;
-                if (level <= 2) {
-                	System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                	return 0;
-                }
-
-                /* ************* ************** */
-                
-                System.out.println("== Generating dynexp3 start ==========================");
-                
-                DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
-                ProgramStfpl3 prog3 = d3transformer.transform();
-                System.out.println("== Generating dynexp3 end ==========================");
-
-                ProgramStfpl3Printer sPrinter3 = new ProgramStfpl3Printer();
-                String outputSTFPL3 = sPrinter3.print(prog3);
-                System.out.println("==stfpl's ast code (layer 03) is ==========================");
-                System.out.println(outputSTFPL3);
-                
-                m_dyn3 = outputSTFPL3;
-                if (level <= 3) {
-                	System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                	return 0;
-                }
-
-                /* ************* ************** */
-                
-                System.out.println("== Generating instruction start ==========================");
-                
-                SIdFactory sid_factory = new SIdFactory();
-                InstructionTransformer ins_cvt = new InstructionTransformer(sid_factory, prog3);
-                ProgramIns prog_in = ins_cvt.transform();
-                
-                System.out.println("== Generating instruction end ==========================");
-                
-                InstructionPrinter insPrinter = new InstructionPrinter();
-                String outputIns = insPrinter.print(prog_in);
-                System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
-                System.out.println(outputIns);
-                
-                m_inss = outputIns;
-                if (level <= 4) {
-                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                    return 0;
-                }
-
-                /* ************* ************** */
-                
-                System.out.println("== Generating mcinstruction start ==========================");
-                AddressAllocator addr_alloc = new AddressAllocator();
-                MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory, addr_alloc);
-                MCInstructionTransformer mcins_cvt = new MCInstructionTransformer(
-                                         mcsid_factory
-                                       , ins_cvt.getFunMap()
-                                       , prog_in);
-
-                ProgramMCIns prog_mcins = mcins_cvt.transform();
-                
-                System.out.println("== Generating mcinstruction end ==========================");
-                
-                MCInstructionPrinter mcinsPrinter = new MCInstructionPrinter();
-                String outputMCIns = mcinsPrinter.print(prog_mcins);
-                System.out.println("==stfpl's code (layer IMCInstruction) is ==========================");
-                System.out.println(outputMCIns);
-
-                m_mcinss = outputMCIns;
-                if (level <= 5) {
-                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                    return 0;
-                }
-                
-                /* ************* ************** */
-                
-                System.out.println("== Generating mycspinstruction start ==========================");
-
-                MyCspInsTransformer mycspins_cvt = new MyCspInsTransformer(prog_mcins, mcsid_factory);
-
-                ProgramMyCspIns prog_mycspins = mycspins_cvt.transform();
-                
-                System.out.println("== Generating mycspinstruction end ==========================");
-                
-                MyCspInsPrinter mycspinsPrinter = new MyCspInsPrinter();
-                String outputMyCspIns = mycspinsPrinter.print(prog_mycspins);
-                System.out.println("==stfpl's code (layer MyCspInstruction) is ==========================");
-                System.out.println(outputMyCspIns);
-
-                m_mycspinss = outputMyCspIns;
-                if (level <= 6) {
-                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                    return 0;
-                }
-                
-                /* ************* ************** */
-                
-                System.out.println("== Generating patsinstruction start ==========================");
-
-                PatCspsTransformer patsins_cvt = new PatCspsTransformer(prog_mycspins);
-
-                PModel prog_patsins = patsins_cvt.transform();
-                
-                System.out.println("== Generating patsinstruction end ==========================");
-                
-                PATCSPSPrinter patsinsPrinter = new PATCSPSPrinter();
-                String outputPatsIns = patsinsPrinter.print(prog_patsins);
-                
-                System.out.println("==stfpl's code (layer PatsInstructions) is ==========================");
-//                System.out.println(outputPatsIns);
-                
-                FileWriter fwPats = new FileWriter(FilenameUtils.changeExt(path_json, FilenameUtils.cPATCSPS));
-                BufferedWriter bwPats = new BufferedWriter(fwPats);
-                bwPats.write(outputPatsIns);
-                bwPats.close();
-
-                m_patsinss = outputPatsIns;
-                if (level <= 7) {
-                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                    return 0;
-                }
-                
-                /* ************* ************** */
-                
-                File path_csp = FilenameUtils.changeExt(path_json, FilenameUtils.cPATCSPS);
-                File path_result = null;
-                
-                if (null == m_outputpath) {
-                	path_result = FilenameUtils.changeExt(path_json, FilenameUtils.cTxt);
-                } else {
-                	path_result = new File(m_outputpath);
-                }
-
-            	ProcessBuilder pbpat3 = new ProcessBuilder("mono", m_patpath, "-csp", path_csp.getAbsolutePath(), path_result.getAbsolutePath());
-            	pbpat3.redirectErrorStream(true);
-            	Process childpat = pbpat3.start();
-            	
-                String cmdpat = "mono " + m_patpath + " -csp " + 
-            			path_csp.getAbsolutePath() + " " + path_result.getAbsolutePath();
-            	System.out.println("cmdpat is " + cmdpat);
-
-            	int returnCodePat = childpat.waitFor();
-            	System.out.println("returnCode is " + returnCodePat);
-            	if (0 == returnCodePat) {
-                    System.out.println("== Model Checking succeeded.");
-            		String line;
-            		BufferedReader reader = new BufferedReader(new InputStreamReader(childpat.getInputStream()));
-            		while ((line = reader.readLine()) != null) {
-            			System.out.println(line);
-            		}
-            	} else {
-            		String line;
-            		BufferedReader reader = new BufferedReader(new InputStreamReader(childpat.getErrorStream()));
-            		while ((line = reader.readLine()) != null) {
-            			System.err.println("Model Checking failed.");
-            			System.err.println(line);
-            		}
-            		return returnCode;            		
-            	}
-                    
-            	
-                if (level <= 8) {
-                    System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
-                    return 0;
-                }
-                
-                /* ************* ************** */
-                throw new Error("level " + level + " is not supported.");
-
-        	} else {
+        	if (0 != returnCode) {
+        		System.err.println("\"patsopt --jsonize-2\" failed.");
         		String line;
         		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        		System.err.println("\"patsopt --jsonize-2\" failed.");
         		while ((line = reader.readLine()) != null) {
         			System.err.println(line);
         		}
-        		return returnCode;            		
+        		return returnCode;
         	}
+        	
+            FileReader fReader = new FileReader(path_json);
+
+            System.out.println("== Parsing JSON start ==========================");
+            StfplProgramParserJson stfplParser = new StfplProgramParserJson();
+            ProgramStfpl2 prog2 = stfplParser.trans(fReader);
+            System.out.println("== Parsing JSON end   ==========================");
+            
+            System.out.println("== Type Checking start ==========================");
+            StfplTypeChecker tyChecker = new StfplTypeChecker(prog2);
+            tyChecker.typecheck();
+            System.out.println("== Type Checking end   ==========================");
+
+            ProgramStfpl2Printer sPrinter2 = new ProgramStfpl2Printer();
+            String outputSTFPL2 = sPrinter2.print(prog2);
+            
+            System.out.println("==stfpl's ast code (layer 02) is ==========================");
+            System.out.println(outputSTFPL2);
+            FileWriter fwSTFPL2 = new FileWriter(FilenameUtils.changeExt(path_json, FilenameUtils.cSTFPL2));
+            BufferedWriter bwSTFPL2 = new BufferedWriter(fwSTFPL2);
+            bwSTFPL2.write(outputSTFPL2);
+            bwSTFPL2.close();
+            
+            m_dyn = outputSTFPL2;
+            if (level <= 2) {
+            	System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+            	return 0;
+            }
+
+            /* ************* ************** */
+            
+            System.out.println("== Generating dynexp3 start ==========================");
+            
+            DynExp3Transformer d3transformer = new DynExp3Transformer(prog2.m_d2ecs);
+            ProgramStfpl3 prog3 = d3transformer.transform();
+            System.out.println("== Generating dynexp3 end ==========================");
+
+            ProgramStfpl3Printer sPrinter3 = new ProgramStfpl3Printer();
+            String outputSTFPL3 = sPrinter3.print(prog3);
+            System.out.println("==stfpl's ast code (layer 03) is ==========================");
+            System.out.println(outputSTFPL3);
+            
+            m_dyn3 = outputSTFPL3;
+            if (level <= 3) {
+            	System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+            	return 0;
+            }
+
+            /* ************* ************** */
+            
+            System.out.println("== Generating instruction start ==========================");
+            
+            SIdFactory sid_factory = new SIdFactory();
+            InstructionTransformer ins_cvt = new InstructionTransformer(sid_factory, prog3);
+            ProgramIns prog_in = ins_cvt.transform();
+            
+            System.out.println("== Generating instruction end ==========================");
+            
+            InstructionPrinter insPrinter = new InstructionPrinter();
+            String outputIns = insPrinter.print(prog_in);
+            System.out.println("==stfpl's code (layer IStfplInstruction) is ==========================");
+            System.out.println(outputIns);
+            
+            m_inss = outputIns;
+            if (level <= 4) {
+                System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+                return 0;
+            }
+
+            /* ************* ************** */
+            
+            System.out.println("== Generating mcinstruction start ==========================");
+            AddressAllocator addr_alloc = new AddressAllocator();
+            MCSIdFactory mcsid_factory = new MCSIdFactory(sid_factory, addr_alloc);
+            MCInstructionTransformer mcins_cvt = new MCInstructionTransformer(
+                                     mcsid_factory
+                                   , ins_cvt.getFunMap()
+                                   , prog_in);
+
+            ProgramMCIns prog_mcins = mcins_cvt.transform();
+            
+            System.out.println("== Generating mcinstruction end ==========================");
+            
+            MCInstructionPrinter mcinsPrinter = new MCInstructionPrinter();
+            String outputMCIns = mcinsPrinter.print(prog_mcins);
+            System.out.println("==stfpl's code (layer IMCInstruction) is ==========================");
+            System.out.println(outputMCIns);
+
+            m_mcinss = outputMCIns;
+            if (level <= 5) {
+                System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+                return 0;
+            }
+            
+            /* ************* ************** */
+            
+            System.out.println("== Generating mycspinstruction start ==========================");
+
+            MyCspInsTransformer mycspins_cvt = new MyCspInsTransformer(prog_mcins, mcsid_factory);
+
+            ProgramMyCspIns prog_mycspins = mycspins_cvt.transform();
+            
+            System.out.println("== Generating mycspinstruction end ==========================");
+            
+            MyCspInsPrinter mycspinsPrinter = new MyCspInsPrinter();
+            String outputMyCspIns = mycspinsPrinter.print(prog_mycspins);
+            System.out.println("==stfpl's code (layer MyCspInstruction) is ==========================");
+            System.out.println(outputMyCspIns);
+
+            m_mycspinss = outputMyCspIns;
+            if (level <= 6) {
+                System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+                return 0;
+            }
+            
+            /* ************* ************** */
+            
+            System.out.println("== Generating patsinstruction start ==========================");
+
+            PatCspsTransformer patsins_cvt = new PatCspsTransformer(prog_mycspins);
+
+            PModel prog_patsins = patsins_cvt.transform();
+            
+            System.out.println("== Generating patsinstruction end ==========================");
+            
+            PATCSPSPrinter patsinsPrinter = new PATCSPSPrinter();
+            String outputPatsIns = patsinsPrinter.print(prog_patsins);
+            
+            System.out.println("==stfpl's code (layer PatsInstructions) is ==========================");
+//            System.out.println(outputPatsIns);
+            
+            FileWriter fwPats = new FileWriter(FilenameUtils.changeExt(path_json, FilenameUtils.cPATCSPS));
+            BufferedWriter bwPats = new BufferedWriter(fwPats);
+            bwPats.write(outputPatsIns);
+            bwPats.close();
+
+            m_patsinss = outputPatsIns;
+            if (level <= 7) {
+                System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+                return 0;
+            }
+            
+            /* ************* ************** */
+            
+            File path_csp = FilenameUtils.changeExt(path_json, FilenameUtils.cPATCSPS);
+            File path_result = null;
+            
+            if (null == m_outputpath) {
+            	path_result = FilenameUtils.changeExt(path_json, FilenameUtils.cTxt);
+            } else {
+            	path_result = new File(m_outputpath);
+            }
+            
+            // Model checking.
+            ProcessBuilder pbpat3 = new ProcessBuilder("mono", 
+            		m_patpath, "-csp", path_csp.getAbsolutePath(), 
+            		path_result.getAbsolutePath());
+            System.out.println("cmd is " + getProcessCommand(pbpat3));
+            pbpat3.redirectErrorStream(true);
+            Process childpat = pbpat3.start();
+            int returnCodePat = childpat.waitFor();
+            System.out.println("returnCode is " + returnCodePat);
+        	if (0 != returnCode) {
+        		System.err.println("\"mono PAT\\ 3\" failed.");
+        		String line;
+        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
+        		while ((line = reader.readLine()) != null) {
+        			System.err.println(line);
+        		}
+        		return returnCode;
+			}
+
+			String line;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+			        childpat.getInputStream()));
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+			}
+                
+            
+            if (level <= 8) {
+                System.out.println("\n" + "==" + m_inputpath + " is O.K. " + " ==============================================================================\n");
+                return 0;
+            }
+            
+            /* ************* ************** */
+            throw new Error("level " + level + " is not supported.");
+
 
         } else {
         	throw new Error("non-ats file is not supported.");
