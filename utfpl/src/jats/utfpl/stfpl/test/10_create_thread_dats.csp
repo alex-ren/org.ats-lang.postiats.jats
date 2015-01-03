@@ -184,7 +184,7 @@ var tid1_66 = 0;
 var y_67 = 0;
 
 foo_64(sys_tid) =
-  foo_64__1{  atom_ref_manager.setElement(gref_63, sys_gstack.frame_get(sys_tid, 0, 0))
+  foo_64_s1.sys_tid{  atom_ref_manager.setElement(gref_63, sys_gstack.frame_get(sys_tid, 0, 0))
   } ->
   Skip
   ;
@@ -195,13 +195,13 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main8_id__1{  gref_63 = atom_ref_manager.allocate(0);
+  main8_id_s1.sys_tid{  gref_63 = atom_ref_manager.allocate(0);
   tid1_66 = sys_tid_allocator.allocate();
   } ->
   sys_thread_create(tid1_66, 1, 1);
-  main8_id__2{  y_67 = atom_ref_manager.getElement(gref_63);
+  main8_id_s2.sys_tid{  y_67 = atom_ref_manager.getElement(gref_63);
   } ->
-  main8_id__3{  var temp5_id = call(eq, y_67, 0);
+  main8_id_s3.sys_tid{  var temp5_id = call(eq, y_67, 0);
   sys_assert_var = temp5_id;
   } ->
   Skip; 

@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -57,6 +58,16 @@ public class ModelGenerater {
 	
 	public String getPATModel() {
 		return m_patsinss;
+	}
+	
+	private static String readFromProcess(InputStream is) throws IOException {
+		String line = null;
+		String lines = "";
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		while ((line = reader.readLine()) != null) {
+			lines += line;
+		}
+		return lines;
 	}
 	
 	static String getProcessCommand(ProcessBuilder pb) {
@@ -93,15 +104,12 @@ public class ModelGenerater {
         	System.out.println("cmd is " + getProcessCommand(pb));
         	pb.redirectErrorStream(true);
         	Process child = pb.start();
+        	String lines = readFromProcess(child.getInputStream());
         	int returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 != returnCode) {
         		System.err.println("\"patsopt --pkgreloc\" failed.");
-        		String line;
-        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        		while ((line = reader.readLine()) != null) {
-        			System.err.println(line);
-        		}
+        		System.err.println(lines);
         		return returnCode;
         	}
         	
@@ -110,15 +118,12 @@ public class ModelGenerater {
         	System.out.println("cmd is " + getProcessCommand(pb));
         	pb.redirectErrorStream(true);
         	child = pb.start();
+        	lines = readFromProcess(child.getInputStream());
         	returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 != returnCode) {
         		System.err.println("\"atspkgreloc_curl\" failed.");
-        		String line;
-        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        		while ((line = reader.readLine()) != null) {
-        			System.err.println(line);
-        		}
+        		System.err.println(lines);
         		return returnCode;
         	}
         	
@@ -131,15 +136,12 @@ public class ModelGenerater {
         	System.out.println("cmd is " + getProcessCommand(pb));
         	pb.redirectErrorStream(true);
         	child = pb.start();
+        	lines = readFromProcess(child.getInputStream());
         	returnCode = child.waitFor();
         	System.out.println("returnCode is " + returnCode);
         	if (0 != returnCode) {
         		System.err.println("\"patsopt --jsonize-2\" failed.");
-        		String line;
-        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        		while ((line = reader.readLine()) != null) {
-        			System.err.println(line);
-        		}
+        		System.err.println(lines);
         		return returnCode;
         	}
         	
@@ -302,15 +304,12 @@ public class ModelGenerater {
             System.out.println("cmd is " + getProcessCommand(pbpat3));
             pbpat3.redirectErrorStream(true);
             Process childpat = pbpat3.start();
+            lines = readFromProcess(child.getInputStream());
             int returnCodePat = childpat.waitFor();
             System.out.println("returnCode is " + returnCodePat);
         	if (0 != returnCode) {
         		System.err.println("\"mono PAT\\ 3\" failed.");
-        		String line;
-        		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        		while ((line = reader.readLine()) != null) {
-        			System.err.println(line);
-        		}
+        		System.err.println(lines);
         		return returnCode;
 			}
 

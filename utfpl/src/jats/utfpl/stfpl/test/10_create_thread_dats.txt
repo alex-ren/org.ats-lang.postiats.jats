@@ -12,8 +12,8 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:30
 Total Transitions:44
-Time Used:0.0544684s
-Estimated Memory Used:8749.056KB
+Time Used:0.0414786s
+Estimated Memory Used:8757.248KB
 
 
 =======================================================
@@ -21,7 +21,7 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init -> main8_id__1 -> sys_ch_sch.1.1.1 -> τ -> thread_init -> [if((1 == 1))] -> foo_64__1 -> thread_finalize -> main8_id__2 -> main8_id__3>
+<init -> main_init -> main8_id_s1.0 -> sys_ch_sch.1.1.1 -> τ -> thread_init -> [if((1 == 1))] -> foo_64_s1.1 -> thread_finalize -> main8_id_s2.0 -> main8_id_s3.0>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -32,7 +32,7 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:10
 Total Transitions:14
-Time Used:0.0132751s
+Time Used:0.0072698s
 Estimated Memory Used:8548.352KB
 
 
