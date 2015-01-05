@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="jats/utfpl/MGenerator.java|jats/utfpl/ccomp/|jats/utfpl/csps/|jats/utfpl/instruction/|jats/utfpl/parser/|jats/utfpl/patcsps/|jats/utfpl/stfpl/csharptype/CSAppType.java|jats/utfpl/stfpl/csharptype/CSPolyParaType.java|jats/utfpl/stfpl/csharptype/CSPolyType.java|jats/utfpl/stfpl/csharptype/CSTBookingEnv.java|jats/utfpl/tree/|jats/utfpl/tree/Test_02_naming.java" kind="src" path="src"/>
+	<classpathentry excluding="jats/utfpl/MGenerator.java|jats/utfpl/ccomp/|jats/utfpl/csps/|jats/utfpl/instruction/|jats/utfpl/parser/|jats/utfpl/patcsps/|jats/utfpl/stfpl/csharptype/CSAppType.java|jats/utfpl/stfpl/csharptype/CSPolyParaType.java|jats/utfpl/stfpl/csharptype/CSPolyType.java|jats/utfpl/stfpl/csharptype/CSTBookingEnv.java|jats/utfpl/tree/|jats/utfpl/tree/Test_02_naming.java|jats/utfpl/stfpl/stype/Abstype.java" kind="src" path="src"/>
 	<classpathentry excluding="jats/utfpl/parser/Utfpl_tree.java" kind="src" path="antlr-output"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="antlr-3.5-complete.jar" sourcepath="/home/grad2/aren/workspace/antlr/repository/antlr3"/>

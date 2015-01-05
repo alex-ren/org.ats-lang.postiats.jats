@@ -1,6 +1,5 @@
 package jats.utfpl.stfpl.staexp;
 
-import jats.utfpl.stfpl.stype.Abstype;
 import jats.utfpl.stfpl.stype.BoolType;
 import jats.utfpl.stfpl.stype.DataType;
 import jats.utfpl.stfpl.stype.DefaultAppTypeStore;
@@ -85,10 +84,10 @@ public class SExpTypeExtractor {
             {
                 return PropType.cInstance;
             }
-            case type:
+            case type: 
             case t0ype:
-            	Log.log4j.warn("Type detected. name is " + name);
-                return new Abstype(node.m_s2cst, sort);
+            	Log.log4j.warn("DataType detected. name is " + name);
+                return new DataType(node.m_s2cst, new ArrayList<ISType>());
             default:
                 throw new Error("srt " + srt + " is not supported, sort is " + sort);
             }
@@ -187,6 +186,7 @@ public class SExpTypeExtractor {
                     case vt0ype:
                     {
                         List<ISType> tys = extractTypeList(node.m_arglst);
+                    	Log.log4j.info("DataType detected. name is " + snode.getName());                        
                         DataType ret = new DataType(snode.m_s2cst, tys);
                         return ret;
                     }

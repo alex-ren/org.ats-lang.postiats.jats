@@ -60,6 +60,13 @@ D2Cstaload_st(filename) ::= <<
 staload "<filename>"
 >>
 
+D2Clocal(d2cs0, d2cs1) ::= <<
+local
+in
+  <d2cs1; separator="\n">
+end
+>>
+
 D2Clist_st(d2cs) ::= <<
 <d2cs; separator="\n">
 >>

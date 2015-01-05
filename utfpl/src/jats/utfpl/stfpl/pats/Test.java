@@ -44,7 +44,6 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/20_four_slot.dats"
         		"src/jats/utfpl/stfpl/test/20_1_two_slot_acm.dats"
 
-
         		
         };
 

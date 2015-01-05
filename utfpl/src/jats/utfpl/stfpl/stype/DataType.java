@@ -3,6 +3,7 @@ package jats.utfpl.stfpl.stype;
 import jats.utfpl.stfpl.csharptype.ICSTypeBooking;
 import jats.utfpl.stfpl.staexp.Cs2cst;
 import jats.utfpl.stfpl.stype.AuxSType.ToCSTypeResult;
+import jats.utfpl.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,9 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 // abstype atomref (a: t@ype)
+// abst@ype thread_id_t = int
+
+
 public class DataType extends BoxedType {
     public List<ISType> m_tyLst;
     public Cs2cst m_name;
@@ -48,7 +52,6 @@ public class DataType extends BoxedType {
     public TypeCheckResult match(ISType ty) {
         this.normalize();
 //        Log.log4j.info("type is " + this.toSTStfpl3(AuxSType.cStg).render());
-//        throw new Error("eeeeeeeee");
         ISType right = ty.normalize();
 //        Log.log4j.info("right is " + right.toSTStfpl3(AuxSType.cStg).render());
         if (right instanceof VarType) {
@@ -57,7 +60,10 @@ public class DataType extends BoxedType {
         } else if (right instanceof DataType) {
             DataType right1 = (DataType)right;
             if (m_name != right1.m_name) {
-                throw new Error("type mismatch");
+            	Log.log4j.warn("type mismatch: " + 
+                              this.toSTStfpl3(AuxSType.cStg).render() +
+                              " v.s. " +
+                              right.toSTStfpl3(AuxSType.cStg).render());
             }
             for (int i = 0; i < m_tyLst.size(); ++i) {
             	TypeCheckResult tyret = m_tyLst.get(i).match(right1.m_tyLst.get(i));

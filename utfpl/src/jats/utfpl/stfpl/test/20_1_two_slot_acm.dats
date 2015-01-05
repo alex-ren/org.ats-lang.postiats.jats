@@ -35,10 +35,10 @@ in
     (vpf | v)
   end
 
-  prfun acquire_ownership .<>. {i: nat}
+  prfun mc_acquire_ownership .<>. {i: nat}
     (i: int i): own_slot_vt (i) = mc_vlock_get (i, 0, 1, 1)
 
-  prfun release_ownship .<>. {i: nat}
+  prfun mc_release_ownership .<>. {i: nat}
     (vpf: own_slot_vt (i)): void = mc_vlock_put (vpf)
   
 end
@@ -52,18 +52,18 @@ val latest = conats_atomref_create {[x:nat | x < 2] int x} (0)
 
 fun write (item: int): void = let
   val index = 1 - conats_atomref_get (latest)
-  prval vpf = acquire_ownership (index)
+  prval vpf = mc_acquire_ownership (index)
   val (vpf | _) = slots_update (vpf | slots, index, item)
-  prval () = release_ownship (vpf)
+  prval () = mc_release_ownership (vpf)
   val () = conats_atomref_update (latest, index)
 in
 end
 
 fun read (): int = let
   val index = conats_atomref_get (latest)
-  prval vpf = acquire_ownership (index)
+  prval vpf = mc_acquire_ownership (index)
   val (vpf | item) = slots_get (vpf | slots, index)
-  prval () = release_ownship (vpf)
+  prval () = mc_release_ownership (vpf)
 in
   item
 end

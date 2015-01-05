@@ -75,13 +75,24 @@ public class ProgramStfpl2Printer {
         } else if (node instanceof D2Clist) {
             return printD2Clist((D2Clist)node);
         } else if (node instanceof D2Cstaload) {
-            return printD2Cstaload((D2Cstaload)node);     
+            return printD2Cstaload((D2Cstaload)node);  
+        } else if (node instanceof D2Clocal) {
+        	return printD2Clocal((D2Clocal)node);            
         } else {
             throw new Error("Id2ecl_node " + node + " is not supported");
         }
     }
     
-    private ST printD2Cstaload(D2Cstaload node) {
+    private ST printD2Clocal(D2Clocal node) {
+        // D2Clocal(d2cs0, d2cs1) ::= <<
+        ST st = m_stg.getInstanceOf("D2Clocal");
+        for (Cd2ecl dec: node.m_d2cs) {
+        	st.add("d2cs1", printCd2ecl(dec));
+        }
+        return st;
+	}
+
+	private ST printD2Cstaload(D2Cstaload node) {
         // D2Cstaload_st(filename) ::= <<
         ST st = m_stg.getInstanceOf("D2Cstaload_st");
         st.add("filename", node.m_file);

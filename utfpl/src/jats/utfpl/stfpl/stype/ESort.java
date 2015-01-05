@@ -34,7 +34,7 @@ public enum ESort {
         } else if (name.equals("view")) {
             return view;                    
         } else {
-        	Log.log4j.warn("unknown sort name " + name);
+        	Log.log4j.info("general sort name " + name);
             return advance;
         }
     }

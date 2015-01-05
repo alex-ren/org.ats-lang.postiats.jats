@@ -65,8 +65,8 @@ public class Id2ecl_nodeDeserializer implements JsonDeserializer<Id2ecl_node> {
         } else if (name.equals("D2Cinclude")) {
             return context.deserialize(je2, D2Cinclude.class);
         } else if (name.equals("D2Clocal")) {
-            Log.log4j.error("D2Clocal not supported");
-            throw new Error("D2Clocal not supported");
+            Log.log4j.warn("D2Clocal is encountered");
+            return context.deserialize(je2, D2Clocal.class);
         } else if (name.equals("D2Cignored")) {
             return context.deserialize(je2, D2Cignored.class);
         } else if (name.equals("D2Cstaload")) {

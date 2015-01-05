@@ -5,7 +5,7 @@ import jats.utfpl.stfpl.staexp.Cs2cst;
 import java.util.List;
 
 /*
- * Definition of dataype
+ * Definition of datatype
  */
 public class D2Cdatdecs implements Id2ecl_node {
     public int m_knd;

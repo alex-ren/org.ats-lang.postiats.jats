@@ -18,6 +18,7 @@ import jats.utfpl.stfpl.dynexp.D2Cfundecs;
 import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
 import jats.utfpl.stfpl.dynexp.D2Cinclude;
+import jats.utfpl.stfpl.dynexp.D2Clocal;
 import jats.utfpl.stfpl.dynexp.D2Cnone;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cstaload;
@@ -164,6 +165,8 @@ public class DynExp3Transformer {
             return transform((D2Cstacsts)node0, d2ec.d2ecl_loc);
         } else if (node0 instanceof D2Cvaldecs) {
             return transform((D2Cvaldecs)node0, d2ec.d2ecl_loc, scope, needed);    
+        } else if (node0 instanceof D2Clocal) {
+            return transform((D2Clocal)node0, d2ec.d2ecl_loc, scope, needed);                
         } else if (node0 instanceof D2Cdatdecs) {
             Log.log4j.warn("D2Cdatdecs encountered in generating dynexp3.");
             return null;
@@ -181,7 +184,18 @@ public class DynExp3Transformer {
         }
     }
 
-    private Cd3ecl transform(D2Cvaldecs node0, Cloc_t loc, 
+    private Cd3ecl transform(D2Clocal node0, Cloc_t loc,
+			Set<Cd3var> scope, Set<Cd3var> needed) {
+        List<Cd3ecl> d3cs = transform(node0.m_d2cs, scope, needed);
+        
+        D3Clocal node = new D3Clocal(d3cs);
+        Cd3ecl d3ecl = new Cd3ecl(loc, node);
+        
+        return d3ecl;
+        
+	}
+
+	private Cd3ecl transform(D2Cvaldecs node0, Cloc_t loc, 
             Set<Cd3var> scope, Set<Cd3var> needed) {
         if (Evalkind.VK_prval == node0.m_knd) {
             D3Cvaldecs node = transform_prval(node0, loc, scope, needed);
@@ -263,7 +277,7 @@ public class DynExp3Transformer {
                 Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
                 return v3d;
             } else {
-                throw new Error("Check this. I think this should not happen.");
+                throw new Error("Check this. I think this should not happen. loc is " + loc);
             }
         } else if (pnode instanceof P2Tignored) {
             throw new Error("Check this.");

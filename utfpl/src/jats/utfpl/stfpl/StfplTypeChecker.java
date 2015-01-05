@@ -20,6 +20,7 @@ import jats.utfpl.stfpl.dynexp.D2Cignored;
 import jats.utfpl.stfpl.dynexp.D2Cimpdec;
 import jats.utfpl.stfpl.dynexp.D2Cinclude;
 import jats.utfpl.stfpl.dynexp.D2Clist;
+import jats.utfpl.stfpl.dynexp.D2Clocal;
 import jats.utfpl.stfpl.dynexp.D2Cnone;
 import jats.utfpl.stfpl.dynexp.D2Cstacsts;
 import jats.utfpl.stfpl.dynexp.D2Cstaload;
@@ -117,6 +118,8 @@ public class StfplTypeChecker {
     		typecheck_dec((D2Cstacsts)d2ecl);
     	} else if (d2ecl instanceof D2Cvaldecs) {
     		typecheck_dec((D2Cvaldecs)d2ecl);    
+        } else if (d2ecl instanceof D2Clocal) {
+        	typecheck_dec((D2Clocal)d2ecl);     		
     	} else if (d2ecl instanceof D2Cdatdecs) {
     	    Log.log4j.warn("D2Cdatdecs encountered in type checking.");
     	} else if (d2ecl instanceof D2Clist) {
@@ -124,13 +127,20 @@ public class StfplTypeChecker {
     	} else if (d2ecl instanceof D2Cinclude) {
     	    Log.log4j.warn("D2Cinclude encountered");
         } else if (d2ecl instanceof D2Cstaload) {
-            Log.log4j.warn("D2Cstaload encountered");
+            Log.log4j.warn("D2Cstaload encountered");           
         } else if (d2ecl instanceof D2Cnone) {
         	Log.log4j.warn("D2Cnone encountered");
     	} else {
     		throw new Error(d2ecl + " is not supported.");
     	}
     }
+
+	private void typecheck_dec(D2Clocal d2ecl) {
+		for (Cd2ecl dec: d2ecl.m_d2cs) {
+			typecheck_dec(dec);
+		}
+		
+	}
 
 	private void typecheck_dec(D2Cvaldecs d2ecl) {
         for (Cv2aldec valdec: d2ecl.m_v2ds) {
@@ -792,6 +802,8 @@ public class StfplTypeChecker {
             normalizeType((D2Cstacsts)d2ecl);
         } else if (d2ecl instanceof D2Cvaldecs) {
             normalizeType((D2Cvaldecs)d2ecl);    
+        } else if (d2ecl instanceof D2Clocal) {
+            normalizeType((D2Clocal)d2ecl);             
         } else if (d2ecl instanceof D2Cdatdecs) {
         } else if (d2ecl instanceof D2Clist) {
         } else if (d2ecl instanceof D2Cinclude) {
@@ -802,7 +814,14 @@ public class StfplTypeChecker {
         }
     }
 
-    private void normalizeType(D2Cvaldecs d2ecl) {
+    private void normalizeType(D2Clocal d2ecl) {
+		for (Cd2ecl dec: d2ecl.m_d2cs) {
+			normalizeType(dec);
+		}
+		
+	}
+
+	private void normalizeType(D2Cvaldecs d2ecl) {
         for (Cv2aldec valdec: d2ecl.m_v2ds) {
             normalizeType(valdec);
         }
