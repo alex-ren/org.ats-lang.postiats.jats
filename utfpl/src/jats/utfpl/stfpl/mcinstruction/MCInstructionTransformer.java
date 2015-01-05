@@ -743,13 +743,13 @@ public class MCInstructionTransformer {
                 boolean isret = ins.m_holder.isRetHolder();
 
                 return new MCInsMCAssert(mcvp, isret);
-            } else if (fname.compSymbolString(CCompUtils.cMCVLockViewGet)) {
+            } else if (fname.compSymbolString(CCompUtils.cMCVLockGet)) {
                 // prfun mc_vlockview_get {x,y: nat} {xi,yi: pos} ( x: int x, y: int y, xi: int xi, yi: int yi): mc_vlockview (x, y, xi, yi)
 
                 List<IMCValPrim> mcargs = m_mcsid_factory.fromIValPrimList(ins.m_args, map_clo_name, map_name);
                 
                 return new MCInsMCVLockViewGet(mcargs, mcholder); 
-            } else if (fname.compSymbolString(CCompUtils.cMCVLockViewPut)) {
+            } else if (fname.compSymbolString(CCompUtils.cMCVLockPut)) {
                 // prfun mc_vlockview_put {x,y: nat} {xi,yi: pos} (v: mc_vlockview (x, y, xi, yi): void
                 IValPrim v = ins.m_args.get(0);
                 IMCValPrim mcv = m_mcsid_factory.fromIValPrim(v, map_clo_name, map_name);

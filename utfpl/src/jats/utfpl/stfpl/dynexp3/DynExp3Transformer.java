@@ -290,7 +290,7 @@ public class DynExp3Transformer {
                 } else {
                     return null;
                 }
-            } else {
+            } else {  // prval x = 3 will be kept.
                 Cp3at p3at = transform(level, p2at, scope);
                 
                 Cd3exp d3exp = transform(d2exp, scope, needed, 

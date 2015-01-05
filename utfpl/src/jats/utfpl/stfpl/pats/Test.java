@@ -36,8 +36,9 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/14_create_threads.dats",
 //				"src/jats/utfpl/stfpl/test/15_thread_cond.dats",
 //				"src/jats/utfpl/stfpl/test/15_2_thread_cond.dats",
-				"src/jats/utfpl/stfpl/test/16_producer_consumer.dats"
+//				"src/jats/utfpl/stfpl/test/16_producer_consumer.dats"
 //				"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats",
+        		"src/jats/utfpl/stfpl/test/17_1_mcset_mcget_calc.dats",
 //				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats",
 //				"src/jats/utfpl/stfpl/test/19_mc_view.dats"
 //        		"src/jats/utfpl/stfpl/test/20_four_slot.dats"

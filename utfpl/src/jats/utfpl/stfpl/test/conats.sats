@@ -169,17 +169,17 @@ prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
 
 (* ************* ************** *)
 
-absviewtype mc_vlockview (int, int, int, int)
+absviewtype mc_vlock_vt (int, int, int, int)
 
-prfun mc_vlockview_get {x,y: nat} {xi,yi: pos}
+prfun mc_vlock_get {x,y: nat} {xi,yi: pos}
   ( x: int x
   , y: int y
   , xi: int xi
   , yi: int yi
-  ): mc_vlockview (x, y, xi, yi)
+  ): mc_vlock_vt (x, y, xi, yi)
 
-prfun mc_vlockview_put {x,y: nat} {xi,yi: pos}
-  (v: mc_vlockview (x, y, xi, yi)
+prfun mc_vlock_put {x,y: nat} {xi,yi: pos}
+  (v: mc_vlock_vt (x, y, xi, yi)
 //  | x: int x
 //  , y: int y
 //  , xi: int xi

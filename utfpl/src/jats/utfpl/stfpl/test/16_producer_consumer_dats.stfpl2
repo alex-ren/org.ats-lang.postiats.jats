@@ -1,6 +1,6 @@
 D2Cnone
 
-staload "/tmp/conats57041399133781/conats.sats"
+staload "/tmp/conats4777727654352/conats.sats"
 
 staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
 
@@ -133,27 +133,26 @@ fun consumer_109 = lam (<P2Tann>(x_110:int:t@ype)) <fun> =
                   in
                     if (isful_118) then
                       let
-                        val db_120 = D2Ecst<conats_shared_signal_2564:{a_3844_0:viewt0ype}(((shared_t_722_0(a_3844_0:viewt0ype), a_3844_0:viewt0ype) -<fun> a_3844_0:viewt0ype))> (s_96, db_119)
                       in
-                        db_120
+                        db_119
                       end
                     else
                       db_119
                   end
               end:lin_buffer_736_0(int):viewtype))
-        val db_121 = takeout_112 (db_111)
-        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_96, db_121)
+        val db_120 = takeout_112 (db_111)
+        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_96, db_120)
       in
         consumer_109 (x_110)
       end:void:t@ype))
 
-val tid1_122 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0)> ()
+val tid1_121 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0)> ()
 
-val tid2_123 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0)> ()
+val tid2_122 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0)> ()
 
-val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0) -<fun> void))> (producer_97, 0, tid1_122)
+val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0) -<fun> void))> (producer_97, 0, tid1_121)
 
-val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0) -<fun> void))> (consumer_109, 0, tid2_123)
+val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0) -<fun> void))> (consumer_109, 0, tid2_122)
 
 %{
 #assert main deadlockfree;

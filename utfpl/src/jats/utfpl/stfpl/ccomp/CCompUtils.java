@@ -59,8 +59,8 @@ public class CCompUtils {
 
     /* ************* *************** */
     
-    public static final String cMCVLockViewGet = "mc_vlockview_get";
-    public static final String cMCVLockViewPut = "mc_vlockview_put";
+    public static final String cMCVLockGet = "mc_vlock_get";
+    public static final String cMCVLockPut = "mc_vlock_put";
     
     /* ************* *************** */
 	

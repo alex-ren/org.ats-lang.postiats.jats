@@ -1,0 +1,25 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+"D2Cstacsts" mid_736: int
+
+"D2Cdcstdecs" mc_m_2591:int
+
+fun foo_63 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      prval () = D2Ecst<mc_set_int_2579:((int, int) -<fun> void)> (D2Ecst<mc_m_2591:int>, 3)
+      prval <P2Trec>(<LABP2ATnorm>(pf_64), <LABP2ATnorm>(x_65)) = D2Ecst<mc_get_int_2580:((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<mc_m_2591:int>)
+      prval y_66 = <D2Esym>(+) (x_65, 1)
+      prval () = D2Ecst<mc_assert_2583:((bool) -<fun> void)> (<D2Esym>(=) (y_66, 5))
+    in
+      D2Ecst<mc_set_int_2579:((int, int) -<fun> void)> (D2Ecst<mc_m_2591:int>, 4)
+    end:void:t@ype)
+
+val () = foo_63 ()
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}
