@@ -8,4 +8,14 @@ public class LABP2ATomit implements Ilabp2at {
     public void normalizeType() { 
     }
 
+	@Override
+    public boolean isProof() {
+	    throw new Error("Not supported.");
+    }
+
+	@Override
+    public boolean isVoid() {
+		throw new Error("Not supported.");
+    }
+
 }

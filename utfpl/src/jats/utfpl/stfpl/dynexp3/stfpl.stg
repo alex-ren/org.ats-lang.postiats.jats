@@ -4,6 +4,13 @@ stfpl_prog_st(d3ecs) ::= <<
 <d3ecs; separator="\n\n">
 >>
 
+D3Clocal_st(d3cs0, d3cs1) ::= <<
+local
+in
+  <d3cs1; separator="\n">
+end
+>>
+
 D3Cdatdecs_st(knd, scsts) ::= <<
 datatype(<knd>)<scsts; separator="\nand ">
 >>

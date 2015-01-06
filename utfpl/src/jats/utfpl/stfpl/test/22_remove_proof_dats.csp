@@ -174,9 +174,68 @@ var sys_assert_var = true;
 
 // =====================
 
-var g_63 = 0;
-var x_64 = 0;
 
+foo_63(sys_tid) =
+  foo_63_s1.sys_tid{  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+foo2_64(sys_tid) =
+  foo2_64_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo_63(sys_tid);
+  foo2_64_s2.sys_tid{  var x_65 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, x_65);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo_63(sys_tid);
+  foo2_64_s3.sys_tid{  var y_66 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, y_66);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo_63(sys_tid);
+  foo2_64_s4.sys_tid{  var z_67 = sys_gstack.retopr_frame(sys_tid);
+  var temp4_id = call(add, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+  var ret3_id = call(add, temp4_id, z_67);
+  sys_gstack.frame_push(sys_tid, ret3_id);
+  } ->
+  Skip
+  ;
+
+mc_goo_69(sys_tid) =
+  mc_goo_69_s1.sys_tid{  sys_gstack.frame_push(sys_tid, 3);
+  } ->
+  Skip
+  ;
+
+mc_goo2_70(sys_tid) =
+  mc_goo2_70_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_goo_69(sys_tid);
+  mc_goo2_70_s2.sys_tid{  var x_71 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, x_71);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_goo_69(sys_tid);
+  mc_goo2_70_s3.sys_tid{  var y_72 = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, y_72);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_goo_69(sys_tid);
+  mc_goo2_70_s4.sys_tid{  var z_73 = sys_gstack.retopr_frame(sys_tid);
+  var temp7_id = call(add, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+  var ret6_id = call(add, temp7_id, z_73);
+  sys_gstack.frame_push(sys_tid, ret6_id);
+  } ->
+  Skip
+  ;
 
 // =====================
 
@@ -184,14 +243,6 @@ main_s(sys_tid) =
   main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main5_id_s1.sys_tid{  g_63 = atom_ref_manager.allocate(0);
-  atom_ref_manager.setElement(g_63, 3)
-  } ->
-  main5_id_s2.sys_tid{  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  main5_id_s3.sys_tid{  var temp3_id = call(eq, x_64, 4);
-  sys_assert_var = temp3_id;
-  } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 
@@ -202,11 +253,5 @@ main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
 // #assert main deadlockfree;
 
 // #assert main |= G sys_assertion;
-
-
-#assert main deadlockfree;
-
-#assert main |= G sys_assertion;
-
 
 

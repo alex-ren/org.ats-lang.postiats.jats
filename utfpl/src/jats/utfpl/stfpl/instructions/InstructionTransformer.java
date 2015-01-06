@@ -19,6 +19,7 @@ import jats.utfpl.stfpl.dynexp3.D3Cdcstdecs;
 import jats.utfpl.stfpl.dynexp3.D3Cextcode;
 import jats.utfpl.stfpl.dynexp3.D3Cfundecs;
 import jats.utfpl.stfpl.dynexp3.D3Cimpdec;
+import jats.utfpl.stfpl.dynexp3.D3Clocal;
 import jats.utfpl.stfpl.dynexp3.D3Cstacsts;
 import jats.utfpl.stfpl.dynexp3.D3Cvaldecs;
 import jats.utfpl.stfpl.dynexp3.D3EXPARGdyn;
@@ -203,6 +204,8 @@ public class InstructionTransformer {
             transform(d3ec.m_loc, (D3Cfundecs)node0, env, inss, is_top);
         } else if (node0 instanceof D3Cimpdec) {
             transform((D3Cimpdec)node0, d3ec.m_loc, env, inss, is_top);
+        } else if (node0 instanceof D3Clocal) {
+        	transform((D3Clocal)node0, d3ec.m_loc, env, inss, is_top);
         } else if (node0 instanceof D3Cstacsts) {
             Log.log4j.warn("D3Cstacsts encountered in generating instruction.");
         } else if (node0 instanceof D3Cvaldecs) {
@@ -214,7 +217,15 @@ public class InstructionTransformer {
         }
     }
 
-    /*
+    private void transform(D3Clocal node0, Cloc_t m_loc, Set<Cd3var> env,
+            List<IStfplInstruction> inss, boolean is_top) {
+	    for (Cd3ecl dec: node0.m_d3cs) { 
+	    	transform(dec, env, inss, is_top);
+	    }
+	    
+    }
+
+	/*
      * Assume there is no mutually recursively defined values.
      * E.g.
      *     val x = y + 1
@@ -227,6 +238,7 @@ public class InstructionTransformer {
             List<IStfplInstruction> inss, boolean is_top) {
         List<SId> sids = new ArrayList<SId>();
         for (Cv3aldec valdec: node0.m_v3ds) {
+//        	Log.log4j.error("loc is " + m_loc);
             transfrom(node0.m_knd, valdec, env, inss, is_top, sids);
         }
         if (is_top) {
@@ -888,6 +900,7 @@ public class InstructionTransformer {
             List<IStfplInstruction> inss, SId holder, boolean is_top) {
         SIdUser sid_user = null;
         if (env.contains(node.m_d3var)) {
+//        	Log.log4j.error("node.m_d3var is " + node.m_d3var.toStringNoStamp());
             sid_user = m_sid_factory.createSIdUserByCd3var(node.m_d3var, true);
         } else {
             sid_user = m_sid_factory.createSIdUserByCd3var(node.m_d3var, false);

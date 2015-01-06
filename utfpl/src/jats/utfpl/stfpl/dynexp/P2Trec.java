@@ -46,4 +46,16 @@ public class P2Trec implements Ip2at_node {
             }
         }
     }
+
+	@Override
+    public boolean isProof() {
+		// val (pf (pf | x) | y) = ...
+	    throw new Error("This should not happen.");
+    }
+
+	@Override
+    public boolean isVoid() {
+		// val (pf (pf | x) | y) = ...
+	    throw new Error("This should not happen.");
+    }
 }

@@ -16,4 +16,15 @@ public class P2Tann implements Ip2at_node {
         m_p2t.p2at_node.normalizeType();
     }
 
+	@Override
+    public boolean isProof() {
+	    return m_p2t.p2at_node.isProof();
+    }
+
+	@Override
+    public boolean isVoid() {
+
+		return m_p2t.p2at_node.isVoid();
+    }
+
 }

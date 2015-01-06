@@ -21,4 +21,14 @@ public class P2Tpat implements Ip2at_node {
         m_p2at.p2at_node.normalizeType();
     }
 
+	@Override
+    public boolean isProof() {
+		 return m_p2at.p2at_node.isProof(); 
+    }
+
+	@Override
+    public boolean isVoid() {
+		return m_p2at.p2at_node.isVoid(); 
+    }
+
 }

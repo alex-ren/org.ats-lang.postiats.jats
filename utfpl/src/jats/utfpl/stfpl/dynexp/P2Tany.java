@@ -1,6 +1,8 @@
 package jats.utfpl.stfpl.dynexp;
 
 import jats.utfpl.stfpl.stype.ISType;
+import jats.utfpl.stfpl.stype.PropType;
+import jats.utfpl.stfpl.stype.VoidType;
 
 
 public class P2Tany implements Ip2at_node {
@@ -26,6 +28,16 @@ public class P2Tany implements Ip2at_node {
     @Override
     public void normalizeType() {
         m_stype = m_stype.normalize();
+    }
+
+	@Override
+    public boolean isProof() {
+	    return (m_stype instanceof PropType);
+    }
+
+	@Override
+    public boolean isVoid() {
+		return (m_stype instanceof VoidType);
     }
 }
 

@@ -25,6 +25,8 @@ public interface ILabPat {
     
     public ST toSTStfpl3(STGroup stg);
     
+    public boolean isProof();
+    
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc);
 //
 //    public boolean equalCSharp(ILabPat next,

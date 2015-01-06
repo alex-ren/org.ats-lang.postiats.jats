@@ -75,6 +75,11 @@ public class LabPatNorm implements ILabPat {
         return m_type;
     }
 
+	@Override
+    public boolean isProof() {
+	    return m_type instanceof PropType;
+    }
+
 //    @Override
 //    public NamifyResult namify(Map<ITypeName, NamedType> map, Set<PolyParaType> esc) {
 //        NamifyResult nres = m_type.namify(map, esc);

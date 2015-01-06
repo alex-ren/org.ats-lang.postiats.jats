@@ -1,0 +1,27 @@
+fun foo_63 = lam () <fun> = 
+  <D2EannSeff>(
+    (3 | ()):@{0 = int, 1 = void}:t@ype)
+
+fun foo2_64 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      val <P2Trec>(<LABP2ATnorm>(x_65), <LABP2ATnorm>(_)) = foo_63 ()
+      val <P2Trec>(<LABP2ATnorm>(y_66), <LABP2ATnorm>(())) = foo_63 ()
+      val <P2Trec>(<LABP2ATnorm>(z_67), <LABP2ATnorm>(q_68)) = foo_63 ()
+    in
+      <D2Esym>(+) (<D2Esym>(+) (x_65, y_66), z_67)
+    end:int:t@ype)
+
+prfun mc_goo_69 = lamMet. lam () <fun> = 
+  <D2EannSeff>(
+    (3 | ()):@{0 = int, 1 = void}:t@ype)
+
+prfun mc_goo2_70 = lamMet. lam () <fun> = 
+  <D2EannSeff>(
+    let
+      prval <P2Trec>(<LABP2ATnorm>(x_71), <LABP2ATnorm>(_)) = mc_goo_69 ()
+      prval <P2Trec>(<LABP2ATnorm>(y_72), <LABP2ATnorm>(())) = mc_goo_69 ()
+      prval <P2Trec>(<LABP2ATnorm>(z_73), <LABP2ATnorm>(q_74)) = mc_goo_69 ()
+    in
+      <D2Esym>(+) (<D2Esym>(+) (x_71, y_72), z_73)
+    end:int:t@ype)

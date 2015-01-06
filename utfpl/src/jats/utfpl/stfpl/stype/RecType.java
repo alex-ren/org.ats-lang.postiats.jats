@@ -127,7 +127,22 @@ public class RecType extends BoxedType {
             i = m_npf;
         }
         
-        List<ILabPat> tys = m_labtypes.subList(i, m_labtypes.size());
+        List<ILabPat> tys = new ArrayList<ILabPat>();
+        for (ILabPat ty: m_labtypes) {
+        	--i;
+        	if (i >= 0 && ty.isProof()) {
+        		continue;
+        	}
+        	
+        	if ((ty instanceof VoidType) && tys.size() > 0) {
+        		// turn the case of (t1, t2, | void) into (t1, t2)
+        		break;
+        	}
+        	
+        	tys.add(ty);
+        }
+ 
+//        List<ILabPat> tys = m_labtypes.subList(i, m_labtypes.size());
         // flat tuple with one element
         if (tys.size() == 1 && isTuple() && !isBoxed()) {
             return tys.get(0).getType();

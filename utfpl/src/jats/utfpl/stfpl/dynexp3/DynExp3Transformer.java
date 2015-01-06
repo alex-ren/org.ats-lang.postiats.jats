@@ -244,7 +244,10 @@ public class DynExp3Transformer {
     }
     
 
-    
+    /*
+     * The purpose is level is to prevent the following:
+     * prval (x1 | (x2 | y)) = ...
+     */
     private Cv3aldec transform_prval_pat_exp(int level, Cloc_t loc, Cp2at p2at, Cd2exp d2exp, Set<Cd3var> scope, Set<Cd3var> needed) {
         Ip2at_node pnode = p2at.p2at_node;
         Cloc_t loc_pat = p2at.p2at_loc;
@@ -311,7 +314,7 @@ public class DynExp3Transformer {
                         new ArrayList<List<PolyParaType>>());
                 
                 Cv3aldec v3d = new Cv3aldec(loc, p3at, d3exp);
-                return v3d;                
+                return v3d;
                 
             }
         } else {
@@ -336,10 +339,28 @@ public class DynExp3Transformer {
         }
         
         List<LABP3ATnorm> labitems = new ArrayList<LABP3ATnorm>();
-        // skip all the proofs
-        ListIterator<Ilabp2at> iter = pnode.m_labpats.listIterator(i);
+        
+        
+//        // skip all the proofs
+//        ListIterator<Ilabp2at> iter = pnode.m_labpats.listIterator(i);
+
+        ListIterator<Ilabp2at> iter = pnode.m_labpats.listIterator(0);
         while (iter.hasNext()) {
-            LABP3ATnorm labitem = transform(1, iter.next(), scope);
+        	--i;
+        	Ilabp2at labpat = iter.next();
+            // keep those non-prop
+            // prval (pf, x:int | y) = ...
+        	if (i >= 0 && labpat.isProof()) {
+        		continue;
+        	}
+        	
+        	if (labpat.isVoid()) {
+        		if (labitems.size() > 0) {
+        			break;
+        		}
+        	}
+        	
+            LABP3ATnorm labitem = transform(1, labpat, scope);
             labitems.add(labitem);
         }
         
@@ -378,6 +399,9 @@ public class DynExp3Transformer {
             if (fun_node instanceof D2Ecst) {
                 Cd2cst d2cst = ((D2Ecst)fun_node).m_d2cst;
                 return d2cst.m_symbol.isMC();
+            } else if (fun_node instanceof D2Evar) {
+            	Cd2var d2var = ((D2Evar)fun_node).m_d2var;
+                return d2var.m_sym.isMC();
             } else {
                 return false;
             }
@@ -468,10 +492,26 @@ public class DynExp3Transformer {
         }
         
         List<LABP3ATnorm> labitems = new ArrayList<LABP3ATnorm>();
-        // skip all the proofs
-        ListIterator<Ilabp2at> iter = node0.m_labpats.listIterator(i);
+        
+//        // skip all the proofs
+//        ListIterator<Ilabp2at> iter = node0.m_labpats.listIterator(i);
+        
+
+        ListIterator<Ilabp2at> iter = node0.m_labpats.listIterator(0);
         while (iter.hasNext()) {
-            LABP3ATnorm labitem = transform(1, iter.next(), scope);
+        	--i;
+        	Ilabp2at labpat = iter.next();
+            // keep those non-prop
+            // val (pf, x:int | y) = ...        	
+        	if (i >= 0 && labpat.isProof()) {
+        		continue;
+        	}
+        	if (labpat.isVoid()) {
+        		if (labitems.size() > 0) {
+        			break;
+        		}
+        	}
+            LABP3ATnorm labitem = transform(1, labpat, scope);
             labitems.add(labitem);
         }
         
@@ -767,9 +807,20 @@ public class DynExp3Transformer {
         if (i < 0) {
             i = 0;
         }
-        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+//        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(0);
         while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
+        	--i;
+        	Cd2exp exp = iter.next();
+        	// Skip prop
+        	if (i >= 0 && exp.d2exp_node.getSType() instanceof PropType) {
+        		continue;
+        	}
+        	if ((exp.d2exp_node.getSType() instanceof VoidType) && d3es.size() > 0) {
+        		// turn the case of (x, y, | ()) into (x, y)
+        		break;
+        	}
+            Cd3exp d3e = transform(exp, scope, needed, new ArrayList<List<PolyParaType>>());
             d3es.add(d3e);
         }
         
@@ -796,9 +847,20 @@ public class DynExp3Transformer {
         if (i < 0) {
             i = 0;
         }
-        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+//        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(i);
+        ListIterator<Cd2exp> iter = node0.m_d2es.listIterator(0);
+        
         while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
+        	--i;
+        	Cd2exp exp = iter.next();
+        	if (i >= 0 && exp.d2exp_node.getSType() instanceof PropType) {
+        		continue;
+        	}
+        	if ((exp.d2exp_node.getSType() instanceof VoidType) && d3es.size() > 0) {
+        		// turn the case of (x, y, | ()) into (x, y)
+        		break;
+        	}
+            Cd3exp d3e = transform(exp, scope, needed, new ArrayList<List<PolyParaType>>());
             d3es.add(d3e);
         }
         
@@ -908,10 +970,16 @@ public class DynExp3Transformer {
         } else {
             i = node0.m_npf;
         }
-        ListIterator<Cd2exp> iter = node0.m_d2expLst.listIterator(i);
-        
+//        ListIterator<Cd2exp> iter = node0.m_d2expLst.listIterator(i);
+        ListIterator<Cd2exp> iter = node0.m_d2expLst.listIterator(0);
         while (iter.hasNext()) {
-            Cd3exp d3e = transform(iter.next(), scope, needed, new ArrayList<List<PolyParaType>>());
+        	--i;
+        	Cd2exp d2e = iter.next();
+        	if (i >= 0 && d2e.d2exp_node.getSType() instanceof PropType) {
+        		continue;
+        	}
+        	
+            Cd3exp d3e = transform(d2e, scope, needed, new ArrayList<List<PolyParaType>>());
             if (null != d3e) {
             	d3es.add(d3e);   
             }
@@ -926,14 +994,23 @@ public class DynExp3Transformer {
     private Cd3exp transform(D2ElamDyn node0, Cloc_t loc, 
             Set<Cd3var> scope, Set<Cd3var> needed, List<List<PolyParaType>> accu) {
         Set<Cd3var> cur_scope = new HashSet<Cd3var>();
-        int npf = 0;
+        int i = 0;
         if (node0.m_npf > 0) {
-            npf = node0.m_npf;
+            i = node0.m_npf;
         }
         
         
         // remove proof parameters
-        List<Cp3at> p3ats = transform(node0.m_p2ts.subList(npf, node0.m_p2ts.size()), cur_scope);
+        List<Cp2at> pats = new ArrayList<Cp2at>();
+        for (Cp2at pat: node0.m_p2ts) {
+        	--i;
+        	if (i >= 0 && pat.p2at_node.isProof()) {
+        		continue;
+        	}
+        	pats.add(pat);
+        }
+        
+        List<Cp3at> p3ats = transform(pats, cur_scope);
 //        Set<Cd3var> paras = collect_stamps(p3ats);
         
         Set<Cd3var> cur_needed = new HashSet<Cd3var>();

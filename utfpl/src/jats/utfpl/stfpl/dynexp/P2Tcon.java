@@ -26,4 +26,14 @@ public class P2Tcon implements Ip2at_node {
         }
     }
 
+	@Override
+    public boolean isProof() {
+	    throw new Error("Not supported.");
+    }
+
+	@Override
+    public boolean isVoid() {
+		throw new Error("Not supported.");
+    }
+
 }

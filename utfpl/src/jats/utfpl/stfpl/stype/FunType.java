@@ -196,7 +196,15 @@ public class FunType extends BoxedType {
             npf = m_npf;
         }
         
-        List<ISType> args = m_args.subList(npf, m_args.size());
+        List<ISType> args = new ArrayList<ISType>();
+        for (ISType arg: m_args) {
+        	--npf;
+        	if (npf >= 0 && arg instanceof PropType) {
+        		continue;
+        	}
+        	args.add(arg);
+        	
+        }
         ISType res = m_res.removeProof();
         
         return new FunType(npf, args, res, m_funclo, m_effect);

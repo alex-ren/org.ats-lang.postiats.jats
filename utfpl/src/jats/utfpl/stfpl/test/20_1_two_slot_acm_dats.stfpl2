@@ -1,0 +1,94 @@
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+"D2Cstacsts" slots_t_736: (t@ype, int) -\> type
+
+"D2Cstacsts" own_slot_vt_737: (int) -\> viewtype
+
+local
+in
+  fun slots_create_63 = lamSta. lamSta. lam (<P2Tann>(x_64:int:t@ype), <P2Tann>(v_65:a_3890_0:t@ype:t@ype)) <fun> = 
+    <D2EannSeff>(
+      D2Ecst<conats_atomarrayref_create_2574:{a_3857_0:t@ype}(((int, a_3857_0:t@ype) -<fun> atomarrayref_727_0(a_3857_0:t@ype)))> (x_64, v_65):slots_t_736_0(a_3890_0:t@ype):type)
+  fun slots_update_66 = lamSta. lamSta. lam (<P2Tann>(vpf_67:own_slot_vt_737_0():viewtype), <P2Tann>(slots_68:slots_t_736_0(a_3892_0:t@ype):type), <P2Tann>(i_69:int:t@ype), <P2Tann>(v_70:a_3892_0:t@ype:t@ype)) <fun> = 
+    <D2EannSeff>(
+      let
+        val () = D2Ecst<conats_atomarrayref_update_2575:{a_3858_0:t@ype}(((atomarrayref_727_0(a_3858_0:t@ype), int, a_3858_0:t@ype) -<fun> void))> (slots_68, i_69, v_70)
+      in
+        (vpf_67 | ())
+      end:@{0 = own_slot_vt_737_0(), 1 = void}:viewt0ype)
+  fun slots_get_71 = lamSta. lamSta. lam (<P2Tann>(vpf_72:own_slot_vt_737_0():viewtype), <P2Tann>(slots_73:slots_t_736_0(a_3895_0:t@ype):type), <P2Tann>(i_74:int:t@ype)) <fun> = 
+    <D2EannSeff>(
+      let
+        val v_75 = D2Ecst<conats_atomarrayref_get_2576:{a_3859_0:t@ype}(((atomarrayref_727_0(a_3859_0:t@ype), int) -<fun> a_3859_0:t@ype))> (slots_73, i_74)
+      in
+        (vpf_72 | v_75)
+      end:@{0 = own_slot_vt_737_0(), 1 = a_3895_0:t@ype}:viewt0ype)
+  prfun mc_acquire_ownership_76 = lamMet. lamSta. lam (<P2Tann>(i_77:int:t@ype)) <fun> = 
+    <D2EannSeff>(
+      D2Ecst<mc_vlock_get_2584:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (i_77, 0, 1, 1):own_slot_vt_737_0():viewtype)
+  prfun mc_release_ownership_78 = lamMet. lamSta. lam (<P2Tann>(vpf_79:own_slot_vt_737_0():viewtype)) <fun> = 
+    <D2EannSeff>(
+      D2Ecst<mc_vlock_put_2585:((mc_vlock_vt_733_0()) -<fun> void)> (vpf_79):void:t@ype)
+end
+
+D2Cnone
+
+val slots_80 = slots_create_63 (2, 0)
+
+val latest_81 = D2Ecst<conats_atomref_create_2571:{a_3853_0:t@ype}(((a_3853_0:t@ype) -<fun> atomref_726_0(a_3853_0:t@ype)))> (0)
+
+fun write_82 = lam (<P2Tann>(item_83:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val index_84 = <D2Esym>(-) (1, D2Ecst<conats_atomref_get_2573:{a_3855_0:t@ype}(((atomref_726_0(a_3855_0:t@ype)) -<fun> a_3855_0:t@ype))> (latest_81))
+      prval vpf_85 = mc_acquire_ownership_76 (index_84)
+      val <P2Trec>(<LABP2ATnorm>(vpf_86), <LABP2ATnorm>(_)) = slots_update_66 (vpf_85, slots_80, index_84, item_83)
+      prval () = mc_release_ownership_78 (vpf_86)
+      val () = D2Ecst<conats_atomref_update_2572:{a_3854_0:t@ype}(((atomref_726_0(a_3854_0:t@ype), a_3854_0:t@ype) -<fun> void))> (latest_81, index_84)
+    in
+      ()
+    end:void:t@ype)
+
+fun read_87 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      val index_88 = D2Ecst<conats_atomref_get_2573:{a_3855_0:t@ype}(((atomref_726_0(a_3855_0:t@ype)) -<fun> a_3855_0:t@ype))> (latest_81)
+      prval vpf_89 = mc_acquire_ownership_76 (index_88)
+      val <P2Trec>(<LABP2ATnorm>(vpf_90), <LABP2ATnorm>(item_91)) = slots_get_71 (vpf_89, slots_80, index_88)
+      prval () = mc_release_ownership_78 (vpf_90)
+    in
+      item_91
+    end:int:t@ype)
+
+fun loop_writer_92 = lam (<P2Tann>(x_93:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val () = write_82 (x_93)
+      in
+        loop_writer_92 (x_93)
+      end:void:t@ype))
+
+fun loop_reader_94 = lam (<P2Tann>(x_95:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val _ = read_87 ()
+      in
+        loop_reader_94 (x_95)
+      end:void:t@ype))
+
+val tid1_96 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
+
+val tid2_97 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
+
+val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_reader_94, 0, tid1_96)
+
+val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_writer_92, 0, tid2_97)
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

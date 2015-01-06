@@ -1,0 +1,10 @@
+val g_63 = 1
+
+fun foo_64 = lam (<P2Tann>(x_65:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    <D2Esym>(+) (g_63, x_65):int:t@ype)
+
+fun foo2_66 = lam (<P2Tann>(x_67:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      <D2Esym>(+) (g_63, x_67):int:t@ype))

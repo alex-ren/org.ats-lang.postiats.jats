@@ -30,4 +30,14 @@ public class P2Tempty implements Ip2at_node {
     @Override
     public void normalizeType() {
     }
+
+	@Override
+    public boolean isProof() {
+	    return false;
+    }
+
+	@Override
+    public boolean isVoid() {
+	    return true;
+    }
 }

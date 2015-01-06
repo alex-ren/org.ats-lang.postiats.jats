@@ -43,7 +43,8 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/19_mc_view.dats"
 //        		"src/jats/utfpl/stfpl/test/20_four_slot.dats"
         		"src/jats/utfpl/stfpl/test/20_1_two_slot_acm.dats"
-
+//        		"src/jats/utfpl/stfpl/test/21_global_val.dats"
+//        		"src/jats/utfpl/stfpl/test/22_remove_proof.dats"
         		
         };
 

@@ -21,4 +21,14 @@ public class LABP2ATnorm implements Ilabp2at {
         m_pat.p2at_node.normalizeType();
     }
 
+	@Override
+    public boolean isProof() {
+	    return m_pat.p2at_node.isProof();
+    }
+
+	@Override
+    public boolean isVoid() {
+		return m_pat.p2at_node.isVoid();
+    }
+
 }

@@ -63,13 +63,25 @@ public class ProgramStfpl3Printer {
             return printD3Cstacsts((D3Cstacsts)node);
         } else if (node instanceof D3Cvaldecs) {
             return printD3Cvaldecs((D3Cvaldecs)node);
+        } else if (node instanceof D3Clocal) {
+            return printD3Clocal((D3Clocal)node);            
         } else {
             throw new Error("Id3ecl_node " + node + " is not supported");
         }
     }
 
 
-    private ST printD3Cdatdecs(D3Cdatdecs node) {
+    private ST printD3Clocal(D3Clocal node) {
+	    // D3Clocal_st(d3cs0, d3cs1) ::= <<
+        ST st = m_stg.getInstanceOf("D3Clocal_st");
+        for (Cd3ecl dec: node.m_d3cs) {
+            st.add("d3cs1", printCd3ecl(dec));
+        }
+        
+        return st;
+    }
+
+	private ST printD3Cdatdecs(D3Cdatdecs node) {
 	    // D3Cdatdecs_st(knd, scsts) ::= <<
         ST st = m_stg.getInstanceOf("D3Cdatdecs_st");
         st.add("knd", node.m_knd);

@@ -12,4 +12,14 @@ public class P2Tignored implements Ip2at_node {
     public void normalizeType() {
     }
 
+	@Override
+    public boolean isProof() {
+	    throw new Error("Not supported.");
+    }
+
+	@Override
+    public boolean isVoid() {
+		throw new Error("Not supported.");
+    }
+
 }
