@@ -60,16 +60,24 @@ public class DataType extends BoxedType {
         } else if (right instanceof DataType) {
             DataType right1 = (DataType)right;
             if (m_name != right1.m_name) {
+            	// Type assumuption is not supported yet.
+            	// E.g.
+            	//   
+            	//  assume t1 = int
             	Log.log4j.warn("type mismatch: " + 
                               this.toSTStfpl3(AuxSType.cStg).render() +
                               " v.s. " +
                               right.toSTStfpl3(AuxSType.cStg).render());
             }
-            for (int i = 0; i < m_tyLst.size(); ++i) {
-            	TypeCheckResult tyret = m_tyLst.get(i).match(right1.m_tyLst.get(i));
-            	if (!tyret.isGood()) {
-            		throw new Error("type error at " + tyret.getMsg());
-            	}
+            
+            if (m_name == right1.m_name) {
+            	// Only do comparison when two constructors are of the same name.
+	            for (int i = 0; i < m_tyLst.size(); ++i) {
+	            	TypeCheckResult tyret = m_tyLst.get(i).match(right1.m_tyLst.get(i));
+	            	if (!tyret.isGood()) {
+	            		throw new Error("type error at " + tyret.getMsg());
+	            	}
+	            }
             }
             
 //            Log.log4j.info("after type is " + this.toSTStfpl3(AuxSType.cStg).render());

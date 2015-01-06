@@ -16,6 +16,7 @@ public class Main {
     private String m_input;
     private String m_output;
     private String m_pat;
+    private int m_engine;
     
     public void options(PrintStream stm) {
         stm.println("usage: java -jar mcatscc.jar <command> ... <command>");
@@ -29,7 +30,9 @@ public class Main {
         stm.println("  -o, --output filename");
         stm.println("               Specify the name of the output file.");
         stm.println("  -p, --pat path");
-        stm.println("               Specify the path of the executable (PAT3.Console.exe) of PAT.");        
+        stm.println("               Specify the path of the executable (PAT3.Console.exe) of PAT.");      
+        stm.println("  -e, --engine num");
+        stm.println("               Specify the search strategy 0: DFS (default), 1: BFS.");    
         stm.println();
 
     }
@@ -39,6 +42,7 @@ public class Main {
         m_input = null;
         m_output = null;
         m_pat = null;
+        m_engine = 0;
         
     }
 
@@ -77,7 +81,21 @@ public class Main {
                 } else {
                     m_pat = argv[i + 1];
                     i = i + 1;
-                }                
+                }         
+            } else if (arg.equals("-e") || arg.equals("--engine")) {
+                if ((i + 1) >= argv.length) {
+                    System.err.println("Error: Please specify the search strategy.\n");
+                    options(System.err);
+                    return -1;
+                } else {
+                    m_engine = Integer.parseInt(argv[i + 1]);
+                    if (m_engine <0 || m_engine > 1) {
+                        System.err.println("Error: Please specify the search strategy appropriately.\n");
+                        options(System.err);
+                        return -1;
+                    }
+                    i = i + 1;
+                }                  
             } else {
                 System.err.println("unknow options");
                 options(System.err);
@@ -102,7 +120,7 @@ public class Main {
                 System.err.println("Input file doesn't exist.");
                 return -1;
             }
-            ModelGenerater mcGen = new ModelGenerater(path.getAbsolutePath(), m_output, m_pat);
+            ModelGenerater mcGen = new ModelGenerater(path.getAbsolutePath(), m_output, m_pat, m_engine);
             mcGen.generate(8);
                         
             /* ******** ******** */

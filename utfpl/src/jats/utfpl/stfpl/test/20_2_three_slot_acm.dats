@@ -44,17 +44,27 @@ in
 end
 
 // Define type for data slots used in the example.
-// We use two data slots.
-typedef data_t = dataslots_t (int, 2)
-val data: data_t = dataslots_create (2, 0)
+// We use three data slots.
+typedef data_t = dataslots_t (int, 3)
+val data: data_t = dataslots_create (3, 0)
 
-typedef int2 = [i: int | i >= 0 && i <= 1] int i
+typedef int3 = [i: int | i >= 0 && i <= 2] int i
 
 // control variables
-val latest = conats_atomref_create {int2} (0)
+val latest = conats_atomref_create {int3} (0)
+val reading = conats_atomref_create {int3} (0)
 
+// contant table
+#define :: list_cons
+#define nil list_nil ()
+val differ0: list_t int3 = 1 :: 2 :: 1 :: nil
+val differ1: list_t int3 = 2 :: 2 :: 0 :: nil
+val differ2: list_t int3 = 1 :: 0 :: 0 :: nil
+val differ = differ0 :: differ1 :: differ2 :: nil
+  
 fun write (item: int): void = let
-  val index = 1 - conats_atomref_get (latest)
+  val differx = list_get_element (differ, conats_atomref_get (latest))
+  val index = list_get_element (differx, conats_atomref_get (reading))
 
   prval vpf = mc_acquire_ownership (index)
   val (vpf | _) = dataslots_update (vpf | data, index, item)
@@ -66,6 +76,7 @@ end
 
 fun read (): int = let
   val index = conats_atomref_get (latest)
+  val () = conats_atomref_update (reading, index)
 
   prval vpf = mc_acquire_ownership (index)
   val (vpf | item) = dataslots_get (vpf | data, index)
@@ -73,6 +84,8 @@ fun read (): int = let
 in
   item
 end
+
+
 
 fun loop_writer (x: int): void = let
   val () = write (x)
@@ -103,6 +116,15 @@ val () = conats_thread_create(loop_writer, 0, tid2)
 #assert main |= G sys_assertion;
 
 %}
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 "D2Cstacsts" slots_t_736: (t@ype, int) -\> type
 
@@ -61,22 +61,20 @@ fun read_87 = lam () <fun> =
     end:int:t@ype)
 
 fun loop_writer_92 = lam (<P2Tann>(x_93:int:t@ype)) <fun> = 
-  <D2EannFunclo><fun>(
-    <D2EannSeff>(
-      let
-        val () = write_82 (x_93)
-      in
-        loop_writer_92 (x_93)
-      end:void:t@ype))
+  <D2EannSeff>(
+    let
+      val () = write_82 (x_93)
+    in
+      loop_writer_92 (x_93)
+    end:void:t@ype)
 
 fun loop_reader_94 = lam (<P2Tann>(x_95:int:t@ype)) <fun> = 
-  <D2EannFunclo><fun>(
-    <D2EannSeff>(
-      let
-        val _ = read_87 ()
-      in
-        loop_reader_94 (x_95)
-      end:void:t@ype))
+  <D2EannSeff>(
+    let
+      val _ = read_87 ()
+    in
+      loop_reader_94 (x_95)
+    end:void:t@ype)
 
 val tid1_96 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
 

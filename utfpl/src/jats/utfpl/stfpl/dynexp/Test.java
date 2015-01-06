@@ -46,7 +46,7 @@ public class Test {
         };
 
         for (String strPath: paths) {
-        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath());
+        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath(), 1);
         	mcGen.generate(2);
         }
 

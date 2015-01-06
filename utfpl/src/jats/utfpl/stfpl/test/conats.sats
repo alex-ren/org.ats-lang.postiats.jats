@@ -188,14 +188,15 @@ prfun mc_vlock_put {x,y: nat} {xi,yi: pos}
 
 (* ************* ************** *)
 
-abstype sys_list_t
-typedef sys_list = sys_list_t
+abstype list_t (t@ype)
+typedef list (a:t@ype) = list_t (a)
 
-fun sys_list_nil (): sys_list
-fun sys_list_cons {a:type} (x: a, xs: sys_list): sys_list
-fun sys_list_get_header {a:type} (xs: sys_list): a
-fun sys_list_get_tail (xs: sys_list): sys_list
-fun sys_list_is_nil (xs: sys_list): bool
+fun list_nil {a:t@ype} (): list a
+fun list_cons {a:t@ype} (x: a, xs: list a): list a
+fun list_get_header {a:t@ype} (xs: list a): a
+fun list_get_element {a:t@ype} (xs: list a, n: int): a
+fun list_get_tail {a:t@ype} (xs: list a): list a
+fun list_is_nil {a:t@ype} (xs: list a): bool
 
 (* ************* ************** *)
 

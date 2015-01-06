@@ -89,6 +89,11 @@ namespace PAT.Lib
             return xs.getValue();
         }
 
+        public Object list_get_element(SysLinkedNode xs, int n)
+        {
+            return xs.getAtPos(n);
+        }
+
         public SysLinkedNode list_get_tail(SysLinkedNode xs)
         {
             return xs.getTail();

@@ -17,7 +17,7 @@ namespace PAT.Lib
     {
         private Object m_v;
         private SysLinkedNode m_next;
-        private Guid m_id;
+        // private Guid m_id;
 
         public SysLinkedNode getTail() {
             return m_next;
@@ -25,6 +25,18 @@ namespace PAT.Lib
         
         public Object getValue() {
             return m_v;
+        }
+
+        public Object getAtPos(int pos)
+        {
+            SysLinkedNode node = this;
+            while (pos > 0)
+            {
+                node = node.getTail();
+                pos--;
+            }
+
+            return node.getValue();
         }
 
         public static SysLinkedNode nil()
@@ -36,8 +48,9 @@ namespace PAT.Lib
         {
             m_v = v;
             m_next = next;
-            m_id = Guid.NewGuid();
+            // m_id = Guid.NewGuid();
         }
+
 
         private string getContent()
         {

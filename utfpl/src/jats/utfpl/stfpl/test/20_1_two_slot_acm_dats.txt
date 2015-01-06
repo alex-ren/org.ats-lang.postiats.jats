@@ -5,34 +5,44 @@ The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: First Witness Trace using Depth First Search
+Search Engine: Shortest Witness Trace using Breadth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
 Visited States:2635
 Total Transitions:6571
-Time Used:0.3235367s
-Estimated Memory Used:17608.704KB
+Time Used:0.5127651s
+Estimated Memory Used:24174.592KB
 
 
 =======================================================
 Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
-A counterexample is presented as follows.
-<init -> main_init -> main30_id_s1.0 -> slots_create_63_s1.0 -> main30_id_s2.0 -> sys_ch_sch.1.9.0 -> τ -> thread_init -> [if!((9 == 8))] -> [if((9 == 9))] -> sys_ch_sch.2.8.0 -> τ -> thread_init -> [if((8 == 8))] -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> loop_reader_94_s1.1 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> read_87_s1.1 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> read_87_s2.1 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> mc_acquire_ownership_76_s1.1 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 -> slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 -> write_82_s5.2 -> loop_writer_92_s2.2 -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 -> mc_acquire_ownership_76_s1.2>
+A counterexample is presented as follows.  
+
+<init -> main_init
+-> main30_id_s1.0 -> slots_create_63_s1.0 -> main30_id_s2.0 ->
+sys_ch_sch.1.9.0 -> τ -> thread_init -> [if!((9 == 8))] -> [if((9 ==
+9))] -> sys_ch_sch.2.8.0 -> τ -> loop_reader_94_s1.1 -> read_87_s1.1 ->
+read_87_s2.1 -> mc_acquire_ownership_76_s1.1 -> thread_init -> [if((8
+== 8))] -> loop_writer_92_s1.2 -> write_82_s1.2 -> write_82_s2.2 ->
+mc_acquire_ownership_76_s1.2 -> write_82_s3.2 -> slots_update_66_s1.2 ->
+slots_update_66_s2.2 -> write_82_s4.2 -> mc_release_ownership_78_s1.2 ->
+write_82_s5.2 -> loop_writer_92_s2.2 -> loop_writer_92_s1.2 -> write_82_s1.2
+-> write_82_s2.2 -> mc_acquire_ownership_76_s1.2>
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
+Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:120
-Total Transitions:338
-Time Used:0.0145671s
-Estimated Memory Used:10293.248KB
+Visited States:1155
+Total Transitions:2549
+Time Used:0.194901s
+Estimated Memory Used:15695.872KB
 
 

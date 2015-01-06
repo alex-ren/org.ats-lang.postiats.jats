@@ -37,6 +37,7 @@ public class ModelGenerater {
 	private String m_inputpath;
 	private String m_outputpath;
 	private String m_patpath;
+	private int m_engine; // search strategy
 	
 	private String m_dyn;
 	private String m_dyn3;
@@ -45,12 +46,15 @@ public class ModelGenerater {
     private String m_mycspinss;
     private String m_patsinss;
 	
+    public ModelGenerater(String inputpath, String outputpath, String patpath) {
+    	this(inputpath, outputpath, patpath, 0);
+    }
 	
-	
-	public ModelGenerater(String inputpath, String outputpath, String patpath) {
+	public ModelGenerater(String inputpath, String outputpath, String patpath, int engine) {
 		m_inputpath = inputpath;
         m_outputpath = outputpath;
         m_patpath = patpath;
+        m_engine = engine;
     	m_dyn = null;
     	m_dyn3 = null;
     	m_inss = null;
@@ -299,7 +303,9 @@ public class ModelGenerater {
             
             // Model checking.
             ProcessBuilder pbpat3 = new ProcessBuilder("mono", 
-            		m_patpath, "-csp", path_csp.getAbsolutePath(), 
+            		m_patpath, 
+            		"-engine", Integer.toString(m_engine),
+            		"-csp", path_csp.getAbsolutePath(), 
             		path_result.getAbsolutePath());
             System.out.println("cmd is " + getProcessCommand(pbpat3));
             pbpat3.redirectErrorStream(true);
