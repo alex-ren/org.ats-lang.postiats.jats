@@ -37,6 +37,10 @@ namespace PAT.Lib
             return new MyString("abc");
         }
 
+        public void mc_print(Object obj) {
+            System.Console.WriteLine(obj);
+        }
+
         public void showString(MyString str) {
             System.Console.WriteLine(str.m_str);
         }

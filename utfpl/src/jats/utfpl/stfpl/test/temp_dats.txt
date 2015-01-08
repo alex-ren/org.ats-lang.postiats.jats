@@ -1,0 +1,18 @@
+=======================================================
+Assertion: main() |= G sys_assertion
+********Verification Result********
+The Assertion (main() |= G sys_assertion) is VALID.
+
+********Verification Setting********
+Admissible Behavior: All
+Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:24
+Total Transitions:23
+Time Used:0.1006463s
+Estimated Memory Used:8605.696KB
+
+

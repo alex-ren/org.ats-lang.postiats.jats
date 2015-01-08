@@ -56,7 +56,7 @@ namespace PAT.Lib
 
         public static int div(int x, int y)
         {
-            return x * y;
+            return x / y;
         }
 
         public static bool gt(int x, int y)

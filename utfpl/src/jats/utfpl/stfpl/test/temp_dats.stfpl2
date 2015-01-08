@@ -1,0 +1,33 @@
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+
+D2Cnone
+
+fun sum_63 = lamSta. lam (<P2Tann>(x_64:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    <D2Esym>(/) (<D2Esym>(*) (x_64, <D2Esym>(+) (x_64, 1)), 2):int:t@ype)
+
+fun sum2_65 = lamSta. lamMet. lam (<P2Tann>(x_66:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      if (<D2Esym>(>) (x_66, 0)) then
+        <D2Esym>(+) (x_66, sum2_65 (<D2Esym>(-) (x_66, 1)))
+      else
+        0:int:t@ype))
+
+val n_67 = 3
+
+val ret_68 = sum_63 (n_67)
+
+prval mc_ret_69 = sum2_65 (n_67)
+
+prval () = D2Ecst<mc_assert_2583:((bool) -<fun> void)> (<D2Esym>(=) (ret_68, mc_ret_69))
+
+prval () = D2Ecst<mc_print_2586:{a_3882_0:t@ype}(((a_3882_0:t@ype) -<fun> void))> (ret_68)
+
+prval () = D2Ecst<mc_print_2586:{a_3882_0:t@ype}(((a_3882_0:t@ype) -<fun> void))> (mc_ret_69)
+
+%{
+
+#assert main |= G sys_assertion;
+
+%}

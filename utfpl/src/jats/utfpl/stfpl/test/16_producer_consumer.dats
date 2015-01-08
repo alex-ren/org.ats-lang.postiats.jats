@@ -3,38 +3,36 @@
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
 staload "{$CONATSCONTRIB}/conats.sats"
 
-staload UN = "prelude/SATS/unsafe.sats"
-
 (* ************* ************* *)
 
 // Define linear buffer to prevent resource leak.
 absviewtype lin_buffer (a:t@ype)
 
-fun lin_buffer_create {a:t@ype} (
-  data: a): lin_buffer a = let
-  val ref = conats_atomref_create (data)
-  val lref = $UN.castvwtp0 {lin_buffer a} (ref)
+local
+  assume lin_buffer (a) = atomref (a)
 in
-  lref
+  fun lin_buffer_create {a:t@ype} (
+    data: a): lin_buffer a = let
+    val ref = conats_atomref_create (data)
+  in
+    ref
+  end
+  
+  fun lin_buffer_update {a:t@ype} (
+    lref: lin_buffer a, data: a): lin_buffer a = let
+    val () = conats_atomref_update (lref, data)
+  in
+    lref
+  end
+  
+  fun lin_buffer_get {a:t@ype} (
+    lref: lin_buffer a): (lin_buffer a, a) = let
+    val v = conats_atomref_get lref
+  in
+    (lref, v)
+  end
 end
 
-fun lin_buffer_update {a:t@ype} (
-  lref: lin_buffer a, data: a): lin_buffer a = let
-  val ref = $UN.castvwtp0 {atomref a} (lref)
-  val () = conats_atomref_update (ref, data)
-  val lref = $UN.castvwtp0 (ref)
-in
-  lref
-end
-
-fun lin_buffer_get {a:t@ype} (
-  lref: lin_buffer a): (lin_buffer a, a) = let
-  val ref = $UN.castvwtp0 {atomref a} (lref)
-  val v = conats_atomref_get ref
-  val lref = $UN.castvwtp0 (ref)
-in
-  (lref, v)
-end
 
 (* ************* ************* *)
 
@@ -117,7 +115,8 @@ fun consumer (x: int):<fun1> void = let
       val db = demo_buffer_takeout (db)
     in
       if isful then let
-//        val db = conats_shared_signal (s, db)
+        // Omitting the following would cause deadlock
+        // val db = conats_shared_signal (s, db)
       in db end
       else db
     end

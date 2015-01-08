@@ -67,7 +67,8 @@ fun conats_thread_create {a:t@ype} (tfun: thread_fun_t a, arg: a, tid: tid): voi
 
 // model checking related
 
-sortdef sid = int // id for state variable of model checking
+sortdef mc_sid = int // id for state variable of model checking
+sortdef sid = mc_sid
 
 absprop int_value_of (sid, int)
 
@@ -185,6 +186,11 @@ prfun mc_vlock_put {x,y: nat} {xi,yi: pos}
 //  , xi: int xi
 //  , yi: int yi
   ): void
+
+(* ************* ************** *)
+
+prfun mc_print {a:t@ype} (x: a): void
+
 
 (* ************* ************** *)
 
