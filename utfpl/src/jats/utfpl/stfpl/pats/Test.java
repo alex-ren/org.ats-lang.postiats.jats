@@ -40,7 +40,7 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/16_1_producer_consumer_m_1.dats"
 //        		"src/jats/utfpl/stfpl/test/16_2_producer_consumer_m_1_2cond.dats"
 //        		"src/jats/utfpl/stfpl/test/16_3_producer_consumer_m_m_signal.dats"
-        		"src/jats/utfpl/stfpl/test/16_4_producer_consumer_m_m_broadcast.dats"
+//        		"src/jats/utfpl/stfpl/test/16_4_producer_consumer_m_m_broadcast.dats"
 //				"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats",
 //        		"src/jats/utfpl/stfpl/test/17_1_mcset_mcget_calc.dats",
 //				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats",
@@ -52,6 +52,7 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/21_global_val.dats"
 //        		"src/jats/utfpl/stfpl/test/22_remove_proof.dats"
 //        		"src/jats/utfpl/stfpl/test/23_use_condition.dats"
+        		"src/jats/utfpl/stfpl/test/24_global_ghost_variable.dats"
 //        		"src/jats/utfpl/stfpl/test/temp.dats"
         		
         };
