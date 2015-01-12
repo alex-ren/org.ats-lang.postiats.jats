@@ -19,6 +19,9 @@ fun conats_shared_release {a: viewt@ype} {n:pos} (s: shared_t (a, n), ele: a): v
 fun conats_shared_signal {a: viewt@ype} (s: shared (a), ele: a): a
 fun conats_sharedn_signal {a: viewt@ype} {i,n:nat | i < n} (s: shared_t (a, n), i: int i, ele: a): a
 
+fun conats_shared_broadcast {a: viewt@ype} (s: shared (a), ele: a): a
+fun conats_sharedn_broadcast {a: viewt@ype} {i,n:nat | i < n} (s: shared_t (a, n), i: int i, ele: a): a
+
 fun conats_shared_condwait {a: viewt@ype} (s: shared (a), ele: a): a
 fun conats_sharedn_condwait {a: viewt@ype} {i,n:nat | i < n} (s: shared_t (a, n), i: int i, ele: a): a
 

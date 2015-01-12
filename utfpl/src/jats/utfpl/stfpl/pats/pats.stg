@@ -186,7 +186,13 @@ sys_cond_wait_impl(<sys_tid()>, c, m) = atomic{
   ;
 
 // ====================
-sys_cond_broadcast(<sys_tid()>) = sys_cond_broadcast_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
+
+conats_shared_broadcast(<sys_tid()>) = conats_shared_broadcast_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), 0);
+conats_sharedn_broadcast(<sys_tid()>) = conats_shared_broadcast_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0), <sys_gstack()>.frame_get(<sys_tid()>, 0, 1));
+
+
+conats_shared_broadcast_impl(<sys_tid()>, tup, index) = 
+    sys_cond_broadcast_impl(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, index + 2));
 
 sys_cond_broadcast_impl(<sys_tid()>, c) = atomic{if (cond_holder[c] > 0) {  // It's safe to use *atomic* here.
 

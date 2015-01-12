@@ -159,7 +159,13 @@ sys_cond_wait_impl(sys_tid, c, m) = atomic{
   ;
 
 // ====================
-sys_cond_broadcast(sys_tid) = sys_cond_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+conats_shared_broadcast(sys_tid) = conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+conats_sharedn_broadcast(sys_tid) = conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+
+conats_shared_broadcast_impl(sys_tid, tup, index) = 
+    sys_cond_broadcast_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
 
 sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {  // It's safe to use *atomic* here.
 
@@ -190,6 +196,7 @@ var s_91 = 0;
 var tid1_117 = 0;
 var tid2_118 = 0;
 var tid3_119 = 0;
+var tid4_120 = 0;
 
 lin_buffer_create_63(sys_tid) =
   lin_buffer_create_63_s1.sys_tid{  var ref_65 = atom_ref_manager.allocate(sys_gstack.frame_get(sys_tid, 0, 0));
@@ -299,7 +306,7 @@ demo_buffer_takeout_85(sys_tid) =
   ;
 
 insert_95(sys_tid) =
-  insert_95_s1.sys_tid{  var insert_clo41_id = sys_mylib_obj.createTuple2(8, sys_gstack.frame_get(sys_tid, 0, 1));
+  insert_95_s1.sys_tid{  var insert_clo42_id = sys_mylib_obj.createTuple2(8, sys_gstack.frame_get(sys_tid, 0, 1));
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
@@ -332,17 +339,17 @@ insert_95(sys_tid) =
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     demo_buffer_isnil_76(sys_tid);
-    insert_95_s7.sys_tid{  var temp50_id = sys_gstack.retopr_frame(sys_tid);
-    var db51_id = sys_mylib_obj.getTupleElement(temp50_id, 0);;
-    var isnil52_id = sys_mylib_obj.getTupleElement(temp50_id, 1);;
-    sys_gstack.frame_push(sys_tid, isnil52_id);
+    insert_95_s7.sys_tid{  var temp51_id = sys_gstack.retopr_frame(sys_tid);
+    var db52_id = sys_mylib_obj.getTupleElement(temp51_id, 0);;
+    var isnil53_id = sys_mylib_obj.getTupleElement(temp51_id, 1);;
+    sys_gstack.frame_push(sys_tid, isnil53_id);
     var __temp_list_args = sys_mylib_obj.list_nil ();
-    __temp_list_args = sys_mylib_obj.list_cons (db51_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (db52_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     demo_buffer_insert_80(sys_tid);
-    insert_95_s8.sys_tid{  var db53_id = sys_gstack.retopr_frame(sys_tid);
-    sys_gstack.frame_push(sys_tid, db53_id);
+    insert_95_s8.sys_tid{  var db54_id = sys_gstack.retopr_frame(sys_tid);
+    sys_gstack.frame_push(sys_tid, db54_id);
     } ->
     if (sys_gstack.frame_get_bool(sys_tid, 0, 4)) {
       insert_95_s9.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
@@ -351,7 +358,7 @@ insert_95(sys_tid) =
       __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 5), __temp_list_args);
       sys_gstack.reload_frame(sys_tid, __temp_list_args);
       } ->
-      conats_sharedn_signal(sys_tid)
+      conats_sharedn_broadcast(sys_tid)
     } else {
       insert_95_s11.sys_tid{  sys_gstack.frame_push(sys_tid, sys_gstack.frame_get(sys_tid, 0, 5));
       } ->
@@ -367,11 +374,11 @@ producer_92(sys_tid) =
   } ->
   conats_shared_acquire(sys_tid);
   producer_92_s2.sys_tid{  var db_94 = sys_gstack.retopr_frame(sys_tid);
-  var env43_id = sys_mylib_obj.createTuple(0);
-  var insert_closure44_id = sys_mylib_obj.createTuple2(8, env43_id);
+  var env44_id = sys_mylib_obj.createTuple(0);
+  var insert_closure45_id = sys_mylib_obj.createTuple2(8, env44_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (db_94, __temp_list_args);
-  __temp_list_args = sys_mylib_obj.list_cons (env43_id, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (env44_id, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   insert_95(sys_tid);
@@ -383,15 +390,12 @@ producer_92(sys_tid) =
   } ->
   conats_shared_release(sys_tid);
   producer_92_s4.sys_tid{  sys_gstack.delete_frame(sys_tid);
-  var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
-  sys_gstack.reload_frame(sys_tid, __temp_list_args);
   } ->
-  producer_92(sys_tid)
+  Skip
   ;
 
 takeout_107(sys_tid) =
-  takeout_107_s1.sys_tid{  var takeout_clo46_id = sys_mylib_obj.createTuple2(10, sys_gstack.frame_get(sys_tid, 0, 1));
+  takeout_107_s1.sys_tid{  var takeout_clo47_id = sys_mylib_obj.createTuple2(10, sys_gstack.frame_get(sys_tid, 0, 1));
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
@@ -424,17 +428,17 @@ takeout_107(sys_tid) =
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     demo_buffer_isful_72(sys_tid);
-    takeout_107_s7.sys_tid{  var temp56_id = sys_gstack.retopr_frame(sys_tid);
-    var db57_id = sys_mylib_obj.getTupleElement(temp56_id, 0);;
-    var isful58_id = sys_mylib_obj.getTupleElement(temp56_id, 1);;
-    sys_gstack.frame_push(sys_tid, isful58_id);
+    takeout_107_s7.sys_tid{  var temp57_id = sys_gstack.retopr_frame(sys_tid);
+    var db58_id = sys_mylib_obj.getTupleElement(temp57_id, 0);;
+    var isful59_id = sys_mylib_obj.getTupleElement(temp57_id, 1);;
+    sys_gstack.frame_push(sys_tid, isful59_id);
     var __temp_list_args = sys_mylib_obj.list_nil ();
-    __temp_list_args = sys_mylib_obj.list_cons (db57_id, __temp_list_args);
+    __temp_list_args = sys_mylib_obj.list_cons (db58_id, __temp_list_args);
     sys_gstack.add_frame(sys_tid, __temp_list_args);
     } ->
     demo_buffer_takeout_85(sys_tid);
-    takeout_107_s8.sys_tid{  var db59_id = sys_gstack.retopr_frame(sys_tid);
-    sys_gstack.frame_push(sys_tid, db59_id);
+    takeout_107_s8.sys_tid{  var db60_id = sys_gstack.retopr_frame(sys_tid);
+    sys_gstack.frame_push(sys_tid, db60_id);
     } ->
     if (sys_gstack.frame_get_bool(sys_tid, 0, 4)) {
       takeout_107_s9.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
@@ -443,9 +447,9 @@ takeout_107(sys_tid) =
       __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 5), __temp_list_args);
       sys_gstack.add_frame(sys_tid, __temp_list_args);
       } ->
-      conats_sharedn_signal(sys_tid);
-      takeout_107_s10.sys_tid{  var db60_id = sys_gstack.retopr_frame(sys_tid);
-      sys_gstack.frame_push(sys_tid, db60_id);
+      conats_sharedn_broadcast(sys_tid);
+      takeout_107_s10.sys_tid{  var db61_id = sys_gstack.retopr_frame(sys_tid);
+      sys_gstack.frame_push(sys_tid, db61_id);
       } ->
       Skip
     } else {
@@ -463,11 +467,11 @@ consumer_104(sys_tid) =
   } ->
   conats_shared_acquire(sys_tid);
   consumer_104_s2.sys_tid{  var db_106 = sys_gstack.retopr_frame(sys_tid);
-  var env48_id = sys_mylib_obj.createTuple(0);
-  var takeout_closure49_id = sys_mylib_obj.createTuple2(10, env48_id);
+  var env49_id = sys_mylib_obj.createTuple(0);
+  var takeout_closure50_id = sys_mylib_obj.createTuple2(10, env49_id);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (db_106, __temp_list_args);
-  __temp_list_args = sys_mylib_obj.list_cons (env48_id, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (env49_id, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   takeout_107(sys_tid);
@@ -479,11 +483,8 @@ consumer_104(sys_tid) =
   } ->
   conats_shared_release(sys_tid);
   consumer_104_s4.sys_tid{  sys_gstack.delete_frame(sys_tid);
-  var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
-  sys_gstack.reload_frame(sys_tid, __temp_list_args);
   } ->
-  consumer_104(sys_tid)
+  Skip
   ;
 
 // =====================
@@ -492,12 +493,12 @@ main_s(sys_tid) =
   main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main63_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  main64_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (0, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   lin_buffer_create_63(sys_tid);
-  main63_id_s2.sys_tid{  db_90 = sys_gstack.retopr_frame(sys_tid);
+  main64_id_s2.sys_tid{  db_90 = sys_gstack.retopr_frame(sys_tid);
   var bound = 2 + 2;
   s_91 = sys_mylib_obj.createTuple(bound);
   sys_mylib_obj.setTupleElement(s_91, 0, db_90);  // value
@@ -510,10 +511,12 @@ main_s(sys_tid) =
   tid1_117 = sys_tid_allocator.allocate();
   tid2_118 = sys_tid_allocator.allocate();
   tid3_119 = sys_tid_allocator.allocate();
+  tid4_120 = sys_tid_allocator.allocate();
   } ->
   sys_thread_create(tid1_117, 9, 0);
-  sys_thread_create(tid2_118, 11, 0);
-  sys_thread_create(tid3_119, 11, 0); 
+  sys_thread_create(tid2_118, 9, 0);
+  sys_thread_create(tid3_119, 11, 0);
+  sys_thread_create(tid4_120, 11, 0); 
   proc_thread_finalize(sys_tid);
 
 main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;

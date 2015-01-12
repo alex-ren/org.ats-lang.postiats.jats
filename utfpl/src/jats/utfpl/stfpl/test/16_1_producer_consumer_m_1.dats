@@ -43,7 +43,7 @@ viewtypedef demo_buffer = lin_buffer int
 fun demo_buffer_isful (buf: demo_buffer): (demo_buffer, bool) = let
   val (buf, len) = lin_buffer_get (buf)
 in
-  (buf, len > 0)  // Assume the buffer can only hold 1 elements.
+  (buf, len > 1)  // Assume the buffer can only hold 2 elements.
 end
 
 fun demo_buffer_isnil (buf: demo_buffer): (demo_buffer, bool) = let

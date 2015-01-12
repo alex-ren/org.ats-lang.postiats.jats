@@ -1,4 +1,4 @@
-// One producer and two consumer, two condition, no deadlock.
+// two producer and two consumer, two condition variables, using signal
 
 #define CONATSCONTRIB
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
@@ -100,7 +100,7 @@ fun producer (x: int):<fun1> void = let
   val db = insert (db)
   val () = conats_shared_release (s, db); 
 in
-  producer (x)
+  ()
 end
 
 // Keep removing elements from buffer.
@@ -129,7 +129,7 @@ fun consumer (x: int):<fun1> void = let
   val db = takeout (db)
   val () = conats_shared_release (s, db); 
 in
-  consumer (x)
+  ()
 end
 
 // Construct the model of whole system.
@@ -137,11 +137,12 @@ end
 val tid1 = conats_tid_allocate ()
 val tid2 = conats_tid_allocate ()
 val tid3 = conats_tid_allocate ()
-
+val tid4 = conats_tid_allocate ()
 
 val () = conats_thread_create(producer, 0, tid1)
-val () = conats_thread_create(consumer, 0, tid2)
+val () = conats_thread_create(producer, 0, tid2)
 val () = conats_thread_create(consumer, 0, tid3)
+val () = conats_thread_create(consumer, 0, tid4)
 
 // List the properties for model checking.
 
@@ -151,3 +152,5 @@ val () = conats_thread_create(consumer, 0, tid3)
 // #assert main |= G sys_assertion;
 
 %}
+
+

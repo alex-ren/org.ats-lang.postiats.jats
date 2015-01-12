@@ -51,6 +51,8 @@ public class MCSIdFactory {
 	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedRelease) ||
 	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedSignal) ||
 	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharednSignal) ||
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedBroadcast) ||
+	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharednBroadcast) ||
 	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharedCondwait) ||
 	    			    sid.toStringNoStamp().equals(CCompUtils.cConATSSharednCondwait)
                     ) {

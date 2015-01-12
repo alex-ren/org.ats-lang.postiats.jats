@@ -1,6 +1,6 @@
 D2Cnone
 
-staload "/tmp/conats38202040326083/conats.sats"
+staload "/tmp/conats2155997631375244/conats.sats"
 
 "D2Cstacsts" lin_buffer_736: (t@ype) -\> viewtype
 
@@ -36,7 +36,7 @@ fun demo_buffer_isful_72 = lam (<P2Tann>(buf_73:lin_buffer_736_0(int):viewtype))
     let
       val <P2Trec>(<LABP2ATnorm>(buf_74), <LABP2ATnorm>(len_75)) = lin_buffer_get_69 (buf_73)
     in
-      ( | buf_74, <D2Esym>(>) (len_75, 0))
+      ( | buf_74, <D2Esym>(>) (len_75, 1))
     end:@{0 = lin_buffer_736_0(int), 1 = bool}:viewt0ype)
 
 fun demo_buffer_isnil_76 = lam (<P2Tann>(buf_77:lin_buffer_736_0(int):viewtype)) <fun> = 

@@ -227,7 +227,7 @@ demo_buffer_isful_72(sys_tid) =
   demo_buffer_isful_72_s2.sys_tid{  var temp7_id = sys_gstack.retopr_frame(sys_tid);
   var buf_74 = sys_mylib_obj.getTupleElement(temp7_id, 0);;
   var len_75 = sys_mylib_obj.getTupleElement(temp7_id, 1);;
-  var temp8_id = call(gt, len_75, 0);
+  var temp8_id = call(gt, len_75, 1);
   var ret6_id = sys_mylib_obj.createTuple(2);
   sys_mylib_obj.setTupleElement(ret6_id, 0, buf_74);
   sys_mylib_obj.setTupleElement(ret6_id, 1, temp8_id);
