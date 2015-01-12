@@ -38,8 +38,8 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
             Log.log4j.error("D2Eint not supported");
             throw new Error("D2Eint not supported");
         } else if (name.equals("D2Eintrep")) {
-            Log.log4j.error("D2Eintrep not supported");
-            throw new Error("D2Eintrep not supported");
+        	// treat D2Eintrep as D2Ei0nt.
+        	return context.deserialize(je2, D2Ei0nt.class);
         } else if (name.equals("D2Ei0nt")) {
             return context.deserialize(je2, D2Ei0nt.class);
         } else if (name.equals("D2Ec0har")) {
