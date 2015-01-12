@@ -84,7 +84,7 @@ var sch_args;
 
 <scheduler_body>;
 
-Scheduler() = (atomic{sys_ch_sch?<sys_tid()>.fn.args -> 
+Scheduler() = (atomic{sys_ch_sch?<sys_tid()>.fn.args ->  // It's safe to use *atomic* here.
                       {sys_thread_num++;
                        sch_sys_tid = sys_tid;
                        sch_fn = fn;
@@ -98,7 +98,7 @@ Scheduler() = (atomic{sys_ch_sch?<sys_tid()>.fn.args ->
   ;
 
 proc_thread_finalize(<sys_tid()>) = 
-  thread_finalize{
+  thread_finalize.<sys_tid()>{
     <sys_gstack()>.delete_frame(<sys_tid()>); 
     sys_thread_num--;
     <sys_tid_allocator()>.release(<sys_tid()>);
@@ -115,11 +115,11 @@ var\<Allocator> <sys_mutex_manager()> = new Allocator();
 // ====================
 conats_mutex_acquire(<sys_tid()>) = sys_mutex_lock_impl (<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
-sys_mutex_lock_impl(<sys_tid()>, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
+sys_mutex_lock_impl(<sys_tid()>, m) = [mutex[m] == 0] mlock.<sys_tid()>{mutex[m] = 1} -> Skip;
 // ====================
 conats_mutex_release(<sys_tid()>) = sys_mutex_unlock_impl (<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
-sys_mutex_unlock_impl(<sys_tid()>, m) = sys_munlock{mutex[m] = 0} -> Skip;
+sys_mutex_unlock_impl(<sys_tid()>, m) = sys_munlock.<sys_tid()>{mutex[m] = 0} -> Skip;
 // ======================
 
 var cond_holder[10];  // 10 condition
@@ -136,10 +136,11 @@ conats_shared_acquire(<sys_tid()>) = conats_shared_acquire_impl(<sys_tid()>, <sy
 //  a = sys_mylib_obj.getTupleElement(tup, 0);
 //  mutex = sys_mylib_obj.getTupleElement(tup, 1);
 //  cond = sys_mylib_obj.getTupleElement(tup, 2);
-conats_shared_acquire_impl(<sys_tid()>, tup) = atomic{
-    {<sys_gstack()>.frame_push(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, 0))} ->
+conats_shared_acquire_impl(<sys_tid()>, tup) = // atomic{ // Cannot use atomic here. Otherwise it would cause higher priority.
+    shared_acq.<sys_tid()>{<sys_gstack()>.frame_push(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, 0))} ->
     sys_mutex_lock_impl(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, 1))
-    };
+    // }  // end of atomic
+    ;
 // ====================
 conats_shared_release(<sys_tid()>) = conats_shared_release_impl(<sys_tid()>, 
                                           <sys_gstack()>.frame_get(<sys_tid()>, 0, 0),
@@ -156,9 +157,9 @@ conats_shared_signal_impl(<sys_tid()>, tup, index) =
     sys_cond_signal_impl(<sys_tid()>, sys_mylib_obj.getTupleElement(tup, index + 2));
     
 
-sys_cond_signal_impl(<sys_tid()>, c) = atomic {if (cond_holder[c] > 0) {
+sys_cond_signal_impl(<sys_tid()>, c) = atomic {if (cond_holder[c] > 0) {  // I think it's safe to keep *atomic* here.
 
-          csub{cond_holder[c]--;} ->
+          csub.<sys_tid()>{cond_holder[c]--;} ->
 
           cond_chan[c]!1
 
@@ -178,16 +179,16 @@ conats_shared_condwait_impl(<sys_tid()>, tup, index) = sys_cond_wait_impl(<sys_t
                                   sys_mylib_obj.getTupleElement(tup, 1));  // mutex
 
 sys_cond_wait_impl(<sys_tid()>, c, m) = atomic{
-  cadd{cond_holder[c]++;} -> 
+  cadd.<sys_tid()>{cond_holder[c]++;} -> 
   sys_mutex_unlock_impl(<sys_tid()>, m); 
-  cond_chan[c]?_ -> 
-  sys_mutex_lock_impl(<sys_tid()>, m)
-  };
+  cond_chan[c]?_ -> Skip }; 
+  sys_mutex_lock_impl(<sys_tid()>, m)  // Cannot use atomic here. Otherwise it would cause current thread has higher priority to lock.
+  ;
 
 // ====================
 sys_cond_broadcast(<sys_tid()>) = sys_cond_broadcast_impl(<sys_tid()>, <sys_gstack()>.frame_get(<sys_tid()>, 0, 0));
 
-sys_cond_broadcast_impl(<sys_tid()>, c) = atomic{if (cond_holder[c] > 0) {
+sys_cond_broadcast_impl(<sys_tid()>, c) = atomic{if (cond_holder[c] > 0) {  // It's safe to use *atomic* here.
 
           sys_signaln(c, cond_holder[c]); csub{cond_holder[c]=0;} -> Skip
 
@@ -218,7 +219,7 @@ var <sys_assert_var()> = true;
 // =====================
 
 main_s(<sys_tid()>) = 
-  main_init{var <local_temp_list()> = <sys_mylib()>.list_nil ();
+  main_init.<sys_tid()>{var <local_temp_list()> = <sys_mylib()>.list_nil ();
             <sys_gstack()>.add_frame(0, <local_temp_list()>); 
             } ->
   <main_proc_body>; 
@@ -504,8 +505,8 @@ var <holder> = <gv>;
 >>
 
 PProcGrpMCAtomicStart_st(proc) ::= <<
-ifa (<sys_glb()> == 0) {atomic { {<sys_glb()> = 1;} ->
-<proc>
+ifa (<sys_glb()> == 0) {atomic { {<sys_glb()> = 1;} ->  // I think that it's safe to have atomic here, since
+<proc>                                                  // there's always gonna be a non-atomic step and non-effective step before the atomic.
 >>
 
 PProcGrpMCAtomicEnd_st(proc) ::= <<

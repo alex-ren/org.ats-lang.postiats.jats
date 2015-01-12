@@ -1,0 +1,58 @@
+=======================================================
+Assertion: main() deadlockfree
+********Verification Result********
+The Assertion (main() deadlockfree) is NOT valid.
+The following trace leads to a deadlock situation.
+<init -> main_init.0 -> main43_id_s1.0 -> lin_buffer_create_63_s1.0 -> main43_id_s2.0 -> main43_id_s3.0 -> foo1_92_s1.0 -> shared_acq.0 -> mlock.0 -> foo1_92_s2.0 -> sys_ch_sch.1.9.0 -> τ -> foo1_92_s3.0 -> lin_buffer_update_66_s1.0 -> lin_buffer_update_66_s2.0 -> foo1_92_s4.0 -> cadd.0 -> sys_munlock.0 -> thread_init -> [if((9 == 9))] -> foo2_93_s1.1 -> shared_acq.1 -> mlock.1 -> foo2_93_s2.1 -> sys_ch_sch.2.10.0 -> τ -> foo2_93_s3.1 -> lin_buffer_update_66_s1.1 -> lin_buffer_update_66_s2.1 -> foo2_93_s4.1 -> cadd.1 -> sys_munlock.1 -> thread_init -> [if!((10 == 9))] -> [if((10 == 10))] -> foo3_94_s1.2 -> shared_acq.2 -> mlock.2 -> foo3_94_s2.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> foo3_94_s3.2 -> foo3_94_s4.2 -> [if((cond_holder[0] > 0))] -> csub.2 -> cond_chan[0].1 -> foo3_94_s5.2 -> sys_munlock.2 -> mlock.1 -> foo2_93_s5.1 -> foo2_93_s6.1 -> sys_munlock.1 -> foo2_93_s7.1 -> thread_finalize.1 -> foo3_94_s6.2 -> thread_finalize.2>
+
+********Verification Setting********
+Admissible Behavior: All
+Search Engine: Shortest Witness Trace using Breadth First Search
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:139
+Total Transitions:187
+Time Used:0.0352089s
+Estimated Memory Used:10047.488KB
+
+
+=======================================================
+Assertion: main() |= G sys_assertion
+********Verification Result********
+The Assertion (main() |= G sys_assertion) is VALID.
+
+********Verification Setting********
+Admissible Behavior: All
+Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:190
+Total Transitions:261
+Time Used:0.0185197s
+Estimated Memory Used:9297.92KB
+
+
+=======================================================
+Assertion: main() reaches target
+********Verification Result********
+The Assertion (main() reaches target) is VALID.
+The following trace leads to a state where the condition is satisfied.
+<init -> main_init.0 -> main43_id_s1.0 -> lin_buffer_create_63_s1.0 -> main43_id_s2.0 -> main43_id_s3.0 -> foo1_92_s1.0 -> shared_acq.0 -> mlock.0 -> foo1_92_s2.0 -> sys_ch_sch.1.9.0 -> τ -> foo1_92_s3.0 -> lin_buffer_update_66_s1.0 -> lin_buffer_update_66_s2.0 -> foo1_92_s4.0 -> cadd.0 -> sys_munlock.0 -> thread_init -> [if((9 == 9))] -> foo2_93_s1.1 -> shared_acq.1 -> mlock.1 -> foo2_93_s2.1 -> sys_ch_sch.2.10.0 -> τ -> foo2_93_s3.1 -> lin_buffer_update_66_s1.1 -> lin_buffer_update_66_s2.1 -> foo2_93_s4.1 -> cadd.1 -> sys_munlock.1 -> thread_init -> [if!((10 == 9))] -> [if((10 == 10))] -> foo3_94_s1.2 -> shared_acq.2 -> mlock.2 -> foo3_94_s2.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> foo3_94_s3.2 -> foo3_94_s4.2 -> [if((cond_holder[0] > 0))] -> csub.2 -> cond_chan[0].1 -> foo3_94_s5.2 -> sys_munlock.2 -> mlock.0 -> foo1_92_s5.0>
+
+********Verification Setting********
+Admissible Behavior: All
+Search Engine: Shortest Witness Trace using Breadth First Search
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:110
+Total Transitions:138
+Time Used:0.0109053s
+Estimated Memory Used:9195.52KB
+
+

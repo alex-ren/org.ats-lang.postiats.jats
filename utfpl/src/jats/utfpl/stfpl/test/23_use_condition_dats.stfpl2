@@ -1,0 +1,128 @@
+D2Cnone
+
+staload "/tmp/conats29671988151811/conats.sats"
+
+"D2Cstacsts" mid_736: int
+
+"D2Cdcstdecs" mc_m_2593:int
+
+"D2Cstacsts" lin_buffer_737: (t@ype) -\> viewtype
+
+local
+in
+  fun lin_buffer_create_63 = lamSta. lam (<P2Tann>(data_64:a_3893_0:t@ype:t@ype)) <fun> = 
+    <D2EannSeff>(
+      let
+        val ref_65 = D2Ecst<conats_atomref_create_2571:{a_3853_0:t@ype}(((a_3853_0:t@ype) -<fun> atomref_726_0(a_3853_0:t@ype)))> (data_64)
+      in
+        ref_65
+      end:lin_buffer_737_0(a_3893_0:t@ype):viewtype)
+  fun lin_buffer_update_66 = lamSta. lam (<P2Tann>(lref_67:lin_buffer_737_0(a_3894_0:t@ype):viewtype), <P2Tann>(data_68:a_3894_0:t@ype:t@ype)) <fun> = 
+    <D2EannSeff>(
+      let
+        val () = D2Ecst<conats_atomref_update_2572:{a_3854_0:t@ype}(((atomref_726_0(a_3854_0:t@ype), a_3854_0:t@ype) -<fun> void))> (lref_67, data_68)
+      in
+        lref_67
+      end:lin_buffer_737_0(a_3894_0:t@ype):viewtype)
+  fun lin_buffer_get_69 = lamSta. lam (<P2Tann>(lref_70:lin_buffer_737_0(a_3895_0:t@ype):viewtype)) <fun> = 
+    <D2EannSeff>(
+      let
+        val v_71 = D2Ecst<conats_atomref_get_2573:{a_3855_0:t@ype}(((atomref_726_0(a_3855_0:t@ype)) -<fun> a_3855_0:t@ype))> (lref_70)
+      in
+        ( | lref_70, v_71)
+      end:@{0 = lin_buffer_737_0(a_3895_0:t@ype), 1 = a_3895_0:t@ype}:viewt0ype)
+end
+
+D2Cnone
+
+fun demo_buffer_isful_72 = lam (<P2Tann>(buf_73:lin_buffer_737_0(int):viewtype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val <P2Trec>(<LABP2ATnorm>(buf_74), <LABP2ATnorm>(len_75)) = lin_buffer_get_69 (buf_73)
+    in
+      ( | buf_74, <D2Esym>(>) (len_75, 0))
+    end:@{0 = lin_buffer_737_0(int), 1 = bool}:viewt0ype)
+
+fun demo_buffer_isnil_76 = lam (<P2Tann>(buf_77:lin_buffer_737_0(int):viewtype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val <P2Trec>(<LABP2ATnorm>(buf_78), <LABP2ATnorm>(len_79)) = lin_buffer_get_69 (buf_77)
+    in
+      ( | buf_78, <D2Esym>(<=) (len_79, 0))
+    end:@{0 = lin_buffer_737_0(int), 1 = bool}:viewt0ype)
+
+fun demo_buffer_insert_80 = lam (<P2Tann>(buf_81:lin_buffer_737_0(int):viewtype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val <P2Trec>(<LABP2ATnorm>(buf_82), <LABP2ATnorm>(len_83)) = lin_buffer_get_69 (buf_81)
+      val buf_84 = lin_buffer_update_66 (buf_82, <D2Esym>(+) (len_83, 1))
+    in
+      buf_84
+    end:lin_buffer_737_0(int):viewtype)
+
+fun demo_buffer_takeout_85 = lam (<P2Tann>(buf_86:lin_buffer_737_0(int):viewtype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val <P2Trec>(<LABP2ATnorm>(buf_87), <LABP2ATnorm>(len_88)) = lin_buffer_get_69 (buf_86)
+      val buf_89 = lin_buffer_update_66 (buf_87, <D2Esym>(-) (len_88, 1))
+    in
+      buf_89
+    end:lin_buffer_737_0(int):viewtype)
+
+val <P2Tann>(db_90:lin_buffer_737_0(int):viewtype) = lin_buffer_create_63 (0)
+
+val s_91 = D2Ecst<conats_shared_create_2560:{a_3837_0:viewt0ype}(((a_3837_0:viewt0ype) -<fun> shared_t_722_0(a_3837_0:viewt0ype)))> (db_90)
+
+fun foo1_92 = lam (<P2Tann>(x_95:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val db_96 = D2Ecst<conats_shared_acquire_2562:{a_3840_0:viewt0ype}(((shared_t_722_0(a_3840_0:viewt0ype)) -<fun> a_3840_0:viewt0ype))> (s_91)
+        val tid1_97 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
+        val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0()) -<fun> void))> (foo2_93, 0, tid1_97)
+        val db_98 = lin_buffer_update_66 (db_96, 1)
+        val db_99 = D2Ecst<conats_shared_condwait_2566:{a_3848_0:viewt0ype}(((shared_t_722_0(a_3848_0:viewt0ype), a_3848_0:viewt0ype) -<fun> a_3848_0:viewt0ype))> (s_91, db_98)
+        prval () = D2Ecst<mc_set_int_2579:((int, int) -<fun> void)> (D2Ecst<mc_m_2593:int>, 1)
+        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_91, db_99)
+      in
+        ()
+      end:void:t@ype))
+and foo2_93 = lam (<P2Tann>(x_100:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val db_101 = D2Ecst<conats_shared_acquire_2562:{a_3840_0:viewt0ype}(((shared_t_722_0(a_3840_0:viewt0ype)) -<fun> a_3840_0:viewt0ype))> (s_91)
+        val tid2_102 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
+        val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0()) -<fun> void))> (foo3_94, 0, tid2_102)
+        val db_103 = lin_buffer_update_66 (db_101, 2)
+        val db_104 = D2Ecst<conats_shared_condwait_2566:{a_3848_0:viewt0ype}(((shared_t_722_0(a_3848_0:viewt0ype), a_3848_0:viewt0ype) -<fun> a_3848_0:viewt0ype))> (s_91, db_103)
+        prval () = D2Ecst<mc_set_int_2579:((int, int) -<fun> void)> (D2Ecst<mc_m_2593:int>, 2)
+        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_91, db_104)
+      in
+        ()
+      end:void:t@ype))
+and foo3_94 = lam (<P2Tann>(x_105:int:t@ype)) <fun> = 
+  <D2EannFunclo><fun>(
+    <D2EannSeff>(
+      let
+        val db_106 = D2Ecst<conats_shared_acquire_2562:{a_3840_0:viewt0ype}(((shared_t_722_0(a_3840_0:viewt0ype)) -<fun> a_3840_0:viewt0ype))> (s_91)
+        val <P2Trec>(<LABP2ATnorm>(db_107), <LABP2ATnorm>(len_108)) = lin_buffer_get_69 (db_106)
+        prval () = D2Ecst<mc_assert_2583:((bool) -<fun> void)> (<D2Esym>(=) (len_108, 2))
+        val db_109 = D2Ecst<conats_shared_signal_2564:{a_3844_0:viewt0ype}(((shared_t_722_0(a_3844_0:viewt0ype), a_3844_0:viewt0ype) -<fun> a_3844_0:viewt0ype))> (s_91, db_107)
+        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_91, db_109)
+      in
+        ()
+      end:void:t@ype))
+
+prval () = D2Ecst<mc_set_int_2579:((int, int) -<fun> void)> (D2Ecst<mc_m_2593:int>, 0)
+
+val () = foo1_92 (0)
+
+%{
+
+#define target mc_m == 1;
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+#assert main reaches target;
+%}

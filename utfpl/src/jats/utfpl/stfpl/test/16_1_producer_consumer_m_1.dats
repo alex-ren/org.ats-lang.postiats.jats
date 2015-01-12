@@ -1,4 +1,4 @@
-// One producer and one consumer, everything is fine.
+// One producer and two consumer, one condition, deadlock.
 
 #define CONATSCONTRIB
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
@@ -133,9 +133,11 @@ end
 
 val tid1 = conats_tid_allocate ()
 val tid2 = conats_tid_allocate ()
+val tid3 = conats_tid_allocate ()
 
 val () = conats_thread_create(producer, 0, tid1)
 val () = conats_thread_create(consumer, 0, tid2)
+val () = conats_thread_create(consumer, 0, tid3)
 
 // List the properties for model checking.
 
@@ -145,7 +147,3 @@ val () = conats_thread_create(consumer, 0, tid2)
 // #assert main |= G sys_assertion;
 
 %}
-
-
-
-

@@ -1,10 +1,12 @@
-// One producer and one consumer, everything is fine.
 
 #define CONATSCONTRIB
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
 staload "{$CONATSCONTRIB}/conats.sats"
 
 (* ************* ************* *)
+stacst mid: sid
+
+extern val mc_m: mc_gv_t mid
 
 // Define linear buffer to prevent resource leak.
 absviewtype lin_buffer (a:t@ype)
@@ -74,78 +76,51 @@ val db: demo_buffer = lin_buffer_create (0)
 // Turn a linear buffer into a shared buffer.
 val s = conats_shared_create {demo_buffer}(db)
 
-// Keep adding elements into buffer.
-fun producer (x: int):<fun1> void = let
-  val db = conats_shared_acquire (s)
 
-  fun insert (db: demo_buffer):<cloref1> demo_buffer = let
-    val (db, isful) = demo_buffer_isful (db)
-  in
-    if isful then let
-      val db = conats_shared_condwait (s, db)
-    in
-      insert (db)
-    end else let 
-      val (db, isnil) = demo_buffer_isnil (db)
-      val db = demo_buffer_insert (db)
-    in
-      if isnil then conats_shared_signal (s, db)
-      else db
-    end
-  end
-  
-  val db = insert (db)
+
+
+fun foo1 (x: int):<fun1> void = let
+  val db = conats_shared_acquire (s)
+  val tid1 = conats_tid_allocate ()
+  val () = conats_thread_create(foo2, 0, tid1)
+  val db = lin_buffer_update (db, 1)
+  val db = conats_shared_condwait (s, db)
+  prval () = mc_set_int (mc_m, 1)
   val () = conats_shared_release (s, db); 
 in
-  producer (x)
 end
 
-// Keep removing elements from buffer.
-fun consumer (x: int):<fun1> void = let
+and foo2 (x: int):<fun1> void = let
   val db = conats_shared_acquire (s)
-
-  fun takeout (db: demo_buffer):<cloref1> demo_buffer = let
-    val (db, isnil) = demo_buffer_isnil (db)
-  in
-    if isnil then let
-      val db = conats_shared_condwait (s, db)
-    in
-      takeout (db)
-    end else let
-      val (db, isful) = demo_buffer_isful (db)
-      val db = demo_buffer_takeout (db)
-    in
-      if isful then let
-        // Omitting the following would cause deadlock
-        val db = conats_shared_signal (s, db)
-      in db end
-      else db
-    end
-  end
-
-  val db = takeout (db)
+  val tid2 = conats_tid_allocate ()
+  val () = conats_thread_create(foo3, 0, tid2)
+  val db = lin_buffer_update (db, 2)
+  val db = conats_shared_condwait (s, db)
+  prval () = mc_set_int (mc_m, 2)
   val () = conats_shared_release (s, db); 
 in
-  consumer (x)
+end
+
+and foo3 (x: int):<fun1> void = let
+  val db = conats_shared_acquire (s)
+  val (db, len) = lin_buffer_get (db)
+  prval () = mc_assert (len = 2)
+  val db = conats_shared_signal (s, db)
+  val () = conats_shared_release (s, db);
+in
 end
 
 // Construct the model of whole system.
-
-val tid1 = conats_tid_allocate ()
-val tid2 = conats_tid_allocate ()
-
-val () = conats_thread_create(producer, 0, tid1)
-val () = conats_thread_create(consumer, 0, tid2)
+prval () = mc_set_int (mc_m, 0)
+val () = foo1 (0)
 
 // List the properties for model checking.
 
 %{$
+
+#define target mc_m == 1;
 #assert main deadlockfree;
 
-// #assert main |= G sys_assertion;
-
+#assert main |= G sys_assertion;
+#assert main reaches target;
 %}
-
-
-
-
