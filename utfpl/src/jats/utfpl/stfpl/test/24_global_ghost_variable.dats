@@ -7,7 +7,6 @@ staload "./conats.sats"
 stacst sid_init: sid
 extern val mc_init: mc_gv_t sid_init
 
-
 fun exec (x: int): void = let
 
   fun foo {init: pos}(pf: int_value_of (sid_init, init) | x: int): int = x
@@ -15,7 +14,7 @@ fun exec (x: int): void = let
   prval (pf | init) = mc_get_int (mc_init)
   
   // mc_assert cannot be omitted though it is ghost code.
-  // prval () = mc_assert (init > 0)
+  prval () = mc_assert (init > 0)
   
   val _ = foo (pf | x)
 in
