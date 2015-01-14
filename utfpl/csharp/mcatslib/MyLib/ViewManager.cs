@@ -68,27 +68,58 @@ namespace PAT.Lib
         }
     }
 
+    public class RecComp : IComparer<Rectangle>
+    {
+        // Compares by Height, Length, and Width. 
+        public int Compare(Rectangle x, Rectangle y)
+        {
+            if (x.Left.CompareTo(y.Left) != 0)
+            {
+                return x.Left.CompareTo(y.Left);
+            }
+            else if (x.Top.CompareTo(y.Top) != 0)
+            {
+                return x.Top.CompareTo(y.Top);
+            }
+            else if (x.Width.CompareTo(y.Width) != 0)
+            {
+                return x.Width.CompareTo(y.Width);
+            }
+            else if (x.Height.CompareTo(y.Height) != 0)
+            {
+                return x.Height.CompareTo(y.Height);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
     public class ViewManager : ExpressionValue
     {
-        private List<Rectangle> m_views;
+        private SortedList<Rectangle, int> m_views;
 
         public ViewManager() {
-            m_views = new List<Rectangle>();
+            m_views = new SortedList<Rectangle, int>(new RecComp());
         }
 
-        public ViewManager(List<Rectangle> views) {
+        public ViewManager(SortedList<Rectangle, int> views) {
             m_views = views;
         }
 
         public Maybe get(int x, int y, int width, int height) {
             Rectangle rec = new Rectangle(x, y, width, height);
-            foreach (Rectangle t in m_views) {
-                if (rec.IntersectsWith(t)) {
+            IEnumerator<KeyValuePair<Rectangle, int>> iter = m_views.GetEnumerator();
+
+            foreach (KeyValuePair<Rectangle, int> p in m_views) {
+
+                if (rec.IntersectsWith(p.Key)) {
                     return Maybe.none();
                 } 
             }
 
-            m_views.Add(rec);
+            m_views.Add(rec, 0);
 
             return Maybe.some(new MyRec(rec));
         }
@@ -115,9 +146,9 @@ namespace PAT.Lib
          {
  
              String returnString = "";
-             foreach (Rectangle t in m_views)
+             foreach (KeyValuePair<MyRec, int> p in m_views)
              {
-                 returnString += t.ToString() + ", ";
+                 returnString += p.Key.ToString() + "." + p.Value + ",";
              }
  
              if (returnString.Length > 0)
@@ -136,7 +167,7 @@ namespace PAT.Lib
          /// <returns></returns>
          public override ExpressionValue GetClone()
          {
-             List<Rectangle> nlst = new List<Rectangle>(m_views);
+             SortedList<Rectangle> nlst = new SortList<Rectangle>(m_views);
              return new ViewManager(nlst);
          }
  
@@ -149,12 +180,13 @@ namespace PAT.Lib
              get
              {
                  String returnString = "";
-                 foreach (Rectangle t in m_views)
+                 foreach (KeyValuePair p in m_views)
                  {
-                     returnString += "(" + t.Left + "," +
-                                           t.Top  + "," +
-                                           t.Width + "," +
-                                           t.Height + ")";
+                     returnString += "(" + p.Key.Left + "," +
+                                           p.Key.Top  + "," +
+                                           p.Key.Width + "," +
+                                           p.Key.Height + "," +
+                                           p.Value + ")";
                           
                  }
  

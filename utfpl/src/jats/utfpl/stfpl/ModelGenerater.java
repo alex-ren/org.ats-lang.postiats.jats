@@ -37,7 +37,7 @@ public class ModelGenerater {
 	private String m_inputpath;
 	private String m_outputpath;
 	private String m_patpath;
-	private int m_engine; // search strategy
+	private int m_engine; // search strategy 0:DFS 1:BFS
 	
 	private String m_dyn;
 	private String m_dyn3;
