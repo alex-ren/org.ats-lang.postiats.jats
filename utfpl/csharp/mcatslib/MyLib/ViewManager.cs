@@ -70,6 +70,7 @@ namespace PAT.Lib
 
     public class RecComp : IComparer<Rectangle>
     {
+
         // Compares by Height, Length, and Width. 
         public int Compare(Rectangle x, Rectangle y)
         {
@@ -109,8 +110,9 @@ namespace PAT.Lib
         }
 
         public Maybe get(int x, int y, int width, int height) {
+                    return Maybe.none();
             Rectangle rec = new Rectangle(x, y, width, height);
-            IEnumerator<KeyValuePair<Rectangle, int>> iter = m_views.GetEnumerator();
+            // IEnumerator<KeyValuePair<Rectangle, int>> iter = m_views.GetEnumerator();
 
             foreach (KeyValuePair<Rectangle, int> p in m_views) {
 
@@ -126,6 +128,7 @@ namespace PAT.Lib
 
 
         public void put(Maybe m) {
+            return;
             if (Maybe.is_none(m)) {
                 return;
             }
@@ -146,9 +149,9 @@ namespace PAT.Lib
          {
  
              String returnString = "";
-             foreach (KeyValuePair<MyRec, int> p in m_views)
+             foreach (KeyValuePair<Rectangle, int> p in m_views)
              {
-                 returnString += p.Key.ToString() + "." + p.Value + ",";
+                 returnString += p.Key.ToString() + "." + p.Value + ", ";
              }
  
              if (returnString.Length > 0)
@@ -167,7 +170,8 @@ namespace PAT.Lib
          /// <returns></returns>
          public override ExpressionValue GetClone()
          {
-             SortedList<Rectangle> nlst = new SortList<Rectangle>(m_views);
+             SortedList<Rectangle, int> nlst = 
+                 new SortedList<Rectangle, int>(m_views, m_views.Comparer);
              return new ViewManager(nlst);
          }
  
@@ -180,13 +184,13 @@ namespace PAT.Lib
              get
              {
                  String returnString = "";
-                 foreach (KeyValuePair p in m_views)
+                 foreach (KeyValuePair<Rectangle, int> p in m_views)
                  {
                      returnString += "(" + p.Key.Left + "," +
                                            p.Key.Top  + "," +
                                            p.Key.Width + "," +
                                            p.Key.Height + "," +
-                                           p.Value + ")";
+                                           p.Value + "), ";
                           
                  }
  
@@ -194,6 +198,7 @@ namespace PAT.Lib
                  {
                      returnString = returnString.Substring(0, returnString.Length - 2);
                  }
+                 // Console.WriteLine(returnString);
  
                  return "[" + returnString + "]";
  

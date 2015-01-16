@@ -1,18 +1,18 @@
 =======================================================
-Assertion: main() |= G sys_assertion
+Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() |= G sys_assertion) is VALID.
+The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:24
-Total Transitions:23
-Time Used:0.0289243s
-Estimated Memory Used:8601.6KB
+Visited States:313524
+Total Transitions:1097194
+Time Used:87.3815769s
+Estimated Memory Used:80470.016KB
 
 

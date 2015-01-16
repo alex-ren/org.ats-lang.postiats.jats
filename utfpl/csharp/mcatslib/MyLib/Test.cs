@@ -1,9 +1,15 @@
+#define DEBUG
+#define TRACE
+
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Text;
 using PAT.Common.Classes.Expressions.ExpressionClass;
 
 using PAT.Lib;
+
+
 //the namespace must be PAT.Lib, the class and method names can be arbitrary
 //
 
@@ -18,20 +24,47 @@ namespace PAT.Lib
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("begin testing AtomRefManager");
+            // open debug output
+            var tl = new System.Diagnostics.ConsoleTraceListener();
+            System.Diagnostics.Debug.Listeners.Add ( tl );
+
+            Console.WriteLine("begin testing AtomRefManager\n");
             AtomRefManager atom = new AtomRefManager(10);
             int index = atom.allocate(0);
             atom.setElement(index, 1);
             int r = (int)atom.getElement(index);
-            Console.WriteLine("end testing ArrayRefManager");
+            Console.WriteLine("end testing ArrayRefManager\n");
 
-            Console.WriteLine("begin testing ArrayRefManager");
+            Console.WriteLine("begin testing ArrayRefManager\n");
             ArrayRefManager arr = new ArrayRefManager(10);
             int index2 = arr.allocate(2, 0);
             arr.setElement(index2, 1, 42);
             int r2 = (int)arr.getElement(index2, 1);
-            Console.WriteLine("end testing ArrayRefManager");
+            Console.WriteLine("end testing ArrayRefManager\n");
 
+            Console.WriteLine("begin testing ViewManager\n");
+
+            ViewManager vm = new ViewManager();
+
+            Maybe opt_rec = vm.get(0, 0, 1, 1);
+            Debug.Assert(!Maybe.is_none(opt_rec), "Fail to get lock.");
+            vm = vm.GetClone();
+            Console.WriteLine(vm.ExpressionID);
+            Console.WriteLine(vm.ToString());
+
+            
+            opt_rec = vm.get(0, 0, 1, 1);
+            Debug.Assert(Maybe.is_none(opt_rec), "should not get lock.");
+            vm = vm.GetClone();
+            Console.WriteLine(vm.ExpressionID);
+            Console.WriteLine(vm.ToString());
+
+            opt_rec = vm.get(0, 1, 1, 1);
+            Debug.Assert(!Maybe.is_none(opt_rec), "Fail to get lock.");
+            vm = vm.GetClone();
+            Console.WriteLine(vm.ExpressionID);
+            Console.WriteLine(vm.ToString());
+            Console.WriteLine("end testing ViewManager\n");
 
 
         }

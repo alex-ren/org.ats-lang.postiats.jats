@@ -32,7 +32,8 @@ $(TARGET): $(SOURCE)
 test: test11.exe
 
 test11.exe: Test.cs $(SOURCE)
-	dmcs -lib:$(PATHOME) -r:PAT.Common.dll -target:exe -out:test11.exe Test.cs $(SOURCE)
+	dmcs -lib:$(PATHOME) -r:PAT.Common.dll -r:System.Drawing.dll \
+	   -target:exe -out:test11.exe Test.cs $(SOURCE)
 
 install:
 	cp $(TARGET) $(PATHOME)/Lib
