@@ -173,7 +173,7 @@ prfun mc_assert {b: bool} (x: bool b):<fun> [b == true] void
 
 (* ************* ************** *)
 
-absviewtype mc_vlock_vt (int, int, int, int)
+abstype mc_vlock_vt (int, int, int, int)
 
 prfun mc_vlock_get {x,y: nat} {xi,yi: pos}
   ( x: int x

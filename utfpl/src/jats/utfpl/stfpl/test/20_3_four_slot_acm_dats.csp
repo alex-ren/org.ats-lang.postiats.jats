@@ -45,12 +45,7 @@ thread_init{
   __temp_list_args = sys_mylib_obj.list_cons (args, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
 } ->
-  if (fn == 9) {
-    loop_writer_110(sys_tid); proc_thread_finalize(sys_tid)
-    |||
-    Scheduler()
-  }
-  else if (fn == 10) {
+  if (fn == 10) {
     loop_reader_112(sys_tid); proc_thread_finalize(sys_tid)
     |||
     Scheduler()
@@ -197,7 +192,6 @@ var latest_96 = 0;
 var reading_97 = 0;
 var tid1_114 = 0;
 var tid2_115 = 0;
-var tid3_116 = 0;
 
 loop_69(sys_tid) =
   loop_69_s1.sys_tid{  var temp4_id = call(gte, sys_gstack.frame_get(sys_tid, 0, 0), 0);
@@ -258,30 +252,27 @@ dataslots_get_82(sys_tid) =
   dataslots_get_82_s2.sys_tid{  var v_88 = array_ref_manager.getElement(sys_gstack.frame_get(sys_tid, 0, 4), sys_gstack.frame_get(sys_tid, 0, 3));
   sys_gstack.frame_push(sys_tid, v_88);
   } ->
-  dataslots_get_82_s3.sys_tid{  // var ret11_id = sys_mylib_obj.createTuple(2);
-  // sys_mylib_obj.setTupleElement(ret11_id, 0, sys_gstack.frame_get(sys_tid, 0, 0));
-  // sys_mylib_obj.setTupleElement(ret11_id, 1, sys_gstack.frame_get(sys_tid, 0, 5));
-  // sys_gstack.frame_push(sys_tid, ret11_id);
-  sys_gstack.frame_push(sys_tid, 0);
+  dataslots_get_82_s3.sys_tid{  var ret11_id = sys_mylib_obj.createTuple(2);
+  sys_mylib_obj.setTupleElement(ret11_id, 0, sys_gstack.frame_get(sys_tid, 0, 0));
+  sys_mylib_obj.setTupleElement(ret11_id, 1, sys_gstack.frame_get(sys_tid, 0, 5));
+  sys_gstack.frame_push(sys_tid, ret11_id);
   } ->
   Skip
   ;
 
-// mc_acquire_ownership_89(sys_tid) =
-//   mc_acquire_ownership_89_s1.sys_tid{ // var ret12_id = view_manager.get(sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1), 1, 1);
-//   // sys_assert_var = !sys_mylib_obj.is_none(ret12_id);
-//   // sys_gstack.frame_push(sys_tid, ret12_id);
-//   sys_gstack.frame_push(sys_tid, 0);
-//   } ->
-//   Skip
-//   ;
+mc_acquire_ownership_89(sys_tid) =
+  mc_acquire_ownership_89_s1.sys_tid{  var ret12_id = view_manager.get(sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1), 1, 1);
+  sys_assert_var = !sys_mylib_obj.is_none(ret12_id);
+  sys_gstack.frame_push(sys_tid, ret12_id);
+  } ->
+  Skip
+  ;
 
-// mc_release_ownership_92(sys_tid) =
-//   // mc_release_ownership_92_s1.sys_tid{  view_manager.put(sys_gstack.frame_get(sys_tid, 0, 0));
-//   mc_release_ownership_92_s1.sys_tid{  var x = 3;
-//   } ->
-//   Skip
-//   ;
+mc_release_ownership_92(sys_tid) =
+  mc_release_ownership_92_s1.sys_tid{  view_manager.put(sys_gstack.frame_get(sys_tid, 0, 0));
+  } ->
+  Skip
+  ;
 
 write_98(sys_tid) =
   write_98_s1.sys_tid{  var temp15_id = atom_ref_manager.getElement(reading_97);
@@ -294,13 +285,13 @@ write_98(sys_tid) =
   } ->
   write_98_s3.sys_tid{  var index_101 = call(sub, 1, sys_gstack.frame_get(sys_tid, 0, 3));
   sys_gstack.frame_push(sys_tid, index_101);
-  // var __temp_list_args = sys_mylib_obj.list_nil ();
-  // __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 2), __temp_list_args);
-  // __temp_list_args = sys_mylib_obj.list_cons (index_101, __temp_list_args);
-  // sys_gstack.add_frame(sys_tid, __temp_list_args);
-  // } ->
-  // mc_acquire_ownership_89(sys_tid);
-  var vpf_102 = 0; // sys_gstack.retopr_frame(sys_tid);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 2), __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (index_101, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_acquire_ownership_89(sys_tid);
+  write_98_s4.sys_tid{  var vpf_102 = sys_gstack.retopr_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (vpf_102, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (data_94, __temp_list_args);
@@ -311,12 +302,12 @@ write_98(sys_tid) =
   } ->
   dataslots_update_75(sys_tid);
   write_98_s5.sys_tid{  var vpf_103 = sys_gstack.retopr_frame(sys_tid);
-  // var __temp_list_args = sys_mylib_obj.list_nil ();
-  // __temp_list_args = sys_mylib_obj.list_cons (vpf_103, __temp_list_args);
-  // sys_gstack.add_frame(sys_tid, __temp_list_args);
-  // } ->
-  // mc_release_ownership_92(sys_tid);
-  // write_98_s6.sys_tid{  // sys_gstack.delete_frame(sys_tid);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (vpf_103, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_release_ownership_92(sys_tid);
+  write_98_s6.sys_tid{  sys_gstack.delete_frame(sys_tid);
   array_ref_manager.setElement(slot_95, sys_gstack.frame_get(sys_tid, 0, 2), sys_gstack.frame_get(sys_tid, 0, 4))
   } ->
   write_98_s7.sys_tid{  atom_ref_manager.setElement(latest_96, sys_gstack.frame_get(sys_tid, 0, 2))
@@ -332,14 +323,14 @@ read_104(sys_tid) =
   } ->
   read_104_s3.sys_tid{  var index_106 = array_ref_manager.getElement(slot_95, sys_gstack.frame_get(sys_tid, 0, 0));
   sys_gstack.frame_push(sys_tid, index_106);
-  // } ->
-  // read_104_s4.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
-  // __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
-  // __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 1), __temp_list_args);
-  // sys_gstack.add_frame(sys_tid, __temp_list_args);
-  // } ->
-  // mc_acquire_ownership_89(sys_tid);
-  var vpf_107 = 0; // sys_gstack.retopr_frame(sys_tid);
+  } ->
+  read_104_s4.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 1), __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_acquire_ownership_89(sys_tid);
+  read_104_s5.sys_tid{  var vpf_107 = sys_gstack.retopr_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (vpf_107, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (data_94, __temp_list_args);
@@ -349,15 +340,16 @@ read_104(sys_tid) =
   } ->
   dataslots_get_82(sys_tid);
   read_104_s6.sys_tid{  var temp22_id = sys_gstack.retopr_frame(sys_tid);
-  // var vpf_108 = sys_mylib_obj.getTupleElement(temp22_id, 0);;
-  // var item_109 = sys_mylib_obj.getTupleElement(temp22_id, 1);;
-  // var __temp_list_args = sys_mylib_obj.list_nil ();
-  // __temp_list_args = sys_mylib_obj.list_cons (vpf_108, __temp_list_args);
-  // sys_gstack.add_frame(sys_tid, __temp_list_args);
-  // } ->
-  // mc_release_ownership_92(sys_tid);
-  // read_104_s7.sys_tid{  // sys_gstack.delete_frame(sys_tid);
-  sys_gstack.frame_push(sys_tid, 0);
+  var vpf_108 = sys_mylib_obj.getTupleElement(temp22_id, 0);;
+  var item_109 = sys_mylib_obj.getTupleElement(temp22_id, 1);;
+  sys_gstack.frame_push(sys_tid, item_109);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (vpf_108, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  mc_release_ownership_92(sys_tid);
+  read_104_s7.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, sys_gstack.frame_get(sys_tid, 0, 2));
   } ->
   Skip
   ;
@@ -395,24 +387,21 @@ main_s(sys_tid) =
   main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main42_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  main40_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (2, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (2, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (0, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   dataslots_create_63(sys_tid);
-  main42_id_s2.sys_tid{  data_94 = sys_gstack.retopr_frame(sys_tid);
+  main40_id_s2.sys_tid{  data_94 = sys_gstack.retopr_frame(sys_tid);
   slot_95 = array_ref_manager.allocate(2, 0);
   latest_96 = atom_ref_manager.allocate(0);
   reading_97 = atom_ref_manager.allocate(0);
   tid1_114 = sys_tid_allocator.allocate();
   tid2_115 = sys_tid_allocator.allocate();
-  tid3_116 = sys_tid_allocator.allocate();
   } ->
-  sys_thread_create(tid1_114, 10, 0);
-  sys_thread_create(tid2_115, 10, 0);
-  sys_thread_create(tid3_116, 9, 0); 
+  sys_thread_create(tid1_114, 10, 0); 
   proc_thread_finalize(sys_tid);
 
 main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;

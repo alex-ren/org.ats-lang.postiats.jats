@@ -40,6 +40,17 @@ namespace PAT.Lib
             int index2 = arr.allocate(2, 0);
             arr.setElement(index2, 1, 42);
             int r2 = (int)arr.getElement(index2, 1);
+            Debug.Assert(r2 == 42, "r2 == 42 failed");
+
+
+            int index3 = arr.allocate(3, 0);
+            arr.setElement(index3, 1, 41);
+            int r3 = (int)arr.getElement(index3, 1);
+            Debug.Assert(r3 == 41, "r3 == 41 failed");
+
+            Console.WriteLine(arr.ExpressionID);
+            Console.WriteLine(arr.ToString());
+
             Console.WriteLine("end testing ArrayRefManager\n");
 
             Console.WriteLine("begin testing ViewManager\n");
@@ -48,20 +59,20 @@ namespace PAT.Lib
 
             Maybe opt_rec = vm.get(0, 0, 1, 1);
             Debug.Assert(!Maybe.is_none(opt_rec), "Fail to get lock.");
-            vm = vm.GetClone();
+            vm = (ViewManager)vm.GetClone();
             Console.WriteLine(vm.ExpressionID);
             Console.WriteLine(vm.ToString());
 
             
             opt_rec = vm.get(0, 0, 1, 1);
             Debug.Assert(Maybe.is_none(opt_rec), "should not get lock.");
-            vm = vm.GetClone();
+            vm = (ViewManager)vm.GetClone();
             Console.WriteLine(vm.ExpressionID);
             Console.WriteLine(vm.ToString());
 
             opt_rec = vm.get(0, 1, 1, 1);
             Debug.Assert(!Maybe.is_none(opt_rec), "Fail to get lock.");
-            vm = vm.GetClone();
+            vm = (ViewManager)vm.GetClone();
             Console.WriteLine(vm.ExpressionID);
             Console.WriteLine(vm.ToString());
             Console.WriteLine("end testing ViewManager\n");

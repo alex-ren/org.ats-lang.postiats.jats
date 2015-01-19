@@ -1,8 +1,8 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 "D2Cstacsts" dataslots_t_736: (t@ype, int, int) -\> type
 
-"D2Cstacsts" own_slot_vt_737: (int, int) -\> viewtype
+"D2Cstacsts" own_slot_vt_737: (int, int) -\> type
 
 local
 in
@@ -44,8 +44,8 @@ in
       end:a_3913_0:t@ype:t@ype)
   prfun mc_acquire_ownership_87 = lamMet. lamSta. lam (<P2Tann>(i_88:int:t@ype), <P2Tann>(j_89:int:t@ype)) <fun> = 
     <D2EannSeff>(
-      D2Ecst<mc_vlock_get_2586:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (i_88, j_89, 1, 1):own_slot_vt_737_0():viewtype)
-  prfun mc_release_ownership_90 = lamMet. lamSta. lam (<P2Tann>(vpf_91:own_slot_vt_737_0():viewtype)) <fun> = 
+      D2Ecst<mc_vlock_get_2586:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (i_88, j_89, 1, 1):own_slot_vt_737_0():type)
+  prfun mc_release_ownership_90 = lamMet. lamSta. lam (<P2Tann>(vpf_91:own_slot_vt_737_0():type)) <fun> = 
     <D2EannSeff>(
       D2Ecst<mc_vlock_put_2587:((mc_vlock_vt_733_0()) -<fun> void)> (vpf_91):void:t@ype)
 end
@@ -67,51 +67,55 @@ fun write_96 = lam (<P2Tann>(item_97:int:t@ype)) <fun> =
     let
       val pair_98 = <D2Esym>(-) (1, D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (reading_95))
       val index_99 = <D2Esym>(-) (1, D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slot_93, pair_98))
+      prval vpf_100 = mc_acquire_ownership_87 (pair_98, index_99)
       val () = dataslots_update_75 (data_92, pair_98, index_99, item_97)
+      prval () = mc_release_ownership_90 (vpf_100)
       val () = D2Ecst<conats_atomarrayref_update_2577:{a_3862_0:t@ype}(((atomarrayref_727_0(a_3862_0:t@ype), int, a_3862_0:t@ype) -<fun> void))> (slot_93, pair_98, index_99)
       val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (latest_94, pair_98)
     in
       ()
     end:void:t@ype)
 
-fun read_100 = lam () <fun> = 
+fun read_101 = lam () <fun> = 
   <D2EannSeff>(
     let
-      val pair_101 = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (latest_94)
-      val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (reading_95, pair_101)
-      val index_102 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slot_93, pair_101)
-      val item_103 = dataslots_get_81 (data_92, pair_101, index_102)
+      val pair_102 = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (latest_94)
+      val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (reading_95, pair_102)
+      val index_103 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slot_93, pair_102)
+      prval vpf_104 = mc_acquire_ownership_87 (pair_102, index_103)
+      val item_105 = dataslots_get_81 (data_92, pair_102, index_103)
+      prval () = mc_release_ownership_90 (vpf_104)
     in
       0
     end:int:t@ype)
 
-fun loop_writer_104 = lam (<P2Tann>(x_105:int:t@ype)) <fun> = 
+fun loop_writer_106 = lam (<P2Tann>(x_107:int:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      val () = write_96 (x_105)
+      val () = write_96 (x_107)
     in
-      loop_writer_104 (x_105)
+      loop_writer_106 (x_107)
     end:void:t@ype)
 
-fun loop_reader_106 = lam (<P2Tann>(x_107:int:t@ype)) <fun> = 
+fun loop_reader_108 = lam (<P2Tann>(x_109:int:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      val _ = read_100 ()
+      val _ = read_101 ()
     in
-      loop_reader_106 (x_107)
+      loop_reader_108 (x_109)
     end:void:t@ype)
 
-val tid1_108 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
+val tid1_110 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val tid2_109 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
+val tid2_111 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val tid3_110 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
+val tid3_112 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_reader_106, 0, tid1_108)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_reader_108, 0, tid1_110)
 
-val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_reader_106, 0, tid2_109)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_reader_108, 0, tid2_111)
 
-val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_writer_104, 0, tid3_110)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_writer_106, 0, tid3_112)
 
 %{
 #assert main deadlockfree;

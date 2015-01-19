@@ -7,7 +7,7 @@ staload "./conats.sats"
 // Define types for data slots.
 abstype dataslots_t (t@ype, int, int)
 
-absviewtype own_slot_vt (int, int)
+abstype own_slot_vt (int, int)
 
 local
   assume dataslots_t (a:t@ype, x: int, y: int) = atomarrayref (atomarrayref (a))
@@ -76,9 +76,9 @@ fun write (item: int): void = let
   val pair = 1 - conats_atomref_get (reading)
   val index = 1 - conats_atomarrayref_get (slot, pair)
 
-//  prval vpf = mc_acquire_ownership (pair, index)
+  prval vpf = mc_acquire_ownership (pair, index)
   val () = dataslots_update (data, pair, index, item)
-//  prval () = mc_release_ownership (vpf)
+  prval () = mc_release_ownership (vpf)
 
   val () = conats_atomarrayref_update (slot, pair, index)
   val () = conats_atomref_update (latest, pair)
@@ -91,9 +91,9 @@ fun read (): int = let
   val () = conats_atomref_update (reading, pair)
   val index = conats_atomarrayref_get (slot, pair)
 
-//  prval vpf = mc_acquire_ownership (pair, index)
+  prval vpf = mc_acquire_ownership (pair, index)
   val item = dataslots_get (data, pair, index)
-//  prval () = mc_release_ownership (vpf)
+  prval () = mc_release_ownership (vpf)
 in
   0  // item
 end

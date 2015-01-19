@@ -1,6 +1,10 @@
 
+// debug #define DEBUG
+// #define TRACE
+
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
@@ -101,8 +105,20 @@ namespace PAT.Lib
     {
         private SortedList<Rectangle, int> m_views;
 
+        static int x = 0;
+
+        int add() {
+            return 5 - 5;
+        }
+
         public ViewManager() {
             m_views = new SortedList<Rectangle, int>(new RecComp());
+            // debug if (x == 0) {
+            // // open debug output
+            // var tl = new System.Diagnostics.ConsoleTraceListener();
+            // System.Diagnostics.Debug.Listeners.Add ( tl );
+            // x = 1;
+            // }
         }
 
         public ViewManager(SortedList<Rectangle, int> views) {
@@ -110,7 +126,8 @@ namespace PAT.Lib
         }
 
         public Maybe get(int x, int y, int width, int height) {
-                    return Maybe.none();
+                    // return Maybe.none();
+                // Console.WriteLine(this.ToString());
             Rectangle rec = new Rectangle(x, y, width, height);
             // IEnumerator<KeyValuePair<Rectangle, int>> iter = m_views.GetEnumerator();
 
@@ -123,12 +140,19 @@ namespace PAT.Lib
 
             m_views.Add(rec, 0);
 
+            // debug if (m_views.Count > 3) {
+            //     Console.WriteLine(this.ToString());
+            // Debug.Assert(false, "assert fail");
+            //     int z = 1 / add();
+
+            // }
+
             return Maybe.some(new MyRec(rec));
         }
 
 
         public void put(Maybe m) {
-            return;
+            // return;
             if (Maybe.is_none(m)) {
                 return;
             }
