@@ -1,5 +1,6 @@
-
-staload "./conats.sats"
+#define CONATSCONTRIB
+"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
+staload "{$CONATSCONTRIB}/conats.sats"
 
 fun foo .<>.(x: (int, (int, int))):<fun> int = let
   val (a, (b, c)) = x

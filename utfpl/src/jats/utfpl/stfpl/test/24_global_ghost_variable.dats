@@ -1,8 +1,7 @@
-//#define CONATSCONTRIB
-//"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
-//staload "{$CONATSCONTRIB}/conats.sats"
+#define CONATSCONTRIB
+"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
+staload "{$CONATSCONTRIB}/conats.sats"
 
-staload "./conats.sats"
 
 stacst sid_init: sid
 extern val mc_init: mc_gv_t sid_init

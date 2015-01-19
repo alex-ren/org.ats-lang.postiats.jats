@@ -1,8 +1,7 @@
 #define CONATSCONTRIB
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
-// staload "{$CONATSCONTRIB}/conats.sats"
+staload "{$CONATSCONTRIB}/conats.sats"
 
-staload "./conats.sats"
 
 // Define types for data slots.
 abstype dataslots_t (t@ype, int, int)

@@ -1,6 +1,9 @@
 
 
-staload "./conats.sats"
+#define CONATSCONTRIB
+"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
+staload "{$CONATSCONTRIB}/conats.sats"
+
 
 val s = conats_shared_create (0)
 

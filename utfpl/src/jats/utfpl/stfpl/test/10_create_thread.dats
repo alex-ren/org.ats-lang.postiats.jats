@@ -1,5 +1,7 @@
+#define CONATSCONTRIB
+"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
+staload "{$CONATSCONTRIB}/conats.sats"
 
-staload "./conats.sats"
 staload UN = "prelude/SATS/unsafe.sats"
 
 val gref = conats_atomref_create (0)

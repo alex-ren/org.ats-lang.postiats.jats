@@ -1,4 +1,7 @@
-staload "./conats.sats"
+#define CONATSCONTRIB
+"https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
+staload "{$CONATSCONTRIB}/conats.sats"
+
 
 val x = if 1 > 2 then 3 else 4
 
