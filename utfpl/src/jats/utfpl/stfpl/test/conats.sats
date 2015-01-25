@@ -204,8 +204,11 @@ fun list_nil {a:t@ype} (): list a
 fun list_cons {a:t@ype} (x: a, xs: list a): list a
 fun list_get_header {a:t@ype} (xs: list a): a
 fun list_get_element {a:t@ype} (xs: list a, n: int): a
+// xs is not nil
+fun list_remove_element {a:t@ype} (xs: list a, e: a): list a
 fun list_get_tail {a:t@ype} (xs: list a): list a
 fun list_is_nil {a:t@ype} (xs: list a): bool
+fun list_length {a:t@ype} (xs: list a): int
 
 (* ************* ************** *)
 

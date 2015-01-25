@@ -1,0 +1,90 @@
+[
+{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 2(line=2, offs=1) -- 25(line=2, offs=24)", "d2ecl_node": {"D2Cstaload": [[], "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"]}}
+,
+{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 27(line=4, offs=1) -- 61(line=4, offs=35)", "d2ecl_node": {"D2Cfundecs": ["FK_fun", {}, [{"f2undec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 31(line=4, offs=5) -- 61(line=4, offs=35)", "f2undec_var": {"d2var_name": "foo2", "d2var_stamp": 63}, "f2undec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 36(line=4, offs=10) -- 61(line=4, offs=35)", "d2exp_node": {"D2Elam_dyn": [0, -1, [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 37(line=4, offs=11) -- 43(line=4, offs=17)", "p2at_node": {"P2Tann": [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 37(line=4, offs=11) -- 38(line=4, offs=12)", "p2at_node": {"P2Tvar": [{"d2var_name": "x", "d2var_stamp": 64}]}}, {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["tkind"]}], {"S2RTbas": ["t@ype"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "g0int_t0ype", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["tkind"]}], {"S2RTbas": ["t@ype"]}]}, "s2cst_stamp": 198, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["tkind"]}, "s2exp_node": {"S2Eextkind": ["atstype_int"]}}]]}}]}}, {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 45(line=4, offs=19) -- 51(line=4, offs=25)", "p2at_node": {"P2Tann": [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 45(line=4, offs=19) -- 46(line=4, offs=20)", "p2at_node": {"P2Tvar": [{"d2var_name": "y", "d2var_stamp": 65}]}}, {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["tkind"]}], {"S2RTbas": ["t@ype"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "g0int_t0ype", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["tkind"]}], {"S2RTbas": ["t@ype"]}]}, "s2cst_stamp": 198, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["tkind"]}, "s2exp_node": {"S2Eextkind": ["atstype_int"]}}]]}}]}}], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 54(line=4, offs=28) -- 61(line=4, offs=35)", "d2exp_node": {"D2Eann_seff": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 54(line=4, offs=28) -- 61(line=4, offs=35)", "d2exp_node": {"D2Eann_type": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 60(line=4, offs=34) -- 61(line=4, offs=35)", "d2exp_node": {"D2Evar": [{"d2var_name": "y", "d2var_stamp": 65}]}}, {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["tkind"]}], {"S2RTbas": ["t@ype"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "g0int_t0ype", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["tkind"]}], {"S2RTbas": ["t@ype"]}]}, "s2cst_stamp": 198, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["tkind"]}, "s2exp_node": {"S2Eextkind": ["atstype_int"]}}]]}}]}}, {}]}}]}}, "f2undec_ann": []}]]}}
+,
+{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 63(line=6, offs=1) -- 192(line=11, offs=4)", "d2ecl_node": {"D2Cfundecs": ["FK_fun", {}, [{"f2undec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 67(line=6, offs=5) -- 192(line=11, offs=4)", "f2undec_var": {"d2var_name": "foo", "d2var_stamp": 66}, "f2undec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 71(line=6, offs=9) -- 192(line=11, offs=4)", "d2exp_node": {"D2Elam_sta": [[{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3897}], [], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 81(line=6, offs=19) -- 192(line=11, offs=4)", "d2exp_node": {"D2Elam_dyn": [0, -1, [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 82(line=6, offs=20) -- 92(line=6, offs=30)", "p2at_node": {"P2Tann": [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 82(line=6, offs=20) -- 84(line=6, offs=22)", "p2at_node": {"P2Tvar": [{"d2var_name": "xs", "d2var_stamp": 67}]}}, {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "list_t", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2cst_stamp": 734, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3897}]}}]]}}]}}], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 95(line=6, offs=33) -- 192(line=11, offs=4)", "d2exp_node": {"D2Eann_seff": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 95(line=6, offs=33) -- 192(line=11, offs=4)", "d2exp_node": {"D2Eann_type": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 102(line=6, offs=40) -- 192(line=11, offs=4)", "d2exp_node": {"D2Elet": [[{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 108(line=7, offs=3) -- 132(line=7, offs=27)", "d2ecl_node": {"D2Cvaldecs": ["VK_val", [{"v2aldec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 112(line=7, offs=7) -- 132(line=7, offs=27)", "v2aldec_pat": {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 112(line=7, offs=7) -- 113(line=7, offs=8)", "p2at_node": {"P2Tvar": [{"d2var_name": "x", "d2var_stamp": 68}]}}, "v2aldec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 116(line=7, offs=11) -- 131(line=7, offs=26)", "d2exp_node": {"D2Eapplst": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 116(line=7, offs=11) -- 127(line=7, offs=22)", "d2exp_node": {"D2Ecst": [{"d2cst_name": "list_is_nil", "d2cst_type": {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Euni": [[{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3895}], [], {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Efun": [-1, [{"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "list_t", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2cst_stamp": 734, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3895}]}}]]}}], {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "bool_t0ype", "s2cst_srt": {"S2RTbas": ["t@ype"]}, "s2cst_stamp": 168, "s2cst_supcls": []}]}}]}}]}}, "d2cst_stamp": 2595}]}}, [{"D2EXPARGdyn": [-1, "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 129(line=7, offs=24) -- 131(line=7, offs=26)", [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 129(line=7, offs=24) -- 131(line=7, offs=26)", "d2exp_node": {"D2Evar": [{"d2var_name": "xs", "d2var_stamp": 67}]}}]]}]]}}, "v2aldec_ann": {}}]]}}, {"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 135(line=8, offs=3) -- 163(line=8, offs=31)", "d2ecl_node": {"D2Cvaldecs": ["VK_val", [{"v2aldec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 139(line=8, offs=7) -- 163(line=8, offs=31)", "v2aldec_pat": {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 139(line=8, offs=7) -- 140(line=8, offs=8)", "p2at_node": {"P2Tvar": [{"d2var_name": "y", "d2var_stamp": 69}]}}, "v2aldec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 143(line=8, offs=11) -- 162(line=8, offs=30)", "d2exp_node": {"D2Eapplst": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 143(line=8, offs=11) -- 158(line=8, offs=26)", "d2exp_node": {"D2Ecst": [{"d2cst_name": "list_get_header", "d2cst_type": {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Euni": [[{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3891}], [], {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Efun": [-1, [{"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "list_t", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2cst_stamp": 734, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3891}]}}]]}}], {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3891}]}}]}}]}}, "d2cst_stamp": 2591}]}}, [{"D2EXPARGdyn": [-1, "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 160(line=8, offs=28) -- 162(line=8, offs=30)", [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 160(line=8, offs=28) -- 162(line=8, offs=30)", "d2exp_node": {"D2Evar": [{"d2var_name": "xs", "d2var_stamp": 67}]}}]]}]]}}, "v2aldec_ann": {}}]]}}, {"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 166(line=9, offs=3) -- 185(line=9, offs=22)", "d2ecl_node": {"D2Cvaldecs": ["VK_val", [{"v2aldec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 170(line=9, offs=7) -- 185(line=9, offs=22)", "v2aldec_pat": {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 170(line=9, offs=7) -- 171(line=9, offs=8)", "p2at_node": {"P2Tvar": [{"d2var_name": "x", "d2var_stamp": 70}]}}, "v2aldec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 174(line=9, offs=11) -- 185(line=9, offs=22)", "d2exp_node": {"D2Eapplst": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 174(line=9, offs=11) -- 178(line=9, offs=15)", "d2exp_node": {"D2Evar": [{"d2var_name": "foo2", "d2var_stamp": 63}]}}, [{"D2EXPARGdyn": [-1, "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 179(line=9, offs=16) -- 185(line=9, offs=22)", [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 180(line=9, offs=17) -- 181(line=9, offs=18)", "d2exp_node": {"D2Ei0nt": ["2"]}}, {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 183(line=9, offs=20) -- 184(line=9, offs=21)", "d2exp_node": {"D2Ei0nt": ["3"]}}]]}]]}}, "v2aldec_ann": {}}]]}}], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 186(line=10, offs=1) -- 192(line=11, offs=4)", "d2exp_node": {"D2Eempty": []}}]}}, {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "atsvoid_t0ype", "s2cst_srt": {"S2RTbas": ["t@ype"]}, "s2cst_stamp": 419, "s2cst_supcls": []}]}}]}}, {}]}}]}}]}}, "f2undec_ann": []}]]}}
+,
+{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 196(line=15, offs=1) -- 1640(line=96, offs=3)", "d2ecl_node": {"D2Cextcode": [1, 99, "
+
+// id of currrent running thread
+var cur_tid = 0;
+
+// list of runable threads
+var runable;
+var runable_size;
+
+
+runable_get_random(xs, n) = 
+  if (n == 0) {Skip}
+  else if (n == 1) {
+    run_first_one(xs)
+  }
+  else {
+    run_first_one(xs)
+    <>
+    runable_get_random(sys_mylib_obj.list_get_tail(xs), n - 1)
+  };
+  
+run_first_one(xs) = 
+  {cur_tid = sys_mylib_obj.list_get_header(xs);
+  } -> 
+  scheduler_random
+  ;
+
+scheduler_random = [cur_tid == -1] runable_get_random(runable, runable_size);
+
+
+var gx = 0;
+
+P(sid) = {
+    gx = 1;
+    cur_tid = -1;  // schedule out
+  } -> Skip;
+  [cur_tid == sid] {  // schedule in
+    gx = 2;
+  } -> 
+  P2(sid); 
+  { var x = 5;
+  } -> 
+  Skip;
+  
+P2(sid) = {
+    gx = 3;
+    cur_tid = -1;  // schedule out
+  } -> Skip;
+  [cur_tid == sid] {  // schedule in
+    gx = 4;
+    cur_tid = -1;  // schedule out
+  } -> Skip;
+  [cur_tid == sid] // schedule in
+  Skip;
+
+Main2 = {
+  var xs = sys_mylib_obj.list_nil ();
+  xs = sys_mylib_obj.list_cons (0, xs);
+  runable = xs;
+  runable_size = 1;
+  cur_tid = -1;  // schedule out
+  } -> Skip;
+  [cur_tid == 0] P(0);  // schedule in
+  {
+    // finalize thread
+    // remove tid
+    runable = sys_mylib_obj.list_remove_element(runable, 0);
+    runable_size = sys_mylib_obj.list_length(runable);
+    
+    
+    cur_tid = -1;  // schedule out
+  } -> Skip
+  ;
+  
+main2 = Main2 ||| scheduler_random;
+  
+#assert main2 deadlockfree;
+
+// #assert main |= G sys_assertion;
+
+
+"]}}
+]

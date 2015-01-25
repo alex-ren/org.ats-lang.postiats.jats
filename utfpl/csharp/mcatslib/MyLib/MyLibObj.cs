@@ -93,6 +93,7 @@ namespace PAT.Lib
             return xs.getValue();
         }
 
+        // Pre: xs != null
         public Object list_get_element(SysLinkedNode xs, int n)
         {
             return xs.getAtPos(n);
@@ -101,6 +102,19 @@ namespace PAT.Lib
         public SysLinkedNode list_get_tail(SysLinkedNode xs)
         {
             return xs.getTail();
+        }
+
+        // Pre: xs != null
+        public SysLinkedNode list_remove_element(SysLinkedNode xs, Object e) {
+            return xs.remove_element(e);
+        }
+
+        public int list_length(SysLinkedNode xs) {
+            if (null == xs) {
+                return 0;
+            } else {
+                return xs.length();
+            }
         }
 
         /* *************** ***************** */

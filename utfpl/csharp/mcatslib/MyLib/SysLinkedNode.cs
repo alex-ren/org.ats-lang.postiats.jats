@@ -18,6 +18,15 @@ namespace PAT.Lib
         private Object m_v;
         private SysLinkedNode m_next;
         // private Guid m_id;
+        //
+
+        public SysLinkedNode(Object v, SysLinkedNode next)
+        {
+            m_v = v;
+            m_next = next;
+            // m_id = Guid.NewGuid();
+        }
+
 
         public SysLinkedNode getTail() {
             return m_next;
@@ -39,16 +48,43 @@ namespace PAT.Lib
             return node.getValue();
         }
 
+        // It's allowed that e is not in "this" list.
+        public SysLinkedNode remove_element(Object e) {
+            SysLinkedNode tail = m_next;
+            if (e.Equals(m_v)) {
+                return tail;
+            }
+
+            SysLinkedNode new_list = new SysLinkedNode(m_v, null);
+            SysLinkedNode cur_list = new_list;
+
+            while (null != tail) {
+                if (e.Equals(tail.m_v)) {
+                    cur_list.m_next = tail.m_next;
+                    return new_list;
+                } else {
+                    SysLinkedNode new_tail = new SysLinkedNode(tail.m_v, null);
+                    cur_list.m_next = new_tail;
+                    cur_list = new_tail;
+                    tail = tail.m_next;
+                }
+            }
+            return this;  // element not found
+        }
+
+        public int length() {
+            int n = 0;
+            SysLinkedNode cur = this;
+            while (null != cur) {
+                ++n;
+                cur = cur.m_next;
+            }
+            return n;
+        }
+
         public static SysLinkedNode nil()
         {
             return null;
-        }
-
-        public SysLinkedNode(Object v, SysLinkedNode next)
-        {
-            m_v = v;
-            m_next = next;
-            // m_id = Guid.NewGuid();
         }
 
 
