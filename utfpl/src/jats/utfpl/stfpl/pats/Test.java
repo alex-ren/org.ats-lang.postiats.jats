@@ -59,7 +59,7 @@ public class Test {
         };
 
         for (String strPath : paths) {
-        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath(), 0);
+        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath(), 1);
             mcGen.generate(8);
         }
 
