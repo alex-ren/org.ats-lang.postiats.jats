@@ -51,6 +51,7 @@ namespace PAT.Lib
         }
 
         // It's allowed that e is not in "this" list.
+        // This is functional style.
         public SysLinkedNode remove_element(Object e) {
             // empty list
             if (this == s_nil) {
@@ -87,6 +88,17 @@ namespace PAT.Lib
                 cur = cur.m_next;
             }
             return n;
+        }
+
+        public SysLinkedNode revappend(SysLinkedNode ys) {
+            SysLinkedNode cur = this;
+
+            while (ys != s_nil) {
+                cur = new SysLinkedNode(ys.m_v, cur);
+                ys = ys.m_next;
+            }
+
+            return cur;
         }
 
         private string getContent()

@@ -1,4 +1,4 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 fun foo2_63 = lam (<P2Tann>(x_64:int:t@ype), <P2Tann>(y_65:int:t@ype)) <fun> = 
   <D2EannSeff>(
@@ -15,6 +15,63 @@ fun foo_66 = lamSta. lam (<P2Tann>(xs_67:list_t_734_0(a_3897_0:t@ype):type)) <fu
     end:void:t@ype)
 
 %{
+// =================================
+// Set the initial capacity to 10.
+#define COND_NO  10;
+var cond2 = [0(COND_NO)];
+var<AtomRefManager> cond_sleep_list_manager = new AtomRefManager(COND_NO);
+
+InitCond2(n) = InitCond_s1{
+  cond_sleep_list_manager.initialize(n, sys_mylib_obj.list_nil());
+} -> Skip;
+
+
+CondSignal(sys_tid, c) = 
+  ifa(sys_mylib_obj.list_is_nil(cond_sleep_list_manager.getElement(c))) {
+    Skip
+  } else {
+    CondSignalRandom(sys_tid, c, cond_sleep_list_manager.getElement(c))
+  }
+
+CondSignalRandom(sys_tid, c, sleep_list) = 
+  ifa (sys_mylib_obj.list_is_nil(sys_mylib_obj.list_get_tail(sleep_list))) {
+    CondSignalRandom_first(sys_tid, c, sys_mylib_obj.list_get_header(sleep_list))
+  } else {
+    CondSignalRandom_first(sys_tid, c, sys_mylib_obj.list_get_header(sleep_list))
+    <>
+    CondSignalRandom(sys_tid, c, sys_mylib_obj.list_get_tail(sleep_list))
+  }
+  ;
+  
+CondSignalRandom_first(sys_tid, c, tid) = {
+  // remove from sleep list
+  var sleep_list = cond_sleep_list_manager.getElement(c);
+  var new_list = sys_mylib_obj.list_remove_element(sleep_list, tid);
+  cond_sleep_list_manager.setElement(c, new_list);
+  
+  // add to runable
+  runable = sys_mylib_obj.list_cons(tid, runable);
+  runable_size = runable_size + 1;
+  } -> Skip;
+
+
+CondBroadcast(sys_tid, c) = CondBroadcast_s1{
+  runable = sys_mylib_obj.list_revappend(runable, cond_sleep_list_manager.getElement(c));
+  cond_sleep_list_manager.setElement(c, sys_mylib_obj.list_nil());
+  } -> Skip;
+
+CondWait(sys_tid, c, m) = {
+  // remove from runable
+  runable = sys_mylib_obj.list_remove_element(runable, sys_tid);
+  // add to sleep
+  var new_list = sys_mylib_obj.list_cons(sys_tid, cond_sleep_list_manager.getElement(c));
+  cond_sleep_list_manager.setElement(c, new_list);
+  } -> Skip;
+  // release mutex. This would cause schedule out
+  MutexRelease(sys_tid, m);
+  MutexAcquire(sys_tid, m);
+
+
 
 // =================================
 
@@ -52,7 +109,6 @@ MutexRelease(sys_tid, m) =
       cur_tid = -1;  // schedule out
     } -> ([sys_tid == cur_tid] Skip)  // schedule in
   } else {
-    bbb{var x = 3;} ->
     MutexReleaseRandom(sys_tid, m, mutex_waiting_list_manager.getElement(m))
   }
 
@@ -129,7 +185,12 @@ sch_thread_starter2(tid, fn, args) = sch_thread_starter2_s1{
     ([cur_tid == tid]P1(tid, args);thread_finalize2(tid)) ||| scheduler_random
   } else ifa (fn == 2) {
     ([cur_tid == tid]P2(tid, args);thread_finalize2(tid)) ||| scheduler_random
-  } else {
+  } else ifa (fn == 3) {
+    ([cur_tid == tid]P3(tid, args);thread_finalize2(tid)) ||| scheduler_random
+  } else ifa (fn == 4) {
+    ([cur_tid == tid]P4(tid, args);thread_finalize2(tid)) ||| scheduler_random
+  }
+  else {
     Stop
   };
   
@@ -161,7 +222,7 @@ P1(sys_tid, args) = p1_s1.sys_tid{
     gx = 2;
   } -> 
   MutexAcquire(sys_tid, args);
-  // MutexRelease(sys_tid, args);
+  MutexRelease(sys_tid, args);
   p1_s3.sys_tid{ var x = 5;
   } -> 
   Skip;
@@ -178,8 +239,23 @@ P2(sys_tid, args) = p2_s1.sys_tid{
   MutexAcquire(sys_tid, args);
   MutexRelease(sys_tid, args);
 
+P3(sys_tid, args) = p3_s1.sys_tid{
+    gx = 1;
+  } -> Skip;
+  MutexAcquire(sys_tid, args);
+  CondWait(sys_tid, args, args);
+  MutexRelease(sys_tid, args);
+
+P4(sys_tid, args) = p4_s1.sys_tid{
+    gx = 2;
+  } -> Skip;
+  MutexAcquire(sys_tid, args);
+  CondSignal(sys_tid, args);
+  MutexRelease(sys_tid, args);
+
 Main2 = 
   InitMutex2(MUTEX_NO);  // initialize mutex
+  InitCond2(COND_NO);
   main_s1.0{
   var xs = sys_mylib_obj.list_nil ();
   xs = sys_mylib_obj.list_cons (0, xs);
@@ -189,9 +265,13 @@ Main2 =
   } -> Skip;
   [cur_tid == 0] Skip;  // schedule in
   // sys_tid, tid, fn, args
-  thread_create(0, 1, 1, 0);
-  thread_create(0, 2, 2, 0);
-  thread_create(0, 3, 2, 0);
+  // thread_create(0, 1, 1, 0);
+  // thread_create(0, 2, 2, 0);
+  // thread_create(0, 3, 2, 0);
+
+  thread_create(0, 4, 3, 0);
+  thread_create(0, 5, 4, 0);
+
   thread_finalize2(0);
 
   

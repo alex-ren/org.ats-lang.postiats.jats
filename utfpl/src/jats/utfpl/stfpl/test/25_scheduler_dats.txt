@@ -3,7 +3,7 @@ Assertion: main2() deadlockfree
 ********Verification Result********
 The Assertion (main2() deadlockfree) is NOT valid.
 The following trace leads to a deadlock situation.
-<init -> InitMutex_s1 -> main_s1.0 -> run_first_one_s1 -> τ -> thread_create_s1.0 -> sch_thread_starter2_s1 -> [int_choice] -> run_first_one_s1 -> p1_s1.1 -> [int_choice] -> run_first_one_s1 -> p1_s2.1 -> MutexAcquire_yes.1 -> p1_s3.1 -> thread_finalize2_s1.1 -> run_first_one_s1 -> τ -> thread_create_s1.0 -> sch_thread_starter2_s1 -> [int_choice] -> run_first_one_s1 -> p2_s1.2 -> [int_choice] -> run_first_one_s1 -> p2_s2.2 -> [int_choice] -> run_first_one_s1 -> τ -> MutexAcquire_no.2 -> run_first_one_s1 -> τ -> thread_create_s1.0 -> sch_thread_starter2_s1 -> [int_choice] -> run_first_one_s1 -> τ -> thread_finalize2_s1.0 -> run_first_one_s1 -> p2_s1.3 -> run_first_one_s1 -> p2_s2.3 -> run_first_one_s1 -> τ -> MutexAcquire_no.3>
+<init -> InitMutex_s1 -> InitCond_s1 -> main_s1.0 -> run_first_one_s1 -> τ -> thread_create_s1.0 -> sch_thread_starter2_s1 -> [int_choice] -> run_first_one_s1 -> p3_s1.4 -> MutexAcquire_yes.4 -> τ -> MutexRelease_s1.4 -> [int_choice] -> run_first_one_s1>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,9 +12,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:2280
-Total Transitions:2634
-Time Used:0.0984951s
-Estimated Memory Used:20099.072KB
+Visited States:32
+Total Transitions:31
+Time Used:0.0722446s
+Estimated Memory Used:8642.56KB
 
 

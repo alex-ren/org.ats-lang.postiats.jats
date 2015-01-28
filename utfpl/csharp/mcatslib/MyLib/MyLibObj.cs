@@ -110,11 +110,11 @@ namespace PAT.Lib
         }
 
         public int list_length(SysLinkedNode xs) {
-            if (null == xs) {
-                return 0;
-            } else {
-                return xs.length();
-            }
+            return xs.length();
+        }
+
+        public SysLinkedNode list_revappend(SysLinkedNode xs, SysLinkedNode ys) {
+            return xs.revappend(ys);
         }
 
         /* *************** ***************** */
