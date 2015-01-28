@@ -74,7 +74,7 @@ namespace PAT.Lib
         //
         public SysLinkedNode list_nil()
         {
-            return SysLinkedNode.nil();
+            return SysLinkedNode.s_nil;
         }
 
         public SysLinkedNode list_cons(Object header, SysLinkedNode tail)
@@ -85,7 +85,7 @@ namespace PAT.Lib
 
         public Boolean list_is_nil(SysLinkedNode xs)
         {
-            return (null == xs);
+            return (SysLinkedNode.s_nil == xs);
         }
 
         public Object list_get_header(SysLinkedNode xs)

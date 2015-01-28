@@ -5,7 +5,76 @@
 ,
 {"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 63(line=6, offs=1) -- 192(line=11, offs=4)", "d2ecl_node": {"D2Cfundecs": ["FK_fun", {}, [{"f2undec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 67(line=6, offs=5) -- 192(line=11, offs=4)", "f2undec_var": {"d2var_name": "foo", "d2var_stamp": 66}, "f2undec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 71(line=6, offs=9) -- 192(line=11, offs=4)", "d2exp_node": {"D2Elam_sta": [[{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3897}], [], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 81(line=6, offs=19) -- 192(line=11, offs=4)", "d2exp_node": {"D2Elam_dyn": [0, -1, [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 82(line=6, offs=20) -- 92(line=6, offs=30)", "p2at_node": {"P2Tann": [{"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 82(line=6, offs=20) -- 84(line=6, offs=22)", "p2at_node": {"P2Tvar": [{"d2var_name": "xs", "d2var_stamp": 67}]}}, {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "list_t", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2cst_stamp": 734, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3897}]}}]]}}]}}], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 95(line=6, offs=33) -- 192(line=11, offs=4)", "d2exp_node": {"D2Eann_seff": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 95(line=6, offs=33) -- 192(line=11, offs=4)", "d2exp_node": {"D2Eann_type": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 102(line=6, offs=40) -- 192(line=11, offs=4)", "d2exp_node": {"D2Elet": [[{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 108(line=7, offs=3) -- 132(line=7, offs=27)", "d2ecl_node": {"D2Cvaldecs": ["VK_val", [{"v2aldec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 112(line=7, offs=7) -- 132(line=7, offs=27)", "v2aldec_pat": {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 112(line=7, offs=7) -- 113(line=7, offs=8)", "p2at_node": {"P2Tvar": [{"d2var_name": "x", "d2var_stamp": 68}]}}, "v2aldec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 116(line=7, offs=11) -- 131(line=7, offs=26)", "d2exp_node": {"D2Eapplst": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 116(line=7, offs=11) -- 127(line=7, offs=22)", "d2exp_node": {"D2Ecst": [{"d2cst_name": "list_is_nil", "d2cst_type": {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Euni": [[{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3895}], [], {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Efun": [-1, [{"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "list_t", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2cst_stamp": 734, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3895}]}}]]}}], {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "bool_t0ype", "s2cst_srt": {"S2RTbas": ["t@ype"]}, "s2cst_stamp": 168, "s2cst_supcls": []}]}}]}}]}}, "d2cst_stamp": 2595}]}}, [{"D2EXPARGdyn": [-1, "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 129(line=7, offs=24) -- 131(line=7, offs=26)", [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 129(line=7, offs=24) -- 131(line=7, offs=26)", "d2exp_node": {"D2Evar": [{"d2var_name": "xs", "d2var_stamp": 67}]}}]]}]]}}, "v2aldec_ann": {}}]]}}, {"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 135(line=8, offs=3) -- 163(line=8, offs=31)", "d2ecl_node": {"D2Cvaldecs": ["VK_val", [{"v2aldec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 139(line=8, offs=7) -- 163(line=8, offs=31)", "v2aldec_pat": {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 139(line=8, offs=7) -- 140(line=8, offs=8)", "p2at_node": {"P2Tvar": [{"d2var_name": "y", "d2var_stamp": 69}]}}, "v2aldec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 143(line=8, offs=11) -- 162(line=8, offs=30)", "d2exp_node": {"D2Eapplst": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 143(line=8, offs=11) -- 158(line=8, offs=26)", "d2exp_node": {"D2Ecst": [{"d2cst_name": "list_get_header", "d2cst_type": {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Euni": [[{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3891}], [], {"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Efun": [-1, [{"s2exp_srt": {"S2RTbas": ["type"]}, "s2exp_node": {"S2Eapp": [{"s2exp_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "list_t", "s2cst_srt": {"S2RTfun": [[{"S2RTbas": ["t@ype"]}], {"S2RTbas": ["type"]}]}, "s2cst_stamp": 734, "s2cst_supcls": []}]}}, [{"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3891}]}}]]}}], {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Evar": [{"s2var_name": "a", "s2var_srt": {"S2RTbas": ["t@ype"]}, "s2var_stamp": 3891}]}}]}}]}}, "d2cst_stamp": 2591}]}}, [{"D2EXPARGdyn": [-1, "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 160(line=8, offs=28) -- 162(line=8, offs=30)", [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 160(line=8, offs=28) -- 162(line=8, offs=30)", "d2exp_node": {"D2Evar": [{"d2var_name": "xs", "d2var_stamp": 67}]}}]]}]]}}, "v2aldec_ann": {}}]]}}, {"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 166(line=9, offs=3) -- 185(line=9, offs=22)", "d2ecl_node": {"D2Cvaldecs": ["VK_val", [{"v2aldec_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 170(line=9, offs=7) -- 185(line=9, offs=22)", "v2aldec_pat": {"p2at_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 170(line=9, offs=7) -- 171(line=9, offs=8)", "p2at_node": {"P2Tvar": [{"d2var_name": "x", "d2var_stamp": 70}]}}, "v2aldec_def": {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 174(line=9, offs=11) -- 185(line=9, offs=22)", "d2exp_node": {"D2Eapplst": [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 174(line=9, offs=11) -- 178(line=9, offs=15)", "d2exp_node": {"D2Evar": [{"d2var_name": "foo2", "d2var_stamp": 63}]}}, [{"D2EXPARGdyn": [-1, "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 179(line=9, offs=16) -- 185(line=9, offs=22)", [{"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 180(line=9, offs=17) -- 181(line=9, offs=18)", "d2exp_node": {"D2Ei0nt": ["2"]}}, {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 183(line=9, offs=20) -- 184(line=9, offs=21)", "d2exp_node": {"D2Ei0nt": ["3"]}}]]}]]}}, "v2aldec_ann": {}}]]}}], {"d2exp_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 186(line=10, offs=1) -- 192(line=11, offs=4)", "d2exp_node": {"D2Eempty": []}}]}}, {"s2exp_srt": {"S2RTbas": ["t@ype"]}, "s2exp_node": {"S2Ecst": [{"s2cst_name": "atsvoid_t0ype", "s2cst_srt": {"S2RTbas": ["t@ype"]}, "s2cst_stamp": 419, "s2cst_supcls": []}]}}]}}, {}]}}]}}]}}, "f2undec_ann": []}]]}}
 ,
-{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 196(line=15, offs=1) -- 2617(line=128, offs=3)", "d2ecl_node": {"D2Cextcode": [1, 99, "
+{"d2ecl_loc": "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/25_scheduler.dats: 196(line=15, offs=1) -- 5225(line=203, offs=3)", "d2ecl_node": {"D2Cextcode": [1, 99, "
+
+// =================================
+
+// Set the initial capacity to 10.
+#define MUTEX_NO  10;
+var mutex2 = [-1(MUTEX_NO)];
+var<AtomRefManager> mutex_waiting_list_manager = new AtomRefManager(MUTEX_NO);
+
+InitMutex2(n) = InitMutex_s1{
+  mutex_waiting_list_manager.initialize(n, sys_mylib_obj.list_nil());
+} -> Skip;
+
+MutexAcquire(sys_tid, m) =
+  ifa (mutex2[m] == -1) {  // can have the mutex
+    MutexAcquire_yes.sys_tid{mutex2[m] = sys_tid;} -> Skip
+  } else {
+    MutexAcquire_no.sys_tid{  // cannot have the mutex
+      // remove current thread from runable
+      runable = sys_mylib_obj.list_remove_element(runable, sys_tid);
+      runable_size = runable_size - 1;
+      
+      // add current thread to waiting list
+      var new_list = sys_mylib_obj.list_cons(sys_tid, mutex_waiting_list_manager.getElement(m));
+      mutex_waiting_list_manager.setElement(m, new_list);
+      
+      cur_tid = -1;  // schedule out
+    } -> ([cur_tid == sys_tid] Skip)  // schedule in
+  }
+  ;
+
+MutexRelease(sys_tid, m) = 
+  ifa(sys_mylib_obj.list_is_nil(mutex_waiting_list_manager.getElement(m))) {
+    MutexRelease_s1.sys_tid{
+      mutex2[m] = -1;
+      cur_tid = -1;  // schedule out
+    } -> ([sys_tid == cur_tid] Skip)  // schedule in
+  } else {
+    bbb{var x = 3;} ->
+    MutexReleaseRandom(sys_tid, m, mutex_waiting_list_manager.getElement(m))
+  }
+
+MutexReleaseRandom(sys_tid, m, waiting_list) = 
+  ifa (sys_mylib_obj.list_is_nil(sys_mylib_obj.list_get_tail(waiting_list))) {
+    MutexReleaseRandom_first(sys_tid, m, sys_mylib_obj.list_get_header(waiting_list))
+  } else {
+    MutexReleaseRandom_first(sys_tid, m, sys_mylib_obj.list_get_header(waiting_list))
+    <>
+    MutexReleaseRandom(sys_tid, m, sys_mylib_obj.list_get_tail(waiting_list))
+  }
+  ;
+  
+MutexReleaseRandom_first(sys_tid, m, tid) = {
+  // remove from waiting list
+  var waiting_list = mutex_waiting_list_manager.getElement(m);
+  var new_list = sys_mylib_obj.list_remove_element(waiting_list, tid);
+  mutex_waiting_list_manager.setElement(m, new_list);
+  
+  mutex2[m] = tid;
+  
+  // add to runable
+  runable = sys_mylib_obj.list_cons(tid, runable);
+  runable_size = runable_size + 1;
+  
+  cur_tid = -1;  // schedule out
+  } -> Skip;
+  [cur_tid == sys_tid] Skip;  // Schedule in
+  
+// =================================
+// Scheduler
 
 // id of currrent running thread
 var cur_tid = 0;
@@ -48,9 +117,9 @@ sch_thread_starter2(tid, fn, args) = sch_thread_starter2_s1{
     runable =  sys_mylib_obj.list_cons(tid, runable);
     runable_size = runable_size + 1;
   } -> ifa (fn == 1) {
-    ([cur_tid == tid]P(tid);thread_finalize2(tid)) ||| scheduler_random
+    ([cur_tid == tid]P1(tid, args);thread_finalize2(tid)) ||| scheduler_random
   } else ifa (fn == 2) {
-    ([cur_tid == tid]P2(tid);thread_finalize2(tid)) ||| scheduler_random
+    ([cur_tid == tid]P2(tid, args);thread_finalize2(tid)) ||| scheduler_random
   } else {
     Stop
   };
@@ -69,45 +138,51 @@ thread_create(sys_tid, tid, fn, args) = thread_create_s1.sys_tid{
     new_args = args;
   
     cur_tid = -1;
-  } -> Skip;
-  [cur_tid == sys_tid] Skip;
-   
+  } -> ([cur_tid == sys_tid] Skip);
+
+// ===================================
 
 var gx = 0;
 
-P(sid) = p_s1.sid{
+P1(sys_tid, args) = p1_s1.sys_tid{
     gx = 1;
     cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == sid] p_s2.sid{  // schedule in
+  [cur_tid == sys_tid] p1_s2.sys_tid{  // schedule in
     gx = 2;
   } -> 
-  P2(sid); 
-  p_s2.sid{ var x = 5;
+  MutexAcquire(sys_tid, args);
+  // MutexRelease(sys_tid, args);
+  p1_s3.sys_tid{ var x = 5;
   } -> 
   Skip;
   
-P2(sid) = p2_s1.sid{
+P2(sys_tid, args) = p2_s1.sys_tid{
     gx = 3;
     cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == sid] p2_s2.sid{  // schedule in
+  [cur_tid == sys_tid] p2_s2.sys_tid{  // schedule in
     gx = 4;
     cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == sid] // schedule in
-  Skip;
+  [cur_tid == sys_tid] Skip;// schedule in
+  MutexAcquire(sys_tid, args);
+  MutexRelease(sys_tid, args);
 
-Main2 = main_s1.0{
+Main2 = 
+  InitMutex2(MUTEX_NO);  // initialize mutex
+  main_s1.0{
   var xs = sys_mylib_obj.list_nil ();
   xs = sys_mylib_obj.list_cons (0, xs);
   runable = xs;
   runable_size = 1;
   cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == 0] P(0);  // schedule in
+  [cur_tid == 0] Skip;  // schedule in
+  // sys_tid, tid, fn, args
   thread_create(0, 1, 1, 0);
   thread_create(0, 2, 2, 0);
+  thread_create(0, 3, 2, 0);
   thread_finalize2(0);
 
   

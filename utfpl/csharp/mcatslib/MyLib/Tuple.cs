@@ -42,6 +42,9 @@ namespace PAT.Lib
                 if (ele != null) {
                     ret += ele.ToString();
                     ret += ",";
+                } else {
+                    ret += "null";
+                    ret += ",";
                 }
             }
             ret += ")";

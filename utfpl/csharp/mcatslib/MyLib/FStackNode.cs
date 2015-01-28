@@ -21,7 +21,7 @@ namespace PAT.Lib
 
         public static FStackNode<Object> createFromLinkedList(SysLinkedNode xs, ref int i)
         {
-            if (xs == SysLinkedNode.nil())
+            if (xs == SysLinkedNode.s_nil)
             {
                 i = 0;
                 return FStackNode<Object>.nil();

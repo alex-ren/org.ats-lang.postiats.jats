@@ -17,6 +17,8 @@ namespace PAT.Lib
     {
         private Object m_v;
         private SysLinkedNode m_next;
+
+        public static SysLinkedNode s_nil = new SysLinkedNode(null, null);
         // private Guid m_id;
         //
 
@@ -50,20 +52,25 @@ namespace PAT.Lib
 
         // It's allowed that e is not in "this" list.
         public SysLinkedNode remove_element(Object e) {
+            // empty list
+            if (this == s_nil) {
+                return this;
+            }
+
             SysLinkedNode tail = m_next;
             if (e.Equals(m_v)) {
                 return tail;
             }
 
-            SysLinkedNode new_list = new SysLinkedNode(m_v, null);
+            SysLinkedNode new_list = new SysLinkedNode(m_v, s_nil);
             SysLinkedNode cur_list = new_list;
 
-            while (null != tail) {
+            while (s_nil != tail) {
                 if (e.Equals(tail.m_v)) {
                     cur_list.m_next = tail.m_next;
                     return new_list;
                 } else {
-                    SysLinkedNode new_tail = new SysLinkedNode(tail.m_v, null);
+                    SysLinkedNode new_tail = new SysLinkedNode(tail.m_v, s_nil);
                     cur_list.m_next = new_tail;
                     cur_list = new_tail;
                     tail = tail.m_next;
@@ -75,26 +82,25 @@ namespace PAT.Lib
         public int length() {
             int n = 0;
             SysLinkedNode cur = this;
-            while (null != cur) {
+            while (s_nil != cur) {
                 ++n;
                 cur = cur.m_next;
             }
             return n;
         }
 
-        public static SysLinkedNode nil()
-        {
-            return null;
-        }
-
-
         private string getContent()
         {
             string ret = "";
             SysLinkedNode link = this;
-            while (null != link)
+            while (s_nil != link)
             {
-                ret += link.m_v.ToString();
+                if (null != link.m_v) {
+                    ret += link.m_v.ToString();
+                } else {
+                    ret += "null";
+                }
+
                 ret += "-";
                 link = link.m_next;
             }

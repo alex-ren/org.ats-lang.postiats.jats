@@ -16,6 +16,75 @@ fun foo_66 = lamSta. lam (<P2Tann>(xs_67:list_t_734_0(a_3897_0:t@ype):type)) <fu
 
 %{
 
+// =================================
+
+// Set the initial capacity to 10.
+#define MUTEX_NO  10;
+var mutex2 = [-1(MUTEX_NO)];
+var<AtomRefManager> mutex_waiting_list_manager = new AtomRefManager(MUTEX_NO);
+
+InitMutex2(n) = InitMutex_s1{
+  mutex_waiting_list_manager.initialize(n, sys_mylib_obj.list_nil());
+} -> Skip;
+
+MutexAcquire(sys_tid, m) =
+  ifa (mutex2[m] == -1) {  // can have the mutex
+    MutexAcquire_yes.sys_tid{mutex2[m] = sys_tid;} -> Skip
+  } else {
+    MutexAcquire_no.sys_tid{  // cannot have the mutex
+      // remove current thread from runable
+      runable = sys_mylib_obj.list_remove_element(runable, sys_tid);
+      runable_size = runable_size - 1;
+      
+      // add current thread to waiting list
+      var new_list = sys_mylib_obj.list_cons(sys_tid, mutex_waiting_list_manager.getElement(m));
+      mutex_waiting_list_manager.setElement(m, new_list);
+      
+      cur_tid = -1;  // schedule out
+    } -> ([cur_tid == sys_tid] Skip)  // schedule in
+  }
+  ;
+
+MutexRelease(sys_tid, m) = 
+  ifa(sys_mylib_obj.list_is_nil(mutex_waiting_list_manager.getElement(m))) {
+    MutexRelease_s1.sys_tid{
+      mutex2[m] = -1;
+      cur_tid = -1;  // schedule out
+    } -> ([sys_tid == cur_tid] Skip)  // schedule in
+  } else {
+    bbb{var x = 3;} ->
+    MutexReleaseRandom(sys_tid, m, mutex_waiting_list_manager.getElement(m))
+  }
+
+MutexReleaseRandom(sys_tid, m, waiting_list) = 
+  ifa (sys_mylib_obj.list_is_nil(sys_mylib_obj.list_get_tail(waiting_list))) {
+    MutexReleaseRandom_first(sys_tid, m, sys_mylib_obj.list_get_header(waiting_list))
+  } else {
+    MutexReleaseRandom_first(sys_tid, m, sys_mylib_obj.list_get_header(waiting_list))
+    <>
+    MutexReleaseRandom(sys_tid, m, sys_mylib_obj.list_get_tail(waiting_list))
+  }
+  ;
+  
+MutexReleaseRandom_first(sys_tid, m, tid) = {
+  // remove from waiting list
+  var waiting_list = mutex_waiting_list_manager.getElement(m);
+  var new_list = sys_mylib_obj.list_remove_element(waiting_list, tid);
+  mutex_waiting_list_manager.setElement(m, new_list);
+  
+  mutex2[m] = tid;
+  
+  // add to runable
+  runable = sys_mylib_obj.list_cons(tid, runable);
+  runable_size = runable_size + 1;
+  
+  cur_tid = -1;  // schedule out
+  } -> Skip;
+  [cur_tid == sys_tid] Skip;  // Schedule in
+  
+// =================================
+// Scheduler
+
 // id of currrent running thread
 var cur_tid = 0;
 
@@ -57,9 +126,9 @@ sch_thread_starter2(tid, fn, args) = sch_thread_starter2_s1{
     runable =  sys_mylib_obj.list_cons(tid, runable);
     runable_size = runable_size + 1;
   } -> ifa (fn == 1) {
-    ([cur_tid == tid]P(tid);thread_finalize2(tid)) ||| scheduler_random
+    ([cur_tid == tid]P1(tid, args);thread_finalize2(tid)) ||| scheduler_random
   } else ifa (fn == 2) {
-    ([cur_tid == tid]P2(tid);thread_finalize2(tid)) ||| scheduler_random
+    ([cur_tid == tid]P2(tid, args);thread_finalize2(tid)) ||| scheduler_random
   } else {
     Stop
   };
@@ -78,45 +147,51 @@ thread_create(sys_tid, tid, fn, args) = thread_create_s1.sys_tid{
     new_args = args;
   
     cur_tid = -1;
-  } -> Skip;
-  [cur_tid == sys_tid] Skip;
-   
+  } -> ([cur_tid == sys_tid] Skip);
+
+// ===================================
 
 var gx = 0;
 
-P(sid) = p_s1.sid{
+P1(sys_tid, args) = p1_s1.sys_tid{
     gx = 1;
     cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == sid] p_s2.sid{  // schedule in
+  [cur_tid == sys_tid] p1_s2.sys_tid{  // schedule in
     gx = 2;
   } -> 
-  P2(sid); 
-  p_s2.sid{ var x = 5;
+  MutexAcquire(sys_tid, args);
+  // MutexRelease(sys_tid, args);
+  p1_s3.sys_tid{ var x = 5;
   } -> 
   Skip;
   
-P2(sid) = p2_s1.sid{
+P2(sys_tid, args) = p2_s1.sys_tid{
     gx = 3;
     cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == sid] p2_s2.sid{  // schedule in
+  [cur_tid == sys_tid] p2_s2.sys_tid{  // schedule in
     gx = 4;
     cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == sid] // schedule in
-  Skip;
+  [cur_tid == sys_tid] Skip;// schedule in
+  MutexAcquire(sys_tid, args);
+  MutexRelease(sys_tid, args);
 
-Main2 = main_s1.0{
+Main2 = 
+  InitMutex2(MUTEX_NO);  // initialize mutex
+  main_s1.0{
   var xs = sys_mylib_obj.list_nil ();
   xs = sys_mylib_obj.list_cons (0, xs);
   runable = xs;
   runable_size = 1;
   cur_tid = -1;  // schedule out
   } -> Skip;
-  [cur_tid == 0] P(0);  // schedule in
+  [cur_tid == 0] Skip;  // schedule in
+  // sys_tid, tid, fn, args
   thread_create(0, 1, 1, 0);
   thread_create(0, 2, 2, 0);
+  thread_create(0, 3, 2, 0);
   thread_finalize2(0);
 
   
