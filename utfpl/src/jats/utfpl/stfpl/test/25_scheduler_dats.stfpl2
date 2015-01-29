@@ -1,4 +1,4 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 fun foo2_63 = lam (<P2Tann>(x_64:int:t@ype), <P2Tann>(y_65:int:t@ype)) <fun> = 
   <D2EannSeff>(
@@ -255,7 +255,7 @@ P4(sys_tid, args) = p4_s1.sys_tid{
     gx = 2;
   } -> Skip;
   MutexAcquire(sys_tid, args);
-  // CondSignal(sys_tid, args);
+  CondSignal(sys_tid, args);
   MutexRelease(sys_tid, args);
 
 Main2 = 
@@ -293,5 +293,7 @@ main2 = Main2 ||| scheduler_random;
 
 // #assert main |= G sys_assertion;
 
-
+var xxx = 0;
+PP = a -> ([xxx == 0] a -> Skip); b -> Stop;
+#assert PP deadlockfree;
 %}

@@ -8,6 +8,8 @@ sys_gstack() ::= <<sys_gstack>>
 
 sys_tid() ::= <<sys_tid>>
 
+sys_cur_tid() ::= <<sys_cur_tid>>
+
 sys_mylib() ::= <<sys_mylib_obj>>
 
 atom_ref_manager() ::= <<atom_ref_manager>>
@@ -97,7 +99,7 @@ Scheduler() = (atomic{sys_ch_sch?<sys_tid()>.fn.args ->  // It's safe to use *at
   ifa (sys_thread_num == 0) {Skip}
   ;
 
-proc_thread_finalize(<sys_tid()>) = 
+sys_proc_thread_finalize(<sys_tid()>) = 
   thread_finalize.<sys_tid()>{
     <sys_gstack()>.delete_frame(<sys_tid()>); 
     sys_thread_num--;
@@ -224,14 +226,14 @@ var <sys_assert_var()> = true;
 
 // =====================
 
-main_s(<sys_tid()>) = 
-  main_init.<sys_tid()>{var <local_temp_list()> = <sys_mylib()>.list_nil ();
+sys_main(<sys_tid()>) = 
+  sys_main_init.<sys_tid()>{var <local_temp_list()> = <sys_mylib()>.list_nil ();
             <sys_gstack()>.add_frame(0, <local_temp_list()>); 
             } ->
   <main_proc_body>; 
-  proc_thread_finalize(<sys_tid()>);
+  sys_proc_thread_finalize(<sys_tid()>);
 
-main = main_s(<sys_tid_allocator()>.allocate()) ||| Scheduler;
+main = sys_main(<sys_tid_allocator()>.allocate()) ||| Scheduler;
 
 #define sys_assertion <sys_assert_var()> == true;
 
@@ -254,7 +256,7 @@ thread_init{
 } ->
 <if(proc1_name)>
   if (fn == <proc1_addr>) {
-    <proc1_name>(<sys_tid()>); proc_thread_finalize(<sys_tid()>)
+    <proc1_name>(<sys_tid()>); sys_proc_thread_finalize(<sys_tid()>)
     |||
     Scheduler()
   }
@@ -267,7 +269,7 @@ thread_init{
 
 schedule_else_if(proc_name, proc_addr) ::= <<
 else if (fn == <proc_addr>) {
-  <proc_name>(<sys_tid()>); proc_thread_finalize(<sys_tid()>)
+  <proc_name>(<sys_tid()>); sys_proc_thread_finalize(<sys_tid()>)
   |||
   Scheduler()
 }
@@ -291,19 +293,17 @@ if (<cond>) {
 >>
 
 pprocbranch_ifa_st(cond, if_proc, else_proc) ::= <<
-if (<cond>) {
+ifa (<cond>) {
   <if_proc>
 }<if(else_proc)> else {
   <else_proc>
 }<endif>
 >>
 
-pprocbranch_ifb_st(cond, if_proc, else_proc) ::= <<
-if (<cond>) {
+pprocbranch_ifb_st(cond, if_proc) ::= <<
+ifb (<cond>) {
   <if_proc>
-}<if(else_proc)> else {
-  <else_proc>
-}<endif>
+}
 >>
   
 pevent_st(tag, stat_lst) ::= <<

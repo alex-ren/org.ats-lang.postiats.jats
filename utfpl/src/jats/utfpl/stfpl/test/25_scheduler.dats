@@ -291,6 +291,8 @@ main2 = Main2 ||| scheduler_random;
 
 // #assert main |= G sys_assertion;
 
-
+var xxx = 0;
+PP = a -> ([xxx == 0] a -> Skip); b -> Stop;
+#assert PP deadlockfree;
 %}
 

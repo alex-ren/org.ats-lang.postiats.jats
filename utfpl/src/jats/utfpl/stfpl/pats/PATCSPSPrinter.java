@@ -98,6 +98,9 @@ public class PATCSPSPrinter implements PNodeVisitor {
             break;
         case ifb:
             st = m_stg.getInstanceOf("pprocbranch_ifb_st");
+            if (node.m_elseProc != null) {
+                throw new Error("ifb has no \"else\" branch.");
+            }            
             break;
         }
         st.add("cond", node.m_condExp.accept(this));

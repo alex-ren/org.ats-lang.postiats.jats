@@ -61,7 +61,7 @@ Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args ->  // It's safe to use *atomic
   ifa (sys_thread_num == 0) {Skip}
   ;
 
-proc_thread_finalize(sys_tid) = 
+sys_proc_thread_finalize(sys_tid) = 
   thread_finalize.sys_tid{
     sys_gstack.delete_frame(sys_tid); 
     sys_thread_num--;
@@ -204,14 +204,14 @@ foo_66(sys_tid) =
 
 // =====================
 
-main_s(sys_tid) = 
-  main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
+sys_main(sys_tid) = 
+  sys_main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
   Skip; 
-  proc_thread_finalize(sys_tid);
+  sys_proc_thread_finalize(sys_tid);
 
-main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
+main = sys_main(sys_tid_allocator.allocate()) ||| Scheduler;
 
 #define sys_assertion sys_assert_var == true;
 
@@ -460,7 +460,7 @@ P4(sys_tid, args) = p4_s1.sys_tid{
     gx = 2;
   } -> Skip;
   MutexAcquire(sys_tid, args);
-  // CondSignal(sys_tid, args);
+  CondSignal(sys_tid, args);
   MutexRelease(sys_tid, args);
 
 Main2 = 
@@ -498,6 +498,8 @@ main2 = Main2 ||| scheduler_random;
 
 // #assert main |= G sys_assertion;
 
-
+var xxx = 0;
+PP = a -> ([xxx == 0] a -> Skip); b -> Stop;
+#assert PP deadlockfree;
 
 

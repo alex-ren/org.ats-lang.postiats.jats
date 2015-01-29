@@ -1,9 +1,7 @@
 =======================================================
 Assertion: main2() deadlockfree
 ********Verification Result********
-The Assertion (main2() deadlockfree) is NOT valid.
-The following trace leads to a deadlock situation.
-<init -> InitMutex_s1 -> InitCond_s1 -> main_s1.0 -> run_first_one_s1 -> τ -> thread_create_s1.0 -> sch_thread_starter2_s1 -> [int_choice] -> run_first_one_s1 -> p3_s1.4 -> MutexAcquire_yes.4 -> τ -> CondWait_st.4 -> MutexRelease_s1.4 -> run_first_one_s1 -> τ -> τ -> thread_create_s1.0 -> sch_thread_starter2_s1 -> [int_choice] -> run_first_one_s1 -> τ -> thread_finalize2_s1.0 -> run_first_one_s1 -> p4_s1.5 -> MutexAcquire_yes.5 -> MutexRelease_s1.5 -> run_first_one_s1 -> τ -> thread_finalize2_s1.5>
+The Assertion (main2() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,9 +10,29 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:59
-Total Transitions:62
-Time Used:0.0148943s
-Estimated Memory Used:8925.184KB
+Visited States:121
+Total Transitions:133
+Time Used:0.0238722s
+Estimated Memory Used:9498.624KB
+
+
+=======================================================
+Assertion: PP() deadlockfree
+********Verification Result********
+The Assertion (PP() deadlockfree) is NOT valid.
+The following trace leads to a deadlock situation.
+<init -> a -> a -> b>
+
+********Verification Setting********
+Admissible Behavior: All
+Search Engine: Shortest Witness Trace using Breadth First Search
+System Abstraction: False
+
+
+********Verification Statistics********
+Visited States:4
+Total Transitions:3
+Time Used:0.0024209s
+Estimated Memory Used:8556.544KB
 
 

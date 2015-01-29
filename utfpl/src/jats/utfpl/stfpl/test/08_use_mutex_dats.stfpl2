@@ -1,11 +1,24 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
 
-val g_63 = D2Ecst<(() -<fun> mutex_t_724_0)> ()
+staload "/tmp/conats3633150373452935/conats.sats"
 
-val () = D2Ecst<((mutex_t_724_0) -<fun> void)> (g_63)
+fun foo_63 = lam () <fun> = 
+  <D2EannSeff>(
+    let
+      val g_64 = D2Ecst<conats_mutex_create_2570:(() -<fun> mutex_t_724_0())> ()
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_64)
+      val () = D2Ecst<conats_mutex_release_2572:((mutex_t_724_0()) -<fun> void)> (g_64)
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_64)
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_64)
+    in
+      ()
+    end:void:t@ype)
 
-val () = D2Ecst<((mutex_t_724_0) -<fun> void)> (g_63)
+val () = foo_63 ()
 
-val () = D2Ecst<((mutex_t_724_0) -<fun> void)> (g_63)
+%{
+#assert main deadlockfree;
 
-val () = D2Ecst<((mutex_t_724_0) -<fun> void)> (g_63)
+#assert main |= G sys_assertion;
+
+%}
