@@ -26,7 +26,7 @@ InitCond2(n) = InitCond_s1{
 
 CondSignal(sys_tid, c) = 
   ifa(sys_mylib_obj.list_is_nil(cond_sleep_list_manager.getElement(c))) {
-    Skip
+    CondSignal_empty.sys_tid -> Skip
   } else {
     CondSignalRandom(sys_tid, c, cond_sleep_list_manager.getElement(c))
   }
@@ -41,7 +41,7 @@ CondSignalRandom(sys_tid, c, sleep_list) =
   }
   ;
   
-CondSignalRandom_first(sys_tid, c, tid) = {
+CondSignalRandom_first(sys_tid, c, tid) = CondSignalRandom_first_s1.sys_tid{
   // remove from sleep list
   var sleep_list = cond_sleep_list_manager.getElement(c);
   var new_list = sys_mylib_obj.list_remove_element(sleep_list, tid);
@@ -54,13 +54,16 @@ CondSignalRandom_first(sys_tid, c, tid) = {
 
 
 CondBroadcast(sys_tid, c) = CondBroadcast_s1{
-  runable = sys_mylib_obj.list_revappend(runable, cond_sleep_list_manager.getElement(c));
+  var sleep_list = cond_sleep_list_manager.getElement(c);
+  runable = sys_mylib_obj.list_revappend(runable, sleep_list);
+  runable_size = runable_size + sys_mylib_obj.list_length(sleep_list);
   cond_sleep_list_manager.setElement(c, sys_mylib_obj.list_nil());
   } -> Skip;
 
-CondWait(sys_tid, c, m) = {
+CondWait(sys_tid, c, m) = CondWait_st.sys_tid{
   // remove from runable
   runable = sys_mylib_obj.list_remove_element(runable, sys_tid);
+  runable_size = runable_size - 1;
   // add to sleep
   var new_list = sys_mylib_obj.list_cons(sys_tid, cond_sleep_list_manager.getElement(c));
   cond_sleep_list_manager.setElement(c, new_list);
@@ -237,10 +240,12 @@ P2(sys_tid, args) = p2_s1.sys_tid{
   MutexAcquire(sys_tid, args);
   MutexRelease(sys_tid, args);
 
+var P3_x = 0;
 P3(sys_tid, args) = p3_s1.sys_tid{
     gx = 1;
   } -> Skip;
   MutexAcquire(sys_tid, args);
+  {P3_x = 1;} ->
   CondWait(sys_tid, args, args);
   MutexRelease(sys_tid, args);
 
@@ -266,12 +271,19 @@ Main2 =
   // thread_create(0, 1, 1, 0);
   // thread_create(0, 2, 2, 0);
   // thread_create(0, 3, 2, 0);
-
+  
   thread_create(0, 4, 3, 0);
+  Main2_loop(0);
   thread_create(0, 5, 4, 0);
-
-  thread_finalize2(0);
-
+  thread_finalize2(0);  
+  
+  
+Main2_loop(sys_tid) = ifa (P3_x == 1) {
+  Skip
+  } else {
+    {cur_tid = -1;} -> ([cur_tid == sys_tid] Main2_loop(sys_tid))
+  }
+  ;
   
 main2 = Main2 ||| scheduler_random;
   

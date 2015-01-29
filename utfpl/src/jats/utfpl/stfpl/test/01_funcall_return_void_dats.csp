@@ -48,7 +48,7 @@ thread_init{
   Skip
 ;
 
-Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args -> 
+Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args ->  // It's safe to use *atomic* here.
                       {sys_thread_num++;
                        sch_sys_tid = sys_tid;
                        sch_fn = fn;
@@ -62,7 +62,7 @@ Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args ->
   ;
 
 proc_thread_finalize(sys_tid) = 
-  thread_finalize{
+  thread_finalize.sys_tid{
     sys_gstack.delete_frame(sys_tid); 
     sys_thread_num--;
     sys_tid_allocator.release(sys_tid);
@@ -79,11 +79,11 @@ var<Allocator> sys_mutex_manager = new Allocator();
 // ====================
 conats_mutex_acquire(sys_tid) = sys_mutex_lock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
+sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock.sys_tid{mutex[m] = 1} -> Skip;
 // ====================
 conats_mutex_release(sys_tid) = sys_mutex_unlock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-sys_mutex_unlock_impl(sys_tid, m) = sys_munlock{mutex[m] = 0} -> Skip;
+sys_mutex_unlock_impl(sys_tid, m) = sys_munlock.sys_tid{mutex[m] = 0} -> Skip;
 // ======================
 
 var cond_holder[10];  // 10 condition
@@ -100,10 +100,11 @@ conats_shared_acquire(sys_tid) = conats_shared_acquire_impl(sys_tid, sys_gstack.
 //  a = sys_mylib_obj.getTupleElement(tup, 0);
 //  mutex = sys_mylib_obj.getTupleElement(tup, 1);
 //  cond = sys_mylib_obj.getTupleElement(tup, 2);
-conats_shared_acquire_impl(sys_tid, tup) = atomic{
-    {sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
+conats_shared_acquire_impl(sys_tid, tup) = // atomic{ // Cannot use atomic here. Otherwise it would cause higher priority.
+    shared_acq.sys_tid{sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
     sys_mutex_lock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1))
-    };
+    // }  // end of atomic
+    ;
 // ====================
 conats_shared_release(sys_tid) = conats_shared_release_impl(sys_tid, 
                                           sys_gstack.frame_get(sys_tid, 0, 0),
@@ -119,9 +120,9 @@ conats_sharedn_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.f
 conats_shared_signal_impl(sys_tid, tup, index) = 
     sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
 
-sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
+sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {  // I think it's safe to keep *atomic* here.
 
-          csub{cond_holder[c]--;} ->
+          csub.sys_tid{cond_holder[c]--;} ->
 
           cond_chan[c]!1
 
@@ -141,16 +142,22 @@ conats_shared_condwait_impl(sys_tid, tup, index) = sys_cond_wait_impl(sys_tid,
                                   sys_mylib_obj.getTupleElement(tup, 1));  // mutex
 
 sys_cond_wait_impl(sys_tid, c, m) = atomic{
-  cadd{cond_holder[c]++;} -> 
+  cadd.sys_tid{cond_holder[c]++;} -> 
   sys_mutex_unlock_impl(sys_tid, m); 
-  cond_chan[c]?_ -> 
-  sys_mutex_lock_impl(sys_tid, m)
-  };
+  cond_chan[c]?_ -> Skip }; 
+  sys_mutex_lock_impl(sys_tid, m)  // Cannot use atomic here. Otherwise it would cause current thread has higher priority to lock.
+  ;
 
 // ====================
-sys_cond_broadcast(sys_tid) = sys_cond_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {
+conats_shared_broadcast(sys_tid) = conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+conats_sharedn_broadcast(sys_tid) = conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+
+conats_shared_broadcast_impl(sys_tid, tup, index) = 
+    sys_cond_broadcast_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
+
+sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {  // It's safe to use *atomic* here.
 
           sys_signaln(c, cond_holder[c]); csub{cond_holder[c]=0;} -> Skip
 
@@ -180,18 +187,18 @@ foo1_63(sys_tid) =
   ;
 
 foo2_64(sys_tid) =
-  foo2_64__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  foo2_64_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   foo1_63(sys_tid);
-  foo2_64__2{  sys_gstack.delete_frame(sys_tid);
+  foo2_64_s2.sys_tid{  sys_gstack.delete_frame(sys_tid);
   sys_gstack.frame_push(sys_tid, 3);
   } ->
   Skip
   ;
 
 foo3_66(sys_tid) =
-  foo3_66__1{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  foo3_66_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   sys_gstack.reload_frame(sys_tid, __temp_list_args);
   } ->
   foo1_63(sys_tid)
@@ -200,9 +207,16 @@ foo3_66(sys_tid) =
 // =====================
 
 main_s(sys_tid) = 
-  main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
+  main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
+  main10_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo2_64(sys_tid);
+  main10_id_s2.sys_tid{  var temp5_id = sys_gstack.retopr_frame(sys_tid);
+  sys_mylib_obj.mc_print(temp5_id);
+  } ->
   Skip; 
   proc_thread_finalize(sys_tid);
 
@@ -210,8 +224,14 @@ main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
 
 #define sys_assertion sys_assert_var == true;
 
+// #assert main deadlockfree;
+
+// #assert main |= G sys_assertion;
+
+
 #assert main deadlockfree;
 
 #assert main |= G sys_assertion;
+
 
 

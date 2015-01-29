@@ -17,7 +17,7 @@ public class Test {
     public static void main(String[] args) throws IOException, InterruptedException, RecognitionException {
         String[] paths = { 
 
-//		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats",
+		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
 //				"src/jats/utfpl/stfpl/test/02_closure_call.dats",
 //				"src/jats/utfpl/stfpl/test/02_2_closure_level.dats",
 ////				"src/jats/utfpl/stfpl/test/02_3_closure_return.dats", // This is not working, since S2EFun has no info of closure.
@@ -54,7 +54,7 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/23_use_condition.dats"
 //        		"src/jats/utfpl/stfpl/test/24_global_ghost_variable.dats"
 //        		"src/jats/utfpl/stfpl/test/temp.dats"
-        		"src/jats/utfpl/stfpl/test/25_scheduler.dats"
+//        		"src/jats/utfpl/stfpl/test/25_scheduler.dats"
         		
         };
 

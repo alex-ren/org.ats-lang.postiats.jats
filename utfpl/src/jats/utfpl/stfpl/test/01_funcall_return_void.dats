@@ -1,4 +1,4 @@
-
+staload "./conats.sats"
 
 fun foo1 ():<fun1> void = ()
 
@@ -10,6 +10,8 @@ end
 
 fun foo3 ():<fun1> void = foo1 ()
 
+
+val () = mc_print(foo2 ())
 
 %{$
 #assert main deadlockfree;
