@@ -7,7 +7,8 @@ public class PInsArrayRefGet extends PIns {
     public PExp m_ref;
     public PExp m_pos;
     
-    public PInsArrayRefGet(PExp ref, PExp pos, MCSId holder) {
+    public PInsArrayRefGet(PExp ref, PExp pos, MCSId holder, boolean effect) {
+    	super(effect);
         m_ref = ref;
         m_pos = pos;
         m_holder = holder;

@@ -8,7 +8,8 @@ public class PInsTupleAdd extends PIns {
     public PExp  m_v;
     public int m_ind;
     
-    public PInsTupleAdd(MCSId tupname, PExp v, int ind) {
+    public PInsTupleAdd(MCSId tupname, PExp v, int ind, boolean effect) {
+    	super(effect);
         m_tupname = tupname;
         m_v = v;
         m_ind = ind;

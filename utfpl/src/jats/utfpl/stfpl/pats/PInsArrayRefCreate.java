@@ -8,7 +8,8 @@ public class PInsArrayRefCreate extends PIns {
     public PExp m_v;  // initial value
     public PExp m_len;
     
-    public PInsArrayRefCreate(MCSId holder, PExp len, PExp v) {
+    public PInsArrayRefCreate(MCSId holder, PExp len, PExp v, boolean effect) {
+    	super(effect);
         m_holder = holder;
         m_len = len;
         m_v = v;

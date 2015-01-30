@@ -6,7 +6,8 @@ public class PInsMutexCreate extends PIns {
     
     public MCSId m_holder;
     
-    public PInsMutexCreate(MCSId holder) {
+    public PInsMutexCreate(MCSId holder, boolean effect) {
+    	super(effect);
         m_holder = holder;
     }
 

@@ -288,7 +288,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         
         PExp vp  = CTemp2PExp(node.m_vp);
         
-        ret.add(new PInsAtomRefCreate(holder, vp));
+        ret.add(new PInsAtomRefCreate(holder, vp, node.hasSideEffect()));
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }
@@ -303,7 +303,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         PExp ref = CTemp2PExp(node.m_ref);
         MCSId localHolder = node.m_localHolder.getMCSId();
         
-        ret.add(new PInsAtomRefGet(ref, localHolder));
+        ret.add(new PInsAtomRefGet(ref, localHolder, node.hasSideEffect()));
         
         if (node.m_localHolder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_localHolder.getMCSId())));
@@ -337,7 +337,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         PExp ref = CTemp2PExp(node.m_ref);
         PExp localSrc  = CTemp2PExp(node.m_localSrc);
         
-        ret.add(new PInsAtomRefUpdate(localSrc, ref));
+        ret.add(new PInsAtomRefUpdate(localSrc, ref, node.hasSideEffect()));
         
         return ret;
     }
@@ -361,7 +361,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         List<PStat> falseBranch = CInsLst2PStatLst(node.m_false);
         PExp cond = (PExp)node.m_cond.accept(this);
         
-        ret.add(new PInsCond(cond, trueBranch, falseBranch));
+        ret.add(new PInsCond(cond, trueBranch, falseBranch, node.hasSideEffect()));
         if (null != node.m_holder && node.m_holder.isDefinition() && node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }
@@ -407,7 +407,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         List<PStat> ret = new ArrayList<PStat>();
         MCSId holder = node.m_holder.getMCSId();
         
-        ret.add(new PInsMutexCreate(holder));
+        ret.add(new PInsMutexCreate(holder, node.hasSideEffect()));
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }
@@ -443,7 +443,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         List<PStat> ret = new ArrayList<PStat>();
         PExp localSrc = CTemp2PExp(node.m_localSrc);
         
-        ret.add(new PInsMCAssert(localSrc));
+        ret.add(new PInsMCAssert(localSrc, node.hasSideEffect()));
         
         return ret;
     }
@@ -468,7 +468,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 		List<PStat> ret = new ArrayList<PStat>();
 		MCSId globalVar = node.m_globalVar.getMCSId();
 		MCSId localHolder = node.m_localHolder.getMCSId();
-		ret.add(new PInsMCGet(globalVar, localHolder));
+		ret.add(new PInsMCGet(globalVar, localHolder, node.hasSideEffect()));
 
         if (node.m_localHolder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_localHolder.getMCSId())));
@@ -483,7 +483,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 		
 		MCSId gname = node.m_globalVar.getMCSId();
 		PExp v = CTemp2PExp(node.m_localSrc);
-		ret.add(new PInsMCSet(gname, v));
+		ret.add(new PInsMCSet(gname, v, node.hasSideEffect()));
 
         return ret;
 	}
@@ -500,7 +500,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 		int index = 0;
 		for (IMyCspTemp arg: ins.m_eles) {
 			PExp ele = CTemp2PExp(arg);
-			PInsTupleAdd ins_add = new PInsTupleAdd(tupname, ele, index);
+			PInsTupleAdd ins_add = new PInsTupleAdd(tupname, ele, index, ins.hasSideEffect());
 			ret.add(ins_add);
 			++index;
 		}
@@ -521,7 +521,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 		int index = 0;
 		for (IMyCspTemp arg: ins.m_eles) {
 			PExp ele = CTemp2PExp(arg);
-			PInsTupleAdd ins_add = new PInsTupleAdd(tupname, ele, index);
+			PInsTupleAdd ins_add = new PInsTupleAdd(tupname, ele, index, ins.hasSideEffect());
 			ret.add(ins_add);
 			++index;
 		}
@@ -574,7 +574,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         
         List<PExp> args = CTempList2PExpList(node.m_args);
         MCSId holder = node.m_holder.getMCSId();
-        ret.add(new PInsMCVLockViewGet(args, holder));
+        ret.add(new PInsMCVLockViewGet(args, holder, node.hasSideEffect()));
         
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
@@ -588,7 +588,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 		List<PStat> ret = new ArrayList<PStat>();
 		
 		PExp v = CTemp2PExp(node.m_v);
-		ret.add(new PInsMCVLockViewPut(v));
+		ret.add(new PInsMCVLockViewPut(v, node.hasSideEffect()));
 
         return ret;
 	}
@@ -602,7 +602,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
       PExp pos = CTemp2PExp(node.m_pos);
       PExp v   = CTemp2PExp(node.m_v);
       
-      ret.add(new PInsArrayRefUpdate(ref, pos, v));
+      ret.add(new PInsArrayRefUpdate(ref, pos, v, node.hasSideEffect()));
       
       return ret;
 	}
@@ -615,7 +615,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         PExp len  = CTemp2PExp(node.m_len);
         PExp v  = CTemp2PExp(node.m_v);
         
-        ret.add(new PInsArrayRefCreate(holder, len, v));
+        ret.add(new PInsArrayRefCreate(holder, len, v, node.hasSideEffect()));
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }
@@ -631,7 +631,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         PExp pos = CTemp2PExp(node.m_pos);
         MCSId holder = node.m_holder.getMCSId();
         
-        ret.add(new PInsArrayRefGet(ref, pos, holder));
+        ret.add(new PInsArrayRefGet(ref, pos, holder, node.hasSideEffect()));
         
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
@@ -644,7 +644,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         List<PStat> ret = new ArrayList<PStat>();
         MCSId holder = node.m_holder.getMCSId();
         
-        ret.add(new PInsTIdAllocate(holder));
+        ret.add(new PInsTIdAllocate(holder, node.hasSideEffect()));
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }
@@ -660,7 +660,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         PExp v = CTemp2PExp(node.m_vp);
         PExp n = CTemp2PExp(node.m_n_cond);
         
-        ret.add(new PInsSharedCreate(holder, v, n));
+        ret.add(new PInsSharedCreate(holder, v, n, node.hasSideEffect()));
         if (node.m_holder.isEscaped()) {
             ret.add(new PStatStackPush(new PExpID(node.m_holder.getMCSId())));
         }

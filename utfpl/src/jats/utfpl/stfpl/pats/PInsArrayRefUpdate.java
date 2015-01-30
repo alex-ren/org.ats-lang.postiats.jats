@@ -7,7 +7,8 @@ public class PInsArrayRefUpdate extends PIns {
     public PExp m_pos;
     public PExp m_v;
     
-    public PInsArrayRefUpdate(PExp ref, PExp pos, PExp v) {
+    public PInsArrayRefUpdate(PExp ref, PExp pos, PExp v, boolean effect) {
+    	super(effect);
         m_ref = ref;
         m_pos = pos;
         m_v = v;

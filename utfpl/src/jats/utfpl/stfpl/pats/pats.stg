@@ -12,7 +12,19 @@ sys_cur_tid() ::= <<sys_cur_tid>>
 sys_sch_tid() ::= <<-1>>
 
 sys_schedule_in() ::= <<[<sys_cur_tid()> == <sys_tid()>]>>
-sys_schedule_out() ::= <<<sys_cur_tid()> = <sys_sch_tid()>;>>
+sys_schedule_out() ::= <<
+if (<sys_glb()> == 0) {  // not atomic
+  <sys_cur_tid()> = <sys_sch_tid()>;
+}
+>>
+
+sys_ins_schedule_out_yes(has_effect) ::= <<
+<if(has_effect)><sys_schedule_out()><else>...should not happen...<endif>
+>>
+
+sys_ins_schedule_out_no() ::= <<
+<if(has_effect)>...should not happen...<endif>
+>>
 
 sys_mylib() ::= <<sys_mylib_obj>>
 
@@ -39,7 +51,7 @@ sys_tid_allocator
 >>
 
 sys_glb() ::= <<
-glb
+sys_glb
 >>
 
 
@@ -66,6 +78,8 @@ var\<ArrayRefManager> <array_ref_manager()> = new ArrayRefManager(10);
 //
 var\<ViewManager> <view_manager()> = new ViewManager();
 
+// ====================
+var <sys_cur_tid()> = 
 // =====================
 // For global exclusion.
 var <sys_glb()> = 0;
@@ -233,11 +247,12 @@ var <sys_assert_var()> = true;
 sys_main(<sys_tid()>) = 
   sys_main_init.<sys_tid()>{var <local_temp_list()> = <sys_mylib()>.list_nil ();
             <sys_gstack()>.add_frame(0, <local_temp_list()>); 
-            } ->
+            } -> Skip;
   <main_proc_body>; 
   sys_proc_thread_finalize(<sys_tid()>);
 
-main = sys_main(<sys_tid_allocator()>.allocate()) ||| Scheduler;
+var main_sys_tid = <sys_tid_allocator()>.allocate();
+main = sys_main(main_sys_tid) ||| Scheduler;
 
 #define sys_assertion <sys_assert_var()> == true;
 
@@ -410,27 +425,29 @@ if (<cond>) {
 >>
 
 
-pinsmutexalloc_st(holder, is_global) ::= <<
+PInsMutexCreate_st(holder, is_global, has_effect) ::= <<
 <if(is_global)><else>var <endif><holder> = <sys_mutex_manager()>.allocate();
+<sys_ins_schedule_out_no(has_effect)>
 >>
 
-pinsmutexrelease_st(mutex) ::= <<
-<sys_mutex_manager()>.release(<mutex>);
->>
+// pinsmutexrelease_st(mutex) ::= <<
+// <sys_mutex_manager()>.release(<mutex>);
+// >>
 
 pinscondalloc_st(holder, is_global) ::= <<
 <if(is_global)><else>var <endif><holder> = <sys_cond_manager()>.allocate();
 >>
 
-pinsmcassert_st(pred) ::= <<
+PInsMCAssert_st(pred, has_effect) ::= <<
 <sys_assert_var()> = <pred>;
+<sys_ins_schedule_out_no(has_effect)>
 >>
 
-pinscondrelease_st(cond) ::= <<
-<sys_cond_manager()>.release(<cond>);
->>
+// pinscondrelease_st(cond) ::= <<
+// <sys_cond_manager()>.release(<cond>);
+// >>
 
-pprocthreadcreate_st(tid, funaddr, args) ::= <<
+PProcThreadCreate_st(tid, funaddr, args) ::= <<
 sys_thread_create(<tid>, <funaddr>, <args>)
 >>
 
@@ -462,41 +479,50 @@ PInsTupleAdd_st(tupname, index, e) ::= <<
 <sys_mylib()>.setTupleElement(<tupname>, <index>, <e>);
 >>
 
-PInsAtomRefCreate_st(holder, init, is_global) ::= <<
+PInsAtomRefCreate_st(holder, init, is_global, has_effect) ::= <<
 <if(is_global)><else>var <endif><holder> = <atom_ref_manager()>.allocate(<init>);
+<sys_ins_schedule_out_no(has_effect)>
 >>
 
-PInsAtomRefGet_st(holder, ref, is_global) ::= <<
+PInsAtomRefGet_st(holder, ref, is_global, has_effect) ::= <<
 <if(is_global)><else>var <endif><holder> = <atom_ref_manager()>.getElement(<ref>);
+<sys_ins_schedule_out_yes(has_effect)>
 >>
 
-PInsAtomRefUpdate_st(ref, exp) ::= <<
+PInsAtomRefUpdate_st(ref, exp, has_effect) ::= <<
 <atom_ref_manager()>.setElement(<ref>, <exp>);
+<sys_ins_schedule_out_yes(has_effect)>
 >>
 
 
-PInsArrayRefCreate_st(holder, len, init, is_global) ::= <<
+PInsArrayRefCreate_st(holder, len, init, is_global, has_effect) ::= <<
 <if(is_global)><else>var <endif><holder> = <array_ref_manager()>.allocate(<len>, <init>);
+<sys_ins_schedule_out_no(has_effect)>
 >>
 
-PInsArrayRefGet_st(holder, ref, pos, is_global) ::= <<
+PInsArrayRefGet_st(holder, ref, pos, is_global, has_effect) ::= <<
 <if(is_global)><else>var <endif><holder> = <array_ref_manager()>.getElement(<ref>, <pos>);
+<sys_ins_schedule_out_yes(has_effect)>
 >>
 
-PInsArrayRefUpdate_st(ref, pos, exp) ::= <<
+PInsArrayRefUpdate_st(ref, pos, exp, has_effect, has_effect) ::= <<
 <array_ref_manager()>.setElement(<ref>, <pos>, <exp>);
+<sys_ins_schedule_out_yes(has_effect)>
 >>
 
-PInsTIdAllocate_st(holder, is_global) ::= <<
+PInsTIdAllocate_st(holder, is_global, has_effect) ::= <<
 <if(is_global)><else>var <endif><holder> = <sys_tid_allocator()>.allocate();
+<sys_ins_schedule_out_no(has_effect)>
 >>
 
 PInsMCSet_st(gv, v) ::= <<
 <gv> = <v>;
+<sys_ins_schedule_out_yes(true)>
 >>
 
 PInsMCGet_st(holder, gv) ::= <<
 var <holder> = <gv>;
+<sys_ins_schedule_out_yes(true)>
 >>
 
 PProcGrpMCAtomicStart_st(proc) ::= <<
@@ -518,7 +544,7 @@ PInsMCVLockViewPut_st(v) ::= <<
 <view_manager()>.put(<v>);
 >>
 
-PInsSharedCreate_st(holder, v, n, is_global) ::= <<
+PInsSharedCreate_st(holder, v, n, is_global, has_effect) ::= <<
 var bound = <n> + 2;
 <if(is_global)><else>var <endif><holder> = <sys_mylib()>.createTuple(bound);
 <sys_mylib()>.setTupleElement(<holder>, 0, <v>);  // value
@@ -528,6 +554,7 @@ while (index \< bound) {
     <sys_mylib()>.setTupleElement(<holder>, index, <sys_cond_manager()>.allocate());
     index = index + 1;
 };
+<sys_ins_schedule_out_no(has_effect)>
 >>
 
 

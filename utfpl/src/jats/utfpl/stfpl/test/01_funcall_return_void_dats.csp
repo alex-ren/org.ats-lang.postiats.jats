@@ -18,7 +18,7 @@ var<ViewManager> view_manager = new ViewManager();
 
 // =====================
 // For global exclusion.
-var glb = 0;
+var sys_glb = 0;
 
 // =====================
 
@@ -61,7 +61,7 @@ Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args ->  // It's safe to use *atomic
   ifa (sys_thread_num == 0) {Skip}
   ;
 
-proc_thread_finalize(sys_tid) = 
+sys_proc_thread_finalize(sys_tid) = 
   thread_finalize.sys_tid{
     sys_gstack.delete_frame(sys_tid); 
     sys_thread_num--;
@@ -186,41 +186,41 @@ foo1_63(sys_tid) =
   Skip
   ;
 
-foo2_64(sys_tid) =
-  foo2_64_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
-  sys_gstack.add_frame(sys_tid, __temp_list_args);
-  } ->
-  foo1_63(sys_tid);
-  foo2_64_s2.sys_tid{  sys_gstack.delete_frame(sys_tid);
-  sys_gstack.frame_push(sys_tid, 3);
-  } ->
-  Skip
-  ;
+foo2_64(sys_tid) = Skip;
+//   [cur_tid == sys_tid] foo2_64_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+//   sys_gstack.add_frame(sys_tid, __temp_list_args);
+//   } -> Skip;
+//   foo1_63(sys_tid);
+//   [sys_cur_tid == sys_tid] foo2_64_s2.sys_tid{  sys_gstack.delete_frame(sys_tid);
+//   sys_gstack.frame_push(sys_tid, 3);
+//   } -> Skip;
+//   Skip
+//   ;
 
-foo3_66(sys_tid) =
-  foo3_66_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
-  sys_gstack.reload_frame(sys_tid, __temp_list_args);
-  } ->
-  foo1_63(sys_tid)
-  ;
+foo3_66(sys_tid) = Skip;
+//  [sys_cur_tid == sys_tid] foo3_66_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+//  sys_gstack.reload_frame(sys_tid, __temp_list_args);
+//  } -> Skip;
+//  foo1_63(sys_tid)
+//  ;
 
 // =====================
 
-main_s(sys_tid) = 
-  main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
+sys_main(sys_tid) = 
+  sys_main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
-            } ->
-  main10_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+            } -> Skip;
+  [sys_cur_tid == sys_tid] main10_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   sys_gstack.add_frame(sys_tid, __temp_list_args);
-  } ->
+  } -> Skip;
   foo2_64(sys_tid);
-  main10_id_s2.sys_tid{  var temp5_id = sys_gstack.retopr_frame(sys_tid);
+  [sys_cur_tid == sys_tid] main10_id_s2.sys_tid{  var temp5_id = sys_gstack.retopr_frame(sys_tid);
   sys_mylib_obj.mc_print(temp5_id);
-  } ->
+  } -> Skip;
   Skip; 
-  proc_thread_finalize(sys_tid);
+  sys_proc_thread_finalize(sys_tid);
 
-main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
+main = sys_main(sys_tid_allocator.allocate()) ||| Scheduler;
 
 #define sys_assertion sys_assert_var == true;
 

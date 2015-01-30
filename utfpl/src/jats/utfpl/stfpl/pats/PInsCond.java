@@ -7,7 +7,8 @@ public class PInsCond extends PIns {
     public List<PStat> m_true;
     public List<PStat> m_false;
 
-    public PInsCond(PExp cond, List<PStat> trueBranch, List<PStat> falseBranch) {
+    public PInsCond(PExp cond, List<PStat> trueBranch, List<PStat> falseBranch, boolean effect) {
+    	super(effect);
         m_cond = cond;
         m_true = trueBranch;
         m_false = falseBranch;

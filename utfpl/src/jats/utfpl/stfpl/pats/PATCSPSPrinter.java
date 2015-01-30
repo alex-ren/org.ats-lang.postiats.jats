@@ -375,11 +375,12 @@ public class PATCSPSPrinter implements PNodeVisitor {
     
 	@Override
 	public Object visit(PInsAtomRefCreate node) {
-		// PInsAtomRefCreate_st(holder, init, is_global) ::= <<
+		// PInsAtomRefCreate_st(holder, init, is_global, has_effect) ::= <<
 		ST st = m_stg.getInstanceOf("PInsAtomRefCreate_st");
 		st.add("holder", node.m_holder.toStringMCIns());
 		st.add("init", node.m_v.accept(this));
 		st.add("is_global", node.m_holder.getSId().isGlobalValue());
+		st.add("has_effect", node.hasSideEffect());
 		return st;
 	}
 
@@ -387,22 +388,24 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsAtomRefGet node) {
-        // PInsAtomRefGet_st(holder, ref, is_global) ::= <<
+        // PInsAtomRefGet_st(holder, ref, is_global, has_effect) ::= <<
         ST st = m_stg.getInstanceOf("PInsAtomRefGet_st");
         st.add("ref", node.m_globalVar.accept(this));
       
         st.add("holder", node.m_localHolder.toStringMCIns());
         st.add("is_global", node.m_localHolder.getSId().isGlobalValue()); 
+        st.add("has_effect", node.hasSideEffect());
         return st;        
         
     }
 
     @Override
     public Object visit(PInsAtomRefUpdate node) {
-        // PInsAtomRefUpdate_st(ref, exp) ::= <<
+        // PInsAtomRefUpdate_st(ref, exp, has_effect) ::= <<
         ST st = m_stg.getInstanceOf("PInsAtomRefUpdate_st");
         st.add("ref", node.m_globalVar.accept(this));
         st.add("exp", node.m_localSrc.accept(this));
+        st.add("has_effect", node.hasSideEffect());
         
         return st;
     }
@@ -437,8 +440,8 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
     public Object visit(PProcThreadCreate node) {
-	    // pprocthreadcreate_st(tid, funaddr, args) ::= <<
-		ST st = m_stg.getInstanceOf("pprocthreadcreate_st");
+	    // PProcThreadCreate_st(tid, funaddr, args) ::= <<
+		ST st = m_stg.getInstanceOf("PProcThreadCreate_st");
 		st.add("tid", node.m_tid.accept(this));
 		st.add("funaddr", node.m_funlab.getAddr().toStringMCIns());
 		st.add("args", node.m_args.accept(this));
@@ -450,14 +453,15 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsMutexCreate node) {
-        // pinsmutexalloc_st(holder, is_global) ::= <<
-    	ST st = m_stg.getInstanceOf("pinsmutexalloc_st");
+        // PInsMutexCreate_st(holder, is_global, has_effect) ::= <<
+    	ST st = m_stg.getInstanceOf("PInsMutexCreate_st");
     	st.add("holder", node.m_holder.toStringMCIns());
     	if (node.m_holder.getSId().isGlobalValue()) {
     		st.add("is_global", true);
     	} else {
     		st.add("is_global", false);
     	}
+    	st.add("has_effect", node.hasSideEffect());
     	
     	return st;
     }
@@ -485,10 +489,10 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
     @Override
     public Object visit(PInsMCAssert node) {
-        // pinsmcassert_st(pred) ::= <<
+        // PInsMCAssert_st(pred, has_effect) ::= <<
         ST st = m_stg.getInstanceOf("pinsmcassert_st");
         st.add("pred", node.m_localSrc.accept(this));
-        
+        st.add("has_effect", node.hasSideEffect());
         return st;
     }
 
@@ -596,47 +600,48 @@ public class PATCSPSPrinter implements PNodeVisitor {
 		return st;
 	}
 
-
-	@Override
-	public Object visit(PInsArrayRefUpdate node) {
-        // PInsArrayRefUpdate_st(ref, pos, exp) ::= <<
-        ST st = m_stg.getInstanceOf("PInsArrayRefUpdate_st");
-        st.add("ref", node.m_ref.accept(this));
-        st.add("pos", node.m_pos.accept(this));
-        st.add("exp", node.m_v.accept(this));
-        
-        return st;
-	}
-
-
 	@Override
 	public Object visit(PInsArrayRefCreate node) {
-		// PInsArrayRefCreate_st(holder, len, init, is_global) ::= <<
+		// PInsArrayRefCreate_st(holder, len, init, is_global, has_effect) ::= <<
 		ST st = m_stg.getInstanceOf("PInsArrayRefCreate_st");
 		st.add("holder", node.m_holder.toStringMCIns());
 		st.add("len", node.m_len.accept(this));
 		st.add("init", node.m_v.accept(this));
 		st.add("is_global", node.m_holder.getSId().isGlobalValue());
+		st.add("has_effect", node.hasSideEffect());
 		return st;
 	}
 
 
 	@Override
 	public Object visit(PInsArrayRefGet node) {
-        // PInsArrayRefGet_st(holder, ref, pos, is_global) ::= <<
+        // PInsArrayRefGet_st(holder, ref, pos, is_global, has_effect) ::= <<
         ST st = m_stg.getInstanceOf("PInsArrayRefGet_st");
         st.add("ref", node.m_ref.accept(this));
         st.add("pos", node.m_pos.accept(this));
       
         st.add("holder", node.m_holder.toStringMCIns());
         st.add("is_global", node.m_holder.getSId().isGlobalValue()); 
+        st.add("has_effect", node.hasSideEffect());
         return st;
 	}
 
 
 	@Override
+	public Object visit(PInsArrayRefUpdate node) {
+        // PInsArrayRefUpdate_st(ref, pos, exp, has_effect) ::= <<
+        ST st = m_stg.getInstanceOf("PInsArrayRefUpdate_st");
+        st.add("ref", node.m_ref.accept(this));
+        st.add("pos", node.m_pos.accept(this));
+        st.add("exp", node.m_v.accept(this));
+        st.add("has_effect", node.hasSideEffect());
+        
+        return st;
+	}
+
+	@Override
 	public Object visit(PInsTIdAllocate node) {
-        // PInsTIdAllocate_st(holder, is_global) ::= <<
+        // PInsTIdAllocate_st(holder, is_global, has_effect) ::= <<
     	ST st = m_stg.getInstanceOf("PInsTIdAllocate_st");
     	st.add("holder", node.m_holder.toStringMCIns());
     	if (node.m_holder.getSId().isGlobalValue()) {
@@ -644,6 +649,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     	} else {
     		st.add("is_global", false);
     	}
+    	st.add("has_effect", node.hasSideEffect());
     	
     	return st;
 	}
@@ -651,7 +657,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 	@Override
 	public Object visit(PInsSharedCreate node) {
-	    // PInsSharedCreate_st(holder, v, n, is_global) ::= <<
+	    // PInsSharedCreate_st(holder, v, n, is_global, has_effect) ::= <<
 		ST st = m_stg.getInstanceOf("PInsSharedCreate_st");
 		st.add("holder", node.m_holder.toStringMCIns());
 		st.add("v", node.m_v.accept(this));
@@ -662,6 +668,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
 			st.add("is_global", false);
 		}
 		
+		st.add("has_effect", node.hasSideEffect());
 		return st;
 	}
 

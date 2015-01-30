@@ -7,7 +7,8 @@ public class PInsAtomRefCreate extends PIns {
     public MCSId m_holder;
     public PExp m_v;  // initial value
     
-    public PInsAtomRefCreate(MCSId holder, PExp v) {
+    public PInsAtomRefCreate(MCSId holder, PExp v, boolean effect) {
+    	super(effect);
         m_holder = holder;
         m_v = v;
     }

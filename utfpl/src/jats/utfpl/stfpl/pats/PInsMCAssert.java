@@ -4,7 +4,8 @@ public class PInsMCAssert extends PIns {
     
     public PExp m_localSrc;
     
-    public PInsMCAssert(PExp localSrc) {
+    public PInsMCAssert(PExp localSrc, boolean effect) {
+    	super(effect);
         m_localSrc = localSrc;
     }
 

@@ -6,7 +6,8 @@ public class PInsTIdAllocate extends PIns {
     
     public MCSId m_holder;
     
-    public PInsTIdAllocate(MCSId holder) {
+    public PInsTIdAllocate(MCSId holder, boolean effect) {
+    	super(effect);
         m_holder = holder;
     }
 

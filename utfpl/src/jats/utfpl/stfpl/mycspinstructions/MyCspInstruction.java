@@ -9,7 +9,7 @@ public abstract class MyCspInstruction {
         m_effect = effect;
     }
     
-    boolean hasSideEffect() {
+    public boolean hasSideEffect() {
     	return m_effect;
     }
     

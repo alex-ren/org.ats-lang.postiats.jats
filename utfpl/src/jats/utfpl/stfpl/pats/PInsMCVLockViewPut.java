@@ -4,7 +4,8 @@ package jats.utfpl.stfpl.pats;
 public class PInsMCVLockViewPut extends PIns {
 	public PExp m_v;
 	
-	public PInsMCVLockViewPut(PExp v) {
+	public PInsMCVLockViewPut(PExp v, boolean effect) {
+    	super(effect);
 		m_v = v;
 	}
 

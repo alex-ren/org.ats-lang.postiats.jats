@@ -10,7 +10,8 @@ public class PInsMCVLockViewGet extends PIns {
 	public List<PExp> m_args;
 	public MCSId m_holder;
 	
-	PInsMCVLockViewGet(List<PExp> args, MCSId holder) {
+	PInsMCVLockViewGet(List<PExp> args, MCSId holder, boolean effect) {
+    	super(effect);
 		m_args = args;
 		m_holder = holder;
 	}
