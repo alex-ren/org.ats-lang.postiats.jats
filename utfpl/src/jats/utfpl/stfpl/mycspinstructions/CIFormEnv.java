@@ -7,8 +7,8 @@ public class CIFormEnv extends MyCspInstruction {
     public List<MyCspTempID> m_eles;
     public MyCspTempID m_holder;
     
-    public CIFormEnv(List<MyCspTempID> eles, MyCspTempID holder, MyCspGroup blk) {
-        super(blk);
+    public CIFormEnv(List<MyCspTempID> eles, MyCspTempID holder, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         
         m_holder = holder;
         m_eles = eles;

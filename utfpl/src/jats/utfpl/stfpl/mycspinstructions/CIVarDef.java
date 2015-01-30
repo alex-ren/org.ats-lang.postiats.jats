@@ -14,7 +14,7 @@ public class CIVarDef extends MyCspInstruction {
     public MyCspTempID m_id;
     
     public CIVarDef(MyCspTempID id, MyCspGroup blk) {
-        super(blk);
+        super(blk, false);
         m_id = id;
     }
 

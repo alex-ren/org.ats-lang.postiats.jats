@@ -7,8 +7,8 @@ public class CIMove extends MyCspInstruction {
     public IMyCspTemp m_vp;
 
 
-    public CIMove(IMyCspTemp vp, MyCspTempID holder, MyCspGroup blk) {
-        super(blk);
+    public CIMove(IMyCspTemp vp, MyCspTempID holder, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_holder = holder;
         m_vp = vp;
         if (AuxSType.isVoid(vp.getType())) {

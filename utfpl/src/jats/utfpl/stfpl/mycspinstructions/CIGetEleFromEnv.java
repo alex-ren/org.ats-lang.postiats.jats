@@ -7,8 +7,8 @@ public class CIGetEleFromEnv extends MyCspInstruction {
     public MyCspTempID m_holder;
     public MyCspTempID m_env;
     
-    public CIGetEleFromEnv(MyCspTempID holder, MyCspTempID env, String lab, int index, MyCspGroup blk) {
-        super(blk);
+    public CIGetEleFromEnv(MyCspTempID holder, MyCspTempID env, String lab, int index, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         
         m_lab = lab;
         m_index = index;

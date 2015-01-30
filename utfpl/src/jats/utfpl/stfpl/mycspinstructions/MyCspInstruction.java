@@ -2,9 +2,15 @@ package jats.utfpl.stfpl.mycspinstructions;
 
 public abstract class MyCspInstruction {
     private MyCspGroup m_blk;
+    private boolean m_effect;
     
-    public MyCspInstruction(MyCspGroup blk) {
+    public MyCspInstruction(MyCspGroup blk, boolean effect) {
         m_blk = blk;
+        m_effect = effect;
+    }
+    
+    boolean hasSideEffect() {
+    	return m_effect;
     }
     
     public MyCspGroup getBlock() {

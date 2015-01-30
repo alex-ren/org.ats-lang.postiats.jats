@@ -6,8 +6,8 @@ public class CIArrayRefUpdate extends MyCspInstruction {
     public IMyCspTemp m_pos;
     public IMyCspTemp m_v;
 
-    public CIArrayRefUpdate(MyCspTempID ref, IMyCspTemp pos, IMyCspTemp v, MyCspGroup blk) {
-        super(blk);
+    public CIArrayRefUpdate(MyCspTempID ref, IMyCspTemp pos, IMyCspTemp v, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_ref = ref;
         m_pos = pos;
         m_v = v;

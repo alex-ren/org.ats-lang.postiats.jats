@@ -4,8 +4,8 @@ public class CIAtomRefCreate extends MyCspInstruction {
     public MyCspTempID m_holder;
     public IMyCspTemp m_vp;
     
-    public CIAtomRefCreate(MyCspTempID holder, IMyCspTemp vp, MyCspGroup blk) {
-        super(blk);
+    public CIAtomRefCreate(MyCspTempID holder, IMyCspTemp vp, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_holder = holder;
         m_vp = vp;
     }

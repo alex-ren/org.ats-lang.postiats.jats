@@ -1,6 +1,6 @@
 package jats.utfpl.stfpl.pats;
 
-public class PInsMCAssert implements PIns {
+public class PInsMCAssert extends PIns {
     
     public PExp m_localSrc;
     

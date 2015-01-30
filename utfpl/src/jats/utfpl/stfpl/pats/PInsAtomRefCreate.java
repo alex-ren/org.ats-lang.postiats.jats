@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsAtomRefCreate implements PIns {
+public class PInsAtomRefCreate extends PIns {
     
     public MCSId m_holder;
     public PExp m_v;  // initial value

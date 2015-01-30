@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.pats;
 
 
-public class PInsArrayRefUpdate implements PIns {
+public class PInsArrayRefUpdate extends PIns {
     
     public PExp m_ref;
     public PExp m_pos;

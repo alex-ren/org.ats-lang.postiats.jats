@@ -8,8 +8,8 @@ public class CIPatLabDecompose extends MyCspInstruction {
     public MyCspTempID m_holder;
     public IMyCspTemp m_record;
     
-    public CIPatLabDecompose(MyCspTempID holder, IMyCspTemp vp, Ilabel lab, int index, MyCspGroup blk) {
-        super(blk);
+    public CIPatLabDecompose(MyCspTempID holder, IMyCspTemp vp, Ilabel lab, int index, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         
         m_holder = holder;
         m_record = vp;

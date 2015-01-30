@@ -6,8 +6,11 @@ public class CIReturn extends MyCspInstruction {
     
     public IMyCspTemp m_v;
 
-    public CIReturn(IMyCspTemp v, MyCspGroup blk) {
-        super(blk);
+    public CIReturn(IMyCspTemp v, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
+        if (true == effect) {
+        	throw new Error("Should not happen.");
+        }
         m_v = v;
         
         if (AuxSType.isVoid(v.getType())) {

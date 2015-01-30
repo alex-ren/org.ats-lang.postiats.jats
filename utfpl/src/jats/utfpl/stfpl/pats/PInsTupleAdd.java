@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsTupleAdd implements PExp {
+public class PInsTupleAdd extends PIns {
     
     public MCSId m_tupname;
     public PExp  m_v;

@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import java.util.List;
 
-public class PInsCond implements PIns {
+public class PInsCond extends PIns {
     public PExp m_cond;
     public List<PStat> m_true;
     public List<PStat> m_false;

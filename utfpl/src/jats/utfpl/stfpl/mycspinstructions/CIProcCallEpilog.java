@@ -9,7 +9,7 @@ public class CIProcCallEpilog extends MyCspInstruction {
                            // m_ret.isRet() == false
     
     public CIProcCallEpilog(MyCspGroup blk, MCSId funlab, MyCspTempID holder) {
-    	super(blk);
+        super(blk, false);
     	m_funlab = funlab;
     	m_holder = holder;
     }

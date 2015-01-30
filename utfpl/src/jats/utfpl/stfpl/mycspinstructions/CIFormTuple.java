@@ -7,8 +7,8 @@ public class CIFormTuple extends MyCspInstruction {
     public List<IMyCspTemp> m_eles;
     public MyCspTempID m_holder;
     
-    public CIFormTuple(List<IMyCspTemp> eles, MyCspTempID holder, MyCspGroup blk) {
-        super(blk);
+    public CIFormTuple(List<IMyCspTemp> eles, MyCspTempID holder, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         
         m_holder = holder;
         m_eles = eles;

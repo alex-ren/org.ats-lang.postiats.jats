@@ -1,20 +1,25 @@
 D2Cnone
 
-staload "/tmp/conats3633150373452935/conats.sats"
+staload "/tmp/conats42547082462618/conats.sats"
 
-fun foo_63 = lam () <fun> = 
+fun foo1_63 = lam (<P2Tann>(x_64:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    <D2Esym>(+) (x_64, 1):int:t@ype)
+
+fun foo_65 = lam () <fun> = 
   <D2EannSeff>(
     let
-      val g_64 = D2Ecst<conats_mutex_create_2570:(() -<fun> mutex_t_724_0())> ()
-      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_64)
-      val () = D2Ecst<conats_mutex_release_2572:((mutex_t_724_0()) -<fun> void)> (g_64)
-      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_64)
-      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_64)
+      val q_66 = foo1_63 (3)
+      val g_67 = D2Ecst<conats_mutex_create_2570:(() -<fun> mutex_t_724_0())> ()
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_67)
+      val () = D2Ecst<conats_mutex_release_2572:((mutex_t_724_0()) -<fun> void)> (g_67)
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_67)
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_67)
     in
       ()
     end:void:t@ype)
 
-val () = foo_63 ()
+val () = foo_65 ()
 
 %{
 #assert main deadlockfree;

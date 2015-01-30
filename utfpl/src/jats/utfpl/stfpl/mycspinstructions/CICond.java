@@ -9,10 +9,13 @@ public class CICond extends MyCspInstruction {
     public List<MyCspInstruction> m_true;
     public List<MyCspInstruction> m_false;
 
-    public CICond(MyCspTempID holder, IMyCspTemp cond, 
-            List<MyCspInstruction> trueBranch, List<MyCspInstruction> falseBranch, 
-            MyCspGroup blk) {
-        super(blk);
+    public CICond(MyCspTempID holder, 
+    		IMyCspTemp cond, 
+            List<MyCspInstruction> trueBranch, 
+            List<MyCspInstruction> falseBranch, 
+            MyCspGroup blk,
+            boolean effect) {
+        super(blk, effect);
         m_holder = holder;
         m_cond = cond;
         m_true = trueBranch;

@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.pats;
 
 
-public class PInsAtomRefUpdate implements PIns {
+public class PInsAtomRefUpdate extends PIns {
     
     public PExp m_globalVar;
     public PExp m_localSrc;

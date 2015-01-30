@@ -1,7 +1,7 @@
 package jats.utfpl.stfpl.pats;
 
 
-public class PInsMCVLockViewPut implements PIns {
+public class PInsMCVLockViewPut extends PIns {
 	public PExp m_v;
 	
 	public PInsMCVLockViewPut(PExp v) {

@@ -5,8 +5,8 @@ public class CIMCVLockViewPut extends MyCspInstruction {
 
     public MyCspTempID m_v;
 
-    public CIMCVLockViewPut(MyCspTempID v, MyCspGroup blk) {
-        super(blk);
+    public CIMCVLockViewPut(MyCspTempID v, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_v = v;
 
     }

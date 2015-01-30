@@ -8,8 +8,8 @@ public class CIFormClosure extends MyCspInstruction {
     public MyCspTempID m_env_name;
     
     
-    public CIFormClosure(MyCspTempID holder, MyCspTempID fun_name, MyCspTempID env_name, MyCspGroup blk) {
-        super(blk);
+    public CIFormClosure(MyCspTempID holder, MyCspTempID fun_name, MyCspTempID env_name, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
 
         m_holder = holder;
         m_env_name = env_name;

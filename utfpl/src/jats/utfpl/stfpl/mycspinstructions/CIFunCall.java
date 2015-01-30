@@ -12,8 +12,13 @@ public class CIFunCall extends MyCspInstruction {
     public boolean m_isTail;  // useless currently
 
     
-    public CIFunCall(MCSId funlab, List<IMyCspTemp> args, /* MyCspTempID envname, */MyCspTempID ret, boolean isTail, MyCspGroup blk) {
-        super(blk);
+    public CIFunCall(MCSId funlab, List<IMyCspTemp> args, 
+    		/* MyCspTempID envname, */
+    		MyCspTempID ret, 
+    		boolean isTail, 
+    		MyCspGroup blk,
+            boolean effect) {
+        super(blk, effect);
         m_funlab = funlab;
         m_args = args;
 //        m_envname = envname;

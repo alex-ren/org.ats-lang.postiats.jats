@@ -10,8 +10,12 @@ public class CIProcCallPrelogue extends MyCspInstruction {
 //	public MyCspTempID m_envname;
 	public boolean m_isTail;
 
-    public CIProcCallPrelogue(MCSId fun, MyCspGroup blk, List<IMyCspTemp> args, /*MyCspTempID envname, */boolean isTail) {
-        super(blk);
+    public CIProcCallPrelogue(MCSId fun, 
+    		MyCspGroup blk, 
+    		List<IMyCspTemp> args, 
+    		/*MyCspTempID envname, */
+    		boolean isTail) {
+        super(blk, false);
 //        m_fun = fun;
         m_args = args;
 //        m_envname = envname;

@@ -7,8 +7,8 @@ public class CIMCVLockViewGet extends MyCspInstruction {
     public List<IMyCspTemp> m_args;
     public MyCspTempID m_holder;
 
-    public CIMCVLockViewGet(List<IMyCspTemp> args, MyCspTempID holder, MyCspGroup blk) {
-        super(blk);
+    public CIMCVLockViewGet(List<IMyCspTemp> args, MyCspTempID holder, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_args = args;
         m_holder = holder;
 

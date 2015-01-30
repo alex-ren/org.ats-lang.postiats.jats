@@ -3,8 +3,8 @@ package jats.utfpl.stfpl.mycspinstructions;
 public class CIMutexCreate extends MyCspInstruction {
     public MyCspTempID m_holder;
     
-    public CIMutexCreate(MyCspTempID holder, MyCspGroup blk) {
-        super(blk);
+    public CIMutexCreate(MyCspTempID holder, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_holder = holder;
     }
 

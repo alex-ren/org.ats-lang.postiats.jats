@@ -5,8 +5,8 @@ public class CIAtomRefUpdate extends MyCspInstruction {
     public MyCspTempID m_ref;
     public IMyCspTemp m_localSrc;
 
-    public CIAtomRefUpdate(IMyCspTemp localSrc, MyCspTempID ref, MyCspGroup blk) {
-        super(blk);
+    public CIAtomRefUpdate(IMyCspTemp localSrc, MyCspTempID ref, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_ref = ref;
         m_localSrc = localSrc;
 

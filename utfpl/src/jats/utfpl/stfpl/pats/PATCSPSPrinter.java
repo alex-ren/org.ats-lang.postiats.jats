@@ -397,25 +397,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
     }
 
-
-//    @Override
-//    public Object visit(PInsLoadArray node) {
-//        // pinsloadarray_st(src, index, dst, is_global) ::= <<
-//        ST st = m_stg.getInstanceOf("pinsloadarray_st");
-//        st.add("src", node.m_globalVar);
-//        st.add("dst", node.m_localHolder);
-//        st.add("index", node.m_localIndex.accept(this));
-//        
-//        if (node.m_localHolder.isGlobal()) {  // assign to a global value
-//            st.add("is_global", true);
-//        } else {
-//            st.add("is_global", false);
-//        }
-//        
-//        return st;
-//    }
-
-
     @Override
     public Object visit(PInsAtomRefUpdate node) {
         // PInsAtomRefUpdate_st(ref, exp) ::= <<
@@ -425,18 +406,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
         
         return st;
     }
-
-
-//    @Override
-//    public Object visit(PInsStoreArray node) {
-//        // pinsstorearray_st(src, dst, index) ::= <<
-//    	ST st = m_stg.getInstanceOf("pinsstorearray_st");
-//    	st.add("src", node.m_localSrc.accept(this));
-//    	st.add("dst", node.m_globalVar);
-//    	st.add("index", node.m_localIndex.accept(this));
-//    	
-//    	return st;
-//    }
 
 
     @Override

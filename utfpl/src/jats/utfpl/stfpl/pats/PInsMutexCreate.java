@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsMutexCreate implements PIns {
+public class PInsMutexCreate extends PIns {
     
     public MCSId m_holder;
     

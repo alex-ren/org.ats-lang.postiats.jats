@@ -5,7 +5,7 @@ import jats.utfpl.stfpl.mcinstruction.MCSId;
 import java.util.List;
 
 
-public class PInsMCVLockViewGet implements PIns {
+public class PInsMCVLockViewGet extends PIns {
 	
 	public List<PExp> m_args;
 	public MCSId m_holder;

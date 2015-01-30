@@ -5,8 +5,12 @@ public class CIArrayRefCreate extends MyCspInstruction {
     public IMyCspTemp m_len;
     public IMyCspTemp m_v;
     
-    public CIArrayRefCreate(MyCspTempID holder, IMyCspTemp len, IMyCspTemp v, MyCspGroup blk) {
-        super(blk);
+    public CIArrayRefCreate(MyCspTempID holder, 
+    		IMyCspTemp len, 
+    		IMyCspTemp v, 
+    		MyCspGroup blk,
+    		boolean effect) {
+        super(blk, effect);
         m_holder = holder;
         m_len = len;
         m_v = v;

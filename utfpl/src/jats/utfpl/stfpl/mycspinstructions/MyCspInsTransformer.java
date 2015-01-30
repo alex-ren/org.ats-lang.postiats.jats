@@ -250,7 +250,7 @@ public class MyCspInsTransformer {
                 m_cbEvt.m_inslst = insLstBackup;
                 m_cblkLst = blkLstBackup;
                 
-                CICond nIns = new CICond(ctHolder/* may be null*/, ctCond, trueBranch, falseBranch, m_cbEvt);
+                CICond nIns = new CICond(ctHolder/* may be null*/, ctCond, trueBranch, falseBranch, m_cbEvt, false);
                 if (!ins.m_holder.getSId().isRetHolder() && ctHolder.isDefinition()) {
 //                    System.out.println("dddddddddddddddddd holder is " + ins.m_holder + "in " + m_funLab);
                     CIVarDef defIns = new CIVarDef(ctHolder, m_cbEvt);
@@ -300,7 +300,7 @@ public class MyCspInsTransformer {
                 
 //            	System.out.println("========== name is " + ins.m_fun.toStringMCIns());
                 MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-                CIFunCall nIns = new CIFunCall(ins.m_fun, nLst, ctHolder, ins.isTailCall(), m_cbEvt);
+                CIFunCall nIns = new CIFunCall(ins.m_fun, nLst, ctHolder, ins.isTailCall(), m_cbEvt, false);
 
                 handleReturnForNoEffect(nIns, ins.m_holder);
                 
@@ -314,14 +314,14 @@ public class MyCspInsTransformer {
 	        if (false == AuxSType.isVoid(ins.m_holder.getType())) {
 	            if (ins.m_holder.isRet()) {
 	            	IMyCspTemp retCTempID = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
-	    	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+	    	        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt, false);
 	    	        m_cbEvt.add(retIns);
 	    	        m_cblkLst.add(m_cbEvt);
 	    	        m_cbEvt = new GrpEvent(m_funLab, ++m_no);
 	            } else {
 	                IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
 	                MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-	                CIMove nIns = new CIMove(v, holder, m_cbEvt);
+	                CIMove nIns = new CIMove(v, holder, m_cbEvt, ins.hasSideEffect());
 	                m_cbEvt.add(nIns);
 	            }
 	        }
@@ -354,7 +354,7 @@ public class MyCspInsTransformer {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             
-            CIAtomRefCreate nIns = new CIAtomRefCreate(holder, vp, m_cbEvt);
+            CIAtomRefCreate nIns = new CIAtomRefCreate(holder, vp, m_cbEvt, ins.hasSideEffect());
             
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -368,7 +368,7 @@ public class MyCspInsTransformer {
             IMyCspTemp localSrc = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID globalDest = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
             
-            CIAtomRefUpdate nIns = new CIAtomRefUpdate(localSrc, globalDest, m_cbEvt);
+            CIAtomRefUpdate nIns = new CIAtomRefUpdate(localSrc, globalDest, m_cbEvt, ins.hasSideEffect());
 
             handleNoReturnForWithEffect(nIns);
             
@@ -381,7 +381,7 @@ public class MyCspInsTransformer {
             MyCspTempID globalVar = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID localHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CIAtomRefGet nIns = new CIAtomRefGet(globalVar, localHolder, m_cbEvt);
+            CIAtomRefGet nIns = new CIAtomRefGet(globalVar, localHolder, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForWithEffect(nIns, ins.m_holder);
             
@@ -392,7 +392,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsMutexCreate ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CIMutexCreate nIns = new CIMutexCreate(holder, m_cbEvt);
+            CIMutexCreate nIns = new CIMutexCreate(holder, m_cbEvt, ins.hasSideEffect());
             
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -403,7 +403,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsMCAssert ins) {
             IMyCspTemp localSrc = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             
-            CIMCAssert nIns = new CIMCAssert(localSrc, m_cbEvt);
+            CIMCAssert nIns = new CIMCAssert(localSrc, m_cbEvt, ins.hasSideEffect());
             m_cbEvt.add(nIns);
             
             // Add return ins
@@ -422,7 +422,7 @@ public class MyCspInsTransformer {
             MyCspTempID globalVar = TID2CTempID(ins.m_src, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID localHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CIMCGet nIns = new CIMCGet(globalVar, localHolder, m_cbEvt);
+            CIMCGet nIns = new CIMCGet(globalVar, localHolder, m_cbEvt, ins.hasSideEffect());
             m_cbEvt.add(nIns);
             
             // Add return ins
@@ -441,7 +441,7 @@ public class MyCspInsTransformer {
             IMyCspTemp localSrc = ValPrim2CTemp(ins.m_src, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID globalDest = TID2CTempID(ins.m_dst, m_subMap, m_funLab, m_cbEvt);
             
-            CIMCSet nIns = new CIMCSet(localSrc, globalDest, m_cbEvt);
+            CIMCSet nIns = new CIMCSet(localSrc, globalDest, m_cbEvt, ins.hasSideEffect());
 
             handleNoReturnForWithEffect(nIns);
             
@@ -452,7 +452,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsTuple ins) {
             List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_elements, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIFormTuple nIns = new CIFormTuple(nLst, ctHolder, m_cbEvt);
+            CIFormTuple nIns = new CIFormTuple(nLst, ctHolder, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForNoEffect(nIns, ins.m_holder);
 
@@ -463,7 +463,9 @@ public class MyCspInsTransformer {
         public Object visit(MCInsPatLabDecompose ins) {
             IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIPatLabDecompose nIns = new CIPatLabDecompose(holder, vp, ins.m_lab, ins.m_index, m_cbEvt);
+            CIPatLabDecompose nIns = 
+            		new CIPatLabDecompose(holder, vp, ins.m_lab, 
+            				ins.m_index, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForNoEffect(nIns, ins.m_holder);
 
@@ -474,7 +476,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsFormEnv ins) {
         	List<MyCspTempID> nLst = MCSIdList2CTempIdList(ins.m_env, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID ctHolder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIFormEnv nIns = new CIFormEnv(nLst, ctHolder, m_cbEvt);
+            CIFormEnv nIns = new CIFormEnv(nLst, ctHolder, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -485,7 +487,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsGetEleFromEnv ins) {
         	MyCspTempID env    = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIGetEleFromEnv nIns = new CIGetEleFromEnv(holder, env, ins.m_tag, ins.m_index, m_cbEvt);
+            CIGetEleFromEnv nIns = new CIGetEleFromEnv(holder, env, ins.m_tag, ins.m_index, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -497,7 +499,7 @@ public class MyCspInsTransformer {
         	MyCspTempID fun_name = TID2CTempID(ins.m_fun, m_subMap, m_funLab, m_cbEvt);
         	MyCspTempID env_name = TID2CTempID(ins.m_env, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder   = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIFormClosure nIns = new CIFormClosure(holder, fun_name, env_name, m_cbEvt);
+            CIFormClosure nIns = new CIFormClosure(holder, fun_name, env_name, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -531,7 +533,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsMCVLockViewGet ins) {
             List<IMyCspTemp> nLst = ValPrimLst2CTempLst(ins.m_args, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
-            CIMCVLockViewGet nIns = new CIMCVLockViewGet(nLst, holder, m_cbEvt);
+            CIMCVLockViewGet nIns = new CIMCVLockViewGet(nLst, holder, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForWithEffect(nIns, ins.m_holder);
 
@@ -542,7 +544,7 @@ public class MyCspInsTransformer {
         public Object visit(MCInsMCVLockViewPut ins) {
         	MyCspTempID v = TID2CTempID(ins.m_v, m_subMap, m_funLab, m_cbEvt);
 
-        	CIMCVLockViewPut nIns = new CIMCVLockViewPut(v, m_cbEvt);
+        	CIMCVLockViewPut nIns = new CIMCVLockViewPut(v, m_cbEvt, ins.hasSideEffect());
 
         	handleNoReturnForWithEffect(nIns);
 
@@ -569,7 +571,7 @@ public class MyCspInsTransformer {
 	            MyCspTempID retCTempID = TID2CTempID(holder, m_subMap, m_funLab, m_cbEvt);
 		        // No return for void
 		        if (false == AuxSType.isVoid(holder.getType())) {
-			        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+			        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt, false);
 			        m_cbEvt.add(retIns);
 		        }
 	        }
@@ -595,7 +597,7 @@ public class MyCspInsTransformer {
 	        MyCspTempID retCTempID = TID2CTempID(holder, m_subMap, m_funLab, m_cbEvt);
 	        // No return for void
 	        if (false == AuxSType.isVoid(holder.getType())) {
-		        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt);
+		        CIReturn retIns = new CIReturn(retCTempID, m_cbEvt, false);
 		        m_cbEvt.add(retIns);
 	        }
 	        m_cblkLst.add(m_cbEvt);
@@ -608,7 +610,7 @@ public class MyCspInsTransformer {
             IMyCspTemp len = ValPrim2CTemp(ins.m_len, m_subMap, m_funLab, m_cbEvt);
             IMyCspTemp vp = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
             
-            CIArrayRefCreate nIns = new CIArrayRefCreate(holder, len, vp, m_cbEvt);
+            CIArrayRefCreate nIns = new CIArrayRefCreate(holder, len, vp, m_cbEvt, ins.hasSideEffect());
             
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -622,7 +624,7 @@ public class MyCspInsTransformer {
             MyCspTempID ref = TID2CTempID(ins.m_ref, m_subMap, m_funLab, m_cbEvt);
             
             
-            CIArrayRefUpdate nIns = new CIArrayRefUpdate(ref, pos, v, m_cbEvt);
+            CIArrayRefUpdate nIns = new CIArrayRefUpdate(ref, pos, v, m_cbEvt, ins.hasSideEffect());
 
             handleNoReturnForWithEffect(nIns);
             
@@ -635,7 +637,7 @@ public class MyCspInsTransformer {
             IMyCspTemp pos = ValPrim2CTemp(ins.m_pos, m_subMap, m_funLab, m_cbEvt);
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CIArrayRefGet nIns = new CIArrayRefGet(ref, pos, holder, m_cbEvt);
+            CIArrayRefGet nIns = new CIArrayRefGet(ref, pos, holder, m_cbEvt, ins.hasSideEffect());
 
             handleReturnForWithEffect(nIns, ins.m_holder);
             
@@ -646,7 +648,7 @@ public class MyCspInsTransformer {
 		public Object visit(MCInsTIdAllocate ins) {
             MyCspTempID holder = TID2CTempID(ins.m_holder, m_subMap, m_funLab, m_cbEvt);
             
-            CITIdAllocate nIns = new CITIdAllocate(holder, m_cbEvt);
+            CITIdAllocate nIns = new CITIdAllocate(holder, m_cbEvt, ins.hasSideEffect());
             
             handleReturnForNoEffect(nIns, ins.m_holder);
             
@@ -659,7 +661,7 @@ public class MyCspInsTransformer {
 			IMyCspTemp v = ValPrim2CTemp(ins.m_vp, m_subMap, m_funLab, m_cbEvt);
 			IMyCspTemp n = ValPrim2CTemp(ins.m_n, m_subMap, m_funLab, m_cbEvt);
 			
-			CISharedCreate nins = new CISharedCreate(holder, v, n, m_cbEvt);
+			CISharedCreate nins = new CISharedCreate(holder, v, n, m_cbEvt, ins.hasSideEffect());
 			m_cbEvt.add(nins);
 			
 //			MCSId m = m_fac.createLocalVar("mutex", BlankType.cInstance);

@@ -9,6 +9,10 @@ sys_gstack() ::= <<sys_gstack>>
 sys_tid() ::= <<sys_tid>>
 
 sys_cur_tid() ::= <<sys_cur_tid>>
+sys_sch_tid() ::= <<-1>>
+
+sys_schedule_in() ::= <<[<sys_cur_tid()> == <sys_tid()>]>>
+sys_schedule_out() ::= <<<sys_cur_tid()> = <sys_sch_tid()>;>>
 
 sys_mylib() ::= <<sys_mylib_obj>>
 
@@ -307,8 +311,8 @@ ifb (<cond>) {
 >>
   
 pevent_st(tag, stat_lst) ::= <<
-<tag>.<sys_tid()>{  <stat_lst; separator="\n">
-}
+<sys_schedule_in()> <tag>.<sys_tid()>{  <stat_lst; separator="\n">
+} -> Skip
 >>
 
 PExpFuncCall_st(is_sym, fun_lab, arg_lst) ::= <<
@@ -356,7 +360,7 @@ pexpstackopr_int_t(frame, pos) ::= <<
 >>
 
 pprocevent_st(evt, proc) ::= <<
-<evt> ->
+<evt>;
 <proc>
 >>
 
@@ -405,21 +409,6 @@ if (<cond>) {
 }
 >>
 
-pinsload_st(src, dst) ::= <<
-var <dst> = <src>;
->> 
-
-pinsloadarray_st(src, index, dst, is_global) ::= <<
-<if(is_global)><else>var <endif><dst> = <src>[<index>];
->>
-
-pinsstore_st(src, dst) ::= <<
-<dst> = <src>;
->>
-
-pinsstorearray_st(src, dst, index) ::= <<
-<dst>[<index>] = <src>
->>
 
 pinsmutexalloc_st(holder, is_global) ::= <<
 <if(is_global)><else>var <endif><holder> = <sys_mutex_manager()>.allocate();
@@ -482,7 +471,7 @@ PInsAtomRefGet_st(holder, ref, is_global) ::= <<
 >>
 
 PInsAtomRefUpdate_st(ref, exp) ::= <<
-<atom_ref_manager()>.setElement(<ref>, <exp>)
+<atom_ref_manager()>.setElement(<ref>, <exp>);
 >>
 
 
@@ -495,7 +484,7 @@ PInsArrayRefGet_st(holder, ref, pos, is_global) ::= <<
 >>
 
 PInsArrayRefUpdate_st(ref, pos, exp) ::= <<
-<array_ref_manager()>.setElement(<ref>, <pos>, <exp>)
+<array_ref_manager()>.setElement(<ref>, <pos>, <exp>);
 >>
 
 PInsTIdAllocate_st(holder, is_global) ::= <<

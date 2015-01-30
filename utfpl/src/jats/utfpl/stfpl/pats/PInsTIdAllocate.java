@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsTIdAllocate implements PIns {
+public class PInsTIdAllocate extends PIns {
     
     public MCSId m_holder;
     

@@ -182,33 +182,46 @@ var sys_assert_var = true;
 // =====================
 
 
-foo_63(sys_tid) =
-  foo_63_s1.sys_tid{  var g_64 = sys_mutex_manager.allocate();
-  sys_gstack.frame_push(sys_tid, g_64);
+foo1_63(sys_tid) =
+  foo1_63_s1.sys_tid{  var ret2_id = call(add, sys_gstack.frame_get(sys_tid, 0, 0), 1);
+  sys_gstack.frame_push(sys_tid, ret2_id);
+  } ->
+  Skip
+  ;
+
+foo_65(sys_tid) =
+  foo_65_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (3, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } ->
+  foo1_63(sys_tid);
+  foo_65_s2.sys_tid{  var q_66 = sys_gstack.retopr_frame(sys_tid);
+  var g_67 = sys_mutex_manager.allocate();
+  sys_gstack.frame_push(sys_tid, g_67);
   var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (g_64, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (g_67, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_mutex_acquire(sys_tid);
-  foo_63_s2.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  foo_65_s3.sys_tid{  sys_gstack.delete_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_mutex_release(sys_tid);
-  foo_63_s3.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  foo_65_s4.sys_tid{  sys_gstack.delete_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_mutex_acquire(sys_tid);
-  foo_63_s4.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  foo_65_s5.sys_tid{  sys_gstack.delete_frame(sys_tid);
   var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
   conats_mutex_acquire(sys_tid);
-  foo_63_s5.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  foo_65_s6.sys_tid{  sys_gstack.delete_frame(sys_tid);
   } ->
   Skip
   ;
@@ -219,11 +232,11 @@ sys_main(sys_tid) =
   sys_main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } ->
-  main9_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  main11_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } ->
-  foo_63(sys_tid);
-  main9_id_s2.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  foo_65(sys_tid);
+  main11_id_s2.sys_tid{  sys_gstack.delete_frame(sys_tid);
   } ->
   Skip; 
   sys_proc_thread_finalize(sys_tid);

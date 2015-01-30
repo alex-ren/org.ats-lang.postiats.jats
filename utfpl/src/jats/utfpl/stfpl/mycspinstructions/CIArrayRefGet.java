@@ -6,8 +6,8 @@ public class CIArrayRefGet extends MyCspInstruction {
     public IMyCspTemp m_pos;
     public MyCspTempID m_holder;
 
-    public CIArrayRefGet(MyCspTempID ref, IMyCspTemp pos, MyCspTempID holder, MyCspGroup blk) {
-        super(blk);
+    public CIArrayRefGet(MyCspTempID ref, IMyCspTemp pos, MyCspTempID holder, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_ref = ref;
         m_pos = pos;
         m_holder = holder;

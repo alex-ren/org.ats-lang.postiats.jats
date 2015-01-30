@@ -2,7 +2,7 @@ package jats.utfpl.stfpl.pats;
 
 import jats.utfpl.stfpl.mcinstruction.MCSId;
 
-public class PInsSharedCreate implements PIns {
+public class extends implements PIns {
     
     public MCSId m_holder;
 	public PExp m_v;

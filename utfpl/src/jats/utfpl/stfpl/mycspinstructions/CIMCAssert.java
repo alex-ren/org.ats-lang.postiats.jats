@@ -4,8 +4,8 @@ public class CIMCAssert extends MyCspInstruction {
 
     public IMyCspTemp m_localSrc;
 
-    public CIMCAssert(IMyCspTemp localSrc, MyCspGroup blk) {
-        super(blk);
+    public CIMCAssert(IMyCspTemp localSrc, MyCspGroup blk, boolean effect) {
+        super(blk, effect);
         m_localSrc = localSrc;
 
     }
