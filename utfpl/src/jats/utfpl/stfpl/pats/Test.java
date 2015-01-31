@@ -17,14 +17,14 @@ public class Test {
     public static void main(String[] args) throws IOException, InterruptedException, RecognitionException {
         String[] paths = { 
 
-		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
-//				"src/jats/utfpl/stfpl/test/02_closure_call.dats",
+//		"src/jats/utfpl/stfpl/test/01_funcall_return_void.dats"
+//				"src/jats/utfpl/stfpl/test/02_closure_call.dats"
 //				"src/jats/utfpl/stfpl/test/02_2_closure_level.dats",
 ////				"src/jats/utfpl/stfpl/test/02_3_closure_return.dats", // This is not working, since S2EFun has no info of closure.
 //				"src/jats/utfpl/stfpl/test/03_symbol_opr.dats",
 //				"src/jats/utfpl/stfpl/test/04_if_function.dats",
 //        		"src/jats/utfpl/stfpl/test/04_2_if_function_tag.dats"
-//				"src/jats/utfpl/stfpl/test/05_use_ref.dats"
+				"src/jats/utfpl/stfpl/test/05_use_ref.dats"
 //				"src/jats/utfpl/stfpl/test/06_mc_assert.dats",
 //				"src/jats/utfpl/stfpl/test/07_use_array.dats",
 //				"src/jats/utfpl/stfpl/test/08_use_mutex.dats"

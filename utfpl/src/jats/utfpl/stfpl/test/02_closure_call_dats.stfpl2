@@ -17,3 +17,10 @@ fun foo3_67 = lam () <clo> =
   <D2EannFunclo><clo_ref>(
     <D2EannSeff>(
       foo1_63 ():void:t@ype))
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

@@ -16,9 +16,77 @@ var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
 //
 var<ViewManager> view_manager = new ViewManager();
 
+// ====================
+// For scheduler
+
+// id of currrent running thread
+var sys_cur_tid = 0;
+
+// list of runable threads
+var sys_runable_list;
+var sys_runable_size;
+
+sys_runable_run_random(xs, n) = 
+  ifa (n == 0) {Skip}
+  else ifa (n == 1) {
+    sys_run_first_one(xs)
+  }
+  else {
+    sys_run_first_one(xs)
+    <>
+    sys_runable_run_random(sys_mylib_obj.list_get_tail(xs), n - 1)
+  };
+
+sys_run_first_one(xs) = 
+  sys_run_first_one_s1{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
+  } -> 
+  sys_scheduler_random
+  ;
+
+var sys_new_tid;  // indicator for creating new thread
+var sys_new_fn;
+var sys_new_args;
+
+sys_scheduler_random = [sys_cur_tid == -1](
+  ifa (sys_new_tid == -1) {  // schedule
+    sys_runable_run_random(sys_runable_list, sys_runable_size)
+  } else {  // create new thread
+    sys_sch_thread_starter(sys_new_tid, sys_new_fn, sys_new_args)
+  });
+
+
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
+    sys_new_tid = -1;
+    sys_runable_list =  sys_mylib_obj.list_cons(tid, sys_runable_list);
+    sys_runable_size = sys_runable_size + 1;
+
+    // Create a list with one element for stack
+    var __temp_list_args = sys_mylib_obj.list_nil ();
+    __temp_list_args = sys_mylib_obj.list_cons (args, __temp_list_args);
+    sys_gstack.add_frame(tid, __temp_list_args);
+
+  } -> 
+  Skip  // sys_sch_thread_starter
+
+sys_thread_finalize(sys_tid) = [sys_cur_tid == sys_tid] sys_thread_finalize_s1.sys_tid{
+    // finalize thread
+    // remove tid
+    sys_runable_list = sys_mylib_obj.list_remove_element(sys_runable_list, sys_tid);
+    sys_runable_size = sys_runable_size - 1;
+    sys_cur_tid = -1;  // schedule out
+  } -> Skip;
+
+sys_thread_create(sys_tid, tid, fn, args) = [sys_cur_tid == sys_tid] sys_thread_create_s1.sys_tid{
+    sys_new_tid = tid;
+    sys_new_fn = fn;
+    sys_new_args = args;
+
+    sys_cur_tid = -1;
+  } -> Skip;
+
 // =====================
 // For global exclusion.
-var glb = 0;
+var sys_glb = 0;
 
 // =====================
 
@@ -30,46 +98,6 @@ var<Allocator> sys_tid_allocator = new Allocator();  // todo: improve
 
 // =====================
 
-var sys_thread_num = 1;
-
-channel sys_ch_sch 0;
-
-var sch_sys_tid;
-var sch_fn;
-var sch_args;
-
-sch_thread_starter(sys_tid, fn, args) =
-thread_init{
-  // Create a list with one element.
-  var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (args, __temp_list_args);
-  sys_gstack.add_frame(sys_tid, __temp_list_args);
-} ->
-  Skip
-;
-
-Scheduler() = (atomic{sys_ch_sch?sys_tid.fn.args -> 
-                      {sys_thread_num++;
-                       sch_sys_tid = sys_tid;
-                       sch_fn = fn;
-                       sch_args = args;
-                      } -> Skip
-                      };
-  sch_thread_starter(sch_sys_tid, sch_fn, sch_args)
-  )
-  []
-  ifa (sys_thread_num == 0) {Skip}
-  ;
-
-proc_thread_finalize(sys_tid) = 
-  thread_finalize{
-    sys_gstack.delete_frame(sys_tid); 
-    sys_thread_num--;
-    sys_tid_allocator.release(sys_tid);
-  } -> Skip;
-
-sys_thread_create (tid, fn, args) = sys_ch_sch!tid.fn.args -> Skip;
-
 // =====================
 
 var mutex[10];  // 10 mutex
@@ -79,11 +107,11 @@ var<Allocator> sys_mutex_manager = new Allocator();
 // ====================
 conats_mutex_acquire(sys_tid) = sys_mutex_lock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock{mutex[m] = 1} -> Skip;
+sys_mutex_lock_impl(sys_tid, m) = [mutex[m] == 0] mlock.sys_tid{mutex[m] = 1} -> Skip;
 // ====================
 conats_mutex_release(sys_tid) = sys_mutex_unlock_impl (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-sys_mutex_unlock_impl(sys_tid, m) = sys_munlock{mutex[m] = 0} -> Skip;
+sys_mutex_unlock_impl(sys_tid, m) = sys_munlock.sys_tid{mutex[m] = 0} -> Skip;
 // ======================
 
 var cond_holder[10];  // 10 condition
@@ -100,10 +128,11 @@ conats_shared_acquire(sys_tid) = conats_shared_acquire_impl(sys_tid, sys_gstack.
 //  a = sys_mylib_obj.getTupleElement(tup, 0);
 //  mutex = sys_mylib_obj.getTupleElement(tup, 1);
 //  cond = sys_mylib_obj.getTupleElement(tup, 2);
-conats_shared_acquire_impl(sys_tid, tup) = atomic{
-    {sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
+conats_shared_acquire_impl(sys_tid, tup) = // atomic{ // Cannot use atomic here. Otherwise it would cause higher priority.
+    shared_acq.sys_tid{sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))} ->
     sys_mutex_lock_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, 1))
-    };
+    // }  // end of atomic
+    ;
 // ====================
 conats_shared_release(sys_tid) = conats_shared_release_impl(sys_tid, 
                                           sys_gstack.frame_get(sys_tid, 0, 0),
@@ -119,9 +148,9 @@ conats_sharedn_signal(sys_tid) = conats_shared_signal_impl(sys_tid, sys_gstack.f
 conats_shared_signal_impl(sys_tid, tup, index) = 
     sys_cond_signal_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
 
-sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {
+sys_cond_signal_impl(sys_tid, c) = atomic {if (cond_holder[c] > 0) {  // I think it's safe to keep *atomic* here.
 
-          csub{cond_holder[c]--;} ->
+          csub.sys_tid{cond_holder[c]--;} ->
 
           cond_chan[c]!1
 
@@ -141,16 +170,22 @@ conats_shared_condwait_impl(sys_tid, tup, index) = sys_cond_wait_impl(sys_tid,
                                   sys_mylib_obj.getTupleElement(tup, 1));  // mutex
 
 sys_cond_wait_impl(sys_tid, c, m) = atomic{
-  cadd{cond_holder[c]++;} -> 
+  cadd.sys_tid{cond_holder[c]++;} -> 
   sys_mutex_unlock_impl(sys_tid, m); 
-  cond_chan[c]?_ -> 
-  sys_mutex_lock_impl(sys_tid, m)
-  };
+  cond_chan[c]?_ -> Skip }; 
+  sys_mutex_lock_impl(sys_tid, m)  // Cannot use atomic here. Otherwise it would cause current thread has higher priority to lock.
+  ;
 
 // ====================
-sys_cond_broadcast(sys_tid) = sys_cond_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
 
-sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {
+conats_shared_broadcast(sys_tid) = conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+conats_sharedn_broadcast(sys_tid) = conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), sys_gstack.frame_get(sys_tid, 0, 1));
+
+
+conats_shared_broadcast_impl(sys_tid, tup, index) = 
+    sys_cond_broadcast_impl(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
+
+sys_cond_broadcast_impl(sys_tid, c) = atomic{if (cond_holder[c] > 0) {  // It's safe to use *atomic* here.
 
           sys_signaln(c, cond_holder[c]); csub{cond_holder[c]=0;} -> Skip
 
@@ -180,22 +215,41 @@ var x_64 = 0;
 
 // =====================
 
-main_s(sys_tid) = 
-  main_init{var __temp_list_args = sys_mylib_obj.list_nil ();
+sys_main(sys_tid) = [sys_cur_tid == sys_tid]
+  sys_main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
-            } ->
-  main5_id_s1.sys_tid{  g_63 = atom_ref_manager.allocate(0);
-  atom_ref_manager.setElement(g_63, 3)
-  } ->
-  main5_id_s2.sys_tid{  x_64 = atom_ref_manager.getElement(g_63);
-  } ->
-  main5_id_s3.sys_tid{  var temp3_id = call(eq, x_64, 4);
-  sys_assert_var = temp3_id;
-  } ->
-  Skip; 
-  proc_thread_finalize(sys_tid);
+            } -> Skip;
+  [sys_cur_tid == sys_tid] main5_id_s1.sys_tid{  g_63 = atom_ref_manager.allocate(0);
 
-main = main_s(sys_tid_allocator.allocate()) ||| Scheduler;
+  atom_ref_manager.setElement(g_63, 3);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  [sys_cur_tid == sys_tid] main5_id_s2.sys_tid{  x_64 = atom_ref_manager.getElement(g_63);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  [sys_cur_tid == sys_tid] main5_id_s3.sys_tid{  var temp3_id = call(eq, x_64, 4);
+  sys_assert_var = temp3_id;
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  Skip; 
+  sys_thread_finalize(sys_tid);
+
+var main_sys_tid = sys_tid_allocator.allocate();
+main = main_init{  // initialize runable
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (main_sys_tid, __temp_list_args);
+  sys_runable_list = __temp_list_args;
+  sys_runable_size = 1;
+  sys_cur_tid = main_sys_tid;
+
+  sys_new_tid = -1;  // -1: not creating new thread
+  } -> (sys_main(main_sys_tid) ||| sys_scheduler_random);
 
 #define sys_assertion sys_assert_var == true;
 

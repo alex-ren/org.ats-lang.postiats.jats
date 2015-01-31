@@ -1,12 +1,14 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
 
-val g_63 = D2Ecst<conats_atomref_create_2571:{a_3853_0:t@ype}(((a_3853_0:t@ype) -<fun> atomref_726_0(a_3853_0:t@ype)))> (0)
+staload "/tmp/conats65985995991668/conats.sats"
 
-val () = D2Ecst<conats_atomref_update_2572:{a_3854_0:t@ype}(((atomref_726_0(a_3854_0:t@ype), a_3854_0:t@ype) -<fun> void))> (g_63, 3)
+val g_63 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
 
-val x_64 = D2Ecst<conats_atomref_get_2573:{a_3855_0:t@ype}(((atomref_726_0(a_3855_0:t@ype)) -<fun> a_3855_0:t@ype))> (g_63)
+val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (g_63, 3)
 
-val () = D2Ecst<mc_assert_2583:((bool) -<fun> void)> (<D2Esym>(=) (x_64, 4))
+val x_64 = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (g_63)
+
+val () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(=) (x_64, 4))
 
 %{
 #assert main deadlockfree;

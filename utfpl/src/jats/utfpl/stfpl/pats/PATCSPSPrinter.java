@@ -47,8 +47,8 @@ public class PATCSPSPrinter implements PNodeVisitor {
             st.add("ext_code_lst", extCode.m_content);
         }
         
-        // scheduler_body_st(proc1_name, proc1_addr, else_procs) ::= <<
-        ST stSch = m_stg.getInstanceOf("scheduler_body_st");
+        // sys_sch_thread_starter_st(proc1_name, proc1_addr, else_procs) ::= <<
+        ST stSch = m_stg.getInstanceOf("sys_sch_thread_starter_st");
         
         Iterator<PGDecProc> iter = node.m_threadLst.iterator();
         if (iter.hasNext()) {
@@ -59,8 +59,8 @@ public class PATCSPSPrinter implements PNodeVisitor {
             while (iter.hasNext()) {
             	PGDecProc proc_else = iter.next();
             	
-            	// schedule_else_if(proc_name, proc_addr) ::= <<
-            	ST st_else = m_stg.getInstanceOf("schedule_else_if");
+            	// sys_sch_thread_starter_else_if(proc_name, proc_addr) ::= <<
+            	ST st_else = m_stg.getInstanceOf("sys_sch_thread_starter_else_if");
             	st_else.add("proc_name", proc_else.m_name.toStringMCIns());
             	st_else.add("proc_addr", proc_else.m_name.getAddr().toStringMCIns());
             	
@@ -490,7 +490,7 @@ public class PATCSPSPrinter implements PNodeVisitor {
     @Override
     public Object visit(PInsMCAssert node) {
         // PInsMCAssert_st(pred, has_effect) ::= <<
-        ST st = m_stg.getInstanceOf("pinsmcassert_st");
+        ST st = m_stg.getInstanceOf("PInsMCAssert_st");
         st.add("pred", node.m_localSrc.accept(this));
         st.add("has_effect", node.hasSideEffect());
         return st;

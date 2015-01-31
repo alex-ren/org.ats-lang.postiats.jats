@@ -10,6 +10,11 @@ sys_tid() ::= <<sys_tid>>
 
 sys_cur_tid() ::= <<sys_cur_tid>>
 sys_sch_tid() ::= <<-1>>
+sys_new_tid() ::= <<sys_new_tid>>
+sys_runable_list() ::= <<sys_runable_list>>
+sys_runable_size() ::= <<sys_runable_size>>
+sys_new_fn() ::= <<sys_new_fn>>
+sys_new_args() ::= <<sys_new_args>>
 
 sys_schedule_in() ::= <<[<sys_cur_tid()> == <sys_tid()>]>>
 sys_schedule_out() ::= <<
@@ -22,7 +27,7 @@ sys_ins_schedule_out_yes(has_effect) ::= <<
 <if(has_effect)><sys_schedule_out()><else>...should not happen...<endif>
 >>
 
-sys_ins_schedule_out_no() ::= <<
+sys_ins_schedule_out_no(has_effect) ::= <<
 <if(has_effect)>...should not happen...<endif>
 >>
 
@@ -54,6 +59,33 @@ sys_glb() ::= <<
 sys_glb
 >>
 
+sys_sch_thread_starter_st(proc1_name, proc1_addr, else_procs) ::= <<
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
+    <sys_new_tid()> = -1;
+    <sys_runable_list()> =  <sys_mylib()>.list_cons(tid, <sys_runable_list()>);
+    <sys_runable_size()> = <sys_runable_size()> + 1;
+    
+    // Create a list with one element for stack
+    var <local_temp_list()> = sys_mylib_obj.list_nil ();
+    <local_temp_list()> = sys_mylib_obj.list_cons (args, <local_temp_list()>);
+    <sys_gstack()>.add_frame(tid, <local_temp_list()>);
+    
+  } -> 
+  <if(proc1_name)>ifa (fn == <proc1_addr>) {
+    ([<sys_cur_tid()> == tid]<proc1_name>(tid);sys_thread_finalize(tid)) ||| sys_scheduler_random
+  }
+  <else_procs; separator="\n">
+  else {
+    Stop
+  };
+  <else>Skip<endif>
+>>
+
+sys_sch_thread_starter_else_if(proc_name, proc_addr) ::= <<
+else ifa (fn == <proc_addr>) {
+  ([<sys_cur_tid()> == tid]<proc_name>(tid);sys_thread_finalize(tid)) ||| sys_scheduler_random
+}
+>>
 
 // ===============================
 
@@ -79,7 +111,62 @@ var\<ArrayRefManager> <array_ref_manager()> = new ArrayRefManager(10);
 var\<ViewManager> <view_manager()> = new ViewManager();
 
 // ====================
-var <sys_cur_tid()> = 
+// For scheduler
+
+// id of currrent running thread
+var <sys_cur_tid()> = 0;
+
+// list of runable threads
+var <sys_runable_list()>;
+var <sys_runable_size()>;
+
+sys_runable_run_random(xs, n) = 
+  ifa (n == 0) {Skip}
+  else ifa (n == 1) {
+    sys_run_first_one(xs)
+  }
+  else {
+    sys_run_first_one(xs)
+    \<>
+    sys_runable_run_random(<sys_mylib()>.list_get_tail(xs), n - 1)
+  };
+  
+sys_run_first_one(xs) = 
+  sys_run_first_one_s1{<sys_cur_tid()> = <sys_mylib()>.list_get_header(xs);
+  } -> 
+  sys_scheduler_random
+  ;
+
+var <sys_new_tid()>;  // indicator for creating new thread
+var <sys_new_fn()>;
+var <sys_new_args()>;
+
+sys_scheduler_random = [<sys_cur_tid()> == <sys_sch_tid()>](
+  ifa (<sys_new_tid()> == -1) {  // schedule
+    sys_runable_run_random(<sys_runable_list()>, <sys_runable_size()>)
+  } else {  // create new thread
+    sys_sch_thread_starter(<sys_new_tid()>, <sys_new_fn()>, <sys_new_args()>)
+  });
+
+
+<scheduler_body>  // sys_sch_thread_starter
+  
+sys_thread_finalize(<sys_tid()>) = [<sys_cur_tid()> == <sys_tid()>] sys_thread_finalize_s1.<sys_tid()>{
+    // finalize thread
+    // remove tid
+    <sys_runable_list()> = <sys_mylib()>.list_remove_element(<sys_runable_list()>, <sys_tid()>);
+    <sys_runable_size()> = <sys_runable_size()> - 1;
+    <sys_cur_tid()> = <sys_sch_tid()>;  // schedule out
+  } -> Skip;
+
+sys_thread_create(<sys_tid()>, tid, fn, args) = [<sys_cur_tid()> == <sys_tid()>] sys_thread_create_s1.<sys_tid()>{
+    <sys_new_tid()> = tid;
+    <sys_new_fn()> = fn;
+    <sys_new_args()> = args;
+  
+    <sys_cur_tid()> = <sys_sch_tid()>;
+  } -> Skip;
+  
 // =====================
 // For global exclusion.
 var <sys_glb()> = 0;
@@ -93,38 +180,6 @@ var\<PStack> <sys_gstack()> = new PStack();
 var\<Allocator> <sys_tid_allocator()> = new Allocator();  // todo: improve
 
 // =====================
-
-var sys_thread_num = 1;
-
-channel sys_ch_sch 0;
-
-var sch_sys_tid;
-var sch_fn;
-var sch_args;
-
-<scheduler_body>;
-
-Scheduler() = (atomic{sys_ch_sch?<sys_tid()>.fn.args ->  // It's safe to use *atomic* here.
-                      {sys_thread_num++;
-                       sch_sys_tid = sys_tid;
-                       sch_fn = fn;
-                       sch_args = args;
-                      } -> Skip
-                      };
-  sch_thread_starter(sch_sys_tid, sch_fn, sch_args)
-  )
-  []
-  ifa (sys_thread_num == 0) {Skip}
-  ;
-
-sys_proc_thread_finalize(<sys_tid()>) = 
-  thread_finalize.<sys_tid()>{
-    <sys_gstack()>.delete_frame(<sys_tid()>); 
-    sys_thread_num--;
-    <sys_tid_allocator()>.release(<sys_tid()>);
-  } -> Skip;
-
-sys_thread_create (tid, fn, args) = sys_ch_sch!tid.fn.args -> Skip;
 
 // =====================
 
@@ -244,15 +299,23 @@ var <sys_assert_var()> = true;
 
 // =====================
 
-sys_main(<sys_tid()>) = 
+sys_main(<sys_tid()>) = <sys_schedule_in()>
   sys_main_init.<sys_tid()>{var <local_temp_list()> = <sys_mylib()>.list_nil ();
             <sys_gstack()>.add_frame(0, <local_temp_list()>); 
             } -> Skip;
   <main_proc_body>; 
-  sys_proc_thread_finalize(<sys_tid()>);
+  sys_thread_finalize(<sys_tid()>);
 
 var main_sys_tid = <sys_tid_allocator()>.allocate();
-main = sys_main(main_sys_tid) ||| Scheduler;
+main = main_init{  // initialize runable
+  var <local_temp_list()> = <sys_mylib()>.list_nil ();
+  <local_temp_list()> = <sys_mylib()>.list_cons (main_sys_tid, <local_temp_list()>);
+  <sys_runable_list()> = <local_temp_list()>;
+  <sys_runable_size()> = 1;
+  <sys_cur_tid()> = main_sys_tid;
+  
+  <sys_new_tid()> = -1;  // -1: not creating new thread
+  } -> (sys_main(main_sys_tid) ||| sys_scheduler_random);
 
 #define sys_assertion <sys_assert_var()> == true;
 
@@ -264,36 +327,6 @@ main = sys_main(main_sys_tid) ||| Scheduler;
 
 
 >>
-
-scheduler_body_st(proc1_name, proc1_addr, else_procs) ::= <<
-sch_thread_starter(<sys_tid()>, fn, args) =
-thread_init{
-  // Create a list with one element.
-  var <local_temp_list()> = sys_mylib_obj.list_nil ();
-  <local_temp_list()> = sys_mylib_obj.list_cons (args, <local_temp_list()>);
-  <sys_gstack()>.add_frame(sys_tid, <local_temp_list()>);
-} ->
-<if(proc1_name)>
-  if (fn == <proc1_addr>) {
-    <proc1_name>(<sys_tid()>); sys_proc_thread_finalize(<sys_tid()>)
-    |||
-    Scheduler()
-  }
-  <else_procs; separator="\n">
-  else {Skip}
-<else>
-  Skip
-<endif>
->>
-
-schedule_else_if(proc_name, proc_addr) ::= <<
-else if (fn == <proc_addr>) {
-  <proc_name>(<sys_tid()>); sys_proc_thread_finalize(<sys_tid()>)
-  |||
-  Scheduler()
-}
->>
-
 
 PGDecVar_st(id, init) ::= <<
 var <id><if(init)> = <init><endif>;
@@ -440,7 +473,7 @@ pinscondalloc_st(holder, is_global) ::= <<
 
 PInsMCAssert_st(pred, has_effect) ::= <<
 <sys_assert_var()> = <pred>;
-<sys_ins_schedule_out_no(has_effect)>
+<sys_ins_schedule_out_yes(has_effect)>
 >>
 
 // pinscondrelease_st(cond) ::= <<
@@ -448,7 +481,7 @@ PInsMCAssert_st(pred, has_effect) ::= <<
 // >>
 
 PProcThreadCreate_st(tid, funaddr, args) ::= <<
-sys_thread_create(<tid>, <funaddr>, <args>)
+sys_thread_create(<sys_tid()>, <tid>, <funaddr>, <args>)
 >>
 
 PStatProcCallPrelogue_st(args, is_tail_call) ::= <<
