@@ -509,23 +509,19 @@ public class MyCspInsTransformer {
 
         @Override
         public Object visit(MCInsMCAtomicStart ins) {
-            GrpMCAtomicStart grp = new GrpMCAtomicStart();
-            if (0 != m_cbEvt.size()) {
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent(m_funLab, ++m_no);
-            }
-            m_cblkLst.add(grp);
+            CIMCAtomicStart nIns = new CIMCAtomicStart(m_cbEvt, ins.hasSideEffect());
+
+            m_cbEvt.add(nIns);
+            
             return null;
         }
         
         @Override
         public Object visit(MCInsMCAtomicEnd ins) {
-            GrpMCAtomicEnd grp = new GrpMCAtomicEnd();
-            if (0 != m_cbEvt.size()) {
-                m_cblkLst.add(m_cbEvt);
-                m_cbEvt = new GrpEvent(m_funLab, ++m_no);
-            }
-            m_cblkLst.add(grp);
+            CIMCAtomicEnd nIns = new CIMCAtomicEnd(m_cbEvt, ins.hasSideEffect());
+
+            m_cbEvt.add(nIns);
+            
             return null;
         }
 

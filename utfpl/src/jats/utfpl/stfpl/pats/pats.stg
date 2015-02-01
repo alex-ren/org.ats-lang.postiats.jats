@@ -670,16 +670,6 @@ var <holder> = <gv>;
 <sys_ins_schedule_out_yes(true)>
 >>
 
-PProcGrpMCAtomicStart_st(proc) ::= <<
-ifa (<sys_glb()> == 0) {atomic { {<sys_glb()> = 1;} ->  // I think that it's safe to have atomic here, since
-<proc>                                                  // there's always gonna be a non-atomic step and non-effective step before the atomic.
->>
-
-PProcGrpMCAtomicEnd_st(proc) ::= <<
-{<sys_glb()> = 0;} -> Skip } }<if(proc)>;<endif><if(proc)>
-<proc><endif>
->>
-
 PInsMCVLockViewGet_st(args, holder) ::= <<
 var <holder> = <view_manager()>.get(<args; separator=", ">);
 sys_assert_var = !<sys_mylib()>.is_none(<holder>);
@@ -702,7 +692,13 @@ while (index \< bound) {
 <sys_ins_schedule_out_no(has_effect)>
 >>
 
+PInsMCAtomicStart_st() ::= <<
+<sys_glb()> = 1;
+>>
 
+PInsMCAtomicEnd_st() ::= <<
+<sys_glb()> = 0;
+>>
 
 
 

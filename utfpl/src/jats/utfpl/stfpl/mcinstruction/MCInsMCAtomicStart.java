@@ -11,8 +11,7 @@ public class MCInsMCAtomicStart implements IMCInstruction {
 
     @Override
     public Boolean hasSideEffect() {
-        return true;  // It's difficult to say this ins has effect.
-                      // I may change my mind in the future.
+        return false;
     }
 
 }

@@ -1,16 +1,18 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
+
+staload "/tmp/conats47651040679736/conats.sats"
 
 "D2Cstacsts" mid_736: int
 
-"D2Cdcstdecs" int
+"D2Cdcstdecs" mc_m_2595:int
 
 fun foo1_63 = lam () <fun> = 
   <D2EannSeff>(
     let
-      prval () = D2Ecst<(() -<fun> void)> ()
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 3)
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 4)
-      prval () = D2Ecst<(() -<fun> void)> ()
+      prval () = D2Ecst<mc_atomic_start_2583:(() -<fun> void)> ()
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mc_m_2595:int>, 3)
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mc_m_2595:int>, 4)
+      prval () = D2Ecst<mc_atomic_end_2584:(() -<fun> void)> ()
     in
       ()
     end:void:t@ype)
@@ -18,14 +20,21 @@ fun foo1_63 = lam () <fun> =
 fun foo2_64 = lam (<P2Tann>(x_65:int:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      prval <P2Trec>(<LABP2ATnorm>(pf_66), <LABP2ATnorm>(x_67)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
-      prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(<>) (x_67, 3))
+      prval <P2Trec>(<LABP2ATnorm>(pf_66), <LABP2ATnorm>(x_67)) = D2Ecst<mc_get_int_2582:((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<mc_m_2595:int>)
+      prval () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(<>) (x_67, 3))
     in
       ()
     end:void:t@ype)
 
-val tid1_68 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+val tid1_68 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (foo2_64, 0, tid1_68)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (foo2_64, 0, tid1_68)
 
 val () = foo1_63 ()
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

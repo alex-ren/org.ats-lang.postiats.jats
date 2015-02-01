@@ -18,6 +18,8 @@ import jats.utfpl.stfpl.mycspinstructions.CIFormTuple;
 import jats.utfpl.stfpl.mycspinstructions.CIFunCall;
 import jats.utfpl.stfpl.mycspinstructions.CIGetEleFromEnv;
 import jats.utfpl.stfpl.mycspinstructions.CIMCAssert;
+import jats.utfpl.stfpl.mycspinstructions.CIMCAtomicEnd;
+import jats.utfpl.stfpl.mycspinstructions.CIMCAtomicStart;
 import jats.utfpl.stfpl.mycspinstructions.CIMCGet;
 import jats.utfpl.stfpl.mycspinstructions.CIMCSet;
 import jats.utfpl.stfpl.mycspinstructions.CIMCVLockViewGet;
@@ -34,8 +36,6 @@ import jats.utfpl.stfpl.mycspinstructions.CIVarDef;
 import jats.utfpl.stfpl.mycspinstructions.FunctionMyCsp;
 import jats.utfpl.stfpl.mycspinstructions.GrpCond;
 import jats.utfpl.stfpl.mycspinstructions.GrpEvent;
-import jats.utfpl.stfpl.mycspinstructions.GrpMCAtomicEnd;
-import jats.utfpl.stfpl.mycspinstructions.GrpMCAtomicStart;
 import jats.utfpl.stfpl.mycspinstructions.GrpProc;
 import jats.utfpl.stfpl.mycspinstructions.GrpThreadCreate;
 import jats.utfpl.stfpl.mycspinstructions.IMyCspInsVisitor;
@@ -111,10 +111,10 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
             Object evt_proc = cb.accept(this);
             if (evt_proc instanceof PProc) {
                 retProc = (PProc) evt_proc;
-            } else if (evt_proc instanceof PNodeMCAtomicStart) {
-            	throw new Error("Should not happen.");
-            } else if (evt_proc instanceof PNodeMCAtomicEnd) {
-                retProc = new PProcGrpMCAtomicEnd(retProc);                
+//            } else if (evt_proc instanceof PNodeMCAtomicStart) {
+//            	throw new Error("Should not happen.");
+//            } else if (evt_proc instanceof PNodeMCAtomicEnd) {
+//                retProc = new PProcGrpMCAtomicEnd(retProc);                
             } else if (evt_proc instanceof PNodeEvent){
                 retProc = new PProcEvent((PNodeEvent)evt_proc, PProcAtom.SKIP);
             } else {
@@ -126,10 +126,10 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
             Object evt_proc = cb.accept(this);
             if (evt_proc instanceof PProc) {
                 retProc = new PProcSeq((PProc)evt_proc, retProc);
-            } else if (evt_proc instanceof PNodeMCAtomicStart) {
-            	retProc = new PProcGrpMCAtomicStart(retProc);
-            } else if (evt_proc instanceof PNodeMCAtomicEnd) {
-                retProc = new PProcGrpMCAtomicEnd(retProc);
+//            } else if (evt_proc instanceof PNodeMCAtomicStart) {
+//            	retProc = new PProcGrpMCAtomicStart(retProc);
+//            } else if (evt_proc instanceof PNodeMCAtomicEnd) {
+//                retProc = new PProcGrpMCAtomicEnd(retProc);
             } else if (evt_proc instanceof PNodeEvent) {
                 retProc = new PProcEvent((PNodeEvent)evt_proc, retProc);
             } else {
@@ -414,29 +414,6 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 
         return ret;
     }
-    
-//	@Override
-//    public Object visit(CIMutexRelease node) {
-//        List<PStat> ret = new ArrayList<PStat>();
-//        
-//	    PExp mutex = (PExp)node.m_mutex.accept(this);
-//	    
-//	    PInsMutexRelease nIns = new PInsMutexRelease(mutex);
-//	    ret.add(nIns);
-//	    return ret;
-//    }
-	
-    
-//	@Override
-//    public Object visit(CICondRelease node) {
-//        List<PStat> ret = new ArrayList<PStat>();
-//        
-//	    PExp cond = (PExp)node.m_cond.accept(this);
-//	    
-//	    PInsCondRelease nIns = new PInsCondRelease(cond);
-//	    ret.add(nIns);
-//	    return ret;
-//    }
 
     @Override
     public Object visit(CIMCAssert node) {
@@ -447,21 +424,6 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         
         return ret;
     }
-
-	@Override
-	public PNodeMCAtomicStart visit(GrpMCAtomicStart node) {
-		PNodeMCAtomicStart proc = new PNodeMCAtomicStart();
-		
-		return proc;
-	}
-	
-
-	@Override
-	public PNodeMCAtomicEnd visit(GrpMCAtomicEnd node) {
-		PNodeMCAtomicEnd proc = new PNodeMCAtomicEnd();
-		
-		return proc;
-	}
 
 	@Override
 	public Object visit(CIMCGet node) {
@@ -667,6 +629,22 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
 
         return ret;
 	}
+
+	@Override
+    public Object visit(CIMCAtomicStart node) {
+		List<PStat> ret = new ArrayList<PStat>();
+		ret.add(new PInsMCAtomicStart(node.hasSideEffect()));
+		
+		return ret;
+    }
+
+	@Override
+    public Object visit(CIMCAtomicEnd node) {
+		List<PStat> ret = new ArrayList<PStat>();
+		ret.add(new PInsMCAtomicEnd(node.hasSideEffect()));
+		
+		return ret;
+    }
 	
 }
 

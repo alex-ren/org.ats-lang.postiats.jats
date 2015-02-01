@@ -528,28 +528,6 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
 	@Override
-	public Object visit(PProcGrpMCAtomicStart node) {
-		// PProcGrpMCAtomicStart_st(proc) ::= <<
-        ST st = m_stg.getInstanceOf("PProcGrpMCAtomicStart_st");
-        st.add("proc", node.m_proc.accept(this));
-        return st;
-	}
-	
-	@Override
-	public Object visit(PProcGrpMCAtomicEnd node) {
-		// PProcGrpMCAtomicEnd_st(proc) ::= <<
-        ST st = m_stg.getInstanceOf("PProcGrpMCAtomicEnd_st");
-        if (node.m_proc == PProcAtom.SKIP) {
-        	
-        } else {
-        	st.add("proc", node.m_proc.accept(this));
-        }
-        
-        return st;
-	}
-
-
-	@Override
 	public Object visit(PInsMCGet node) {
 		// PInsMCGet_st(holder, gv) ::= <<
 		ST st = m_stg.getInstanceOf("PInsMCGet_st");
@@ -674,15 +652,20 @@ public class PATCSPSPrinter implements PNodeVisitor {
 
 
 	@Override
-	public Object visit(PNodeMCAtomicStart node) {
-		throw new Error("Should not happen.");
-	}
+    public Object visit(PInsMCAtomicStart node) {
+		// PInsMCAtomicStart_st() ::= <<
+	    ST st = m_stg.getInstanceOf("PInsMCAtomicStart_st");
+	    return st;
+    }
 
 
 	@Override
-	public Object visit(PNodeMCAtomicEnd node) {
-		throw new Error("Should not happen.");
-	}
+    public Object visit(PInsMCAtomicEnd node) {
+		// PInsMCAtomicEnd_st() ::= <<
+	    ST st = m_stg.getInstanceOf("PInsMCAtomicEnd_st");
+	    return st;
+    }
+
 
 }
 
