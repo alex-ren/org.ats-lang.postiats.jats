@@ -62,7 +62,7 @@ sys_glb
 sys_sch_thread_starter_st(proc1_name, proc1_addr, else_procs) ::= <<
 sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
     <sys_new_tid()> = -1;
-    <sys_runable_list()> =  <sys_mylib()>.list_cons(tid, <sys_runable_list()>);
+    <sys_runable_list()> =  <sys_mylib()>.list_insert_ordered(tid, <sys_runable_list()>);
     <sys_runable_size()> = <sys_runable_size()> + 1;
     
     // Create a list with one element for stack
@@ -204,7 +204,8 @@ sys_mutex_acquire(<sys_tid()>, m) =
       <sys_runable_size()> = <sys_runable_size()> - 1;
       
       // add current thread to waiting list
-      var <local_temp_list()> = <sys_mylib()>.list_cons(<sys_tid()>, sys_mutex_waiting_list_manager.getElement(m));
+      var <local_temp_list()> = 
+        <sys_mylib()>.list_insert_ordered(<sys_tid()>, sys_mutex_waiting_list_manager.getElement(m));
       sys_mutex_waiting_list_manager.setElement(m, <local_temp_list()>);
       
       <sys_cur_tid()> = <sys_sch_tid()>;  // schedule out
@@ -241,7 +242,7 @@ sys_mutex_release_random_first(<sys_tid()>, m, tid) = {
   sys_mutex_repo[m] = tid;
   
   // add to runable
-  <sys_runable_list()> = <sys_mylib()>.list_cons(tid, <sys_runable_list()>);
+  <sys_runable_list()> = <sys_mylib()>.list_insert_ordered(tid, <sys_runable_list()>);
   <sys_runable_size()> = <sys_runable_size()> + 1;
   
   <sys_cur_tid()> = <sys_sch_tid()>;  // schedule out
@@ -298,7 +299,7 @@ sys_cond_signal_random_first(<sys_tid()>, c, tid) = sys_cond_signal_random_first
   sys_cond_sleep_list_manager.setElement(c, new_list);
   
   // add to runable
-  <sys_runable_list()> = <sys_mylib()>.list_cons(tid, <sys_runable_list()>);
+  <sys_runable_list()> = <sys_mylib()>.list_insert_ordered(tid, <sys_runable_list()>);
   <sys_runable_size()> = <sys_runable_size()> + 1;
   } -> Skip;
 
@@ -307,7 +308,7 @@ sys_cond_wait(<sys_tid()>, c, m) = sys_cond_wait_s1.<sys_tid()>{
   <sys_runable_list()> = <sys_mylib()>.list_remove_element(<sys_runable_list()>, <sys_tid()>);
   <sys_runable_size()> = <sys_runable_size()> - 1;
   // add to sleep
-  var new_list = <sys_mylib()>.list_cons(<sys_tid()>, sys_cond_sleep_list_manager.getElement(c));
+  var new_list = <sys_mylib()>.list_insert_ordered(<sys_tid()>, sys_cond_sleep_list_manager.getElement(c));
   sys_cond_sleep_list_manager.setElement(c, new_list);
   } -> Skip;
   // release mutex. This would cause schedule out
@@ -421,7 +422,7 @@ main =
   sys_init_cond_service(COND_NO);
   main_init_scheduler {  // initialize runable
   var <local_temp_list()> = <sys_mylib()>.list_nil ();
-  <local_temp_list()> = <sys_mylib()>.list_cons (main_sys_tid, <local_temp_list()>);
+  <local_temp_list()> = <sys_mylib()>.list_insert_ordered(main_sys_tid, <local_temp_list()>);
   <sys_runable_list()> = <local_temp_list()>;
   <sys_runable_size()> = 1;
   <sys_cur_tid()> = main_sys_tid;

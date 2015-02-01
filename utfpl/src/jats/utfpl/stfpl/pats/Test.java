@@ -27,7 +27,7 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/05_use_ref.dats"
 //				"src/jats/utfpl/stfpl/test/06_mc_assert.dats",
 //				"src/jats/utfpl/stfpl/test/07_use_array.dats",
-//				"src/jats/utfpl/stfpl/test/08_use_mutex.dats"
+				"src/jats/utfpl/stfpl/test/08_use_mutex.dats"
 //				"src/jats/utfpl/stfpl/test/09_tuple.dats",
 //				"src/jats/utfpl/stfpl/test/10_create_thread.dats"
 //				"src/jats/utfpl/stfpl/test/11_fact_fun.dats",
@@ -43,7 +43,7 @@ public class Test {
 //        		"src/jats/utfpl/stfpl/test/16_4_producer_consumer_m_m_broadcast.dats"
 //				"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats",
 //        		"src/jats/utfpl/stfpl/test/17_1_mcset_mcget_calc.dats",
-				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats"
+//				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats"
 //				"src/jats/utfpl/stfpl/test/19_mc_view.dats"
 //        		"src/jats/utfpl/stfpl/test/20_four_slot.dats"
 //        		"src/jats/utfpl/stfpl/test/20_1_two_slot_acm.dats"

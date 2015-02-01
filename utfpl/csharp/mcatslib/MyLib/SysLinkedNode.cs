@@ -50,6 +50,35 @@ namespace PAT.Lib
             return node.getValue();
         }
 
+        public SysLinkedNode insert_ordered(IComparable e) {
+            if (this == s_nil) {
+                return new SysLinkedNode(e, s_nil);
+            }
+            if (e.CompareTo(m_v) < 0) {
+                return new SysLinkedNode(e, this);
+            }
+            SysLinkedNode new_list = new SysLinkedNode(m_v, s_nil);
+
+            SysLinkedNode pre_node = new_list;
+
+            SysLinkedNode cur = m_next;
+            while (s_nil != cur) {
+                if (e.CompareTo(cur.m_v) < 0) {
+                    SysLinkedNode node = new SysLinkedNode(e, cur);
+                    pre_node.m_next = node;
+                    return new_list;
+                } else {
+                    SysLinkedNode node = new SysLinkedNode(cur.m_v, s_nil);
+                    pre_node.m_next = node;
+                    cur = cur.m_next;
+                    pre_node = pre_node.m_next;
+                }
+            }
+
+            pre_node.m_next = new SysLinkedNode(e, s_nil);
+            return new_list;
+        }
+
         // It's allowed that e is not in "this" list.
         // This is functional style.
         public SysLinkedNode remove_element(Object e) {

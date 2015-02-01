@@ -1,6 +1,6 @@
 D2Cnone
 
-staload "/tmp/conats32771652223688/conats.sats"
+staload "/tmp/conats51773593833150/conats.sats"
 
 fun foo1_63 = lam (<P2Tann>(x_64:int:t@ype)) <fun> = 
   <D2EannSeff>(
@@ -13,6 +13,7 @@ fun foo_65 = lam () <fun> =
       val g_67 = D2Ecst<conats_mutex_create_2570:(() -<fun> mutex_t_724_0())> ()
       val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_67)
       val () = D2Ecst<conats_mutex_release_2572:((mutex_t_724_0()) -<fun> void)> (g_67)
+      val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_67)
       val () = D2Ecst<conats_mutex_acquire_2571:((mutex_t_724_0()) -<fun> void)> (g_67)
     in
       ()

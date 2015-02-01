@@ -109,6 +109,11 @@ namespace PAT.Lib
             return xs.remove_element(e);
         }
 
+        // Pre: e not in the list
+        public SysLinkedNode list_insert_ordered(Object e, SysLinkedNode xs) {
+            return xs.insert_ordered((IComparable)e);
+        }
+
         public int list_length(SysLinkedNode xs) {
             return xs.length();
         }
