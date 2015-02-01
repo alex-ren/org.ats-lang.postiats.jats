@@ -109,6 +109,55 @@ namespace PAT.Lib
             return this;  // element not found
         }
 
+        public SysLinkedNode merge_ordered(SysLinkedNode right) {
+            // System.Console.WriteLine("left is " + this.ToString());
+            // System.Console.WriteLine("right is " + right.ToString());
+            SysLinkedNode left = this;
+            if (left == s_nil) {
+                return right;
+            }
+            if (right == s_nil) {
+                return left;
+            }
+
+            SysLinkedNode new_list = null;
+            IComparable lv = (IComparable)left.m_v;
+            Object rv = right.m_v;
+
+            if (lv.CompareTo(rv) < 0) {
+                new_list = new SysLinkedNode(lv, s_nil);
+                left = left.m_next;
+
+            } else { // It's impossible that == 0
+                new_list = new SysLinkedNode(rv, s_nil);
+                right = right.m_next;
+            }
+
+            SysLinkedNode pre_node = new_list;
+
+            while (left != s_nil && right != s_nil) {
+                lv = (IComparable)left.m_v;
+                rv = right.m_v;
+                if (lv.CompareTo(rv) < 0) {
+                    SysLinkedNode new_node = new SysLinkedNode(lv, s_nil);
+                    pre_node.m_next = new_node;
+                    left = left.m_next;
+                } else { // It's impossible that == 0
+                    SysLinkedNode new_node = new SysLinkedNode(lv, s_nil);
+                    pre_node.m_next = new_node;
+                    right = right.m_next;
+                }
+                pre_node = pre_node.m_next;
+            }
+            if (left == s_nil) {
+                pre_node.m_next = right;
+            } else {
+                pre_node.m_next = left;
+            }
+
+            return new_list;
+        }
+
         public int length() {
             int n = 0;
             SysLinkedNode cur = this;

@@ -1,6 +1,6 @@
 D2Cnone
 
-staload "/tmp/conats51773593833150/conats.sats"
+staload "/tmp/conats8772735815718/conats.sats"
 
 fun foo1_63 = lam (<P2Tann>(x_64:int:t@ype)) <fun> = 
   <D2EannSeff>(

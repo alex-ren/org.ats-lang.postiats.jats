@@ -114,6 +114,11 @@ namespace PAT.Lib
             return xs.insert_ordered((IComparable)e);
         }
 
+        // Pre: no common element in both lists
+        public SysLinkedNode list_merge_ordered(SysLinkedNode xs, SysLinkedNode ys) {
+            return xs.merge_ordered(ys);
+        }
+
         public int list_length(SysLinkedNode xs) {
             return xs.length();
         }

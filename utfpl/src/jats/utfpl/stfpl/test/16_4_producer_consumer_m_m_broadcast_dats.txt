@@ -1,18 +1,20 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is VALID.
+The Assertion (main() deadlockfree) is NOT valid.
+The following trace leads to a deadlock situation.
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main64_id_s1.0 -> lin_buffer_create_63_s1.0 -> main64_id_s2.0 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1 -> [int_choice] -> sys_run_first_one_s1 -> producer_92_s1.1 -> conats_shared_acquire_impl_s1.1 -> sys_mutex_acquire_yes.1 -> producer_92_s2.1 -> insert_95_s1.1 -> demo_buffer_isful_72_s1.1 -> lin_buffer_get_69_s1.1 -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.1 -> demo_buffer_isful_72_s2.1 -> insert_95_s2.1 -> insert_95_s6.1 -> demo_buffer_isnil_76_s1.1 -> lin_buffer_get_69_s1.1 -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.1 -> demo_buffer_isnil_76_s2.1 -> insert_95_s7.1 -> demo_buffer_insert_80_s1.1 -> lin_buffer_get_69_s1.1 -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.1 -> demo_buffer_insert_80_s2.1 -> lin_buffer_update_66_s1.1 -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_update_66_s2.1 -> demo_buffer_insert_80_s3.1 -> insert_95_s8.1 -> insert_95_s9.1 -> sys_cond_broadcast_s1 -> producer_92_s3.1 -> sys_mutex_release_s1.1 -> [int_choice] -> sys_run_first_one_s1 -> producer_92_s4.1 -> sys_thread_finalize_s1.1 -> sys_run_first_one_s1 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1 -> [int_choice] -> sys_run_first_one_s1 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1 -> [int_choice] -> sys_run_first_one_s1 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> consumer_104_s1.4 -> conats_shared_acquire_impl_s1.4 -> sys_mutex_acquire_yes.4 -> consumer_104_s2.4 -> takeout_107_s1.4 -> demo_buffer_isnil_76_s1.4 -> lin_buffer_get_69_s1.4 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.4 -> demo_buffer_isnil_76_s2.4 -> takeout_107_s2.4 -> takeout_107_s6.4 -> demo_buffer_isful_72_s1.4 -> lin_buffer_get_69_s1.4 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.4 -> demo_buffer_isful_72_s2.4 -> takeout_107_s7.4 -> demo_buffer_takeout_85_s1.4 -> lin_buffer_get_69_s1.4 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.4 -> demo_buffer_takeout_85_s2.4 -> lin_buffer_update_66_s1.4 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_update_66_s2.4 -> demo_buffer_takeout_85_s3.4 -> takeout_107_s8.4 -> takeout_107_s12.4 -> consumer_104_s3.4 -> sys_mutex_release_s1.4 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> consumer_104_s1.3 -> conats_shared_acquire_impl_s1.3 -> sys_mutex_acquire_yes.3 -> consumer_104_s2.3 -> takeout_107_s1.3 -> demo_buffer_isnil_76_s1.3 -> lin_buffer_get_69_s1.3 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.3 -> demo_buffer_isnil_76_s2.3 -> takeout_107_s2.3 -> takeout_107_s3.3 -> sys_cond_wait_s1.3 -> sys_mutex_release_s1.3 -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> producer_92_s1.2 -> conats_shared_acquire_impl_s1.2 -> sys_mutex_acquire_yes.2 -> producer_92_s2.2 -> insert_95_s1.2 -> demo_buffer_isful_72_s1.2 -> lin_buffer_get_69_s1.2 -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.2 -> demo_buffer_isful_72_s2.2 -> insert_95_s2.2 -> insert_95_s6.2 -> demo_buffer_isnil_76_s1.2 -> lin_buffer_get_69_s1.2 -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.2 -> demo_buffer_isnil_76_s2.2 -> insert_95_s7.2 -> demo_buffer_insert_80_s1.2 -> lin_buffer_get_69_s1.2 -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_get_69_s2.2 -> demo_buffer_insert_80_s2.2 -> lin_buffer_update_66_s1.2 -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> lin_buffer_update_66_s2.2 -> demo_buffer_insert_80_s3.2 -> insert_95_s8.2 -> insert_95_s9.2 -> sys_cond_broadcast_s1 -> producer_92_s3.2 -> sys_mutex_release_s1.2 -> [int_choice] -> [int_choice] -> [int_choice] -> sys_run_first_one_s1 -> consumer_104_s4.4 -> sys_thread_finalize_s1.4 -> [int_choice] -> [int_choice] -> sys_run_first_one_s1>
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:145511
-Total Transitions:168710
-Time Used:11.2484535s
-Estimated Memory Used:138543.104KB
+Visited States:5235
+Total Transitions:5911
+Time Used:0.3040073s
+Estimated Memory Used:23490.56KB
 
 

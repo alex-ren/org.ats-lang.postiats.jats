@@ -57,7 +57,7 @@ sys_scheduler_random = [sys_cur_tid == -1](
 
 sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
     sys_new_tid = -1;
-    sys_runable_list =  sys_mylib_obj.list_insert_ordered(sys_runable_list, tid);
+    sys_runable_list =  sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
     sys_runable_size = sys_runable_size + 1;
 
     // Create a list with one element for stack
@@ -131,7 +131,7 @@ sys_mutex_acquire(sys_tid, m) =
 
       // add current thread to waiting list
       var __temp_list_args = 
-        sys_mylib_obj.list_insert_ordered(sys_mutex_waiting_list_manager.getElement(m), sys_tid);
+        sys_mylib_obj.list_insert_ordered(sys_tid, sys_mutex_waiting_list_manager.getElement(m));
       sys_mutex_waiting_list_manager.setElement(m, __temp_list_args);
 
       sys_cur_tid = -1;  // schedule out
@@ -168,7 +168,7 @@ sys_mutex_release_random_first(sys_tid, m, tid) = {
   sys_mutex_repo[m] = tid;
 
   // add to runable
-  sys_runable_list = sys_mylib_obj.list_insert_ordered(sys_runable_list, tid);
+  sys_runable_list = sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
   sys_runable_size = sys_runable_size + 1;
 
   sys_cur_tid = -1;  // schedule out
@@ -225,7 +225,7 @@ sys_cond_signal_random_first(sys_tid, c, tid) = sys_cond_signal_random_first_s1.
   sys_cond_sleep_list_manager.setElement(c, new_list);
 
   // add to runable
-  sys_runable_list = sys_mylib_obj.list_insert_ordered(sys_runable_list, tid);
+  sys_runable_list = sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
   sys_runable_size = sys_runable_size + 1;
   } -> Skip;
 
@@ -234,7 +234,7 @@ sys_cond_wait(sys_tid, c, m) = sys_cond_wait_s1.sys_tid{
   sys_runable_list = sys_mylib_obj.list_remove_element(sys_runable_list, sys_tid);
   sys_runable_size = sys_runable_size - 1;
   // add to sleep
-  var new_list = sys_mylib_obj.list_insert_ordered(sys_cond_sleep_list_manager.getElement(c), sys_tid);
+  var new_list = sys_mylib_obj.list_insert_ordered(sys_tid, sys_cond_sleep_list_manager.getElement(c));
   sys_cond_sleep_list_manager.setElement(c, new_list);
   } -> Skip;
   // release mutex. This would cause schedule out
@@ -335,7 +335,6 @@ var latest_96 = 0;
 var reading_97 = 0;
 var tid1_114 = 0;
 var tid2_115 = 0;
-var tid3_116 = 0;
 
 loop_69(sys_tid) =
   [sys_cur_tid == sys_tid] loop_69_s1.sys_tid{  var temp4_id = call(gte, sys_gstack.frame_get(sys_tid, 0, 0), 0);
@@ -570,14 +569,14 @@ sys_main(sys_tid) = [sys_cur_tid == sys_tid]
   sys_main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
             sys_gstack.add_frame(0, __temp_list_args); 
             } -> Skip;
-  [sys_cur_tid == sys_tid] main42_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+  [sys_cur_tid == sys_tid] main41_id_s1.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
   __temp_list_args = sys_mylib_obj.list_cons (2, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (2, __temp_list_args);
   __temp_list_args = sys_mylib_obj.list_cons (0, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } -> Skip;
   dataslots_create_63(sys_tid);
-  [sys_cur_tid == sys_tid] main42_id_s2.sys_tid{  data_94 = sys_gstack.retopr_frame(sys_tid);
+  [sys_cur_tid == sys_tid] main41_id_s2.sys_tid{  data_94 = sys_gstack.retopr_frame(sys_tid);
   slot_95 = array_ref_manager.allocate(2, 0);
 
   latest_96 = atom_ref_manager.allocate(0);
@@ -588,12 +587,9 @@ sys_main(sys_tid) = [sys_cur_tid == sys_tid]
 
   tid2_115 = sys_tid_allocator.allocate();
 
-  tid3_116 = sys_tid_allocator.allocate();
-
   } -> Skip;
   sys_thread_create(sys_tid, tid1_114, 10, 0);
-  sys_thread_create(sys_tid, tid2_115, 9, 0);
-  sys_thread_create(sys_tid, tid3_116, 10, 0); 
+  sys_thread_create(sys_tid, tid2_115, 9, 0); 
   sys_thread_finalize(sys_tid);
 
 var main_sys_tid = sys_tid_allocator.allocate();
@@ -602,7 +598,7 @@ main =
   sys_init_cond_service(COND_NO);
   main_init_scheduler {  // initialize runable
   var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_insert_ordered (__temp_list_args, main_sys_tid);
+  __temp_list_args = sys_mylib_obj.list_insert_ordered(main_sys_tid, __temp_list_args);
   sys_runable_list = __temp_list_args;
   sys_runable_size = 1;
   sys_cur_tid = main_sys_tid;
