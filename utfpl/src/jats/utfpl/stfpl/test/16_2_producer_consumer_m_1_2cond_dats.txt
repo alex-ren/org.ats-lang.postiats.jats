@@ -5,14 +5,14 @@ The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:18680
-Total Transitions:49307
-Time Used:4.5146597s
-Estimated Memory Used:36302.848KB
+Visited States:24286
+Total Transitions:27562
+Time Used:2.1490414s
+Estimated Memory Used:17907.712KB
 
 

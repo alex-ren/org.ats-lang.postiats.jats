@@ -1,6 +1,6 @@
 D2Cnone
 
-staload "/tmp/conats10775247381198/conats.sats"
+staload "/tmp/conats3887638189096290/conats.sats"
 
 "D2Cstacsts" lin_buffer_736: (t@ype) -\> viewtype
 
@@ -162,8 +162,8 @@ val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -
 val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (consumer_104, 0, tid4_120)
 
 %{
-// #assert main deadlockfree;
+#assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 %}

@@ -147,9 +147,9 @@ val () = conats_thread_create(consumer, 0, tid4)
 // List the properties for model checking.
 
 %{$
-// #assert main deadlockfree;
+#assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 %}
 

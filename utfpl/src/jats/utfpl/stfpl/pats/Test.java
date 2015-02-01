@@ -39,8 +39,8 @@ public class Test {
 //				"src/jats/utfpl/stfpl/test/16_producer_consumer.dats"  
 //				"src/jats/utfpl/stfpl/test/16_1_producer_consumer_m_1.dats"
 //        		"src/jats/utfpl/stfpl/test/16_2_producer_consumer_m_1_2cond.dats"
-        		"src/jats/utfpl/stfpl/test/16_3_producer_consumer_m_m_signal.dats"
-//        		"src/jats/utfpl/stfpl/test/16_4_producer_consumer_m_m_broadcast.dats"
+//        		"src/jats/utfpl/stfpl/test/16_3_producer_consumer_m_m_signal.dats"
+        		"src/jats/utfpl/stfpl/test/16_4_producer_consumer_m_m_broadcast.dats"
 //				"src/jats/utfpl/stfpl/test/17_mcset_mcget.dats",
 //        		"src/jats/utfpl/stfpl/test/17_1_mcset_mcget_calc.dats",
 //				"src/jats/utfpl/stfpl/test/18_atomic_opr.dats"
@@ -59,7 +59,7 @@ public class Test {
         };
 
         for (String strPath : paths) {
-        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath(), 0);
+        	ModelGenerater mcGen = new ModelGenerater(strPath, null, SystemEnv.getPATPath(), 1);
             mcGen.generate(8);
         }
 

@@ -60,7 +60,7 @@ sys_glb
 >>
 
 sys_sch_thread_starter_st(proc1_name, proc1_addr, else_procs) ::= <<
-sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1.tid{
     <sys_new_tid()> = -1;
     <sys_runable_list()> =  <sys_mylib()>.list_insert_ordered(tid, <sys_runable_list()>);
     <sys_runable_size()> = <sys_runable_size()> + 1;
@@ -121,7 +121,7 @@ var <sys_runable_list()>;
 var <sys_runable_size()>;
 
 sys_runable_run_random(xs, n) = 
-  ifa (n == 0) {Skip}
+  ifa (n == 0) {sys_end -> Skip}
   else ifa (n == 1) {
     sys_run_first_one(xs)
   }
@@ -130,9 +130,11 @@ sys_runable_run_random(xs, n) =
     \<>
     sys_runable_run_random(<sys_mylib()>.list_get_tail(xs), n - 1)
   };
-  
-sys_run_first_one(xs) = 
-  sys_run_first_one_s1{<sys_cur_tid()> = <sys_mylib()>.list_get_header(xs);
+
+var sys_show_cur_tid;
+
+sys_run_first_one(xs) = get_cur_tid{sys_show_cur_tid = <sys_mylib()>.list_get_header(xs);} ->
+  sys_run_first_one_scheduleto.sys_show_cur_tid.<sys_runable_size()>{<sys_cur_tid()> = <sys_mylib()>.list_get_header(xs);
   } -> 
   sys_scheduler_random
   ;
@@ -154,7 +156,9 @@ sys_scheduler_random = [<sys_cur_tid()> == <sys_sch_tid()>](
 sys_thread_finalize(<sys_tid()>) = [<sys_cur_tid()> == <sys_tid()>] sys_thread_finalize_s1.<sys_tid()>{
     // finalize thread
     // remove tid
+    <sys_my_lib()>.print_list(0, <sys_runable_list()>);
     <sys_runable_list()> = <sys_mylib()>.list_remove_element(<sys_runable_list()>, <sys_tid()>);
+    <sys_my_lib()>.print_list(1, <sys_runable_list()>);
     <sys_runable_size()> = <sys_runable_size()> - 1;
     <sys_cur_tid()> = <sys_sch_tid()>;  // schedule out
   } -> Skip;
@@ -318,7 +322,7 @@ sys_cond_wait(<sys_tid()>, c, m) = sys_cond_wait_s1.<sys_tid()>{
 
 sys_cond_broadcast(<sys_tid()>, c) = sys_cond_broadcast_s1{
   var sleep_list = sys_cond_sleep_list_manager.getElement(c);
-  <sys_runable_list()> = <sys_mylib()>.list_revappend(<sys_runable_list()>, sleep_list);
+  <sys_runable_list()> = <sys_mylib()>.list_merge_ordered(<sys_runable_list()>, sleep_list);
   <sys_runable_size()> = <sys_runable_size()> + <sys_mylib()>.list_length(sleep_list);
   sys_cond_sleep_list_manager.setElement(c, <sys_mylib()>.list_nil());
   } -> Skip;

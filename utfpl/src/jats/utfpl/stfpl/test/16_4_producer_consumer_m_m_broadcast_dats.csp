@@ -27,7 +27,7 @@ var sys_runable_list;
 var sys_runable_size;
 
 sys_runable_run_random(xs, n) = 
-  ifa (n == 0) {Skip}
+  ifa (n == 0) {sys_end -> Skip}
   else ifa (n == 1) {
     sys_run_first_one(xs)
   }
@@ -37,8 +37,10 @@ sys_runable_run_random(xs, n) =
     sys_runable_run_random(sys_mylib_obj.list_get_tail(xs), n - 1)
   };
 
-sys_run_first_one(xs) = 
-  sys_run_first_one_s1{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
+var sys_show_cur_tid;
+
+sys_run_first_one(xs) = get_cur_tid{sys_show_cur_tid = sys_mylib_obj.list_get_header(xs);} ->
+  sys_run_first_one_scheduleto.sys_show_cur_tid.sys_runable_size{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
   } -> 
   sys_scheduler_random
   ;
@@ -55,7 +57,7 @@ sys_scheduler_random = [sys_cur_tid == -1](
   });
 
 
-sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1.tid{
     sys_new_tid = -1;
     sys_runable_list =  sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
     sys_runable_size = sys_runable_size + 1;

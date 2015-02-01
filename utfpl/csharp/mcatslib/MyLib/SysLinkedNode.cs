@@ -82,13 +82,17 @@ namespace PAT.Lib
         // It's allowed that e is not in "this" list.
         // This is functional style.
         public SysLinkedNode remove_element(Object e) {
+            // System.Console.WriteLine("e is " + e.ToString());
+            // System.Console.WriteLine("before remove xs is " + this.ToString());
             // empty list
             if (this == s_nil) {
+                // System.Console.WriteLine("after remove xs is " + this.ToString());
                 return this;
             }
 
             SysLinkedNode tail = m_next;
             if (e.Equals(m_v)) {
+                // System.Console.WriteLine("after remove xs is " + tail.ToString());
                 return tail;
             }
 
@@ -98,6 +102,8 @@ namespace PAT.Lib
             while (s_nil != tail) {
                 if (e.Equals(tail.m_v)) {
                     cur_list.m_next = tail.m_next;
+                    // System.Console.WriteLine("after remove xs is " + new_list.ToString());
+
                     return new_list;
                 } else {
                     SysLinkedNode new_tail = new SysLinkedNode(tail.m_v, s_nil);
@@ -106,17 +112,21 @@ namespace PAT.Lib
                     tail = tail.m_next;
                 }
             }
+
+            // System.Console.WriteLine("after remove xs is " + this.ToString());
             return this;  // element not found
         }
 
         public SysLinkedNode merge_ordered(SysLinkedNode right) {
-            // System.Console.WriteLine("left is " + this.ToString());
-            // System.Console.WriteLine("right is " + right.ToString());
+            System.Console.WriteLine("left is " + this.ToString());
+            System.Console.WriteLine("right is " + right.ToString());
             SysLinkedNode left = this;
             if (left == s_nil) {
+                System.Console.WriteLine("new is " + right.ToString());
                 return right;
             }
             if (right == s_nil) {
+                System.Console.WriteLine("new is " + left.ToString());
                 return left;
             }
 
@@ -155,6 +165,7 @@ namespace PAT.Lib
                 pre_node.m_next = left;
             }
 
+            System.Console.WriteLine("new is " + new_list.ToString());
             return new_list;
         }
 

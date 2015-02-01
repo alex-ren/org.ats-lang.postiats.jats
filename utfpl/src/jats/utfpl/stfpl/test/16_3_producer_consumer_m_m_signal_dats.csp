@@ -55,7 +55,7 @@ sys_scheduler_random = [sys_cur_tid == -1](
   });
 
 
-sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1.tid{
     sys_new_tid = -1;
     sys_runable_list =  sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
     sys_runable_size = sys_runable_size + 1;
@@ -690,9 +690,9 @@ main =
 // #assert main |= G sys_assertion;
 
 
-// #assert main deadlockfree;
+#assert main deadlockfree;
 
-#assert main |= G sys_assertion;
+// #assert main |= G sys_assertion;
 
 
 
