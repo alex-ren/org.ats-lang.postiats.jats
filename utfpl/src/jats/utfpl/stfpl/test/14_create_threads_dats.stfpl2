@@ -1,13 +1,15 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
 
-val g_63 = D2Ecst<{para:a_3853_0}(((para:a_3853_0) -<fun> atomref_726_0(para:a_3853_0)))> (0)
+staload "/tmp/conats21880261238872/conats.sats"
+
+val g_63 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
 
 fun fact0_64 = lam (<P2Tann>(x_66:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let
         val r_67 = fact_65 (x_66)
-        val () = D2Ecst<{para:a_3854_0}(((atomref_726_0(para:a_3854_0), para:a_3854_0) -<fun> void))> (g_63, r_67)
+        val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (g_63, r_67)
       in
         ()
       end:void:t@ype))
@@ -19,10 +21,17 @@ and fact_65 = lam (<P2Tann>(x_68:int:t@ype)) <fun> =
       else
         <D2Esym>(*) (x_68, fact_65 (<D2Esym>(-) (x_68, 1))):int:t@ype))
 
-val tid_69 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+val tid_69 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (fact0_64, 3, tid_69)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (fact0_64, 3, tid_69)
 
-val <P2Tann>(x_70:int:t@ype) = D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_3855_0))> (g_63)
+val <P2Tann>(x_70:int:t@ype) = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (g_63)
 
-val () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(<>) (x_70, 6))
+val () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(<>) (x_70, 6))
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

@@ -1,11 +1,22 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
 
-val s_63 = D2Ecst<{para:a_3838_0}(((para:a_3838_0, int) -<fun> shared_t_722_0(para:a_3838_0)))> (0, 2)
+staload "/tmp/conats33010931972593/conats.sats"
 
-val a_64 = D2Ecst<{para:a_3840_0}(((shared_t_722_0(para:a_3840_0)) -<fun> para:a_3840_0))> (s_63)
+val s_63 = D2Ecst<conats_sharedn_create_2561:{a_3838_0:viewt0ype}(((a_3838_0:viewt0ype, int) -<fun> shared_t_722_0(a_3838_0:viewt0ype)))> (0, 2)
 
-val a_65 = D2Ecst<{para:a_3845_0}(((shared_t_722_0(para:a_3845_0), int, para:a_3845_0) -<fun> para:a_3845_0))> (s_63, 0, a_64)
+val a_64 = D2Ecst<conats_shared_acquire_2562:{a_3840_0:viewt0ype}(((shared_t_722_0(a_3840_0:viewt0ype)) -<fun> a_3840_0:viewt0ype))> (s_63)
 
-val a_66 = D2Ecst<{para:a_3845_0}(((shared_t_722_0(para:a_3845_0), int, para:a_3845_0) -<fun> para:a_3845_0))> (s_63, 1, a_65)
+val a_65 = D2Ecst<conats_sharedn_signal_2565:{a_3845_0:viewt0ype}(((shared_t_722_0(a_3845_0:viewt0ype), int, a_3845_0:viewt0ype) -<fun> a_3845_0:viewt0ype))> (s_63, 0, a_64)
 
-val () = D2Ecst<{para:a_3842_0}(((shared_t_722_0(para:a_3842_0), para:a_3842_0) -<fun> void))> (s_63, a_66)
+val a_66 = D2Ecst<conats_sharedn_signal_2565:{a_3845_0:viewt0ype}(((shared_t_722_0(a_3845_0:viewt0ype), int, a_3845_0:viewt0ype) -<fun> a_3845_0:viewt0ype))> (s_63, 1, a_65)
+
+val a_67 = D2Ecst<conats_sharedn_condwait_2569:{a_3853_0:viewt0ype}(((shared_t_722_0(a_3853_0:viewt0ype), int, a_3853_0:viewt0ype) -<fun> a_3853_0:viewt0ype))> (s_63, 0, a_66)
+
+val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_63, a_67)
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

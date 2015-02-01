@@ -214,7 +214,7 @@ public class PatCspsTransformer implements IMyCspInsVisitor {
         PProc ifProc = CBlockLst2PProc(blk.m_tb);
         PProc elseProc = CBlockLst2PProc(blk.m_fb);
         
-        return new PProcBranch(condExp, ifProc, elseProc, PProcBranch.Type.ifcommon);
+        return new PProcBranch(condExp, ifProc, elseProc, PProcBranch.Type.ifa);
     }
     
     @Override

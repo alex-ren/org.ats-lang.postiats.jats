@@ -116,9 +116,11 @@ end
 // Construct the model of whole system.
 val tid1 = conats_tid_allocate ()
 val tid2 = conats_tid_allocate ()
+// val tid3 = conats_tid_allocate ()
 
 val () = conats_thread_create(loop_reader, 0, tid1)
 val () = conats_thread_create(loop_writer, 0, tid2)
+// val () = conats_thread_create(loop_reader, 0, tid3)
 // List the properties for model checking.
 
 %{$

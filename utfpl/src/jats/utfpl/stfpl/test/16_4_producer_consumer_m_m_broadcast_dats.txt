@@ -10,9 +10,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:61310
-Total Transitions:202294
-Time Used:18.9248645s
-Estimated Memory Used:78028.8KB
+Visited States:145511
+Total Transitions:168710
+Time Used:11.2484535s
+Estimated Memory Used:138543.104KB
 
 

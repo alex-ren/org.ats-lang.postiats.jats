@@ -1,9 +1,7 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is NOT valid.
-The following trace leads to a deadlock situation.
-<init -> sys_main_init.0 -> main11_id_s1.0 -> foo_65_s1.0 -> foo1_63_s1.0 -> foo_65_s2.0 -> mlock.0 -> foo_65_s3.0 -> sys_munlock.0 -> foo_65_s4.0 -> mlock.0 -> foo_65_s5.0>
+The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,10 +10,10 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:12
-Total Transitions:11
-Time Used:0.0178975s
-Estimated Memory Used:8564.736KB
+Visited States:18
+Total Transitions:18
+Time Used:0.015065s
+Estimated Memory Used:8577.024KB
 
 
 =======================================================
@@ -30,9 +28,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:12
-Total Transitions:11
-Time Used:0.0037371s
-Estimated Memory Used:8560.64KB
+Visited States:19
+Total Transitions:18
+Time Used:0.011118s
+Estimated Memory Used:8552.448KB
 
 
