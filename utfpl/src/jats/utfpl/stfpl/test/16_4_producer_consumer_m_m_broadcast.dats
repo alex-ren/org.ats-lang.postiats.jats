@@ -1,4 +1,4 @@
-// two producer and two consumer, two condition variables, using broadcast
+// two producer and two consumer, two condition variables, using broadcast, no deadlock
 
 #define CONATSCONTRIB
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"

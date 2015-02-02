@@ -40,7 +40,7 @@ sys_runable_run_random(xs, n) =
 var sys_show_cur_tid;
 
 sys_run_first_one(xs) = get_cur_tid{sys_show_cur_tid = sys_mylib_obj.list_get_header(xs);} ->
-  sys_run_first_one_scheduleto.sys_show_cur_tid.sys_runable_size{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
+  sys_run_first_one_scheduleto.sys_show_cur_tid{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
   } -> 
   sys_scheduler_random
   ;

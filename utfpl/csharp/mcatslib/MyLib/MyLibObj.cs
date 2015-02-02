@@ -38,7 +38,12 @@ namespace PAT.Lib
         }
 
         public void mc_print(Object obj) {
-            System.Console.WriteLine(obj);
+            System.Console.WriteLine(obj.ToString());
+        }
+
+        public void print_list(int x, SysLinkedNode xs) {
+            System.Console.WriteLine(x + " " + xs.ToString());
+            return;
         }
 
         public void showString(MyString str) {

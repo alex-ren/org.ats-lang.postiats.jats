@@ -1,9 +1,7 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is NOT valid.
-The following trace leads to a deadlock situation.
-<init -> main_init.0 -> main61_id_s1.0 -> lin_buffer_create_63_s1.0 -> main61_id_s2.0 -> sys_ch_sch.1.9.0 -> τ -> thread_init -> [if((9 == 9))] -> sys_ch_sch.2.11.0 -> τ -> thread_finalize.0 -> producer_92_s1.1 -> shared_acq.1 -> mlock.1 -> producer_92_s2.1 -> insert_95_s1.1 -> demo_buffer_isful_72_s1.1 -> lin_buffer_get_69_s1.1 -> lin_buffer_get_69_s2.1 -> demo_buffer_isful_72_s2.1 -> insert_95_s2.1 -> [if!(sys_gstack.frame_get_bool(1, 0, 3))] -> insert_95_s6.1 -> demo_buffer_isnil_76_s1.1 -> lin_buffer_get_69_s1.1 -> lin_buffer_get_69_s2.1 -> demo_buffer_isnil_76_s2.1 -> insert_95_s7.1 -> demo_buffer_insert_80_s1.1 -> lin_buffer_get_69_s1.1 -> lin_buffer_get_69_s2.1 -> demo_buffer_insert_80_s2.1 -> lin_buffer_update_66_s1.1 -> lin_buffer_update_66_s2.1 -> demo_buffer_insert_80_s3.1 -> insert_95_s8.1 -> [if(sys_gstack.frame_get_bool(1, 0, 4))] -> insert_95_s9.1 -> [if!((cond_holder[0] > 0))] -> producer_92_s3.1 -> sys_munlock.1 -> producer_92_s4.1 -> producer_92_s1.1 -> shared_acq.1 -> mlock.1 -> producer_92_s2.1 -> insert_95_s1.1 -> demo_buffer_isful_72_s1.1 -> lin_buffer_get_69_s1.1 -> lin_buffer_get_69_s2.1 -> demo_buffer_isful_72_s2.1 -> insert_95_s2.1 -> [if(sys_gstack.frame_get_bool(1, 0, 3))] -> insert_95_s3.1 -> cadd.1 -> sys_munlock.1 -> thread_init -> [if!((11 == 9))] -> [if((11 == 11))] -> consumer_104_s1.2 -> shared_acq.2 -> mlock.2 -> consumer_104_s2.2 -> takeout_107_s1.2 -> demo_buffer_isnil_76_s1.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> demo_buffer_isnil_76_s2.2 -> takeout_107_s2.2 -> [if!(sys_gstack.frame_get_bool(2, 0, 3))] -> takeout_107_s6.2 -> demo_buffer_isful_72_s1.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> demo_buffer_isful_72_s2.2 -> takeout_107_s7.2 -> demo_buffer_takeout_85_s1.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> demo_buffer_takeout_85_s2.2 -> lin_buffer_update_66_s1.2 -> lin_buffer_update_66_s2.2 -> demo_buffer_takeout_85_s3.2 -> takeout_107_s8.2 -> consumer_104_s3.2 -> sys_munlock.2 -> consumer_104_s4.2 -> consumer_104_s1.2 -> shared_acq.2 -> mlock.2 -> consumer_104_s2.2 -> takeout_107_s1.2 -> demo_buffer_isnil_76_s1.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> demo_buffer_isnil_76_s2.2 -> takeout_107_s2.2 -> [if(sys_gstack.frame_get_bool(2, 0, 3))] -> takeout_107_s3.2 -> cadd.2 -> sys_munlock.2>
+The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,9 +10,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:1099
-Total Transitions:2316
-Time Used:0.1412205s
-Estimated Memory Used:18722.816KB
+Visited States:1638
+Total Transitions:1801
+Time Used:0.1008474s
+Estimated Memory Used:23035.904KB
 
 

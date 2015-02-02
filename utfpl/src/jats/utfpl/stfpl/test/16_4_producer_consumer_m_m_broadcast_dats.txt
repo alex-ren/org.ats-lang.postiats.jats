@@ -1,9 +1,7 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is NOT valid.
-The following trace leads to a deadlock situation.
-<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main64_id_s1.0 -> lin_buffer_create_63_s1.0 -> main64_id_s2.0 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.0.2 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.2 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.0.3 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.3 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.0.4 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.4 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.0.5 -> sys_thread_finalize_s1.0 -> [int_choice] -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.3.4 -> consumer_104_s1.3 -> conats_shared_acquire_impl_s1.3 -> sys_mutex_acquire_yes.3 -> consumer_104_s2.3 -> takeout_107_s1.3 -> demo_buffer_isnil_76_s1.3 -> lin_buffer_get_69_s1.3 -> [int_choice] -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.3.4 -> lin_buffer_get_69_s2.3 -> demo_buffer_isnil_76_s2.3 -> takeout_107_s2.3 -> takeout_107_s3.3 -> sys_cond_wait_s1.3 -> sys_mutex_release_s1.3 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1.3 -> producer_92_s1.1 -> conats_shared_acquire_impl_s1.1 -> sys_mutex_acquire_yes.1 -> producer_92_s2.1 -> insert_95_s1.1 -> demo_buffer_isful_72_s1.1 -> lin_buffer_get_69_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1.3 -> lin_buffer_get_69_s2.1 -> demo_buffer_isful_72_s2.1 -> insert_95_s2.1 -> insert_95_s6.1 -> demo_buffer_isnil_76_s1.1 -> lin_buffer_get_69_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1.3 -> lin_buffer_get_69_s2.1 -> demo_buffer_isnil_76_s2.1 -> insert_95_s7.1 -> demo_buffer_insert_80_s1.1 -> lin_buffer_get_69_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1.3 -> lin_buffer_get_69_s2.1 -> demo_buffer_insert_80_s2.1 -> lin_buffer_update_66_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1.3 -> lin_buffer_update_66_s2.1 -> demo_buffer_insert_80_s3.1 -> insert_95_s8.1 -> insert_95_s9.1 -> sys_cond_broadcast_s1 -> producer_92_s3.1 -> sys_mutex_release_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1.4 -> producer_92_s4.1 -> sys_thread_finalize_s1.1 -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.3 -> consumer_104_s1.4 -> conats_shared_acquire_impl_s1.4 -> sys_mutex_acquire_yes.4 -> consumer_104_s2.4 -> takeout_107_s1.4 -> demo_buffer_isnil_76_s1.4 -> lin_buffer_get_69_s1.4 -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.3 -> lin_buffer_get_69_s2.4 -> demo_buffer_isnil_76_s2.4 -> takeout_107_s2.4 -> takeout_107_s6.4 -> demo_buffer_isful_72_s1.4 -> lin_buffer_get_69_s1.4 -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.3 -> lin_buffer_get_69_s2.4 -> demo_buffer_isful_72_s2.4 -> takeout_107_s7.4 -> demo_buffer_takeout_85_s1.4 -> lin_buffer_get_69_s1.4 -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.3 -> lin_buffer_get_69_s2.4 -> demo_buffer_takeout_85_s2.4 -> lin_buffer_update_66_s1.4 -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.3 -> lin_buffer_update_66_s2.4 -> demo_buffer_takeout_85_s3.4 -> takeout_107_s8.4 -> takeout_107_s12.4 -> consumer_104_s3.4 -> sys_mutex_release_s1.4 -> [int_choice] -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.3 -> consumer_104_s4.4 -> sys_thread_finalize_s1.4 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.4.2>
+The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,9 +10,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:67095
-Total Transitions:79200
-Time Used:6.6207198s
-Estimated Memory Used:122859.52KB
+Visited States:90395
+Total Transitions:108705
+Time Used:6.0178223s
+Estimated Memory Used:112553.984KB
 
 

@@ -118,15 +118,15 @@ namespace PAT.Lib
         }
 
         public SysLinkedNode merge_ordered(SysLinkedNode right) {
-            System.Console.WriteLine("left is " + this.ToString());
-            System.Console.WriteLine("right is " + right.ToString());
+            // System.Console.WriteLine("left is " + this.ToString());
+            // System.Console.WriteLine("right is " + right.ToString());
             SysLinkedNode left = this;
             if (left == s_nil) {
-                System.Console.WriteLine("new is " + right.ToString());
+                // System.Console.WriteLine("new is " + right.ToString());
                 return right;
             }
             if (right == s_nil) {
-                System.Console.WriteLine("new is " + left.ToString());
+                // System.Console.WriteLine("new is " + left.ToString());
                 return left;
             }
 
@@ -153,7 +153,7 @@ namespace PAT.Lib
                     pre_node.m_next = new_node;
                     left = left.m_next;
                 } else { // It's impossible that == 0
-                    SysLinkedNode new_node = new SysLinkedNode(lv, s_nil);
+                    SysLinkedNode new_node = new SysLinkedNode(rv, s_nil);
                     pre_node.m_next = new_node;
                     right = right.m_next;
                 }
@@ -165,7 +165,7 @@ namespace PAT.Lib
                 pre_node.m_next = left;
             }
 
-            System.Console.WriteLine("new is " + new_list.ToString());
+            // System.Console.WriteLine("new is " + new_list.ToString());
             return new_list;
         }
 

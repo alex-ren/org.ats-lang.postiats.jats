@@ -1,32 +1,32 @@
 D2Cnone
 
-staload "/tmp/conats33198786800220/conats.sats"
+staload "/tmp/conats44100304138413/conats.sats"
 
 "D2Cstacsts" lin_buffer_736: (t@ype) -\> viewtype
 
 local
 in
-  fun lin_buffer_create_63 = lamSta. lam (<P2Tann>(data_64:a_3893_0:t@ype:t@ype)) <fun> = 
+  fun lin_buffer_create_63 = lamSta. lam (<P2Tann>(data_64:a_3897_0:t@ype:t@ype)) <fun> = 
     <D2EannSeff>(
       let
-        val ref_65 = D2Ecst<conats_atomref_create_2571:{a_3853_0:t@ype}(((a_3853_0:t@ype) -<fun> atomref_726_0(a_3853_0:t@ype)))> (data_64)
+        val ref_65 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (data_64)
       in
         ref_65
-      end:lin_buffer_736_0(a_3893_0:t@ype):viewtype)
-  fun lin_buffer_update_66 = lamSta. lam (<P2Tann>(lref_67:lin_buffer_736_0(a_3894_0:t@ype):viewtype), <P2Tann>(data_68:a_3894_0:t@ype:t@ype)) <fun> = 
+      end:lin_buffer_736_0(a_3897_0:t@ype):viewtype)
+  fun lin_buffer_update_66 = lamSta. lam (<P2Tann>(lref_67:lin_buffer_736_0(a_3898_0:t@ype):viewtype), <P2Tann>(data_68:a_3898_0:t@ype:t@ype)) <fun> = 
     <D2EannSeff>(
       let
-        val () = D2Ecst<conats_atomref_update_2572:{a_3854_0:t@ype}(((atomref_726_0(a_3854_0:t@ype), a_3854_0:t@ype) -<fun> void))> (lref_67, data_68)
+        val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (lref_67, data_68)
       in
         lref_67
-      end:lin_buffer_736_0(a_3894_0:t@ype):viewtype)
-  fun lin_buffer_get_69 = lamSta. lam (<P2Tann>(lref_70:lin_buffer_736_0(a_3895_0:t@ype):viewtype)) <fun> = 
+      end:lin_buffer_736_0(a_3898_0:t@ype):viewtype)
+  fun lin_buffer_get_69 = lamSta. lam (<P2Tann>(lref_70:lin_buffer_736_0(a_3899_0:t@ype):viewtype)) <fun> = 
     <D2EannSeff>(
       let
-        val v_71 = D2Ecst<conats_atomref_get_2573:{a_3855_0:t@ype}(((atomref_726_0(a_3855_0:t@ype)) -<fun> a_3855_0:t@ype))> (lref_70)
+        val v_71 = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (lref_70)
       in
         ( | lref_70, v_71)
-      end:@{0 = lin_buffer_736_0(a_3895_0:t@ype), 1 = a_3895_0:t@ype}:viewt0ype)
+      end:@{0 = lin_buffer_736_0(a_3899_0:t@ype), 1 = a_3899_0:t@ype}:viewt0ype)
 end
 
 D2Cnone
@@ -82,7 +82,7 @@ fun producer_92 = lam (<P2Tann>(x_93:int:t@ype)) <fun> =
               in
                 if (isful_98) then
                   let
-                    val db_99 = D2Ecst<conats_shared_condwait_2566:{a_3848_0:viewt0ype}(((shared_t_722_0(a_3848_0:viewt0ype), a_3848_0:viewt0ype) -<fun> a_3848_0:viewt0ype))> (s_91, db_97)
+                    val db_99 = D2Ecst<conats_shared_condwait_2568:{a_3852_0:viewt0ype}(((shared_t_722_0(a_3852_0:viewt0ype), a_3852_0:viewt0ype) -<fun> a_3852_0:viewt0ype))> (s_91, db_97)
                   in
                     insert_95 (db_99)
                   end
@@ -116,7 +116,7 @@ fun consumer_104 = lam (<P2Tann>(x_105:int:t@ype)) <fun> =
               in
                 if (isnil_110) then
                   let
-                    val db_111 = D2Ecst<conats_shared_condwait_2566:{a_3848_0:viewt0ype}(((shared_t_722_0(a_3848_0:viewt0ype), a_3848_0:viewt0ype) -<fun> a_3848_0:viewt0ype))> (s_91, db_109)
+                    val db_111 = D2Ecst<conats_shared_condwait_2568:{a_3852_0:viewt0ype}(((shared_t_722_0(a_3852_0:viewt0ype), a_3852_0:viewt0ype) -<fun> a_3852_0:viewt0ype))> (s_91, db_109)
                   in
                     takeout_107 (db_111)
                   end
@@ -127,26 +127,27 @@ fun consumer_104 = lam (<P2Tann>(x_105:int:t@ype)) <fun> =
                   in
                     if (isful_113) then
                       let
+                        val db_115 = D2Ecst<conats_shared_signal_2564:{a_3844_0:viewt0ype}(((shared_t_722_0(a_3844_0:viewt0ype), a_3844_0:viewt0ype) -<fun> a_3844_0:viewt0ype))> (s_91, db_114)
                       in
-                        db_114
+                        db_115
                       end
                     else
                       db_114
                   end
               end:lin_buffer_736_0(int):viewtype))
-        val db_115 = takeout_107 (db_106)
-        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_91, db_115)
+        val db_116 = takeout_107 (db_106)
+        val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_91, db_116)
       in
         consumer_104 (x_105)
       end:void:t@ype))
 
-val tid1_116 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
+val tid1_117 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val tid2_117 = D2Ecst<conats_tid_allocate_2577:(() -<fun> thread_id_t_728_0())> ()
+val tid2_118 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0()) -<fun> void))> (producer_92, 0, tid1_116)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (producer_92, 0, tid1_117)
 
-val () = D2Ecst<conats_thread_create_2578:{a_3861_0:t@ype}(((((a_3861_0:t@ype) -<fun> void), a_3861_0:t@ype, thread_id_t_728_0()) -<fun> void))> (consumer_104, 0, tid2_117)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (consumer_104, 0, tid2_118)
 
 %{
 #assert main deadlockfree;
