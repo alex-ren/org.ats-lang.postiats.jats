@@ -1,8 +1,8 @@
 D2Cnone
 
-staload "/tmp/conats65845616563713/conats.sats"
+staload "/tmp/conats35623620947171/conats.sats"
 
-staload "/home/alex/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
+staload "/home/grad2/aren/workspace/Postiats/ATS-Postiats/prelude/SATS/unsafe.sats"
 
 val gref_63 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
 

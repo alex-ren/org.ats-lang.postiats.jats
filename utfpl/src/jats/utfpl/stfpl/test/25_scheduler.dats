@@ -15,7 +15,7 @@ end
 %{$
 // =================================
 // Set the initial capacity to 10.
-#define COND_NO  10;
+
 var cond2 = [0(COND_NO)];
 var<AtomRefManager> cond_sleep_list_manager = new AtomRefManager(COND_NO);
 
@@ -77,7 +77,7 @@ CondWait(sys_tid, c, m) = CondWait_st.sys_tid{
 // =================================
 
 // Set the initial capacity to 10.
-#define MUTEX_NO  10;
+
 var mutex2 = [-1(MUTEX_NO)];
 var<AtomRefManager> mutex_waiting_list_manager = new AtomRefManager(MUTEX_NO);
 
@@ -291,8 +291,5 @@ main2 = Main2 ||| scheduler_random;
 
 // #assert main |= G sys_assertion;
 
-var xxx = 0;
-PP = a -> ([xxx == 0] a -> Skip); b -> Stop;
-#assert PP deadlockfree;
 %}
 

@@ -1,19 +1,21 @@
 =======================================================
 Assertion: main() deadlockfree
 ********Verification Result********
-The Assertion (main() deadlockfree) is VALID.
+The Assertion (main() deadlockfree) is NOT valid.
+The following trace leads to a deadlock situation.
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main3_id_s1.0 -> conats_shared_acquire_impl_s1.0 -> sys_mutex_acquire_yes.0 -> main3_id_s2.0 -> sys_cond_signal_empty.0 -> main3_id_s3.0 -> sys_cond_wait_s1.0 -> sys_mutex_release_s1.0 -> sys_end>
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:15
-Total Transitions:15
-Time Used:0.0153595s
-Estimated Memory Used:8572.928KB
+Visited States:14
+Total Transitions:13
+Time Used:0.0228114s
+Estimated Memory Used:8601.6KB
 
 
 =======================================================
@@ -23,14 +25,14 @@ The Assertion (main() |= G sys_assertion) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:16
-Total Transitions:15
-Time Used:0.0046668s
-Estimated Memory Used:8556.544KB
+Visited States:14
+Total Transitions:13
+Time Used:0.0053115s
+Estimated Memory Used:8589.312KB
 
 

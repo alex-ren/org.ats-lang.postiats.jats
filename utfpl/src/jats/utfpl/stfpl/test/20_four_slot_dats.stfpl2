@@ -1,4 +1,6 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
+
+staload "/tmp/conats35273862465909/conats.sats"
 
 "D2Cstacsts" mwp_736: int
 
@@ -8,52 +10,52 @@ staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl
 
 "D2Cstacsts" mw_init_739: int
 
-"D2Cdcstdecs" int
+"D2Cdcstdecs" mwp_2595:int
 
-"D2Cdcstdecs" int
+"D2Cdcstdecs" mc_mwi_2596:int
 
-"D2Cdcstdecs" int
+"D2Cdcstdecs" mc_min_write_2597:int
 
-"D2Cdcstdecs" int
+"D2Cdcstdecs" mc_mw_init_2598:int
 
 D2Cnone
 
-val L_63 = D2Ecst<{para:a_3853_0}(((para:a_3853_0) -<fun> atomref_726_0(para:a_3853_0)))> (0)
+val L_63 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
 
-val R_64 = D2Ecst<{para:a_3853_0}(((para:a_3853_0) -<fun> atomref_726_0(para:a_3853_0)))> (0)
+val R_64 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
 
-val slot_65 = D2Ecst<{para:a_3857_0}(((int, para:a_3857_0) -<fun> atomarrayref_727_0(para:a_3857_0)))> (2, 0)
+val slot_65 = D2Ecst<conats_atomarrayref_create_2576:{a_3861_0:t@ype}(((int, a_3861_0:t@ype) -<fun> atomarrayref_727_0(a_3861_0:t@ype)))> (2, 0)
 
-val data_66 = D2Ecst<{para:a_3857_0}(((int, para:a_3857_0) -<fun> atomarrayref_727_0(para:a_3857_0)))> (4, 0)
+val data_66 = D2Ecst<conats_atomarrayref_create_2576:{a_3861_0:t@ype}(((int, a_3861_0:t@ype) -<fun> atomarrayref_727_0(a_3861_0:t@ype)))> (4, 0)
 
 "D2Cstacsts" data_741: t@ype
 
-"D2Cdcstdecs" (() -<fun> data_741_0)
+"D2Cdcstdecs" data_create_2599:(() -<fun> data_741_0())
 
-"D2Cdcstdecs" ((int, int, data_741_0) -<fun> void)
+"D2Cdcstdecs" write_2600:((int, int, data_741_0()) -<fun> void)
 
-implement ((int, int, data_741_0) -<fun> void) = lam (<P2Tann>(p_67:int:t@ype), <P2Tann>(i_68:int:t@ype), <P2Tann>(x_69:data_741_0:t@ype)) <fun> = 
+implement write_2600:((int, int, data_741_0()) -<fun> void) = lam (<P2Tann>(p_67:int:t@ype), <P2Tann>(i_68:int:t@ype), <P2Tann>(x_69:data_741_0():t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       ():void:t@ype))
 
-"D2Cdcstdecs" ((prop, prop, prop, int, int) -<fun> data_741_0)
+"D2Cdcstdecs" read_2601:((prop, prop, prop, int, int) -<fun> data_741_0())
 
-fun writer_70 = lam (<P2Tann>(x_71:data_741_0:t@ype)) <fun> = 
+fun writer_70 = lam (<P2Tann>(x_71:data_741_0():t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      val wp_72 = <D2Esym>(-) (1, D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_3855_0))> (R_64))
-      val wi_73 = <D2Esym>(-) (1, D2Ecst<{para:a_3859_0}(((atomarrayref_727_0(para:a_3859_0), int) -<fun> para:a_3859_0))> (slot_65, wp_72))
-      prval () = D2Ecst<(() -<fun> void)> ()
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, wp_72)
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, wi_73)
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 1)
-      prval () = D2Ecst<(() -<fun> void)> ()
-      val () = D2Ecst<((int, int, data_741_0) -<fun> void)> (wp_72, wi_73, x_71)
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 0)
-      val () = D2Ecst<{para:a_3858_0}(((atomarrayref_727_0(para:a_3858_0), int, para:a_3858_0) -<fun> void))> (slot_65, wp_72, wi_73)
-      val () = D2Ecst<{para:a_3854_0}(((atomref_726_0(para:a_3854_0), para:a_3854_0) -<fun> void))> (L_63, wp_72)
-      prval () = D2Ecst<((int, int) -<fun> void)> (D2Ecst<int>, 1)
+      val wp_72 = <D2Esym>(-) (1, D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (R_64))
+      val wi_73 = <D2Esym>(-) (1, D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slot_65, wp_72))
+      prval () = D2Ecst<mc_atomic_start_2583:(() -<fun> void)> ()
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mwp_2595:int>, wp_72)
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mc_mwi_2596:int>, wi_73)
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mc_min_write_2597:int>, 1)
+      prval () = D2Ecst<mc_atomic_end_2584:(() -<fun> void)> ()
+      val () = D2Ecst<write_2600:((int, int, data_741_0()) -<fun> void)> (wp_72, wi_73, x_71)
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mc_min_write_2597:int>, 0)
+      val () = D2Ecst<conats_atomarrayref_update_2577:{a_3862_0:t@ype}(((atomarrayref_727_0(a_3862_0:t@ype), int, a_3862_0:t@ype) -<fun> void))> (slot_65, wp_72, wi_73)
+      val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (L_63, wp_72)
+      prval () = D2Ecst<mc_set_int_2581:((int, int) -<fun> void)> (D2Ecst<mc_mw_init_2598:int>, 1)
     in
       ()
     end:void:t@ype)
@@ -64,39 +66,39 @@ fun comp3_74 = lamMet. lamSta. lam (<P2Tann>(x_75:bool:t@ype), <P2Tann>(y_76:boo
       if (x_75) then
         if (y_76) then
           if (z_77) then
-            D2Ecst<bool>
+            D2Ecst<true_bool_0:bool>
           else
-            D2Ecst<bool>
+            D2Ecst<false_bool_1:bool>
         else
-          D2Ecst<bool>
+          D2Ecst<false_bool_1:bool>
       else
-        D2Ecst<bool>:bool:t@ype))
+        D2Ecst<false_bool_1:bool>:bool:t@ype))
 
 "D2Cstacsts" initialized_742: prop
 
-"D2Cdcstdecs" ((prop) -<fun> prop)
+"D2Cdcstdecs" is_initialized_2602:((prop) -<fun> prop)
 
 fun reader_78 = lam (<P2Tann>(pf_79:prop:prop)) <fun> = 
   <D2EannSeff>(
     let
-      val rp_80 = D2Ecst<{para:a_3855_0}(((atomref_726_0(para:a_3855_0)) -<fun> para:a_3855_0))> (L_63)
-      val () = D2Ecst<{para:a_3854_0}(((atomref_726_0(para:a_3854_0), para:a_3854_0) -<fun> void))> (R_64, rp_80)
-      val ri_81 = D2Ecst<{para:a_3859_0}(((atomarrayref_727_0(para:a_3859_0), int) -<fun> para:a_3859_0))> (slot_65, rp_80)
-      prval () = D2Ecst<(() -<fun> void)> ()
-      prval <P2Trec>(<LABP2ATnorm>(pfwp_82), <LABP2ATnorm>(wp_83)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
-      prval <P2Trec>(<LABP2ATnorm>(pfwi_84), <LABP2ATnorm>(wi_85)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
-      prval <P2Trec>(<LABP2ATnorm>(pf_in_86), <LABP2ATnorm>(in_write_87)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
-      prval () = D2Ecst<(() -<fun> void)> ()
-      prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(~) (comp3_74 (<D2Esym>(=) (in_write_87, 1), <D2Esym>(=) (wp_83, rp_80), <D2Esym>(=) (wi_85, ri_81))))
-      val x_88 = D2Ecst<((prop, prop, prop, int, int) -<fun> data_741_0)> (pf_in_86, pfwp_82, pfwi_84, rp_80, ri_81)
+      val rp_80 = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (L_63)
+      val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (R_64, rp_80)
+      val ri_81 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slot_65, rp_80)
+      prval () = D2Ecst<mc_atomic_start_2583:(() -<fun> void)> ()
+      prval <P2Trec>(<LABP2ATnorm>(pfwp_82), <LABP2ATnorm>(wp_83)) = D2Ecst<mc_get_int_2582:((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<mwp_2595:int>)
+      prval <P2Trec>(<LABP2ATnorm>(pfwi_84), <LABP2ATnorm>(wi_85)) = D2Ecst<mc_get_int_2582:((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<mc_mwi_2596:int>)
+      prval <P2Trec>(<LABP2ATnorm>(pf_in_86), <LABP2ATnorm>(in_write_87)) = D2Ecst<mc_get_int_2582:((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<mc_min_write_2597:int>)
+      prval () = D2Ecst<mc_atomic_end_2584:(() -<fun> void)> ()
+      prval () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(~) (comp3_74 (<D2Esym>(=) (in_write_87, 1), <D2Esym>(=) (wp_83, rp_80), <D2Esym>(=) (wi_85, ri_81))))
+      val x_88 = D2Ecst<read_2601:((prop, prop, prop, int, int) -<fun> data_741_0())> (pf_in_86, pfwp_82, pfwi_84, rp_80, ri_81)
     in
       x_88
-    end:data_741_0:t@ype)
+    end:data_741_0():t@ype)
 
 fun loop_write_89 = lam (<P2Tann>(arg_90:int:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      val () = writer_70 (D2Ecst<(() -<fun> data_741_0)> ())
+      val () = writer_70 (D2Ecst<data_create_2599:(() -<fun> data_741_0())> ())
     in
       loop_write_89 (arg_90)
     end:void:t@ype)
@@ -104,33 +106,33 @@ fun loop_write_89 = lam (<P2Tann>(arg_90:int:t@ype)) <fun> =
 fun loop_read_91 = lam (<P2Tann>(arg_92:int:t@ype)) <fun> = 
   <D2EannSeff>(
     let
-      prval <P2Trec>(<LABP2ATnorm>(pf_93), <LABP2ATnorm>(w_init_94)) = D2Ecst<((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<int>)
-      prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(>) (w_init_94, 0))
-      prval pf_init_95 = D2Ecst<((prop) -<fun> prop)> (pf_93)
+      prval <P2Trec>(<LABP2ATnorm>(pf_93), <LABP2ATnorm>(w_init_94)) = D2Ecst<mc_get_int_2582:((int) -<fun> @{0 = prop, 1 = int})> (D2Ecst<mc_mw_init_2598:int>)
+      prval () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(>) (w_init_94, 0))
+      prval pf_init_95 = D2Ecst<is_initialized_2602:((prop) -<fun> prop)> (pf_93)
       val x_96 = reader_78 (pf_init_95)
     in
       loop_read_91 (arg_92)
     end:void:t@ype)
 
-implement (() -<fun> data_741_0) = lam () <fun> = 
+implement data_create_2599:(() -<fun> data_741_0()) = lam () <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
-      1:data_741_0:t@ype))
+      1:data_741_0():t@ype))
 
-implement ((prop, prop, prop, int, int) -<fun> data_741_0) = lamSta. lamSta. lamSta. lam (<P2Tann>(pf0_97:prop:prop), <P2Tann>(pf1_98:prop:prop), <P2Tann>(pf2_99:prop:prop), <P2Tann>(p_100:int:t@ype), <P2Tann>(i_101:int:t@ype)) <fun> = 
+implement read_2601:((prop, prop, prop, int, int) -<fun> data_741_0()) = lamSta. lamSta. lamSta. lam (<P2Tann>(pf0_97:prop:prop), <P2Tann>(pf1_98:prop:prop), <P2Tann>(pf2_99:prop:prop), <P2Tann>(p_100:int:t@ype), <P2Tann>(i_101:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
     <D2EannSeff>(
-      D2Ecst<(() -<fun> data_741_0)> ():data_741_0:t@ype))
+      D2Ecst<data_create_2599:(() -<fun> data_741_0())> ():data_741_0():t@ype))
 
-val () = writer_70 (D2Ecst<(() -<fun> data_741_0)> ())
+val () = writer_70 (D2Ecst<data_create_2599:(() -<fun> data_741_0())> ())
 
-val tid1_102 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+val tid1_102 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val tid2_103 = D2Ecst<(() -<fun> thread_id_t_728_0)> ()
+val tid2_103 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
 
-val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (loop_read_91, 0, tid1_102)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_read_91, 0, tid1_102)
 
-val () = D2Ecst<{para:a_3861_0}(((((para:a_3861_0) -<fun> void), para:a_3861_0, thread_id_t_728_0) -<fun> void))> (loop_write_89, 0, tid2_103)
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (loop_write_89, 0, tid2_103)
 
 %{
 #assert main deadlockfree;

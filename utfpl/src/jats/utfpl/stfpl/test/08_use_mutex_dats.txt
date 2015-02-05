@@ -3,7 +3,7 @@ Assertion: main() deadlockfree
 ********Verification Result********
 The Assertion (main() deadlockfree) is NOT valid.
 The following trace leads to a deadlock situation.
-<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main11_id_s1.0 -> foo_65_s1.0 -> foo1_63_s1.0 -> foo_65_s2.0 -> sys_mutex_acquire_yes.0 -> foo_65_s3.0 -> sys_mutex_release_s1.0 -> sys_run_first_one_s1 -> foo_65_s4.0 -> sys_mutex_acquire_yes.0 -> foo_65_s5.0 -> sys_mutex_acquire_no.0>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main11_id_s1.0 -> foo_65_s1.0 -> foo1_63_s1.0 -> foo_65_s2.0 -> sys_mutex_acquire_yes.0 -> foo_65_s3.0 -> sys_mutex_release_s1.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> foo_65_s4.0 -> sys_mutex_acquire_yes.0 -> foo_65_s5.0 -> sys_mutex_acquire_no.0 -> sys_end>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,10 +12,10 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:17
-Total Transitions:16
-Time Used:0.014899s
-Estimated Memory Used:8577.024KB
+Visited States:19
+Total Transitions:18
+Time Used:0.0221954s
+Estimated Memory Used:8593.408KB
 
 
 =======================================================
@@ -30,9 +30,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:17
-Total Transitions:16
-Time Used:0.0048062s
-Estimated Memory Used:8577.024KB
+Visited States:19
+Total Transitions:18
+Time Used:0.005835s
+Estimated Memory Used:8589.312KB
 
 

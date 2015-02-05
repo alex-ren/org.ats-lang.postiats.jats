@@ -1,12 +1,14 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
+
+staload "/tmp/conats35272581893247/conats.sats"
 
 fun foo_63 = lam () <fun> = 
   <D2EannSeff>(
     let
-      prval v_64 = D2Ecst<mc_vlock_get_2584:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (0, 0, 1, 1)
-      prval v2_65 = D2Ecst<mc_vlock_get_2584:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (0, 0, 1, 2)
-      prval () = D2Ecst<mc_vlock_put_2585:((mc_vlock_vt_733_0()) -<fun> void)> (v_64)
-      prval () = D2Ecst<mc_vlock_put_2585:((mc_vlock_vt_733_0()) -<fun> void)> (v2_65)
+      prval v_64 = D2Ecst<mc_vlock_get_2586:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (0, 0, 1, 1)
+      prval v2_65 = D2Ecst<mc_vlock_get_2586:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (0, 0, 1, 2)
+      prval () = D2Ecst<mc_vlock_put_2587:((mc_vlock_vt_733_0()) -<fun> void)> (v_64)
+      prval () = D2Ecst<mc_vlock_put_2587:((mc_vlock_vt_733_0()) -<fun> void)> (v2_65)
     in
       ()
     end:void:t@ype)

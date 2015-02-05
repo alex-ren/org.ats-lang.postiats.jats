@@ -1,4 +1,6 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
+
+staload "/tmp/conats35296035613253/conats.sats"
 
 "D2Cstacsts" sid_init_736: int
 

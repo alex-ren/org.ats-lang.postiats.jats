@@ -8,7 +8,7 @@ import java.util.List;
 
 /*
  * Pattern of record.
- * List is in essence a record, with labels named by integer 0, 1, ...
+ * Tuple is in essence a record, with labels named by integer 0, 1, ...
  */
 public class P2Trec implements Ip2at_node {
 
@@ -49,13 +49,15 @@ public class P2Trec implements Ip2at_node {
 
 	@Override
     public boolean isProof() {
-		// val (pf (pf | x) | y) = ...
-	    throw new Error("This should not happen.");
+		// val (pf, (x, y) | z) = ...
+		// (x, y)
+	    return false;
     }
 
 	@Override
     public boolean isVoid() {
-		// val (pf (pf | x) | y) = ...
-	    throw new Error("This should not happen.");
+		// val (x, (y, z)) = ...
+		// (y, z)
+	    return false;  // This may not be perfect.
     }
 }

@@ -1,6 +1,6 @@
 D2Cnone
 
-staload "/tmp/conats32882702386977/conats.sats"
+staload "/tmp/conats35244262587570/conats.sats"
 
 val s_63 = D2Ecst<conats_shared_create_2560:{a_3837_0:viewt0ype}(((a_3837_0:viewt0ype) -<fun> shared_t_722_0(a_3837_0:viewt0ype)))> (0)
 
@@ -8,7 +8,9 @@ val a_64 = D2Ecst<conats_shared_acquire_2562:{a_3840_0:viewt0ype}(((shared_t_722
 
 val a_65 = D2Ecst<conats_shared_signal_2564:{a_3844_0:viewt0ype}(((shared_t_722_0(a_3844_0:viewt0ype), a_3844_0:viewt0ype) -<fun> a_3844_0:viewt0ype))> (s_63, a_64)
 
-val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_63, a_65)
+val a_66 = D2Ecst<conats_shared_condwait_2568:{a_3852_0:viewt0ype}(((shared_t_722_0(a_3852_0:viewt0ype), a_3852_0:viewt0ype) -<fun> a_3852_0:viewt0ype))> (s_63, a_65)
+
+val () = D2Ecst<conats_shared_release_2563:{a_3842_0:viewt0ype}(((shared_t_722_0(a_3842_0:viewt0ype), a_3842_0:viewt0ype) -<fun> void))> (s_63, a_66)
 
 %{
 #assert main deadlockfree;

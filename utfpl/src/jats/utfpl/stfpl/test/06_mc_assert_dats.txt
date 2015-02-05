@@ -10,10 +10,10 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:4
-Total Transitions:4
-Time Used:0.0235021s
-Estimated Memory Used:8560.64KB
+Visited States:10
+Total Transitions:10
+Time Used:0.0183462s
+Estimated Memory Used:8564.736KB
 
 
 =======================================================
@@ -21,7 +21,7 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init -> main4_id__1>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main4_id_s1.0>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -30,9 +30,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:2
-Total Transitions:2
-Time Used:0.0049927s
-Estimated Memory Used:8552.448KB
+Visited States:5
+Total Transitions:5
+Time Used:0.006691s
+Estimated Memory Used:8548.352KB
 
 

@@ -1,4 +1,6 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
+
+staload "/tmp/conats35236432465362/conats.sats"
 
 fun foo_63 = lamMet. lam (<P2Tann>(x_64:@{0 = int, 1 = @{0 = int, 1 = int}}:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
@@ -15,9 +17,16 @@ fun main_68 = lam () <fun> =
       let
         val x_69 = foo_63 ((1, ( | 2, 3)))
         prval b_70 = <D2Esym>(=) (x_69, 7)
-        prval () = D2Ecst<((bool) -<fun> void)> (b_70)
+        prval () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (b_70)
       in
         ()
       end:void:t@ype))
 
 val () = main_68 ()
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

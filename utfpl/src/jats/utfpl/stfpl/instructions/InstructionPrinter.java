@@ -176,7 +176,7 @@ public class InstructionPrinter {
     private Object printIValPrim(IValPrim vp) {
 	    if (vp instanceof AtomValue) {
 	    	return printAtomValue((AtomValue)vp);
-	    } else if (vp instanceof AtomValue) {
+	    } else if (vp instanceof SId) {
 	    	return printSId((SId)vp);
 	    } else if (vp instanceof SIdUser) {
 	    	return printSIdUser((SIdUser)vp);

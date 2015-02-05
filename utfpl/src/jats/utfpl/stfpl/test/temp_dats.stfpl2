@@ -1,4 +1,4 @@
-staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
 
 "D2Cstacsts" dataslots_t_736: (t@ype, int, int) -\> type
 
@@ -6,12 +6,12 @@ staload "/home/alex/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/
 
 local
 in
-  fun dataslots_create_63 = lamSta. lamSta. lam (<P2Tann>(x_64:int:t@ype), <P2Tann>(y_65:int:t@ype), <P2Tann>(v_66:a_3905_0:t@ype:t@ype)) <fun> = 
+  fun dataslots_create_63 = lamSta. lamSta. lam (<P2Tann>(x_64:int:t@ype), <P2Tann>(y_65:int:t@ype), <P2Tann>(v_66:a_3907_0:t@ype:t@ype)) <fun> = 
     <D2EannSeff>(
       let
         val ele_67 = D2Ecst<conats_atomarrayref_create_2576:{a_3861_0:t@ype}(((int, a_3861_0:t@ype) -<fun> atomarrayref_727_0(a_3861_0:t@ype)))> (y_65, v_66)
         val array_68 = D2Ecst<conats_atomarrayref_create_2576:{a_3861_0:t@ype}(((int, a_3861_0:t@ype) -<fun> atomarrayref_727_0(a_3861_0:t@ype)))> (x_64, ele_67)
-        fun loop_69 = lam (<P2Tann>(x_70:int:t@ype), <P2Tann>(y_71:int:t@ype), <P2Tann>(array_72:atomarrayref_727_0(atomarrayref_727_0(a_3905_0:t@ype)):type), <P2Tann>(v_73:a_3905_0:t@ype:t@ype)) <fun> = 
+        fun loop_69 = lam (<P2Tann>(x_70:int:t@ype), <P2Tann>(y_71:int:t@ype), <P2Tann>(array_72:atomarrayref_727_0(atomarrayref_727_0(a_3907_0:t@ype)):type), <P2Tann>(v_73:a_3907_0:t@ype:t@ype)) <fun> = 
           <D2EannSeff>(
             if (<D2Esym>(>=) (x_70, 0)) then
               let
@@ -25,8 +25,8 @@ in
         val () = loop_69 (<D2Esym>(-) (x_64, 2), y_65, array_68, v_66)
       in
         array_68
-      end:dataslots_t_736_0(a_3905_0:t@ype):type)
-  fun dataslots_update_75 = lamSta. lamSta. lam (<P2Tann>(slots_76:dataslots_t_736_0(a_3908_0:t@ype):type), <P2Tann>(i_77:int:t@ype), <P2Tann>(j_78:int:t@ype), <P2Tann>(v_79:a_3908_0:t@ype:t@ype)) <fun> = 
+      end:dataslots_t_736_0(a_3907_0:t@ype):type)
+  fun dataslots_update_75 = lamSta. lamSta. lam (<P2Tann>(slots_76:dataslots_t_736_0(a_3910_0:t@ype):type), <P2Tann>(i_77:int:t@ype), <P2Tann>(j_78:int:t@ype), <P2Tann>(v_79:a_3910_0:t@ype:t@ype)) <fun> = 
     <D2EannSeff>(
       let
         val ele_80 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slots_76, i_77)
@@ -34,14 +34,14 @@ in
       in
         ()
       end:void:t@ype)
-  fun dataslots_get_81 = lamSta. lamSta. lam (<P2Tann>(slots_82:dataslots_t_736_0(a_3913_0:t@ype):type), <P2Tann>(i_83:int:t@ype), <P2Tann>(j_84:int:t@ype)) <fun> = 
+  fun dataslots_get_81 = lamSta. lamSta. lam (<P2Tann>(slots_82:dataslots_t_736_0(a_3915_0:t@ype):type), <P2Tann>(i_83:int:t@ype), <P2Tann>(j_84:int:t@ype)) <fun> = 
     <D2EannSeff>(
       let
         val ele_85 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (slots_82, i_83)
         val v_86 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (ele_85, j_84)
       in
         v_86
-      end:a_3913_0:t@ype:t@ype)
+      end:a_3915_0:t@ype:t@ype)
   prfun mc_acquire_ownership_87 = lamMet. lamSta. lam (<P2Tann>(i_88:int:t@ype), <P2Tann>(j_89:int:t@ype)) <fun> = 
     <D2EannSeff>(
       D2Ecst<mc_vlock_get_2586:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (i_88, j_89, 1, 1):own_slot_vt_737_0():type)

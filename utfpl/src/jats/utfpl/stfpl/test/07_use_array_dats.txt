@@ -10,10 +10,10 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:6
-Total Transitions:6
-Time Used:0.0247503s
-Estimated Memory Used:8560.64KB
+Visited States:16
+Total Transitions:16
+Time Used:0.0203588s
+Estimated Memory Used:8564.736KB
 
 
 =======================================================
@@ -28,9 +28,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:7
-Total Transitions:6
-Time Used:0.0055602s
-Estimated Memory Used:8552.448KB
+Visited States:17
+Total Transitions:16
+Time Used:0.0060715s
+Estimated Memory Used:8556.544KB
 
 

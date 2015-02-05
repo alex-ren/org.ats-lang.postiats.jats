@@ -2,8 +2,8 @@ fun foo0_63 = lam () <fun> =
   <D2EannFunclo><fun>(
     <D2EannSeff>(
       let
-        val x_64 = D2Ecst<bool>
-        val y_65 = D2Ecst<bool>
+        val x_64 = D2Ecst<true_bool_0:bool>
+        val y_65 = D2Ecst<false_bool_1:bool>
       in
         x_64
       end:bool:t@ype))
@@ -33,3 +33,10 @@ fun foox_72 = lam () <fun> =
     in
       ()
     end:void:t@ype)
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

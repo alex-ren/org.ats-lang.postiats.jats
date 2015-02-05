@@ -125,7 +125,7 @@ val () = conats_thread_create(loop_writer, 0, tid3)
 %{$
 #assert main deadlockfree;
 
-//#assert main |= G sys_assertion;
+#assert main |= G sys_assertion;
 
 %}
 

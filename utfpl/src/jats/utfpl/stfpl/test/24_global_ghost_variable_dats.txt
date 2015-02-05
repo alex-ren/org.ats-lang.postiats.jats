@@ -3,18 +3,18 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init.0 -> main11_id_s1.0 -> sys_ch_sch.1.2.0 -> τ -> thread_init -> [if((2 == 2))] -> exec_63_s1.1 -> exec_63_s2.1>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main11_id_s1.0 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> exec_63_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> exec_63_s2.1>
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:26
-Total Transitions:31
-Time Used:0.0301413s
+Visited States:15
+Total Transitions:17
+Time Used:0.0230922s
 Estimated Memory Used:8556.544KB
 
 

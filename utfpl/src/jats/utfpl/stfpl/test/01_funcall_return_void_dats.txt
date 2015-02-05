@@ -5,15 +5,15 @@ The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:9
-Total Transitions:9
-Time Used:0.0186558s
-Estimated Memory Used:8585.216KB
+Visited States:12
+Total Transitions:12
+Time Used:0.0268139s
+Estimated Memory Used:8593.408KB
 
 
 =======================================================
@@ -23,14 +23,14 @@ The Assertion (main() |= G sys_assertion) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:10
-Total Transitions:9
-Time Used:0.0044065s
-Estimated Memory Used:8544.256KB
+Visited States:13
+Total Transitions:12
+Time Used:0.0054437s
+Estimated Memory Used:8556.544KB
 
 

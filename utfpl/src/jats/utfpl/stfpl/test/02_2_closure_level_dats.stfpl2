@@ -18,3 +18,10 @@ fun foo2_64 = lam () <clo> =
       in
         3
       end:int:t@ype))
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

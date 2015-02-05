@@ -27,7 +27,7 @@ var sys_runable_list;
 var sys_runable_size;
 
 sys_runable_run_random(xs, n) = 
-  ifa (n == 0) {Skip}
+  ifa (n == 0) {sys_end -> Skip}
   else ifa (n == 1) {
     sys_run_first_one(xs)
   }
@@ -37,8 +37,10 @@ sys_runable_run_random(xs, n) =
     sys_runable_run_random(sys_mylib_obj.list_get_tail(xs), n - 1)
   };
 
-sys_run_first_one(xs) = 
-  sys_run_first_one_s1{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
+var sys_show_cur_tid;
+
+sys_run_first_one(xs) = get_cur_tid{sys_show_cur_tid = sys_mylib_obj.list_get_header(xs);} ->
+  sys_run_first_one_scheduleto.sys_show_cur_tid{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
   } -> 
   sys_scheduler_random
   ;
@@ -55,9 +57,9 @@ sys_scheduler_random = [sys_cur_tid == -1](
   });
 
 
-sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1{
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1.tid{
     sys_new_tid = -1;
-    sys_runable_list =  sys_mylib_obj.list_cons(tid, sys_runable_list);
+    sys_runable_list =  sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
     sys_runable_size = sys_runable_size + 1;
 
     // Create a list with one element for stack
@@ -121,7 +123,8 @@ sys_mutex_acquire(sys_tid, m) =
       sys_runable_size = sys_runable_size - 1;
 
       // add current thread to waiting list
-      var __temp_list_args = sys_mylib_obj.list_cons(sys_tid, sys_mutex_waiting_list_manager.getElement(m));
+      var __temp_list_args = 
+        sys_mylib_obj.list_insert_ordered(sys_tid, sys_mutex_waiting_list_manager.getElement(m));
       sys_mutex_waiting_list_manager.setElement(m, __temp_list_args);
 
       sys_cur_tid = -1;  // schedule out
@@ -158,7 +161,7 @@ sys_mutex_release_random_first(sys_tid, m, tid) = {
   sys_mutex_repo[m] = tid;
 
   // add to runable
-  sys_runable_list = sys_mylib_obj.list_cons(tid, sys_runable_list);
+  sys_runable_list = sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
   sys_runable_size = sys_runable_size + 1;
 
   sys_cur_tid = -1;  // schedule out
@@ -215,7 +218,7 @@ sys_cond_signal_random_first(sys_tid, c, tid) = sys_cond_signal_random_first_s1.
   sys_cond_sleep_list_manager.setElement(c, new_list);
 
   // add to runable
-  sys_runable_list = sys_mylib_obj.list_cons(tid, sys_runable_list);
+  sys_runable_list = sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
   sys_runable_size = sys_runable_size + 1;
   } -> Skip;
 
@@ -224,7 +227,7 @@ sys_cond_wait(sys_tid, c, m) = sys_cond_wait_s1.sys_tid{
   sys_runable_list = sys_mylib_obj.list_remove_element(sys_runable_list, sys_tid);
   sys_runable_size = sys_runable_size - 1;
   // add to sleep
-  var new_list = sys_mylib_obj.list_cons(sys_tid, sys_cond_sleep_list_manager.getElement(c));
+  var new_list = sys_mylib_obj.list_insert_ordered(sys_tid, sys_cond_sleep_list_manager.getElement(c));
   sys_cond_sleep_list_manager.setElement(c, new_list);
   } -> Skip;
   // release mutex. This would cause schedule out
@@ -234,7 +237,7 @@ sys_cond_wait(sys_tid, c, m) = sys_cond_wait_s1.sys_tid{
 
 sys_cond_broadcast(sys_tid, c) = sys_cond_broadcast_s1{
   var sleep_list = sys_cond_sleep_list_manager.getElement(c);
-  sys_runable_list = sys_mylib_obj.list_revappend(sys_runable_list, sleep_list);
+  sys_runable_list = sys_mylib_obj.list_merge_ordered(sys_runable_list, sleep_list);
   sys_runable_size = sys_runable_size + sys_mylib_obj.list_length(sleep_list);
   sys_cond_sleep_list_manager.setElement(c, sys_mylib_obj.list_nil());
   } -> Skip;
@@ -322,6 +325,7 @@ var sys_assert_var = true;
 var s_63 = 0;
 var a_64 = 0;
 var a_65 = 0;
+var a_66 = 0;
 
 
 // =====================
@@ -358,8 +362,15 @@ sys_main(sys_tid) = [sys_cur_tid == sys_tid]
   __temp_list_args = sys_mylib_obj.list_cons (a_65, __temp_list_args);
   sys_gstack.add_frame(sys_tid, __temp_list_args);
   } -> Skip;
+  conats_shared_condwait(sys_tid);
+  [sys_cur_tid == sys_tid] main3_id_s4.sys_tid{  a_66 = sys_gstack.retopr_frame(sys_tid);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (s_63, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (a_66, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } -> Skip;
   conats_shared_release(sys_tid);
-  [sys_cur_tid == sys_tid] main3_id_s4.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  [sys_cur_tid == sys_tid] main3_id_s5.sys_tid{  sys_gstack.delete_frame(sys_tid);
   } -> Skip;
   Skip; 
   sys_thread_finalize(sys_tid);
@@ -370,7 +381,7 @@ main =
   sys_init_cond_service(COND_NO);
   main_init_scheduler {  // initialize runable
   var __temp_list_args = sys_mylib_obj.list_nil ();
-  __temp_list_args = sys_mylib_obj.list_cons (main_sys_tid, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_insert_ordered(main_sys_tid, __temp_list_args);
   sys_runable_list = __temp_list_args;
   sys_runable_size = 1;
   sys_cur_tid = main_sys_tid;

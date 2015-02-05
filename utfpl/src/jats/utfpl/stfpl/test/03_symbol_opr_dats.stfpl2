@@ -11,3 +11,10 @@ fun foo2_66 = lam (<P2Tann>(x_67:int:t@ype)) <fun> =
       in
         z_68
       end:int:t@ype))
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

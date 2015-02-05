@@ -12,8 +12,8 @@ System Abstraction: False
 ********Verification Statistics********
 Visited States:36
 Total Transitions:36
-Time Used:0.0356569s
-Estimated Memory Used:8712.192KB
+Time Used:0.0224215s
+Estimated Memory Used:8699.904KB
 
 
 =======================================================
@@ -21,7 +21,7 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init -> main24_id__1 -> main_69__1 -> fact1_63__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__1 -> [if(sys_gstack.frame_get_bool(0, 0, 1))] -> fact1_63__1 -> fact1_63__2 -> fact1_63__2 -> fact1_63__2 -> main_69__2 -> mc_fact2_66__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> mc_fact2_66__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> mc_fact2_66__1 -> [if!(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> mc_fact2_66__1 -> [if(sys_gstack.frame_get_bool(0, 0, 2))] -> mc_fact2_66__1 -> main_69__3 -> main_69__4>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main24_id_s1.0 -> main_69_s1.0 -> fact1_63_s1.0 -> fact1_63_s4.0 -> fact1_63_s1.0 -> fact1_63_s4.0 -> fact1_63_s1.0 -> fact1_63_s4.0 -> fact1_63_s1.0 -> fact1_63_s2.0 -> fact1_63_s5.0 -> fact1_63_s5.0 -> fact1_63_s5.0 -> main_69_s2.0 -> mc_fact2_66_s1.0 -> mc_fact2_66_s4.0 -> mc_fact2_66_s1.0 -> mc_fact2_66_s4.0 -> mc_fact2_66_s1.0 -> mc_fact2_66_s4.0 -> mc_fact2_66_s1.0 -> mc_fact2_66_s2.0 -> main_69_s3.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> main_69_s4.0>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -30,9 +30,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:33
-Total Transitions:33
-Time Used:0.0060542s
-Estimated Memory Used:8552.448KB
+Visited States:30
+Total Transitions:30
+Time Used:0.006231s
+Estimated Memory Used:8617.984KB
 
 

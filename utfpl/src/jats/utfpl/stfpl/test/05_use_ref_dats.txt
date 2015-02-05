@@ -5,15 +5,15 @@ The Assertion (main() deadlockfree) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:10
-Total Transitions:10
-Time Used:0.014765s
-Estimated Memory Used:8560.64KB
+Visited States:16
+Total Transitions:16
+Time Used:0.0196844s
+Estimated Memory Used:8564.736KB
 
 
 =======================================================
@@ -21,18 +21,18 @@ Assertion: main() |= G sys_assertion
 ********Verification Result********
 The Assertion (main() |= G sys_assertion) is NOT valid.
 A counterexample is presented as follows.
-<init -> main_init -> sys_main_init.0 -> main5_id_s1.0 -> sys_run_first_one_s1 -> main5_id_s2.0 -> sys_run_first_one_s1 -> main5_id_s3.0>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main5_id_s1.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> main5_id_s2.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> main5_id_s3.0>
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:8
-Total Transitions:7
-Time Used:0.0068536s
-Estimated Memory Used:8544.256KB
+Visited States:11
+Total Transitions:11
+Time Used:0.0055572s
+Estimated Memory Used:8552.448KB
 
 

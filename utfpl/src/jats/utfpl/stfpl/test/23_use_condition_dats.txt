@@ -3,19 +3,19 @@ Assertion: main() deadlockfree
 ********Verification Result********
 The Assertion (main() deadlockfree) is NOT valid.
 The following trace leads to a deadlock situation.
-<init -> main_init.0 -> main43_id_s1.0 -> lin_buffer_create_63_s1.0 -> main43_id_s2.0 -> main43_id_s3.0 -> foo1_92_s1.0 -> shared_acq.0 -> mlock.0 -> foo1_92_s2.0 -> sys_ch_sch.1.9.0 -> τ -> foo1_92_s3.0 -> lin_buffer_update_66_s1.0 -> lin_buffer_update_66_s2.0 -> foo1_92_s4.0 -> cadd.0 -> sys_munlock.0 -> thread_init -> [if((9 == 9))] -> foo2_93_s1.1 -> shared_acq.1 -> mlock.1 -> foo2_93_s2.1 -> sys_ch_sch.2.10.0 -> τ -> foo2_93_s3.1 -> lin_buffer_update_66_s1.1 -> lin_buffer_update_66_s2.1 -> foo2_93_s4.1 -> cadd.1 -> sys_munlock.1 -> thread_init -> [if!((10 == 9))] -> [if((10 == 10))] -> foo3_94_s1.2 -> shared_acq.2 -> mlock.2 -> foo3_94_s2.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> foo3_94_s3.2 -> foo3_94_s4.2 -> [if((cond_holder[0] > 0))] -> csub.2 -> cond_chan[0].1 -> foo3_94_s5.2 -> sys_munlock.2 -> mlock.1 -> foo2_93_s5.1 -> foo2_93_s6.1 -> sys_munlock.1 -> foo2_93_s7.1 -> thread_finalize.1 -> foo3_94_s6.2 -> thread_finalize.2>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main43_id_s1.0 -> lin_buffer_create_63_s1.0 -> main43_id_s2.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> main43_id_s3.0 -> foo1_92_s1.0 -> conats_shared_acquire_impl_s1.0 -> sys_mutex_acquire_yes.0 -> foo1_92_s2.0 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s1.1 -> conats_shared_acquire_impl_s1.1 -> sys_mutex_acquire_no.1 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> foo1_92_s3.0 -> lin_buffer_update_66_s1.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> lin_buffer_update_66_s2.0 -> foo1_92_s4.0 -> sys_cond_wait_s1.0 -> τ -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s2.1 -> sys_thread_create_s1.1 -> sys_sch_thread_starter_s1.2 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s1.2 -> conats_shared_acquire_impl_s1.2 -> sys_mutex_acquire_no.2 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s3.1 -> lin_buffer_update_66_s1.1 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> lin_buffer_update_66_s2.1 -> foo2_93_s4.1 -> sys_cond_wait_s1.1 -> τ -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s2.2 -> lin_buffer_get_69_s1.2 -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> lin_buffer_get_69_s2.2 -> foo3_94_s3.2 -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s4.2 -> [int_choice] -> sys_cond_signal_random_first_s1.2 -> foo3_94_s5.2 -> sys_mutex_release_s1.2 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s6.2 -> sys_thread_finalize_s1.2 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> sys_mutex_acquire_yes.1 -> foo2_93_s5.1 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s6.1 -> sys_mutex_release_s1.1 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s7.1 -> sys_thread_finalize_s1.1 -> sys_end>
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:139
-Total Transitions:187
-Time Used:0.0352089s
-Estimated Memory Used:10047.488KB
+Visited States:91
+Total Transitions:90
+Time Used:0.0297459s
+Estimated Memory Used:9555.968KB
 
 
 =======================================================
@@ -25,15 +25,15 @@ The Assertion (main() |= G sys_assertion) is VALID.
 
 ********Verification Setting********
 Admissible Behavior: All
-Method: Refinement Based Safety Analysis using BFS - The LTL formula is a safety property!
+Method: Refinement Based Safety Analysis using DFS - The LTL formula is a safety property!
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:190
-Total Transitions:261
-Time Used:0.0185197s
-Estimated Memory Used:9297.92KB
+Visited States:217
+Total Transitions:224
+Time Used:0.0227531s
+Estimated Memory Used:9134.08KB
 
 
 =======================================================
@@ -41,18 +41,18 @@ Assertion: main() reaches target
 ********Verification Result********
 The Assertion (main() reaches target) is VALID.
 The following trace leads to a state where the condition is satisfied.
-<init -> main_init.0 -> main43_id_s1.0 -> lin_buffer_create_63_s1.0 -> main43_id_s2.0 -> main43_id_s3.0 -> foo1_92_s1.0 -> shared_acq.0 -> mlock.0 -> foo1_92_s2.0 -> sys_ch_sch.1.9.0 -> τ -> foo1_92_s3.0 -> lin_buffer_update_66_s1.0 -> lin_buffer_update_66_s2.0 -> foo1_92_s4.0 -> cadd.0 -> sys_munlock.0 -> thread_init -> [if((9 == 9))] -> foo2_93_s1.1 -> shared_acq.1 -> mlock.1 -> foo2_93_s2.1 -> sys_ch_sch.2.10.0 -> τ -> foo2_93_s3.1 -> lin_buffer_update_66_s1.1 -> lin_buffer_update_66_s2.1 -> foo2_93_s4.1 -> cadd.1 -> sys_munlock.1 -> thread_init -> [if!((10 == 9))] -> [if((10 == 10))] -> foo3_94_s1.2 -> shared_acq.2 -> mlock.2 -> foo3_94_s2.2 -> lin_buffer_get_69_s1.2 -> lin_buffer_get_69_s2.2 -> foo3_94_s3.2 -> foo3_94_s4.2 -> [if((cond_holder[0] > 0))] -> csub.2 -> cond_chan[0].1 -> foo3_94_s5.2 -> sys_munlock.2 -> mlock.0 -> foo1_92_s5.0>
+<init -> sys_init_mutex_service_s1 -> sys_init_cond_service_s1 -> main_init_scheduler -> sys_main_init.0 -> main43_id_s1.0 -> lin_buffer_create_63_s1.0 -> main43_id_s2.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> main43_id_s3.0 -> foo1_92_s1.0 -> conats_shared_acquire_impl_s1.0 -> sys_mutex_acquire_yes.0 -> foo1_92_s2.0 -> sys_thread_create_s1.0 -> sys_sch_thread_starter_s1.1 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s1.1 -> conats_shared_acquire_impl_s1.1 -> sys_mutex_acquire_no.1 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> foo1_92_s3.0 -> lin_buffer_update_66_s1.0 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> lin_buffer_update_66_s2.0 -> foo1_92_s4.0 -> sys_cond_wait_s1.0 -> τ -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s2.1 -> sys_thread_create_s1.1 -> sys_sch_thread_starter_s1.2 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s1.2 -> conats_shared_acquire_impl_s1.2 -> sys_mutex_acquire_no.2 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> foo2_93_s3.1 -> lin_buffer_update_66_s1.1 -> get_cur_tid -> sys_run_first_one_scheduleto.1 -> lin_buffer_update_66_s2.1 -> foo2_93_s4.1 -> sys_cond_wait_s1.1 -> τ -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s2.2 -> lin_buffer_get_69_s1.2 -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> lin_buffer_get_69_s2.2 -> foo3_94_s3.2 -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s4.2 -> [int_choice] -> sys_cond_signal_random_first_s1.2 -> foo3_94_s5.2 -> sys_mutex_release_s1.2 -> [int_choice] -> get_cur_tid -> sys_run_first_one_scheduleto.2 -> foo3_94_s6.2 -> sys_thread_finalize_s1.2 -> get_cur_tid -> sys_run_first_one_scheduleto.0 -> sys_mutex_acquire_yes.0 -> foo1_92_s5.0>
 
 ********Verification Setting********
 Admissible Behavior: All
-Search Engine: Shortest Witness Trace using Breadth First Search
+Search Engine: First Witness Trace using Depth First Search
 System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:110
-Total Transitions:138
-Time Used:0.0109053s
-Estimated Memory Used:9195.52KB
+Visited States:133
+Total Transitions:134
+Time Used:0.0098147s
+Estimated Memory Used:9146.368KB
 
 

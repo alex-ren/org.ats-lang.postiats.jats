@@ -1,4 +1,6 @@
-staload "/home/grad2/aren/workspace/Postiats/projects/utfpl/src/jats/utfpl/stfpl/test/conats.sats"
+D2Cnone
+
+staload "/tmp/conats35239028304260/conats.sats"
 
 fun fact1_63 = lam (<P2Tann>(x_64:int:t@ype)) <fun> = 
   <D2EannFunclo><fun>(
@@ -26,10 +28,17 @@ fun main_69 = lam () <fun> =
       let
         val x_70 = fact1_63 (4)
         prval y_71 = mc_fact2_66 (4, 1)
-        prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(=) (x_70, y_71))
-        prval () = D2Ecst<((bool) -<fun> void)> (<D2Esym>(=) (x_70, 23))
+        prval () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(=) (x_70, y_71))
+        prval () = D2Ecst<mc_assert_2585:((bool) -<fun> void)> (<D2Esym>(=) (x_70, 23))
       in
         ()
       end:void:t@ype))
 
 val () = main_69 ()
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}
