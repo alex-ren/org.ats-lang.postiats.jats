@@ -1,4 +1,8 @@
 
+/*
+ * 06/30/2015
+ * This example is out-of-date. Please use the example 20_3_four_slot_acm.dats.
+ */
 #define CONATSCONTRIB
 "https://raw.githubusercontent.com/alex-ren/org.ats-lang.postiats.jats/master/utfpl/src/jats/utfpl/stfpl/test"
 staload "{$CONATSCONTRIB}/conats.sats"

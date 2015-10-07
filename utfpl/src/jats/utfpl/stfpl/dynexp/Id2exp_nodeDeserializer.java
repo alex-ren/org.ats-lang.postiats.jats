@@ -91,7 +91,7 @@ public class Id2exp_nodeDeserializer implements JsonDeserializer<Id2exp_node> {
 		} else if (name.equals("D2Eerrexp")) {
             Log.log4j.error("D2Eerrexp not supported");
             throw new Error("D2Eerrexp not supported");
-		} else if (name.equals("D2ignored")) {
+		} else if (name.equals("D2Eignored")) {
 		    return context.deserialize(je2, D2Eignored.class);
 		} else {
             Log.log4j.error(name + " unexpected");

@@ -1,0 +1,64 @@
+D2Cnone
+
+staload "/tmp/conats980358842404235/conats.sats"
+
+fun iand_63 = lam (<P2Tann>(x_64:bool:t@ype), <P2Tann>(y_65:bool:t@ype)) <fun> = 
+  <D2EannSeff>(
+    if (x_64) then
+      y_65
+    else
+      D2Ecst<false_bool_1:bool>:bool:t@ype)
+
+D2Cnone
+
+D2Cnone
+
+D2Cnone
+
+val flags_66 = D2Ecst<conats_atomarrayref_create_2576:{a_3861_0:t@ype}(((int, a_3861_0:t@ype) -<fun> atomarrayref_727_0(a_3861_0:t@ype)))> (2, 0)
+
+val turn_67 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
+
+val g_68 = D2Ecst<conats_atomref_create_2573:{a_3857_0:t@ype}(((a_3857_0:t@ype) -<fun> atomref_726_0(a_3857_0:t@ype)))> (0)
+
+fun worker_69 = lam (<P2Tann>(id_70:int:t@ype)) <fun> = 
+  <D2EannSeff>(
+    let
+      val opponent_71 = <D2Esym>(-) (1, id_70)
+      val () = D2Ecst<conats_atomarrayref_update_2577:{a_3862_0:t@ype}(((atomarrayref_727_0(a_3862_0:t@ype), int, a_3862_0:t@ype) -<fun> void))> (flags_66, id_70, 1)
+      val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (turn_67, opponent_71)
+      fun wait_loop_72 = lam () <clo> = 
+        <D2EannFunclo><clo_ref>(
+          <D2EannSeff>(
+            let
+              val lflag_73 = D2Ecst<conats_atomarrayref_get_2578:{a_3863_0:t@ype}(((atomarrayref_727_0(a_3863_0:t@ype), int) -<fun> a_3863_0:t@ype))> (flags_66, opponent_71)
+              val <P2Tann>(lturn_74:int:t@ype) = D2Ecst<conats_atomref_get_2575:{a_3859_0:t@ype}(((atomref_726_0(a_3859_0:t@ype)) -<fun> a_3859_0:t@ype))> (turn_67)
+            in
+              if (iand_63 (<D2Esym>(=) (lflag_73, 1), <D2Esym>(=) (lturn_74, opponent_71))) then
+                wait_loop_72 ()
+              else
+                ()
+            end:void:t@ype))
+      val () = wait_loop_72 ()
+      prval v_75 = D2Ecst<mc_vlock_get_2586:((int, int, int, int) -<fun> mc_vlock_vt_733_0())> (0, 0, 1, 1)
+      val () = D2Ecst<conats_atomref_update_2574:{a_3858_0:t@ype}(((atomref_726_0(a_3858_0:t@ype), a_3858_0:t@ype) -<fun> void))> (g_68, 1)
+      prval () = D2Ecst<mc_vlock_put_2587:((mc_vlock_vt_733_0()) -<fun> void)> (v_75)
+      val () = D2Ecst<conats_atomarrayref_update_2577:{a_3862_0:t@ype}(((atomarrayref_727_0(a_3862_0:t@ype), int, a_3862_0:t@ype) -<fun> void))> (flags_66, id_70, 0)
+    in
+      ()
+    end:void:t@ype)
+
+val tid1_76 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
+
+val tid2_77 = D2Ecst<conats_tid_allocate_2579:(() -<fun> thread_id_t_728_0())> ()
+
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (worker_69, 0, tid1_76)
+
+val () = D2Ecst<conats_thread_create_2580:{a_3865_0:t@ype}(((((a_3865_0:t@ype) -<fun> void), a_3865_0:t@ype, thread_id_t_728_0()) -<fun> void))> (worker_69, 1, tid2_77)
+
+%{
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+%}

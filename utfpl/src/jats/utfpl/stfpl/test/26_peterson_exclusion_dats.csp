@@ -1,0 +1,473 @@
+// ===============================
+
+#import "MyLib";  // import the library
+
+// =====================
+
+// library data structure (e.g. tuple, list)
+var<MyLibObj> sys_mylib_obj = new MyLibObj();
+
+// Set the initial capacity to 10.
+var<AtomRefManager> atom_ref_manager = new AtomRefManager(10);
+
+// Set the initial capacity to 10.
+var<ArrayRefManager> array_ref_manager = new ArrayRefManager(10);
+
+//
+var<ViewManager> view_manager = new ViewManager();
+
+// ====================
+// For scheduler
+
+// id of currrent running thread
+var sys_cur_tid = 0;
+
+// list of runable threads
+var sys_runable_list;
+var sys_runable_size;
+
+sys_runable_run_random(xs, n) = 
+  ifa (n == 0) {sys_end -> Skip}
+  else ifa (n == 1) {
+    sys_run_first_one(xs)
+  }
+  else {
+    sys_run_first_one(xs)
+    <>
+    sys_runable_run_random(sys_mylib_obj.list_get_tail(xs), n - 1)
+  };
+
+var sys_show_cur_tid;
+
+sys_run_first_one(xs) = get_cur_tid{sys_show_cur_tid = sys_mylib_obj.list_get_header(xs);} ->
+  sys_run_first_one_scheduleto.sys_show_cur_tid{sys_cur_tid = sys_mylib_obj.list_get_header(xs);
+  } -> 
+  sys_scheduler_random
+  ;
+
+var sys_new_tid;  // indicator for creating new thread
+var sys_new_fn;
+var sys_new_args;
+
+sys_scheduler_random = [sys_cur_tid == -1](
+  ifa (sys_new_tid == -1) {  // schedule
+    sys_runable_run_random(sys_runable_list, sys_runable_size)
+  } else {  // create new thread
+    sys_sch_thread_starter(sys_new_tid, sys_new_fn, sys_new_args)
+  });
+
+
+sys_sch_thread_starter(tid, fn, args) = sys_sch_thread_starter_s1.tid{
+    sys_new_tid = -1;
+    sys_runable_list =  sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
+    sys_runable_size = sys_runable_size + 1;
+
+    // Create a list with one element for stack
+    var __temp_list_args = sys_mylib_obj.list_nil ();
+    __temp_list_args = sys_mylib_obj.list_cons (args, __temp_list_args);
+    sys_gstack.add_frame(tid, __temp_list_args);
+
+  } -> 
+  ifa (fn == 3) {
+      ([sys_cur_tid == tid]worker_69(tid);sys_thread_finalize(tid)) ||| sys_scheduler_random
+    }
+    else {
+      Stop
+    };
+  // sys_sch_thread_starter
+
+sys_thread_finalize(sys_tid) = [sys_cur_tid == sys_tid] sys_thread_finalize_s1.sys_tid{
+    // finalize thread
+    // remove tid
+    sys_runable_list = sys_mylib_obj.list_remove_element(sys_runable_list, sys_tid);
+    sys_runable_size = sys_runable_size - 1;
+    sys_cur_tid = -1;  // schedule out
+  } -> Skip;
+
+sys_thread_create(sys_tid, tid, fn, args) = [sys_cur_tid == sys_tid] sys_thread_create_s1.sys_tid{
+    sys_new_tid = tid;
+    sys_new_fn = fn;
+    sys_new_args = args;
+
+    sys_cur_tid = -1;
+  } -> Skip;
+
+// =====================
+// For global exclusion.
+var sys_glb = 0;
+
+// =====================
+
+// Stack Operation
+var<PStack> sys_gstack = new PStack();
+
+// thread id allocator
+var<Allocator> sys_tid_allocator = new Allocator();  // todo: improve
+
+// =====================
+
+// Set the initial capacity to 10.
+#define MUTEX_NO  10;
+var<Allocator> sys_mutex_manager = new Allocator();
+
+// ====================
+
+var sys_mutex_repo = [-1(MUTEX_NO)];
+var<AtomRefManager> sys_mutex_waiting_list_manager = new AtomRefManager(MUTEX_NO);
+
+sys_init_mutex_service(n) = sys_init_mutex_service_s1{
+  sys_mutex_waiting_list_manager.initialize(n, sys_mylib_obj.list_nil());
+} -> Skip;
+
+sys_mutex_acquire(sys_tid, m) = 
+  ifa (sys_mutex_repo[m] == -1) {  // can have the mutex
+    sys_mutex_acquire_yes.sys_tid{sys_mutex_repo[m] = sys_tid;} -> Skip
+  } else {
+   sys_mutex_acquire_no.sys_tid{  // cannot have the mutex
+      // remove current thread from runable
+      sys_runable_list = sys_mylib_obj.list_remove_element(sys_runable_list, sys_tid);
+      sys_runable_size = sys_runable_size - 1;
+
+      // add current thread to waiting list
+      var __temp_list_args = 
+        sys_mylib_obj.list_insert_ordered(sys_tid, sys_mutex_waiting_list_manager.getElement(m));
+      sys_mutex_waiting_list_manager.setElement(m, __temp_list_args);
+
+      sys_cur_tid = -1;  // schedule out
+    } -> Skip
+  }
+  ;
+
+sys_mutex_release(sys_tid, m) = 
+  ifa(sys_mylib_obj.list_is_nil(sys_mutex_waiting_list_manager.getElement(m))) {
+    sys_mutex_release_s1.sys_tid{
+      sys_mutex_repo[m] = -1;
+      sys_cur_tid = -1;  // schedule out
+    } -> Skip
+  } else {
+    sys_mutex_release_random(sys_tid, m, sys_mutex_waiting_list_manager.getElement(m))
+  }
+
+sys_mutex_release_random(sys_tid, m, waiting_list) = 
+  ifa (sys_mylib_obj.list_is_nil(sys_mylib_obj.list_get_tail(waiting_list))) {
+    sys_mutex_release_random_first(sys_tid, m, sys_mylib_obj.list_get_header(waiting_list))
+  } else {
+    sys_mutex_release_random_first(sys_tid, m, sys_mylib_obj.list_get_header(waiting_list))
+    <>
+    sys_mutex_release_random(sys_tid, m, sys_mylib_obj.list_get_tail(waiting_list))
+  }
+  ;
+
+sys_mutex_release_random_first(sys_tid, m, tid) = {
+  // remove from waiting list
+  var waiting_list = sys_mutex_waiting_list_manager.getElement(m);
+  var new_list = sys_mylib_obj.list_remove_element(waiting_list, tid);
+  sys_mutex_waiting_list_manager.setElement(m, new_list);
+
+  sys_mutex_repo[m] = tid;
+
+  // add to runable
+  sys_runable_list = sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
+  sys_runable_size = sys_runable_size + 1;
+
+  sys_cur_tid = -1;  // schedule out
+  } -> Skip;
+
+// ====================
+
+conats_mutex_acquire(sys_tid) = 
+  [sys_cur_tid == sys_tid] 
+  sys_mutex_acquire(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+conats_mutex_release(sys_tid) = 
+  [sys_cur_tid == sys_tid] 
+  sys_mutex_release (sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+// =================================
+// Set the initial capacity to 10.
+#define COND_NO  10;
+var<Allocator> sys_cond_manager = new Allocator();
+
+// ======================
+
+var sys_cond_repo = [0(COND_NO)];
+var<AtomRefManager> sys_cond_sleep_list_manager = new AtomRefManager(COND_NO);
+
+// ======================
+
+sys_init_cond_service(n) = sys_init_cond_service_s1{
+  sys_cond_sleep_list_manager.initialize(n, sys_mylib_obj.list_nil());
+} -> Skip;
+
+
+sys_cond_signal(sys_tid, c, m) = 
+  ifa(sys_mylib_obj.list_is_nil(sys_cond_sleep_list_manager.getElement(c))) {
+    sys_cond_signal_empty.sys_tid -> Skip
+  } else {
+    sys_cond_signal_random(sys_tid, c, sys_cond_sleep_list_manager.getElement(c))
+  }
+
+sys_cond_signal_random(sys_tid, c, sleep_list) = 
+  ifa (sys_mylib_obj.list_is_nil(sys_mylib_obj.list_get_tail(sleep_list))) {
+    sys_cond_signal_random_first(sys_tid, c, sys_mylib_obj.list_get_header(sleep_list))
+  } else {
+    sys_cond_signal_random_first(sys_tid, c, sys_mylib_obj.list_get_header(sleep_list))
+    <>
+    sys_cond_signal_random(sys_tid, c, sys_mylib_obj.list_get_tail(sleep_list))
+  }
+  ;
+
+sys_cond_signal_random_first(sys_tid, c, tid) = sys_cond_signal_random_first_s1.sys_tid{
+  // remove from sleep list
+  var sleep_list = sys_cond_sleep_list_manager.getElement(c);
+  var new_list = sys_mylib_obj.list_remove_element(sleep_list, tid);
+  sys_cond_sleep_list_manager.setElement(c, new_list);
+
+  // add to runable
+  sys_runable_list = sys_mylib_obj.list_insert_ordered(tid, sys_runable_list);
+  sys_runable_size = sys_runable_size + 1;
+  } -> Skip;
+
+sys_cond_wait(sys_tid, c, m) = sys_cond_wait_s1.sys_tid{
+  // remove from runable
+  sys_runable_list = sys_mylib_obj.list_remove_element(sys_runable_list, sys_tid);
+  sys_runable_size = sys_runable_size - 1;
+  // add to sleep
+  var new_list = sys_mylib_obj.list_insert_ordered(sys_tid, sys_cond_sleep_list_manager.getElement(c));
+  sys_cond_sleep_list_manager.setElement(c, new_list);
+  } -> Skip;
+  // release mutex. This would cause schedule out
+  sys_mutex_release(sys_tid, m);
+  [sys_cur_tid == sys_tid]  // schedule in
+  sys_mutex_acquire(sys_tid, m);
+
+sys_cond_broadcast(sys_tid, c) = sys_cond_broadcast_s1{
+  var sleep_list = sys_cond_sleep_list_manager.getElement(c);
+  sys_runable_list = sys_mylib_obj.list_merge_ordered(sys_runable_list, sleep_list);
+  sys_runable_size = sys_runable_size + sys_mylib_obj.list_length(sleep_list);
+  sys_cond_sleep_list_manager.setElement(c, sys_mylib_obj.list_nil());
+  } -> Skip;
+
+// ======================
+
+conats_shared_acquire(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_acquire_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0));
+
+//  tup = sys_gstack.frame_get(sys_tid, 0, 0)
+//  a = sys_mylib_obj.getTupleElement(tup, 0);
+//  mutex = sys_mylib_obj.getTupleElement(tup, 1);
+//  cond = sys_mylib_obj.getTupleElement(tup, 2);
+conats_shared_acquire_impl(sys_tid, tup) =
+    conats_shared_acquire_impl_s1.sys_tid{
+      sys_gstack.frame_push(sys_tid, sys_mylib_obj.getTupleElement(tup, 0))  // return a
+    } ->
+    sys_mutex_acquire(sys_tid, sys_mylib_obj.getTupleElement(tup, 1))
+    ;
+
+// ====================
+
+conats_shared_release(sys_tid) = 
+  [sys_cur_tid == sys_tid] 
+  conats_shared_release_impl(sys_tid, 
+                             sys_gstack.frame_get(sys_tid, 0, 0),
+                             sys_gstack.frame_get(sys_tid, 0, 1)
+                            );
+
+conats_shared_release_impl(sys_tid, tup, a) = 
+  sys_mutex_release(sys_tid, sys_mylib_obj.getTupleElement(tup, 1));
+
+// ====================
+
+conats_shared_signal(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+
+
+conats_sharedn_signal(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_signal_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 
+                                            sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_signal_impl(sys_tid, tup, index) = sys_cond_signal(sys_tid, 
+                                  sys_mylib_obj.getTupleElement(tup, index + 2),  // cond
+                                  sys_mylib_obj.getTupleElement(tup, 1));  // mutex
+
+// ====================
+
+conats_shared_condwait(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+
+conats_sharedn_condwait(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_condwait_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 
+                                              sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_condwait_impl(sys_tid, tup, index) = sys_cond_wait(sys_tid, 
+                                  sys_mylib_obj.getTupleElement(tup, index + 2),  // cond
+                                  sys_mylib_obj.getTupleElement(tup, 1));  // mutex
+
+// ====================
+
+conats_shared_broadcast(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+
+conats_sharedn_broadcast(sys_tid) = 
+  [sys_cur_tid == sys_tid]
+  conats_shared_broadcast_impl(sys_tid, sys_gstack.frame_get(sys_tid, 0, 0), 
+                                               sys_gstack.frame_get(sys_tid, 0, 1));
+
+conats_shared_broadcast_impl(sys_tid, tup, index) = 
+    sys_cond_broadcast(sys_tid, sys_mylib_obj.getTupleElement(tup, index + 2));
+
+// ===============================
+// global variable for assertion
+var sys_assert_var = true;
+
+// =====================
+
+var flags_66 = 0;
+var turn_67 = 0;
+var g_68 = 0;
+var tid1_76 = 0;
+var tid2_77 = 0;
+
+iand_63(sys_tid) =
+  [sys_cur_tid == sys_tid] iand_63_s1.sys_tid{  if (sys_gstack.frame_get_bool(sys_tid, 0, 0)) {
+      sys_gstack.frame_push(sys_tid, sys_gstack.frame_get_bool(sys_tid, 0, 1));
+  } else {
+      sys_gstack.frame_push(sys_tid, false);
+  }
+  } -> Skip;
+  Skip
+  ;
+
+wait_loop_72(sys_tid) =
+  [sys_cur_tid == sys_tid] wait_loop_72_s1.sys_tid{  var wait_loop_clo19_id = sys_mylib_obj.createTuple2(2, sys_gstack.frame_get(sys_tid, 0, 0));
+  var opponent_7120_id = sys_mylib_obj.getTupleElement(sys_gstack.frame_get(sys_tid, 0, 0), 0);
+  sys_gstack.frame_push(sys_tid, opponent_7120_id);
+  var lflag_73 = array_ref_manager.getElement(flags_66, opponent_7120_id);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  sys_gstack.frame_push(sys_tid, lflag_73);
+  } -> Skip;
+  [sys_cur_tid == sys_tid] wait_loop_72_s2.sys_tid{  var lturn_74 = atom_ref_manager.getElement(turn_67);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  sys_gstack.frame_push(sys_tid, lturn_74);
+  } -> Skip;
+  [sys_cur_tid == sys_tid] wait_loop_72_s3.sys_tid{  var temp8_id = call(eq, sys_gstack.frame_get(sys_tid, 0, 2), 1);
+  var temp9_id = call(eq, sys_gstack.frame_get(sys_tid, 0, 3), sys_gstack.frame_get(sys_tid, 0, 1));
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (temp8_id, __temp_list_args);
+  __temp_list_args = sys_mylib_obj.list_cons (temp9_id, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } -> Skip;
+  iand_63(sys_tid);
+  [sys_cur_tid == sys_tid] wait_loop_72_s4.sys_tid{  var temp10_id = sys_gstack.retopr_frame(sys_tid);
+  sys_gstack.frame_push(sys_tid, temp10_id);
+  } -> Skip;
+  ifa (sys_gstack.frame_get_bool(sys_tid, 0, 4)) {
+    [sys_cur_tid == sys_tid] wait_loop_72_s5.sys_tid{  var __temp_list_args = sys_mylib_obj.list_nil ();
+    __temp_list_args = sys_mylib_obj.list_cons (sys_gstack.frame_get(sys_tid, 0, 0), __temp_list_args);
+    sys_gstack.reload_frame(sys_tid, __temp_list_args);
+    } -> Skip;
+    wait_loop_72(sys_tid)
+  } else {
+    Skip
+  }
+  ;
+
+worker_69(sys_tid) =
+  [sys_cur_tid == sys_tid] worker_69_s1.sys_tid{  var opponent_71 = call(sub, 1, sys_gstack.frame_get(sys_tid, 0, 0));
+  sys_gstack.frame_push(sys_tid, opponent_71);
+  array_ref_manager.setElement(flags_66, sys_gstack.frame_get(sys_tid, 0, 0), 1);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  [sys_cur_tid == sys_tid] worker_69_s2.sys_tid{  atom_ref_manager.setElement(turn_67, sys_gstack.frame_get(sys_tid, 0, 1));
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  [sys_cur_tid == sys_tid] worker_69_s3.sys_tid{  var env22_id = sys_mylib_obj.createTuple(1);
+  sys_mylib_obj.setTupleElement(env22_id, 0, sys_gstack.frame_get(sys_tid, 0, 1));
+  var wait_loop_closure23_id = sys_mylib_obj.createTuple2(2, env22_id);
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_cons (env22_id, __temp_list_args);
+  sys_gstack.add_frame(sys_tid, __temp_list_args);
+  } -> Skip;
+  wait_loop_72(sys_tid);
+  [sys_cur_tid == sys_tid] worker_69_s4.sys_tid{  sys_gstack.delete_frame(sys_tid);
+  var v_75 = view_manager.get(0, 0, 1, 1);
+  sys_assert_var = !sys_mylib_obj.is_none(v_75);
+  sys_gstack.frame_push(sys_tid, v_75);
+  } -> Skip;
+  [sys_cur_tid == sys_tid] worker_69_s5.sys_tid{  atom_ref_manager.setElement(g_68, 1);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  [sys_cur_tid == sys_tid] worker_69_s6.sys_tid{  view_manager.put(sys_gstack.frame_get(sys_tid, 0, 2));
+  } -> Skip;
+  [sys_cur_tid == sys_tid] worker_69_s7.sys_tid{  array_ref_manager.setElement(flags_66, sys_gstack.frame_get(sys_tid, 0, 0), 0);
+  if (sys_glb == 0) {  // not atomic
+    sys_cur_tid = -1;
+  }
+  } -> Skip;
+  Skip
+  ;
+
+// =====================
+
+sys_main(sys_tid) = [sys_cur_tid == sys_tid]
+  sys_main_init.sys_tid{var __temp_list_args = sys_mylib_obj.list_nil ();
+            sys_gstack.add_frame(0, __temp_list_args); 
+            } -> Skip;
+  [sys_cur_tid == sys_tid] main25_id_s1.sys_tid{  flags_66 = array_ref_manager.allocate(2, 0);
+
+  turn_67 = atom_ref_manager.allocate(0);
+
+  g_68 = atom_ref_manager.allocate(0);
+
+  tid1_76 = sys_tid_allocator.allocate();
+
+  tid2_77 = sys_tid_allocator.allocate();
+
+  } -> Skip;
+  sys_thread_create(sys_tid, tid1_76, 3, 0);
+  sys_thread_create(sys_tid, tid2_77, 3, 1); 
+  sys_thread_finalize(sys_tid);
+
+var main_sys_tid = sys_tid_allocator.allocate();
+main = 
+  sys_init_mutex_service(MUTEX_NO);
+  sys_init_cond_service(COND_NO);
+  main_init_scheduler {  // initialize runable
+  var __temp_list_args = sys_mylib_obj.list_nil ();
+  __temp_list_args = sys_mylib_obj.list_insert_ordered(main_sys_tid, __temp_list_args);
+  sys_runable_list = __temp_list_args;
+  sys_runable_size = 1;
+  sys_cur_tid = main_sys_tid;
+
+  sys_new_tid = -1;  // -1: not creating new thread
+  } -> (sys_main(main_sys_tid) ||| sys_scheduler_random);
+
+#define sys_assertion sys_assert_var == true;
+
+// #assert main deadlockfree;
+
+// #assert main |= G sys_assertion;
+
+
+#assert main deadlockfree;
+
+#assert main |= G sys_assertion;
+
+
+
