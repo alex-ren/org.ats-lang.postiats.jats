@@ -32,7 +32,7 @@ fun worker (id: worker_id): void = let
   
   prval v = mc_vlock_get (0, 0, 1, 1)
   
-  // do things exclusively-
+  // do things exclusively
   val () = conats_atomref_update(g, 1)
 
   prval () = mc_vlock_put (v)
